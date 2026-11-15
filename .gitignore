@@ -1,0 +1,20 @@
+# Go
+**/bin/
+**/tmp/
+*.test
+coverage.out
+
+# Node
+**/node_modules/
+**/dist/
+**/build/
+*.tsbuildinfo
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Liara/local tooling
+.liara/
+*.log

@@ -1,0 +1,49 @@
+name: deploy-api
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - "db/migrations/**"
+      - ".github/workflows/deploy-api.yml"
+
+concurrency:
+  group: deploy-api-production
+  cancel-in-progress: false
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/api/go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify API
+        working-directory: apps/api
+        run: |
+          go mod tidy
+          test -z "$(git status --porcelain)"
+          go test ./...
+          go vet ./...
+      - name: Install Liara CLI
+        run: npm install --global @liara/cli@9
+      - name: Include database migrations in API context
+        run: |
+          mkdir -p apps/api/db/migrations
+          cp -R db/migrations/. apps/api/db/migrations/
+      - name: Deploy API
+        env:
+          LIARA_API_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+        run: >-
+          liara deploy
+          --app="${{ vars.LIARA_API_APP }}"
+          --path=apps/api
+          --platform=go
+          --liara-json=apps/api/liara.json
+          --api-token="$LIARA_API_TOKEN"
+          --no-app-logs

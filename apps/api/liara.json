@@ -1,0 +1,7 @@
+{
+  "go": {
+    "mainFile": "cmd/api/main.go",
+    "port": 8080,
+    "version": "1.23"
+  }
+}

@@ -1,0 +1,46 @@
+# مستندات BDD بازارگاه
+
+این پوشه مرجع سناریوهای رفتاری بازارگاه است. سناریوها با قالب Gherkin فارسی در فایل‌های `.feature` ثبت شده‌اند و هر سناریو با شناسه پذیرش موجود در سند حوزه یا تجربه پیوند دارد. این اسناد در وضعیت مستندات هستند و به‌تنهایی مجوز ساخت یا اتصال به سرویس واقعی نیستند.
+
+## قواعد نگارش و ردیابی
+
+- هر فایل یک `Feature` و هر پذیرش یک `Scenario` با همان شناسه `DOM-*` یا `FEAT-*` دارد.
+- `Given` فقط پیش‌شرط و داده آزمون را آماده می‌کند؛ `When` یک محرک قابل مشاهده است؛ `Then` نتیجه قابل مشاهده و قابل بررسی را بیان می‌کند.
+- داده‌ها ساختگی‌اند و در [داده آزمون](test-data.md) تعریف می‌شوند؛ شماره، کلید، درگاه، پیامک و انتقال مالی واقعی وارد سناریو نمی‌شود.
+- قواعد قطعی از سند حوزه/تجربه خوانده می‌شوند. طراحی پیشنهادی، پرسش باز و قرارداد انتخاب‌نشده نباید به‌عنوان نتیجه قطعی سناریو نوشته شود.
+- هر سناریوی مسدودشده باید در سند مرجع به `Q-*` لینک شود. تا رفع مانع، نتیجه آن «قابل اجرا نیست» است، نه قبولی.
+- اجرای آینده باید برای هر سناریو شواهدی شامل شناسه اجرا، داده ورودی، نتیجه و لینک گزارش ثبت کند؛ وضعیت سند با وضعیت اجرای آزمون یکی نیست.
+
+## پوشش فعلی
+
+در این نسخه ۱۷۰ سناریو ثبت شده است: ۱۵۹ سناریوی پذیرش موجود و ۱۱ سناریوی تصمیم/جریان ترکیبی برای سیاست‌های جدید کمیسیون، OTP، پیامک، مبلغ و PWA.
+
+| بخش | فایل | سناریو | مرجع |
+| --- | --- | ---: | --- |
+| کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 13 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
+| سبد، رزرو موجودی و جلسه پرداخت (DOM-CHECKOUT-001) | [`features/domains/checkout.feature`](features/domains/checkout.feature) | 12 | [`domains/checkout/README.md`](../domains/checkout/README.md) |
+| حساب و هویت (DOM-IDENTITY-001) | [`features/domains/identity.feature`](features/domains/identity.feature) | 9 | [`domains/identity/README.md`](../domains/identity/README.md) |
+| اطلاع‌رسانی پیامکی (DOM-NOTIFICATIONS-001) | [`features/domains/notifications.feature`](features/domains/notifications.feature) | 5 | [`domains/notifications/README.md`](../domains/notifications/README.md) |
+| سفارش، تأمین و رسیدگی به عدم تأمین (DOM-ORDERS-001) | [`features/domains/orders.feature`](features/domains/orders.feature) | 13 | [`domains/orders/README.md`](../domains/orders/README.md) |
+| پرداخت، کیف پول، برداشت و بازپرداخت (DOM-PAYMENTS-001) | [`features/domains/payments.feature`](features/domains/payments.feature) | 15 | [`domains/payments/README.md`](../domains/payments/README.md) |
+| قیمت‌گذاری و کمیسیون (DOM-PRICING-001) | [`features/domains/pricing.feature`](features/domains/pricing.feature) | 13 | [`domains/pricing/README.md`](../domains/pricing/README.md) |
+| تسویه فروشنده (DOM-SETTLEMENTS-001) | [`features/domains/settlements.feature`](features/domains/settlements.feature) | 6 | [`domains/settlements/README.md`](../domains/settlements/README.md) |
+| آماده‌سازی و ارسال (DOM-SHIPPING-001) | [`features/domains/shipping.feature`](features/domains/shipping.feature) | 18 | [`domains/shipping/README.md`](../domains/shipping/README.md) |
+| عملیات مالی و تسویه (FEAT-BO-003) | [`features/experiences/backoffice-finance.feature`](features/experiences/backoffice-finance.feature) | 6 | [`experiences/backoffice/finance.md`](../experiences/backoffice/finance.md) |
+| مدیریت فروشگاه، کاتالوگ و سیاست‌ها (FEAT-BO-001) | [`features/experiences/backoffice-management.feature`](features/experiences/backoffice-management.feature) | 6 | [`experiences/backoffice/management.md`](../experiences/backoffice/management.md) |
+| رسیدگی عملیاتی سفارش (FEAT-BO-002) | [`features/experiences/backoffice-support.feature`](features/experiences/backoffice-support.feature) | 8 | [`experiences/backoffice/support.md`](../experiences/backoffice/support.md) |
+| مدیریت عرضه فروشگاه (FEAT-SP-001) | [`features/experiences/seller-portal-catalog.feature`](features/experiences/seller-portal-catalog.feature) | 7 | [`experiences/seller-portal/catalog.md`](../experiences/seller-portal/catalog.md) |
+| تأیید تأمین و ارسال فروشنده (FEAT-SP-002) | [`features/experiences/seller-portal-fulfillment.feature`](features/experiences/seller-portal-fulfillment.feature) | 5 | [`experiences/seller-portal/fulfillment.md`](../experiences/seller-portal/fulfillment.md) |
+| سبد تا نتیجه پرداخت (FEAT-SF-002) | [`features/experiences/storefront-checkout.feature`](features/experiences/storefront-checkout.feature) | 5 | [`experiences/storefront/checkout.md`](../experiences/storefront/checkout.md) |
+| کشف کالا و انتخاب فروشگاه (FEAT-SF-001) | [`features/experiences/storefront-discovery.feature`](features/experiences/storefront-discovery.feature) | 12 | [`experiences/storefront/discovery.md`](../experiences/storefront/discovery.md) |
+| پیگیری خرید و لغو در عدم تأمین (FEAT-SF-003) | [`features/experiences/storefront-orders.feature`](features/experiences/storefront-orders.feature) | 5 | [`experiences/storefront/orders.md`](../experiences/storefront/orders.md) |
+| کیف پول مشتری (FEAT-SF-004) | [`features/experiences/storefront-wallet.feature`](features/experiences/storefront-wallet.feature) | 4 | [`experiences/storefront/wallet.md`](../experiences/storefront/wallet.md) |
+| جریان‌های ترکیبی بحرانی | [`features/cross-domain-critical-flows.feature`](features/cross-domain-critical-flows.feature) | 8 | [`../governance/traceability.md`](../governance/traceability.md) |
+
+## قرارداد آماده‌سازی آزمون
+
+پیش از اجرای هر فایل، داده پایه از `test-data.md` بارگذاری و شناسه محیط آزمون ثبت شود. هر سناریو باید در برابر داده‌های خالی، خطای اعتبارسنجی، رد مجوز، تکرار درخواست و نتیجه نامشخص، در صورت ارتباط با مرجع خود، مسیر جدا داشته باشد. اگر مرجع سناریو این حالت را پوشش نداده است، آن را با تصمیم حدسی به سناریو اضافه نکنید؛ خلأ را در `docs/product/open-questions.md` ثبت کنید.
+
+## وضعیت و مالکیت
+
+این خروجی بخشی از مستندات `in-review` است. مالک قواعد همان مالک سند مرجع است و مالک اجرای آینده باید هنگام آماده‌سازی برش تحویل تعیین شود. هیچ سناریویی در این پوشه `approved` یا `passed` تلقی نمی‌شود مگر اینکه مالک تصمیم و شواهد اجرای مستقل ثبت شده باشد.

@@ -1,8 +1,8 @@
-# مستندات Marketplace
+# Marketplace
 
-مرجع محصول و طراحی سه محیط **سایت فروش PWA، پنل فروشگاه PWA و بک‌آفیس وب**؛ مبنای پیاده‌سازی آینده، بدون کد اجرایی یا فناوری انتخاب‌شده.
+مرجع محصول، مستندات و codebase سه محیط **سایت فروش PWA، پنل فروشگاه PWA و بک‌آفیس وب**. تصمیم‌های معماری اولیه در [ADR-002](docs/decisions/adr-002-codebase-architecture.md) و deployment در [ADR-003](docs/decisions/adr-003-liara-deployment.md) ثبت شده‌اند.
 
-اولویت جاری: **ابتدا بک‌آفیس و پنل فروشندگان، سپس سایت مشتری**. جزئیات و وابستگی‌ها در [برنامه تحویل](docs/delivery/README.md) است.
+اولویت جاری: **ابتدا بک‌آفیس و پنل فروشندگان، سپس سایت مشتری**. رودمپ کامل در [رودمپ پیاده‌سازی](docs/delivery/roadmap.md) و جزئیات برش‌ها در [برنامه تحویل](docs/delivery/README.md) است.
 
 ## از اینجا شروع کنید
 
@@ -29,4 +29,31 @@ AGENTS.md
 
 **قاعده در حوزه، تعامل در تجربه، دلیل انتخاب در تصمیم و ابهام در دفتر پرسش‌ها** نگهداری می‌شود. اسناد به هم لینک می‌دهند؛ نسخه‌های موازی قانون ساخته نمی‌شود.
 
+ساختار اجرایی فعلی:
+
+```text
+apps/
+  api/                    backend Go و modular monolith
+  backoffice-web/         frontend React/Vite بک‌آفیس
+  seller-portal-web/      محل frontend پنل فروشنده
+  storefront-web/         محل frontend سایت مشتری
+db/migrations/            migrationهای مرجع دیتابیس
+packages/                 قراردادها و کد مشترک آینده
+.github/workflows/        CI و deploy روی Liara
+```
+
+راهنمای اجرای این ساختار در [راهنمای استقرار Liara](docs/delivery/liara-deployment.md) آمده است.
+
 قواعد صریح گفتگو ثبت شده‌اند؛ جزئیات طراحی پیشنهادی از آن‌ها جداست. وضعیت مشخصات `in-review` است و به معنی تکمیل پیاده‌سازی یا آمادگی همه مسیرها برای ساخت نیست. برای ساخت هر برش، [معیار آمادگی](docs/delivery/readiness.md) بررسی شود.
+
+## بررسی صفحات بک‌آفیس
+
+نسخه بررسی با داده ساختگی از API Go تغذیه می‌شود. ابتدا `npm ci` و `npm run build` را در `apps/backoffice-web` اجرا کنید. سپس از `apps/api`:
+
+```sh
+APP_ENV=test WEB_ROOT=../backoffice-web/build PORT=8087 go run ./cmd/api
+```
+
+رابط در `http://localhost:8087` باز می‌شود. حساب مدیر آزمون `09000000001` است؛ کد آزمون در مرحله دوم فرم نمایش داده می‌شود. سایر نقش‌ها از دکمه‌های حساب آزمون انتخاب می‌شوند. داده‌ها با restart بازنشانی می‌شوند؛ این نسخه برای داده واقعی یا انتقال بانکی نیست.
+
+[وضعیت مرحله ۱](docs/delivery/stage-1-progress.md) و [بسته استقرار Liara](deploy/liara/README.md) محدودیت‌ها و شواهد اجرا را مشخص می‌کنند.

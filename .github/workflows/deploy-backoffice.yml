@@ -1,0 +1,42 @@
+name: deploy-backoffice
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/backoffice-web/**"
+      - ".github/workflows/deploy-backoffice.yml"
+
+concurrency:
+  group: deploy-backoffice-production
+  cancel-in-progress: false
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/backoffice-web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --legacy-peer-deps --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run build
+      - name: Install Liara CLI
+        run: npm install --global @liara/cli@9
+        working-directory: .
+      - name: Deploy backoffice
+        working-directory: .
+        env:
+          LIARA_API_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+        run: >-
+          liara deploy
+          --app="${{ vars.LIARA_BACKOFFICE_APP }}"
+          --path=apps/backoffice-web
+          --platform=react
+          --liara-json=apps/backoffice-web/liara.json
+          --api-token="$LIARA_API_TOKEN"
+          --no-app-logs

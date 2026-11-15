@@ -1,0 +1,4 @@
+:root { font-family: Vazirmatn, Tahoma, sans-serif; color: #172033; background: #f4f6fb; }
+body { margin: 0; }
+.shell { max-width: 760px; margin: 18vh auto; padding: 2rem; background: #fff; border: 1px solid #e3e7ef; border-radius: 1rem; box-shadow: 0 1rem 3rem #17203312; }
+.eyebrow { color: #3c63d8; font-size: .9rem; font-weight: 700; }

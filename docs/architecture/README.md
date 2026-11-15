@@ -1,6 +1,39 @@
 # معماری منطقی و مرز مسئولیت‌ها
 
-این بخش طرح پیشنهادی برای بررسی است؛ stack، دیتابیس، topology استقرار، REST/GraphQL یا microservice انتخاب نشده‌اند. سه محیط کاربری لزوماً سه backend نیستند. این اسناد قرارداد اجرایی آماده تولید client نیستند.
+این بخش مرزهای منطقی و تصمیم‌های اجرایی ثبت‌شده را نگه می‌دارد؛ جزئیات انتخاب‌نشده مانند نسخه و پلن دیتابیس، topology استقرار، پروتکل دقیق و ارائه‌دهنده‌های بیرونی محصول باید جداگانه تصمیم‌گیری شوند. سه محیط کاربری لزوماً سه backend نیستند. این اسناد قرارداد اجرایی آماده تولید client نیستند.
+
+## تصمیم اجرایی فعلی
+
+طبق [ADR-002](../decisions/adr-002-codebase-architecture.md)، codebase در repository `marketplace` به‌صورت monorepo نگهداری می‌شود. backend مشترک با Go و modular monolith است و Hexagonal Architecture در سطح هر ماژول دامنه اعمال می‌شود. frontendهای بک‌آفیس، پنل فروشنده و سایت مشتری پروژه‌های مستقل داخل `apps/` هستند؛ اشتراک قرارداد، UI و تنظیمات در `packages/` انجام می‌شود. migrationهای دیتابیس در `db/migrations` قرار می‌گیرند.
+
+طبق [ADR-003](../decisions/adr-003-liara-deployment.md)، استقرار اولیه روی Liara انجام می‌شود. جزئیات PaaS Go/React، DBaaS PostgreSQL، شبکه خصوصی، CI/CD، دامنه و secretها در [راهنمای استقرار Liara](../delivery/liara-deployment.md) ثبت شده‌اند.
+
+## ساختار اجرایی API
+
+API به‌صورت modular monolith و با مرز hexagonal برای هر دامنه سازمان‌دهی می‌شود:
+
+```text
+apps/api/
+  cmd/                         composition entrypoints فقط
+  internal/
+    domain/<domain>/           entity، value object، rule و خطای دامنه
+    application/<capability>/  use case و portهای موردنیاز
+    adapters/<capability>/     پیاده‌سازی repository، provider و notifier
+    transport/http/            route، request decoding و response mapping
+    bootstrap/                 composition root و wiring وابستگی‌ها
+    config/                    بارگذاری و اعتبارسنجی تنظیمات محیط
+```
+
+قواعد وابستگی:
+
+- `domain` به هیچ لایه اجرایی یا provider وابسته نیست.
+- `application` فقط به domain و interfaceهای port وابسته است.
+- `adapters` portهای application را پیاده می‌کنند؛ application هرگز adapter concrete را import نمی‌کند.
+- `transport` فقط use caseها را فراخوانی و خطای دامنه را به قرارداد HTTP تبدیل می‌کند.
+- `bootstrap` تنها محل ساخت concrete dependency graph است؛ `main.go` فقط lifecycle پردازه و shutdown را مدیریت می‌کند.
+- هر دامنه جدید پوشه مستقل خودش را دارد و منطق بین domainها از طریق use case/port یا رویداد صریح عبور می‌کند.
+
+مسیر هویت نمونه این ساختار در `apps/api/internal/domain/identity`، `application/auth`، `adapters/authmemory` و `transport/http` پیاده شده است. adapter حافظه فقط برای local/test است و جایگزین persistence یا provider انتخاب‌نشده production نیست.
 
 ## مرزهای منطقی
 
