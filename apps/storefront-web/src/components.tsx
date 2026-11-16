@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 export function Icon({
   name,
 }: {
@@ -51,13 +51,16 @@ export function Modal({
   children,
   onClose,
   wide = false,
+  className,
 }: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
   wide?: boolean;
+  className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   useEffect(() => {
     const dialog = ref.current!;
     dialog.showModal();
@@ -71,15 +74,17 @@ export function Modal({
   return (
     <dialog
       ref={ref}
-      className={wide ? "modal wide" : "modal"}
-      onCancel={onClose}
+      className={["modal", wide && "wide", className].filter(Boolean).join(" ")}
+      onCancel={(event) => {
+        if (!event.defaultPrevented) onClose();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
     >
       <div className="modal-head">
-        <h2 id="modal-title">{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <button className="icon-button" aria-label="بستن" onClick={onClose}>
           <Icon name="close" />
         </button>
@@ -103,11 +108,15 @@ export function Brand({ onClick }: { onClick?: () => void }) {
       }}
     >
       <img
-        src="/brand/open-c-main.svg"
-        alt="Cherriva — لوگوی C جوانه"
-        width="184"
-        height="45"
+        className="brand-letter"
+        src="/brand/open-c-main-symbol.svg"
+        alt=""
+        width="64"
+        height="64"
       />
+      <span className="brand-tail" aria-hidden="true">
+        <img src="/brand/open-c-main.svg" alt="" width="590" height="144" />
+      </span>
     </a>
   );
 }

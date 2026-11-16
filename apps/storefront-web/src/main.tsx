@@ -12,11 +12,23 @@ import {
 } from "./catalog";
 import { Brand, Icon, Modal } from "./components";
 import { ProductModal } from "./product-modal";
+import { ProductCard } from "./product-card";
+import { productPhoto, productPhotos } from "./product-photos";
+import type { ProductPurchase } from "./product-purchase";
 import { CheckoutPage } from "./checkout/checkout-page";
 import { AuthPanel, useDemoAuth } from "./checkout/demo-auth";
 import { initialDraft } from "./checkout/model";
 import "./styles.css";
 import "./checkout/styles.css";
+
+const featuredProduct = products.find((product) => product.id === "cup")!;
+
+function quantityForProduct(cart: CartLine[], productId: string) {
+  return cart.reduce(
+    (total, line) => total + (line.productId === productId ? line.quantity : 0),
+    0,
+  );
+}
 
 function App() {
   const auth = useDemoAuth();
@@ -37,7 +49,6 @@ function App() {
     setCartOpen(false);
     setAccountOpen(false);
     setActiveProduct(null);
-    setNotice("");
     history.pushState(
       null,
       "",
@@ -58,17 +69,22 @@ function App() {
       : "all",
   );
   const [sort, setSort] = useState("popular");
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [storeFilter, setStoreFilter] = useState("all");
   const [maxPrice, setMaxPrice] = useState(4000000);
   const [colorFilter, setColorFilter] = useState("all");
   const [selection, setSelection] = useState<Record<string, string>>({});
+  const [selectedStores, setSelectedStores] = useState<Record<string, string>>(
+    {},
+  );
+  const [modalStoreId, setModalStoreId] = useState("");
+  const [pictures, setPictures] = useState<Record<string, number>>({});
   const [cart, setCart] = useState<CartLine[]>([]);
   const [activeProduct, setActiveProduct] = useState(
     products.find((p) => p.id === initial.get("product")) ?? null,
   );
   const [cartOpen, setCartOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [notice, setNotice] = useState("");
   useEffect(() => {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
@@ -80,47 +96,106 @@ function App() {
       `${location.pathname}${params.size ? "?" + params : ""}${location.hash}`,
     );
   }, [query, category, activeProduct]);
-  useEffect(() => {
-    if (!notice) return;
-    const timer = setTimeout(() => setNotice(""), 4000);
-    return () => clearTimeout(timer);
-  }, [notice]);
-  const selectedColor = (product: Product) =>
-    selection[product.id] ??
-    (product.colors.length === 1 ? product.colors[0] : "");
-  function add(
-    product: Product,
-    storeId = storeFilter === "all" ? stores[0].id : storeFilter,
-    quantity = 1,
-  ) {
-    const color = selectedColor(product);
-    if (!color) {
-      setNotice("ابتدا رنگ یا نوع کالا را انتخاب کنید.");
-      return;
-    }
-    const total = cart
-      .filter((line) => line.productId === product.id)
-      .reduce((sum, line) => sum + line.quantity, 0);
-    if (total + quantity > product.stock) {
-      setNotice("تعداد درخواستی از موجودی نمونه بیشتر است.");
-      return false;
-    }
-    const line = { productId: product.id, color, storeId, quantity };
-    setCart((current) => {
-      const match = current.find(
-        (existing) => lineKey(existing) === lineKey(line),
-      );
-      return match
-        ? current.map((existing) =>
-            existing === match
-              ? { ...existing, quantity: existing.quantity + quantity }
-              : existing,
-          )
-        : [...current, line];
-    });
-    setNotice("کالا به سبد خرید اضافه شد.");
-    return true;
+  function selectedColor(product: Product) {
+    if (!product.stock) return "";
+    return selection[product.id] ?? product.colors[0] ?? "";
   }
+
+  function selectedStore(product: Product) {
+    const storeId =
+      storeFilter === "all" ? selectedStores[product.id] : storeFilter;
+    return (
+      stores.find(
+        (store) =>
+          store.id === storeId && product.price + store.extra <= maxPrice,
+      ) ?? stores[0]
+    );
+  }
+
+  function pictureIndex(product: Product) {
+    return (
+      pictures[product.id] ??
+      Math.max(
+        0,
+        productPhotos(product).findIndex(
+          (photo) => photo.color === selectedColor(product),
+        ),
+      )
+    );
+  }
+
+  function chooseColor(product: Product, color: string) {
+    setSelection((current) => ({ ...current, [product.id]: color }));
+    setPictures((current) => {
+      const next = { ...current };
+      delete next[product.id];
+      return next;
+    });
+  }
+
+  function chooseFilterColor(color: string) {
+    setColorFilter(color);
+    if (color === "all") return;
+    const matching = products.filter((product) =>
+      product.colors.includes(color),
+    );
+    setSelection((current) => ({
+      ...current,
+      ...Object.fromEntries(matching.map((product) => [product.id, color])),
+    }));
+    setPictures((current) =>
+      Object.fromEntries(
+        Object.entries(current).filter(
+          ([id]) => !matching.some((product) => product.id === id),
+        ),
+      ),
+    );
+  }
+
+  function purchase(
+    product: Product,
+    store = selectedStore(product),
+  ): ProductPurchase {
+    const color = selectedColor(product);
+    const item = { productId: product.id, color, storeId: store.id };
+    const key = lineKey(item);
+    const quantity = cart.find((line) => lineKey(line) === key)?.quantity ?? 0;
+    return {
+      color,
+      store,
+      quantity,
+      canAdd:
+        Boolean(color) && quantityForProduct(cart, product.id) < product.stock,
+      onColorChange: (value) => chooseColor(product, value),
+      onQuantityChange: (change) => {
+        setCart((current) => {
+          const match = current.find((line) => lineKey(line) === key);
+          if (
+            !color ||
+            (change > 0 &&
+              quantityForProduct(current, product.id) >= product.stock)
+          )
+            return current;
+          const nextQuantity = (match?.quantity ?? 0) + change;
+          if (!match)
+            return nextQuantity > 0
+              ? [...current, { ...item, quantity: nextQuantity }]
+              : current;
+          return nextQuantity > 0
+            ? current.map((line) =>
+                line === match ? { ...line, quantity: nextQuantity } : line,
+              )
+            : current.filter((line) => line !== match);
+        });
+      },
+    };
+  }
+
+  function openProduct(product: Product) {
+    setModalStoreId("");
+    setActiveProduct(product);
+  }
+
   function updateLine(key: string, patch: Partial<CartLine>) {
     setCart((current) => {
       const changed = current
@@ -132,12 +207,19 @@ function App() {
         if (existing) existing.quantity += line.quantity;
         else merged.push({ ...line });
       }
-      return merged;
+      const productId = current.find(
+        (line) => lineKey(line) === key,
+      )?.productId;
+      const product = products.find((entry) => entry.id === productId);
+      return product && quantityForProduct(merged, product.id) > product.stock
+        ? current
+        : merged;
     });
   }
   const filtered = products
     .filter(
       (p) =>
+        (!onlyAvailable || p.stock > 0) &&
         (category === "all" || p.category === category) &&
         `${p.name} ${p.subtitle}`.includes(query.trim()) &&
         p.price + (storeFilter === "pearl" ? stores[1].extra : 0) <= maxPrice &&
@@ -182,6 +264,7 @@ function App() {
     setColorFilter("all");
     setStoreFilter("all");
     setSort("popular");
+    setOnlyAvailable(false);
   }
   if (checkoutOpen)
     return (
@@ -195,387 +278,230 @@ function App() {
     );
   return (
     <>
-      <div className="announcement">
-        <span>چیزهای خوب، از یک انتخاب شروع می‌شوند.</span>
-        <span className="review-label">
-          نسخه بررسی · کالاها و قیمت‌ها آزمایشی‌اند
-        </span>
-      </div>
-      <header className="header wrap">
-        <Brand />
-        <label className="search">
-          <Icon name="search" />
-          <input
-            type="search"
-            aria-label="جست‌وجوی کالا"
-            placeholder="دنبال چه چیزی می‌گردی؟"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              document
-                .getElementById("catalog")
-                ?.scrollIntoView({ behavior: "smooth" });
-            }}
-          />
-          <kbd>جست‌وجو</kbd>
-        </label>
-        <div className="header-actions">
-          <button className="account" onClick={() => setAccountOpen(true)}>
-            <Icon name="user" />
-            <span>{auth.customer ? "حساب نمونه من" : "ورود / ثبت‌نام"}</span>
-          </button>
-          <i />
-          <button
-            className="bag icon-button"
-            aria-label={`سبد خرید، ${cartCount} کالا`}
-            onClick={() => setCartOpen(true)}
-          >
-            <Icon name="bag" />
-            {cartCount > 0 && <b>{money(cartCount)}</b>}
-          </button>
+      <header className="header">
+        <div className="header-inner wrap">
+          <Brand />
+          <label className="search">
+            <Icon name="search" />
+            <input
+              type="search"
+              aria-label="جست‌وجوی کالا"
+              placeholder="جست‌وجوی کالا"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </label>
+          <div className="header-actions">
+            <button
+              type="button"
+              className="account icon-button"
+              onClick={() => setAccountOpen(true)}
+              aria-label={auth.customer ? "حساب نمونه من" : "ورود / ثبت‌نام"}
+            >
+              <Icon name="user" />
+            </button>
+            <button
+              type="button"
+              className="bag"
+              aria-label={`سبد خرید، ${cartCount} کالا`}
+              onClick={() => setCartOpen(true)}
+            >
+              <Icon name="bag" /> <span className="bag-label">سبد خرید</span>{" "}
+              <b>{money(cartCount)}</b>
+            </button>
+          </div>
         </div>
       </header>
-      <nav className="nav wrap" aria-label="دسته‌بندی اصلی">
-        <button className="category-trigger" onClick={() => browse("all")}>
-          <span>☰</span> دسته‌بندی کالاها
-        </button>
-        <div className="nav-links">
-          {categories.slice(1).map((c) => (
-            <button key={c.id} onClick={() => browse(c.id)}>
-              {c.name}
+      <main className="wrap storefront-main">
+        <section className="hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <p>خانه و زندگی</p>
+            <h1 id="hero-title">
+              ماگ سرامیکی
+              <br />
+              مینیمال
+            </h1>
+            <button
+              className="primary"
+              type="button"
+              onClick={() => {
+                reset();
+                openProduct(featuredProduct);
+              }}
+            >
+              انتخاب رنگ <Icon name="arrow" />
+            </button>
+          </div>
+          <img
+            src={productPhoto(featuredProduct, "سفید")}
+            alt="ماگ سرامیکی سفید"
+            fetchPriority="high"
+          />
+        </section>
+        <nav className="chips categories" aria-label="دسته‌بندی کالا">
+          {categories.map((entry) => (
+            <button
+              key={entry.id}
+              type="button"
+              data-category={entry.id}
+              aria-pressed={category === entry.id}
+              onClick={() => browse(entry.id)}
+            >
+              {entry.name}
             </button>
           ))}
-        </div>
-        <span className="nav-note">یک بازار، انتخاب‌های بسیار</span>
-      </nav>
-      <main className="wrap">
-        <section className="hero">
-          <div className="hero-copy">
-            <span className="overline">
-              <i /> به دنیای چریوا خوش آمدی
-            </span>
-            <h1>
-              برای سلیقه‌ات،
-              <br />
-              <em>چیزی اینجاست.</em>
-            </h1>
-            <p>
-              از یک فنجان آرامش تا همراه دیجیتال روزهایت؛
-              <br />
-              انتخاب‌های متفاوت را یک‌جا پیدا کن.
-            </p>
-            <button className="primary" onClick={() => browse("all")}>
-              کشف همه محصولات <Icon name="arrow" />
-            </button>
-            <div className="hero-foot">
-              <span>با سلیقه انتخاب کن</span>
-              <span className="line" />
-              <span>از فروشگاه‌های مختلف</span>
-            </div>
+        </nav>
+        <section
+          className="catalog-section"
+          id="catalog"
+          aria-labelledby="catalog-title"
+        >
+          <div className="section-heading">
+            <h2 id="catalog-title">کالاها</h2>
+            <small className="result-count" aria-live="polite">
+              {money(filtered.length)} کالا
+            </small>
           </div>
-          <div className="hero-image">
-            <img
-              src="/images/coffee.svg"
-              alt="فنجان قهوه روی میز، همراه یک لحظه آرام"
-              fetchPriority="high"
-            />
-            <div className="image-overlay" />
-            <span className="image-caption">
-              THE LITTLE THINGS
-              <br />
-              <b>لحظه‌های کوچک، حس‌های بزرگ</b>
-            </span>
-            <div className="image-sticker">
-              <span>انتخاب امروز</span>
-              <strong>یک مکث دل‌نشین</strong>
+          <div
+            className="catalog-controls"
+            role="group"
+            aria-label="فیلتر و مرتب‌سازی"
+          >
+            <div
+              className="sort-row chips"
+              role="group"
+              aria-label="مرتب‌سازی و موجودی"
+            >
+              {[
+                ["popular", "پرفروش‌ترین"],
+                ["cheap", "کمترین قیمت"],
+                ["expensive", "بیشترین قیمت"],
+                ["new", "جدیدترین"],
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  data-sort={value}
+                  aria-pressed={sort === value}
+                  onClick={() => setSort(value)}
+                >
+                  {label}
+                </button>
+              ))}
               <button
-                onClick={() => browse("tea")}
-                aria-label="دیدن چای و قهوه"
+                type="button"
+                data-available
+                aria-pressed={onlyAvailable}
+                onClick={() => setOnlyAvailable(!onlyAvailable)}
               >
-                <Icon name="arrow" />
+                فقط کالاهای موجود
               </button>
             </div>
-          </div>
-        </section>
-        <section className="category-strip" aria-label="انتخاب دسته">
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              className={category === c.id ? "category active" : "category"}
-              onClick={() => browse(c.id)}
-            >
-              <span className={`category-icon ${c.id}`}>{c.icon}</span>
-              <span>{c.name}</span>
-              <small>←</small>
-            </button>
-          ))}
-        </section>
-        <section className="catalog-section" id="catalog">
-          <div className="section-heading">
-            <div>
-              <span className="overline">به انتخاب خودت</span>
-              <h2>
-                {category === "all"
-                  ? "کشف کن، مقایسه کن، انتخاب کن."
-                  : categories.find((c) => c.id === category)!.name}
-              </h2>
-            </div>
-            <span className="result-count">
-              {money(filtered.length)} کالای نمونه
-            </span>
-          </div>
-          <div className="catalog-layout">
-            <aside className="filters">
-              <div className="filter-heading">
-                <h3>فیلترها</h3>
-                <button onClick={reset}>حذف فیلترها</button>
-              </div>
+            <div className="filter-row">
               <label>
                 فروشگاه
                 <select
                   aria-label="فروشگاه"
                   value={storeFilter}
-                  onChange={(e) => setStoreFilter(e.target.value)}
+                  onChange={(event) => setStoreFilter(event.target.value)}
                 >
                   <option value="all">همه فروشگاه‌ها</option>
-                  {stores.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
+                  {stores.map((store) => (
+                    <option key={store.id} value={store.id}>
+                      {store.name}
                     </option>
                   ))}
                 </select>
               </label>
               <label>
-                محدوده قیمت
-                <span className="range-value">تا {money(maxPrice)} تومان</span>
+                رنگ / نوع
+                <select
+                  value={colorFilter}
+                  onChange={(event) => chooseFilterColor(event.target.value)}
+                >
+                  <option value="all">همه گزینه‌ها</option>
+                  {colors.map((color) => (
+                    <option key={color}>{color}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                تا {money(maxPrice)} تومان
                 <input
-                  aria-label="حداکثر قیمت"
                   type="range"
+                  aria-label="حداکثر قیمت"
                   min="0"
                   max="4000000"
                   step="50000"
                   value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  onChange={(event) => setMaxPrice(Number(event.target.value))}
                 />
-                <span className="range-ends">
-                  <span>۰</span>
-                  <span>۴ میلیون تومان</span>
-                </span>
               </label>
-              <label>
-                رنگ / نوع
-                <select
-                  value={colorFilter}
-                  onChange={(e) => setColorFilter(e.target.value)}
-                >
-                  <option value="all">همه گزینه‌ها</option>
-                  {colors.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
-              </label>
-              <div className="filter-note">
-                <span>◈</span>
-                <strong>انتخاب آگاهانه‌تر</strong>
-                <p>
-                  در جزئیات هر کالا، قیمت و زمان آماده‌سازی فروشگاه‌ها را مقایسه
-                  کن.
-                </p>
-              </div>
-            </aside>
-            <div className="catalog-results">
-              <div className="sort-bar">
-                <span>مرتب‌سازی:</span>
-                <label className="sr-only" htmlFor="sort">
-                  مرتب‌سازی
-                </label>
-                <select
-                  id="sort"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                >
-                  <option value="popular">پرفروش‌ترین</option>
-                  <option value="cheap">ارزان‌ترین</option>
-                  <option value="expensive">گران‌ترین</option>
-                  <option value="new">جدیدترین</option>
-                </select>
-                <span className="sample-note">موجودی و فروش نمونه</span>
-              </div>
-              {filtered.length ? (
-                <div className="product-grid">
-                  {filtered.map((product) => (
-                    <article className="product-card" key={product.id}>
-                      <button
-                        className="product-picture"
-                        onClick={() => setActiveProduct(product)}
-                        aria-label={`مشاهده ${product.name}`}
-                      >
-                        <img
-                          src={`/images/${product.image}.svg`}
-                          alt={product.name}
-                          loading="lazy"
-                        />
-                        {!product.stock ? (
-                          <span className="badge unavailable">ناموجود</span>
-                        ) : (
-                          <span className="badge">انتخاب چریوا</span>
-                        )}
-                        <span className="quick-view">مشاهده محصول ↖</span>
-                      </button>
-                      <div className="product-info">
-                        <small>
-                          {
-                            categories.find((c) => c.id === product.category)!
-                              .name
-                          }
-                        </small>
-                        <button
-                          className="product-title"
-                          onClick={() => setActiveProduct(product)}
-                        >
-                          {product.name}
-                        </button>
-                        <p>{product.subtitle}</p>
-                        <div className="card-choice">
-                          <label
-                            className="sr-only"
-                            htmlFor={`color-${product.id}`}
-                          >
-                            رنگ یا نوع {product.name}
-                          </label>
-                          <select
-                            id={`color-${product.id}`}
-                            value={selectedColor(product)}
-                            onChange={(e) =>
-                              setSelection({
-                                ...selection,
-                                [product.id]: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="" disabled>
-                              انتخاب رنگ / نوع
-                            </option>
-                            {product.colors.map((c) => (
-                              <option key={c}>{c}</option>
-                            ))}
-                          </select>
-                          <span>
-                            {stores.find((s) => s.id === storeFilter)?.name ??
-                              stores[0].name}
-                          </span>
-                        </div>
-                        <div className="product-bottom">
-                          <div>
-                            <strong>
-                              {money(
-                                product.price +
-                                  (storeFilter === "pearl"
-                                    ? stores[1].extra
-                                    : 0),
-                              )}
-                            </strong>{" "}
-                            <small>تومان</small>
-                          </div>
-                          <button
-                            className="add-button"
-                            aria-label={`افزودن ${product.name} به سبد`}
-                            disabled={!product.stock || !selectedColor(product)}
-                            onClick={() => add(product)}
-                          >
-                            <span>+</span>
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className="empty">
-                  <span>⌕</span>
-                  <h3>هنوز چیزی پیدا نکردیم.</h3>
-                  <p>عبارت جست‌وجو یا فیلترها را تغییر بده.</p>
-                  <button className="primary" onClick={reset}>
-                    نمایش همه کالاها
-                  </button>
-                </div>
-              )}
+              <button type="button" className="filter-reset" onClick={reset}>
+                حذف فیلترها
+              </button>
             </div>
           </div>
-        </section>
-        <section className="collection-banner">
-          <div>
-            <span className="overline">دنیای دیجیتال چریوا</span>
-            <h2>همراه کوچکِ روزهای بزرگ.</h2>
-            <p>انتخاب‌هایی برای کار، موسیقی و زندگی روزمره.</p>
-            <button onClick={() => browse("digital")}>
-              کشف کالاهای دیجیتال <Icon name="arrow" />
-            </button>
-          </div>
-          <span className="banner-art" aria-hidden="true">
-            ⌘
-          </span>
-          <div className="banner-caption">
-            CHERRIVA
-            <br />
-            <strong>DIGI</strong>
-          </div>
-        </section>
-        <section className="benefits">
-          <div>
-            <span>◈</span>
-            <h3>چند فروشگاه، یک تجربه</h3>
-            <p>مقایسه پیشنهادها در کنار هم</p>
-          </div>
-          <div>
-            <span>⌕</span>
-            <h3>انتخاب با جزئیات روشن</h3>
-            <p>قیمت، موجودی و آماده‌سازی مشخص</p>
-          </div>
-          <div>
-            <span>♡</span>
-            <h3>برای سلیقه‌های متفاوت</h3>
-            <p>از خانه تا دنیای دیجیتال</p>
-          </div>
+          {filtered.length ? (
+            <div className="product-grid">
+              {filtered.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  purchase={purchase(product)}
+                  image={pictureIndex(product)}
+                  onImageChange={(index) =>
+                    setPictures((current) => ({
+                      ...current,
+                      [product.id]: index,
+                    }))
+                  }
+                  onDetails={() => openProduct(product)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="empty">
+              <h3>هنوز چیزی پیدا نکردیم.</h3>
+              <p>عبارت جست‌وجو یا فیلترها را تغییر بده.</p>
+              <button className="primary" onClick={reset}>
+                نمایش همه کالاها
+              </button>
+            </div>
+          )}
         </section>
       </main>
-      <footer>
+      <footer className="storefront-footer">
         <div className="wrap footer-inner">
-          <div>
-            <Brand />
-            <p>چیزهای خوب را کنار هم پیدا کنیم.</p>
-          </div>
-          <div>
-            <strong>دنیای چریوا</strong>
-            {categories.slice(1).map((c) => (
-              <button key={c.id} onClick={() => browse(c.id)}>
-                {c.name}
-              </button>
-            ))}
-          </div>
-          <div className="footer-review">
-            <strong>درباره این نسخه</strong>
-            <p>
-              پیش‌نمایش سایت مشتری با داده ساختگی.
-              <br />
-              ثبت سفارش، ورود و پرداخت واقعی فعال نیست.
-            </p>
-          </div>
-        </div>
-        <div className="wrap copyright">
-          <span>Cherriva · نسخه بررسی رابط کاربری</span>
-          <span>ساخته‌شده برای انتخاب‌های خوب</span>
+          <Brand />
+          <p>نسخه بررسی با کالاها، قیمت‌ها و فرایند خرید آزمایشی</p>
         </div>
       </footer>
       {activeProduct && (
         <ProductModal
+          key={activeProduct.id}
           product={activeProduct}
-          color={selectedColor(activeProduct)}
-          setColor={(color) =>
-            setSelection({ ...selection, [activeProduct.id]: color })
+          purchase={purchase(
+            activeProduct,
+            stores.find((store) => store.id === modalStoreId) ??
+              selectedStore(activeProduct),
+          )}
+          image={pictureIndex(activeProduct)}
+          onImageChange={(index) =>
+            setPictures((current) => ({
+              ...current,
+              [activeProduct.id]: index,
+            }))
           }
+          onStoreChange={(storeId) => {
+            setModalStoreId(storeId);
+            if (storeFilter === "all")
+              setSelectedStores((current) => ({
+                ...current,
+                [activeProduct.id]: storeId,
+              }));
+          }}
           onClose={() => setActiveProduct(null)}
-          onAdd={add}
         />
       )}
       {cartOpen && (
@@ -605,12 +531,16 @@ function App() {
                           (p) => p.id === line.productId,
                         )!;
                         const key = lineKey(line);
-                        const totalQuantity = cart
-                          .filter((l) => l.productId === product.id)
-                          .reduce((sum, l) => sum + l.quantity, 0);
+                        const totalQuantity = quantityForProduct(
+                          cart,
+                          product.id,
+                        );
                         return (
                           <div className="cart-line" key={key}>
-                            <img src={`/images/${product.image}.svg`} alt="" />
+                            <img
+                              src={productPhoto(product, line.color)}
+                              alt=""
+                            />
                             <div className="cart-line-info">
                               <strong>{product.name}</strong>
                               <label>
@@ -717,19 +647,6 @@ function App() {
           <AuthPanel auth={auth} onDone={() => setAccountOpen(false)} />
         </Modal>
       )}
-      <div className={`toast ${notice ? "visible" : ""}`} role="status">
-        {notice}
-        <button
-          onClick={() => {
-            setActiveProduct(null);
-            setCartOpen(true);
-            setNotice("");
-          }}
-          hidden={!notice.includes("اضافه شد")}
-        >
-          مشاهده سبد ←
-        </button>
-      </div>
     </>
   );
 }

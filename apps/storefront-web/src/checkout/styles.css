@@ -1,14 +1,3 @@
-.brand-logo {
-  letter-spacing: normal;
-  line-height: 1;
-}
-.brand-logo img {
-  width: 184px;
-  height: auto;
-}
-.footer-inner .brand-logo img {
-  width: 164px;
-}
 .checkout-page {
   min-height: 100vh;
   background: #fcfafb;
@@ -645,12 +634,6 @@
   }
 }
 @media (max-width: 740px) {
-  .brand-logo img {
-    width: 150px;
-  }
-  .footer-inner .brand-logo img {
-    width: 145px;
-  }
   .checkout-header {
     min-height: 85px;
   }
@@ -805,9 +788,6 @@
   }
 }
 @media (max-width: 360px) {
-  .checkout-header .brand-logo img {
-    width: 125px;
-  }
   .checkout-header .text-button {
     font-size: 9px;
   }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { products, stores, money, lineKey, type CartLine } from "../catalog";
 import { Icon, Brand } from "../components";
+import { productPhoto } from "../product-photos";
 import { AuthPanel, type DemoAuth } from "./demo-auth";
 import { AddressStep } from "./address-step";
 import { PaymentStep } from "./payment-step";
@@ -245,7 +246,7 @@ export function CheckoutPage({
                             return (
                               <div key={lineKey(line)}>
                                 <img
-                                  src={`/images/${product.image}.svg`}
+                                  src={productPhoto(product, line.color)}
                                   alt=""
                                 />
                                 <span>
@@ -368,7 +369,7 @@ export function CheckoutPage({
                     )!;
                     return (
                       <div key={lineKey(line)}>
-                        <img src={`/images/${product.image}.svg`} alt="" />
+                        <img src={productPhoto(product, line.color)} alt="" />
                         <span>
                           <strong>{product.name}</strong>
                           <small>

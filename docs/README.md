@@ -12,6 +12,7 @@
 | فهم اصلاح تصمیم قبلی | [دفتر تصمیم‌ها](decisions/README.md) |
 | انتخاب مسیر ساخت | [برش‌ها](delivery/README.md)، [رودمپ](delivery/roadmap.md)، [آمادگی](delivery/readiness.md) |
 | اجرای سرویس و CI/CD | [راهنمای استقرار Liara](delivery/liara-deployment.md)، [ADR-003](decisions/adr-003-liara-deployment.md) |
+| طراحی بصری سایت مشتری | [راهنمای طراحی چریوا](experiences/storefront/visual-design.md) |
 | بررسی رابط سایت مشتری | [نسخه بررسی Cherriva](delivery/storefront-review.md) |
 | پیگیری پوشش نیازمندی | [ردیابی](governance/traceability.md) |
 | سناریوهای رفتاری و داده آزمون | [BDD](bdd/README.md) |
