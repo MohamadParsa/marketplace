@@ -13,21 +13,21 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۷۰ سناریو ثبت شده است: ۱۵۹ سناریوی پذیرش موجود و ۱۱ سناریوی تصمیم/جریان ترکیبی برای سیاست‌های جدید کمیسیون، OTP، پیامک، مبلغ و PWA.
+در این نسخه ۱۷۷ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش موجود و ۱۱ سناریوی تصمیم/جریان ترکیبی برای سیاست‌های جدید کمیسیون، OTP، پیامک، مبلغ و PWA.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
-| کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 13 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
+| کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 15 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
 | سبد، رزرو موجودی و جلسه پرداخت (DOM-CHECKOUT-001) | [`features/domains/checkout.feature`](features/domains/checkout.feature) | 12 | [`domains/checkout/README.md`](../domains/checkout/README.md) |
-| حساب و هویت (DOM-IDENTITY-001) | [`features/domains/identity.feature`](features/domains/identity.feature) | 9 | [`domains/identity/README.md`](../domains/identity/README.md) |
+| حساب و هویت (DOM-IDENTITY-001) | [`features/domains/identity.feature`](features/domains/identity.feature) | 11 | [`domains/identity/README.md`](../domains/identity/README.md) |
 | اطلاع‌رسانی پیامکی (DOM-NOTIFICATIONS-001) | [`features/domains/notifications.feature`](features/domains/notifications.feature) | 5 | [`domains/notifications/README.md`](../domains/notifications/README.md) |
 | سفارش، تأمین و رسیدگی به عدم تأمین (DOM-ORDERS-001) | [`features/domains/orders.feature`](features/domains/orders.feature) | 13 | [`domains/orders/README.md`](../domains/orders/README.md) |
 | پرداخت، کیف پول، برداشت و بازپرداخت (DOM-PAYMENTS-001) | [`features/domains/payments.feature`](features/domains/payments.feature) | 15 | [`domains/payments/README.md`](../domains/payments/README.md) |
 | قیمت‌گذاری و کمیسیون (DOM-PRICING-001) | [`features/domains/pricing.feature`](features/domains/pricing.feature) | 13 | [`domains/pricing/README.md`](../domains/pricing/README.md) |
 | تسویه فروشنده (DOM-SETTLEMENTS-001) | [`features/domains/settlements.feature`](features/domains/settlements.feature) | 6 | [`domains/settlements/README.md`](../domains/settlements/README.md) |
-| آماده‌سازی و ارسال (DOM-SHIPPING-001) | [`features/domains/shipping.feature`](features/domains/shipping.feature) | 18 | [`domains/shipping/README.md`](../domains/shipping/README.md) |
+| آماده‌سازی و ارسال (DOM-SHIPPING-001) | [`features/domains/shipping.feature`](features/domains/shipping.feature) | 19 | [`domains/shipping/README.md`](../domains/shipping/README.md) |
 | عملیات مالی و تسویه (FEAT-BO-003) | [`features/experiences/backoffice-finance.feature`](features/experiences/backoffice-finance.feature) | 6 | [`experiences/backoffice/finance.md`](../experiences/backoffice/finance.md) |
-| مدیریت فروشگاه، کاتالوگ و سیاست‌ها (FEAT-BO-001) | [`features/experiences/backoffice-management.feature`](features/experiences/backoffice-management.feature) | 6 | [`experiences/backoffice/management.md`](../experiences/backoffice/management.md) |
+| مدیریت فروشگاه، کاتالوگ و سیاست‌ها (FEAT-BO-001) | [`features/experiences/backoffice-management.feature`](features/experiences/backoffice-management.feature) | 8 | [`experiences/backoffice/management.md`](../experiences/backoffice/management.md) |
 | رسیدگی عملیاتی سفارش (FEAT-BO-002) | [`features/experiences/backoffice-support.feature`](features/experiences/backoffice-support.feature) | 8 | [`experiences/backoffice/support.md`](../experiences/backoffice/support.md) |
 | مدیریت عرضه فروشگاه (FEAT-SP-001) | [`features/experiences/seller-portal-catalog.feature`](features/experiences/seller-portal-catalog.feature) | 7 | [`experiences/seller-portal/catalog.md`](../experiences/seller-portal/catalog.md) |
 | تأیید تأمین و ارسال فروشنده (FEAT-SP-002) | [`features/experiences/seller-portal-fulfillment.feature`](features/experiences/seller-portal-fulfillment.feature) | 5 | [`experiences/seller-portal/fulfillment.md`](../experiences/seller-portal/fulfillment.md) |
