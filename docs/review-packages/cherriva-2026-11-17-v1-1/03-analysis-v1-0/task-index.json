@@ -1,0 +1,2069 @@
+{
+  "version": "1.0",
+  "date": "2026-11-17",
+  "task_count": 91,
+  "tasks": [
+    {
+      "id": "CV-FND-01",
+      "title": "تثبیت مرز ماژول و قرارداد شروع",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "S",
+      "dependencies": [],
+      "spec": "02-architecture.md",
+      "screen": "پایه همه محیط‌ها",
+      "business": "تیم از یک مدل ساده و قرارداد مشترک شروع کند و کد legacy را مرجع قاعده نگیرد.",
+      "technical": "Go modular monolith و پنل React مشترک؛ راهبر فنی انتخاب DB/مهاجرت/SSR را ثبت کند. اسکلت دامنه و port بدون منطق درگاه واقعی؛ OpenAPI منابع نخست کاتالوگ/هویت/خطا تولید شود.",
+      "acceptance": [
+        "یک use case نمونه از HTTP تا adapter آزمون قابل ردیابی باشد",
+        "هیچ وابستگی provider داخل domain و هیچ تصمیم مالی باز در کد hardcode نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-01.md"
+    },
+    {
+      "id": "CV-FND-02",
+      "title": "قرارداد پول، درصد، زمان و تاریخ",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-01"
+      ],
+      "spec": "03-data-model.md",
+      "screen": "همه فرم‌های مبلغ/زمان",
+      "business": "اختلاف ریال/تومان و منطقه زمانی نباید مبلغ یا مهلت مشتری را عوض کند.",
+      "technical": "Money با integer ریال، درصد/وزن decimal و DTO واحددار؛ نمایش تومان و تاریخ شمسی در component مشترک؛ ذخیره UTC و روز کسب‌وکار تهران. rounding policy به‌صورت وابستگی صریح قابل انتخاب باشد.",
+      "acceptance": [
+        "تبدیل ۱۰۰۰۰ ریال به ۱۰۰۰ تومان رفت‌وبرگشت دقیق داشته باشد",
+        "مرز روز تهران و ورودی رقم فارسی/لاتین تست شود؛ float در مبلغ وجود نداشته باشد"
+      ],
+      "block": "CHQ-01: محل گردکردن مرکب و دقت نرخ هنوز باز است؛ قرارداد واحد قابل شروع",
+      "status": "todo",
+      "file": "tasks/cv-fnd-02.md"
+    },
+    {
+      "id": "CV-FND-03",
+      "title": "خطا، نسخه و تکرار امن درخواست",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-01"
+      ],
+      "spec": "04-api-contracts.md",
+      "screen": "تمام submitها",
+      "business": "دوبار کلیک و retry نباید تغییر یا خروج وجه تکراری بسازد.",
+      "technical": "Envelope خطای پایدار، expected_version و idempotency store با hash درخواست و نتیجه؛ کلید یکسان/بدنه متفاوت 409. middleware correlation و request validation؛ عملیات مالی رکورد تکرار را پایدار نگه دارند.",
+      "acceptance": [
+        "دو درخواست یکسان یک نتیجه و یک اثر داشته باشند",
+        "نسخه کهنه و کلید یکسان با مبلغ متفاوت conflict بدهند و داده حساس در error نباشد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-03.md"
+    },
+    {
+      "id": "CV-FND-04",
+      "title": "schema پایه و migrationهای قابل بازبینی",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-01",
+        "CV-FND-02"
+      ],
+      "spec": "03-data-model.md",
+      "screen": "منابع پایه پنل",
+      "business": "کلید و قید صحیح، جلوی orphan و داده مالی نامعتبر را از ابتدا بگیرد.",
+      "technical": "مهاجرت مرحله‌ای Identity/Store/Catalog و ثبت نسخه؛ FK/unique/check و ایندکس‌ها با قرارداد مدل. schema مالی در تسک همان ماژول تکمیل شود؛ داده production جابه‌جا نشود.",
+      "acceptance": [
+        "ایجاد DB خالی و ارتقای نسخه قبل در محیط آزمون کار کند",
+        "دسته چرخه‌ای/شناسه مرجع ناموجود و موجودی منفی به شکل کنترل‌شده رد شوند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-04.md"
+    },
+    {
+      "id": "CV-FND-05",
+      "title": "داده آزمون و آداپتر کنترل نتیجه",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-03",
+        "CV-FND-04"
+      ],
+      "spec": "12-delivery-plan.md",
+      "screen": "پایلوت پنل W1/W2",
+      "business": "تیم بدون سایت مشتری و بدون پول واقعی همه بخش‌های پنل را مرور کند.",
+      "technical": "fixture فروشگاه الف/ب، مشتری، نقش‌ها، طلا/گوشی، خرید چندسلری و پرونده/ledger بسازد؛ سناریوهای success/failure/unknown و callback دیررس کنترل‌پذیر. seed فقط local/test و داده ساختگی باشد.",
+      "acceptance": [
+        "reset آزمون نتیجه قابل تکرار دهد",
+        "production بدون fixture و provider آزمون بالا بیاید یا با خطای پیکربندی روشن رد شود؛ فرم سفارش واقعی اضافه نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-05.md"
+    },
+    {
+      "id": "CV-FND-06",
+      "title": "audit و outbox پایدار سبک",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-03",
+        "CV-FND-04"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "BO-24",
+      "business": "عملیات مهم قابل پیگیری و اعلان پس از ثبت قطعی قابل بازیابی باشد.",
+      "technical": "audit محدود عامل/منبع/علت/نسخه و outbox اختصاصی در transaction تغییر؛ worker با retry/backoff/dedup. payload محرمانه ثبت نشود؛ صفحه خواندن audit با مجوز مستقل بعداً وصل شود.",
+      "acceptance": [
+        "crash پس از commit رخداد را گم نکند و retry اعلان تکراری قطعی نسازد",
+        "OTP/token/اطلاعات کارت در log و audit وجود نداشته باشد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-06.md"
+    },
+    {
+      "id": "CV-FND-07",
+      "title": "پوسته مشترک پنل و الگوی فرم",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-01",
+        "CV-FND-03"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-01 و همه فرم‌ها",
+      "business": "مدیر و سلر یک رابط قابل توسعه داشته باشند و تکرار صفحات کم شود.",
+      "technical": "layout RTL، navigation مبتنی بر capabilities، table/pagination، form field/error/loading/conflict و action guard مشترک. schema فرم تراکنشی کدنویسی‌شده باشد؛ تغییر منو امنیت API را تعیین نکند.",
+      "acceptance": [
+        "دو حساب با capability متفاوت منوهای متفاوت ببینند",
+        "صفحه محدود با URL مستقیم هم داده نگیرد؛ تعارض فرم مقدار جدید را خاموش overwrite نکند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fnd-07.md"
+    },
+    {
+      "id": "CV-IAM-01",
+      "title": "درخواست OTP و محدودیت ارسال",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-03",
+        "CV-FND-04"
+      ],
+      "spec": "04-api-contracts.md",
+      "screen": "ورود پنل و سایت",
+      "business": "ورود با شماره ساده بماند ولی ارسال و تلاش بی‌حد هزینه/سوءاستفاده نسازد.",
+      "technical": "challenge هش‌شده با زمان انقضا و محدودیت شماره/IP؛ اعتبار ۹۰ ثانیه، resend پس ۶۰ ثانیه و سقف تلاش منتقل‌شده؛ adapter پیامک آزمون. شماره نرمال و پاسخ بدون افشای وجود حساب.",
+      "acceptance": [
+        "ارسال مجدد زودهنگام 429 و زمان قابل نمایش بدهد",
+        "کد خام فقط در fixture آزمون مجاز باشد و در log ذخیره نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-iam-01.md"
+    },
+    {
+      "id": "CV-IAM-02",
+      "title": "تأیید OTP، نشست و خروج",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-01",
+        "CV-FND-03"
+      ],
+      "spec": "04-api-contracts.md",
+      "screen": "ورود/خروج و /me",
+      "business": "کاربر با یک کد معتبر وارد شود و خروج واقعاً دسترسی را قطع کند.",
+      "technical": "verify یک‌بارمصرف و session امن با ابطال؛ کنترل origin/CSRF در روش cookie؛ /me فقط capability و داده مجاز. ایجاد حساب مشتری پس از verify معتبر؛ ورود پنل صرف شماره ناشناس حساب مدیر نسازد.",
+      "acceptance": [
+        "دو verify هم‌زمان یک challenge را دوبار مصرف نکنند",
+        "کد منقضی/اشتباه و نشست logout‌شده دسترسی نداشته باشند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-iam-02.md"
+    },
+    {
+      "id": "CV-IAM-03",
+      "title": "رجیستری مجوز و نقش قابل تعریف",
+      "priority": "P0",
+      "wave": "W0",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-04",
+        "CV-FND-07",
+        "CV-IAM-02"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-03",
+      "business": "دسترسی منو، فرم و عملیات مهم قابل انتساب باشد.",
+      "technical": "permission keyهای view/edit/publish/finance از رجیستری مشخص؛ Role با نام و مجوزها و نسخه؛ فرم ماتریسی و API CRUD محدود. presetها فقط آغازند؛ unknown key رد شود.",
+      "acceptance": [
+        "نقش تازه فقط با view ساخته شود و publish نگیرد",
+        "کاربر بدون access.manage نتواند نقش یا permission registry را عوض کند"
+      ],
+      "block": "CHQ-06: جزئیات مدیریت/افزایش اختیار؛ مدل نقش سفارشی قطعی است",
+      "status": "todo",
+      "file": "tasks/cv-iam-03.md"
+    },
+    {
+      "id": "CV-IAM-04",
+      "title": "کاربر، انتساب نقش و ابطال اختیار",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-03"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-02",
+      "business": "اختیار اشخاص قابل مدیریت و تغییرش بلافاصله مؤثر باشد.",
+      "technical": "role grant با scope، نسخه و audit؛ غیرفعال‌سازی حساب و محافظ آخرین مدیر؛ API اختیار جاری را بازخوانی کند. مسیر assignment از policy صریح استفاده کند، نه قبول role_id از کاربر عادی.",
+      "acceptance": [
+        "بعد از حذف grant، نشست قدیمی عملیات قبلی را انجام ندهد",
+        "کاربر نتواند به خودش نقش بالاتر یا فروشگاه دیگر انتساب دهد"
+      ],
+      "block": "CHQ-06: چندنقشی و grant مستقیم تا پاسخ فعال نشوند",
+      "status": "todo",
+      "file": "tasks/cv-iam-04.md"
+    },
+    {
+      "id": "CV-IAM-05",
+      "title": "جداسازی داده فروشگاه در API و خروجی",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-02",
+        "CV-IAM-03"
+      ],
+      "spec": "02-architecture.md",
+      "screen": "تمام صفحات سلر",
+      "business": "پنل مشترک نباید اطلاعات یک سلر را به دیگری نشان دهد.",
+      "technical": "authorization service با action+resource ownership؛ queryهای scoped، DTO محدود و کنترل export/media. store_id از principal و resource resolve شود؛ capabilities فرانت مجوز نیست.",
+      "acceptance": [
+        "تغییر ID فروشگاه/سفارش/عرضه در URL و body داده سلر دیگر ندهد",
+        "مشاهده مجاز فرم به publish/refund یا آمار کل بازارگاه منجر نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-iam-05.md"
+    },
+    {
+      "id": "CV-IAM-06",
+      "title": "پرونده فروشگاه و سیاست‌هایش",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-04",
+        "CV-IAM-05"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-04",
+      "business": "سلر منتخب با مالک و سیاست عرضه/انتشار روشن وارد سیستم شود.",
+      "technical": "CRUD عنوان/مالک/فعال‌بودن/مدل کاتالوگ/انتشار و منبع نرخ؛ مدارک فقط reference امن و وضعیت بررسی. API/فرم با stores permissions و audit؛ فعال‌سازی صلاحیت به گیت قراردادی متصل شود.",
+      "acceptance": [
+        "سیاست فروشگاه الف عرضه/نرخ ب را تغییر ندهد",
+        "فروشگاه بدون اختیار فعال‌سازی با ویرایش عمومی فعال نشود"
+      ],
+      "block": "CHQ-11 / CHQ-13: مدارک و شرایط فعال‌سازی واقعی باید از مسئول کسب‌وکار بیاید",
+      "status": "todo",
+      "file": "tasks/cv-iam-06.md"
+    },
+    {
+      "id": "CV-IAM-07",
+      "title": "اطلاعات مشتری و نشانی‌های گیرنده",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-02",
+        "CV-FND-04"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Profile / Address",
+      "business": "مشتری چند آدرس داشته باشد و گیرنده با صاحب حساب اشتباه نشود.",
+      "technical": "API خصوصی پروفایل و address CRUD با نام/شماره گیرنده، استان/شهر، کدپستی و متن؛ validation و ownership؛ تغییر شماره ورود با احراز مجدد. گیرنده حساب login جدید ایجاد نکند.",
+      "acceptance": [
+        "ویرایش آدرس دیگری با تغییر ID رد شود",
+        "تغییر گیرنده شماره ورود و مالک خرید را تغییر ندهد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-iam-07.md"
+    },
+    {
+      "id": "CV-CAT-01",
+      "title": "درخت دسته‌بندی و فرم والد/فرزند",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-05",
+        "CV-FND-04"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-05",
+      "business": "کالاهای متنوع و مسیر زیرشاخه PLP با ساختار واقعی اداره شوند.",
+      "technical": "Category parent/path/slug/order و API tree؛ create/edit با منع چرخه و نسخه؛ breadcrumb مستقل از selector دسته. دسته برگ children خالی برگرداند.",
+      "acceptance": [
+        "طلا←شمش و موبایل←لوازم درست serialize شوند",
+        "والدشدن نوه برای ریشه رد شود و برگ شارژر زیرشاخه ساختگی نداشته باشد"
+      ],
+      "block": "CHQ-09: انتقال/آرشیو دسته فعال و تجمیع محصولات والد جدا؛ CRUD پایه آزاد",
+      "status": "todo",
+      "file": "tasks/cv-cat-01.md"
+    },
+    {
+      "id": "CV-CAT-02",
+      "title": "خصوصیت و محورهای تنوع دسته",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-01"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-07",
+      "business": "فیلتر و سه ویژگی کارت برای طلا و دیجیتال متفاوت و قابل مدیریت باشند.",
+      "technical": "attribute typed با unit/options/filterable/variant_axis/card_order؛ پیشنهاد خصوصیت سلر با صف approve. فرم metadata کدنویسی‌شده؛ فرمول مالی دلخواه به attribute تبدیل نشود.",
+      "acceptance": [
+        "فیلتر توان شارژر با حافظه گوشی مخلوط نشود",
+        "مقدار خارج enum/واحد ناسازگار و استفاده خصوصیت پیشنهادی تأییدنشده رد شوند"
+      ],
+      "block": "CHQ-09: ارث خصوصیت و تغییر مخرب type پیش از اجرا تعیین شود",
+      "status": "todo",
+      "file": "tasks/cv-cat-02.md"
+    },
+    {
+      "id": "CV-CAT-03",
+      "title": "برند، لوگو و صفحه برند",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "S",
+      "dependencies": [
+        "CV-CAT-01",
+        "CV-IAM-05"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-06",
+      "business": "برندها و آیکن برند دیجیتال از پنل قابل ویرایش باشند.",
+      "technical": "Brand CRUD عنوان/slug/لوگو/alt/متن و SEO با وضعیت؛ رابطه محصول و لینک لیست برند. تصویر امن از media؛ حذف مرجع فعال به آرشیو کنترل‌شده تبدیل شود.",
+      "acceptance": [
+        "تغییر لوگو و عنوان در داده عمومی منتشر منعکس شود",
+        "برند آرشیوی محصول قبلی را orphan نکند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-03.md"
+    },
+    {
+      "id": "CV-CAT-04",
+      "title": "محصول مستقل/مشترک و محتوای نسخه‌دار",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-02",
+        "CV-CAT-03",
+        "CV-IAM-06"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-08",
+      "business": "یک محصول مرجع چند عرضه داشته باشد و فروشگاه مستقل هم پشتیبانی شود.",
+      "technical": "Product با category/brand/title/short/full/spec و نسخه عمومی/draft؛ seller request برای محصول موجود attach و تکراری نسازد. مالکیت محتوای shared با مجوز مرکزی.",
+      "acceptance": [
+        "دو درخواست یک محصول به همان مرجع متصل شوند",
+        "سلر shared content را مستقیم بازنویسی نکند؛ نسخه عمومی هنگام ویرایش حفظ شود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-04.md"
+    },
+    {
+      "id": "CV-CAT-05",
+      "title": "تنوع، SKU و داده طلای فیزیکی",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-04"
+      ],
+      "spec": "03-data-model.md",
+      "screen": "BO-09 بخش تنوع",
+      "business": "انتخاب رنگ/حافظه یا وزن/عیار به ترکیب دقیق خرید تبدیل شود.",
+      "technical": "Variant با ترکیب attribute یکتا و SKU، تصویر مرتبط و داده وزن/عیار/نوع قطعه؛ یک/دو محور اصلی UI. وزن decimal و واحد صریح؛ فروش وزن دلخواه ایجاد نشود.",
+      "acceptance": [
+        "دو ترکیب یکسان برای یک محصول رد شوند",
+        "وزن نامعتبر/منفی و جایگزینی نرخ قطعه به نرخ گرم بدون تبدیل پذیرفته نشوند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-05.md"
+    },
+    {
+      "id": "CV-CAT-06",
+      "title": "عرضه، موجودی و آماده‌سازی فروشنده",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-05",
+        "CV-IAM-05"
+      ],
+      "spec": "03-data-model.md",
+      "screen": "BO-09 عرضه",
+      "business": "هر سلر قیمت/موجودی خودش را داشته باشد بدون خراب‌شدن رزروها.",
+      "technical": "Offer variant+seller، stock/reserved، base pricing mode و lead time؛ تغییر stock با تراکنش و نسخه. selector فروشگاه برای مدیر مجاز؛ سلر فقط خودش. انتشار محتوا و موجودی مستقل.",
+      "acceptance": [
+        "دو سلر یک تنوع دو عرضه مستقل داشته باشند",
+        "کاهش stock زیر رزرو معتبر یا update کهنه بی‌صدا اعمال نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-06.md"
+    },
+    {
+      "id": "CV-CAT-07",
+      "title": "رسانه و گالری محصول/تنوع",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-04",
+        "CV-FND-03"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Media picker / BO-08",
+      "business": "تصاویر درست و سبک با تنوع مرتبط در PDP و کارت دیده شوند.",
+      "technical": "upload و metadata با MIME واقعی JPEG/PNG/WebP، سقف منتقل‌شده ۵MB و ۱۰ عکس محصول؛ order/alt/variant mapping؛ adapter local/test سپس object storage. محتوای مخرب و path traversal رد شود.",
+      "acceptance": [
+        "عکس تنوع با انتخاب همان تنوع برگردد",
+        "فایل اجرایی با پسوند تصویر و بارگذاری بیش از سقف رد شوند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-07.md"
+    },
+    {
+      "id": "CV-CAT-08",
+      "title": "انتشار و بررسی محصول/خصوصیت",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-04",
+        "CV-CAT-07",
+        "CV-IAM-03"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-07/08 بررسی",
+      "business": "کیفیت محتوا کنترل شود و تغییر قیمت بی‌دلیل منتظر بررسی نماند.",
+      "technical": "صف draft/review/published/rejected با reason/version؛ publication policy فروشگاه؛ approve/reject جدا از edit. بازبینی محتوای جدید نسخه قبلی public را نگه دارد؛ event ابطال کش.",
+      "acceptance": [
+        "منتشرکردن بدون publish permission رد شود",
+        "تغییر فقط موجودی عرضه وارد صف ویرایش متن نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cat-08.md"
+    },
+    {
+      "id": "CV-CAT-09",
+      "title": "query عمومی فهرست، فیلتر و شاخص جست‌وجو",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-06",
+        "CV-CAT-08"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "API Home/PLP/Search",
+      "business": "کشف محصول بدون موتور خارجی، با قیمت/عرضه منطبق و فیلتر صحیح کار کند.",
+      "technical": "read model نرمال عنوان/مدل/SKU، pagination و filter typed، sortهای خواسته‌شده؛ scope host از config امن. queryها ایندکس‌پذیر و parameterized؛ available/not-available گروه‌بندی شوند. فقط endpoint داده، UI در WEB است.",
+      "acceptance": [
+        "فیلتر رنگ/قیمت از همان عرضه نماینده معتبر نتیجه دهد",
+        "gold با query یا host manipulation محصول دیجیتال ندهد؛ عبارت تزریقی SQL اجرا نشود"
+      ],
+      "block": "CHQ-09: query تجمیع والد تا پاسخ؛ sort پربازدید نیاز ثبت رویداد واقعی دارد",
+      "status": "todo",
+      "file": "tasks/cv-cat-09.md"
+    },
+    {
+      "id": "CV-PRC-01",
+      "title": "روش فروش و اتصال به درگاه",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-03",
+        "CV-FND-02"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-12",
+      "business": "برای هر مسیر نقدی/اعتباری درصد و درگاه‌های مرتبط قابل تعریف باشد.",
+      "technical": "SaleMethod CRUD نوع/عنوان/درصد default/فعال و GatewayBinding؛ eligibility interface بر مبنای سبد و provider capabilities. یک provider می‌تواند چند روش داشته باشد؛ نام provider با مدل فروش یکی نیست.",
+      "acceptance": [
+        "روش وام ۴٪ و روش دیگر مستقل ذخیره شوند",
+        "روش غیرفعال یا درگاه نامرتبط وارد درخواست پرداخت نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-prc-01.md"
+    },
+    {
+      "id": "CV-PRC-02",
+      "title": "مارکاپ دسته با وراثت و صفر صریح",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-PRC-01",
+        "CV-CAT-01"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-13",
+      "business": "قاعده دسته مثل طلا بر درصد پیش‌فرض مقدم و قابل توضیح باشد.",
+      "technical": "CategoryMarkup method+category با version؛ resolver دسته مستقیم تا root اولین رکورد را می‌گیرد و fallback default؛ preview source path؛ unique constraint. صفر ثبت‌شده با null فرق دارد.",
+      "acceptance": [
+        "طلا۶/شمش۵/default۳ نتیجه شمش۵ بدهد و بدون شمش نتیجه۶",
+        "شمش صفر روی والد۶ مقدم باشد و روش فروش دیگر اثر نگیرد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-prc-02.md"
+    },
+    {
+      "id": "CV-PRC-03",
+      "title": "نرخ طلا مشترک و اختصاصی سلر",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-06",
+        "CV-FND-02"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-10",
+      "business": "یک سلر از نرخ چریوا و دیگری از نرخ خودش استفاده کند.",
+      "technical": "GoldRate version/source/seller/type/unit/purity/validity و rate selection فروشگاه؛ فرم ثبت و preview منبع. تاریخچه نرخ استفاده‌شده حفظ و نبود نرخ خطای صریح؛ دریافت خودکار نرخ الزام نیست.",
+      "acceptance": [
+        "دو سلر منابع متفاوت مستقل مصرف کنند",
+        "نرخ اختصاصی مفقود با نرخ سلر دیگر یا مشترک خاموش جایگزین نشود"
+      ],
+      "block": "CHQ-03: نوع/دقت/اعتبار نرخ و اختیار ثبت/تأیید؛ CRUD آزمون قابل شروع",
+      "status": "todo",
+      "file": "tasks/cv-prc-03.md"
+    },
+    {
+      "id": "CV-PRC-04",
+      "title": "پروفایل قیمت طلا و محاسبه نسخه‌دار",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-PRC-03",
+        "CV-CAT-06"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-11",
+      "business": "قیمت قطعه طلا قابل بازسازی باشد و تغییر نرخ سفارش قبلی را عوض نکند.",
+      "technical": "pricing mode fixed/formula؛ typed formula components و version با unit conversion صریح، preview و breakdown. از eval و فرمول آزاد متنی استفاده نشود؛ schema انعطاف محدود برای fee/profit/tax.",
+      "acceptance": [
+        "ورودی و فرمول نمونه نتیجه و نسخه قابل بازسازی بدهند",
+        "نرخ منقضی/واحد ناسازگار خرید واقعی را رد کند و snapshot قبلی ثابت بماند"
+      ],
+      "block": "CHQ-03: فرمول/مالیات واقعی تا پاسخ مسدود؛ فرم و قرارداد/آزمون مستقل آزاد",
+      "status": "todo",
+      "file": "tasks/cv-prc-04.md"
+    },
+    {
+      "id": "CV-PRC-05",
+      "title": "قانون کمیسیون و clock مستقل",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-02",
+        "CV-IAM-06",
+        "CV-CAT-06"
+      ],
+      "spec": "01-scope-decisions.md",
+      "screen": "BO-14",
+      "business": "درآمد چریوا با مارکاپ/تخفیف مخلوط نشود و قرارداد سلر رعایت شود.",
+      "technical": "resolver شرط AND، درصد یا ثابت، صفر قرارداد، scope priority و tie-break پایدار؛ ثابت × تعداد و درصد از base بدون ارسال. اعتبار۱۵+۱۵+۱۵ از تغییر base reset نشود؛ قانون انتخاب‌شده در جلسه snapshot.",
+      "acceptance": [
+        "قرارداد صفر بر قانون مبلغ بالاتر مقدم باشد",
+        "تغییر base در پنجره دوم شمار تمدید را صفر نکند"
+      ],
+      "block": "CHQ-14: مبدأ دقیق clock/چندتب؛ ترتیب با تخفیف مرکب در CHQ-01",
+      "status": "todo",
+      "file": "tasks/cv-prc-05.md"
+    },
+    {
+      "id": "CV-PRC-06",
+      "title": "quote مرکزی و breakdown قیمت",
+      "priority": "P0",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-PRC-01",
+        "CV-PRC-02",
+        "CV-PRC-04",
+        "CV-PRC-05",
+        "CV-DSC-01"
+      ],
+      "spec": "04-api-contracts.md",
+      "screen": "همه قیمت‌ها و BO preview",
+      "business": "Home، PDP، سبد و درگاه یک مبلغ قابل توضیح داشته باشند.",
+      "technical": "use case واحد calculate quote با cash after discount، markup per method، shipping جدا، versions و expiry؛ snapshot و errorهای invalid rate/price change. مبلغ browser نادیده گرفته شود؛ اجزای باز strategy صریح و غیرفعال.",
+      "acceptance": [
+        "cash۱۰۰۰−discount۱۰۰ با۴٪ و shipping۵۰ جمع۹۸۶ بدهد",
+        "قیمت کلاینت و داده cache کهنه نتوانند مبلغ درگاه را تغییر دهند"
+      ],
+      "block": "CHQ-01 / CHQ-02 / CHQ-03 / CHQ-04: بخش مرکب و جلسه؛ فرمول ساده تأییدشده و DTO قابل شروع",
+      "status": "todo",
+      "file": "tasks/cv-prc-06.md"
+    },
+    {
+      "id": "CV-PRC-07",
+      "title": "عرضه نماینده، بای‌باکس و انتخاب سلر",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-09",
+        "CV-PRC-06"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "کارت/PDP/سبد",
+      "business": "مشتری قیمت واقعی و سلر مرتبط ببیند و تعویض مخفی رخ ندهد.",
+      "technical": "eligible offer selector براساس مبلغ نهایی کالا بدون ارسال؛ فیلترهای فعال و ترکیب در نظر گرفته شوند. قیمت کارت همراه offer/variant reference؛ preserve seller روی تغییر تنوع معتبر؛ تساوی stable پیشنهادی.",
+      "acceptance": [
+        "عرضه با base کمتر ولی payable بیشتر بای‌باکس ارزان‌تر نشود",
+        "اگر سلر انتخابی تنوع مقصد دارد حفظ شود؛ در غیر این صورت جایگزین نیاز به تأیید داشته باشد"
+      ],
+      "block": "CHQ-14: tie-break قطعی بین عرضه‌های هم‌قیمت",
+      "status": "todo",
+      "file": "tasks/cv-prc-07.md"
+    },
+    {
+      "id": "CV-PRC-08",
+      "title": "ابطال کش قیمت و preview مدیریتی",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-PRC-06",
+        "CV-FND-06"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "BO-10 تا BO-15",
+      "business": "اپراتور اثر قانون را ببیند و قیمت کهنه بعد تغییر فعال نماند.",
+      "technical": "cache key شامل seller/source/version/method/scope؛ تغییر نرخ/عرضه/مارکاپ/تخفیف event invalidation مرتبط بسازد. preview با داده نمونه هیچ write مالی نداشته باشد؛ session snapshot مجاز محفوظ بماند.",
+      "acceptance": [
+        "تغییر نرخ مشترک quote تازه سلر مشترک را تغییر دهد نه اختصاصی",
+        "quote/سفارش قطعی قبلی با invalidation عمومی بازنویسی نشود"
+      ],
+      "block": "CHQ-03: TTL نرخ عدد قطعی ندارد؛ محدود به valid_to و نسخه",
+      "status": "todo",
+      "file": "tasks/cv-prc-08.md"
+    },
+    {
+      "id": "CV-DSC-01",
+      "title": "مدل تخفیف محصول و منبع هزینه",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-06",
+        "CV-PRC-01"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-15",
+      "business": "تخفیف واقعی کالا و هزینه چریوا/سلر جدا و قابل گزارش باشند.",
+      "technical": "Promotion typed fixed/percent/cap/dates/target/method/funder؛ eligibility و version مستقل از UI. درصد/مبلغ منفی رد؛ composite funding بدون تصمیم فعال نشود.",
+      "acceptance": [
+        "یک تخفیف چریوا و یک تخفیف سلر جدا ثبت شوند",
+        "تخفیف منقضی یا برای روش نامرتبط از قیمت کسر نشود"
+      ],
+      "block": "CHQ-04: stacking و مشارکت مشترک؛ دو منبع مستقل قطعی",
+      "status": "todo",
+      "file": "tasks/cv-dsc-01.md"
+    },
+    {
+      "id": "CV-DSC-02",
+      "title": "کد تخفیف و ارزیابی سبد",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-DSC-01"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO-15 / Cart coupon",
+      "business": "مشتری کد وارد کند و علت عدم شمول روشن باشد.",
+      "technical": "Coupon code normalization، scope و limits؛ API apply/remove و breakdown از quote. code ورودی مبلغ نیست؛ حداقل خرید و روش فروش فیلدهای سیاست صریح باشند.",
+      "acceptance": [
+        "کد کالای غیرواجد شرایط از کل سبد کسر نشود",
+        "حذف کد quote را تازه کند و کد اشتباه پیام قابل اصلاح دهد"
+      ],
+      "block": "CHQ-04: حداقل خرید/ارسال/ترکیب و روش مجاز",
+      "status": "todo",
+      "file": "tasks/cv-dsc-02.md"
+    },
+    {
+      "id": "CV-DSC-03",
+      "title": "رزرو و مصرف اتمیک سهمیه کوپن",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-DSC-02",
+        "CV-FND-03"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "Checkout / BO مصرف",
+      "business": "آخرین سهمیه دوبار مصرف نشود و خرید ناموفق سهمیه را بی‌دلیل نسوزاند.",
+      "technical": "Redemption reservation به session/attempt؛ تراکنش ظرفیت کل/هر مشتری؛ consume روی پرداخت قطعی و release طبق سیاست؛ unique key و replay بدون اثر تکراری.",
+      "acceptance": [
+        "دو خرید هم‌زمان آخرین سهمیه را دوبار نگیرند",
+        "callback تکراری consume دوباره نکند و unknown خودکار آزاد نکند"
+      ],
+      "block": "CHQ-04 / CHQ-02: نقطه رزرو/آزادسازی و رفتار unknown",
+      "status": "todo",
+      "file": "tasks/cv-dsc-03.md"
+    },
+    {
+      "id": "CV-DSC-04",
+      "title": "تخصیص تخفیف و بازگشت جزئی",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-DSC-03",
+        "CV-PRC-06"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Refund / Settlement",
+      "business": "لغو بخشی از خرید سهم مشتری و هزینه تخفیف را درست نگه دارد.",
+      "technical": "تخصیص per-line و per-quantity از snapshot، funder و rounding residual پایدار؛ سقف refund و سهم سلر/چریوا جدا. قیمت جاری و تقسیم float مرجع نیستند.",
+      "acceptance": [
+        "جمع تخصیص اقلام برابر تخفیف کل باشد",
+        "دو refund جزئی از ظرفیت قلم/تخفیف بیشتر نشوند"
+      ],
+      "block": "CHQ-01 / CHQ-04: فرمول تخصیص و بازیابی کد؛ interface و fixture ممکن",
+      "status": "todo",
+      "file": "tasks/cv-dsc-04.md"
+    },
+    {
+      "id": "CV-DSC-05",
+      "title": "فرم تخفیف/کوپن و پیش‌نمایش اثر",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-DSC-01",
+        "CV-DSC-02",
+        "CV-FND-07"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-15",
+      "business": "اپراتور شرایط و هزینه تخفیف را قبل انتشار ببیند.",
+      "technical": "فرم هدف/بازه/روش/نوع/سقف/funder و preview cart نمونه؛ edit versioned و publish permission جدا؛ استفاده واقعی از redemption. سیاست نامشخص disabled با دلیل.",
+      "acceptance": [
+        "کاربر view نتواند قانون فعال کند",
+        "preview مبلغ و funder و علت عدم شمول را بدون ثبت سفارش نشان دهد"
+      ],
+      "block": "CHQ-04: اختیار سلر و approval واقعی",
+      "status": "todo",
+      "file": "tasks/cv-dsc-05.md"
+    },
+    {
+      "id": "CV-CMS-01",
+      "title": "مدل Page و سکشن‌های typed",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-04",
+        "CV-IAM-05"
+      ],
+      "spec": "07-content-sections.md",
+      "screen": "BO-16",
+      "business": "صفحه اصلی و لندینگ بدون CMS پیچیده قابل چیدمان باشند.",
+      "technical": "Page scope/key و Section type/config/order/enabled/revision؛ هشت نوع محدود سند۰۷؛ source category/promotion/manual؛ validation مرکزی و بدون SQL یا widget code دلخواه.",
+      "acceptance": [
+        "صفحه چند سکشن با ترتیب پایدار ذخیره شود",
+        "config نامعتبر، scope خارج اختیار و type ناشناخته رد شوند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cms-01.md"
+    },
+    {
+      "id": "CV-CMS-02",
+      "title": "ویرایش، پیش‌نمایش و انتشار سکشن",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-FND-07",
+        "CV-FND-06"
+      ],
+      "spec": "07-content-sections.md",
+      "screen": "BO-16 editor",
+      "business": "تغییر ترتیب و حذف سکشن قبل از نمایش عمومی بررسی شود.",
+      "technical": "فرم نوع‌محور، reorder قابل keyboard، draft/public revision، preview محدود noindex؛ publish atomic و cache event؛ حذف سکشن داده محصول را حذف نکند.",
+      "acceptance": [
+        "draft صفحه عمومی را تا publish عوض نکند",
+        "دو reorder هم‌زمان overwrite خاموش نشوند و preview index نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-cms-02.md"
+    },
+    {
+      "id": "CV-CMS-03",
+      "title": "منو، برندها، فوتر و خدمات سایت",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-CAT-03"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-26",
+      "business": "هدر/فوتر و آیکن برند از پنل کنترل شوند و وعده غیرواقعی ندهند.",
+      "technical": "SiteSettings versioned برای logo/nav/contact/social/newsletter/trust و brand-rail؛ media/link validation و scope؛ هر badge خدمت/نماد state و شاهد دارد.",
+      "acceptance": [
+        "تغییر ترتیب برند در public منتشر منعکس شود",
+        "نماد/خدمت غیرفعال ادعای فعال نسازد"
+      ],
+      "block": "CHQ-13: متن حقوقی و شواهد خدمت/نماد",
+      "status": "todo",
+      "file": "tasks/cv-cms-03.md"
+    },
+    {
+      "id": "CV-CMS-04",
+      "title": "محتوای لندینگ اقساط و FAQ",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-PRC-01"
+      ],
+      "spec": "07-content-sections.md",
+      "screen": "BO-16 landing",
+      "business": "بازدیدکننده لندتک شرایط و محصولات واجد شرایط را بفهمد.",
+      "technical": "Page installment با guide/provider/FAQ/CTA و rail واجد شرایط؛ method فعال، متن نسخه‌دار؛ نرخ/تعداد قسط از قرارداد؛ renderer در WEB-13.",
+      "acceptance": [
+        "روش غیرفعال CTA پرداخت نسازد",
+        "برنامه قسط نمونه شرط واقعی منتشر نشود"
+      ],
+      "block": "CHQ-11: شرایط provider؛ draft و renderer مستقل ممکن",
+      "status": "todo",
+      "file": "tasks/cv-cms-04.md"
+    },
+    {
+      "id": "CV-CMS-05",
+      "title": "زمان‌بندی و بازگشت نسخه محتوا",
+      "priority": "P2",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-02"
+      ],
+      "spec": "07-content-sections.md",
+      "screen": "BO-16 schedule",
+      "business": "در صورت نیاز کمپین انتشار و پایان زمان‌دار کنترل شود.",
+      "technical": "valid_from/to و scheduler با timezone؛ rollback نسخه تازه بسازد. خاموش‌کردن سکشن و ابطال تخفیف مالی دو عملیات مستقل باشند.",
+      "acceptance": [
+        "پایان بازه خروجی public و cache را تازه کند",
+        "rollback سابقه را پاک نکند"
+      ],
+      "block": "CHQ-12: نیاز زمان‌بندی در شروع؛ توسعه پیشنهادی",
+      "status": "todo",
+      "file": "tasks/cv-cms-05.md"
+    },
+    {
+      "id": "CV-CMS-06",
+      "title": "فرم محتوایی محدود غیرمالی",
+      "priority": "P2",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-IAM-05"
+      ],
+      "spec": "07-content-sections.md",
+      "screen": "فرم تماس/جذب",
+      "business": "در صورت نیاز فرم کمپین/تماس بدون توسعه تکراری ساخته شود.",
+      "technical": "schema text/select/checkbox، مقصد داخلی معلوم، consent، rate limit و retention؛ بدون script/SQL/permission/action مالی. فرم تراکنشی از این سازنده تولید نشود.",
+      "acceptance": [
+        "submit فقط رکورد مقصد مجاز بسازد",
+        "فیلد دلخواه نتواند نقش یا مبلغ سفارش را تغییر دهد"
+      ],
+      "block": "CHQ-12 / CHQ-10 / CHQ-13: ضرورت فرم، رضایت و نگهداری؛ شروع پس از انتخاب",
+      "status": "todo",
+      "file": "tasks/cv-cms-06.md"
+    },
+    {
+      "id": "CV-OPS-01",
+      "title": "خرید، سفارش سلر و جزئیات snapshot",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-06",
+        "CV-PRC-06",
+        "CV-FND-05",
+        "CV-IAM-05"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-18",
+      "business": "اپراتور خرید چندسلری را با اقلام و وضعیت مستقل ببیند.",
+      "technical": "Purchase/SellerOrder/Item با variant/offer/price snapshot؛ query scoped و صفحه جزئیات وضعیت ابعادی. fixture فقط test؛ create واقعی از payment use case، نه فرم سفارش دستی.",
+      "acceptance": [
+        "یک خرید به دو سفارش سلر مرتبط باشد",
+        "فیلتر seller_id دسترسی سلر دیگر ندهد و قیمت جاری snapshot را عوض نکند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-ops-01.md"
+    },
+    {
+      "id": "CV-OPS-02",
+      "title": "تأیید قلمی تأمین و حریم خصوصی",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-01"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-18 seller supply",
+      "business": "سلر تعهد تأمین بدهد و اطلاعات گیرنده در مرحله مجاز باز شود.",
+      "technical": "supply decision quantity/reason/version و مهلت یک روز کاری؛ DTO پیش از تأمین فقط شهر/اقلام؛ نمایش گیرنده بعد تعیین تکلیف مجاز همه اقلام؛ accepted حق لغو قطعی سلر ندارد.",
+      "acceptance": [
+        "نام/تلفن/آدرس پیش از تأمین در پاسخ API نباشد",
+        "تأیید تکراری و قلم واگذارشده/لغوشده اثر دوباره ندهد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-ops-02.md"
+    },
+    {
+      "id": "CV-OPS-03",
+      "title": "عدم تأمین، بی‌پاسخی و صف رسیدگی",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-02",
+        "CV-FND-06"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-20",
+      "business": "کسری تأمین و پایان مهلت قابل پیگیری و جدا از لغو خودکار باشند.",
+      "technical": "job deadline بر تقویم/state؛ case با reason unavailable/no-response، توقف مجاز سفارش و SLA configurable؛ مسئول/start/resolution و اعلان. worker تکراری case مضاعف نسازد.",
+      "acceptance": [
+        "بی‌پاسخی پرونده مستقل بسازد نه تأیید/لغو خودکار",
+        "شروع رسیدگی حل‌شده نباشد و هر قلم پرونده هم‌نوع تکراری نگیرد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-ops-03.md"
+    },
+    {
+      "id": "CV-OPS-04",
+      "title": "واگذاری به تأمین‌کننده جایگزین",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-03"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-21",
+      "business": "کسری بدون افزایش مبلغ مشتری و با مسئولیت روشن حل شود.",
+      "technical": "assignment مقدار/قلم/target seller/contract snapshot؛ تأیید versioned و ارسال مستقیم؛ اختیار سلر اصلی روی مقدار واگذارشده قطع. تعدیل مالی از قرارداد واقعی باشد.",
+      "acceptance": [
+        "جایگزین فقط اقلام واگذارشده و داده مرحله مجاز ببیند",
+        "واگذاری هم‌زمان با refund بیش از تعداد قلم و مبلغ اضافه مشتری رد شود"
+      ],
+      "block": "CHQ-01: تعدیلات مالی مرکب؛ مدل/فلو آزمون مستقل ممکن",
+      "status": "todo",
+      "file": "tasks/cv-ops-04.md"
+    },
+    {
+      "id": "CV-OPS-05",
+      "title": "روش حمل، پوشش و تعرفه فروشگاه",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-06",
+        "CV-CAT-06"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-17",
+      "business": "انتخاب ارسال فقط روش‌های معتبر همان مقصد/سلر را نشان دهد.",
+      "technical": "روش مرکزی و تعرفه شهر/فروشگاه، آماده‌سازی، رهگیری و تقویم؛ CRUD scoped/versioned. کلاس طلا در مدل، فعال‌سازی با قرارداد؛ هزینه نمونه واقعی فرض نشود.",
+      "acceptance": [
+        "دو فروشگاه تعرفه مستقل یک شهر داشته باشند",
+        "روش خارج پوشش در checkout قابل پرداخت نباشد"
+      ],
+      "block": "CHQ-07: پوشش/بیمه طلا و هزینه واقعی",
+      "status": "todo",
+      "file": "tasks/cv-ops-05.md"
+    },
+    {
+      "id": "CV-OPS-06",
+      "title": "برآورد و محاسبه مجدد هزینه حمل",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-05",
+        "CV-OPS-01"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-17 preview / Checkout",
+      "business": "هزینه و زمان با اقلام/شهر و لغو جزئی درست بمانند.",
+      "technical": "shipping quote با snapshot و business calendar؛ آماده‌سازی/حمل/دریافت جدا. پس از لغو فقط اختلاف هنوز نگه‌داشته‌شده refund؛ افزایش محاسبه جدید هزینه پلتفرم، نه مبلغ اضافه مشتری.",
+      "acceptance": [
+        "پنج‌شنبه/جمعه و تعطیلات از آماده‌سازی حذف شوند",
+        "دو لغو پیاپی حمل اولیه را دوبار refund نکنند"
+      ],
+      "block": "CHQ-07: cut-off و فرمول تعرفه؛ fixture تقویم آزاد",
+      "status": "todo",
+      "file": "tasks/cv-ops-06.md"
+    },
+    {
+      "id": "CV-OPS-07",
+      "title": "مرسوله، بسته‌ها و اعزام",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-02",
+        "CV-OPS-06"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-19",
+      "business": "همه اقلام باقی‌مانده سلر یکجا اعزام و چند بسته رهگیری شوند.",
+      "technical": "shipment/packages/tracking با اقلام و version؛ guard آماده‌بودن/تأمین؛ dispatch بسته‌ها هم‌زمان. race لغو/اعزام transactional؛ ثبت کد/زمان/عامل.",
+      "acceptance": [
+        "چند بسته یک سفارش بدون قلم گم‌شده ثبت شوند",
+        "dispatch و cancel هم‌زمان یک مقدار را هم ارسال و هم لغوشده نکنند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-ops-07.md"
+    },
+    {
+      "id": "CV-OPS-08",
+      "title": "گزارش حمل و تصمیم پشتیبانی",
+      "priority": "P1",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-03",
+        "CV-OPS-07"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-20 / Customer case",
+      "business": "نرسیدن، آسیب و کسری با شاهد و تصمیم پیگیری شوند.",
+      "technical": "case حمل با بسته/اقلام، مدارک امن و نتیجه refund/reship؛ دریافت پشتیبانی با مجوز/علت. SLA شروع/حل جدا؛ درخواست مالی به FIN-05 وصل، بدون تغییر مستقیم wallet.",
+      "acceptance": [
+        "گزارش مشتری مالکیت خرید را کنترل کند",
+        "job زمانی delivered نکند و بستن case refund موفق نشان ندهد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-ops-08.md"
+    },
+    {
+      "id": "CV-OPS-09",
+      "title": "مرجوعی فیزیکی و بازرسی برگشت",
+      "priority": "P1",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-OPS-08",
+        "CV-FIN-05"
+      ],
+      "spec": "09-order-shipping.md",
+      "screen": "BO-20 returns",
+      "business": "بازگشت کالا با پول و ورود موجودی اشتباه نشود.",
+      "technical": "ReturnRequest مستقل اقلام/تعداد/علت/مدارک، approval/receipt/inspection؛ restock جدا و versioned؛ refund از ظرفیت اصل پرداخت. schema/fixture بدون policy فعال قابل آماده‌سازی است.",
+      "acceptance": [
+        "درخواست خودکار stock یا wallet را زیاد نکند",
+        "دریافت/بازرسی تکراری دوبار موجودی/refund نسازد"
+      ],
+      "block": "CHQ-05: مهلت/کالای مجاز/هزینه/بازرسی/اختیار پیش از فعال‌سازی",
+      "status": "todo",
+      "file": "tasks/cv-ops-09.md"
+    },
+    {
+      "id": "CV-FIN-01",
+      "title": "دفتر مالی و مانده قابل مصرف",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-02",
+        "CV-FND-03",
+        "CV-FND-04"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BO-22 / wallet API",
+      "business": "ورود/خروج پول قابل تطبیق و مانده از دستکاری مستقیم مصون باشد.",
+      "technical": "ledger transaction/entry، accounts، holds و funding lots؛ posting متوازن append-only با source key؛ مانده transactionally materialized یا محاسبه‌شده؛ اصلاح با compensation، مبالغ ریال.",
+      "acceptance": [
+        "posting نامتوازن و debit بیش از available رد شوند",
+        "replay مانده دوباره نسازد و UPDATE تاریخچه قطعی وجود نداشته باشد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fin-01.md"
+    },
+    {
+      "id": "CV-FIN-02",
+      "title": "شارژ مستقل و شارژ کسری خرید",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-01",
+        "CV-PRC-06"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Topup API / fixture",
+      "business": "مشتری دلخواه یا بیش از کسری شارژ کند و پولش گم نشود.",
+      "technical": "attempt purpose=topup، adapter آزمون و verify؛ credit wallet یک‌باره با lot؛ checkout اختیاری. success دیررس credit می‌دهد ولی سفارش نه؛ BNPL topup ممنوع.",
+      "acceptance": [
+        "callback دوباره فقط یک credit داشته باشد",
+        "شارژ دیررس/مازاد در wallet بماند و خرید ناسازگار خودکار نسازد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fin-02.md"
+    },
+    {
+      "id": "CV-FIN-03",
+      "title": "جلسه، رزرو و پرداخت کامل خرید",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-01",
+        "CV-FIN-02",
+        "CV-OPS-01",
+        "CV-OPS-06",
+        "CV-PRC-06"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Checkout core",
+      "business": "نه خرید بی‌پول و نه برداشت بی‌سفارش ایجاد شود.",
+      "technical": "session۱۰دقیقه، reservation با lock/ownership؛ رزرو خود جلسه قابل تخصیص؛ بررسی قبل درگاه/debit؛ نقدی debit کل و ثبت paid اتمیک، BNPL بدون credit wallet. وضعیت unknown قابل پیگیری.",
+      "acceptance": [
+        "رقابت آخرین واحد بیش‌فروشی ندهد و رزرو مشتری ناموجود تلقی نشود",
+        "پس از شارژ و نبود یک قلم بقیه خرید خودکار انجام نشود"
+      ],
+      "block": "CHQ-02: روش/قفل؛ CHQ-01: quote مرکب؛ رزرو/fixture مستقل آزاد",
+      "status": "todo",
+      "file": "tasks/cv-fin-03.md"
+    },
+    {
+      "id": "CV-FIN-04",
+      "title": "برداشت با hold و ظرفیت مبدأ",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-01",
+        "CV-FIN-02",
+        "CV-IAM-07"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BO-22 withdrawals",
+      "business": "برداشت همراه خرید یک مانده یا سقف روز را دوبار مصرف نکند.",
+      "technical": "مقصد واجد شرایط، source capacity با FIFO، balance و limits۳/۱۰۰میلیون تومان configurable؛ hold قبل ارسال/بررسی. بالاتر از سقف awaiting-review؛ unknown hold حفظ؛ fail/reject release یک‌باره.",
+      "acceptance": [
+        "دو خروج concurrent از مانده مشترک عبور نکنند",
+        "کارت بی‌سابقه رد و درخواست بیش‌سقف با hold به review برود"
+      ],
+      "block": "CHQ-11: احراز مقصد و provider واقعی؛ adapter آزمون قابل ساخت",
+      "status": "todo",
+      "file": "tasks/cv-fin-04.md"
+    },
+    {
+      "id": "CV-FIN-05",
+      "title": "استرداد تعدادی با درگاه مبدأ",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-01",
+        "CV-OPS-01",
+        "CV-DSC-04"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BO-22 refunds",
+      "business": "مشتری بابت مقدار لغوشده وجه درست بگیرد و refund مضاعف نشود.",
+      "technical": "refund allocation از snapshot/quantity و source؛ method provider-specific و capacity hold؛ requested/processing/success/fail/unknown جدا. کمیسیون افزوده برگردد؛ کسری سلر دوباره به refund اضافه نشود.",
+      "acceptance": [
+        "دو refund جزئی از ظرفیت اصل پرداخت بیشتر نشوند",
+        "BNPL خودکار wallet credit نشود و retry unknown دوباره وجه نفرستد"
+      ],
+      "block": "CHQ-01 / CHQ-04 / CHQ-11: سهم markup/discount و قابلیت refund واقعی",
+      "status": "todo",
+      "file": "tasks/cv-fin-05.md"
+    },
+    {
+      "id": "CV-FIN-06",
+      "title": "صورتحساب و تسویه قلم‌محور",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-01",
+        "CV-FIN-05",
+        "CV-OPS-04"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BO-23",
+      "business": "سهم سلر، تسویه جزئی و بدهی بعد برگشت روشن باشد.",
+      "technical": "settlement allocation با gross/adjustments/debt/net/paid؛ early/partial طبق قواعد منتقل‌شده؛ قرارداد تأمین‌کننده واقعی حفظ. transfer state مجزا؛ direct edit balance وجود نداشته باشد.",
+      "acceptance": [
+        "refund بعد تسویه debt بسازد و paid حذف نشود",
+        "دو تسویه هم‌زمان بیش از مانده قلم مصرف نکنند و reference موفقیت خودکار نسازد"
+      ],
+      "block": "CHQ-01 / CHQ-11: سهم مالی و زمان/ابزار واقعی تسویه",
+      "status": "todo",
+      "file": "tasks/cv-fin-06.md"
+    },
+    {
+      "id": "CV-FIN-07",
+      "title": "تطبیق unknown و بازیابی اثر مالی",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-02",
+        "CV-FIN-03",
+        "CV-FIN-04",
+        "CV-FIN-05",
+        "CV-FIN-06",
+        "CV-FND-06"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BO-24",
+      "business": "timeout/crash به پرداخت تکراری یا بلاتکلیفی دائمی تبدیل نشود.",
+      "technical": "reconcile worker با ref/purpose/key و backoff؛ transition guard و exception queue با evidence. provider بدون idempotency پیش از retry استعلام/قرارداد امن می‌خواهد.",
+      "acceptance": [
+        "crash بین ارسال و ثبت نتیجه با یک اثر مالی بازیابی شود",
+        "unknown با گذشت زمان خودکار موفق/شکست یا آزادکننده hold نشود"
+      ],
+      "block": "CHQ-11: قرارداد استعلام و retry واقعی",
+      "status": "todo",
+      "file": "tasks/cv-fin-07.md"
+    },
+    {
+      "id": "CV-FIN-08",
+      "title": "صفحات مالی و گزارش مجاز",
+      "priority": "P1",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-04",
+        "CV-FIN-05",
+        "CV-FIN-06",
+        "CV-FIN-07",
+        "CV-FND-07"
+      ],
+      "spec": "05-backoffice-screens.md",
+      "screen": "BO-22/23/24",
+      "business": "اپراتور ظرفیت و انتظار و نتیجه را ببیند و سلر فقط صورتحساب خودش.",
+      "technical": "tabs ledger/topup/withdraw/refund/settlement/reconcile با detail source allocations و action جدا/علت. export scoped ماسک‌شده و ضد CSV injection؛ داشبورد از داده قطعی.",
+      "acceptance": [
+        "read-only execute مالی انجام ندهد",
+        "سلر با export/query دفتر مشتری یا فروشگاه دیگر را نبیند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-fin-08.md"
+    },
+    {
+      "id": "CV-WEB-01",
+      "title": "توکن برند، layout و کنترل خرید مرجع",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-FND-01",
+        "CV-FND-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Shared UI / PDP / Cart",
+      "business": "برند در همه صفحات یک امضای مشخص و کنترل خرید آشنا داشته باشد.",
+      "technical": "توکن‌های رنگ/فاصله/تراکم برای A/B/C، RTL، header/footer و purchase control مشترک؛ متن افزودن و عدد وسط و بخش روشن چپ مورب. state از cart API؛ دو دکمه مستقل دسترس‌پذیر.",
+      "acceptance": [
+        "حالت صفر/یک/چند/حداکثر/انتظار/ناموجود مطابق برد دکمه باشد",
+        "خطای افزایش عدد موفق نشان ندهد و RTL بخش روشن را به راست نبرد"
+      ],
+      "block": "CHQ-12: مسیر بصری نهایی؛ component مشترک و حالت‌ها قابل شروع",
+      "status": "todo",
+      "file": "tasks/cv-web-01.md"
+    },
+    {
+      "id": "CV-WEB-02",
+      "title": "هدر، منوی حساب و popup جست‌وجو",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-01",
+        "CV-CAT-09",
+        "CV-IAM-02"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Header / Search",
+      "business": "مشتری با تایپ سریع محصول پیدا کند و دسترسی‌های حساب روشن باشند.",
+      "technical": "suggest API از read model؛ debounce/cancel، حد طول و سقف پاسخ، keyboard navigation و loading/empty/error. حساب شامل آدرس/سفارش/wallet/bookmark/logout؛ badge سبد از مقدار معتبر.",
+      "acceptance": [
+        "پاسخ عبارت قدیمی نتیجه عبارت جدید را overwrite نکند",
+        "popup در gold دیجیتال نشان ندهد و escape/focus درست کار کند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-02.md"
+    },
+    {
+      "id": "CV-WEB-03",
+      "title": "صفحه اصلی از سکشن‌های منتشرشده",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-01",
+        "CV-CMS-02",
+        "CV-CMS-03",
+        "CV-PRC-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Home",
+      "business": "ویترین بدون تغییر کد با موجودی و کمپین به‌روز شود.",
+      "technical": "renderer نوع‌های سند۰۷، hero/category/discount/category rails/brands/about/trust/footer؛ داده public نسخه‌دار؛ هر کارت لینک PDP. max۱۰ و مشاهده‌همه معتبر؛ lazy image زیر fold، hero priority.",
+      "acceptance": [
+        "سکشن صفر کالای قابل خرید پنهان باشد",
+        "خطای یک سکشن هدر/بقیه صفحه را قطع نکند و کالا برای پرکردن ریل تکرار نشود"
+      ],
+      "block": "CHQ-12: ریل کم‌کالا و انتخاب طرح نهایی",
+      "status": "todo",
+      "file": "tasks/cv-web-03.md"
+    },
+    {
+      "id": "CV-WEB-04",
+      "title": "PLP دسته، فیلتر و مرتب‌سازی",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-01",
+        "CV-CAT-09",
+        "CV-PRC-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "PLP",
+      "business": "مقایسه با ویژگی‌های همان دسته و مسیر زیرشاخه آسان شود.",
+      "technical": "breadcrumb/selector category، sidebar desktop و mobile filter panel، URL state، sort شش‌گانه، pagination و SEO text. کارت حداکثر سه ویژگی، بدون تنوع/خرید؛ available order گروه‌بندی‌شده.",
+      "acceptance": [
+        "برگ شارژر فقط خودش در selector و مسیر والد در breadcrumb داشته باشد",
+        "back مرورگر فیلتر/صفحه را برگرداند و فیلتر نامرتبط دسته اجرا نشود"
+      ],
+      "block": "CHQ-09: تجمیع والد؛ نمایش مستقیم/برگ مستقل ممکن",
+      "status": "todo",
+      "file": "tasks/cv-web-04.md"
+    },
+    {
+      "id": "CV-WEB-05",
+      "title": "PDP مستقل با تنوع و همه فروشندگان",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-01",
+        "CV-CAT-07",
+        "CV-PRC-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "PDP",
+      "business": "خرید با تنوع و سلر روشن و قابل اشتراک انجام شود.",
+      "technical": "route مستقل، گالری، یک/دو محور، buybox، فهرست سلر با مبلغ/آماده‌سازی، توضیح/مشخصات و sticky موبایل. کنترل خرید shared؛ قیمت از quote، selected variant/offer قابل بازسازی در URL.",
+      "acceptance": [
+        "ورود از کارت به PDP واقعی برود نه مودال اجباری",
+        "تعویض سلر/تنوع مبلغ و کنترل تعداد همان قلم را نشان دهد؛ انتخاب نامعلوم قابل افزودن نباشد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-05.md"
+    },
+    {
+      "id": "CV-WEB-06",
+      "title": "سبد، ادغام و بازبینی تغییرات",
+      "priority": "P0",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-05",
+        "CV-FIN-03",
+        "CV-DSC-02"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Cart",
+      "business": "مهمان اقلامش را از دست ندهد و تغییر مبلغ پنهان نماند.",
+      "technical": "cart API و UI offer+variant+quantity، group seller، merge idempotent و نسخه؛ کنترل موجودی/قیمت/عرضه و کوپن. تغییر ترکیب با حفظ سلر معتبر، conflict نیازمند تأیید؛ سبد رزرو نیست.",
+      "acceptance": [
+        "مهمان۲ و حساب۳ همان عرضه بعد merge۵ شود و retry دوباره جمع نکند",
+        "ناموجودی یا افزایش قیمت قبل ادامه مشخص شود و تعویض عرضه بی‌اطلاع نشود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-06.md"
+    },
+    {
+      "id": "CV-WEB-07",
+      "title": "ورود مشتری و فرم آدرس/پروفایل",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-01",
+        "CV-IAM-01",
+        "CV-IAM-02",
+        "CV-IAM-07",
+        "CV-WEB-06"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Login / Profile / Address",
+      "business": "ورود مسیر خرید را قطع نکند و گیرنده درست انتخاب شود.",
+      "technical": "فرم شماره/OTP با paste/autofill و ارقام فارسی/لاتین، شمارنده از server و اصلاح شماره؛ بازگشت امن به مسیر قبلی و merge؛ نشانی‌های خود کاربر/فرم جدید و گیرنده مستقل.",
+      "acceptance": [
+        "کد اشتباه/منقضی و resend محدود پیام روشن بدهند",
+        "ورود اقلام مهمان را پاک نکند و return URL به سایت مخرب redirect نکند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-07.md"
+    },
+    {
+      "id": "CV-WEB-08",
+      "title": "انتخاب ارسال چندسلری",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-06",
+        "CV-WEB-07",
+        "CV-OPS-06"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Checkout shipping",
+      "business": "مشتری هزینه و زمان هر سلر و جمع خرید را قبل پرداخت بداند.",
+      "technical": "آدرس مشترک، group اقلام سلر، آماده‌سازی/حمل/برآورد جدا، radio روش واجد شرایط و جمع سروری. تغییر آدرس/تعداد روش و quote را revalidate؛ داده نمونه وعده واقعی نسازد.",
+      "acceptance": [
+        "تغییر مقصد روش خارج پوشش را حذف و جمع را بازبینی کند",
+        "هزینه نامشخص صفر فرض نشود و انتخاب یک سلر روش دیگری را تغییر ندهد"
+      ],
+      "block": "CHQ-07: حمل/بیمه/تعرفه واقعی؛ UI با داده آزمون ممکن",
+      "status": "todo",
+      "file": "tasks/cv-web-08.md"
+    },
+    {
+      "id": "CV-WEB-09",
+      "title": "پرداخت، روش فروش و جلسه زمان‌دار",
+      "priority": "P0",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-08",
+        "CV-FIN-03",
+        "CV-PRC-06",
+        "CV-PRC-01"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Checkout payment",
+      "business": "مشتری تفاوت نقدی/اعتباری و مبلغ نهایی را آگاهانه بپذیرد.",
+      "technical": "انتخاب روش واجد شرایط و نمایش breakdown markup پس از تخفیف/ارسال جدا؛ نقدی balance/deficit/topup و debit کل، BNPL مستقل. countdown از server و expired→cart؛ controls duplicate-safe.",
+      "acceptance": [
+        "تغییر روش جمع واقعی سرور را قبل تعهد نشان دهد",
+        "انقضا اقدام تازه را رد و BNPL با شارژ wallet ترکیب نشود"
+      ],
+      "block": "CHQ-02 / CHQ-01 / CHQ-11: زمان قفل، مرکب و eligibility واقعی",
+      "status": "todo",
+      "file": "tasks/cv-web-09.md"
+    },
+    {
+      "id": "CV-WEB-10",
+      "title": "نتیجه پرداخت و پیگیری تلاش",
+      "priority": "P0",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-09",
+        "CV-FIN-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Payment result",
+      "business": "کاربر وضعیت نامعلوم را با شکست یا موفقیت اشتباه نگیرد.",
+      "technical": "چهار view موفق قطعی/ناموفق/unknown/شارژ موفق بدون سفارش؛ poll محدود همان attempt و شناسه پیگیری؛ back/reload بدون submit جدید. receipt سفارش فقط از paid سروری.",
+      "acceptance": [
+        "redirect مرورگر به‌تنهایی success نشان ندهد",
+        "unknown دعوت به پرداخت تازه نکند و شارژ دیررس رسید سفارش نسازد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-10.md"
+    },
+    {
+      "id": "CV-WEB-11",
+      "title": "سفارش‌های مشتری، جزئیات و گزارش مشکل",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-07",
+        "CV-OPS-01",
+        "CV-OPS-08",
+        "CV-FIN-05"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Profile orders",
+      "business": "مشتری اقلام هر سلر، ارسال و درخواست‌های خودش را پیگیری کند.",
+      "technical": "لیست/جزئیات خرید و seller orders، snapshot، tracking و زمان؛ لغو مقدار ارسال‌نشده در حالت مجاز و گزارش نرسیدن/آسیب/کسری. private/no-store؛ درخواست refund مستقیم اختیار نامحدود ایجاد نکند.",
+      "acceptance": [
+        "یک خرید دو سلر دو وضعیت مستقل نشان دهد",
+        "تغییر order ID به خرید مشتری دیگر دسترسی ندهد و قلم ارسال‌شده لغو آزاد نگیرد"
+      ],
+      "block": "CHQ-05: UI مرجوعی واقعی بعد سیاست؛ گزارش حمل موجود مستقل است",
+      "status": "todo",
+      "file": "tasks/cv-web-11.md"
+    },
+    {
+      "id": "CV-WEB-12",
+      "title": "کیف پول مشتری، شارژ و برداشت",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-07",
+        "CV-FIN-02",
+        "CV-FIN-04"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Profile wallet",
+      "business": "مانده قابل مصرف و رزروشده و خروج پول برای مشتری روشن باشد.",
+      "technical": "balance/held/available، گردش صفحه‌بندی، topup دلخواه، مقصد واجد شرایط و withdrawal confirmation؛ سقف/ظرفیت و waiting-review/unknown/failed تفکیک؛ no-store و خروج پاک‌کننده state.",
+      "acceptance": [
+        "برداشت در انتظار available را کم کند و علت بررسی دیده شود",
+        "مقصد نامعتبر و مبلغ بیش از ظرفیت در UI و API پذیرفته نشوند"
+      ],
+      "block": "CHQ-11: احراز مقصد و اتصال واقعی؛ همه حالت‌های آزمون طراحی شوند",
+      "status": "todo",
+      "file": "tasks/cv-web-12.md"
+    },
+    {
+      "id": "CV-WEB-13",
+      "title": "لندینگ اقساط و کالاهای واجد شرایط",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-04",
+        "CV-WEB-03",
+        "CV-PRC-01"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Installment landing",
+      "business": "ورودی لندتک به مسیر خرید قابل فهم و محصول مجاز برسد.",
+      "technical": "رندر guide/FAQ/provider/CTA با Section؛ فیلتر eligibility در query و لینک روش منتخب؛ برنامه قسط فقط از داده معتبر. calculator اختیاری نمایش تخمین است نه تأیید اعتبار.",
+      "acceptance": [
+        "روش غیرفعال یا دسته نامجاز وارد CTA قابل خرید نشود",
+        "نبود برنامه قسط، نرخ جعلی یا چهار قسط ثابت نشان ندهد"
+      ],
+      "block": "CHQ-11: شرایط قرارداد و معرفی provider",
+      "status": "todo",
+      "file": "tasks/cv-web-13.md"
+    },
+    {
+      "id": "CV-WEB-14",
+      "title": "SEO، مسیرهای قلمرو و زیرسایت",
+      "priority": "P0",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-09",
+        "CV-CMS-02",
+        "CV-WEB-04",
+        "CV-WEB-05"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Home / PLP / PDP / gold / digi",
+      "business": "ویترین‌ها محدود و قابل پیدا شدن باشند بدون محتوای تکراری مخرب.",
+      "technical": "SSR/SSG، metadata، breadcrumb/product structured data، sitemap، robots، redirects و canonical policy؛ resolver host allowlist و scope server-side؛ private pages noindex/no-store.",
+      "acceptance": [
+        "HTML محصول منتشرشده محتوا/قیمت معتبر داشته باشد",
+        "gold در search/sitemap/ریل دیجیتال ندهد و host ناشناس fallback خاموش نکند"
+      ],
+      "block": "CHQ-08: PDP مرجع/canonical/session بین hostها؛ هسته SEO مستقل آزاد",
+      "status": "todo",
+      "file": "tasks/cv-web-14.md"
+    },
+    {
+      "id": "CV-WEB-15",
+      "title": "نظر کاربران و صف انتشار",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-05",
+        "CV-IAM-02",
+        "CV-FND-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "PDP reviews / BO-25",
+      "business": "نظر قابل اعتماد درباره محصول با کنترل انتشار فراهم شود.",
+      "technical": "Review customer/product/text/rating/moderation، API و UI فرم/فهرست/صف بررسی؛ sanitize/rate limit و actor؛ اعتبار خرید فقط در صورت تأیید سیاست قابل ادعا. رد/انتشار با دلیل و audit.",
+      "acceptance": [
+        "محتوای تأییدنشده عمومی نشود و script اجرا نشود",
+        "امتیاز جعلی یا badge خریدار بدون شاهد ساخته نشود"
+      ],
+      "block": "CHQ-10: اجازه ثبت/خرید معتبر/سیاست انتشار پیش از public write",
+      "status": "todo",
+      "file": "tasks/cv-web-15.md"
+    },
+    {
+      "id": "CV-WEB-16",
+      "title": "پرسش‌وپاسخ محصول و مدیریت پاسخ",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-05",
+        "CV-IAM-02",
+        "CV-FND-07"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "PDP Q&A / BO-25",
+      "business": "ابهام خرید پیش از سفارش پاسخ روشن و قابل مدیریت داشته باشد.",
+      "technical": "Question/Answer جدا از review، author role و moderation؛ UI ثبت/مشاهده و پنل پاسخ مجاز؛ PII پنهان و ضداسپم. اجازه پاسخ سلر از role فرض نشود.",
+      "acceptance": [
+        "پاسخ به محصول درست و پرسش مربوط متصل باشد",
+        "کاربر عادی با تغییر role در body پاسخ رسمی ثبت نکند"
+      ],
+      "block": "CHQ-10: سیاست ثبت/پاسخ/انتشار و اختیار سلر",
+      "status": "todo",
+      "file": "tasks/cv-web-16.md"
+    },
+    {
+      "id": "CV-WEB-17",
+      "title": "علاقه‌مندی و منوی کالاهای ذخیره‌شده",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "S",
+      "dependencies": [
+        "CV-WEB-05",
+        "CV-IAM-02"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Profile bookmarks",
+      "business": "مشتری کالاهای مدنظرش را بعداً راحت پیدا کند.",
+      "technical": "Bookmark unique customer+product؛ add/remove idempotent و فهرست خصوصی؛ قیمت/موجودی از داده جاری معتبر؛ لینک در منوی حساب و کارت/PDP با رفتار مستقل لینک اصلی.",
+      "acceptance": [
+        "افزودن تکراری یک رکورد بسازد و حذف تکراری امن باشد",
+        "مشتری فهرست کاربر دیگر را با تغییر ID نبیند"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-web-17.md"
+    },
+    {
+      "id": "CV-WEB-18",
+      "title": "ثبت ایمیل خبرنامه و لغو رضایت",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-CMS-03",
+        "CV-FND-03"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Footer / BO-26 subscriptions",
+      "business": "ثبت ایمیل شفاف باشد و بدون رضایت پیام ناخواسته نسازد.",
+      "technical": "Subscription normalize/dedup/consent/time/source/unsubscribe ref؛ فرم footer و validation/rate limit. ذخیره درخواست از ارسال کمپین جدا؛ ارسال واقعی adapter و سیاست انتخاب‌نشده لازم دارد.",
+      "acceptance": [
+        "ایمیل تکراری رکورد تبلیغاتی مضاعف نسازد",
+        "لغو رضایت ارسال بعدی را مسدود کند و ثبت فرم به‌تنهایی ارسال واقعی نکند"
+      ],
+      "block": "CHQ-10 / CHQ-13: رضایت، تأیید ایمیل، retention و سرویس ارسال",
+      "status": "todo",
+      "file": "tasks/cv-web-18.md"
+    },
+    {
+      "id": "CV-INT-01",
+      "title": "آداپتر درگاه نقدی واقعی",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-02",
+        "CV-FIN-07"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Cash provider",
+      "business": "شارژ واقعی با مبلغ/واحد صحیح و نتیجه قابل استعلام انجام شود.",
+      "technical": "adapter create/redirect/verify/inquiry از قرارداد provider منتخب؛ credentials امن، timeout و response mapping؛ purpose/amount/currency کنترل؛ sandbox قبل production. نام زرین‌پال گزینه قبلی است نه قرارداد نهایی.",
+      "acceptance": [
+        "sandbox موفق/ناموفق/timeout با تطبیق مبلغ عبور کند",
+        "callback جعلی یا مبلغ نابرابر credit wallet نسازد"
+      ],
+      "block": "CHQ-11: provider/پذیرندگی/secret و روش verify واقعی",
+      "status": "todo",
+      "file": "tasks/cv-int-01.md"
+    },
+    {
+      "id": "CV-INT-02",
+      "title": "آداپتر اعتباری و ماتریس قابلیت",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-03",
+        "CV-FIN-05",
+        "CV-PRC-01"
+      ],
+      "spec": "10-finance.md",
+      "screen": "BNPL provider",
+      "business": "اعتبار فقط برای روش و محصول مجاز و مبلغ مارکاپ‌شده استفاده شود.",
+      "technical": "capabilities eligibility/periods/partial-refund/void/inquiry از قرارداد منتخب؛ loan و credit با یک نام gateway ادغام نشوند. ارسال quote معتبر، callback verify و provider-specific refund؛ کیف پول شارژ نشود.",
+      "acceptance": [
+        "۱۰۰۰ با۴٪ پیش از ارسال۱۰۴۰ شود و مبلغ مبدأ برای verify حفظ شود",
+        "قابلیت refund جزئی از افزونه قدیمی فرض نشود و کالای نامجاز پرداخت نگیرد"
+      ],
+      "block": "CHQ-01 / CHQ-02 / CHQ-11: قرارداد و سهم هزینه/دسته مجاز",
+      "status": "todo",
+      "file": "tasks/cv-int-02.md"
+    },
+    {
+      "id": "CV-INT-03",
+      "title": "callback امن و استعلام خروج وجه",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-INT-01",
+        "CV-INT-02",
+        "CV-FIN-04",
+        "CV-FIN-07"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Provider callbacks / payout",
+      "business": "رویداد تکراری/دیررس یا قطع ارتباط اثر مالی دوگانه نسازد.",
+      "technical": "handlerهای provider با auth/signature، raw-body محدود و dedup؛ استعلام payout/refund، reference مقصد tokenized و transition compare-and-set. retry بدون idempotency به inquiry یا پرونده دستی امن برود.",
+      "acceptance": [
+        "callback تکراری و out-of-order یک posting نهایی بدهند",
+        "unknown خروج وجه reserve را آزاد نکند و مرجع بدون verify success نشود"
+      ],
+      "block": "CHQ-11: payout/refund provider و احراز مقصد",
+      "status": "todo",
+      "file": "tasks/cv-int-03.md"
+    },
+    {
+      "id": "CV-INT-04",
+      "title": "پیامک OTP و اعلان رخدادها",
+      "priority": "P1",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-01",
+        "CV-FND-06",
+        "CV-OPS-03"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Notification adapter / BO-24",
+      "business": "کد ورود و اعلان خرید/تأمین/ارسال با وضعیت تحویل قابل پیگیری باشند.",
+      "technical": "provider adapter و template registry با recipient policy؛ outbox retry محدود و failure queue. ارسال خرید فقط پس از paid، شکست پیامک تراکنش خرید را برنگرداند؛ log بدون متن حساس OTP.",
+      "acceptance": [
+        "خطای پیامک سفارش paid را failed نکند",
+        "retry همان رخداد پیامک خرید تکراری بی‌قاعده نسازد"
+      ],
+      "block": "CHQ-11 / CHQ-13: provider، قالب، مقصد و سطح تضمین تحویل",
+      "status": "todo",
+      "file": "tasks/cv-int-04.md"
+    },
+    {
+      "id": "CV-INT-05",
+      "title": "فضای رسانه و تحویل asset واقعی",
+      "priority": "P1",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-07"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Media storage / CDN",
+      "business": "تصویرها پایدار، امن و سریع تحویل شوند.",
+      "technical": "object storage adapter، اندازه‌های responsive، upload validation و دسترسی private برای مدارک؛ public assets با hash/CDN؛ lifecycle و backup reference. URL مدارک سلر عمومی نشود.",
+      "acceptance": [
+        "نسخه تصویر جدید بدون cache قدیمی نمایش یابد",
+        "آدرس مدارک خصوصی بدون مجوز دانلود نشود"
+      ],
+      "block": "CHQ-13: سرویس/بودجه/retention؛ انتخاب فنی نهایی لازم است",
+      "status": "todo",
+      "file": "tasks/cv-int-05.md"
+    },
+    {
+      "id": "CV-INT-06",
+      "title": "استقرار، backup و مشاهده‌پذیری",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-07",
+        "CV-WEB-14",
+        "CV-INT-04",
+        "CV-INT-05"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Dev / Test / Sandbox / Production",
+      "business": "انتشار قابل بازگشت و خطای مالی قابل کشف باشد.",
+      "technical": "pipeline متناسب پروژه مقصد، config validation، migration gate، TLS/host settings، metrics و alert صف unknown/outbox؛ backup/restore rehearsal و rollback runbook. نه secret در repo و نه fixture در prod.",
+      "acceptance": [
+        "restore آزمون با شمار/تراز داده کنترل شود",
+        "healthcheck بدون افشای secret و rollback نسخه با سازگاری schema تمرین شود"
+      ],
+      "block": "CHQ-13: ظرفیت/SLO/RPO/RTO و بودجه واقعی",
+      "status": "todo",
+      "file": "tasks/cv-int-06.md"
+    },
+    {
+      "id": "CV-INT-07",
+      "title": "چک‌لیست مجوزها و فعال‌سازی فروش واقعی",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-06",
+        "CV-CMS-03",
+        "CV-OPS-05",
+        "CV-INT-01",
+        "CV-INT-02"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Business activation gate",
+      "business": "نمایش نماد و فروش دسته‌ها با شرایط واقعی پذیرندگی و عملیات سازگار باشد.",
+      "technical": "ماتریس شاهد اینماد/صلاحیت دسته طلا/قرارداد سلر/فاکتور/حمل/نماد/تماس؛ مالک بررسی انسانی و تاریخ؛ feature flags دسته/provider تا تکمیل شاهد. سند حکم حقوقی و مجوز خیالی تولید نکند.",
+      "acceptance": [
+        "دسته فاقد تأیید فعال‌سازی وارد پرداخت واقعی نشود",
+        "badge نماد تنها با لینک و وضعیت واقعی قابل نمایش باشد"
+      ],
+      "block": "CHQ-07 / CHQ-11 / CHQ-13: مسئول قراردادی و شواهد واقعی",
+      "status": "todo",
+      "file": "tasks/cv-int-07.md"
+    },
+    {
+      "id": "CV-QA-01",
+      "title": "آزمون مجوز، IDOR و داده خصوصی",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-IAM-05",
+        "CV-OPS-02",
+        "CV-FIN-08"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "تمام پنل و export",
+      "business": "پنل مشترک و دسترسی نقش سفارشی نشت داده یا ارتقای اختیار نسازند.",
+      "technical": "ماتریس نقش×عملیات×فروشگاه×وضعیت با API مستقیم، export و رسانه؛ نقش revokeشده، کاربر read-only و سلر قبل/بعد تأمین؛ CSRF و unknown key. test منفی از منوی UI مستقل باشد.",
+      "acceptance": [
+        "سلر الف با همه مسیرهای شناسه ب به داده ب نرسد",
+        "پیش از تأمین اطلاعات گیرنده از پاسخ حذف و بعد revoke عملیات قبلی رد شود"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-qa-01.md"
+    },
+    {
+      "id": "CV-QA-02",
+      "title": "آزمون طلایی قیمت، تخفیف و واحد",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-PRC-06",
+        "CV-DSC-04",
+        "CV-OPS-06"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "Pricing / Quote / Refund",
+      "business": "قواعد مالی با نمونه‌های ثابت و جمع دقیق قابل اعتماد باشند.",
+      "technical": "golden cases markup بعد تخفیف، ارسال جدا، وراثت/صفر، نقدی/وام، fixed/formula و نرخ سلر؛ property جمع تخصیص و snapshot؛ decimal/ریال/تومان و مرز تاریخ.",
+      "acceptance": [
+        "نمونه۹۰۰×۱٫۰۴+۵۰=۹۸۶ و default۳/gold۶/shamsh۰ عبور کند",
+        "مجموع refund و تخصیص از اصل پرداخت/تخفیف بیشتر نشود"
+      ],
+      "block": "CHQ-01 / CHQ-03 / CHQ-04: golden فرمول نهایی پس از پاسخ، موارد قطعی اکنون قابل نوشتن",
+      "status": "todo",
+      "file": "tasks/cv-qa-02.md"
+    },
+    {
+      "id": "CV-QA-03",
+      "title": "هم‌زمانی رزرو و اثر مالی یکتا",
+      "priority": "P0",
+      "wave": "W2",
+      "size": "M",
+      "dependencies": [
+        "CV-FIN-03",
+        "CV-FIN-04",
+        "CV-FIN-05",
+        "CV-FIN-06",
+        "CV-FIN-07",
+        "CV-OPS-07"
+      ],
+      "spec": "10-finance.md",
+      "screen": "Checkout / Ledger / Shipping",
+      "business": "رقابت و crash صحت موجودی و پول را از بین نبرند.",
+      "technical": "تست integration با DB واقعی آزمون و barrier دو درخواست؛ آخرین موجودی، debit/withdraw، refund/settlement و cancel/dispatch؛ fault injection قبل/بعد commit/network و duplicate callback.",
+      "acceptance": [
+        "نه موجودی منفی و نه تراز شکسته/خروج مضاعف ایجاد شود",
+        "پس از crash replay همان کلید به نتیجه قبلی برسد و unknown دوباره وجه نفرستد"
+      ],
+      "block": "",
+      "status": "todo",
+      "file": "tasks/cv-qa-03.md"
+    },
+    {
+      "id": "CV-QA-04",
+      "title": "پذیرش بصری و فلو کامل سایت",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-10",
+        "CV-WEB-11",
+        "CV-WEB-12",
+        "CV-WEB-15",
+        "CV-WEB-16",
+        "CV-WEB-17",
+        "CV-WEB-18"
+      ],
+      "spec": "08-storefront-design.md",
+      "screen": "Mobile / Desktop",
+      "business": "تیم خروجی را با دیزاین و رفتار واقعی مسیر خرید بسنجد.",
+      "technical": "سناریوی مرورگر کشف→PDP→سبد→OTP→آدرس→دوحمل→نقدی/BNPL fixture→نتیجه؛ خالی/خطا/انقضا/unknown/شارژ موفق بدون سفارش؛ screenshot مرجع، keyboard/focus و کنترل خرید.",
+      "acceptance": [
+        "کارت مودال/خرید مستقیم نداشته باشد و شکل دکمه مطابق مرجع باشد",
+        "بازگشت/refresh خرید تازه یا شمارنده ساختگی معتبر ایجاد نکند"
+      ],
+      "block": "CHQ-12: انتخاب طرح؛ mock acceptance از پذیرش provider جدا",
+      "status": "todo",
+      "file": "tasks/cv-qa-04.md"
+    },
+    {
+      "id": "CV-QA-05",
+      "title": "کارایی جست‌وجو، SEO، کش و PWA",
+      "priority": "P1",
+      "wave": "W3",
+      "size": "M",
+      "dependencies": [
+        "CV-WEB-14",
+        "CV-PRC-08",
+        "CV-WEB-03",
+        "CV-WEB-04"
+      ],
+      "spec": "11-quality-operations.md",
+      "screen": "Public pages / SW / Search",
+      "business": "سرعت با کش درست حاصل شود و داده خصوصی در cache نماند.",
+      "technical": "dataset و load profile ثبت‌شده، query plan و latency؛ invalidate نرخ/سکشن، crawl sitemap/canonical، public HTML و image budget؛ logout/switch user و offline financial block؛ LCP/CLS اندازه‌گیری.",
+      "acceptance": [
+        "gold/digi در cache مشترک داده هم را نشان ندهند",
+        "پس از logout آدرس/wallet/سفارش قبلی با back/offline بازیابی نشود"
+      ],
+      "block": "CHQ-08 / CHQ-13: canonical و هدف عددی کارایی؛ تست ابطال/حریم خصوصی مستقل",
+      "status": "todo",
+      "file": "tasks/cv-qa-05.md"
+    },
+    {
+      "id": "CV-QA-06",
+      "title": "پذیرش نهایی و راهنمای عملیات",
+      "priority": "P0",
+      "wave": "W4",
+      "size": "M",
+      "dependencies": [
+        "CV-QA-01",
+        "CV-QA-02",
+        "CV-QA-03",
+        "CV-QA-04",
+        "CV-QA-05",
+        "CV-INT-03",
+        "CV-INT-06",
+        "CV-INT-07"
+      ],
+      "spec": "12-delivery-plan.md",
+      "screen": "Release gate / Support runbook",
+      "business": "تیم با شاهد روشن و توان پیگیری خطا انتشار کند.",
+      "technical": "چک‌لیست دامنه P1، قراردادهای واقعی، sandbox و پذیرش مجاز، reconciliation و backup/rollback؛ آموزش عملیات unknown/refund/عدم‌تأمین، مسئول on-call و گزارش محدودیت. هیچ task فقط بر اساس build done نشود.",
+      "acceptance": [
+        "همه CHQهای مسیرهای فعال بسته یا feature وابسته صریحاً غیرفعال باشد",
+        "تیم سناریوی unknown و بازیابی را بدون انتقال مضاعف تمرین و شاهد ثبت کند"
+      ],
+      "block": "تمام سؤال‌های مسدودکننده قابلیت‌های فعال؛ موعد انتشار تعهد نشده",
+      "status": "todo",
+      "file": "tasks/cv-qa-06.md"
+    },
+    {
+      "id": "CV-CAT-10",
+      "title": "سنجه بازدید و فروش برای مرتب‌سازی",
+      "priority": "P1",
+      "wave": "W1",
+      "size": "M",
+      "dependencies": [
+        "CV-CAT-09",
+        "CV-FND-06"
+      ],
+      "spec": "06-catalog-pricing.md",
+      "screen": "BO تنظیمات / PLP sorts",
+      "business": "مرتب‌سازی پربازدید/پرفروش از داده واقعی و قابل توضیح ساخته شود.",
+      "technical": "aggregate روزانه بازدید معتبر و فروش قطعی با بازه configurable و job idempotent؛ baseline صفر برای داده آزمون؛ duplicate view suppression و عدم ثبت PII. snapshot/تعریف refund از قرارداد سنجه پیروی کند.",
+      "acceptance": [
+        "rerun job شمار فروش را دوبار زیاد نکند",
+        "ربات/refresh تکراری طبق policy مصوب رتبه ساختگی نسازند و ناموجودها انتهای نتایج بمانند"
+      ],
+      "block": "CHQ-13: پنجره/تعریف بازدید معتبر؛ عدد KPI واقعی حدس زده نشود",
+      "status": "todo",
+      "file": "tasks/cv-cat-10.md"
+    }
+  ]
+}

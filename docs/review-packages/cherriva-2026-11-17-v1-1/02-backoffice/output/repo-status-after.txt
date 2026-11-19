@@ -1,0 +1,28 @@
+ M README.md
+ M docs/README.md
+ M docs/architecture/README.md
+ M docs/architecture/contracts/backoffice-review.md
+ M docs/bdd/README.md
+ M docs/bdd/features/domains/catalog.feature
+ M docs/bdd/features/domains/pricing.feature
+ M docs/bdd/features/experiences/backoffice-management.feature
+ M docs/bdd/features/experiences/storefront-discovery.feature
+ M docs/decisions/README.md
+ M docs/decisions/adr-002-codebase-architecture.md
+ M docs/domains/README.md
+ M docs/domains/catalog/README.md
+ M docs/domains/checkout/README.md
+ M docs/domains/pricing/README.md
+ M docs/experiences/backoffice/management.md
+ M docs/experiences/seller-portal/README.md
+ M docs/experiences/storefront/discovery.md
+ M docs/governance/traceability.md
+ M docs/product/glossary.md
+ M docs/product/open-questions.md
+ M docs/product/roles.md
+ M docs/product/scope.md
+?? Start-Cherriva.cmd
+?? Start-Cherriva.ps1
+?? apps/seller-portal-web/vite.local.config.ts
+?? docs/decisions/adr-004-pricing-category-and-access-expansion.md
+?? docs/local-development.md

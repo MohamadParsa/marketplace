@@ -1,0 +1,39 @@
+# پوشش خواسته‌ها تا تحلیل و تسک
+
+نسخه: ۱.۰ | تاریخ: ۲۰۲۶-۱۱-۱۷ | وضعیت: تحلیل و طراحی برای بازبینی تیم فنی | مالک بررسی: محصول و راهبر فنی؛ انتساب شخص هنوز انجام نشده
+
+این ماتریس خواسته‌های فنی و دیزاین مطرح‌شده را به تحلیل و task وصل می‌کند. «پوشش» یعنی مستند و تسک‌گذاری شده، نه پیاده‌سازی یا تأیید همه جزئیات. توافق مؤسسان، بودجه/نقدینگی واقعی، قرارداد تجاری و حسابداری جامع موضوع اجرای نرم‌افزار این بسته نیستند؛ اسناد کسب‌وکار D:\Marketplace سابقه آن‌ها را نگه می‌دارند.
+
+| شناسه | خواسته | تحلیل | تسک‌های مرتبط | وضعیت تصمیم |
+| --- | --- | --- | --- | --- |
+| COV-01 | ورود، OTP، حساب، آدرس و منوی پروفایل | [مرجع](08-storefront-design.md) | [CV-IAM-01](tasks/cv-iam-01.md)، [CV-IAM-02](tasks/cv-iam-02.md)، [CV-IAM-07](tasks/cv-iam-07.md)، [CV-WEB-02](tasks/cv-web-02.md)، [CV-WEB-07](tasks/cv-web-07.md) | پایه روشن؛ provider پیامک مستقل |
+| COV-02 | دسته درختی، برگ PLP و خصوصیت‌های دسته | [مرجع](06-catalog-pricing.md) | [CV-CAT-01](tasks/cv-cat-01.md)، [CV-CAT-02](tasks/cv-cat-02.md)، [CV-WEB-04](tasks/cv-web-04.md) | برگ/درخت قطعی؛ تجمیع والد و ارث CHQ-09 |
+| COV-03 | برند و آیکن برند قابل مدیریت | [مرجع](05-backoffice-screens.md) | [CV-CAT-03](tasks/cv-cat-03.md)، [CV-CMS-03](tasks/cv-cms-03.md) | دامنه روشن |
+| COV-04 | محصول، تنوع و عرضه مستقل/مشترک چندسلری | [مرجع](06-catalog-pricing.md) | [CV-CAT-04](tasks/cv-cat-04.md)، [CV-CAT-05](tasks/cv-cat-05.md)، [CV-CAT-06](tasks/cv-cat-06.md)، [CV-CAT-08](tasks/cv-cat-08.md) | دامنه پایه روشن |
+| COV-05 | جست‌وجوی DB و پیشنهاد popup بدون موتور بیرونی | [مرجع](06-catalog-pricing.md) | [CV-CAT-09](tasks/cv-cat-09.md)، [CV-WEB-02](tasks/cv-web-02.md) | راه‌حل فنی پیشنهادی و ایندکس قابل اندازه‌گیری |
+| COV-06 | Home: هدر، منو، hero، دسته، تخفیف، ریل، برند و footer | [مرجع](08-storefront-design.md) | [CV-CMS-01](tasks/cv-cms-01.md)، [CV-CMS-02](tasks/cv-cms-02.md)، [CV-CMS-03](tasks/cv-cms-03.md)، [CV-WEB-03](tasks/cv-web-03.md) | ترتیب خواسته‌شده؛ کم‌کالا/طرح CHQ-12 |
+| COV-07 | مدیریت ساده سکشن و صفحه/فرم | [مرجع](07-content-sections.md) | [CV-CMS-01](tasks/cv-cms-01.md)، [CV-CMS-02](tasks/cv-cms-02.md)، [CV-CMS-05](tasks/cv-cms-05.md)، [CV-CMS-06](tasks/cv-cms-06.md) | Page/Section پیشنهادی؛ فرم محتوایی و schedule اختیاری |
+| COV-08 | PLP: فیلتر، رنج قیمت، موجودی، sort و سه ویژگی | [مرجع](08-storefront-design.md) | [CV-CAT-09](tasks/cv-cat-09.md)، [CV-CAT-10](tasks/cv-cat-10.md)، [CV-WEB-04](tasks/cv-web-04.md) | دامنه روشن؛ سنجه معتبر نیاز تعریف دقیق |
+| COV-09 | PDP مستقل، گالری، تنوع، بای‌باکس و همه سلرها | [مرجع](08-storefront-design.md) | [CV-PRC-07](tasks/cv-prc-07.md)، [CV-CAT-07](tasks/cv-cat-07.md)، [CV-WEB-05](tasks/cv-web-05.md) | درخواست قطعی؛ tie-break CHQ-14 |
+| COV-10 | کارت بدون خرید مستقیم، دکمه مرجع و سه مسیر بصری | [مرجع](08-storefront-design.md) | [CV-WEB-01](tasks/cv-web-01.md)، [CV-WEB-03](tasks/cv-web-03.md)، [CV-WEB-04](tasks/cv-web-04.md)، [CV-WEB-05](tasks/cv-web-05.md)، [CV-QA-04](tasks/cv-qa-04.md) | کارت/PDP قطعی؛ انتخاب A/B/C باز |
+| COV-11 | سبد، افزودن/تعداد، ادغام و تغییر تنوع/سلر | [مرجع](08-storefront-design.md) | [CV-WEB-06](tasks/cv-web-06.md)، [CV-PRC-07](tasks/cv-prc-07.md) | دامنه پایه روشن |
+| COV-12 | checkout/place order و جلسه/رزرو | [مرجع](10-finance.md) | [CV-FIN-03](tasks/cv-fin-03.md)، [CV-WEB-08](tasks/cv-web-08.md)، [CV-WEB-09](tasks/cv-web-09.md)، [CV-WEB-10](tasks/cv-web-10.md) | روش وابسته به مبلغ و قفل CHQ-02 |
+| COV-13 | روش ارسال، چندمرسوله، شهر/تعرفه و رهگیری | [مرجع](09-order-shipping.md) | [CV-OPS-05](tasks/cv-ops-05.md)، [CV-OPS-06](tasks/cv-ops-06.md)، [CV-OPS-07](tasks/cv-ops-07.md)، [CV-WEB-08](tasks/cv-web-08.md) | مدل روشن؛ پوشش و بیمه واقعی CHQ-07 |
+| COV-14 | روش پرداخت نقدی و اعتباری و لندینگ اقساط | [مرجع](10-finance.md) | [CV-PRC-01](tasks/cv-prc-01.md)، [CV-CMS-04](tasks/cv-cms-04.md)، [CV-WEB-13](tasks/cv-web-13.md)، [CV-INT-01](tasks/cv-int-01.md)، [CV-INT-02](tasks/cv-int-02.md) | مدل روشن؛ شروط provider CHQ-11 |
+| COV-15 | طلا: نرخ مشترک/اختصاصی، fixed/formula و اجزای قیمت | [مرجع](06-catalog-pricing.md) | [CV-PRC-03](tasks/cv-prc-03.md)، [CV-PRC-04](tasks/cv-prc-04.md) | منبع نرخ قطعی؛ فرمول/واحد/مالیات CHQ-03 |
+| COV-16 | مارکاپ روش و overwrite نزدیک‌ترین دسته بعد تخفیف | [مرجع](06-catalog-pricing.md) | [CV-PRC-01](tasks/cv-prc-01.md)، [CV-PRC-02](tasks/cv-prc-02.md)، [CV-PRC-06](tasks/cv-prc-06.md)، [CV-QA-02](tasks/cv-qa-02.md) | فرمول پایه قطعی؛ ترتیب مرکب/تسویه CHQ-01 |
+| COV-17 | کمیسیون مستقل، clock و snapshot | [مرجع](01-scope-decisions.md) | [CV-PRC-05](tasks/cv-prc-05.md)، [CV-PRC-06](tasks/cv-prc-06.md) | قاعده منتقل‌شده؛ مبدأ/چندتب CHQ-14 |
+| COV-18 | تخفیف محصول/کوپن/سهم هزینه و استرداد | [مرجع](06-catalog-pricing.md) | [CV-DSC-01](tasks/cv-dsc-01.md)، [CV-DSC-02](tasks/cv-dsc-02.md)، [CV-DSC-03](tasks/cv-dsc-03.md)، [CV-DSC-04](tasks/cv-dsc-04.md)، [CV-DSC-05](tasks/cv-dsc-05.md) | هر دو funder قطعی؛ سیاست ترکیب/تخصیص CHQ-04 |
+| COV-19 | کیف پول: شارژ، پرداخت، برداشت، ظرفیت و hold | [مرجع](10-finance.md) | [CV-FIN-01](tasks/cv-fin-01.md)، [CV-FIN-02](tasks/cv-fin-02.md)، [CV-FIN-03](tasks/cv-fin-03.md)، [CV-FIN-04](tasks/cv-fin-04.md)، [CV-WEB-12](tasks/cv-web-12.md) | مدل منتقل‌شده؛ اتصال payout CHQ-11 |
+| COV-20 | سفارش، تأمین، عدم تأمین، واگذاری و پشتیبانی | [مرجع](09-order-shipping.md) | [CV-OPS-01](tasks/cv-ops-01.md)، [CV-OPS-02](tasks/cv-ops-02.md)، [CV-OPS-03](tasks/cv-ops-03.md)، [CV-OPS-04](tasks/cv-ops-04.md)، [CV-OPS-08](tasks/cv-ops-08.md)، [CV-WEB-11](tasks/cv-web-11.md) | پایه روشن؛ تعدیل مالی CHQ-01 |
+| COV-21 | استرداد پول، مرجوعی فیزیکی و برگشت موجودی | [مرجع](09-order-shipping.md) | [CV-FIN-05](tasks/cv-fin-05.md)، [CV-OPS-09](tasks/cv-ops-09.md) | چرخه‌ها جدا؛ سیاست مرجوعی CHQ-05 |
+| COV-22 | تسویه و صورت‌حساب سلر | [مرجع](10-finance.md) | [CV-FIN-06](tasks/cv-fin-06.md)، [CV-FIN-08](tasks/cv-fin-08.md) | قلم‌محور/جزئی؛ قرارداد و سهم‌ها CHQ-01/11 |
+| COV-23 | پنل مشترک، نقش سفارشی و دسترسی منو/فرم/عملیات | [مرجع](05-backoffice-screens.md) | [CV-FND-07](tasks/cv-fnd-07.md)، [CV-IAM-03](tasks/cv-iam-03.md)، [CV-IAM-04](tasks/cv-iam-04.md)، [CV-IAM-05](tasks/cv-iam-05.md)، [CV-QA-01](tasks/cv-qa-01.md) | اصل قطعی؛ جزئیات انتساب CHQ-06 |
+| COV-24 | مادر همه کالاها و gold/digi محدود، SEO و URL | [مرجع](11-quality-operations.md) | [CV-CAT-09](tasks/cv-cat-09.md)، [CV-WEB-14](tasks/cv-web-14.md)، [CV-QA-05](tasks/cv-qa-05.md) | قلمرو قطعی؛ مسیر نهایی/session CHQ-08 |
+| COV-25 | کش در مراحل، ابطال و حفاظت داده خصوصی/PWA | [مرجع](11-quality-operations.md) | [CV-PRC-08](tasks/cv-prc-08.md)، [CV-QA-05](tasks/cv-qa-05.md)، [CV-INT-05](tasks/cv-int-05.md) | راه‌حل پیشنهادی؛ TTL/SLO بعد سنجش |
+| COV-26 | نظر، پرسش‌وپاسخ، bookmark و newsletter | [مرجع](08-storefront-design.md) | [CV-WEB-15](tasks/cv-web-15.md)، [CV-WEB-16](tasks/cv-web-16.md)، [CV-WEB-17](tasks/cv-web-17.md)، [CV-WEB-18](tasks/cv-web-18.md) | خواسته‌ها ثبت؛ سیاست انتشار/رضایت CHQ-10 |
+| COV-27 | لاگ، audit، اعلان و unknown/recovery | [مرجع](11-quality-operations.md) | [CV-FND-06](tasks/cv-fnd-06.md)، [CV-FIN-07](tasks/cv-fin-07.md)، [CV-INT-03](tasks/cv-int-03.md)، [CV-INT-04](tasks/cv-int-04.md) | تراکنش و اثر بیرونی جدا |
+| COV-28 | نماد و مجوز، زیرساخت/دامنه و آمادگی فروش | [مرجع](11-quality-operations.md) | [CV-INT-06](tasks/cv-int-06.md)، [CV-INT-07](tasks/cv-int-07.md)، [CV-QA-06](tasks/cv-qa-06.md) | گیت واقعی با شاهد؛ ادعای مجوز ساخته نشده |
+| COV-29 | آزمون، پذیرش، امنیت، عملکرد و تحویل agent | [مرجع](16-agent-delivery.md) | [CV-QA-01](tasks/cv-qa-01.md)، [CV-QA-02](tasks/cv-qa-02.md)، [CV-QA-03](tasks/cv-qa-03.md)، [CV-QA-04](tasks/cv-qa-04.md)، [CV-QA-05](tasks/cv-qa-05.md)، [CV-QA-06](tasks/cv-qa-06.md) | تسک با AC؛ هیچ آزمون محصول در این تهیه اجرا نشده |
+
+تغییر پس از بررسی: ردیف پوشش، مرجع تحلیل، task و پذیرش وابسته هم‌زمان به‌روز شوند. برای نمونه، تصمیم نهایی فرمول طلا فقط تغییر متن UI نیست و روی quote، ledger، refund، گزارش و تست مالی اثر دارد.

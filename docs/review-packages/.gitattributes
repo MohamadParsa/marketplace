@@ -1,0 +1,2 @@
+# Preserve snapshot bytes and accept the original CRLF line endings.
+cherriva-2026-11-17-v1-1/** -text whitespace=cr-at-eol

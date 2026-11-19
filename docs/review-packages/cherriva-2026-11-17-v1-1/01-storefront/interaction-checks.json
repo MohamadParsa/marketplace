@@ -1,0 +1,86 @@
+[
+  {
+    "name": "PDP initial purchase action",
+    "passed": true
+  },
+  {
+    "name": "PDP added count state",
+    "passed": true
+  },
+  {
+    "name": "PDP quantity one removes",
+    "passed": true
+  },
+  {
+    "name": "Maximum stock disables increase",
+    "passed": true
+  },
+  {
+    "name": "Summary recalculates on quantity",
+    "passed": true
+  },
+  {
+    "name": "Removing other item retains unavailable block",
+    "passed": true
+  },
+  {
+    "name": "Empty cart after final remove",
+    "passed": true
+  },
+  {
+    "name": "Price change blocks continue",
+    "passed": true
+  },
+  {
+    "name": "Price review unlocks continue",
+    "passed": true
+  },
+  {
+    "name": "Phone moves to OTP",
+    "passed": true
+  },
+  {
+    "name": "Can edit phone",
+    "passed": true
+  },
+  {
+    "name": "Invalid code state renders OTP and warning",
+    "passed": true
+  },
+  {
+    "name": "Shipping updates summary",
+    "passed": true
+  },
+  {
+    "name": "Payment action follows total",
+    "passed": true
+  },
+  {
+    "name": "Wallet deficit is minimum charge",
+    "passed": true
+  },
+  {
+    "name": "Credit separate from topup",
+    "passed": true
+  },
+  {
+    "name": "Demo payment navigates to pending only",
+    "passed": true
+  },
+  {
+    "name": "Pending offers query of same attempt",
+    "passed": true
+  },
+  {
+    "name": "Expired has no payment action",
+    "passed": true
+  },
+  {
+    "name": "Expired methods disabled",
+    "passed": true
+  },
+  {
+    "name": "Viewer supports direction page state",
+    "passed": true
+  }
+]

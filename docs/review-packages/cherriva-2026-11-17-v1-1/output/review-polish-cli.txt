@@ -1,0 +1,12 @@
+### Result
+{"optionalEmail":true,"emptyEmailAccepted":true}
+### Ran Playwright code
+```js
+await (async(page)=>{const r=[];for(const theme of ['a','b','c']){for(const route of ['categories','attributes']){await page.setViewportSize({width:1440,height:1000});await page.goto('http://127.0.0.1:4190/02-backoffice/index.html#'+route+'?theme='+theme+'&role=admin&scene=normal');await page.reload();await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:'02-backoffice/output/playwright/bo-'+(route==='categories'?'05':'07')+'-'+route+'-'+theme+'.png',fullPage:true});}}await page.goto('http://127.0.0.1:4190/01-storefront/mockup.html?page=profile&direction=balanced');const optionalEmail=await page.locator('[name=email]').evaluate(x=>!x.required);await page.locator('[name=email]').fill('');await page.locator('#identity-profile-form button[type=submit]').click();return {optionalEmail,emptyEmailAccepted:await page.locator('[name=email]').evaluate(x=>x.checkValidity())};}
+)(page);
+```
+### Page
+- Page URL: http://127.0.0.1:4190/01-storefront/mockup.html?page=profile&direction=balanced
+- Page Title: Cherriva — مطالعه طراحی صفحات
+### Events
+- New console entries: .playwright-cli\console-2026-11-17T11-44-39-799Z.log#L32-L33

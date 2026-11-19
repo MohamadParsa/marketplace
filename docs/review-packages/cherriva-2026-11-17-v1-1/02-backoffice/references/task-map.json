@@ -1,0 +1,335 @@
+{
+  "origin": "technical-handoff v1.0 / 2026-11-17",
+  "status": "read-only excerpt; not implementation progress",
+  "tasks": [
+    {
+      "id": "CV-FND-06",
+      "title": "audit و outbox پایدار سبک",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-FND-07",
+      "title": "پوسته مشترک پنل و الگوی فرم",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-IAM-03",
+      "title": "رجیستری مجوز و نقش قابل تعریف",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-06: جزئیات مدیریت/افزایش اختیار؛ مدل نقش سفارشی قطعی است"
+    },
+    {
+      "id": "CV-IAM-04",
+      "title": "کاربر، انتساب نقش و ابطال اختیار",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-06: چندنقشی و grant مستقیم تا پاسخ فعال نشوند"
+    },
+    {
+      "id": "CV-IAM-05",
+      "title": "جداسازی داده فروشگاه در API و خروجی",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-IAM-06",
+      "title": "پرونده فروشگاه و سیاست‌هایش",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-11 / CHQ-13: مدارک و شرایط فعال‌سازی واقعی باید از مسئول کسب‌وکار بیاید"
+    },
+    {
+      "id": "CV-CAT-01",
+      "title": "درخت دسته‌بندی و فرم والد/فرزند",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-09: انتقال/آرشیو دسته فعال و تجمیع محصولات والد جدا؛ CRUD پایه آزاد"
+    },
+    {
+      "id": "CV-CAT-02",
+      "title": "خصوصیت و محورهای تنوع دسته",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-09: ارث خصوصیت و تغییر مخرب type پیش از اجرا تعیین شود"
+    },
+    {
+      "id": "CV-CAT-03",
+      "title": "برند، لوگو و صفحه برند",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CAT-04",
+      "title": "محصول مستقل/مشترک و محتوای نسخه‌دار",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CAT-05",
+      "title": "تنوع، SKU و داده طلای فیزیکی",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CAT-06",
+      "title": "عرضه، موجودی و آماده‌سازی فروشنده",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CAT-07",
+      "title": "رسانه و گالری محصول/تنوع",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CAT-08",
+      "title": "انتشار و بررسی محصول/خصوصیت",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-PRC-01",
+      "title": "روش فروش و اتصال به درگاه",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-PRC-02",
+      "title": "مارکاپ دسته با وراثت و صفر صریح",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-PRC-03",
+      "title": "نرخ طلا مشترک و اختصاصی سلر",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-03: نوع/دقت/اعتبار نرخ و اختیار ثبت/تأیید؛ CRUD آزمون قابل شروع"
+    },
+    {
+      "id": "CV-PRC-04",
+      "title": "پروفایل قیمت طلا و محاسبه نسخه‌دار",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-03: فرمول/مالیات واقعی تا پاسخ مسدود؛ فرم و قرارداد/آزمون مستقل آزاد"
+    },
+    {
+      "id": "CV-PRC-05",
+      "title": "قانون کمیسیون و clock مستقل",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-14: مبدأ دقیق clock/چندتب؛ ترتیب با تخفیف مرکب در CHQ-01"
+    },
+    {
+      "id": "CV-PRC-06",
+      "title": "quote مرکزی و breakdown قیمت",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-01 / CHQ-02 / CHQ-03 / CHQ-04: بخش مرکب و جلسه؛ فرمول ساده تأییدشده و DTO قابل شروع"
+    },
+    {
+      "id": "CV-DSC-01",
+      "title": "مدل تخفیف محصول و منبع هزینه",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-04: stacking و مشارکت مشترک؛ دو منبع مستقل قطعی"
+    },
+    {
+      "id": "CV-DSC-02",
+      "title": "کد تخفیف و ارزیابی سبد",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-04: حداقل خرید/ارسال/ترکیب و روش مجاز"
+    },
+    {
+      "id": "CV-DSC-05",
+      "title": "فرم تخفیف/کوپن و پیش‌نمایش اثر",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-04: اختیار سلر و approval واقعی"
+    },
+    {
+      "id": "CV-CMS-01",
+      "title": "مدل Page و سکشن‌های typed",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CMS-02",
+      "title": "ویرایش، پیش‌نمایش و انتشار سکشن",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-CMS-03",
+      "title": "منو، برندها، فوتر و خدمات سایت",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-13: متن حقوقی و شواهد خدمت/نماد"
+    },
+    {
+      "id": "CV-CMS-04",
+      "title": "محتوای لندینگ اقساط و FAQ",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-11: شرایط provider؛ draft و renderer مستقل ممکن"
+    },
+    {
+      "id": "CV-CMS-05",
+      "title": "زمان‌بندی و بازگشت نسخه محتوا",
+      "priority": "P2",
+      "status": "todo",
+      "block": "CHQ-12: نیاز زمان‌بندی در شروع؛ توسعه پیشنهادی"
+    },
+    {
+      "id": "CV-OPS-01",
+      "title": "خرید، سفارش سلر و جزئیات snapshot",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-OPS-02",
+      "title": "تأیید قلمی تأمین و حریم خصوصی",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-OPS-03",
+      "title": "عدم تأمین، بی‌پاسخی و صف رسیدگی",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-OPS-04",
+      "title": "واگذاری به تأمین‌کننده جایگزین",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-01: تعدیلات مالی مرکب؛ مدل/فلو آزمون مستقل ممکن"
+    },
+    {
+      "id": "CV-OPS-05",
+      "title": "روش حمل، پوشش و تعرفه فروشگاه",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-07: پوشش/بیمه طلا و هزینه واقعی"
+    },
+    {
+      "id": "CV-OPS-06",
+      "title": "برآورد و محاسبه مجدد هزینه حمل",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-07: cut-off و فرمول تعرفه؛ fixture تقویم آزاد"
+    },
+    {
+      "id": "CV-OPS-07",
+      "title": "مرسوله، بسته‌ها و اعزام",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-OPS-08",
+      "title": "گزارش حمل و تصمیم پشتیبانی",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-OPS-09",
+      "title": "مرجوعی فیزیکی و بازرسی برگشت",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-05: مهلت/کالای مجاز/هزینه/بازرسی/اختیار پیش از فعال‌سازی"
+    },
+    {
+      "id": "CV-FIN-01",
+      "title": "دفتر مالی و مانده قابل مصرف",
+      "priority": "P0",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-FIN-04",
+      "title": "برداشت با hold و ظرفیت مبدأ",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-11: احراز مقصد و provider واقعی؛ adapter آزمون قابل ساخت"
+    },
+    {
+      "id": "CV-FIN-05",
+      "title": "استرداد تعدادی با درگاه مبدأ",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-01 / CHQ-04 / CHQ-11: سهم markup/discount و قابلیت refund واقعی"
+    },
+    {
+      "id": "CV-FIN-06",
+      "title": "صورتحساب و تسویه قلم‌محور",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-01 / CHQ-11: سهم مالی و زمان/ابزار واقعی تسویه"
+    },
+    {
+      "id": "CV-FIN-07",
+      "title": "تطبیق unknown و بازیابی اثر مالی",
+      "priority": "P0",
+      "status": "todo",
+      "block": "CHQ-11: قرارداد استعلام و retry واقعی"
+    },
+    {
+      "id": "CV-FIN-08",
+      "title": "صفحات مالی و گزارش مجاز",
+      "priority": "P1",
+      "status": "todo",
+      "block": ""
+    },
+    {
+      "id": "CV-WEB-15",
+      "title": "نظر کاربران و صف انتشار",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-10: اجازه ثبت/خرید معتبر/سیاست انتشار پیش از public write"
+    },
+    {
+      "id": "CV-WEB-16",
+      "title": "پرسش‌وپاسخ محصول و مدیریت پاسخ",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-10: سیاست ثبت/پاسخ/انتشار و اختیار سلر"
+    },
+    {
+      "id": "CV-WEB-18",
+      "title": "ثبت ایمیل خبرنامه و لغو رضایت",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-10 / CHQ-13: رضایت، تأیید ایمیل، retention و سرویس ارسال"
+    },
+    {
+      "id": "CV-INT-04",
+      "title": "پیامک OTP و اعلان رخدادها",
+      "priority": "P1",
+      "status": "todo",
+      "block": "CHQ-11 / CHQ-13: provider، قالب، مقصد و سطح تضمین تحویل"
+    }
+  ]
+}

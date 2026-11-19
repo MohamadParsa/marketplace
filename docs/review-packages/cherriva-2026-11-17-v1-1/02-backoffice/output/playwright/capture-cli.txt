@@ -1,0 +1,48 @@
+### Result
+{"screens":[{"route":"dashboard","theme":"a","overflow":false,"title":"نمای کلی بازارگاه"},{"route":"users","theme":"a","overflow":false,"title":"کاربران"},{"route":"roles","theme":"a","overflow":false,"title":"نقش‌ها و دسترسی‌ها"},{"route":"stores","theme":"a","overflow":false,"title":"فروشگاه‌ها"},{"route":"categories","theme":"a","overflow":false,"title":"دسته‌بندی‌ها"},{"route":"brands","theme":"a","overflow":false,"title":"برندها"},{"route":"attributes","theme":"a","overflow":false,"title":"خصوصیات و تنوع‌ها"},{"route":"products","theme":"a","overflow":false,"title":"محصولات و محتوا"},{"route":"offers","theme":"a","overflow":false,"title":"عرضه و موجودی"},{"route":"gold-rates","theme":"a","overflow":false,"title":"نرخ پایه طلا"},{"route":"gold-policies","theme":"a","overflow":false,"title":"مدل قیمت‌گذاری طلا"},{"route":"sale-methods","theme":"a","overflow":false,"title":"روش‌های فروش"},{"route":"category-markups","theme":"a","overflow":false,"title":"مارکاپ دسته‌بندی"},{"route":"commissions","theme":"a","overflow":false,"title":"قواعد کمیسیون"},{"route":"promotions","theme":"a","overflow":false,"title":"تخفیف‌ها و کدها"},{"route":"pages","theme":"a","overflow":false,"title":"صفحه‌ها و سکشن‌ها"},{"route":"shipping","theme":"a","overflow":false,"title":"حمل و تقویم"},{"route":"orders","theme":"a","overflow":false,"title":"خریدها و سفارش‌ها"},{"route":"shipments","theme":"a","overflow":false,"title":"مرسوله‌ها"},{"route":"support","theme":"a","overflow":false,"title":"پشتیبانی و پرونده‌ها"},{"route":"assignments","theme":"a","overflow":false,"title":"تأمین جایگزین"},{"route":"finance","theme":"a","overflow":false,"title":"عملیات مالی"},{"route":"settlements","theme":"a","overflow":false,"title":"تسویه فروشندگان"},{"route":"operations","theme":"a","overflow":false,"title":"پیگیری و گزارش"},{"route":"moderation","theme":"a","overflow":false,"title":"نظرها و پرسش‌ها"},{"route":"settings","theme":"a","overflow":false,"title":"تنظیمات ویترین"},{"route":"dashboard","theme":"b","overflow":false,"title":"نمای کلی بازارگاه"},{"route":"users","theme":"b","overflow":false,"title":"کاربران"},{"route":"roles","theme":"b","overflow":false,"title":"نقش‌ها و دسترسی‌ها"},{"route":"stores","theme":"b","overflow":false,"title":"فروشگاه‌ها"},{"route":"categories","theme":"b","overflow":false,"title":"دسته‌بندی‌ها"},{"route":"brands","theme":"b","overflow":false,"title":"برندها"},{"route":"attributes","theme":"b","overflow":false,"title":"خصوصیات و تنوع‌ها"},{"route":"products","theme":"b","overflow":false,"title":"محصولات و محتوا"},{"route":"offers","theme":"b","overflow":false,"title":"عرضه و موجودی"},{"route":"gold-rates","theme":"b","overflow":false,"title":"نرخ پایه طلا"},{"route":"gold-policies","theme":"b","overflow":false,"title":"مدل قیمت‌گذاری طلا"},{"route":"sale-methods","theme":"b","overflow":false,"title":"روش‌های فروش"},{"route":"category-markups","theme":"b","overflow":false,"title":"مارکاپ دسته‌بندی"},{"route":"commissions","theme":"b","overflow":false,"title":"قواعد کمیسیون"},{"route":"promotions","theme":"b","overflow":false,"title":"تخفیف‌ها و کدها"},{"route":"pages","theme":"b","overflow":false,"title":"صفحه‌ها و سکشن‌ها"},{"route":"shipping","theme":"b","overflow":false,"title":"حمل و تقویم"},{"route":"orders","theme":"b","overflow":false,"title":"خریدها و سفارش‌ها"},{"route":"shipments","theme":"b","overflow":false,"title":"مرسوله‌ها"},{"route":"support","theme":"b","overflow":false,"title":"پشتیبانی و پرونده‌ها"},{"route":"assignments","theme":"b","overflow":false,"title":"تأمین جایگزین"},{"route":"finance","theme":"b","overflow":false,"title":"عملیات مالی"},{"route":"settlements","theme":"b","overflow":false,"title":"تسویه فروشندگان"},{"route":"operations","theme":"b","overflow":false,"title":"پیگیری و گزارش"},{"route":"moderation","theme":"b","overflow":false,"title":"نظرها و پرسش‌ها"},{"route":"settings","theme":"b","overflow":false,"title":"تنظیمات ویترین"},{"route":"dashboard","theme":"c","overflow":false,"title":"نمای کلی بازارگاه"},{"route":"users","theme":"c","overflow":false,"title":"کاربران"},{"route":"roles","theme":"c","overflow":false,"title":"نقش‌ها و دسترسی‌ها"},{"route":"stores","theme":"c","overflow":false,"title":"فروشگاه‌ها"},{"route":"categories","theme":"c","overflow":false,"title":"دسته‌بندی‌ها"},{"route":"brands","theme":"c","overflow":false,"title":"برندها"},{"route":"attributes","theme":"c","overflow":false,"title":"خصوصیات و تنوع‌ها"},{"route":"products","theme":"c","overflow":false,"title":"محصولات و محتوا"},{"route":"offers","theme":"c","overflow":false,"title":"عرضه و موجودی"},{"route":"gold-rates","theme":"c","overflow":false,"title":"نرخ پایه طلا"},{"route":"gold-policies","theme":"c","overflow":false,"title":"مدل قیمت‌گذاری طلا"},{"route":"sale-methods","theme":"c","overflow":false,"title":"روش‌های فروش"},{"route":"category-markups","theme":"c","overflow":false,"title":"مارکاپ دسته‌بندی"},{"route":"commissions","theme":"c","overflow":false,"title":"قواعد کمیسیون"},{"route":"promotions","theme":"c","overflow":false,"title":"تخفیف‌ها و کدها"},{"route":"pages","theme":"c","overflow":false,"title":"صفحه‌ها و سکشن‌ها"},{"route":"shipping","theme":"c","overflow":false,"title":"حمل و تقویم"},{"route":"orders","theme":"c","overflow":false,"title":"خریدها و سفارش‌ها"},{"route":"shipments","theme":"c","overflow":false,"title":"مرسوله‌ها"},{"route":"support","theme":"c","overflow":false,"title":"پشتیبانی و پرونده‌ها"},{"route":"assignments","theme":"c","overflow":false,"title":"تأمین جایگزین"},{"route":"finance","theme":"c","overflow":false,"title":"عملیات مالی"},{"route":"settlements","theme":"c","overflow":false,"title":"تسویه فروشندگان"},{"route":"operations","theme":"c","overflow":false,"title":"پیگیری و گزارش"},{"route":"moderation","theme":"c","overflow":false,"title":"نظرها و پرسش‌ها"},{"route":"settings","theme":"c","overflow":false,"title":"تنظیمات ویترین"},{"route":"login","viewport":"390x844","overflow":false},{"route":"dashboard","viewport":"390x844","overflow":false},{"route":"orders","viewport":"390x844","overflow":false},{"route":"pages","viewport":"390x844","overflow":false},{"route":"sale-methods","viewport":"390x844","overflow":false},{"route":"roles","viewport":"390x844","overflow":false},{"route":"finance","viewport":"390x844","overflow":false}],"errors":[]}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const go=async url=>{await page.goto(url);await page.waitForFunction(()=>window.CVDesign&&CVDesign.state.route===(location.hash.slice(1).split('?')[0]||'login'));};
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto('http://127.0.0.1:4179/#dashboard?role=admin&theme=a&scene=normal');
+  await page.reload();
+  const pages=await page.evaluate(()=>CV.pages.map(x=>({id:x.id,code:x.code,title:x.title})));
+  const results=[];
+  for(const theme of ['a','b','c']) {
+    for(const p of pages) {
+      await go(`http://127.0.0.1:4179/#${p.id}?role=admin&theme=${theme}&scene=normal`);
+      await page.evaluate(()=>document.fonts.ready);
+      await page.locator('main h1').waitFor();
+      const layout=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth+1,title:document.querySelector('main h1').textContent}));
+      await page.screenshot({path:`output/playwright/${p.code.toLowerCase()}-${p.id}-${theme}.png`,fullPage:true});
+      results.push({route:p.id,theme,...layout});
+    }
+    await go(`http://127.0.0.1:4179/#login?role=admin&theme=${theme}&scene=normal`);
+    await page.screenshot({path:`output/playwright/login-${theme}.png`,fullPage:true});
+  }
+  for(const route of ['login','dashboard','orders','pages','sale-methods','roles','finance']) {
+    await page.setViewportSize({width:390,height:844});
+    await go(`http://127.0.0.1:4179/#${route}?role=admin&theme=a&scene=normal`);
+    await page.screenshot({path:`output/playwright/mobile-${route}.png`,fullPage:true});
+    results.push({route,viewport:'390x844',overflow:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)});
+  }
+  await page.setViewportSize({width:1440,height:1000});
+  for(const scene of ['loading','empty','error','forbidden']){
+    await page.goto(`http://127.0.0.1:4179/#orders?role=admin&theme=a&scene=${scene}`);
+    await page.screenshot({path:`output/playwright/state-${scene}.png`,fullPage:true});
+  }
+  await page.goto('http://127.0.0.1:4179/#dashboard?role=seller&theme=a&scene=normal');
+  await page.screenshot({path:'output/playwright/seller-dashboard.png',fullPage:true});
+  await page.goto('http://127.0.0.1:4179/#orders?role=seller&theme=a&scene=normal');
+  await page.locator('[data-action="detail"][data-id="ORD-1048-1"]').first().click();
+  await page.screenshot({path:'output/playwright/seller-order-private.png',fullPage:true});
+  await page.goto('http://127.0.0.1:4179/#finance?role=finance&theme=a&scene=normal');
+  await page.locator('[data-action="detail"][data-id="PAY-2081"]').click();
+  await page.screenshot({path:'output/playwright/payment-unknown.png',fullPage:true});
+  await page.goto('http://127.0.0.1:4179/#dashboard?role=admin&theme=a&scene=normal');
+  return {screens:results,errors};
+}
+)(page);
+```

@@ -1,0 +1,17 @@
+{
+  "version": "1.1",
+  "date": "2026-11-17",
+  "scope": "standalone kit; no product/backend/provider tests",
+  "errors": [],
+  "markdown_local_links": 1600,
+  "utf8_text_files": 268,
+  "static_html_css_references": 45,
+  "images_readable": 388,
+  "js_syntax_files": 30,
+  "baseline_tasks": 91,
+  "amendments": 12,
+  "task_graph_acyclic": true,
+  "repo_status_unchanged": true,
+  "packaged_file_count_before_manifest": 665,
+  "passed": true
+}

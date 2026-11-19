@@ -1,0 +1,82 @@
+### Result
+{"date":"2026-11-17","checks":[{"id":"login-invalid-phone","pass":true,"detail":""},{"id":"login-preserves-input","pass":true,"detail":""},{"id":"login-persian-digits","pass":true,"detail":""},{"id":"otp-invalid","pass":true,"detail":""},{"id":"otp-dashboard","pass":true,"detail":""},{"id":"seller-order-scope","pass":true,"detail":""},{"id":"pre-supply-private","pass":true,"detail":""},{"id":"supply-transition","pass":true,"detail":""},{"id":"seller-direct-route-denied","pass":true,"detail":""},{"id":"stock-below-reserved-rejected","pass":true,"detail":""},{"id":"stock-local-update","pass":true,"detail":""},{"id":"viewer-no-save","pass":true,"detail":""},{"id":"viewer-fields-disabled","pass":true,"detail":""},{"id":"quote-after-discount-excluding-shipping","pass":true,"detail":""},{"id":"nearest-category-override","pass":true,"detail":""},{"id":"explicit-zero-override","pass":true,"detail":""},{"id":"parent-inheritance","pass":true,"detail":""},{"id":"discount-over-price","pass":true,"detail":""},{"id":"section-reorder","pass":true,"detail":""},{"id":"independent-scope-layout","pass":true,"detail":""},{"id":"draft-per-scope","pass":true,"detail":""},{"id":"publish-revision-simulation","pass":true,"detail":""},{"id":"unknown-no-forced-success","pass":true,"detail":""},{"id":"table-search","pass":true,"detail":""},{"id":"search-empty","pass":true,"detail":""},{"id":"command-search","pass":true,"detail":""},{"id":"command-navigation","pass":true,"detail":""},{"id":"layout-1440-dashboard","pass":true,"detail":""},{"id":"layout-1440-users","pass":true,"detail":""},{"id":"layout-1440-roles","pass":true,"detail":""},{"id":"layout-1440-stores","pass":true,"detail":""},{"id":"layout-1440-categories","pass":true,"detail":""},{"id":"layout-1440-brands","pass":true,"detail":""},{"id":"layout-1440-attributes","pass":true,"detail":""},{"id":"layout-1440-products","pass":true,"detail":""},{"id":"layout-1440-offers","pass":true,"detail":""},{"id":"layout-1440-gold-rates","pass":true,"detail":""},{"id":"layout-1440-gold-policies","pass":true,"detail":""},{"id":"layout-1440-sale-methods","pass":true,"detail":""},{"id":"layout-1440-category-markups","pass":true,"detail":""},{"id":"layout-1440-commissions","pass":true,"detail":""},{"id":"layout-1440-promotions","pass":true,"detail":""},{"id":"layout-1440-pages","pass":true,"detail":""},{"id":"layout-1440-shipping","pass":true,"detail":""},{"id":"layout-1440-orders","pass":true,"detail":""},{"id":"layout-1440-shipments","pass":true,"detail":""},{"id":"layout-1440-support","pass":true,"detail":""},{"id":"layout-1440-assignments","pass":true,"detail":""},{"id":"layout-1440-finance","pass":true,"detail":""},{"id":"layout-1440-settlements","pass":true,"detail":""},{"id":"layout-1440-operations","pass":true,"detail":""},{"id":"layout-1440-moderation","pass":true,"detail":""},{"id":"layout-1440-settings","pass":true,"detail":""},{"id":"layout-390-dashboard","pass":true,"detail":""},{"id":"layout-390-users","pass":true,"detail":""},{"id":"layout-390-roles","pass":true,"detail":""},{"id":"layout-390-stores","pass":true,"detail":""},{"id":"layout-390-categories","pass":true,"detail":""},{"id":"layout-390-brands","pass":true,"detail":""},{"id":"layout-390-attributes","pass":true,"detail":""},{"id":"layout-390-products","pass":true,"detail":""},{"id":"layout-390-offers","pass":true,"detail":""},{"id":"layout-390-gold-rates","pass":true,"detail":""},{"id":"layout-390-gold-policies","pass":true,"detail":""},{"id":"layout-390-sale-methods","pass":true,"detail":""},{"id":"layout-390-category-markups","pass":true,"detail":""},{"id":"layout-390-commissions","pass":true,"detail":""},{"id":"layout-390-promotions","pass":true,"detail":""},{"id":"layout-390-pages","pass":true,"detail":""},{"id":"layout-390-shipping","pass":true,"detail":""},{"id":"layout-390-orders","pass":true,"detail":""},{"id":"layout-390-shipments","pass":true,"detail":""},{"id":"layout-390-support","pass":true,"detail":""},{"id":"layout-390-assignments","pass":true,"detail":""},{"id":"layout-390-finance","pass":true,"detail":""},{"id":"layout-390-settlements","pass":true,"detail":""},{"id":"layout-390-operations","pass":true,"detail":""},{"id":"layout-390-moderation","pass":true,"detail":""},{"id":"layout-390-settings","pass":true,"detail":""},{"id":"mobile-navigation-open","pass":true,"detail":""},{"id":"scene-loading","pass":true,"detail":""},{"id":"scene-empty","pass":true,"detail":""},{"id":"scene-error","pass":true,"detail":""},{"id":"scene-forbidden","pass":true,"detail":""},{"id":"custom-role-draft","pass":true,"detail":""}],"errors":[],"passed":85,"total":85}
+### Ran Playwright code
+```js
+await (async (page) => {
+  const results=[],errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  const check=(id,pass,detail='')=>results.push({id,pass:!!pass,detail});
+  const go=async(route,role='admin',scene='normal')=>{await page.goto(`http://127.0.0.1:4179/#${route}?role=${role}&theme=a&scene=${scene}`);await page.waitForFunction(({route,role,scene})=>window.CVDesign?.state.route===route&&CVDesign.state.role===role&&CVDesign.state.scene===scene,{route,role,scene});};
+  await page.setViewportSize({width:1440,height:1000});await go('login');await page.reload();
+  await page.getByRole('textbox',{name:'شماره موبایل'}).fill('123');
+  await page.getByRole('button',{name:'دریافت کد ورود نمونه'}).click();
+  check('login-invalid-phone',await page.locator('#login-error').textContent()==='شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+  check('login-preserves-input',await page.locator('#login-input').inputValue()==='123');
+  await page.getByRole('textbox',{name:'شماره موبایل'}).fill('۰۹۰۰۰۰۰۰۰۰۱');
+  await page.getByRole('button',{name:'دریافت کد ورود نمونه'}).click();
+  check('login-persian-digits',await page.getByRole('textbox',{name:'کد تأیید'}).count()===1);
+  await page.getByRole('textbox',{name:'کد تأیید'}).fill('111111');
+  await page.getByRole('button',{name:'تأیید و ورود به نمونه'}).click();
+  check('otp-invalid',await page.locator('#login-error').textContent()!=='');
+  await page.getByRole('textbox',{name:'کد تأیید'}).fill('000000');
+  await page.getByRole('button',{name:'تأیید و ورود به نمونه'}).click();
+  await page.waitForURL('**/#dashboard');
+  await page.waitForFunction(()=>window.CVDesign.state.route==='dashboard');
+  check('otp-dashboard',await page.locator('main h1').textContent()==='نمای کلی بازارگاه');
+  await go('orders','seller');
+  const sellers=await page.locator('tbody').innerText();
+  check('seller-order-scope',await page.locator('tbody tr').count()===2&&!sellers.includes('دیجیتال آبان')&&!sellers.includes('زرین‌قطعه'));
+  await page.locator('[data-action="detail"][data-id="ORD-1048-1"]').first().click();
+  check('pre-supply-private',await page.locator('.private-placeholder').count()===1);
+  await page.locator('[data-action="supply-confirm"]').click();
+  check('supply-transition',await page.locator('tbody').innerText().then(x=>x.includes('آماده‌سازی')));
+  await go('finance','seller');check('seller-direct-route-denied',await page.getByRole('heading',{name:'اجازه مشاهده این بخش را ندارید'}).count()===1);
+  await go('offers','seller');await page.locator('[data-action="detail"][data-id="O1"]').click();
+  await page.locator('[name="stock"]').fill('1');await page.locator('[data-action="save-local"]').click();
+  check('stock-below-reserved-rejected',await page.locator('#offer-error').innerText().then(x=>x.includes('رزرو')));
+  await page.locator('[name="stock"]').fill('13');await page.locator('[data-action="save-local"]').click();
+  check('stock-local-update',await page.locator('tbody tr').first().innerText().then(x=>x.includes('۱۱ قابل تخصیص')));
+  await go('offers','viewer');await page.locator('[data-action="detail"]').first().click();
+  check('viewer-no-save',await page.locator('#drawer [data-action="save-local"]').count()===0);
+  check('viewer-fields-disabled',await page.locator('#drawer [name="stock"]').isDisabled());
+  await go('sale-methods');
+  check('quote-after-discount-excluding-shipping',await page.locator('#quote-total').innerText().then(x=>x.includes('۹۸۶')));
+  await page.locator('[name="method"]').selectOption({index:1});
+  await page.locator('[name="quote-category"]').selectOption({label:'شمش'});
+  check('nearest-category-override',await page.locator('#quote-total').innerText().then(x=>x.includes('۹۹۵')));
+  await page.locator('[name="quote-category"]').selectOption({label:'پارسیان'});
+  check('explicit-zero-override',await page.locator('#quote-total').innerText().then(x=>x.includes('۹۵۰')));
+  await page.locator('[name="quote-category"]').selectOption({label:'آب‌شده'});
+  check('parent-inheritance',await page.locator('#quote-total').innerText().then(x=>x.includes('۱٬۰۰۴')));
+  await page.locator('[name="discount"]').fill('2000');check('discount-over-price',await page.locator('#quote-output .field-error').count()===1);
+  await go('pages');
+  await page.locator('[data-action="move-down"][data-id="SC1"]').click();
+  check('section-reorder',await page.locator('.section-item').first().innerText().then(x=>x.includes('دسته‌های دارای موجودی')));
+  await page.locator('[data-action="scope"][data-id="gold"]').click();check('independent-scope-layout',await page.locator('.section-item').count()===4);
+  await page.locator('[data-action="scope"][data-id="main"]').click();
+  check('draft-per-scope',await page.locator('.publication-state .badge').innerText()==='پیش‌نویس');
+  await page.locator('[data-action="publish"]').click();check('publish-revision-simulation',await page.locator('.publication-state').innerText().then(x=>x.includes('۴')&&x.includes('منتشرشده')));
+  await go('finance','finance');await page.locator('[data-action="detail"][data-id="PAY-2081"]').click();await page.locator('[data-action="query"]').click();
+  check('unknown-no-forced-success',await page.locator('#drawer').innerText().then(x=>x.includes('نتیجه قطعی دریافت نشده'))&&await page.getByRole('button',{name:'اجرای واقعی غیرفعال'}).isDisabled());
+  await go('orders');await page.locator('#table-search').fill('ORD-1048');
+  check('table-search',await page.locator('tbody tr:visible').count()===2);
+  await page.locator('#table-search').fill('بدون نتیجه');check('search-empty',await page.locator('#no-results').isVisible());
+  await go('dashboard');await page.locator('[data-action="search"]').click();await page.locator('#command-input').fill('مارکاپ');
+  check('command-search',await page.locator('.command-result[href="#category-markups"]').count()===1);await page.locator('.command-result[href="#category-markups"]').click();
+  await page.waitForFunction(()=>window.CVDesign.state.route==='category-markups');
+  check('command-navigation',await page.locator('main h1').innerText()==='مارکاپ دسته‌بندی');
+  const routes=await page.evaluate(()=>CV.pages.map(p=>p.id));
+  for(const width of [1440,390]){
+    await page.setViewportSize({width,height:width===1440?1000:844});
+    for(const route of routes){await go(route);check(`layout-${width}-${route}`,!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)));}
+  }
+  await go('dashboard');await page.locator('[data-action="menu"]').click();check('mobile-navigation-open',await page.locator('.sidebar').evaluate(el=>el.classList.contains('open')));
+  await page.setViewportSize({width:1440,height:1000});
+  for(const scene of ['loading','empty','error','forbidden']){await go('orders','admin',scene);check(`scene-${scene}`,await page.locator(scene==='loading'?'[aria-busy="true"]':'.empty').count()===1);}
+  await go('roles');await page.locator('.page-actions .primary').click();await page.locator('#detail-form [name="title"]').fill('مسئول نمونه جدید');await page.locator('#drawer [data-action="save-local"]').click();
+  check('custom-role-draft',await page.locator('.role-list').innerText().then(x=>x.includes('مسئول نمونه جدید')));
+  await go('dashboard');
+  return {date:'2026-11-17',checks:results,errors,passed:results.filter(x=>x.pass).length,total:results.length};
+}
+)(page);
+```

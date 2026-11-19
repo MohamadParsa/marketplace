@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "date": "2026-11-17",
+  "tasks": 91,
+  "coverage_rows": 29,
+  "markdown_files": 113,
+  "local_links_checked": 954,
+  "new_shared_register_links_checked": 4,
+  "unique_task_and_acceptance_ids": true,
+  "dependency_cycle": false,
+  "dependency_wave_order_valid": true,
+  "priorities": {
+    "P0": 52,
+    "P1": 37,
+    "P2": 2
+  },
+  "waves": {
+    "W0": 10,
+    "W1": 30,
+    "W2": 21,
+    "W3": 22,
+    "W4": 8
+  },
+  "tasks_with_partial_or_full_decision_blocks": 55,
+  "design_archive_members": 229,
+  "issues": [],
+  "product_tests_executed": false,
+  "product_repositories_modified_by_document_work": false
+}

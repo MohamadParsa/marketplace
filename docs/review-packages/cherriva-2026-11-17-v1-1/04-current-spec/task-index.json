@@ -1,0 +1,389 @@
+{
+  "version": "1.1",
+  "date": "2026-11-17",
+  "baseline_tasks": 91,
+  "amendment_count": 12,
+  "note": "Amendments to existing tasks; not 103 independent features. All implementation states todo.",
+  "tasks": [
+    {
+      "id": "CV-R2-01",
+      "file": "tasks/cv-r2-01-single-user.md",
+      "title": "هویت واحد و عضویت چندمنظوره",
+      "priority": "P0",
+      "wave": "W0",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-FND-04"
+      ],
+      "amends": [
+        "CV-IAM-04",
+        "CV-IAM-05",
+        "CV-IAM-07"
+      ],
+      "spec": "identity-auth-fa.md",
+      "business": "خریدار و همکار پنل و عضو فروشگاه، بدون ایجاد حساب تکراری از یک هویت استفاده کنند.",
+      "technical": "User مرجع هویت؛ RoleAssignment و StoreMembership رابطه مستقل؛ buyer/customer فقط کاربرد User. Store و آدرس گیرنده مستقل باقی بمانند. موبایل نرمال یکتا؛ سیاست ایمیل در کار بعد. اگر داده قدیمی واقعی وجود داشت، گزارش تکراری‌ها قبل از merge، بدون ادغام خودکار.",
+      "data": "User، RoleAssignment، StoreMembership؛ GET /me و GET /admin/users/:id، DTO بدون credential.",
+      "permission": "users.view/edit و members.manage در scope مجاز؛ داشتن کاربرد خریدار، مجوز پنل ایجاد نمی‌کند.",
+      "errors": "شناسه ناموجود 404؛ دسترسی خارج scope 403 یا 404 طبق قرارداد مشترک؛ تعارض نسخه409.",
+      "acceptance": [
+        "USR-001 در خرید و پنل و عضویت S1 همان شناسه بماند.",
+        "تعویض نما/فروشگاه، User جدید یا گسترش scope نسازد.",
+        "کاربر سلر با تغییر store_id به داده S2 دسترسی پیدا نکند."
+      ],
+      "block": "CHQ-06 فقط ماتریس ارتقای اختیار/انتساب؛ اصل هویت واحد روشن است."
+    },
+    {
+      "id": "CV-R2-02",
+      "file": "tasks/cv-r2-02-phone-otp-link.md",
+      "title": "ورود نخست با موبایل و اتصال به همان هویت",
+      "priority": "P0",
+      "wave": "W0",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-01",
+        "CV-IAM-01",
+        "CV-IAM-02"
+      ],
+      "amends": [
+        "CV-IAM-01",
+        "CV-IAM-02"
+      ],
+      "spec": "identity-auth-fa.md",
+      "business": "شروع ورود ساده بماند و تأیید دوباره یک شماره، حساب تازه نسازد.",
+      "technical": "OTP تأییدشده به normalized_mobile همان User resolve شود؛ ساخت User و مصرف challenge اتمیک/تکرارامن؛ داده هویت سایت و پنل مشترک. نشست و scope از سرور؛ نمایش انتخاب نقش در mock وارد محصول نشود.",
+      "data": "POST /auth/otp/request و /verify؛ AuthSession شامل user_id و مجوز/عضویت مجاز؛ سیاست cookie پس از CHQ-08.",
+      "permission": "مسیر عمومی rate-limited؛ اعطای نقش هرگز از verify ورودی کلاینت انجام نشود.",
+      "errors": "OTP_INVALID، OTP_EXPIRED، TOO_MANY_ATTEMPTS؛ پاسخ عمومی بدون افشای وجود حساب.",
+      "acceptance": [
+        "شماره فارسی/لاتین یکسان به یک User resolve شود.",
+        "دو verify هم‌زمان نه User و نه مصرف challenge تکراری بسازند.",
+        "OTP منقضی/مصرف‌شده نشست ندهد؛ لاگ کد خام نداشته باشد."
+      ],
+      "block": "اتصال پیامک واقعی CV-INT-04؛ پارامترهای جاری OTP از تسک اصلی، تغییرشان در این اصلاح درخواست نشده است."
+    },
+    {
+      "id": "CV-R2-03",
+      "file": "tasks/cv-r2-03-profile-email-password.md",
+      "title": "پروفایل و ورود با ایمیل یا موبایل و یک رمز",
+      "priority": "P0",
+      "wave": "W0",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-02"
+      ],
+      "amends": [
+        "CV-IAM-02",
+        "CV-IAM-07",
+        "CV-WEB-07"
+      ],
+      "spec": "identity-auth-fa.md",
+      "business": "کاربر پس از ورود اولیه، ایمیل و رمز خود را اضافه کند؛ دو رمز یا حساب جدا نسازد.",
+      "technical": "یک PasswordCredential برای User؛ endpoint ورود identifier+password، normalize موبایل/ایمیل؛ hash امن و عدم بازگشت رمز. ایمیل اختیاری؛ تأیید مالکیت ایمیل قبل از login پیشنهاد امنیتی قابل انتخاب است. پروفایل از سایت و پنل یک قرارداد مصرف کند.",
+      "data": "PATCH /v1/me؛ POST /v1/me/email-challenges و /v1/me/email-verifications؛ PUT /v1/me/password؛ POST /v1/auth/password-login پیشنهادی. unique email پس از سیاست انتخاب‌شده؛ ابطال نشست‌های لازم بعد تغییر credential.",
+      "permission": "فقط مالک همان User؛ ویرایش نقش یا store_membership در self-profile ممنوع.",
+      "errors": "INVALID_CREDENTIALS عمومی؛ EMAIL_CONFLICT، EMAIL_UNVERIFIED، PASSWORD_POLICY؛ پیام فیلد و حفظ فرم.",
+      "acceptance": [
+        "موبایل+رمز و ایمیل+همان رمز به user_id یکسان وارد شوند.",
+        "قبل از تعریف رمز، password login شکست قابل فهم داشته باشد؛ OTP باقی بماند.",
+        "ایمیل خالی مجاز؛ تکراری/تأییدنشده طبق سیاست منتخب؛ هیچ رمز در log/DTO نباشد."
+      ],
+      "block": "سیاست بازیابی/تغییر موبایل و جزئیات password/session در open-items-fa.md؛ انتخاب سیاست قبل از انتشار مسیر مربوط."
+    },
+    {
+      "id": "CV-R2-04",
+      "file": "tasks/cv-r2-04-category-brand-media.md",
+      "title": "آیکن دسته و برند با پیش‌فرض",
+      "priority": "P1",
+      "wave": "W1",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-CAT-01",
+        "CV-CAT-03",
+        "CV-CAT-07"
+      ],
+      "amends": [
+        "CV-CAT-01",
+        "CV-CAT-03",
+        "CV-CAT-07"
+      ],
+      "spec": "catalog-workspace-fa.md",
+      "business": "دسته و برند از پنل نشان قابل تغییر داشته باشند و بدون upload هم خوانا دیده شوند.",
+      "technical": "media_id اختیاری، alt و پیش‌فرض داخلی ثابت؛ حذف/فایل خراب به fallback قابل پیش‌بینی. component مشترک preview/upload/remove، اعتبارسنجی نوع/حجم و reference پیش از حذف asset. سقف فایل در mock قرارداد نهایی نیست.",
+      "data": "Category.icon_media_id و Brand.logo_media_id؛ media adapter آزمون؛ PATCH موجودیت نسخه‌دار.",
+      "permission": "categories.edit یا brands.edit؛ سلر به‌صورت پیش‌فرض مدیر کاتالوگ عمومی نیست؛ مجوز نهایی تابع CHQ-06.",
+      "errors": "MEDIA_TYPE_UNSUPPORTED، MEDIA_TOO_LARGE، MEDIA_NOT_READY؛ خطا کنار upload؛ حفظ مقدار قبلی در شکست.",
+      "acceptance": [
+        "پیش‌فرض در نبود تصویر و پس از حذف نمایش داده شود.",
+        "تصویر موبایل/دسکتاپ سایت و پنل کشیده یا مخدوش نشود؛ alt معنا داشته باشد.",
+        "فایل نامعتبر و URL/script دلخواه پذیرفته نشود؛ draft منتشرنشده public نشود."
+      ],
+      "block": "ابعاد و حجم نهایی قالب به انتخاب جهت طراحی وابسته است؛ storage واقعی CV-INT-05."
+    },
+    {
+      "id": "CV-R2-05",
+      "file": "tasks/cv-r2-05-shared-attribute-bindings.md",
+      "title": "کتابخانه خصوصیت و انتساب مستقل به دسته",
+      "priority": "P0",
+      "wave": "W1",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-CAT-01",
+        "CV-CAT-02"
+      ],
+      "amends": [
+        "CV-CAT-02",
+        "CV-CAT-05",
+        "CV-CAT-08"
+      ],
+      "spec": "catalog-workspace-fa.md",
+      "business": "تعریف تکراری خصوصیت کم شود؛ هر دسته تعیین کند چه چیزی انتخاب مشتری و چه چیزی اطلاعات کارت است.",
+      "technical": "AttributeDefinition مشترک با type/unit/options؛ CategoryAttribute با is_variant_axis، show_on_card، is_filterable و order مستقل. مثال موبایل رنگ/گارانتی axis، حافظه/رم/دوربین card. تعداد محور یا ویژگی از مثال ثابت نشود. تغییر محور فعال، preview اثر و version بخواهد؛ ترکیب Variant باید معتبر باشد.",
+      "data": "GET /attributes و /categories/:id/attributes؛ PUT binding نسخه‌دار؛ attribute_id مشترک؛ ارث خودکار از والد تا پاسخ CHQ-09 اجرا نشود.",
+      "permission": "attributes.manage و categories.edit؛ اثر تغییر تعریف مشترک در دسته‌های دیگر قابل مشاهده باشد.",
+      "errors": "ATTRIBUTE_IN_USE، OPTION_IN_USE، VERSION_CONFLICT؛ حذف مخرب مانع یا گردش بازبینی لازم.",
+      "acceptance": [
+        "همان color_id در موبایل و هدفون استفاده شود؛ تغییر binding موبایل روی هدفون اثر نگذارد.",
+        "PDP چیپ رنگ/گارانتی و کارت حافظه/رم/دوربین را از binding بگیرند.",
+        "تعریف تکراری و ترکیب تنوع نامعتبر رد شود؛ تغییر محور، سفارش snapshot را عوض نکند."
+      ],
+      "block": "CHQ-09 ارث و تغییر دسته فعال؛ تعداد/overflow قالب CHQ-12."
+    },
+    {
+      "id": "CV-R2-06",
+      "file": "tasks/cv-r2-06-product-workspace.md",
+      "title": "اکشن سریع تنوع، قیمت و موجودی در محصول",
+      "priority": "P0",
+      "wave": "W1",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-05",
+        "CV-CAT-04",
+        "CV-CAT-06"
+      ],
+      "amends": [
+        "CV-CAT-04",
+        "CV-CAT-05",
+        "CV-CAT-06"
+      ],
+      "spec": "catalog-workspace-fa.md",
+      "business": "کاربر پنل از ردیف محصول یا جزئیات، سریع به همان فرم عملیاتی برسد.",
+      "technical": "سه tab مشخصات/تنوع/عرضه‌ها؛ یک component برای هر فرم و ورودی عمیق با product_id. Variant ترکیب مشخصات؛ Offer کلید فروشنده+تنوع و محل قیمت/stock. فیلتر scope روی query و mutation؛ محصول مشترک به سلر حق ویرایش محتوای عمومی نمی‌دهد.",
+      "data": "GET /products/:id/variants و /offers?product_id؛ PATCH /offers/:id با version و موجودی کل/رزرو؛ ذخیره گروهی یا ردیفی صریح باشد.",
+      "permission": "products.edit، variants.edit، offers.edit و stock.edit مستقل؛ مخفی‌کردن اکشن جای کنترل API نیست.",
+      "errors": "STOCK_BELOW_RESERVED، PRICE_INVALID، OFFER_CONFLICT؛ خطای هر ردیف؛ موفقیت جزئی شفاف و بدون از دست رفتن draft.",
+      "acceptance": [
+        "هر دو entry point یک فرم و همان شناسه تنوع/عرضه را باز کنند.",
+        "تغییر رنگ/گارانتی به عرضه صحیح برسد؛ price روی Product نوشته نشود.",
+        "موجودی کمتر از رزرو و ویرایش عرضه فروشگاه دیگر رد شود."
+      ],
+      "block": "قیمت فرمولی طلا تا CHQ-03 فقط پیکربندی draft؛ race واقعی نیازمند تست سرور است."
+    },
+    {
+      "id": "CV-R2-07",
+      "file": "tasks/cv-r2-07-responsive-banner-section.md",
+      "title": "سکشن بنر با تصویر دسکتاپ و موبایل",
+      "priority": "P1",
+      "wave": "W2",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-CMS-02",
+        "CV-R2-04"
+      ],
+      "amends": [
+        "CV-CMS-01",
+        "CV-CMS-02"
+      ],
+      "spec": "sections-fa.md",
+      "business": "بنر روی موبایل crop نامناسب نگیرد و فرم آن فیلد نامرتبط ریل محصول نداشته باشد.",
+      "technical": "discriminated schema برای hero/banner-grid؛ desktop_media_id و mobile_media_id و alt/link مستقل هر اسلاید. preview دو اندازه؛ draft/revision و publish موجود حفظ شود. script arbitrary در link یا متن ممنوع؛ template نسبت تصویر را اعلام کند.",
+      "data": "Section.type و payload معتبر برای همان type؛ picture/source با breakpoint قالب؛ GET page revision و publish اتمیک.",
+      "permission": "pages.edit و pages.publish مستقل و scope main/gold/digi؛ upload مجوز رسانه.",
+      "errors": "DESKTOP_IMAGE_REQUIRED، MOBILE_IMAGE_REQUIRED، LINK_INVALID، REVISION_CONFLICT؛ انتشار ناقص متوقف شود.",
+      "acceptance": [
+        "فرم بنر دو preview مستقل دارد؛ تصویر تغییر یک اندازه دیگری را overwrite نکند.",
+        "عرض390 و1440 تصویر درست را نشان دهند؛ alt و لینک قابل لمس باشند.",
+        "ویرایش draft، صفحه منتشرشده یا کش عمومی را تا publish عوض نکند."
+      ],
+      "block": "اندازه نمونه پیشنهادی؛ نسبت/سقف محتوا نهایی CHQ-12؛ asset واقعی مستقل."
+    },
+    {
+      "id": "CV-R2-08",
+      "file": "tasks/cv-r2-08-manual-product-rail.md",
+      "title": "کروسل اختصاصی با انتخاب و ترتیب دستی کالا",
+      "priority": "P1",
+      "wave": "W2",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-CMS-01",
+        "CV-CMS-02",
+        "CV-CAT-09",
+        "CV-PRC-07"
+      ],
+      "amends": [
+        "CV-CMS-01",
+        "CV-CMS-02",
+        "CV-WEB-03"
+      ],
+      "spec": "sections-fa.md",
+      "business": "بازاریابی بدون کدنویسی، کالاهای منتخب هر ویترین را بچیند.",
+      "technical": "product_ids ordered unique؛ picker جست‌وجوی DB و فیلتر scope؛ محصول انتخاب شود نه قیمت ثابت یا offer قفل‌شده. renderer از عرضه نماینده معتبر قیمت بخواند؛ ناموجود/خارج scope/unpublished پس از publish حذف امن شود. افزودن/حذف/بالا/پایین در draft.",
+      "data": "Section.product-rail source=manual یا منبع محدود؛ query picker صفحه‌بندی‌شده؛ title/more_link و product_ids در payload.",
+      "permission": "pages.edit/publish؛ query فقط کاتالوگ مجاز همان ویترین؛ انتخاب ID دلخواه از API کنترل شود.",
+      "errors": "PRODUCT_NOT_ELIGIBLE، DUPLICATE_PRODUCT، SECTION_EMPTY، REVISION_CONFLICT؛ وضعیت کالای حذف‌شده واضح.",
+      "acceptance": [
+        "انتخاب دستی، حذف و جابه‌جایی بعد بازخوانی draft ترتیب را حفظ کنند.",
+        "کالای دیجیتال در gold پذیرفته نشود؛ قیمت از offer معتبر بروز شود.",
+        "ناموجود شدن محصول باعث لینک خرید غلط یا کارت بدون قیمت معتبر نشود."
+      ],
+      "block": "رفتار کمتر از۵ کالا CHQ-12؛ سیاست render empty پیش از انتشار تعیین شود."
+    },
+    {
+      "id": "CV-R2-09",
+      "file": "tasks/cv-r2-09-sticky-banner-section.md",
+      "title": "سکشن استیکی با کنترل نمایش و بستن",
+      "priority": "P1",
+      "wave": "W2",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-07"
+      ],
+      "amends": [
+        "CV-CMS-01",
+        "CV-CMS-02",
+        "CV-WEB-03"
+      ],
+      "spec": "sections-fa.md",
+      "business": "کمپین برجسته دیده شود بدون پوشاندن مسیر خرید و دکمه‌ها.",
+      "technical": "sticky-banner با desktop/mobile media، alt/link، position، dismissible و enabled؛ پیش‌فرض غیرفعال. renderer فقط در جای مجاز قالب، offset برای bottom navigation و sticky CTA. دوام بستن در session یا مدت کمپین پیشنهاد UX است و باید انتخاب شود.",
+      "data": "payload typed؛ scope و revision؛ محدودیت تعداد هم‌زمان و صفحه‌های مجاز از قالب.",
+      "permission": "pages.edit/publish با scope؛ محتوای بدون مجوز منتشر نشود.",
+      "errors": "STICKY_POSITION_UNSUPPORTED، SECTION_CONFLICT؛ کنترل بستن قابل دسترس با keyboard و نام.",
+      "acceptance": [
+        "در390 و1440 CTA و هدر/فیلتر پوشانده نشوند.",
+        "بستن banner کار کند؛ focus گم نشود؛ enabled=false چیزی render نکند.",
+        "checkout حساس طبق سیاست منتخب از مزاحمت banner مصون بماند."
+      ],
+      "block": "دامنه مجاز صفحه/دوام بستن و تعداد هم‌زمان پیشنهاد است، در open-items ثبت شده."
+    },
+    {
+      "id": "CV-R2-10",
+      "file": "tasks/cv-r2-10-seller-supply-lead.md",
+      "title": "وقفه تأمین ثابت فروشنده و snapshot سفارش",
+      "priority": "P0",
+      "wave": "W2",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-IAM-06",
+        "CV-CAT-06",
+        "CV-OPS-01"
+      ],
+      "amends": [
+        "CV-IAM-06",
+        "CV-CAT-06",
+        "CV-OPS-05",
+        "CV-OPS-06"
+      ],
+      "spec": "seller-lead-time-fa.md",
+      "business": "هر فروشنده یک وقفه ثابت داشته باشد؛ مشتری آماده‌سازی را با زمان حمل اشتباه نگیرد.",
+      "technical": "Store.supply_lead_time تنها منبع جاری؛ حذف lead override در Product/Category/Offer. read model از فروشگاه join شود؛ order_line snapshot مقدار وقت خرید را حفظ کند. اگر داده قبلی اختلاف داشت، گزارش conflict و انتخاب مسئول؛ migration مقدار دلخواه انتخاب نکند.",
+      "data": "PATCH /stores/:id برای مقدار؛ Offer DTO فیلد read-only مشتق؛ quote/order snapshot شامل supply_lead و حمل مستقل.",
+      "permission": "stores.edit یا permission خاص فروشنده طبق CHQ-06؛ تغییر موجودی به معنی اختیار تغییر SLA نیست.",
+      "errors": "SUPPLY_LEAD_INVALID؛ ورود فیلد override به Offer رد شود؛ stale version409.",
+      "acceptance": [
+        "دو offer یک فروشنده همیشه مقدار یکسان جاری نشان دهند.",
+        "تغییر Store روی quote جدید اثر بگذارد؛ سفارش پرداخت‌شده قبلی ثابت بماند.",
+        "صفحه حمل، وقفه و transit را جدا نشان دهد؛ زمان تقویم بدون CHQ-07 اختراع نشود."
+      ],
+      "block": "واحد روز کاری در نمونه است؛ تقویم، cut-off و ترکیب وعده حمل CHQ-07 پیش از وعده واقعی لازم‌اند."
+    },
+    {
+      "id": "CV-R2-11",
+      "file": "tasks/cv-r2-11-storefront-alignment.md",
+      "title": "همگام‌سازی سایت با قراردادهای اصلاح‌شده",
+      "priority": "P0",
+      "wave": "W3",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-03",
+        "CV-R2-05",
+        "CV-R2-06",
+        "CV-R2-08",
+        "CV-R2-09",
+        "CV-R2-10"
+      ],
+      "amends": [
+        "CV-WEB-02",
+        "CV-WEB-03",
+        "CV-WEB-04",
+        "CV-WEB-05",
+        "CV-WEB-06",
+        "CV-WEB-07",
+        "CV-WEB-08"
+      ],
+      "spec": "storefront-impact-fa.md",
+      "business": "کاربر سایت همان تنظیمات و قواعد پنل را با زبان ساده ببیند؛ طرح جدید رفتار خرید قبلی را حفظ کند.",
+      "technical": "مصرف قرارداد مشترک auth/profile، آیکن fallback، binding کارت/چیپ، انتخاب offer و lead فروشنده. سبد با offer_id و variant_id، قیمت/stock server-authoritative؛ banner/rail published. سه جهت بصری فقط theme/layout هستند؛ منطق مشترک باشد.",
+      "data": "DTOهای عمومی بدون اطلاعات خصوصی؛ افزودن به سبد idempotent طبق قرارداد قبلی؛ هیچ محاسبه قطعی قیمت در browser.",
+      "permission": "public read scoped؛ account/cart owner-only؛ سرور بررسی session/store و انتخاب offer.",
+      "errors": "NO_MATCHING_OFFER، OFFER_UNAVAILABLE، QUOTE_CHANGED، SESSION_EXPIRED؛ متن واضح و اقدام اصلاح.",
+      "acceptance": [
+        "گارانتی۲۴ پس از انتخاب در قیمت، لیست seller، سبد و checkout یکسان دیده شود.",
+        "کارت بدون انتخاب تنوع به PDP مستقل برود؛ CTA خرید همان استایل مرجع حفظ شود.",
+        "درخت PLP و برگ بدون زیرشاخه، سه جهت بصری و موبایل مرور شوند؛ قوانین طلا حفظ شوند."
+      ],
+      "block": "بعد از پذیرش پنل/سلر آزمون آغاز شود؛ host/session CHQ-08 و قیمت طلا CHQ-03 فقط مسیر وابسته را می‌بندند."
+    },
+    {
+      "id": "CV-R2-12",
+      "file": "tasks/cv-r2-12-revision-acceptance.md",
+      "title": "پذیرش اصلاحات، ردیابی و آماده‌سازی تحویل",
+      "priority": "P0",
+      "wave": "W3",
+      "status": "todo",
+      "owner": "unassigned",
+      "dependencies": [
+        "CV-R2-01",
+        "CV-R2-02",
+        "CV-R2-03",
+        "CV-R2-04",
+        "CV-R2-05",
+        "CV-R2-06",
+        "CV-R2-07",
+        "CV-R2-08",
+        "CV-R2-09",
+        "CV-R2-10",
+        "CV-R2-11"
+      ],
+      "amends": [
+        "CV-QA-01",
+        "CV-QA-04",
+        "CV-QA-06"
+      ],
+      "spec": "README-fa.md",
+      "business": "تیم بداند چه چیزی طراحی شده، چه چیزی ساخته/آزموده شده و چه چیزی هنوز تصمیم لازم دارد.",
+      "technical": "ماتریس rule→spec→task→screen→evidence؛ contract tests برای scope/credential/lead و browser برای binding/section/checkout. گزارش mock، integration، browser و provider جدا؛ اصلاح تسک اصلی به‌جای دوباره‌شمردن قابلیت‌ها.",
+      "data": "test fixtures بدون اطلاعات شخصی؛ snapshot قرارداد و گزارش قابل بازتولید، هیچ provider واقعی در این task لازم نیست.",
+      "permission": "بازبین مشخص برای محصول/فنی؛ test runner مجوز production یا انتقال وجه ندارد.",
+      "errors": "شکست تست مانع همان مسیر؛ broken link/شناسه تکراری/گم‌شدن نیازمندی رد تحویل.",
+      "acceptance": [
+        "تمام ACهای اصلاحی به شاهد پیوند داشته باشند؛ هیچ done بدون شاهد ثبت نشود.",
+        "تست مثبت/منفی مستقیم API برای هویت واحد و scope فروشگاه وجود داشته باشد.",
+        "اسناد current و archive تفکیک، لینک/شناسه و task graph معتبر و طرح انتخابی ثبت شده باشند."
+      ],
+      "block": "قبولی مرورگر نمونه موجود جای آزمون محصول را نمی‌گیرد؛ اتصال واقعی گیت جدا دارد."
+    }
+  ]
+}

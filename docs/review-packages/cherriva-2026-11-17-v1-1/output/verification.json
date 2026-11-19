@@ -1,0 +1,454 @@
+{
+  "version": "1.1",
+  "date": "2026-11-17",
+  "checks": [
+    {
+      "id": "phone-otp-first-entry",
+      "pass": true
+    },
+    {
+      "id": "same-user-profile-email",
+      "pass": true
+    },
+    {
+      "id": "email-and-shared-password-entry",
+      "pass": true
+    },
+    {
+      "id": "phone-and-same-password-entry",
+      "pass": true
+    },
+    {
+      "id": "single-identity-many-uses",
+      "pass": true
+    },
+    {
+      "id": "category-default-icon",
+      "pass": true
+    },
+    {
+      "id": "category-icon-local-upload",
+      "pass": true
+    },
+    {
+      "id": "category-default-restored",
+      "pass": true
+    },
+    {
+      "id": "shared-attribute-library",
+      "pass": true
+    },
+    {
+      "id": "mobile-axis-color-warranty",
+      "pass": true
+    },
+    {
+      "id": "mobile-card-storage-ram-camera",
+      "pass": true
+    },
+    {
+      "id": "product-grid-fast-variants",
+      "pass": true
+    },
+    {
+      "id": "product-details-fast-pricing",
+      "pass": true
+    },
+    {
+      "id": "no-offer-lead-override",
+      "pass": true
+    },
+    {
+      "id": "single-seller-lead-source",
+      "pass": true
+    },
+    {
+      "id": "banner-desktop-mobile-upload-pair",
+      "pass": true
+    },
+    {
+      "id": "banner-no-generic-product-source",
+      "pass": true
+    },
+    {
+      "id": "manual-carousel-product-add",
+      "pass": true
+    },
+    {
+      "id": "gold-scope-excludes-mobile-picker",
+      "pass": true
+    },
+    {
+      "id": "sticky-specific-form",
+      "pass": true
+    },
+    {
+      "id": "seller-still-denied-finance",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-dashboard",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-users",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-roles",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-stores",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-categories",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-brands",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-attributes",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-products",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-offers",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-gold-rates",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-gold-policies",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-sale-methods",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-category-markups",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-commissions",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-promotions",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-pages",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-shipping",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-orders",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-shipments",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-support",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-assignments",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-finance",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-settlements",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-operations",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-moderation",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-settings",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-1440-my-profile",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-dashboard",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-users",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-roles",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-stores",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-categories",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-brands",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-attributes",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-products",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-offers",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-gold-rates",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-gold-policies",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-sale-methods",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-category-markups",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-commissions",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-promotions",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-pages",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-shipping",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-orders",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-shipments",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-support",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-assignments",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-finance",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-settlements",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-operations",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-moderation",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-settings",
+      "pass": true
+    },
+    {
+      "id": "bo-layout-390-my-profile",
+      "pass": true
+    },
+    {
+      "id": "site-pdp-warranty-axis",
+      "pass": true
+    },
+    {
+      "id": "site-warranty-changes-offer-price",
+      "pass": true
+    },
+    {
+      "id": "site-card-ram-camera",
+      "pass": true
+    },
+    {
+      "id": "site-profile-unified-id",
+      "pass": true
+    },
+    {
+      "id": "site-sticky-preview",
+      "pass": true
+    },
+    {
+      "id": "sticky-dismiss",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-home",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-plp",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-pdp",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-cart",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-login",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-profile",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-address",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-shipping",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-payment",
+      "pass": true
+    },
+    {
+      "id": "site-layout-1440-result",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-home",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-plp",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-pdp",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-cart",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-login",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-profile",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-address",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-shipping",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-payment",
+      "pass": true
+    },
+    {
+      "id": "site-layout-390-result",
+      "pass": true
+    },
+    {
+      "id": "previewDynamic",
+      "pass": true
+    },
+    {
+      "id": "warrantySynchronized",
+      "pass": true
+    },
+    {
+      "id": "optionalEmail",
+      "pass": true
+    },
+    {
+      "id": "emptyEmailAccepted",
+      "pass": true
+    },
+    {
+      "id": "updated-attributes-mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "updated-categories-mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "category-tree-child-level",
+      "pass": true
+    },
+    {
+      "id": "gold-child-parent-selection",
+      "pass": true
+    },
+    {
+      "id": "hub-links-resolve",
+      "pass": true
+    },
+    {
+      "id": "hub-no-overflow",
+      "pass": true
+    }
+  ],
+  "passed": 111,
+  "total": 111,
+  "errors": [],
+  "scope": "Standalone design prototype only; no backend/provider acceptance"
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#B51F46">
+  <title>Cherriva — طراحی پنل مدیریت</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="a">
+  <div class="review-bar" aria-label="کنترل‌های بررسی طراحی">
+    <div><span class="review-dot"></span><b>پیش‌نمایش طراحی</b><span class="review-sep">/</span><span>داده ساختگی · بدون اتصال</span></div>
+    <div class="review-controls">
+      <label>جهت طرح <select id="theme"><option value="a">A · متعادل و شیک</option><option value="b">B · فروش‌محور</option><option value="c">C · لوکس و تصویری</option></select></label>
+      <label>نمای دسترسی <select id="role"><option value="admin">مدیر کل</option><option value="seller">سلر · گالری آوای طلا</option><option value="finance">مالی</option><option value="support">پشتیبانی</option><option value="viewer">مشاهده‌گر</option></select></label>
+      <label>حالت <select id="scene"><option value="normal">عادی</option><option value="loading">بارگذاری</option><option value="empty">خالی</option><option value="error">خطای شبکه</option><option value="forbidden">عدم دسترسی</option></select></label>
+    </div>
+  </div>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="drawer" aria-label="جزئیات و فرم"><div id="drawer-content"></div></dialog>
+  <dialog id="command" aria-label="جست‌وجو در پنل"><div class="dialog-head"><h2>به کدام بخش می‌روید؟</h2><button class="icon-button" data-action="close-command" aria-label="بستن">×</button></div><input id="command-input" class="command-input" placeholder="نام صفحه، سفارش یا قابلیت…" aria-label="جست‌وجو در بخش‌ها"><div id="command-results"></div></dialog>
+  <script src="data.js"></script><script src="revision.js"></script><script src="app.js"></script>
+</body></html>
