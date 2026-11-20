@@ -4,6 +4,13 @@ export interface WorkspaceContext {
   state: Workspace;
   role: Role;
   execute: (command: Command) => Promise<void>;
+  uploadIcon: (input: {
+    kind: "category" | "brand";
+    target: string;
+    version: number;
+    key: string;
+    file: File;
+  }) => Promise<void>;
   busy: boolean;
 }
 export const WorkspaceContext = createContext<WorkspaceContext | null>(null);

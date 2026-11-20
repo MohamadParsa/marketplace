@@ -142,7 +142,7 @@
       "title": "آیکن دسته و برند با پیش‌فرض",
       "priority": "P1",
       "wave": "W1",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -167,14 +167,15 @@
         "upload معتبر در فرم و فهرست نمایش داده شود و فایل نامعتبر با پیام کنار فیلد، بدون از دست‌رفتن مقدار قبلی رد شود.",
         "دسترسی نوشتن آیکن با مجوز کاتالوگ در سرور کنترل و draft ناخواسته عمومی نشود."
       ],
-      "blocked": "نوع/حجم/ابعاد نهایی آیکن در قرارداد رسانه همین قابلیت ثبت شود؛ ابعاد بنر/CMS معوق، مانع آیکن نیست. سقف نمونه، خودکار سیاست production نشود.",
+      "blocked": "قرارداد API-CATALOG-ICONS-001 سیاست فنی برش آزمون را ثبت می‌کند: PNG/JPEG/WebP تا۱MiB و هر ضلع۱۰۲۴. پیاده‌سازی محلی بررسی شده و در انتظار review/ادغام است؛ سیاست/ذخیره‌سازی production پذیرش جدا دارد.",
       "technical": "media reference اختیاری و alt/fallback؛ validate محتوا در سرور، فایل ناامن یا URL/script دلخواه پذیرفته نشود؛ خطای رسانه و تعارض نسخه قابل نمایش.",
       "evidence": "مرورگر دسکتاپ/موبایل برای upload/delete/fallback؛ API مجوز و فایل نامعتبر؛ storage آزمون کافی است و اتصال واقعی جداست.",
       "amends": [
         "CV-CAT-01",
         "CV-CAT-03",
         "CV-CAT-07"
-      ]
+      ],
+      "verification": "issue-4-verification.md"
     },
     {
       "id": "CV-R2-05",

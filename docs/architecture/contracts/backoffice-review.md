@@ -3,7 +3,7 @@ id: API-BO-REVIEW-001
 title: قرارداد اجرایی نسخه بررسی بک‌آفیس
 status: in-review
 owner: product-owner
-updated: 2026-11-12
+updated: 2026-11-20
 related: [FEAT-BO-001, FEAT-BO-002, FEAT-BO-003]
 approved_by: []
 ---
@@ -61,3 +61,7 @@ approved_by: []
 ## پرسش‌ها و محدودیت‌ها
 
 این نسخه مرور صفحات و بخشی از عملیات را ممکن می‌کند؛ کل گیت مرحله ۱ نیست. ورود رمزعبوری/بازیابی رمز، persistence/migration، ویرایش کامل محتوا، نسخه قرارداد/تعدیلات کامل مالی، صف پایدار و کل سناریوهای BDD محصول هنوز تکمیل نشده‌اند. انتقال مالی واقعی و ارائه‌دهنده پیامک همچنان جدا هستند. [گزارش تحویل](../../delivery/stage-1-progress.md) مرجع وضعیت است.
+
+## افزوده Issue#4
+
+[قرارداد آیکن](catalog-icons.md) upload تصویر و فرمان‌های category.icon.remove/brand.icon.remove را با مجوز کاتالوگ مدیرکل/عملیات به این نسخه اضافه می‌کند. workspace شامل brands و icon_policy و icon_id/version دسته/برند است؛ باینری icon_media برنمی‌گردد. این افزوده حافظه‌ای آزمون است؛ [شواهد](../../delivery/review-v1-1/issue-4-verification.md).

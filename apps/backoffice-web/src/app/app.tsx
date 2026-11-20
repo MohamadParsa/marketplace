@@ -28,6 +28,7 @@ import {
   PeopleOutline,
   StorefrontOutlined,
   CategoryOutlined,
+  LabelOutlined,
   Inventory2Outlined,
   PercentOutlined,
   LocalShippingOutlined,
@@ -84,6 +85,7 @@ const menu = [
         label: "دسته‌ها و خصوصیات",
         icon: <CategoryOutlined />,
       },
+      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
       {
         path: "/products",
         label: "محصولات و محتوا",
@@ -276,6 +278,17 @@ function Workspace({
                 state: query.data,
                 role,
                 execute: (command) => mutation.mutateAsync(command),
+                uploadIcon: async (input) => {
+                  try {
+                    await api.uploadIcon(session.token, input);
+                    await cache.invalidateQueries({ queryKey: ["workspace"] });
+                    setNotice("آیکن با موفقیت ثبت شد.");
+                  } catch (error) {
+                    if (error instanceof ApiError && error.status === 401)
+                      logout();
+                    throw error;
+                  }
+                },
                 busy: mutation.isPending,
               }}
             >
@@ -286,6 +299,7 @@ function Workspace({
                     "users",
                     "stores",
                     "categories",
+                    "brands",
                     "products",
                     "pricing",
                     "shipping",

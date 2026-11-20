@@ -1,5 +1,9 @@
 export type Role =
-  "super-admin" | "operations" | "support" | "finance" | "viewer";
+  | "super-admin"
+  | "operations"
+  | "support"
+  | "finance"
+  | "viewer";
 export interface User {
   id: string;
   name: string;
@@ -19,6 +23,20 @@ export interface Category {
   name: string;
   attributes: string[];
   archived: boolean;
+  icon_id?: string;
+  version: number;
+}
+export interface Brand {
+  id: string;
+  name: string;
+  active: boolean;
+  icon_id?: string;
+  version: number;
+}
+export interface IconPolicy {
+  max_bytes: number;
+  max_dimension: number;
+  content_types: string[];
 }
 export interface Product {
   id: string;
@@ -90,6 +108,8 @@ export interface Workspace {
   users?: User[];
   stores?: Store[];
   categories?: Category[];
+  brands?: Brand[];
+  icon_policy?: IconPolicy;
   products?: Product[];
   offers?: Offer[];
   orders?: Order[];

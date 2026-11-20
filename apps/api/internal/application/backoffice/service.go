@@ -23,7 +23,7 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
-	case "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
+	case "store.toggle", "store.create", "category.create", "category.archive", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "product.publish", "product.reject", "shipping.update":
 		return role == identity.RoleOperations
 	case "case.start", "case.close", "case.refund", "case.assign", "order.deliver":
 		return role == identity.RoleSupport
@@ -44,6 +44,8 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if actor.Role != identity.RoleSuperAdmin {
 		state.Users = nil
 	}
+	state.IconMedia = nil
+	state.IconPolicy = CatalogIconPolicy()
 	if actor.Role != identity.RoleSuperAdmin && actor.Role != identity.RoleFinance {
 		state.Transfers = nil
 		state.Ledger = nil
@@ -93,6 +95,8 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 }
 func (s *Service) apply(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "category.icon.remove", "brand.icon.remove":
+		return removeIcon(state, c)
 	case "user.create", "user.toggle", "user.role":
 		return applyUser(state, c, id)
 	case "store.create", "store.toggle", "category.create", "category.archive", "product.publish", "product.reject", "rule.toggle", "shipping.update":

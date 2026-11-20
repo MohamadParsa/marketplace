@@ -9,8 +9,9 @@ import (
 )
 
 type RouterConfig struct {
-	Auth       *AuthHandler
-	Backoffice *BackofficeHandler
+	Auth         *AuthHandler
+	Backoffice   *BackofficeHandler
+	CatalogIcons *CatalogIconHandler
 }
 
 func NewRouter(cfg RouterConfig) http.Handler {
@@ -20,6 +21,10 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	if cfg.Backoffice != nil {
 		mux.Handle("GET /backoffice/workspace", cfg.Backoffice)
 		mux.Handle("POST /backoffice/commands", cfg.Backoffice)
+	}
+	if cfg.CatalogIcons != nil {
+		mux.HandleFunc("GET /catalog/icons/{id}", cfg.CatalogIcons.Read)
+		mux.HandleFunc("POST /backoffice/catalog/{kind}/{target}/icon", cfg.CatalogIcons.Upload)
 	}
 	if root := os.Getenv("WEB_ROOT"); root != "" {
 		mux.Handle("GET /", staticSite(root))

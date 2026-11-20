@@ -90,3 +90,7 @@
 [ماتریس پاسخ→Issue→سند](../delivery/review-v1-1/README.md#پاسخ-به-issue-و-سند-متأثر) مرجع بند اول #14 است. هر یک از ۱۵ شرح کار نیز پاسخ، مرجع، dependency، بخش مسدود و AC قابل ارزیابی دارد. source snapshot تغییر نکرده و شناسه‌های CV-R2-01..12 حفظ شده‌اند؛ CV-R2-13/14/15 شناسه کارهای جدید #15/#16/#17 هستند و با شماره Issue فرایندی #13/#14 یکی نیستند.
 
 [گزارش کنترل همگام‌سازی](../delivery/review-v1-1/verification.md) بررسی لینک/گراف و تطبیق متن Issueها را از شاهد اجرای محصول جدا نگه می‌دارد.
+
+## شواهد پیاده‌سازی CV-R2-04
+
+AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/contracts/catalog-icons.md)، [گزارش بررسی](../delivery/review-v1-1/issue-4-verification.md) و [تست API و مرورگر](../../tests/e2e/catalog-icons.cjs) متصل‌اند. وضعیت review و منتظر ادغام؛ Go tests/vet و frontend lint/build و۱۴ بررسی مرورگر موفق‌اند. storage حافظه‌ای آزمون است و قبولی production اعلام نشده است.

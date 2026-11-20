@@ -5,6 +5,7 @@ const messages: Record<number, string> = {
   401: "نشست منقضی شده؛ دوباره وارد شوید.",
   403: "مجوز انجام این عملیات را ندارید.",
   409: "وضعیت رکورد تغییر کرده یا عملیات مجاز نیست؛ داده را تازه کنید.",
+  413: "حجم تصویر از حد مجاز بیشتر است.",
   429: "تعداد تلاش‌ها بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.",
 };
 export class ApiError extends Error {
@@ -15,13 +16,42 @@ export class ApiError extends Error {
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(base + path, {
     ...init,
-    headers: { "Content-Type": "application/json", ...init.headers },
+    headers: {
+      ...(init.body instanceof FormData
+        ? {}
+        : { "Content-Type": "application/json" }),
+      ...init.headers,
+    },
   });
   if (!response.ok) throw new ApiError(response.status);
   if (response.status === 204) return undefined as T;
   return response.json();
 }
 export const api = {
+  iconUrl: (id: string) => base + "/catalog/icons/" + encodeURIComponent(id),
+  uploadIcon: (
+    token: string,
+    input: {
+      kind: "category" | "brand";
+      target: string;
+      version: number;
+      key: string;
+      file: File;
+    },
+  ) => {
+    const body = new FormData();
+    body.set("file", input.file);
+    body.set("version", String(input.version));
+    body.set("idempotency_key", input.key);
+    return request<void>(
+      `/backoffice/catalog/${input.kind}/${encodeURIComponent(input.target)}/icon`,
+      {
+        method: "POST",
+        body,
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+  },
   requestCode: (phone: string) =>
     request<{ request_id: string; test_code?: string }>(
       "/backoffice/auth/request-otp",
