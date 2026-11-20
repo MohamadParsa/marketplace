@@ -36,33 +36,36 @@
 
 ## اصلاحات نسخه ۱.۱
 
-۱۲ اصلاح زیر همراه با تسک‌های پایه متأثر بررسی می‌شوند. وضعیت ثبت‌شده در بسته برای همه آن‌ها `todo` است.
+پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت اجرای ۱۲ کار فعال todo و سه کار CMS deferred است؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
 
-| اصلاح | موج | تسک‌های پایه متأثر | مرجع جاری |
+| کار و Issue | موج پیشنهادی | وضعیت اجرا | اصلاح پایه/منشأ |
 | --- | --- | --- | --- |
-| [CV-R2-01](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-01-single-user.md) | W0 | CV-IAM-04, CV-IAM-05, CV-IAM-07 | [سند](../domains/identity/README.md) |
-| [CV-R2-02](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-02-phone-otp-link.md) | W0 | CV-IAM-01, CV-IAM-02 | [سند](../domains/identity/README.md) |
-| [CV-R2-03](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-03-profile-email-password.md) | W0 | CV-IAM-02, CV-IAM-07, CV-WEB-07 | [سند](../domains/identity/README.md) |
-| [CV-R2-04](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-04-category-brand-media.md) | W1 | CV-CAT-01, CV-CAT-03, CV-CAT-07 | [سند](../domains/catalog/README.md) |
-| [CV-R2-05](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-05-shared-attribute-bindings.md) | W1 | CV-CAT-02, CV-CAT-05, CV-CAT-08 | [سند](../domains/catalog/README.md) |
-| [CV-R2-06](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-06-product-workspace.md) | W1 | CV-CAT-04, CV-CAT-05, CV-CAT-06 | [سند](../experiences/backoffice/management.md) |
-| [CV-R2-07](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-07-responsive-banner-section.md) | W2 | CV-CMS-01, CV-CMS-02 | [سند](../experiences/backoffice/management.md) |
-| [CV-R2-08](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-08-manual-product-rail.md) | W2 | CV-CMS-01, CV-CMS-02, CV-WEB-03 | [سند](../experiences/backoffice/management.md) |
-| [CV-R2-09](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-09-sticky-banner-section.md) | W2 | CV-CMS-01, CV-CMS-02, CV-WEB-03 | [سند](../experiences/backoffice/management.md) |
-| [CV-R2-10](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-10-seller-supply-lead.md) | W2 | CV-IAM-06, CV-CAT-06, CV-OPS-05, CV-OPS-06 | [سند](../domains/shipping/README.md) |
-| [CV-R2-11](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-11-storefront-alignment.md) | W3 | CV-WEB-02, CV-WEB-03, CV-WEB-04, CV-WEB-05, CV-WEB-06, CV-WEB-07, CV-WEB-08 | [سند](../experiences/storefront/discovery.md) |
-| [CV-R2-12](../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/tasks/cv-r2-12-revision-acceptance.md) | W3 | CV-QA-01, CV-QA-04, CV-QA-06 | [سند](readiness.md) |
+| [CV-R2-01](review-v1-1/tasks/cv-r2-01-single-user.md) · [#1](https://github.com/MohamadParsa/marketplace/issues/1) | W0 | todo | CV-IAM-04، CV-IAM-05، CV-IAM-07 |
+| [CV-R2-02](review-v1-1/tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | W0 | todo | CV-IAM-01، CV-IAM-02 |
+| [CV-R2-03](review-v1-1/tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | W0 | todo | CV-IAM-02، CV-IAM-07، CV-WEB-07 |
+| [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | todo | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
+| [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | todo | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
+| [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | todo | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
+| [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | later | deferred | CV-CMS-01، CV-CMS-02 |
+| [CV-R2-08](review-v1-1/tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
+| [CV-R2-09](review-v1-1/tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
+| [CV-R2-10](review-v1-1/tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-05، CV-OPS-06 |
+| [CV-R2-11](review-v1-1/tasks/cv-r2-11-storefront-alignment.md) · [#11](https://github.com/MohamadParsa/marketplace/issues/11) | W3 | todo | CV-WEB-02، CV-WEB-03، CV-WEB-04، CV-WEB-05، CV-WEB-06، CV-WEB-07، CV-WEB-08 |
+| [CV-R2-12](review-v1-1/tasks/cv-r2-12-revision-acceptance.md) · [#12](https://github.com/MohamadParsa/marketplace/issues/12) | W3 | todo | CV-QA-01، CV-QA-04، CV-QA-06 |
+| [CV-R2-13](review-v1-1/tasks/cv-r2-13-general-settings.md) · [#15](https://github.com/MohamadParsa/marketplace/issues/15) | W1 | todo | تفکیک جدید از پاسخ مالک |
+| [CV-R2-14](review-v1-1/tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | W2 | todo | تفکیک جدید از پاسخ مالک |
+| [CV-R2-15](review-v1-1/tasks/cv-r2-15-stock-alert.md) · [#17](https://github.com/MohamadParsa/marketplace/issues/17) | W2 | todo | تفکیک جدید از پاسخ مالک |
 
 <a id="issue-13-scope"></a>
 
 ## پاسخ مالک پس از #13 — محدوده آماده بازنویسی تسک
 
-[ADR-005](../decisions/adr-005-review-v1-1-product-responses.md#اثر-بر-تسکها-و-مرحله-بعد) مرجع پاسخ و جدول کارهای متأثر است. اعداد موج/اولویت در snapshot بالا، برنامه نهایی پس از پاسخ نیستند. در #14:
+[ADR-005](../decisions/adr-005-review-v1-1-product-responses.md#اثر-بر-تسکها-و-مرحله-بعد) مرجع پاسخ و جدول کارهای متأثر است. اعداد موج/اولویت در snapshot بالا، برنامه نهایی پس از پاسخ نیستند. اثرهای زیر در شرح‌های فعال و Issueهای #14 اعمال می‌شوند؛ معیارهای این مرحله از اجرای نرم‌افزار جدا هستند:
 
 - #7/#8/#9 و بخش CMS معوق علامت بخورند؛ برای #11/#12 dependency الزام CMS حذف یا با قالب ثابت خانه جایگزین شود. فرم سکشنِ معوق مانع شروع نیست.
 - #1..3 فلو موبایل و لینک رمز، بازیابی و union مجوز scoped/عضویت چندبه‌چند را بگیرند؛ پیشنهاد تغییر موبایل تا تصویب فعال نشود.
 - #5/#6/#11 انتساب بدون ارث و سقف کارت تنظیمی را بگیرند؛ مهاجرت تاریخی ساختگی به پروژه صفر اضافه نشود.
-- #10/#11 روش اسلات‌دار و بازه‌ای را تفکیک کنند. ظرفیت، اعلان موجودشدن تنوع و تنظیمات عمومی به کارهای مستقل با AC و سؤال مربوط شکسته شوند؛ این متن Issue تازه یا اولویت قطعی نساخته است.
+- #10/#11 روش اسلات‌دار و بازه‌ای را تفکیک کنند. ظرفیت، اعلان موجودشدن تنوع و تنظیمات عمومی به کارهای مستقل با AC و سؤال مربوط شکسته شوند؛ این نیازها اکنون در #15 تنظیمات، #16 ظرفیت و #17 خبرم‌کن تفکیک شده‌اند؛ اولویت‌ها پیشنهادی‌اند و اجرا شروع نشده است.
 - اتصال میان زیرسایت‌ها از محدوده شروع خارج و A پنل در پذیرش ثبت شود. رفتار خاموش‌بودن خود PDP و خرید مستقیم صفحه فروشگاه در Q-027 باز باقی است.
 
 تغییرات حوزه به معنی تکمیل کد/API یا پذیرش سناریوهای قبلی نیستند. مرحله۲ باید سناریوها، قراردادها، وابستگی و شواهد لازم بستن هر کار را یکپارچه کند.

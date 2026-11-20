@@ -12,6 +12,7 @@
 | طراحی ارتباطات و آزمون شکست | [قراردادها](architecture/contracts/README.md)، [کیفیت](architecture/quality.md) |
 | تصمیم‌گیری روی ابهام | [پرسش‌ها](product/open-questions.md) |
 | فهم اصلاح تصمیم قبلی | [دفتر تصمیم‌ها](decisions/README.md) |
+| تسک‌های بازنویسی‌شده پس از پاسخ #13 | [۱۵ شرح فعال/معوق، وابستگی و AC و شاهد پایان](delivery/review-v1-1/README.md) |
 | انتخاب مسیر ساخت | [برش‌ها](delivery/README.md)، [رودمپ](delivery/roadmap.md)، [آمادگی](delivery/readiness.md) |
 | ردیابی تسک‌های تحلیل پایه | [نقشه ۹۱ تسک و موج‌های پیشنهادی](delivery/analysis-backlog.md) |
 | اجرای سرویس و CI/CD | [راهنمای استقرار Liara](delivery/liara-deployment.md)، [ADR-003](decisions/adr-003-liara-deployment.md) |

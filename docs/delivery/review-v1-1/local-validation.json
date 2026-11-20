@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-20",
+  "scope": "Planning documentation only; no software or provider acceptance",
+  "task_count": 15,
+  "active_todo": 12,
+  "deferred": [
+    7,
+    8,
+    9
+  ],
+  "local_links": 422,
+  "fragment_references": 31,
+  "graph_nodes": 106,
+  "acyclic": true,
+  "snapshot_files_unchanged": 664,
+  "application_files_changed": 0,
+  "errors": [],
+  "passed": true
+}
