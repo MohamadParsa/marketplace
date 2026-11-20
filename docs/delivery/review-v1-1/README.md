@@ -2,15 +2,15 @@
 
 تاریخ:۲۰۲۶-۱۱-۲۰ | وضعیت مشخصات: in-review | مالک بررسی: محصول و راهبر فنی؛ فرد/موعد انتساب نشده | [فرایند #14](https://github.com/MohamadParsa/marketplace/issues/14)
 
-این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۲ کار فعال todo و۳ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
+این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۲ کار فعال و۳ کار معوق؛ نتیجه اجرا در شرح هر تسک ثبت می‌شود. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
 
 ## ترتیب و وابستگی
 
 | تسک / Issue | خروجی | اولویت / موج پیشنهادی | وضعیت اجرا | وابستگی |
 | --- | --- | --- | --- | --- |
-| [CV-R2-01](tasks/cv-r2-01-single-user.md) · [#1](https://github.com/MohamadParsa/marketplace/issues/1) | هویت واحد، نقش admin و عضویت چندبه‌چند | P0 / W0 | todo | CV-FND-04، CV-IAM-03 |
-| [CV-R2-02](tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | ورود موبایل، OTP و لینک رمز پس از شماره | P0 / W0 | todo | CV-R2-01، CV-IAM-01، CV-IAM-02 |
-| [CV-R2-03](tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | پروفایل، رمز و بازیابی OTP با شروع ورود از موبایل | P0 / W0 | todo | CV-R2-02 |
+| [CV-R2-01](tasks/cv-r2-01-single-user.md) · [#1](https://github.com/MohamadParsa/marketplace/issues/1) | هویت واحد، نقش admin و عضویت چندبه‌چند | P0 / W0 | done (داده آزمون) | CV-FND-04، CV-IAM-03 |
+| [CV-R2-02](tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | ورود موبایل، OTP و لینک رمز پس از شماره | P0 / W0 | done | CV-R2-01، CV-IAM-01، CV-IAM-02 |
+| [CV-R2-03](tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | پروفایل، رمز و بازیابی OTP با شروع ورود از موبایل | P0 / W0 | done (داده آزمون؛ موبایل/رمز) | CV-R2-02 |
 | [CV-R2-04](tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | آیکن دسته و برند با پیش‌فرض | P1 / W1 | todo | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
 | [CV-R2-05](tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | کتابخانه خصوصیت، انتساب صریح و سقف کارت | P0 / W1 | todo | CV-CAT-01، CV-CAT-02، CV-R2-13 |
 | [CV-R2-06](tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | اکشن سریع تنوع، قیمت و موجودی در محصول | P0 / W1 | todo | CV-R2-05، CV-CAT-04، CV-CAT-06 |

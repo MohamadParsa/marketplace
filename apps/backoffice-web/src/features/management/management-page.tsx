@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useWorkspace, can } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
+import { AccessPanel } from "./access-panel";
 import {
   ActionDialog,
   DataTable,
@@ -17,23 +18,22 @@ const roleOptions = [
   "support",
   "finance",
   "viewer",
-].map((value) => ({ value, label: value }));
+].map((value) => ({ value, label: value === "super-admin" ? "ادمین" : value }));
 export function ManagementPage({
   section,
 }: {
   section:
     "users" | "stores" | "categories" | "products" | "pricing" | "shipping";
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, role, can, execute, requestAdminCode } = useWorkspace();
   const [search, setSearch] = useState("");
   const [dialog, setDialog] = useState<{
     title: string;
     fields: Field[];
     command: Command;
   } | null>(null);
-  const editable = can(role, "management");
   const open = (title: string, command: Command, fields: Field[] = []) =>
-    setDialog({ title, fields, command });
+    setDialog({ title, fields, command: { ...command, idempotency_key: crypto.randomUUID() } });
   const titles = {
     users: "کاربران و نقش‌ها",
     stores: "فروشگاه‌ها",
@@ -70,7 +70,7 @@ export function ManagementPage({
         description="مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"
         action={
           ["users", "stores", "categories"].includes(section) &&
-          (role === "super-admin" || (section !== "users" && editable)) ? (
+          (section === "users" ? role === "super-admin" : can(section === "stores" ? "store.create" : "category.create", "management")) ? (
             <Button variant="contained" startIcon={<Add />} onClick={create}>
               افزودن{" "}
               {section === "users"
@@ -108,7 +108,7 @@ export function ManagementPage({
               },
               {
                 title: "نقش",
-                render: (u) => <span className="code">{u.role}</span>,
+                render: (u) => <span className="code">{u.role === "super-admin" ? "ادمین" : u.role || "بدون نقش پیش‌فرض"}</span>,
               },
               {
                 title: "وضعیت",
@@ -129,7 +129,7 @@ export function ManagementPage({
                               name: "value",
                               label: "نقش جدید",
                               options: roleOptions,
-                              default: u.role,
+                              default: u.role || "viewer",
                             },
                           ],
                         )
@@ -184,7 +184,7 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (s) => (
                   <Button
-                    disabled={!editable}
+                    disabled={!can("store.toggle", "management")}
                     onClick={() =>
                       open(
                         "تغییر وضعیت فروشگاه",
@@ -218,7 +218,7 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (c) => (
                   <Button
-                    disabled={!editable || c.archived}
+                    disabled={!can("category.archive", "management") || c.archived}
                     onClick={() =>
                       open(
                         "آرشیو دسته",
@@ -261,7 +261,7 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <Button
-                      disabled={!editable || p.status === "published"}
+                      disabled={!can("product.publish", "management") || p.status === "published"}
                       onClick={() =>
                         open(
                           "تأیید و انتشار محتوا",
@@ -278,7 +278,7 @@ export function ManagementPage({
                     </Button>
                     <Button
                       color="error"
-                      disabled={!editable || p.status === "rejected"}
+                      disabled={!can("product.reject", "management") || p.status === "rejected"}
                       onClick={() =>
                         open(
                           "رد محتوای محصول",
@@ -316,7 +316,7 @@ export function ManagementPage({
                 render: (r) => (
                   <Switch
                     checked={r.active}
-                    disabled={role !== "super-admin"}
+                    disabled={!can("rule.toggle")}
                     onChange={() =>
                       open(
                         "تغییر اعتبار قانون",
@@ -350,7 +350,7 @@ export function ManagementPage({
                   title: "عملیات",
                   render: (s) => (
                     <Button
-                      disabled={!editable}
+                      disabled={!can("shipping.update", "management")}
                       onClick={() =>
                         open(
                           "ویرایش تعرفه",
@@ -376,18 +376,21 @@ export function ManagementPage({
           </>
         )}
       </section>
+      {section === "users" && <AccessPanel />}
       {dialog && (
         <ActionDialog
           key={dialog.command.action + dialog.command.target}
           title={dialog.title}
           open
           fields={dialog.fields}
+          requestAdminCode={dialog.command.action.startsWith("user.") ? requestAdminCode : undefined}
           onClose={() => setDialog(null)}
-          onSubmit={(values) =>
+          onSubmit={(values, reauthentication) =>
             execute({
               ...dialog.command,
               ...values,
               amount: values.amount ? Number(values.amount) : undefined,
+              reauthentication,
             })
           }
         />

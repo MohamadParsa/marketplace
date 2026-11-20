@@ -8,8 +8,12 @@ const messages: Record<number, string> = {
   429: "تعداد تلاش‌ها بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.",
 };
 export class ApiError extends Error {
-  constructor(public status: number) {
-    super(messages[status] ?? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
+  constructor(public status: number, public code?: string) {
+    super(
+      code === "invalid_reauthentication"
+        ? "کد تأیید معتبر نیست یا منقضی شده است."
+        : messages[status] ?? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید.",
+    );
   }
 }
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -17,21 +21,34 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     ...init,
     headers: { "Content-Type": "application/json", ...init.headers },
   });
-  if (!response.ok) throw new ApiError(response.status);
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.code);
+  }
   if (response.status === 204) return undefined as T;
   return response.json();
 }
 export const api = {
   requestCode: (phone: string) =>
-    request<{ request_id: string; test_code?: string }>(
+    request<{ request_id: string; test_code?: string; password_available?: boolean }>(
       "/backoffice/auth/request-otp",
       { method: "POST", body: JSON.stringify({ phone }) },
     ),
+  passwordLogin: (phone: string, password: string) =>
+    request<Session>("/backoffice/auth/password-login", {
+      method: "POST",
+      body: JSON.stringify({ phone, password }),
+    }),
   verify: (request_id: string, code: string) =>
     request<Session>("/backoffice/auth/verify-otp", {
       method: "POST",
       body: JSON.stringify({ request_id, code }),
     }),
+  requestAdminCode: (token: string) =>
+    request<{ request_id: string; test_code?: string }>(
+      "/backoffice/auth/request-admin-otp",
+      { method: "POST", headers: { Authorization: `Bearer ${token}` } },
+    ),
   workspace: (token: string) =>
     request<Workspace>("/backoffice/workspace", {
       headers: { Authorization: `Bearer ${token}` },

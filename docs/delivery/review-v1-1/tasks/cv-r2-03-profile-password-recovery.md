@@ -6,7 +6,7 @@ owner: unassigned
 updated: 2026-11-20
 related: [DOM-IDENTITY-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done (داده آزمون؛ موبایل/رمز)
 priority: P0
 wave: W0
 ---
@@ -15,7 +15,7 @@ wave: W0
 
 Issue: [#3](https://github.com/MohamadParsa/marketplace/issues/3) · پاسخ‌های مالک: [R2-Q01](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری)، [R2-Q06](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
-این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.
+این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای بخش مستقل موبایل/رمز با داده آزمون انجام شده است.
 
 ## هدف بیزینسی و نتیجه
 
@@ -58,6 +58,14 @@ self-profile فقط مالک User؛ hash رمز، challenge محدود و single
 گزارش تحویل: شناسه کار، فایل/قرارداد، رفتار قبل/بعد، داده آزمون و نتیجه هر AC، مجوز/scope، موارد باز و لینک شاهد. mock، integration/API، browser و provider مستقل گزارش شوند؛ هیچ نتیجه‌ای در مرحله تدوین این سند ثبت نشده است.
 
 ## ردیابی و سابقه
+
+## نتیجه اجرای برش
+
+- CV-R2-03-AC01: ایمیل اختیاری و یکتایی سمت سرور پیاده و برای ایمیل تکراری `409 email_conflict` برگردانده می‌شود؛ تغییر پروفایل همان `user_id` را نگه می‌دارد.
+- CV-R2-03-AC02: ثبت/تغییر رمز با bcrypt و بدون بازگرداندن hash/متن خام انجام می‌شود؛ ورود موبایل+رمز و ایمیل+همان رمز به همان User resolve می‌شوند.
+- CV-R2-03-AC03: درخواست و مصرف single-use OTP بازیابی موبایل پیاده است؛ OTP اشتباه/منقضی رد می‌شود. بازیابی رمز در نبود مسیر ایمیل با اقدام ادمین انجام می‌شود؛ بازیابی ایمیلی فعلاً خارج از برش است.
+
+شاهد اجرا و نوع تست در [گزارش شاهد CV-R2-03](../evidence/cv-r2-03-profile-password-recovery.md) ثبت شده است. تست مرورگر انجام شده؛ فقط اتصال provider واقعی (که هنوز انتخاب نشده) و سیاست آینده بازیابی ایمیلی باز است.
 
 اصلاح تسک‌های پایه: CV-IAM-02، CV-IAM-07، CV-WEB-07.
 

@@ -1,8 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/cherriva/marketplace/apps/api/internal/adapters/reviewpostgres"
+	"github.com/cherriva/marketplace/apps/api/internal/config"
+	"github.com/jackc/pgx/v5"
 )
 
 func main() {
@@ -11,8 +17,34 @@ func main() {
 		os.Exit(2)
 	}
 
-	// The migration driver and first approved schema are intentionally pending.
-	// Keep the command explicit so deployment fails loudly once migrations are enabled.
-	fmt.Fprintln(os.Stderr, "migration runner is not configured yet")
-	os.Exit(1)
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	cfg := config.Load()
+	if cfg.ReviewDatabaseURL == "" || (cfg.Environment != "local" && cfg.Environment != "test") {
+		return fmt.Errorf("set REVIEW_DATABASE_URL for a disposable local/test PostgreSQL database")
+	}
+	dir := os.Getenv("MIGRATIONS_DIR")
+	if dir == "" {
+		dir = "../../db/migrations"
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			dir = "db/migrations"
+		}
+	}
+	options, err := pgx.ParseConfig(cfg.ReviewDatabaseURL)
+	if err != nil {
+		return fmt.Errorf("invalid REVIEW_DATABASE_URL")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+	db, err := pgx.ConnectConfig(ctx, options)
+	if err != nil {
+		return err
+	}
+	defer db.Close(context.Background())
+	return reviewpostgres.Migrate(ctx, db, os.DirFS(dir))
 }

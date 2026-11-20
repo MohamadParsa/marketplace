@@ -36,7 +36,10 @@ func (h *AuthHandler) RequestOTP(surface identity.Surface) http.HandlerFunc {
 			writeAuthError(w, err)
 			return
 		}
-		out := map[string]string{"request_id": id}
+		out := map[string]any{"request_id": id}
+		if available, err := h.service.PasswordAvailable(r.Context(), surface, in.Phone); err == nil {
+			out["password_available"] = available
+		}
 		if h.exposeTestCode {
 			if code, ok := h.notifier.Code(surface, identity.NormalizePhone(in.Phone)); ok {
 				out["test_code"] = code
@@ -61,6 +64,155 @@ func (h *AuthHandler) VerifyOTP(surface identity.Surface) http.HandlerFunc {
 			return
 		}
 		writeJSON(w, http.StatusOK, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
+}
+func (h *AuthHandler) PasswordLogin(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Phone    string `json:"phone"`
+			Password string `json:"password"`
+		}
+		if json.NewDecoder(r.Body).Decode(&in) != nil || strings.TrimSpace(in.Phone) == "" || in.Password == "" {
+			writeError(w, http.StatusBadRequest, "invalid_request")
+			return
+		}
+		session, err := h.service.PasswordLogin(r.Context(), surface, in.Phone, in.Password)
+		if err != nil {
+			writeError(w, http.StatusUnauthorized, "invalid_credentials")
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
+}
+func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := h.service.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), surface)
+		if err != nil {
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		writeJSON(w, http.StatusOK, profileJSON(session.User))
+	}
+}
+func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Name     string `json:"name"`
+			Email    string `json:"email"`
+			Password string `json:"password"`
+		}
+		if json.NewDecoder(r.Body).Decode(&in) != nil {
+			writeError(w, http.StatusBadRequest, "invalid_request")
+			return
+		}
+		token := bearer(r.Header.Get("Authorization"))
+		current, authErr := h.service.Authenticate(r.Context(), token, surface)
+		if authErr != nil {
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		if in.Name == "" {
+			in.Name = current.User.Name
+		}
+		if in.Email == "" {
+			in.Email = current.User.Email
+		}
+		user, err := h.service.UpdateProfile(r.Context(), surface, token, in.Name, in.Email, in.Password)
+		if err != nil {
+			writeProfileError(w, err)
+			return
+		}
+		writeJSON(w, http.StatusOK, profileJSON(user))
+	}
+}
+func (h *AuthHandler) RequestRecoveryOTP(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			Phone       string `json:"phone"`
+			Destination string `json:"destination"`
+		}
+		if json.NewDecoder(r.Body).Decode(&in) != nil || strings.TrimSpace(in.Phone) == "" {
+			writeError(w, http.StatusBadRequest, "invalid_request")
+			return
+		}
+		id, _, err := h.service.RequestRecoveryOTP(r.Context(), surface, in.Phone, in.Destination)
+		if err != nil {
+			writeRecoveryError(w, err)
+			return
+		}
+		out := map[string]any{"request_id": id}
+		if h.exposeTestCode {
+			if code, ok := h.notifier.Code(surface, identity.NormalizePhone(in.Phone)); ok {
+				out["test_code"] = code
+			}
+		}
+		writeJSON(w, http.StatusAccepted, out)
+	}
+}
+func (h *AuthHandler) RecoverPassword(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var in struct {
+			RequestID string `json:"request_id"`
+			Code      string `json:"code"`
+			Password  string `json:"password"`
+		}
+		if json.NewDecoder(r.Body).Decode(&in) != nil || in.RequestID == "" || in.Code == "" || in.Password == "" {
+			writeError(w, http.StatusBadRequest, "invalid_request")
+			return
+		}
+		if err := h.service.RecoverPassword(r.Context(), surface, in.RequestID, in.Code, in.Password); err != nil {
+			writeRecoveryError(w, err)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+func (h *AuthHandler) AdminResetPassword(w http.ResponseWriter, r *http.Request) {
+	var in struct {
+		Surface  string `json:"surface"`
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	if json.NewDecoder(r.Body).Decode(&in) != nil || strings.TrimSpace(in.Phone) == "" || in.Password == "" {
+		writeError(w, http.StatusBadRequest, "invalid_request")
+		return
+	}
+	surface := identity.SurfaceBackoffice
+	if in.Surface != "" {
+		surface = identity.Surface(in.Surface)
+	}
+	if err := h.service.AdminResetPassword(r.Context(), bearer(r.Header.Get("Authorization")), surface, in.Phone, in.Password); err != nil {
+		switch {
+		case errors.Is(err, identity.ErrNotAdmin):
+			writeError(w, http.StatusForbidden, "forbidden")
+		case errors.Is(err, identity.ErrInvalidProfile):
+			writeError(w, http.StatusBadRequest, "invalid_password")
+		case errors.Is(err, identity.ErrUnknown):
+			writeError(w, http.StatusNotFound, "user_not_found")
+		default:
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+		}
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+func (h *AuthHandler) RequestAdminOTP(w http.ResponseWriter, r *http.Request) {
+	id, code, err := h.service.RequestAdminOTP(r.Context(), bearer(r.Header.Get("Authorization")))
+	switch {
+	case errors.Is(err, identity.ErrNotAdmin):
+		writeError(w, http.StatusForbidden, "forbidden")
+	case errors.Is(err, identity.ErrInactive) || errors.Is(err, identity.ErrInvalidOTP):
+		writeError(w, http.StatusUnauthorized, "unauthorized")
+	case errors.Is(err, identity.ErrResendSoon) || errors.Is(err, identity.ErrRateLimit):
+		writeError(w, http.StatusTooManyRequests, "otp_rate_limit")
+	case err != nil:
+		writeError(w, http.StatusInternalServerError, "internal_error")
+	default:
+		out := map[string]string{"request_id": id}
+		if h.exposeTestCode {
+			out["test_code"] = code
+		}
+		writeJSON(w, http.StatusAccepted, out)
 	}
 }
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
@@ -96,6 +248,31 @@ func writeAuthError(w http.ResponseWriter, err error) {
 		code = "invalid_credentials"
 	}
 	writeError(w, status, code)
+}
+func profileJSON(user identity.User) map[string]any {
+	return map[string]any{"user_id": user.ID, "name": user.Name, "phone": user.Phone, "email": user.Email, "password_available": user.PasswordHash != ""}
+}
+func writeProfileError(w http.ResponseWriter, err error) {
+	switch {
+	case errors.Is(err, identity.ErrConflict):
+		writeError(w, http.StatusConflict, "email_conflict")
+	case errors.Is(err, identity.ErrInvalidProfile):
+		writeError(w, http.StatusBadRequest, "invalid_profile")
+	default:
+		writeError(w, http.StatusUnauthorized, "unauthorized")
+	}
+}
+func writeRecoveryError(w http.ResponseWriter, err error) {
+	switch {
+	case errors.Is(err, identity.ErrEmailRecoveryUnavailable):
+		writeError(w, http.StatusNotImplemented, "email_recovery_unavailable")
+	case errors.Is(err, identity.ErrInvalidProfile):
+		writeError(w, http.StatusBadRequest, "invalid_password")
+	case errors.Is(err, identity.ErrResendSoon), errors.Is(err, identity.ErrRateLimit):
+		writeError(w, http.StatusTooManyRequests, "otp_rate_limit")
+	default:
+		writeError(w, http.StatusUnauthorized, "invalid_or_expired_otp")
+	}
 }
 func writeJSON(w http.ResponseWriter, status int, body any) {
 	w.Header().Set("Content-Type", "application/json")

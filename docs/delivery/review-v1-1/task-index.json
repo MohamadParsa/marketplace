@@ -3,7 +3,7 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Task alignment only; no implementation done. Original snapshot remains unchanged.",
+  "note": "Implementation evidence is tracked in each task. Original snapshot remains unchanged.",
   "task_count": 15,
   "active_count": 12,
   "deferred_ids": [
@@ -19,7 +19,7 @@
       "title": "هویت واحد، نقش admin و عضویت چندبه‌چند",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -45,7 +45,7 @@
         "کاربر مجاز موجودی A و فقط مشاهده B بتواند A را ویرایش کند و درخواست مستقیم ویرایش B رد شود.",
         "admin نقش و admin دیگر تعیین کند؛ کاربر فاقد مجوز همان API رد شود و تغییر اختیار قابل ردیابی باشد."
       ],
-      "blocked": "نگاشت admin به super-admin نسخه آزمون، سیاست آخرین admin و ابطال اختیار باید پیش از پذیرش افزایش اختیار در قرارداد امن مشخص شوند؛ اصل چندنقشی/عضویت حل‌شده است.",
+      "blocked": "دامنه داده آزمون مانع باقی‌مانده ندارد. اتصال واقعی سایت، ایجاد خرید، پرداخت و ارائه‌دهنده پیامک در گیت‌های جداگانه‌اند.",
       "technical": "داده منطقی User، RoleGrant(user,role,scope) و StoreMembership؛ کنترل server-side در query، mutation و خروجی. خطاهای عدم مجوز و تعارض نسخه اطلاعات خصوصی ندهند.",
       "evidence": "گزارش integration/API با حداقل دو فروشگاه و یک کاربر چندنقشی؛ درخواست مثبت/منفی و سابقه تغییر نقش. تصویر منوی مخفی‌شده به‌تنهایی کافی نیست.",
       "amends": [
@@ -61,7 +61,7 @@
       "title": "ورود موبایل، OTP و لینک رمز پس از شماره",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -89,7 +89,7 @@
       ],
       "blocked": "تغییر موبایل و نشست میان میزبان‌ها در این کار نیست؛ تغییر موبایل منتظر تصویب و زیرسایت‌ها معوق‌اند. طراحی ادامه ورود در همان سایت، مسیر داخلی امن بخواهد؛ redirect خارجی دلخواه ممنوع باشد.",
       "technical": "challenge و session از قرارداد IAM؛ داده fixture برای حساب با/بدون رمز. UI وضعیت موجود/ناموجود حساب را فراتر از رفتار مصوب افشا نکند؛ خطای احراز عمومی و rate limit.",
-      "evidence": "integration احراز و یک مرورگر برای شماره→OTP/رمز با داده آزمون؛ تست تکرار verify، expiry و نتیجه نشست. هیچ پیامک واقعی برای بستن این کار لازم نیست.",
+      "evidence": "integration احراز و مرورگر بک‌آفیس برای شماره→OTP/رمز با داده آزمون؛ تست تکرار verify، expiry، رمز hash‌شده و نتیجه نشست. تصویر شاهد در evidence/cv-r2-02-password-login.png ثبت شده است؛ پیامک واقعی لازم نیست.",
       "amends": [
         "CV-IAM-01",
         "CV-IAM-02"
@@ -102,7 +102,7 @@
       "title": "پروفایل، رمز و بازیابی OTP با شروع ورود از موبایل",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done (داده آزمون؛ موبایل/رمز)",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -133,7 +133,8 @@
         "CV-IAM-02",
         "CV-IAM-07",
         "CV-WEB-07"
-      ]
+      ],
+      "body_sha256": "e71cdb9ac36af3e9a7024efc067f87c12eb9553a130e6283c616ae7c93d4a92f"
     },
     {
       "id": "CV-R2-04",

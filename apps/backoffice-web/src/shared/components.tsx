@@ -12,6 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { labels } from "./format";
+import { ApiError } from "./api";
 export function Status({ value }: { value: string }) {
   const color = ["success", "published", "delivered", "confirmed"].includes(
     value,
@@ -99,15 +100,33 @@ export function ActionDialog({
   open,
   onClose,
   onSubmit,
+  requestAdminCode,
 }: {
   title: string;
   fields: Field[];
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: Record<string, string>) => Promise<void>;
+  onSubmit: (values: Record<string, string>, reauthentication?: { request_id: string; code: string }) => Promise<void>;
+  requestAdminCode?: () => Promise<{ request_id: string; test_code?: string }>;
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pendingValues, setPendingValues] = useState<Record<string, string> | null>(null);
+  const [challenge, setChallenge] = useState<{ request_id: string; test_code?: string } | null>(null);
+  const [code, setCode] = useState("");
+  async function sendAdminCode() {
+    if (!requestAdminCode) return;
+    setBusy(true);
+    setError("");
+    try {
+      setChallenge(await requestAdminCode());
+      setCode("");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "خطا در ارسال کد");
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <Dialog
       open={open}
@@ -125,10 +144,18 @@ export function ActionDialog({
           setBusy(true);
           setError("");
           try {
-            await onSubmit(values);
+            await onSubmit(
+              pendingValues ?? values,
+              challenge ? { request_id: challenge.request_id, code } : undefined,
+            );
             onClose();
           } catch (error) {
-            setError(error instanceof Error ? error.message : "خطا در ثبت");
+            if (requestAdminCode && error instanceof ApiError && error.code === "reauthentication_required") {
+              setPendingValues(values);
+              await sendAdminCode();
+            } else {
+              setError(error instanceof Error ? error.message : "خطا در ثبت");
+            }
           } finally {
             setBusy(false);
           }
@@ -147,6 +174,7 @@ export function ActionDialog({
               type={field.type ?? "text"}
               select={!!field.options}
               required
+              disabled={!!pendingValues || busy}
               fullWidth
               margin="normal"
               defaultValue={field.default ?? field.options?.[0]?.value ?? ""}
@@ -159,13 +187,36 @@ export function ActionDialog({
               ))}
             </TextField>
           ))}
+          {pendingValues && (
+            <>
+              <Alert severity="info" sx={{ mt: 2 }}>
+                برای اعطای اختیار ادمین، کد تأیید حساب خودتان را وارد کنید.
+              </Alert>
+              {challenge && (
+                <TextField
+                  label="کد تأیید ادمین"
+                  value={code}
+                  onChange={(event) => setCode(event.target.value)}
+                  helperText={challenge.test_code ? `کد آزمون: ${challenge.test_code}` : undefined}
+                  autoComplete="one-time-code"
+                  inputProps={{ inputMode: "numeric", maxLength: 6 }}
+                  required
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+              <Button type="button" onClick={sendAdminCode} disabled={busy}>
+                {challenge ? "ارسال دوباره کد" : "ارسال کد تأیید"}
+              </Button>
+            </>
+          )}
           {error && <Alert severity="error">{error}</Alert>}
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} disabled={busy}>
             انصراف
           </Button>
-          <Button variant="contained" type="submit" disabled={busy}>
+          <Button variant="contained" type="submit" disabled={busy || (!!pendingValues && !challenge)}>
             {busy ? "در حال ثبت…" : "ثبت و تأیید"}
           </Button>
         </DialogActions>

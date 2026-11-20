@@ -1,5 +1,15 @@
 export type Role =
-  "super-admin" | "operations" | "support" | "finance" | "viewer";
+  "super-admin" | "operations" | "support" | "finance" | "viewer" | "";
+export type RoleScope = "global" | "store";
+export interface CustomRole {
+  id: string;
+  name: string;
+  scope: RoleScope;
+  permissions: string[];
+  version: number;
+}
+interface StoreMembership { user_id: string; store_id: string }
+interface RoleGrant { user_id: string; role_id: string; store_id?: string }
 export interface User {
   id: string;
   name: string;
@@ -87,6 +97,12 @@ export interface Transfer {
   version: number;
 }
 export interface Workspace {
+  access?: {
+    roles: CustomRole[] | null;
+    grants: RoleGrant[] | null;
+    memberships?: StoreMembership[];
+    registry: Record<RoleScope, string[]>;
+  };
   users?: User[];
   stores?: Store[];
   categories?: Category[];
@@ -137,7 +153,7 @@ export interface Workspace {
 export interface Session {
   token: string;
   expires_at: string;
-  user: { ID: string; Role: Role };
+  user: { ID: string; Role: Role; Permissions?: string[] };
 }
 export interface Command {
   action: string;
@@ -149,4 +165,8 @@ export interface Command {
   amount?: number;
   version?: number;
   idempotency_key?: string;
+  reauthentication?: { request_id: string; code: string };
+  scope?: RoleScope;
+  permissions?: string[];
+  store_id?: string;
 }

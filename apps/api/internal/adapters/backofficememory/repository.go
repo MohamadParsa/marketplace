@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"slices"
 	"sync"
 )
 
@@ -21,6 +22,9 @@ func clone(state backoffice.Workspace) (backoffice.Workspace, error) {
 	}
 	var copy backoffice.Workspace
 	err = json.Unmarshal(encoded, &copy)
+	copy.Users = slices.Clone(state.Users)
+	copy.StoreMemberships = slices.Clone(state.StoreMemberships)
+	copy.Purchases = slices.Clone(state.Purchases)
 	return copy, err
 }
 func (r *Repository) Snapshot(ctx context.Context) (backoffice.Workspace, error) {
