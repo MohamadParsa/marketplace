@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"crypto/subtle"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"sync"
 	"time"
@@ -41,16 +42,34 @@ func (s *Service) RequestOTP(ctx context.Context, surface identity.Surface, phon
 	if !user.Active {
 		return "", identity.ErrInactive
 	}
-	key := challengeKey(surface, phone)
-	now := s.clock.Now()
-	if last, ok, err := s.challenges.LastRequest(ctx, key); err != nil {
-		return "", err
-	} else if ok && now.Sub(last) < resendAfter {
-		return "", identity.ErrResendSoon
-	}
-	recent, err := s.challenges.RecordRequest(ctx, key, now)
+	requestID, _, err := s.issueOTP(ctx, identity.Challenge{Phone: phone, Surface: surface})
+	return requestID, err
+}
+
+// RequestAdminOTP sends a challenge to the current administrator's own account.
+func (s *Service) RequestAdminOTP(ctx context.Context, token string) (string, string, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	session, err := s.Authenticate(ctx, token, identity.SurfaceBackoffice)
 	if err != nil {
-		return "", err
+		return "", "", err
+	}
+	if session.User.Role != identity.RoleSuperAdmin {
+		return "", "", identity.ErrNotAdmin
+	}
+	return s.issueOTP(ctx, identity.Challenge{Phone: session.User.Phone, Surface: identity.SurfaceBackoffice, ReauthSession: session.Token})
+}
+
+func (s *Service) issueOTP(ctx context.Context, challenge identity.Challenge) (string, string, error) {
+	now := s.clock.Now()
+	if last, ok, err := s.challenges.LastRequest(ctx, challenge.CooldownKey()); err != nil {
+		return "", "", err
+	} else if ok && now.Sub(last) < resendAfter {
+		return "", "", identity.ErrResendSoon
+	}
+	recent, err := s.challenges.RecordRequest(ctx, challengeKey(challenge.Surface, challenge.Phone), now)
+	if err != nil {
+		return "", "", err
 	}
 	cutoff := now.Add(-requestWindow)
 	count := 0
@@ -60,45 +79,33 @@ func (s *Service) RequestOTP(ctx context.Context, surface identity.Surface, phon
 		}
 	}
 	if count > maxRequests {
-		return "", identity.ErrRateLimit
+		return "", "", identity.ErrRateLimit
 	}
 	code, err := s.random.Code()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	requestID, err := s.random.Token()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	if err := s.challenges.PutChallenge(ctx, requestID, identity.Challenge{Phone: phone, Surface: surface, Code: code, Expires: now.Add(otpTTL), IssuedAt: now}); err != nil {
-		return "", err
+	challenge.Code, challenge.Expires, challenge.IssuedAt = code, now.Add(otpTTL), now
+	if err := s.challenges.PutChallenge(ctx, requestID, challenge); err != nil {
+		return "", "", err
 	}
-	if err := s.notifier.Send(ctx, surface, phone, code); err != nil {
+	if err := s.notifier.Send(ctx, challenge.Surface, challenge.Phone, code); err != nil {
 		_ = s.challenges.DeleteChallenge(ctx, requestID)
-		return "", err
+		return "", "", err
 	}
-	return requestID, nil
+	return requestID, code, nil
 }
 
 func (s *Service) VerifyOTP(ctx context.Context, surface identity.Surface, requestID, code string) (identity.Session, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	challenge, err := s.challenges.GetChallenge(ctx, requestID)
+	challenge, err := s.consumeOTP(ctx, surface, "", requestID, code)
 	if err != nil {
-		return identity.Session{}, identity.ErrInvalidOTP
-	}
-	now := s.clock.Now()
-	if challenge.Surface != surface || !now.Before(challenge.Expires) {
-		return identity.Session{}, identity.ErrInvalidOTP
-	}
-	if challenge.Code != code {
-		challenge.Attempts++
-		if challenge.Attempts >= maxAttempts {
-			_ = s.challenges.DeleteChallenge(ctx, requestID)
-		} else {
-			_ = s.challenges.PutChallenge(ctx, requestID, challenge)
-		}
-		return identity.Session{}, identity.ErrInvalidOTP
+		return identity.Session{}, err
 	}
 	user, err := s.users.FindByPhone(ctx, surface, challenge.Phone)
 	if err != nil {
@@ -107,16 +114,46 @@ func (s *Service) VerifyOTP(ctx context.Context, surface identity.Surface, reque
 	if !user.Active {
 		return identity.Session{}, identity.ErrInactive
 	}
-	_ = s.challenges.DeleteChallenge(ctx, requestID)
 	token, err := s.random.Token()
 	if err != nil {
 		return identity.Session{}, err
 	}
-	session := identity.Session{Token: token, User: user, Expires: now.Add(sessionTTL)}
+	session := identity.Session{Token: token, User: user, Expires: s.clock.Now().Add(sessionTTL)}
 	if err := s.sessions.Put(ctx, session); err != nil {
 		return identity.Session{}, err
 	}
 	return session, nil
+}
+
+func (s *Service) ConfirmAdminOTP(ctx context.Context, token, requestID, code string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	session, err := s.Authenticate(ctx, token, identity.SurfaceBackoffice)
+	if err != nil || session.User.Role != identity.RoleSuperAdmin {
+		return identity.ErrInvalidOTP
+	}
+	_, err = s.consumeOTP(ctx, identity.SurfaceBackoffice, session.Token, requestID, code)
+	return err
+}
+
+func (s *Service) consumeOTP(ctx context.Context, surface identity.Surface, reauthSession, requestID, code string) (identity.Challenge, error) {
+	challenge, err := s.challenges.GetChallenge(ctx, requestID)
+	if err != nil || challenge.Surface != surface || challenge.ReauthSession != reauthSession || !s.clock.Now().Before(challenge.Expires) {
+		return identity.Challenge{}, identity.ErrInvalidOTP
+	}
+	if subtle.ConstantTimeCompare([]byte(challenge.Code), []byte(code)) != 1 {
+		challenge.Attempts++
+		if challenge.Attempts >= maxAttempts {
+			_ = s.challenges.DeleteChallenge(ctx, requestID)
+		} else {
+			_ = s.challenges.PutChallenge(ctx, requestID, challenge)
+		}
+		return identity.Challenge{}, identity.ErrInvalidOTP
+	}
+	if err := s.challenges.DeleteChallenge(ctx, requestID); err != nil {
+		return identity.Challenge{}, err
+	}
+	return challenge, nil
 }
 
 func (s *Service) Logout(ctx context.Context, token string) error {
@@ -128,7 +165,7 @@ func (s *Service) Authenticate(ctx context.Context, token string, surface identi
 		return identity.Session{}, identity.ErrInvalidOTP
 	}
 	user, err := s.users.FindByPhone(ctx, surface, session.User.Phone)
-	if err != nil || !user.Active {
+	if err != nil || !user.Active || user.ID != session.User.ID || user.AccessVersion != session.User.AccessVersion {
 		return identity.Session{}, identity.ErrInactive
 	}
 	session.User = user

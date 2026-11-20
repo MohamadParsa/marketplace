@@ -10,9 +10,10 @@ var accountPhone = regexp.MustCompile(`^09[0-9]{9}$`)
 func validRole(role identity.Role) bool {
 	return role == identity.RoleSuperAdmin || role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance || role == identity.RoleViewer
 }
-func applyUser(state *Workspace, c Command, id string) error {
+func applyUser(state *Workspace, c Command, id string, confirmed bool, event *Audit) error {
+	role := identity.Role(c.Value)
 	if c.Action == "user.create" {
-		if c.Name == "" || !accountPhone.MatchString(c.Phone) || !validRole(identity.Role(c.Value)) {
+		if c.Name == "" || !accountPhone.MatchString(c.Phone) || !validRole(role) {
 			return ErrInvalid
 		}
 		for _, existing := range state.Users {
@@ -20,7 +21,11 @@ func applyUser(state *Workspace, c Command, id string) error {
 				return ErrConflict
 			}
 		}
-		state.Users = append(state.Users, User{ID: id, Phone: c.Phone, Name: c.Name, Role: identity.Role(c.Value), Active: true})
+		if role == identity.RoleSuperAdmin && !confirmed {
+			return ErrReauthenticationRequired
+		}
+		state.Users = append(state.Users, User{ID: id, Phone: c.Phone, Name: c.Name, Role: role, Active: true})
+		event.Target, event.Role = id, role
 		return nil
 	}
 	for i := range state.Users {
@@ -28,7 +33,11 @@ func applyUser(state *Workspace, c Command, id string) error {
 		if u.ID != c.Target {
 			continue
 		}
-		if u.Active && u.Role == identity.RoleSuperAdmin && (c.Action == "user.toggle" || c.Value != string(identity.RoleSuperAdmin)) {
+		if c.Action == "user.role" && !validRole(role) {
+			return ErrInvalid
+		}
+		toggle := c.Action == "user.toggle"
+		if u.Active && u.Role == identity.RoleSuperAdmin && (toggle || role != identity.RoleSuperAdmin) {
 			count := 0
 			for _, other := range state.Users {
 				if other.Active && other.Role == identity.RoleSuperAdmin {
@@ -39,14 +48,22 @@ func applyUser(state *Workspace, c Command, id string) error {
 				return ErrConflict
 			}
 		}
-		if c.Action == "user.toggle" {
+		grantsAdmin := (!toggle && role == identity.RoleSuperAdmin && u.Role != role) ||
+			(toggle && !u.Active && u.Role == identity.RoleSuperAdmin)
+		if grantsAdmin && !confirmed {
+			return ErrReauthenticationRequired
+		}
+		event.PreviousRole, event.Role = u.Role, u.Role
+		if toggle {
 			u.Active = !u.Active
+			u.AccessVersion++
 			return nil
 		}
-		if !validRole(identity.Role(c.Value)) {
-			return ErrInvalid
+		if u.Role != role {
+			u.Role = role
+			u.AccessVersion++
 		}
-		u.Role = identity.Role(c.Value)
+		event.Role = u.Role
 		return nil
 	}
 	return ErrNotFound

@@ -42,7 +42,7 @@ import {
 } from "@mui/icons-material";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
-import { WorkspaceContext } from "../shared/workspace";
+import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
@@ -161,6 +161,9 @@ function Workspace({
       await cache.invalidateQueries({ queryKey: ["workspace"] });
       setNotice("تغییر با موفقیت ثبت شد.");
     },
+    onError: (error) => {
+      if (error instanceof ApiError && error.status === 401) logout();
+    },
   });
   useEffect(() => {
     if (query.error instanceof ApiError && query.error.status === 401) logout();
@@ -169,7 +172,10 @@ function Workspace({
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
   const role = session.user.Role;
-  const visible = (roles?: string[]) => !roles || roles.includes(role);
+  const permissions = session.user.Permissions ?? [];
+  const financeVisible = role === "super-admin" || role === "finance" || permissions.includes("finance.read");
+  const visible = (roles?: string[]) => !roles || roles.includes(role) ||
+    (roles.includes("finance") && financeVisible);
   return (
     <div className="app-layout">
       <aside className={"sidebar " + (menuOpen ? "is-open" : "")}>
@@ -216,7 +222,7 @@ function Workspace({
           <div className="avatar">{role === "super-admin" ? "م" : "ک"}</div>
           <div>
             <b>کاربر آزمایشی</b>
-            <small>{role}</small>
+            <small>{role === "super-admin" ? "ادمین" : role || "نقش سفارشی"}</small>
           </div>
           <button aria-label="خروج از حساب" onClick={logout}>
             <LogoutOutlined />
@@ -275,7 +281,9 @@ function Workspace({
               value={{
                 state: query.data,
                 role,
+                can: (action, area) => role === "super-admin" || (!!area && can(role, area)) || permissions.includes(action),
                 execute: (command) => mutation.mutateAsync(command),
+                requestAdminCode: () => api.requestAdminCode(session.token),
                 busy: mutation.isPending,
               }}
             >
@@ -297,7 +305,7 @@ function Workspace({
                     element={
                       (section === "users" && role !== "super-admin") ||
                       (section === "pricing" &&
-                        !["super-admin", "finance"].includes(role)) ? (
+                        !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (
                         <ManagementPage key={section} section={section} />
@@ -327,7 +335,7 @@ function Workspace({
                 <Route
                   path="/finance"
                   element={
-                    ["super-admin", "finance"].includes(role) ? (
+                    financeVisible ? (
                       <FinancePage />
                     ) : (
                       <Navigate to="/" replace />

@@ -20,4 +20,5 @@ type Offer struct {
 	StoreID   string `json:"store_id"`
 	Stock     int    `json:"stock"`
 	Price     int64  `json:"price"`
+	Version   int    `json:"version"`
 }

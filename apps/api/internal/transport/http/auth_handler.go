@@ -63,6 +63,25 @@ func (h *AuthHandler) VerifyOTP(surface identity.Surface) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
 	}
 }
+func (h *AuthHandler) RequestAdminOTP(w http.ResponseWriter, r *http.Request) {
+	id, code, err := h.service.RequestAdminOTP(r.Context(), bearer(r.Header.Get("Authorization")))
+	switch {
+	case errors.Is(err, identity.ErrNotAdmin):
+		writeError(w, http.StatusForbidden, "forbidden")
+	case errors.Is(err, identity.ErrInactive) || errors.Is(err, identity.ErrInvalidOTP):
+		writeError(w, http.StatusUnauthorized, "unauthorized")
+	case errors.Is(err, identity.ErrResendSoon) || errors.Is(err, identity.ErrRateLimit):
+		writeError(w, http.StatusTooManyRequests, "otp_rate_limit")
+	case err != nil:
+		writeError(w, http.StatusInternalServerError, "internal_error")
+	default:
+		out := map[string]string{"request_id": id}
+		if h.exposeTestCode {
+			out["test_code"] = code
+		}
+		writeJSON(w, http.StatusAccepted, out)
+	}
+}
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	_ = h.service.Logout(r.Context(), bearer(r.Header.Get("Authorization")))
 	w.WriteHeader(http.StatusNoContent)

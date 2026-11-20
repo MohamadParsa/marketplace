@@ -71,7 +71,10 @@ func (s *Store) PutChallenge(_ context.Context, id string, c identity.Challenge)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.challenges[id] = c
-	s.last[key(c.Surface, c.Phone)] = c.IssuedAt
+	key := c.CooldownKey()
+	if c.IssuedAt.After(s.last[key]) {
+		s.last[key] = c.IssuedAt
+	}
 	return nil
 }
 func (s *Store) GetChallenge(_ context.Context, id string) (identity.Challenge, error) {

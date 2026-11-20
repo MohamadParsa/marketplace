@@ -3,7 +3,9 @@ import type { Command, Role, Workspace } from "./types";
 export interface WorkspaceContext {
   state: Workspace;
   role: Role;
+  can: (action: string, area?: "management" | "support" | "finance") => boolean;
   execute: (command: Command) => Promise<void>;
+  requestAdminCode: () => Promise<{ request_id: string; test_code?: string }>;
   busy: boolean;
 }
 export const WorkspaceContext = createContext<WorkspaceContext | null>(null);
