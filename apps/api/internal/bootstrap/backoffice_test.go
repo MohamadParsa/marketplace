@@ -12,6 +12,11 @@ import (
 
 func login(t *testing.T, handler http.Handler, phone string) string {
 	t.Helper()
+	return loginAt(t, handler, "backoffice", phone)["token"].(string)
+}
+
+func loginAt(t *testing.T, handler http.Handler, surface, phone string) map[string]any {
+	t.Helper()
 	call := func(path string, body any) map[string]any {
 		encoded, _ := json.Marshal(body)
 		response := httptest.NewRecorder()
@@ -25,9 +30,8 @@ func login(t *testing.T, handler http.Handler, phone string) string {
 		}
 		return result
 	}
-	challenge := call("/backoffice/auth/request-otp", map[string]string{"phone": phone})
-	session := call("/backoffice/auth/verify-otp", map[string]any{"request_id": challenge["request_id"], "code": challenge["test_code"]})
-	return session["token"].(string)
+	challenge := call("/"+surface+"/auth/request-otp", map[string]string{"phone": phone})
+	return call("/"+surface+"/auth/verify-otp", map[string]any{"request_id": challenge["request_id"], "code": challenge["test_code"]})
 }
 func TestBackofficeHTTPPermissions(t *testing.T) {
 	handler := bootstrap.NewHTTPHandler(config.Config{Environment: "test"})

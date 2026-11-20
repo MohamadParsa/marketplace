@@ -21,7 +21,8 @@ func NewBackofficeHandler(service *backoffice.Service, authService *auth.Service
 }
 func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
-	session, err := h.auth.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), identity.SurfaceBackoffice)
+	token := bearer(r.Header.Get("Authorization"))
+	session, err := h.auth.Authenticate(r.Context(), token, identity.SurfaceBackoffice)
 	if err != nil {
 		writeError(w, 401, "unauthorized")
 		return
@@ -29,16 +30,26 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		state, err := h.service.Read(r.Context(), session.User)
 		if err != nil {
+			if errors.Is(err, backoffice.ErrForbidden) {
+				writeError(w, 403, "forbidden")
+				return
+			}
 			writeError(w, 500, "internal_error")
 			return
 		}
 		writeJSON(w, 200, state)
 		return
 	}
-	var command backoffice.Command
+	var input struct {
+		backoffice.Command
+		Reauthentication *struct {
+			RequestID string `json:"request_id"`
+			Code      string `json:"code"`
+		} `json:"reauthentication"`
+	}
 	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
 	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&command); err != nil {
+	if err := decoder.Decode(&input); err != nil {
 		writeError(w, 400, "invalid_request")
 		return
 	}
@@ -46,12 +57,20 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeError(w, 400, "invalid_request")
 		return
 	}
-	err = h.service.Execute(r.Context(), session.User, command)
+	var confirm func() error
+	if input.Reauthentication != nil {
+		confirm = func() error {
+			return h.auth.ConfirmAdminOTP(r.Context(), token, input.Reauthentication.RequestID, input.Reauthentication.Code)
+		}
+	}
+	err = h.service.ExecuteWithReauthentication(r.Context(), session.User, input.Command, confirm)
 	if err != nil {
 		status := 500
 		code := "internal_error"
 		switch {
-		case errors.Is(err, backoffice.ErrForbidden):
+		case errors.Is(err, backoffice.ErrForbidden),
+			errors.Is(err, backoffice.ErrReauthenticationRequired),
+			errors.Is(err, backoffice.ErrInvalidReauthentication):
 			status = 403
 		case errors.Is(err, backoffice.ErrInvalid):
 			status = 400

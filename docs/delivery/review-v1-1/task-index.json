@@ -3,7 +3,7 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Task alignment only; no implementation done. Original snapshot remains unchanged.",
+  "note": "Implementation evidence is tracked in each task. Original snapshot remains unchanged.",
   "task_count": 15,
   "active_count": 12,
   "deferred_ids": [
@@ -19,7 +19,7 @@
       "title": "هویت واحد، نقش admin و عضویت چندبه‌چند",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -45,7 +45,7 @@
         "کاربر مجاز موجودی A و فقط مشاهده B بتواند A را ویرایش کند و درخواست مستقیم ویرایش B رد شود.",
         "admin نقش و admin دیگر تعیین کند؛ کاربر فاقد مجوز همان API رد شود و تغییر اختیار قابل ردیابی باشد."
       ],
-      "blocked": "نگاشت admin به super-admin نسخه آزمون، سیاست آخرین admin و ابطال اختیار باید پیش از پذیرش افزایش اختیار در قرارداد امن مشخص شوند؛ اصل چندنقشی/عضویت حل‌شده است.",
+      "blocked": "دامنه داده آزمون مانع باقی‌مانده ندارد. اتصال واقعی سایت، ایجاد خرید، پرداخت و ارائه‌دهنده پیامک در گیت‌های جداگانه‌اند.",
       "technical": "داده منطقی User، RoleGrant(user,role,scope) و StoreMembership؛ کنترل server-side در query، mutation و خروجی. خطاهای عدم مجوز و تعارض نسخه اطلاعات خصوصی ندهند.",
       "evidence": "گزارش integration/API با حداقل دو فروشگاه و یک کاربر چندنقشی؛ درخواست مثبت/منفی و سابقه تغییر نقش. تصویر منوی مخفی‌شده به‌تنهایی کافی نیست.",
       "amends": [

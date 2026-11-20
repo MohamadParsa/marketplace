@@ -12,7 +12,24 @@ import (
 
 func Fixture() backoffice.Workspace {
 	return backoffice.Workspace{
-		Users:      []backoffice.User{{ID: "admin", Phone: "09000000001", Name: "مدیر آزمایشی", Role: identity.RoleSuperAdmin, Active: true}, {ID: "ops", Phone: "09000000002", Name: "عملیات آزمایشی", Role: identity.RoleOperations, Active: true}, {ID: "support", Phone: "09000000003", Name: "پشتیبان آزمایشی", Role: identity.RoleSupport, Active: true}, {ID: "finance", Phone: "09000000004", Name: "مالی آزمایشی", Role: identity.RoleFinance, Active: true}, {ID: "viewer", Phone: "09000000005", Name: "مشاهده‌گر آزمایشی", Role: identity.RoleViewer, Active: true}},
+		StoreMemberships: []identity.StoreMembership{
+			{UserID: "ops", StoreID: "s1"}, {UserID: "ops", StoreID: "s2"},
+			{UserID: "seller-test", StoreID: "s1"},
+		},
+		Access: &backoffice.AccessDirectory{
+			Roles: []identity.RoleDefinition{
+				{ID: "store-view", Name: "مشاهده عرضه", Scope: identity.ScopeStore, Permissions: []string{string(identity.StoreOffersRead)}, Version: 1},
+				{ID: "store-stock", Name: "مدیریت موجودی", Scope: identity.ScopeStore, Permissions: []string{string(identity.StoreStockWrite)}, Version: 1},
+			},
+			Grants: []identity.RoleGrant{
+				{UserID: "ops", StoreID: "s1", RoleID: "store-view"},
+				{UserID: "ops", StoreID: "s1", RoleID: "store-stock"},
+				{UserID: "ops", StoreID: "s2", RoleID: "store-view"},
+				{UserID: "seller-test", StoreID: "s1", RoleID: "store-view"},
+			},
+		},
+		Purchases:  []backoffice.PurchaseOwner{{PurchaseID: "BUY-501", UserID: "ops"}, {PurchaseID: "BUY-502", UserID: "viewer"}},
+		Users:      []backoffice.User{{ID: "admin", Phone: "09000000001", Name: "مدیر آزمایشی", Role: identity.RoleSuperAdmin, Active: true}, {ID: "ops", Phone: "09000000002", Name: "عملیات آزمایشی", Role: identity.RoleOperations, Active: true}, {ID: "support", Phone: "09000000003", Name: "پشتیبان آزمایشی", Role: identity.RoleSupport, Active: true}, {ID: "finance", Phone: "09000000004", Name: "مالی آزمایشی", Role: identity.RoleFinance, Active: true}, {ID: "viewer", Phone: "09000000005", Name: "مشاهده‌گر آزمایشی", Role: identity.RoleViewer, Active: true}, {ID: "seller-test", Phone: "09120000002", Name: "فروشنده آزمایشی", Active: true}},
 		Stores:     []store.Store{{ID: "s1", Name: "خانه سبز", Owner: "فروشنده نمونه الف", City: "تهران", Active: true, Model: "shared"}, {ID: "s2", Name: "چایستان", Owner: "فروشنده نمونه ب", City: "رشت", Active: true, Model: "independent"}, {ID: "s3", Name: "دیجیتال آبان", Owner: "فروشنده نمونه ج", City: "شیراز", Active: false, Model: "shared"}, {ID: "s4", Name: "استودیو آرا", Owner: "فروشنده نمونه د", City: "اصفهان", Active: true, Model: "independent"}},
 		Categories: []catalog.Category{{ID: "c1", Name: "خانه و زندگی", Attributes: []string{"رنگ", "جنس"}}, {ID: "c2", Name: "چای و دمنوش", Attributes: []string{"وزن", "نوع"}}, {ID: "c3", Name: "کالای دیجیتال", Attributes: []string{"رنگ", "حافظه"}}},
 		Products:   []catalog.Product{{ID: "p1", Name: "چراغ رومیزی مینیمال", CategoryID: "c1", Model: "shared", Status: "published", Version: 1}, {ID: "p2", Name: "چای بهاره ۵۰۰ گرمی", CategoryID: "c2", Model: "independent", Status: "pending", Version: 1}, {ID: "p3", Name: "هدفون بی‌سیم", CategoryID: "c3", Model: "shared", Status: "pending", Version: 1}, {ID: "p4", Name: "گلدان سرامیکی", CategoryID: "c1", Model: "independent", Status: "published", Version: 1}, {ID: "p5", Name: "دمنوش به‌لیمو", CategoryID: "c2", Model: "independent", Status: "rejected", Version: 1}},
