@@ -11,11 +11,11 @@ import (
 )
 
 func Fixture() backoffice.Workspace {
-	return backoffice.Workspace{
+	state := backoffice.Workspace{
 		Users:      []backoffice.User{{ID: "admin", Phone: "09000000001", Name: "مدیر آزمایشی", Role: identity.RoleSuperAdmin, Active: true}, {ID: "ops", Phone: "09000000002", Name: "عملیات آزمایشی", Role: identity.RoleOperations, Active: true}, {ID: "support", Phone: "09000000003", Name: "پشتیبان آزمایشی", Role: identity.RoleSupport, Active: true}, {ID: "finance", Phone: "09000000004", Name: "مالی آزمایشی", Role: identity.RoleFinance, Active: true}, {ID: "viewer", Phone: "09000000005", Name: "مشاهده‌گر آزمایشی", Role: identity.RoleViewer, Active: true}},
 		Stores:     []store.Store{{ID: "s1", Name: "خانه سبز", Owner: "فروشنده نمونه الف", City: "تهران", Active: true, Model: "shared"}, {ID: "s2", Name: "چایستان", Owner: "فروشنده نمونه ب", City: "رشت", Active: true, Model: "independent"}, {ID: "s3", Name: "دیجیتال آبان", Owner: "فروشنده نمونه ج", City: "شیراز", Active: false, Model: "shared"}, {ID: "s4", Name: "استودیو آرا", Owner: "فروشنده نمونه د", City: "اصفهان", Active: true, Model: "independent"}},
 		Brands:     []catalog.Brand{{ID: "b1", Name: "اپل", Active: true, Version: 1}, {ID: "b2", Name: "سامسونگ", Active: true, Version: 1}, {ID: "b3", Name: "شیائومی", Active: true, Version: 1}},
-		Categories: []catalog.Category{{ID: "c1", Name: "خانه و زندگی", Attributes: []string{"رنگ", "جنس"}}, {ID: "c2", Name: "چای و دمنوش", Attributes: []string{"وزن", "نوع"}}, {ID: "c3", Name: "کالای دیجیتال", Attributes: []string{"رنگ", "حافظه"}}},
+		Categories: []catalog.Category{{ID: "c1", Name: "خانه و زندگی"}, {ID: "c2", Name: "چای و دمنوش"}, {ID: "c3", Name: "کالای دیجیتال"}},
 		Products:   []catalog.Product{{ID: "p1", Name: "چراغ رومیزی مینیمال", CategoryID: "c1", Model: "shared", Status: "published", Version: 1}, {ID: "p2", Name: "چای بهاره ۵۰۰ گرمی", CategoryID: "c2", Model: "independent", Status: "pending", Version: 1}, {ID: "p3", Name: "هدفون بی‌سیم", CategoryID: "c3", Model: "shared", Status: "pending", Version: 1}, {ID: "p4", Name: "گلدان سرامیکی", CategoryID: "c1", Model: "independent", Status: "published", Version: 1}, {ID: "p5", Name: "دمنوش به‌لیمو", CategoryID: "c2", Model: "independent", Status: "rejected", Version: 1}},
 		Offers:     []catalog.Offer{{ID: "of1", ProductID: "p1", StoreID: "s1", Stock: 3, Price: 18500000}, {ID: "of2", ProductID: "p2", StoreID: "s2", Stock: 24, Price: 4200000}, {ID: "of3", ProductID: "p3", StoreID: "s3", Stock: 8, Price: 32000000}, {ID: "of4", ProductID: "p4", StoreID: "s4", Stock: 2, Price: 6800000}},
 		Orders: []orders.Order{
@@ -33,4 +33,6 @@ func Fixture() backoffice.Workspace {
 		Notifications: []backoffice.Notification{{ID: "n1", Event: "ارجاع عدم تأمین ORD-1042", Recipient: "پشتیبانی", Status: "failure", Retries: 1}, {ID: "n2", Event: "ثبت خرید BUY-501", Recipient: "مشتری آزمایشی", Status: "success", Retries: 0}, {ID: "n3", Event: "ارسال ORD-1044", Recipient: "مشتری آزمایشی", Status: "pending", Retries: 0}},
 		Audit:         []backoffice.Audit{},
 	}
+	fixtureAttributes(&state)
+	return state
 }

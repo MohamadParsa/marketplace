@@ -2,7 +2,7 @@
 
 تاریخ:۲۰۲۶-۱۱-۲۰ | وضعیت مشخصات: in-review | مالک بررسی: محصول و راهبر فنی؛ فرد/موعد انتساب نشده | [فرایند #14](https://github.com/MohamadParsa/marketplace/issues/14)
 
-این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۲ کار فعال (۱۱todo و۱review) و۳ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
+این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۲ کار فعال (۱۰todo و۲review) و۳ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
 
 ## ترتیب و وابستگی
 
@@ -12,7 +12,7 @@
 | [CV-R2-02](tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | ورود موبایل، OTP و لینک رمز پس از شماره | P0 / W0 | todo | CV-R2-01، CV-IAM-01، CV-IAM-02 |
 | [CV-R2-03](tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | پروفایل، رمز و بازیابی OTP با شروع ورود از موبایل | P0 / W0 | todo | CV-R2-02 |
 | [CV-R2-04](tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | آیکن دسته و برند با پیش‌فرض | P1 / W1 | review | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
-| [CV-R2-05](tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | کتابخانه خصوصیت، انتساب صریح و سقف کارت | P0 / W1 | todo | CV-CAT-01، CV-CAT-02، CV-R2-13 |
+| [CV-R2-05](tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | کتابخانه خصوصیت، انتساب صریح و سقف کارت | P0 / W1 | review | CV-CAT-01، CV-CAT-02، CV-R2-13 |
 | [CV-R2-06](tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | اکشن سریع تنوع، قیمت و موجودی در محصول | P0 / W1 | todo | CV-R2-05، CV-CAT-04، CV-CAT-06 |
 | [CV-R2-07](tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | سکشن بنر با تصویر دسکتاپ و موبایل | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-R2-04 |
 | [CV-R2-08](tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | کروسل اختصاصی با انتخاب و ترتیب دستی کالا | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-CAT-09، CV-PRC-07 |
@@ -53,3 +53,7 @@ Issue پیاده‌سازی فقط با نتیجه و شواهد AC همان ک�
 ## اجرای Issue#4
 
 آیکن دسته/برند پیاده‌سازی و محلی بررسی شد؛ [گزارش و شواهد](issue-4-verification.md). این کار review و منتظر ادغام است؛ گزارش همگام‌سازی #14 سابقه برنامه‌ریزی همان تاریخ است و وضعیت اجرای تازه را جایگزین نمی‌کند.
+
+## اجرای Issue#5
+
+خصوصیات مشترک، انتساب مستقل و نمایش کارت با سقف عمومی در نسخه آزمون پیاده شد؛ [گزارش و تصاویر](issue-5-verification.md). وضعیت کد review است. فقط برش تنظیم سقف از #15 اجرا شده؛ سایر تنظیمات هنوز todo هستند. Issue#4 به درخواست مالک بسته شد ولی PR #18 هنوز ادغام نشده است؛ بسته‌شدن Issue با ادغام و استقرار یکی نیست.

@@ -24,7 +24,7 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 		if c.Name == "" {
 			return ErrInvalid
 		}
-		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Attributes: []string{}, Version: 1})
+		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Bindings: []catalog.AttributeBinding{}, Version: 1})
 		return nil
 	case "category.archive":
 		for i := range state.Categories {

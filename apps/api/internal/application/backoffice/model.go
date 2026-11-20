@@ -58,34 +58,39 @@ type Audit struct {
 	At          time.Time `json:"at"`
 }
 type Workspace struct {
-	Users         []User               `json:"users,omitempty"`
-	Stores        []store.Store        `json:"stores,omitempty"`
-	Categories    []catalog.Category   `json:"categories,omitempty"`
-	Brands        []catalog.Brand      `json:"brands,omitempty"`
-	IconMedia     []catalog.IconMedia  `json:"icon_media,omitempty"`
-	IconPolicy    *IconPolicy          `json:"icon_policy,omitempty"`
-	Products      []catalog.Product    `json:"products,omitempty"`
-	Offers        []catalog.Offer      `json:"offers,omitempty"`
-	Orders        []orders.Order       `json:"orders,omitempty"`
-	Cases         []support.Case       `json:"cases,omitempty"`
-	Assignments   []support.Assignment `json:"assignments,omitempty"`
-	Transfers     []finance.Transfer   `json:"transfers,omitempty"`
-	Ledger        []finance.Entry      `json:"ledger,omitempty"`
-	Rules         []Rule               `json:"rules,omitempty"`
-	Shipping      []Shipping           `json:"shipping,omitempty"`
-	Notifications []Notification       `json:"notifications,omitempty"`
-	Audit         []Audit              `json:"audit,omitempty"`
+	Users           []User                        `json:"users,omitempty"`
+	Stores          []store.Store                 `json:"stores,omitempty"`
+	Categories      []catalog.Category            `json:"categories,omitempty"`
+	Attributes      []catalog.AttributeDefinition `json:"attributes,omitempty"`
+	DisplaySettings catalog.DisplaySettings       `json:"display_settings"`
+	CardPreviews    []catalog.CardPreview         `json:"card_previews,omitempty"`
+	Brands          []catalog.Brand               `json:"brands,omitempty"`
+	IconMedia       []catalog.IconMedia           `json:"icon_media,omitempty"`
+	IconPolicy      *IconPolicy                   `json:"icon_policy,omitempty"`
+	Products        []catalog.Product             `json:"products,omitempty"`
+	Offers          []catalog.Offer               `json:"offers,omitempty"`
+	Orders          []orders.Order                `json:"orders,omitempty"`
+	Cases           []support.Case                `json:"cases,omitempty"`
+	Assignments     []support.Assignment          `json:"assignments,omitempty"`
+	Transfers       []finance.Transfer            `json:"transfers,omitempty"`
+	Ledger          []finance.Entry               `json:"ledger,omitempty"`
+	Rules           []Rule                        `json:"rules,omitempty"`
+	Shipping        []Shipping                    `json:"shipping,omitempty"`
+	Notifications   []Notification                `json:"notifications,omitempty"`
+	Audit           []Audit                       `json:"audit,omitempty"`
 }
 type Command struct {
-	Phone          string `json:"phone"`
-	Action         string `json:"action"`
-	Target         string `json:"target"`
-	Name           string `json:"name"`
-	Value          string `json:"value"`
-	Reason         string `json:"reason"`
-	Amount         int64  `json:"amount"`
-	Version        int    `json:"version"`
-	IdempotencyKey string `json:"idempotency_key"`
+	Phone          string                       `json:"phone"`
+	Action         string                       `json:"action"`
+	Target         string                       `json:"target"`
+	Name           string                       `json:"name"`
+	Value          string                       `json:"value"`
+	Reason         string                       `json:"reason"`
+	Amount         int64                        `json:"amount"`
+	Version        int                          `json:"version"`
+	IdempotencyKey string                       `json:"idempotency_key"`
+	Attribute      *catalog.AttributeDefinition `json:"attribute,omitempty"`
+	Bindings       []catalog.AttributeBinding   `json:"bindings,omitempty"`
 }
 
 // Update must execute the callback atomically and roll back its writes on error.

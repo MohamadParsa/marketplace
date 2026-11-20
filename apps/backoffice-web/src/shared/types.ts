@@ -21,7 +21,8 @@ export interface Store {
 export interface Category {
   id: string;
   name: string;
-  attributes: string[];
+  parent_id?: string;
+  bindings: AttributeBinding[];
   archived: boolean;
   icon_id?: string;
   version: number;
@@ -45,6 +46,23 @@ export interface Product {
   model: string;
   status: string;
   version: number;
+  attributes?: { attribute_id: string; value: string }[];
+}
+export interface AttributeDefinition {
+  id: string;
+  code: string;
+  name: string;
+  kind: "enum" | "text" | "number";
+  unit?: string;
+  options: string[];
+  version: number;
+}
+export interface AttributeBinding {
+  attribute_id: string;
+  axis: boolean;
+  card: boolean;
+  filter: boolean;
+  position: number;
 }
 export interface Offer {
   id: string;
@@ -108,6 +126,17 @@ export interface Workspace {
   users?: User[];
   stores?: Store[];
   categories?: Category[];
+  attributes?: AttributeDefinition[];
+  display_settings: { card_attribute_limit: number; version: number };
+  card_previews?: {
+    product_id: string;
+    features: {
+      attribute_id: string;
+      name: string;
+      value: string;
+      unit?: string;
+    }[];
+  }[];
   brands?: Brand[];
   icon_policy?: IconPolicy;
   products?: Product[];
@@ -169,4 +198,6 @@ export interface Command {
   amount?: number;
   version?: number;
   idempotency_key?: string;
+  attribute?: AttributeDefinition;
+  bindings?: AttributeBinding[];
 }

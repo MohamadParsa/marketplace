@@ -41,6 +41,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@mui/icons-material";
+import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
 import { WorkspaceContext } from "../shared/workspace";
@@ -86,6 +87,11 @@ const menu = [
         icon: <CategoryOutlined />,
       },
       { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
+      {
+        path: "/attributes",
+        label: "کتابخانه خصوصیات",
+        icon: <CategoryOutlined />,
+      },
       {
         path: "/products",
         label: "محصولات و محتوا",
@@ -294,6 +300,7 @@ function Workspace({
             >
               <Routes>
                 <Route path="/" element={<DashboardPage />} />
+                <Route path="/attributes" element={<SharedAttributesPage />} />
                 {(
                   [
                     "users",

@@ -23,6 +23,8 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set":
+		return role == identity.RoleOperations
 	case "store.toggle", "store.create", "category.create", "category.archive", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "product.publish", "product.reject", "shipping.update":
 		return role == identity.RoleOperations
 	case "case.start", "case.close", "case.refund", "case.assign", "order.deliver":
@@ -46,6 +48,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	}
 	state.IconMedia = nil
 	state.IconPolicy = CatalogIconPolicy()
+	state.CardPreviews = BuildCardPreviews(state)
 	if actor.Role != identity.RoleSuperAdmin && actor.Role != identity.RoleFinance {
 		state.Transfers = nil
 		state.Ledger = nil
@@ -95,6 +98,8 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 }
 func (s *Service) apply(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit":
+		return applyAttributes(state, c, id)
 	case "category.icon.remove", "brand.icon.remove":
 		return removeIcon(state, c)
 	case "user.create", "user.toggle", "user.role":
