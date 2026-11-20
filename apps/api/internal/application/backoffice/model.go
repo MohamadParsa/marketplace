@@ -61,6 +61,9 @@ type Workspace struct {
 	Users         []User               `json:"users,omitempty"`
 	Stores        []store.Store        `json:"stores,omitempty"`
 	Categories    []catalog.Category   `json:"categories,omitempty"`
+	Brands        []catalog.Brand      `json:"brands,omitempty"`
+	IconMedia     []catalog.IconMedia  `json:"icon_media,omitempty"`
+	IconPolicy    *IconPolicy          `json:"icon_policy,omitempty"`
 	Products      []catalog.Product    `json:"products,omitempty"`
 	Offers        []catalog.Offer      `json:"offers,omitempty"`
 	Orders        []orders.Order       `json:"orders,omitempty"`

@@ -24,12 +24,13 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 		if c.Name == "" {
 			return ErrInvalid
 		}
-		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Attributes: []string{}})
+		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Attributes: []string{}, Version: 1})
 		return nil
 	case "category.archive":
 		for i := range state.Categories {
 			if state.Categories[i].ID == c.Target {
 				state.Categories[i].Archived = true
+				state.Categories[i].Version++
 				return nil
 			}
 		}

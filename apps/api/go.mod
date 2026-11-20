@@ -2,7 +2,10 @@ module github.com/cherriva/marketplace/apps/api
 
 go 1.23
 
-require go.uber.org/fx v1.24.0
+require (
+	go.uber.org/fx v1.24.0
+	golang.org/x/image v0.24.0
+)
 
 require (
 	go.uber.org/dig v1.19.0 // indirect

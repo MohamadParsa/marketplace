@@ -11,6 +11,11 @@ import {
 } from "../../shared/components";
 import { labels, money } from "../../shared/format";
 import type { Command } from "../../shared/types";
+import {
+  CatalogIcon,
+  CatalogIconDialog,
+  type IconTarget,
+} from "./catalog-icon";
 const roleOptions = [
   "super-admin",
   "operations",
@@ -22,10 +27,17 @@ export function ManagementPage({
   section,
 }: {
   section:
-    "users" | "stores" | "categories" | "products" | "pricing" | "shipping";
+    | "users"
+    | "stores"
+    | "categories"
+    | "brands"
+    | "products"
+    | "pricing"
+    | "shipping";
 }) {
   const { state, role, execute } = useWorkspace();
   const [search, setSearch] = useState("");
+  const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [dialog, setDialog] = useState<{
     title: string;
     fields: Field[];
@@ -38,6 +50,7 @@ export function ManagementPage({
     users: "کاربران و نقش‌ها",
     stores: "فروشگاه‌ها",
     categories: "دسته‌ها و خصوصیات",
+    brands: "برندها",
     products: "محصولات و بررسی محتوا",
     pricing: "قوانین کمیسیون",
     shipping: "ارسال و تقویم کاری",
@@ -204,7 +217,19 @@ export function ManagementPage({
           <DataTable
             rows={filtered(state.categories ?? [])}
             columns={[
-              { title: "دسته", render: (c) => <b>{c.name}</b> },
+              {
+                title: "دسته",
+                render: (c) => (
+                  <div className="catalog-name">
+                    <CatalogIcon
+                      kind="category"
+                      name={c.name}
+                      iconId={c.icon_id}
+                    />
+                    <b>{c.name}</b>
+                  </div>
+                ),
+              },
               {
                 title: "خصوصیات",
                 render: (c) =>
@@ -217,17 +242,60 @@ export function ManagementPage({
               {
                 title: "عملیات",
                 render: (c) => (
+                  <>
+                    <Button
+                      disabled={!editable || c.archived}
+                      onClick={() => setIconTarget({ ...c, kind: "category" })}
+                    >
+                      آیکن
+                    </Button>
+                    <Button
+                      disabled={!editable || c.archived}
+                      onClick={() =>
+                        open(
+                          "آرشیو دسته",
+                          { action: "category.archive", target: c.id },
+                          [{ name: "reason", label: "دلیل آرشیو" }],
+                        )
+                      }
+                    >
+                      آرشیو
+                    </Button>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
+        {section === "brands" && (
+          <DataTable
+            rows={filtered(state.brands ?? [])}
+            columns={[
+              {
+                title: "برند",
+                render: (b) => (
+                  <div className="catalog-name">
+                    <CatalogIcon
+                      kind="brand"
+                      name={b.name}
+                      iconId={b.icon_id}
+                    />
+                    <b>{b.name}</b>
+                  </div>
+                ),
+              },
+              {
+                title: "وضعیت",
+                render: (b) => (b.active ? "فعال" : "غیرفعال"),
+              },
+              {
+                title: "عملیات",
+                render: (b) => (
                   <Button
-                    disabled={!editable || c.archived}
-                    onClick={() =>
-                      open(
-                        "آرشیو دسته",
-                        { action: "category.archive", target: c.id },
-                        [{ name: "reason", label: "دلیل آرشیو" }],
-                      )
-                    }
+                    disabled={!editable || !b.active}
+                    onClick={() => setIconTarget({ ...b, kind: "brand" })}
                   >
-                    آرشیو
+                    آیکن
                   </Button>
                 ),
               },
@@ -376,6 +444,12 @@ export function ManagementPage({
           </>
         )}
       </section>
+      {iconTarget && (
+        <CatalogIconDialog
+          target={iconTarget}
+          close={() => setIconTarget(undefined)}
+        />
+      )}
       {dialog && (
         <ActionDialog
           key={dialog.command.action + dialog.command.target}
