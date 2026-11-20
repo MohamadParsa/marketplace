@@ -53,6 +53,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("PATCH /backoffice/account/profile", cfg.Auth.UpdateProfile(identity.SurfaceBackoffice))
 	mux.HandleFunc("POST /backoffice/auth/password-recovery/request-otp", cfg.Auth.RequestRecoveryOTP(identity.SurfaceBackoffice))
 	mux.HandleFunc("POST /backoffice/auth/password-recovery/reset", cfg.Auth.RecoverPassword(identity.SurfaceBackoffice))
+	mux.HandleFunc("POST /backoffice/auth/admin-password-reset", cfg.Auth.AdminResetPassword)
 	mux.HandleFunc("POST /backoffice/auth/request-admin-otp", cfg.Auth.RequestAdminOTP)
 	mux.HandleFunc("POST /backoffice/auth/logout", cfg.Auth.Logout)
 	mux.HandleFunc("POST /seller/auth/request-otp", cfg.Auth.RequestOTP(identity.SurfaceSeller))

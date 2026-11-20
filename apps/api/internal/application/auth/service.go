@@ -215,6 +215,28 @@ func (s *Service) RecoverPassword(ctx context.Context, surface identity.Surface,
 	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash))
 }
 
+// AdminResetPassword lets an authenticated super-admin reset a user's password.
+func (s *Service) AdminResetPassword(ctx context.Context, token string, surface identity.Surface, targetPhone, password string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	admin, err := s.Authenticate(ctx, token, identity.SurfaceBackoffice)
+	if err != nil || admin.User.Role != identity.RoleSuperAdmin {
+		return identity.ErrNotAdmin
+	}
+	if len(password) < 8 {
+		return identity.ErrInvalidProfile
+	}
+	user, err := s.users.FindByPhone(ctx, surface, identity.NormalizePhone(targetPhone))
+	if err != nil {
+		return err
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash))
+}
+
 func (s *Service) createSession(ctx context.Context, user identity.User) (identity.Session, error) {
 	token, err := s.random.Token()
 	if err != nil {

@@ -167,6 +167,35 @@ func (h *AuthHandler) RecoverPassword(surface identity.Surface) http.HandlerFunc
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
+func (h *AuthHandler) AdminResetPassword(w http.ResponseWriter, r *http.Request) {
+	var in struct {
+		Surface  string `json:"surface"`
+		Phone    string `json:"phone"`
+		Password string `json:"password"`
+	}
+	if json.NewDecoder(r.Body).Decode(&in) != nil || strings.TrimSpace(in.Phone) == "" || in.Password == "" {
+		writeError(w, http.StatusBadRequest, "invalid_request")
+		return
+	}
+	surface := identity.SurfaceBackoffice
+	if in.Surface != "" {
+		surface = identity.Surface(in.Surface)
+	}
+	if err := h.service.AdminResetPassword(r.Context(), bearer(r.Header.Get("Authorization")), surface, in.Phone, in.Password); err != nil {
+		switch {
+		case errors.Is(err, identity.ErrNotAdmin):
+			writeError(w, http.StatusForbidden, "forbidden")
+		case errors.Is(err, identity.ErrInvalidProfile):
+			writeError(w, http.StatusBadRequest, "invalid_password")
+		case errors.Is(err, identity.ErrUnknown):
+			writeError(w, http.StatusNotFound, "user_not_found")
+		default:
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+		}
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
 func (h *AuthHandler) RequestAdminOTP(w http.ResponseWriter, r *http.Request) {
 	id, code, err := h.service.RequestAdminOTP(r.Context(), bearer(r.Header.Get("Authorization")))
 	switch {
