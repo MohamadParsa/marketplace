@@ -13,10 +13,11 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۷۷ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش موجود و ۱۱ سناریوی تصمیم/جریان ترکیبی برای سیاست‌های جدید کمیسیون، OTP، پیامک، مبلغ و PWA.
+در این نسخه ۱۸۰ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی و۳ سناریوی اصلاحات خصوصیات مشترک. اجرای مستقل برش جدید در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| خصوصیات مشترک و کارت (CV-R2-05) | [features/experiences/shared-attributes.feature](features/experiences/shared-attributes.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) |
 | کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 15 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
 | سبد، رزرو موجودی و جلسه پرداخت (DOM-CHECKOUT-001) | [`features/domains/checkout.feature`](features/domains/checkout.feature) | 12 | [`domains/checkout/README.md`](../domains/checkout/README.md) |
 | حساب و هویت (DOM-IDENTITY-001) | [`features/domains/identity.feature`](features/domains/identity.feature) | 11 | [`domains/identity/README.md`](../domains/identity/README.md) |

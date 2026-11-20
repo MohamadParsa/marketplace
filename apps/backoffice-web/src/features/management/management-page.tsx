@@ -10,7 +10,8 @@ import {
   type Field,
 } from "../../shared/components";
 import { labels, money } from "../../shared/format";
-import type { Command } from "../../shared/types";
+import type { Command, Category } from "../../shared/types";
+import { CategoryBindingsDialog } from "./shared-attributes";
 import {
   CatalogIcon,
   CatalogIconDialog,
@@ -38,6 +39,7 @@ export function ManagementPage({
   const { state, role, execute } = useWorkspace();
   const [search, setSearch] = useState("");
   const [iconTarget, setIconTarget] = useState<IconTarget>();
+  const [bindingTarget, setBindingTarget] = useState<Category>();
   const [dialog, setDialog] = useState<{
     title: string;
     fields: Field[];
@@ -233,7 +235,14 @@ export function ManagementPage({
               {
                 title: "خصوصیات",
                 render: (c) =>
-                  c.attributes.join("، ") || "هنوز تعریفی ثبت نشده",
+                  (c.bindings ?? [])
+                    .map(
+                      (b) =>
+                        state.attributes?.find((a) => a.id === b.attribute_id)
+                          ?.name,
+                    )
+                    .filter(Boolean)
+                    .join("، ") || "بدون انتساب صریح",
               },
               {
                 title: "وضعیت",
@@ -243,6 +252,12 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (c) => (
                   <>
+                    <Button
+                      disabled={c.archived}
+                      onClick={() => setBindingTarget(c)}
+                    >
+                      تنظیم خصوصیات
+                    </Button>
                     <Button
                       disabled={!editable || c.archived}
                       onClick={() => setIconTarget({ ...c, kind: "category" })}
@@ -448,6 +463,13 @@ export function ManagementPage({
         <CatalogIconDialog
           target={iconTarget}
           close={() => setIconTarget(undefined)}
+        />
+      )}
+      {bindingTarget && (
+        <CategoryBindingsDialog
+          key={bindingTarget.id}
+          category={bindingTarget}
+          close={() => setBindingTarget(undefined)}
         />
       )}
       {dialog && (

@@ -25,3 +25,5 @@
 ## آیکن دسته و برند
 
 [API-CATALOG-ICONS-001](catalog-icons.md) قرارداد upload/remove/read آیکن و سیاست فنی برش آزمون Issue#4 است؛ داده باینری عمومی workspace نیست و storage واقعی جداست.
+
+[API-CATALOG-ATTRIBUTES-001](catalog-attributes.md) قرارداد تعریف مشترک، انتساب مستقل دسته، حفاظت محور استفاده‌شده و projection کارت با تنظیم عمومی در برش آزمون Issue#5 است.
