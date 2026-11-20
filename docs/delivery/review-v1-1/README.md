@@ -40,7 +40,6 @@ W0: هویت/مجوز/ورود و پروفایل. W1: تنظیمات عمومی�
 | [R2-Q06](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) | [CV-R2-02 / #2](tasks/cv-r2-02-mobile-first-login.md)، [CV-R2-03 / #3](tasks/cv-r2-03-profile-password-recovery.md)، [CV-R2-11 / #11](tasks/cv-r2-11-storefront-alignment.md) | [سند حوزه/تجربه](../../product/scope.md) |
 | [Q-027](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#q-027) | [CV-R2-11 / #11](tasks/cv-r2-11-storefront-alignment.md)، [CV-R2-12 / #12](tasks/cv-r2-12-revision-acceptance.md)، [CV-R2-15 / #17](tasks/cv-r2-15-stock-alert.md) | [سند حوزه/تجربه](../../experiences/storefront/discovery.md) |
 | [Q-028](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#q-028) | [CV-R2-11 / #11](tasks/cv-r2-11-storefront-alignment.md)، [CV-R2-12 / #12](tasks/cv-r2-12-revision-acceptance.md) | [سند حوزه/تجربه](../../experiences/backoffice/panel-design.md) |
-
 | تنظیمات عمومی | [CV-R2-13 / #15](tasks/cv-r2-13-general-settings.md) | [مدیریت](../../experiences/backoffice/management.md) |
 
 تنظیمات عمومی نیز به [مدیریت](../../experiences/backoffice/management.md#تنظیمات-عمومی-دستهبندیشده)، ظرفیت به [ارسال](../../domains/shipping/README.md) و خبرم‌کن به [اطلاع‌رسانی](../../domains/notifications/README.md) پیوند دارند. هر فایل کار، پاسخ/دامنه، شرط شروع بخش مسدود، AC و شاهد بستن را دارد.
