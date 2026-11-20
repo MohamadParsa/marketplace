@@ -22,7 +22,9 @@ const (
 
 type User struct {
 	ID               string
+	Name             string
 	Phone            string
+	Email            string
 	Surface          Surface
 	Role             Role
 	StoreID          string
@@ -30,7 +32,8 @@ type User struct {
 	Permissions      []string            `json:",omitempty"`
 	StorePermissions map[string][]string `json:",omitempty"`
 	Active           bool
-	AccessVersion    int `json:"-"`
+	AccessVersion    int    `json:"-"`
+	PasswordHash     string `json:"-"`
 }
 
 type StoreMembership struct {
@@ -72,7 +75,9 @@ type Session struct {
 }
 type Challenge struct {
 	Phone         string
+	Destination   string
 	Surface       Surface
+	Purpose       string
 	Code          string
 	Expires       time.Time
 	Attempts      int

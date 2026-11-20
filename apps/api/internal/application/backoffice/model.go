@@ -25,9 +25,11 @@ type User struct {
 	ID            string        `json:"id"`
 	Name          string        `json:"name"`
 	Phone         string        `json:"phone"`
+	Email         string        `json:"email,omitempty"`
 	Role          identity.Role `json:"role"`
 	Active        bool          `json:"active"`
 	AccessVersion int           `json:"-"`
+	PasswordHash  string        `json:"-"`
 }
 type Rule struct {
 	ID     string `json:"id"`

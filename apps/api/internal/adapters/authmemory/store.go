@@ -67,6 +67,45 @@ func (s *Store) FindByPhone(_ context.Context, surface identity.Surface, phone s
 	}
 	return u, nil
 }
+func (s *Store) FindByEmail(_ context.Context, surface identity.Surface, email string) (identity.User, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	for _, u := range s.users {
+		if u.Surface == surface && identity.NormalizeEmail(u.Email) == identity.NormalizeEmail(email) && u.Email != "" {
+			return u, nil
+		}
+	}
+	return identity.User{}, identity.ErrUnknown
+}
+func (s *Store) UpdateProfile(_ context.Context, surface identity.Surface, userID, name, email, passwordHash string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	var key string
+	for k, u := range s.users {
+		if u.ID == userID && u.Surface == surface {
+			key = k
+			break
+		}
+	}
+	if key == "" {
+		return identity.ErrUnknown
+	}
+	for _, u := range s.users {
+		if u.Surface == surface && u.ID != userID && email != "" && identity.NormalizeEmail(u.Email) == identity.NormalizeEmail(email) {
+			return identity.ErrConflict
+		}
+	}
+	u := s.users[key]
+	if name != "" {
+		u.Name = name
+	}
+	u.Email = identity.NormalizeEmail(email)
+	if passwordHash != "" {
+		u.PasswordHash = passwordHash
+	}
+	s.users[key] = u
+	return nil
+}
 func (s *Store) PutChallenge(_ context.Context, id string, c identity.Challenge) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()

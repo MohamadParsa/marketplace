@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"strings"
 )
 
 type Users struct{ repository backoffice.Repository }
@@ -18,13 +19,14 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 		if account.Phone != phone {
 			continue
 		}
-		user := identity.User{ID: account.ID, Phone: phone, Surface: surface, Active: account.Active}
+		user := identity.User{ID: account.ID, Name: account.Name, Phone: phone, Email: account.Email, PasswordHash: account.PasswordHash, Surface: surface, Active: account.Active}
 		switch surface {
 		case identity.SurfaceBackoffice:
 			if authenticated, ok := state.BackofficeIdentity(account); ok {
 				return authenticated, nil
 			}
 		case identity.SurfaceCustomer:
+			user.Name, user.Email, user.PasswordHash = account.Name, account.Email, account.PasswordHash
 			return user, nil
 		case identity.SurfaceSeller:
 			user.StoreIDs = identity.MemberStoreIDs(state.StoreMemberships, user.ID)
@@ -44,4 +46,45 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 		break
 	}
 	return identity.User{}, identity.ErrUnknown
+}
+
+func (u *Users) FindByEmail(ctx context.Context, surface identity.Surface, email string) (identity.User, error) {
+	state, err := u.repository.Snapshot(ctx)
+	if err != nil {
+		return identity.User{}, err
+	}
+	for _, account := range state.Users {
+		if account.Active && account.Email != "" && strings.EqualFold(account.Email, identity.NormalizeEmail(email)) {
+			return u.FindByPhone(ctx, surface, account.Phone)
+		}
+	}
+	return identity.User{}, identity.ErrUnknown
+}
+
+func (u *Users) UpdateProfile(ctx context.Context, surface identity.Surface, userID, name, email, passwordHash string) error {
+	return u.repository.Update(ctx, func(state *backoffice.Workspace) error {
+		i := -1
+		for n := range state.Users {
+			if state.Users[n].ID == userID && state.Users[n].Active {
+				i = n
+				break
+			}
+		}
+		if i < 0 {
+			return identity.ErrUnknown
+		}
+		for n := range state.Users {
+			if n != i && email != "" && strings.EqualFold(state.Users[n].Email, identity.NormalizeEmail(email)) {
+				return identity.ErrConflict
+			}
+		}
+		if name != "" {
+			state.Users[i].Name = strings.TrimSpace(name)
+		}
+		state.Users[i].Email = identity.NormalizeEmail(email)
+		if passwordHash != "" {
+			state.Users[i].PasswordHash = passwordHash
+		}
+		return nil
+	})
 }

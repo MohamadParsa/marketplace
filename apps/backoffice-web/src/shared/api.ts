@@ -30,10 +30,15 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 export const api = {
   requestCode: (phone: string) =>
-    request<{ request_id: string; test_code?: string }>(
+    request<{ request_id: string; test_code?: string; password_available?: boolean }>(
       "/backoffice/auth/request-otp",
       { method: "POST", body: JSON.stringify({ phone }) },
     ),
+  passwordLogin: (phone: string, password: string) =>
+    request<Session>("/backoffice/auth/password-login", {
+      method: "POST",
+      body: JSON.stringify({ phone, password }),
+    }),
   verify: (request_id: string, code: string) =>
     request<Session>("/backoffice/auth/verify-otp", {
       method: "POST",

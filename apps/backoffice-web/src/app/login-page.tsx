@@ -26,6 +26,10 @@ export function LoginPage({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [testCode, setTestCode] = useState("");
+  const [phone, setPhone] = useState("");
+  const [passwordAvailable, setPasswordAvailable] = useState(false);
+  const [passwordMode, setPasswordMode] = useState(false);
+  const [password, setPassword] = useState("");
   const form = useForm<{ phone: string }>({
     resolver: zodResolver(phoneSchema),
     defaultValues: { phone: "09000000001" },
@@ -76,6 +80,8 @@ export function LoginPage({
                 setError("");
                 try {
                   const result = await api.requestCode(values.phone);
+                  setPhone(values.phone);
+                  setPasswordAvailable(result.password_available === true);
                   setChallenge(result.request_id);
                   setTestCode(result.test_code ?? "");
                 } catch (error) {
@@ -112,7 +118,11 @@ export function LoginPage({
                 setBusy(true);
                 setError("");
                 try {
-                  onLogin(await api.verify(challenge, code));
+                  onLogin(
+                    passwordMode
+                      ? await api.passwordLogin(phone, password)
+                      : await api.verify(challenge, code),
+                  );
                 } catch (error) {
                   handleError(error);
                 } finally {
@@ -120,6 +130,32 @@ export function LoginPage({
                 }
               }}
             >
+              {passwordMode ? (
+                <>
+                  <TextField
+                    fullWidth
+                    label="رمز ورود"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoFocus
+                  />
+                  <Button
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    disabled={busy || password.length === 0}
+                    sx={{ mt: 2 }}
+                  >
+                    {busy ? "در حال بررسی…" : "ورود با رمز"}
+                  </Button>
+                  <Button type="button" onClick={() => setPasswordMode(false)} sx={{ mt: 1 }}>
+                    بازگشت به ورود با کد
+                  </Button>
+                </>
+              ) : (
+                <>
               {testCode && (
                 <Alert severity="warning" sx={{ mb: 2 }}>
                   کد آزمون: <b dir="ltr">{testCode}</b>
@@ -142,15 +178,25 @@ export function LoginPage({
               >
                 {busy ? "در حال بررسی…" : "ورود به پنل"}
               </Button>
+              {passwordAvailable && (
+                <Button type="button" fullWidth onClick={() => setPasswordMode(true)} sx={{ mt: 1 }}>
+                  ورود با رمز
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   setChallenge("");
                   setCode("");
+                  setPassword("");
+                  setPasswordMode(false);
+                  setPasswordAvailable(false);
                 }}
                 sx={{ mt: 1 }}
               >
                 تغییر شماره
               </Button>
+                </>
+              )}
             </form>
           )}
           {error && (

@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/subtle"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"golang.org/x/crypto/bcrypt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -44,6 +46,20 @@ func (s *Service) RequestOTP(ctx context.Context, surface identity.Surface, phon
 	}
 	requestID, _, err := s.issueOTP(ctx, identity.Challenge{Phone: phone, Surface: surface})
 	return requestID, err
+}
+
+// PasswordAvailable reports whether the normalized phone has a credential.
+// It is intended for the post-phone login choice; callers must not use it as
+// an account enumeration API.
+func (s *Service) PasswordAvailable(ctx context.Context, surface identity.Surface, phone string) (bool, error) {
+	user, err := s.users.FindByPhone(ctx, surface, identity.NormalizePhone(phone))
+	if err != nil {
+		return false, err
+	}
+	if !user.Active {
+		return false, identity.ErrInactive
+	}
+	return user.PasswordHash != "", nil
 }
 
 // RequestAdminOTP sends a challenge to the current administrator's own account.
@@ -114,6 +130,92 @@ func (s *Service) VerifyOTP(ctx context.Context, surface identity.Surface, reque
 	if !user.Active {
 		return identity.Session{}, identity.ErrInactive
 	}
+	return s.createSession(ctx, user)
+}
+
+// PasswordLogin authenticates a phone account without requiring a second OTP.
+func (s *Service) PasswordLogin(ctx context.Context, surface identity.Surface, phone, password string) (identity.Session, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	identifier := strings.TrimSpace(phone)
+	var user identity.User
+	var err error
+	if strings.Contains(identifier, "@") {
+		user, err = s.users.FindByEmail(ctx, surface, identity.NormalizeEmail(identifier))
+	} else {
+		user, err = s.users.FindByPhone(ctx, surface, identity.NormalizePhone(identifier))
+	}
+	if err != nil || !user.Active || user.PasswordHash == "" || bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)) != nil {
+		return identity.Session{}, identity.ErrInvalidCredentials
+	}
+	return s.createSession(ctx, user)
+}
+
+func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, token, name, email, password string) (identity.User, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	session, err := s.Authenticate(ctx, token, surface)
+	if err != nil {
+		return identity.User{}, err
+	}
+	name = strings.TrimSpace(name)
+	email = identity.NormalizeEmail(email)
+	if name == "" || (email != "" && !strings.Contains(email, "@")) {
+		return identity.User{}, identity.ErrInvalidProfile
+	}
+	hash := ""
+	if password != "" {
+		if len(password) < 8 {
+			return identity.User{}, identity.ErrInvalidProfile
+		}
+		encoded, e := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		if e != nil {
+			return identity.User{}, e
+		}
+		hash = string(encoded)
+	}
+	if err := s.users.UpdateProfile(ctx, surface, session.User.ID, name, email, hash); err != nil {
+		return identity.User{}, err
+	}
+	return s.users.FindByPhone(ctx, surface, session.User.Phone)
+}
+
+func (s *Service) RequestRecoveryOTP(ctx context.Context, surface identity.Surface, phone, destination string) (string, string, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	phone = identity.NormalizePhone(phone)
+	user, err := s.users.FindByPhone(ctx, surface, phone)
+	if err != nil || !user.Active {
+		return "", "", identity.ErrInvalidCredentials
+	}
+	if destination != "" && destination != "mobile" {
+		return "", "", identity.ErrEmailRecoveryUnavailable
+	}
+	return s.issueOTP(ctx, identity.Challenge{Phone: phone, Surface: surface, Purpose: "password-recovery"})
+}
+
+func (s *Service) RecoverPassword(ctx context.Context, surface identity.Surface, requestID, code, password string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if len(password) < 8 {
+		return identity.ErrInvalidProfile
+	}
+	challenge, err := s.consumeOTP(ctx, surface, "", requestID, code)
+	if err != nil || challenge.Purpose != "password-recovery" {
+		return identity.ErrInvalidOTP
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user, err := s.users.FindByPhone(ctx, surface, challenge.Phone)
+	if err != nil {
+		return err
+	}
+	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash))
+}
+
+func (s *Service) createSession(ctx context.Context, user identity.User) (identity.Session, error) {
 	token, err := s.random.Token()
 	if err != nil {
 		return identity.Session{}, err

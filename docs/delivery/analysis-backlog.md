@@ -41,8 +41,8 @@
 | کار و Issue | موج پیشنهادی | وضعیت اجرا | اصلاح پایه/منشأ |
 | --- | --- | --- | --- |
 | [CV-R2-01](review-v1-1/tasks/cv-r2-01-single-user.md) · [#1](https://github.com/MohamadParsa/marketplace/issues/1) | W0 | done (داده آزمون) | CV-IAM-04، CV-IAM-05، CV-IAM-07 |
-| [CV-R2-02](review-v1-1/tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | W0 | todo | CV-IAM-01، CV-IAM-02 |
-| [CV-R2-03](review-v1-1/tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | W0 | todo | CV-IAM-02، CV-IAM-07، CV-WEB-07 |
+| [CV-R2-02](review-v1-1/tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | W0 | done | CV-IAM-01، CV-IAM-02 |
+| [CV-R2-03](review-v1-1/tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | W0 | done (داده آزمون؛ موبایل/رمز) | CV-IAM-02، CV-IAM-07، CV-WEB-07 |
 | [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | todo | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
 | [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | todo | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
 | [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | todo | CV-CAT-04، CV-CAT-05، CV-CAT-06 |

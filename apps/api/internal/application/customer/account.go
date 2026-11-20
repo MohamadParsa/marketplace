@@ -15,9 +15,11 @@ func NewAccounts(repository backoffice.Repository) *Accounts {
 }
 
 type Profile struct {
-	UserID string `json:"user_id"`
-	Name   string `json:"name"`
-	Phone  string `json:"phone"`
+	UserID            string `json:"user_id"`
+	Name              string `json:"name"`
+	Phone             string `json:"phone"`
+	Email             string `json:"email,omitempty"`
+	PasswordAvailable bool   `json:"password_available"`
 }
 type Purchase struct {
 	ID     string         `json:"id"`
@@ -29,7 +31,7 @@ func (s *Accounts) Profile(ctx context.Context, userID string) (Profile, error) 
 	if err != nil {
 		return Profile{}, err
 	}
-	return Profile{UserID: user.ID, Name: user.Name, Phone: user.Phone}, nil
+	return Profile{UserID: user.ID, Name: user.Name, Phone: user.Phone, Email: user.Email, PasswordAvailable: user.PasswordHash != ""}, nil
 }
 
 func (s *Accounts) Purchases(ctx context.Context, userID string) ([]Purchase, error) {
