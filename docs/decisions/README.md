@@ -7,5 +7,6 @@
 | [ADR-001](adr-001-pricing-and-payment-boundaries.md) | مرز اعتبار کمیسیون، قیمت پایه و جلسه پرداخت؛ اصلاح تصمیم قبلی | in-review؛ اصل اصلاحات صریح کاربر است |
 | [ADR-002](adr-002-codebase-architecture.md) | ساختار monorepo، backend گولنگ، Hexagonal در سطح ماژول و stack اولیه بک‌آفیس | approved |
 | [ADR-003](adr-003-liara-deployment.md) | استقرار Go/React/PostgreSQL روی Liara و CI/CD با GitHub Actions | approved |
+| [ADR-005](adr-005-review-v1-1-product-responses.md) | پاسخ مالک به #13؛ ورود موبایل، نقش، خصوصیت، دامنه شروع/CMS، حمل، ناموجود و انتخاب A پنل | in-review؛ قواعد صریح، پیشنهاد و موارد باز جدا شده‌اند |
 
 ابزار migration، نسخه و پلن دیتابیس، ارائه‌دهنده‌های بیرونیِ محصول و جزئیات عملیاتی استقرار هنوز کامل نشده‌اند؛ این موارد باید در تصمیم‌های جداگانه ثبت شوند.
