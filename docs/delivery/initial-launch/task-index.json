@@ -8,7 +8,7 @@
   "design": "A-balanced",
   "payment": "card-to-card-only",
   "payment_wallet_mapping": "confirmed:wallet-credit-before-separate-consumption",
-  "note": "Owner requested closure of completed homepage slice #27. Later slices remain todo; parent #11 remains open. No deployment or blanket specification approval implied.",
+  "note": "Owner-confirmed reconciliation: only #27 completed. Execute #28, then #29, then #30. #24/#25 are open requirements trackers, not separate execution tasks. No new implementation, merge or deployment.",
   "tasks": [
     {
       "id": "CV-LCH-01",
@@ -63,7 +63,12 @@
         "date": "2026-11-21",
         "basis": "owner-requested-issue-closure",
         "public_deployment": false
-      }
+      },
+      "task_type": "execution",
+      "priority": "P0",
+      "execution_rank": 1,
+      "requirement_issue_ids": [],
+      "next_in_queue": false
     },
     {
       "id": "CV-LCH-02",
@@ -105,7 +110,16 @@
       "blocked": "R2-Q07/R2-Q08 و تجمیع PLP والد در CHQ-09 برای مسیر مرتبط؛ semantics پیش‌فرض sort و سنجه‌های واقعی قبل از فعال‌سازی گزینه نهایی شوند. فیلتر روشن و درخت مستقل ادامه یابند.",
       "file": "tasks/cv-lch-02-plp-search.md",
       "number": 28,
-      "parent_issue": 11
+      "parent_issue": 11,
+      "task_type": "execution",
+      "implementation_status": "todo",
+      "priority": "P0",
+      "execution_rank": 2,
+      "requirement_issue_ids": [
+        24
+      ],
+      "next_in_queue": true,
+      "scope_ownership": "Sole executor of remaining category content/SEO and PLP/search, reusing #27; #24 is requirements-only."
     },
     {
       "id": "CV-LCH-03",
@@ -142,10 +156,19 @@
         "طرح A، لوگوی C، CTA و کنترل تعداد مشابه نمونه در۳۹۰/۱۴۴۰ و قرارداد افزودن همان Offer/Variant بررسی شوند؛ مصرف واقعی سبد در مرحله۴ شاهد مستقل دارد و شرط بستن مرحله۳، تکمیل مرحله۴ نیست.",
         "اسکریپت در متن/متادیتا اجرا نشود؛ چهار حالت robots مستقل و مرز دسترسی محتوای مشترک در API بررسی شوند؛ تعامل/خبرم‌کن آماده‌نشده فعال نباشند."
       ],
-      "blocked": "R2-Q07 واحدها/رسانه/اعتبارسنجی، R2-Q08 انتشار/robots و R2-Q09 محتوای تعامل؛ بخش مستقل روشن ادامه یابد. فرمول طلا، عرضه نماینده حل‌نشده و قوانین مالی حدس زده نشوند.",
+      "blocked": "R2-Q07 واحدها/رسانه/اعتبارسنجی، R2-Q08 انتشار/robots و R2-Q09 محتوای تعامل؛ بخش مستقل روشن ادامه یابد. انتخاب عرضه نقدی ثبت‌شده از قرارداد #27 مصرف شود؛ فرمول طلا و قوانین مالی انتخاب‌نشده حدس زده نشوند.",
       "file": "tasks/cv-lch-03-pdp.md",
       "number": 29,
-      "parent_issue": 11
+      "parent_issue": 11,
+      "task_type": "execution",
+      "implementation_status": "todo",
+      "priority": "P0",
+      "execution_rank": 3,
+      "requirement_issue_ids": [
+        25
+      ],
+      "next_in_queue": false,
+      "scope_ownership": "Sole executor of remaining product content/gallery/SEO and PDP; conditional interaction acceptance stays open in #25."
     },
     {
       "id": "CV-LCH-04",
@@ -197,7 +220,14 @@
       "blocked": "LCH-Q01 با پاسخ مالک حل شد؛ ورودی وجه همیشه شارژ و سپس مصرف مستقل، تأیید واریز و سفارش دستی است. LCH-Q02 جزئیات مبلغ/مرجع/مدرک؛ LCH-Q03 پاسخ‌گویی وجوه و استرداد؛ LCH-Q04 زمان‌بندی رزرو در انتظار بررسی. مالی وابسته تا پاسخ متوقف است؛ سبد، نشانی، ارسال، UI انتظار و قرارداد draft مستقل ادامه یابند. نیازهای مجوز دقیق با مرجع صدور جدا بررسی شود.",
       "file": "tasks/cv-lch-04-checkout-wallet-card-transfer.md",
       "number": 30,
-      "parent_issue": 11
+      "parent_issue": 11,
+      "task_type": "execution",
+      "implementation_status": "todo",
+      "priority": "P0",
+      "execution_rank": 4,
+      "requirement_issue_ids": [],
+      "next_in_queue": false,
+      "scope_ownership": "Sole executor of checkout/customer account/address/shipping/order/wallet/card-transfer; consumes catalog from #28/#29 without rebuilding it."
     }
   ],
   "milestone_number": 1,
@@ -216,5 +246,99 @@
     30
   ],
   "parent_has_independent_implementation": false,
-  "login_decision": "ADR-008"
+  "login_decision": "ADR-008",
+  "next_issue": 28,
+  "completed_execution_issues": [
+    27
+  ],
+  "pending_execution_issues": [
+    28,
+    29,
+    30
+  ],
+  "requirements_tracking": [
+    {
+      "issue": 24,
+      "task_id": "CV-R2-16",
+      "task_type": "requirements-tracking",
+      "independent_execution": false,
+      "implementation_status": "todo",
+      "primary_executor": 28,
+      "reuses_execution_issue": 27,
+      "acceptance_mapping": [
+        {
+          "id": "CV-R2-16-AC01",
+          "execution_issue": 28,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-16-AC02",
+          "execution_issue": 28,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-16-AC03",
+          "execution_issue": 28,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-16-AC04",
+          "execution_issue": 28,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        }
+      ]
+    },
+    {
+      "issue": 25,
+      "task_id": "CV-R2-17",
+      "task_type": "requirements-tracking",
+      "independent_execution": false,
+      "implementation_status": "todo",
+      "primary_executor": 29,
+      "reuses_execution_issue": 27,
+      "acceptance_mapping": [
+        {
+          "id": "CV-R2-17-AC01",
+          "execution_issue": 29,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-17-AC02",
+          "execution_issue": 29,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-17-AC03",
+          "execution_issue": 29,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        },
+        {
+          "id": "CV-R2-17-AC04",
+          "execution_issue": 29,
+          "status": "pending-complete-evidence",
+          "conditional_followup": true,
+          "launch_scope": "independent-toggle-settings-and-disabled-ui",
+          "conditional_followup_references": [
+            "CV-WEB-15",
+            "CV-WEB-16"
+          ],
+          "conditional_scope": "Interaction write API and previous-content behavior after feature/policy readiness; not implemented or accepted by this planning change.",
+          "full_acceptance_required_for_reference_closure": true
+        },
+        {
+          "id": "CV-R2-17-AC05",
+          "execution_issue": 29,
+          "status": "pending-complete-evidence",
+          "conditional_followup": false
+        }
+      ]
+    }
+  ]
 }
