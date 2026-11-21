@@ -13,10 +13,11 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۸۰ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی و۳ سناریوی اصلاحات خصوصیات مشترک. اجرای مستقل برش جدید در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
+در این نسخه ۱۸۳ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک و۳ سناریوی تنوع/عرضه. اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| تنوع و عرضه محصول (CV-R2-06) | [features/experiences/product-workspace.feature](features/experiences/product-workspace.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) |
 | خصوصیات مشترک و کارت (CV-R2-05) | [features/experiences/shared-attributes.feature](features/experiences/shared-attributes.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) |
 | کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 15 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
 | سبد، رزرو موجودی و جلسه پرداخت (DOM-CHECKOUT-001) | [`features/domains/checkout.feature`](features/domains/checkout.feature) | 12 | [`domains/checkout/README.md`](../domains/checkout/README.md) |

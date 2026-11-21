@@ -20,11 +20,22 @@ var (
 )
 
 type User struct {
-	ID     string        `json:"id"`
-	Name   string        `json:"name"`
-	Phone  string        `json:"phone"`
-	Role   identity.Role `json:"role"`
-	Active bool          `json:"active"`
+	ID         string        `json:"id"`
+	Name       string        `json:"name"`
+	Phone      string        `json:"phone"`
+	Role       identity.Role `json:"role"`
+	Active     bool          `json:"active"`
+	SellerOnly bool          `json:"seller_only,omitempty"`
+}
+
+// Minimal test-scope membership permissions; custom role management remains Issue #1.
+type StoreMembership struct {
+	UserID       string `json:"user_id"`
+	StoreID      string `json:"store_id"`
+	Active       bool   `json:"active"`
+	CreateOffers bool   `json:"create_offers"`
+	EditPrice    bool   `json:"edit_price"`
+	EditStock    bool   `json:"edit_stock"`
 }
 type Rule struct {
 	ID     string `json:"id"`
@@ -69,6 +80,8 @@ type Workspace struct {
 	IconPolicy      *IconPolicy                   `json:"icon_policy,omitempty"`
 	Products        []catalog.Product             `json:"products,omitempty"`
 	Offers          []catalog.Offer               `json:"offers,omitempty"`
+	Variants        []catalog.Variant             `json:"variants,omitempty"`
+	Memberships     []StoreMembership             `json:"memberships,omitempty"`
 	Orders          []orders.Order                `json:"orders,omitempty"`
 	Cases           []support.Case                `json:"cases,omitempty"`
 	Assignments     []support.Assignment          `json:"assignments,omitempty"`
@@ -91,6 +104,8 @@ type Command struct {
 	IdempotencyKey string                       `json:"idempotency_key"`
 	Attribute      *catalog.AttributeDefinition `json:"attribute,omitempty"`
 	Bindings       []catalog.AttributeBinding   `json:"bindings,omitempty"`
+	Variant        *VariantInput                `json:"variant,omitempty"`
+	Offer          *OfferInput                  `json:"offer,omitempty"`
 }
 
 // Update must execute the callback atomically and roll back its writes on error.

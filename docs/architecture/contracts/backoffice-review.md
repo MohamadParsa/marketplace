@@ -3,12 +3,14 @@ id: API-BO-REVIEW-001
 title: قرارداد اجرایی نسخه بررسی بک‌آفیس
 status: in-review
 owner: product-owner
-updated: 2026-11-20
+updated: 2026-11-21
 related: [FEAT-BO-001, FEAT-BO-002, FEAT-BO-003]
 approved_by: []
 ---
 
 # قرارداد نسخه بررسی بک‌آفیس
+
+تکمیل #6: [API-PRODUCT-WORKSPACE-001](product-workspace.md) مسیرهای تنوع/عرضه و workspace محدود seller را مشخص می‌کند؛ الگوی کلی فرمان، audit و مخزن حافظه‌ای حفظ شده است. رجیستری نهایی نقش/عضویت در #1 جداست.
 
 تکمیل برش آزمون Issue#5: [خصوصیات مشترک و سقف کارت](catalog-attributes.md) فرمان‌های کتابخانه، انتساب و برش نمایش از تنظیمات عمومی را تعریف می‌کند؛ تنظیمات کامل و تبدیل تنوع استفاده‌شده از این برش نتیجه نمی‌شوند.
 

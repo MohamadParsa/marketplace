@@ -9,9 +9,10 @@ import (
 )
 
 type RouterConfig struct {
-	Auth         *AuthHandler
-	Backoffice   *BackofficeHandler
-	CatalogIcons *CatalogIconHandler
+	Auth             *AuthHandler
+	Backoffice       *BackofficeHandler
+	CatalogIcons     *CatalogIconHandler
+	ProductWorkspace *ProductWorkspaceHandler
 }
 
 func NewRouter(cfg RouterConfig) http.Handler {
@@ -21,6 +22,14 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	if cfg.Backoffice != nil {
 		mux.Handle("GET /backoffice/workspace", cfg.Backoffice)
 		mux.Handle("POST /backoffice/commands", cfg.Backoffice)
+		mux.Handle("GET /seller/workspace", cfg.Backoffice)
+		mux.Handle("POST /seller/commands", cfg.Backoffice)
+	}
+	if cfg.ProductWorkspace != nil {
+		for _, surface := range []string{"backoffice", "seller"} {
+			mux.Handle("GET /"+surface+"/products/{id}/workspace", cfg.ProductWorkspace)
+			mux.Handle("GET /"+surface+"/products/{id}/resolve", cfg.ProductWorkspace)
+		}
 	}
 	if cfg.CatalogIcons != nil {
 		mux.HandleFunc("GET /catalog/icons/{id}", cfg.CatalogIcons.Read)

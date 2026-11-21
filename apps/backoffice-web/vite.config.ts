@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/backoffice": "http://localhost:8080",
+      "/seller": "http://localhost:8080",
       "/catalog/icons": "http://localhost:8080",
     },
   },

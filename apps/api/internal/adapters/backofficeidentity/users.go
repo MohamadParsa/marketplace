@@ -10,10 +10,7 @@ type Users struct{ repository backoffice.Repository }
 
 func New(repository backoffice.Repository) *Users { return &Users{repository: repository} }
 func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone string) (identity.User, error) {
-	if surface == identity.SurfaceSeller && phone == "09120000002" {
-		return identity.User{ID: "seller-test", Phone: phone, Surface: surface, StoreID: "s1", Active: true}, nil
-	}
-	if surface != identity.SurfaceBackoffice {
+	if surface != identity.SurfaceBackoffice && surface != identity.SurfaceSeller {
 		return identity.User{}, identity.ErrUnknown
 	}
 	state, err := u.repository.Snapshot(ctx)
@@ -22,6 +19,17 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 	}
 	for _, user := range state.Users {
 		if user.Phone == phone {
+			if surface == identity.SurfaceSeller {
+				for _, membership := range state.Memberships {
+					if membership.UserID == user.ID && membership.Active {
+						return identity.User{ID: user.ID, Phone: phone, Surface: surface, Role: user.Role, Active: user.Active}, nil
+					}
+				}
+				return identity.User{}, identity.ErrUnknown
+			}
+			if user.SellerOnly {
+				return identity.User{}, identity.ErrUnknown
+			}
 			return identity.User{ID: user.ID, Phone: phone, Surface: surface, Role: user.Role, Active: user.Active}, nil
 		}
 	}

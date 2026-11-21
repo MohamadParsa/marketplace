@@ -42,6 +42,7 @@ import {
   MenuOutlined,
 } from "@mui/icons-material";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
+import { ProductDetailsPage } from "../features/management/product-workspace";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
 import { WorkspaceContext } from "../shared/workspace";
@@ -161,12 +162,15 @@ function Workspace({
   const [notice, setNotice] = useState("");
   const query = useQuery({
     queryKey: ["workspace", session.token],
-    queryFn: () => api.workspace(session.token),
+    queryFn: () => api.workspace(session.token, session.user.Surface),
   });
   const mutation = useMutation({
-    mutationFn: (command: Command) => api.execute(session.token, command),
+    mutationFn: (command: Command) =>
+      api.execute(session.token, command, session.user.Surface),
     onSuccess: async () => {
       await cache.invalidateQueries({ queryKey: ["workspace"] });
+      await cache.invalidateQueries({ queryKey: ["product"] });
+      await cache.invalidateQueries({ queryKey: ["variant-resolution"] });
       setNotice("تغییر با موفقیت ثبت شد.");
     },
   });
@@ -199,7 +203,11 @@ function Workspace({
             <div className="nav-group" key={group.heading}>
               <h3>{group.heading}</h3>
               {group.items
-                .filter((i) => visible("roles" in i ? i.roles : undefined))
+                .filter((i) =>
+                  session.user.Surface === "seller"
+                    ? i.path === "/products"
+                    : visible("roles" in i ? i.roles : undefined),
+                )
                 .map((item) => (
                   <NavLink
                     key={item.path}
@@ -248,9 +256,16 @@ function Workspace({
             >
               <MenuOutlined />
             </button>
-            <span>بک‌آفیس</span>
+            <span>
+              {session.user.Surface === "seller" ? "پنل فروشنده" : "بک‌آفیس"}
+            </span>
             <i>/</i>
-            <strong>{current?.label ?? "جزئیات سفارش"}</strong>
+            <strong>
+              {current?.label ??
+                (location.pathname.startsWith("/products/")
+                  ? "جزئیات محصول"
+                  : "جزئیات سفارش")}
+            </strong>
           </div>
           <div className="topbar-actions">
             <span className="environment">
@@ -283,6 +298,16 @@ function Workspace({
               value={{
                 state: query.data,
                 role,
+                surface: session.user.Surface,
+                loadProduct: (id) =>
+                  api.productWorkspace(session.token, id, session.user.Surface),
+                resolveVariant: (id, values) =>
+                  api.resolveVariant(
+                    session.token,
+                    id,
+                    values,
+                    session.user.Surface,
+                  ),
                 execute: (command) => mutation.mutateAsync(command),
                 uploadIcon: async (input) => {
                   try {
@@ -299,7 +324,17 @@ function Workspace({
               }}
             >
               <Routes>
-                <Route path="/" element={<DashboardPage />} />
+                <Route
+                  path="/"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <DashboardPage />
+                    )
+                  }
+                />
+                <Route path="/products/:id" element={<ProductDetailsPage />} />
                 <Route path="/attributes" element={<SharedAttributesPage />} />
                 {(
                   [
@@ -316,6 +351,8 @@ function Workspace({
                     key={section}
                     path={"/" + section}
                     element={
+                      (session.user.Surface === "seller" &&
+                        section !== "products") ||
                       (section === "users" && role !== "super-admin") ||
                       (section === "pricing" &&
                         !["super-admin", "finance"].includes(role)) ? (
@@ -385,7 +422,10 @@ function Workspace({
 function SessionApp() {
   const [session, setSession] = useState<Session | null>(null);
   const logout = () => {
-    if (session) void api.logout(session.token).catch(() => undefined);
+    if (session)
+      void api
+        .logout(session.token, session.user.Surface)
+        .catch(() => undefined);
     setSession(null);
     queryClient.clear();
   };

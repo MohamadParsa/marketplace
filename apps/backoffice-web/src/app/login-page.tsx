@@ -15,6 +15,8 @@ const accounts = [
   { name: "پشتیبانی", phone: "09000000003" },
   { name: "مالی", phone: "09000000004" },
   { name: "مشاهده‌گر", phone: "09000000005" },
+  { name: "فروشنده الف", phone: "09120000002", surface: "seller" },
+  { name: "فروشنده ب", phone: "09120000003", surface: "seller" },
 ];
 export function LoginPage({
   onLogin,
@@ -26,6 +28,7 @@ export function LoginPage({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [testCode, setTestCode] = useState("");
+  const [surface, setSurface] = useState("backoffice");
   const form = useForm<{ phone: string }>({
     resolver: zodResolver(phoneSchema),
     defaultValues: { phone: "09000000001" },
@@ -75,7 +78,7 @@ export function LoginPage({
                 setBusy(true);
                 setError("");
                 try {
-                  const result = await api.requestCode(values.phone);
+                  const result = await api.requestCode(values.phone, surface);
                   setChallenge(result.request_id);
                   setTestCode(result.test_code ?? "");
                 } catch (error) {
@@ -112,7 +115,7 @@ export function LoginPage({
                 setBusy(true);
                 setError("");
                 try {
-                  onLogin(await api.verify(challenge, code));
+                  onLogin(await api.verify(challenge, code, surface));
                 } catch (error) {
                   handleError(error);
                 } finally {
@@ -165,7 +168,10 @@ export function LoginPage({
                 <button
                   key={account.phone}
                   disabled={!!challenge}
-                  onClick={() => form.setValue("phone", account.phone)}
+                  onClick={() => {
+                    form.setValue("phone", account.phone);
+                    setSurface(account.surface ?? "backoffice");
+                  }}
                 >
                   {account.name}
                 </button>
@@ -173,8 +179,8 @@ export function LoginPage({
             </div>
           </div>
           <small className="muted">
-            ورود صرفاً برای محیط آزمون است. سیاست رمزعبور بک‌آفیس هنوز نهایی نشده
-            است.
+            ورود صرفاً برای محیط آزمون است. سیاست رمزعبور بک‌آفیس هنوز نهایی
+            نشده است.
           </small>
         </div>
       </section>

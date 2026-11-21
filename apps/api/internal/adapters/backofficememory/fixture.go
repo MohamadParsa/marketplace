@@ -34,5 +34,6 @@ func Fixture() backoffice.Workspace {
 		Audit:         []backoffice.Audit{},
 	}
 	fixtureAttributes(&state)
+	fixtureProductWorkspace(&state)
 	return state
 }
