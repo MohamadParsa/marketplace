@@ -3,7 +3,7 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "17 parent amendment tasks retained. Current execution queue is initial-launch/task-index.json (4 end-to-end slices under #11); ADR-007 overrides full-panel-before-site gate for initial launch only. No implementation/merge/deployment implied.",
+  "note": "Current execution queue: initial-launch/task-index.json. #11 is tracking parent (1/4 complete); #24/#25 are requirements-only, executed in #28/#29 with #27 reuse. No separate W1 execution or duplicate PR/test. Other historical task states are unchanged.",
   "task_count": 17,
   "active_count": 15,
   "deferred_ids": [
@@ -433,7 +433,7 @@
       "title": "والد انتشار اولیه؛ خانه، PLP، PDP و خرید کارت‌به‌کارت",
       "priority": "P0",
       "wave": "L0",
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -502,8 +502,14 @@
       "future_acceptance": [
         "مسیر انتخاب اسلات دارای ظرفیت و ثبت خبرم‌کن با backend آزمون و قرارداد تصمیم‌گرفته تکمیل شود."
       ],
-      "task_type": "tracking-epic",
-      "execution_policy": "Implementation only in CV-LCH-01..04; reuse child evidence, no independent feature/PR or duplicate tests under #11."
+      "task_type": "tracking-parent",
+      "execution_policy": "Implementation only in CV-LCH-01..04; reuse child evidence, no independent feature/PR or duplicate tests under #11.",
+      "execution_issues": [
+        27,
+        28,
+        29,
+        30
+      ]
     },
     {
       "id": "CV-R2-12",
@@ -573,6 +579,16 @@
         "CV-LCH-02",
         "CV-LCH-03",
         "CV-LCH-04"
+      ],
+      "launch_scope_executor_evidence": [
+        "CV-LCH-01",
+        "CV-LCH-02",
+        "CV-LCH-03",
+        "CV-LCH-04"
+      ],
+      "requirements_tracking_not_closure_dependencies": [
+        24,
+        25
       ]
     },
     {
@@ -699,9 +715,9 @@
       "id": "CV-R2-16",
       "number": 24,
       "file": "tasks/cv-r2-16-category-content-seo.md",
-      "title": "تکمیل محتوای دسته، انتشار و سئوی PLP",
+      "title": "مرجع کنترل نیازمندی‌های دسته و SEO؛ اجرا در #28",
       "priority": "P0",
-      "wave": "W1",
+      "wave": "reference",
       "implementation_status": "todo",
       "document_status": "in-review",
       "owner": "unassigned",
@@ -721,31 +737,36 @@
       ],
       "business": "تکمیل مدل و فرم دسته برای محتوا و سئوی PLP.",
       "scope": [
-        "تمام فیلدهای درخواست مالک۲۰۲۶-۱۱-۲۱ طبق DOM-CATALOG-CONTENT-001؛ قرارداد/مدل/DTO/فرم پنل و داده عمومی مجاز.",
-        "اتصال HTML و رفتار نهایی سایت در CV-R2-11 با شاهد جدا؛ اجرای این تسک هنوز آغاز نشده است."
+        "مرجع پوشش نیازمندی؛ همه تغییرات اجرایی/فرم/مدل/ذخیره/API/سایت و آزمون در #28، با استفاده از پایه #27.",
+        "بدون صف/PR/تست اجرایی مستقل؛ معیارهای کامل‌نشده باز باقی می‌مانند."
       ],
       "acceptance": [
         "مدیر مجاز تمام هفت فیلد دسته را ثبت کند و پس از بارگذاری دوباره مقادیر بدون از بین‌رفتن والد/آیکن/خصوصیات دیده شوند.",
         "انتشار و بایگانی یک فیلد نباشند؛ مطابق سیاست منتخب R2-Q08، پیش‌نویس در داده عمومی نشت نکند و تغییر وضعیت رفتار فرزندان را به‌طور مستند رعایت کند.",
-        "داده عمومی و متادیتای دسته الف به همان PLP وصل شود و با دسته ب یا تنظیم عمومی جایگزین نشود؛ پذیرش HTML واقعی در #11 گزارش مستقل داشته باشد.",
+        "داده عمومی و متادیتای دسته الف به همان PLP وصل شود و با دسته ب یا تنظیم عمومی جایگزین نشود؛ پذیرش HTML واقعی در #28 گزارش مستقل داشته باشد.",
         "API فاقد مجوز، ورودی نامعتبر و نسخه قدیمی را بدون تغییر قبلی رد کند؛ ذخیره محتوای دسته قیمت/موجودی محصولات را تغییر ندهد."
       ],
       "blocked": "جزئیات validation و انتشار در R2-Q07/R2-Q08؛ فقط بخش وابسته متوقف است.",
       "technical": "قرارداد typed، نسخه/مجوز server-side، متن امن و انتشار مستقل از موجودی؛ راه‌حل پیشنهادی در سند مرجع.",
-      "evidence": "API مثبت/منفی/مجوز/conflict و مرور فرم با داده ساختگی؛ متادیتای HTML در #11 مستقل.",
+      "evidence": "همان شواهد و PR #28، با ارجاع به ACهای پایدار؛ شاهد جداگانه تکراری تولید نشود.",
       "amends": [
         "CV-CAT-01",
         "CV-WEB-04",
         "CV-WEB-14"
-      ]
+      ],
+      "task_type": "requirements-tracking",
+      "independent_execution": false,
+      "execution_issue": 28,
+      "execution_dependencies": [],
+      "dependencies_kind": "capability-references-not-issue-closure-gates"
     },
     {
       "id": "CV-R2-17",
       "number": 25,
       "file": "tasks/cv-r2-17-product-content-seo.md",
-      "title": "تکمیل محتوای محصول، رسانه، تعامل و سئوی PDP",
+      "title": "مرجع کنترل نیازمندی‌های محصول، رسانه، تعامل و SEO؛ اجرا در #29",
       "priority": "P0",
-      "wave": "W1",
+      "wave": "reference",
       "implementation_status": "todo",
       "document_status": "in-review",
       "owner": "unassigned",
@@ -769,19 +790,19 @@
       ],
       "business": "تکمیل محتوای محصول و تنظیمات PDP بدون تغییر مرز تنوع و عرضه.",
       "scope": [
-        "تمام فیلدهای درخواست مالک۲۰۲۶-۱۱-۲۱ طبق DOM-CATALOG-CONTENT-001؛ قرارداد/مدل/DTO/فرم پنل و داده عمومی مجاز.",
-        "اتصال HTML و رفتار نهایی سایت در CV-R2-11 با شاهد جدا؛ اجرای این تسک هنوز آغاز نشده است."
+        "مرجع پوشش نیازمندی؛ همه تغییرات اجرایی/فرم/مدل/ذخیره/API/سایت و آزمون در #29، با استفاده از پایه #27.",
+        "بدون صف/PR/تست اجرایی مستقل؛ معیارهای کامل‌نشده باز باقی می‌مانند."
       ],
       "acceptance": [
         "مدیر مجاز همه فیلدهای جدول را ذخیره و پس از بارگذاری بازیابی کند؛ انتخاب برند/دسته معتبر باشد و تصویر/ترتیب گالری حفظ شود.",
         "فروشنده نتواند محتوای مشترک یا محتوای فروشگاه دیگر را با درخواست مستقیم تغییر دهد؛ نامعتبر/نسخه قدیمی بدون تغییر قبلی رد شوند و قیمت/رزرو محفوظ بمانند.",
         "published و وضعیت بررسی متناقض نشوند؛ draft عمومی نشود، و ناموجودشدن تنوع انتشار محصول را تغییر ندهد؛ نسخه محتوای تأییدشده هنگام بررسی بعدی محفوظ باشد.",
         "تغییر reviews_enabled مقدار qa_enabled را تغییر ندهد و برعکس؛ پس از اتصال API تعامل، ثبت مستقیم در بخش خاموش رد شود؛ تکلیف محتوای قبلی طبق R2-Q09 با شاهد جدا بررسی شود.",
-        "سه فیلد متا و چهار ترکیب noindex/nofollow در خروجی PDP همان محصول قابل تفکیک باشند؛ noindex محتوا را خصوصی نکند، نام/متادیتا script اجرا نکنند و متادیتای محصول دیگر نشت نکند؛ HTML و invalidation نهایی در #11 شاهد بگیرند."
+        "سه فیلد متا و چهار ترکیب noindex/nofollow در خروجی PDP همان محصول قابل تفکیک باشند؛ noindex محتوا را خصوصی نکند، نام/متادیتا script اجرا نکنند و متادیتای محصول دیگر نشت نکند؛ HTML و invalidation نهایی در #29 شاهد بگیرند."
       ],
       "blocked": "جزئیات validation و انتشار در R2-Q07/R2-Q08 و رفتار تعامل در R2-Q09؛ فقط بخش وابسته متوقف است.",
       "technical": "قرارداد typed، نسخه/مجوز server-side، متن امن و انتشار مستقل از موجودی؛ راه‌حل پیشنهادی در سند مرجع.",
-      "evidence": "API مثبت/منفی/مجوز/conflict و مرور فرم با داده ساختگی؛ متادیتای HTML در #11 مستقل.",
+      "evidence": "همان شواهد و PR #29، با ارجاع به ACهای پایدار؛ شاهد جداگانه تکراری تولید نشود.",
       "amends": [
         "CV-CAT-03",
         "CV-CAT-04",
@@ -791,7 +812,12 @@
         "CV-WEB-14",
         "CV-WEB-15",
         "CV-WEB-16"
-      ]
+      ],
+      "task_type": "requirements-tracking",
+      "independent_execution": false,
+      "execution_issue": 29,
+      "execution_dependencies": [],
+      "dependencies_kind": "capability-references-not-issue-closure-gates"
     }
   ],
   "launch_plan": "../initial-launch/task-index.json"

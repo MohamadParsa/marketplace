@@ -6,14 +6,29 @@ owner: unassigned
 updated: 2026-11-21
 related: [ADR-007, PLAN-INITIAL-LAUNCH-001, FEAT-SF-001, DOM-CHECKOUT-001]
 approved_by: []
-implementation_status: todo
+implementation_status: in-progress
 priority: P0
 wave: L0
+task_type: tracking-parent
 ---
 
 # CV-R2-11 — والد انتشار اولیه؛ خانه، PLP، PDP و خرید کارت‌به‌کارت
 
 Issue: [#11](https://github.com/MohamadParsa/marketplace/issues/11). دامنه جاری با درخواست مالک۲۰۲۶-۱۱-۲۱ و [ADR-007](../../../decisions/adr-007-initial-launch-sequence.md) بازنویسی شده است؛ شرط قبلی تکمیل تمام پنل‌ها برای شروع سایت، در همین انتشار جای خود را به بخش لازم پنل هر قابلیت می‌دهد.
+
+## صف و وضعیت فعلی؛ فقط۱از۴ تکمیل
+
+- [x] #27 — خانه؛ done و بسته، [گزارش](../../initial-launch/issue-27-verification.md)، PR #32 جدا از merge/deploy.
+- [ ] #28 — **P0، کار بعدی**؛ تکمیل دسته/SEO و PLP/جست‌وجو، همراه بک‌آفیس/API/سایت؛ todo.
+- [ ] #29 — **P0، بعد از پذیرش #28**؛ تکمیل محصول/گالری/SEO و PDP؛ todo.
+- [ ] #30 — **P0، بعد از پذیرش #29**؛ مسیر خرید و پنل مربوط؛ todo.
+
+| مرجع باز | مسئول اجرای یکتا | تکلیف |
+| --- | --- | --- |
+| [#24](cv-r2-16-category-content-seo.md) | #28 با استفاده از پایه #27 | کنترل ACهای دسته؛ بدون صف، PR یا تست موازی |
+| [#25](cv-r2-17-product-content-seo.md) | #29 با استفاده از پایه #27 | کنترل ACهای محصول؛ معیار شرطی تعامل باز می‌ماند تا شاهد واقعی داشته باشد |
+
+[مرز دقیق و نگاشت](../../initial-launch/README.md#execution-ownership): فقط چهار کار بالا زیرتسک اجرایی‌اند. #24/#25 تا پذیرش همه معیارهای خودشان باز می‌مانند؛ بسته‌بودنشان شرط شروع #28/#29/#30 نیست. این اصلاح صرفاً برنامه است؛ مرحله جدیدی شروع نشده و مجوز merge/deploy از آن نتیجه نمی‌شود.
 
 ## نوع کار و مرز اجرا
 

@@ -115,3 +115,8 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## اجرای خانه — CV-LCH-01
 
 [PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا done و #27 با دستور مالک بسته شد؛ #11 باز و #28/#29/#30 اجرا نشده‌اند. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
+
+
+## رفع هم‌پوشانی صف با مراجع کاتالوگ — ۲۰۲۶-۱۱-۲۱
+
+[تصمیم تکمیلی ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [صف و مالکیت یکتای اجرا](../delivery/initial-launch/README.md#execution-ownership) → #24 / CV-R2-16-AC01..04 فقط از شواهد #28 و #25 / CV-R2-17-AC01..05 فقط از شواهد #29 استفاده می‌کنند؛ پایه موجود #27 بازنویسی نمی‌شود. شناسه‌های BDD ثابت‌اند و تست/PR تکراری برای مراجع ساخته نمی‌شود. معیار شرطی تعامل همچنان باز است؛ نوع reference مجوز حذف معیار نیست. فقط #27 done؛ #28/#29/#30 todo و #11 والد در حال پیگیری است. این اصلاح فقط مستندات و برنامه GitHub است و اجرای تازه‌ای ندارد.
