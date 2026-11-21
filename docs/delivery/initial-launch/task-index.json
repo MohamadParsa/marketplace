@@ -55,7 +55,9 @@
       "number": 27,
       "parent_issue": 11,
       "implementation_status": "review",
-      "verification": "issue-27-verification.md"
+      "verification": "issue-27-verification.md",
+      "pull_request": 32,
+      "implementation_commit": "8f45c9be80dc4690120da4b61fb5c33b39fb70d5"
     },
     {
       "id": "CV-LCH-02",

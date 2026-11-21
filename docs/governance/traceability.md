@@ -110,3 +110,8 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## مسیر انتشار اولیه و جریان وجه
 
 درخواست مالک → [ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [برنامه و چهار Issue #27 تا #30](../delivery/initial-launch/README.md) → [۲۴ سناریوی مستند](../bdd/features/experiences/initial-launch.feature) → گیت اولیه #12. هر Issue بک‌آفیس/API/سایت دارد؛ خانه review و سایر مراحل todo هستند. [شاهد اجرای خانه](../delivery/initial-launch/issue-27-verification.md) و [ADR-008 ورود مشترک](../decisions/adr-008-shared-login-modes.md) به همین مسیر اضافه شده‌اند. LCH-Q01 با پاسخ مالک حل شد: ورودی وجه ابتدا شارژ، تأیید کارت‌به‌کارت دستی/بصری و سپس تأیید سفارش با مصرف جدا. LCH-Q02 تا04 فقط بخش وابسته را متوقف می‌کنند. خانه/PLP/PDP با طرح A و C حرف اول Cherriva پیش می‌روند.
+
+
+## اجرای خانه — CV-LCH-01
+
+[PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا review و تأیید مالک در انتظار است؛ Issueهای #27/#11 باز و #28/#29/#30 اجرا نشده‌اند. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
