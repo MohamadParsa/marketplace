@@ -166,6 +166,34 @@ func TestHomeCatalogWritePermissionsValidationAndMedia(t *testing.T) {
 	call(admin, backoffice.Command{Action: "homepage.save", Home: &settings, Version: settings.Version, IdempotencyKey: "duplicate-category"}, 400)
 }
 func bString(b []byte) string { return string(b) }
+func TestLegacyProductPublishEnforcesHomepageMinimum(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		change func(*backoffice.Workspace)
+		status int
+	}{
+		{"complete", func(*backoffice.Workspace) {}, 204},
+		{"missing name", func(w *backoffice.Workspace) { w.Products[0].Name = " " }, 400},
+		{"missing photo", func(w *backoffice.Workspace) { w.Products[0].ImageID = "" }, 400},
+		{"unpublished category", func(w *backoffice.Workspace) { w.Categories[0].Published = false }, 400},
+		{"inactive brand", func(w *backoffice.Workspace) { w.Products[0].BrandID = "invalid" }, 400},
+		{"no available offer", func(w *backoffice.Workspace) { w.Offers[0].Stock = 0 }, 400},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			w := homeFixture(t)
+			w.Products[0].Status = "draft"
+			tc.change(&w)
+			repo := backofficememory.New(w)
+			h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
+			admin := login(t, h, "09000000001")
+			productCall(t, h, "POST", "/backoffice/commands", admin, backoffice.Command{Action: "product.publish", Target: "mobile", Version: 1, IdempotencyKey: "legacy-publish"}, tc.status)
+			state, _ := repo.Snapshot(context.Background())
+			if tc.status == 400 && (state.Products[0].Status != "draft" || state.Products[0].Version != 1 || len(state.Audit) != 0) {
+				t.Fatal("invalid publication changed state")
+			}
+		})
+	}
+}
 func TestProductPhotoResizeAndSeparateIconLimits(t *testing.T) {
 	repo := backofficememory.New(homeFixture(t))
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)

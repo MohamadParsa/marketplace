@@ -73,6 +73,9 @@ func imageAttached(w Workspace, id string) bool {
 	}
 	return false
 }
+func canPublishProduct(w Workspace, p catalog.Product) bool {
+	return strings.TrimSpace(p.Name) != "" && publicCategory(w, p.CategoryID) != nil && validBrand(w, p.BrandID) && imageAttached(w, p.ImageID) && len(publicOffers(w, p)) > 0
+}
 func applyHomeCatalog(w *Workspace, c Command, id string) error {
 	if c.Action == "homepage.save" {
 		if c.Home == nil || c.Version != w.HomeSettings.Version {
@@ -192,7 +195,9 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 			if p.CategoryID != in.CategoryID {
 				return ErrConflict
 			}
-			if in.Published && (publicCategory(*w, in.CategoryID) == nil || !imageAttached(*w, p.ImageID) || len(publicOffers(*w, *p)) == 0) {
+			candidate := *p
+			candidate.Name, candidate.BrandID = in.Name, in.BrandID
+			if in.Published && !canPublishProduct(*w, candidate) {
 				return ErrInvalid
 			}
 			p.Name = in.Name

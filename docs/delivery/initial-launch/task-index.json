@@ -57,7 +57,8 @@
       "implementation_status": "review",
       "verification": "issue-27-verification.md",
       "pull_request": 32,
-      "implementation_commit": "8f45c9be80dc4690120da4b61fb5c33b39fb70d5"
+      "integration_commit": "8f45c9be80dc4690120da4b61fb5c33b39fb70d5",
+      "source_branch": "codex/issue-27-homepage"
     },
     {
       "id": "CV-LCH-02",

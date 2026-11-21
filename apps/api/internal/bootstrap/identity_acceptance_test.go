@@ -7,10 +7,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficememory"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/application/customer"
 	"github.com/cherriva/marketplace/apps/api/internal/bootstrap"
 	"github.com/cherriva/marketplace/apps/api/internal/config"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 )
 
 func requestAs(t *testing.T, handler http.Handler, token, method, path, body string, want int) []byte {
@@ -59,7 +61,19 @@ func TestUnifiedCustomerAccountAndPurchaseOwnership(t *testing.T) {
 }
 
 func TestCustomRolesCombineWithoutGrantingAccessManagement(t *testing.T) {
-	handler := bootstrap.NewHTTPHandler(config.Config{Environment: "test"})
+	fixture := backofficememory.Fixture()
+	for i := range fixture.Categories {
+		if fixture.Categories[i].ID == "c2" {
+			fixture.Categories[i].Published = true
+		}
+	}
+	for i := range fixture.Products {
+		if fixture.Products[i].ID == "p2" {
+			fixture.Products[i].ImageID = "publish-ready-photo"
+		}
+	}
+	fixture.IconMedia = append(fixture.IconMedia, catalog.IconMedia{ID: "publish-ready-photo", Data: iconPNG(t, 8)})
+	handler := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, backofficememory.New(fixture))
 	admin := login(t, handler, "09000000001")
 	commands := "/backoffice/commands"
 	requestAs(t, handler, admin, "POST", commands, `{"action":"role.create","name":"read","scope":"global","permissions":["workspace.read"],"idempotency_key":"read"}`, 204)
