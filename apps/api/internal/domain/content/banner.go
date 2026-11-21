@@ -1,6 +1,7 @@
 package content
 
 type BannerConfig struct {
+	Placement string `json:"placement,omitempty"`
 	DesktopID string `json:"desktop_id"`
 	MobileID  string `json:"mobile_id"`
 	Alt       string `json:"alt"`

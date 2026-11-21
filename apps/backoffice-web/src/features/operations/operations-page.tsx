@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
-import { can, useWorkspace } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
 import {
   ActionDialog,
   DataTable,
@@ -16,7 +16,7 @@ export function OperationsPage({
 }: {
   section: "orders" | "support" | "assignments" | "notifications" | "reports";
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, can, execute } = useWorkspace();
   const { id } = useParams();
   const [dialog, setDialog] = useState<{
     title: string;
@@ -99,7 +99,7 @@ export function OperationsPage({
               </dl>
               {selected.status === "shipped" && (
                 <Button
-                  disabled={!can(role, "support")}
+                  disabled={!can("order.deliver", "support")}
                   variant="contained"
                   onClick={() =>
                     open("تأیید دریافت توسط پشتیبانی", {
@@ -223,7 +223,7 @@ export function OperationsPage({
                   render: (c) => (
                     <div className="action-group">
                       <Button
-                        disabled={!can(role, "support") || c.status !== "open"}
+                        disabled={!can("case.start", "support") || c.status !== "open"}
                         onClick={() =>
                           open("شروع رسیدگی", {
                             action: "case.start",
@@ -236,7 +236,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") ||
+                          !can("case.refund", "support") ||
                           c.status === "closed" ||
                           c.status === "refund-pending"
                         }
@@ -252,7 +252,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") ||
+                          !can("case.assign", "support") ||
                           c.status === "closed" ||
                           c.status === "assigned"
                         }
@@ -288,7 +288,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") || c.status === "closed"
+                          !can("case.close", "support") || c.status === "closed"
                         }
                         onClick={() =>
                           open("بستن پرونده", {
@@ -354,7 +354,7 @@ export function OperationsPage({
                   render: (n) => (
                     <Button
                       disabled={
-                        role !== "super-admin" ||
+                        !can("notification.retry") ||
                         n.retries >= 3 ||
                         n.status === "success"
                       }

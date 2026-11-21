@@ -7,10 +7,17 @@ import (
 )
 
 func fixtureProductWorkspace(state *backoffice.Workspace) {
-	state.Users = append(state.Users, backoffice.User{ID: "seller-test", Name: "فروشنده آزمون الف", Phone: "09120000002", Role: identity.RoleViewer, Active: true, SellerOnly: true}, backoffice.User{ID: "seller-b", Name: "فروشنده آزمون ب", Phone: "09120000003", Role: identity.RoleViewer, Active: true, SellerOnly: true})
+	state.Users = append(state.Users, backoffice.User{ID: "catalog-seller-a", Name: "فروشنده آزمون الف", Phone: "09120000012", Role: identity.RoleViewer, Active: true, SellerOnly: true}, backoffice.User{ID: "catalog-seller-b", Name: "فروشنده آزمون ب", Phone: "09120000013", Role: identity.RoleViewer, Active: true, SellerOnly: true})
 	state.Memberships = []backoffice.StoreMembership{
-		{UserID: "seller-test", StoreID: "s1", Active: true, CreateOffers: true, EditPrice: true, EditStock: true},
-		{UserID: "seller-b", StoreID: "s2", Active: true, CreateOffers: true, EditPrice: true, EditStock: true},
+		{UserID: "catalog-seller-a", StoreID: "s1", Active: true, CreateOffers: true, EditPrice: true, EditStock: true},
+		{UserID: "catalog-seller-b", StoreID: "s2", Active: true, CreateOffers: true, EditPrice: true, EditStock: true},
+	}
+	state.Access.Roles = append(state.Access.Roles, identity.RoleDefinition{ID: "catalog-price", Name: "عرضه و قیمت", Scope: identity.ScopeStore, Permissions: []string{"offers.read", "offers.create", "offers.price.write"}, Version: 1}, identity.RoleDefinition{ID: "catalog-stock", Name: "موجودی کاتالوگ", Scope: identity.ScopeStore, Permissions: []string{"stock.write"}, Version: 1})
+	for _, m := range state.Memberships {
+		state.StoreMemberships = append(state.StoreMemberships, identity.StoreMembership{UserID: m.UserID, StoreID: m.StoreID})
+		for _, r := range []string{"catalog-price", "catalog-stock"} {
+			state.Access.Grants = append(state.Access.Grants, identity.RoleGrant{UserID: m.UserID, StoreID: m.StoreID, RoleID: r})
+		}
 	}
 	for i := range state.Stores {
 		state.Stores[i].LeadDays = i + 1

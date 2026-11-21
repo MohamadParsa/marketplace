@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"slices"
 	"strconv"
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
@@ -67,7 +68,7 @@ func (h *BannerHandler) Upload(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if actor.Role != identity.RoleSuperAdmin && actor.Role != identity.RoleOperations {
+	if actor.Role != identity.RoleSuperAdmin && actor.Role != identity.RoleOperations && !slices.Contains(actor.Permissions, "banner.media.set") {
 		iconError(w, backoffice.ErrForbidden)
 		return
 	}

@@ -18,11 +18,12 @@ type VariantInput struct {
 	Values    []catalog.AttributeValue `json:"values"`
 }
 type OfferInput struct {
-	ProductID string `json:"product_id"`
-	VariantID string `json:"variant_id"`
-	StoreID   string `json:"store_id"`
-	Price     *int64 `json:"price,omitempty"`
-	Stock     *int   `json:"stock,omitempty"`
+	RegularPrice *int64 `json:"regular_price,omitempty"`
+	ProductID    string `json:"product_id"`
+	VariantID    string `json:"variant_id"`
+	StoreID      string `json:"store_id"`
+	Price        *int64 `json:"price,omitempty"`
+	Stock        *int   `json:"stock,omitempty"`
 }
 type ProductPermissions struct {
 	CreateVariant     bool     `json:"create_variant"`
@@ -54,41 +55,27 @@ func isProductAction(action string) bool {
 }
 
 func catalogActor(state Workspace, actor identity.User) (identity.User, error) {
-	u, err := currentActor(state, actor.ID)
-	if err != nil {
-		return identity.User{}, err
+	if actor.Surface != identity.SurfaceSeller {
+		return currentActor(state, actor)
 	}
-	if actor.Surface == identity.SurfaceSeller {
-		for _, m := range state.Memberships {
-			if m.UserID == actor.ID && m.Active {
-				u.Surface = identity.SurfaceSeller
-				return u, nil
-			}
-		}
-		return identity.User{}, ErrForbidden
-	}
-	for _, x := range state.Users {
-		if x.ID == actor.ID && x.SellerOnly {
-			return identity.User{}, ErrForbidden
+	for _, u := range state.Users {
+		if u.ID == actor.ID && u.Active && u.AccessVersion == actor.AccessVersion && len(identity.MemberStoreIDs(state.StoreMemberships, u.ID)) > 0 {
+			actor.Role = u.Role
+			return actor, nil
 		}
 	}
-	u.Surface = identity.SurfaceBackoffice
-	return u, nil
+	return identity.User{}, ErrForbidden
 }
-
 func canStore(state Workspace, actor identity.User, storeID, permission string) bool {
 	if actor.Surface != identity.SurfaceSeller {
-		return actor.Role == identity.RoleSuperAdmin || actor.Role == identity.RoleOperations
+		action := map[string]string{"read": WorkspaceRead, "create": "offer.create", "price": "offer.price.update", "stock": "offer.stock.update"}[permission]
+		return allowsAction(actor, action) || actor.Role == identity.RoleSuperAdmin || actor.Role == identity.RoleOperations
 	}
-	for _, m := range state.Memberships {
-		if m.UserID != actor.ID || m.StoreID != storeID || !m.Active {
-			continue
-		}
-		if permission == "read" || (permission == "create" && m.CreateOffers) || (permission == "price" && m.EditPrice) || (permission == "stock" && m.EditStock) {
-			return true
-		}
+	if state.Access == nil {
+		return false
 	}
-	return false
+	perm := map[string]identity.StorePermission{"read": identity.StoreOffersRead, "create": "offers.create", "price": "offers.price.write", "stock": identity.StoreStockWrite}[permission]
+	return identity.AllowsStore(state.StoreMemberships, state.Access.Roles, state.Access.Grants, actor.ID, storeID, perm)
 }
 
 func visibleProduct(state Workspace, actor identity.User, p catalog.Product) bool {
@@ -146,7 +133,7 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 	if !visibleProduct(state, actor, *p) {
 		return ProductWorkspace{}, ErrForbidden
 	}
-	result := ProductWorkspace{Product: *p, Axes: productAxes(state, *p), Variants: []catalog.Variant{}, Offers: []OfferView{}, Stores: []store.Store{}, Permissions: ProductPermissions{CreateVariant: actor.Surface != identity.SurfaceSeller && (actor.Role == identity.RoleSuperAdmin || actor.Role == identity.RoleOperations), CreateOfferStores: []string{}, PriceStores: []string{}, StockStores: []string{}}}
+	result := ProductWorkspace{Product: *p, Axes: productAxes(state, *p), Variants: []catalog.Variant{}, Offers: []OfferView{}, Stores: []store.Store{}, Permissions: ProductPermissions{CreateVariant: actor.Surface != identity.SurfaceSeller && allowsAction(actor, "variant.create"), CreateOfferStores: []string{}, PriceStores: []string{}, StockStores: []string{}}}
 	for _, v := range state.Variants {
 		if v.ProductID == id {
 			result.Variants = append(result.Variants, v)
@@ -404,7 +391,14 @@ func applyProduct(state *Workspace, c Command, id string) error {
 				return ErrConflict
 			}
 		}
-		state.Offers = append(state.Offers, catalog.Offer{ID: id, ProductID: p.ID, VariantID: input.VariantID, StoreID: input.StoreID, Price: *input.Price, Stock: *input.Stock, Version: 1})
+		regular := int64(0)
+		if input.RegularPrice != nil {
+			regular = *input.RegularPrice
+		}
+		if regular < 0 || regular > MaxOfferPrice || (regular > 0 && regular <= *input.Price) {
+			return ErrInvalid
+		}
+		state.Offers = append(state.Offers, catalog.Offer{RegularPrice: regular, ID: id, ProductID: p.ID, VariantID: input.VariantID, StoreID: input.StoreID, Price: *input.Price, Stock: *input.Stock, Version: 1})
 		return nil
 	}
 	for i := range state.Offers {
@@ -431,9 +425,17 @@ func applyProduct(state *Workspace, c Command, id string) error {
 			if input.Price == nil || input.Stock != nil || *input.Price <= 0 || *input.Price > MaxOfferPrice {
 				return ErrInvalid
 			}
+			regular := o.RegularPrice
+			if input.RegularPrice != nil {
+				regular = *input.RegularPrice
+			}
+			if regular < 0 || regular > MaxOfferPrice || (regular > 0 && regular <= *input.Price) {
+				return ErrInvalid
+			}
+			o.RegularPrice = regular
 			o.Price = *input.Price
 		} else if c.Action == "offer.stock.update" {
-			if input.Stock == nil || input.Price != nil || *input.Stock < 0 || *input.Stock > MaxOfferStock {
+			if input.Stock == nil || input.Price != nil || input.RegularPrice != nil || *input.Stock < 0 || *input.Stock > MaxOfferStock {
 				return ErrInvalid
 			}
 			if *input.Stock < o.Reserved {

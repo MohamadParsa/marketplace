@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { AccessPanel } from "./access-panel";
 import { useWorkspace, can } from "../../shared/workspace";
 import {
   ActionDialog,
@@ -476,6 +477,7 @@ export function ManagementPage({
           </>
         )}
       </section>
+      {section === "users" && <AccessPanel />}
       {iconTarget && (
         <CatalogIconDialog
           target={iconTarget}

@@ -205,7 +205,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
                   </>
                 ),
               },
-              { title: "قیمت پایه نقدی", render: (o) => money(o.price) },
+              { title: "قیمت نهایی نقدی", render: (o) => money(o.price) },
               {
                 title: "موجودی کل / رزرو / آزاد",
                 render: (o) => (
@@ -555,7 +555,10 @@ function OfferEditor({
     [error, setError] = useState("");
   const [conflict, setConflict] = useState(false);
   const price = field === "price";
-  const label = price ? "قیمت پایه نقدی (تومان)" : "موجودی کل";
+  const label = price ? "قیمت نهایی نقدی (تومان)" : "موجودی کل";
+  const [regular, setRegular] = useState(
+    offer.regular_price ? String(offer.regular_price / 10) : "",
+  );
   return (
     <Dialog
       open
@@ -587,12 +590,26 @@ function OfferEditor({
             );
             return;
           }
+          const beforeDiscount =
+            regular.trim() === "" ? 0 : tomanToRial(regular);
+          if (
+            price &&
+            (beforeDiscount === undefined ||
+              (beforeDiscount > 0 && beforeDiscount <= amount))
+          ) {
+            setError(
+              "قیمت قبل از تخفیف باید بیشتر از قیمت نهایی باشد؛ برای حذف تخفیف فیلد را خالی کنید.",
+            );
+            return;
+          }
           const command: Command = {
             action: price ? "offer.price.update" : "offer.stock.update",
             target: offer.id,
             version: current.version,
             idempotency_key: key,
-            offer: price ? { price: amount } : { stock: amount },
+            offer: price
+              ? { price: amount, regular_price: beforeDiscount }
+              : { stock: amount },
           };
           setError("");
           setPending(true);
@@ -647,6 +664,20 @@ function OfferEditor({
             >
               بازخوانی و بازبینی
             </Button>
+          )}
+          {price && (
+            <TextField
+              label="قیمت قبل از تخفیف (تومان)"
+              type="number"
+              value={regular}
+              disabled={pending}
+              onChange={(e) => {
+                setRegular(e.target.value);
+                setKey(crypto.randomUUID());
+              }}
+              inputProps={{ min: 0.1, step: 0.1, max: 900000000000000 }}
+              helperText="اختیاری؛ قیمت نهایی همان مبلغ قابل پرداخت مشتری است. خالی یعنی بدون تخفیف."
+            />
           )}
           <TextField
             label={label}
@@ -761,7 +792,7 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
                 title: "فروشنده",
                 render: (o) => w.stores.find((s) => s.id === o.store_id)?.name,
               },
-              { title: "قیمت پایه نقدی", render: (o) => money(o.price) },
+              { title: "قیمت نهایی نقدی", render: (o) => money(o.price) },
               { title: "قابل تخصیص", render: (o) => o.available },
               { title: "وقفه تأمین", render: (o) => `${o.lead_days} روز کاری` },
             ]}

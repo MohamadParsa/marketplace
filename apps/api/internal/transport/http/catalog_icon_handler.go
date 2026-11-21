@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"slices"
 	"strconv"
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
@@ -41,12 +42,16 @@ func (h *CatalogIconHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
-	if session.User.Role != identity.RoleSuperAdmin && session.User.Role != identity.RoleOperations {
+	if session.User.Role != identity.RoleSuperAdmin && session.User.Role != identity.RoleOperations && !slices.Contains(session.User.Permissions, r.PathValue("kind")+".icon.set") {
 		iconError(w, backoffice.ErrForbidden)
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, backoffice.MaxIconBytes+16*1024)
-	if err := r.ParseMultipartForm(backoffice.MaxIconBytes + 16*1024); err != nil {
+	maxBytes := int64(backoffice.MaxIconBytes)
+	if r.PathValue("kind") == "product" {
+		maxBytes = backoffice.MaxProductImageBytes
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, maxBytes+16*1024)
+	if err := r.ParseMultipartForm(maxBytes + 16*1024); err != nil {
 		var tooLarge *http.MaxBytesError
 		if errors.As(err, &tooLarge) {
 			iconError(w, backoffice.ErrIconTooLarge)
@@ -77,7 +82,7 @@ func (h *CatalogIconHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-	data, err := io.ReadAll(io.LimitReader(file, backoffice.MaxIconBytes+1))
+	data, err := io.ReadAll(io.LimitReader(file, maxBytes+1))
 	if err != nil {
 		iconError(w, backoffice.ErrInvalid)
 		return
@@ -107,4 +112,21 @@ func iconError(w http.ResponseWriter, err error) {
 		status, code = http.StatusBadRequest, "invalid_request"
 	}
 	writeError(w, status, code)
+}
+
+func (h *CatalogIconHandler) Preview(w http.ResponseWriter, r *http.Request) {
+	session, err := h.auth.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), identity.SurfaceBackoffice)
+	if err != nil {
+		writeError(w, 401, "unauthorized")
+		return
+	}
+	data, err := h.service.ReadManagedIcon(r.Context(), session.User, r.PathValue("id"))
+	if err != nil {
+		iconError(w, err)
+		return
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	_, _ = w.Write(data)
 }

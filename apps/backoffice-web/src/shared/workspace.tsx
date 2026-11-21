@@ -8,6 +8,17 @@ import type {
   BannerList,
 } from "./types";
 export interface WorkspaceContext {
+  loadProfile: () => Promise<{
+    name: string;
+    email?: string;
+    password_available: boolean;
+  }>;
+  updateProfile: (input: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
+  loadCatalogMedia: (id: string) => Promise<Blob>;
   loadBanners: () => Promise<BannerList>;
   loadBannerAsset: (id: string) => Promise<Blob>;
   uploadBanner: (input: {
@@ -25,14 +36,17 @@ export interface WorkspaceContext {
     id: string,
     values: { attribute_id: string; value: string }[],
   ) => Promise<VariantResolution>;
-  execute: (command: Command) => Promise<void>;
+
   uploadIcon: (input: {
-    kind: "category" | "brand";
+    kind: "category" | "brand" | "product";
     target: string;
     version: number;
     key: string;
     file: File;
   }) => Promise<void>;
+  can: (action: string, area?: "management" | "support" | "finance") => boolean;
+  execute: (command: Command) => Promise<void>;
+  requestAdminCode: () => Promise<{ request_id: string; test_code?: string }>;
   busy: boolean;
 }
 export const WorkspaceContext = createContext<WorkspaceContext | null>(null);

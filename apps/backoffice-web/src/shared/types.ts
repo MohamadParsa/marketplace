@@ -3,7 +3,25 @@ export type Role =
   | "operations"
   | "support"
   | "finance"
-  | "viewer";
+  | "viewer"
+  | "";
+export type RoleScope = "global" | "store";
+export interface CustomRole {
+  id: string;
+  name: string;
+  scope: RoleScope;
+  permissions: string[];
+  version: number;
+}
+interface StoreMembership {
+  user_id: string;
+  store_id: string;
+}
+interface RoleGrant {
+  user_id: string;
+  role_id: string;
+  store_id?: string;
+}
 export interface User {
   id: string;
   name: string;
@@ -20,6 +38,9 @@ export interface Store {
   lead_days: number;
 }
 export interface Category {
+  english_name?: string;
+  description?: string;
+  published: boolean;
   id: string;
   name: string;
   parent_id?: string;
@@ -41,6 +62,10 @@ export interface IconPolicy {
   content_types: string[];
 }
 export interface Product {
+  english_name?: string;
+  description?: string;
+  brand_id?: string;
+  image_id?: string;
   id: string;
   name: string;
   category_id: string;
@@ -68,6 +93,7 @@ export interface AttributeBinding {
   position: number;
 }
 export interface Offer {
+  regular_price?: number;
   id: string;
   product_id: string;
   store_id: string;
@@ -157,7 +183,27 @@ export interface Transfer {
   reference: string;
   version: number;
 }
+export interface HomeSettings {
+  version: number;
+  rails: { key: string; category_id: string; limit: number }[];
+}
+export interface CatalogInput {
+  name: string;
+  english_name: string;
+  description: string;
+  category_id: string;
+  brand_id: string;
+  parent_id: string;
+  published: boolean;
+}
 export interface Workspace {
+  home_settings: HomeSettings;
+  access?: {
+    roles: CustomRole[] | null;
+    grants: RoleGrant[] | null;
+    memberships?: StoreMembership[];
+    registry: Record<RoleScope, string[]>;
+  };
   users?: User[];
   stores?: Store[];
   categories?: Category[];
@@ -221,9 +267,16 @@ export interface Workspace {
 export interface Session {
   token: string;
   expires_at: string;
-  user: { ID: string; Role: Role; Surface: "backoffice" | "seller" };
+  user: {
+    ID: string;
+    Role: Role;
+    Surface: "backoffice" | "seller";
+    Permissions?: string[];
+  };
 }
 export interface Command {
+  catalog?: CatalogInput;
+  home?: HomeSettings;
   banner?: BannerConfig;
   action: string;
   target?: string;
@@ -246,11 +299,17 @@ export interface Command {
     variant_id?: string;
     store_id?: string;
     price?: number;
+    regular_price?: number;
     stock?: number;
   };
+  reauthentication?: { request_id: string; code: string };
+  scope?: RoleScope;
+  permissions?: string[];
+  store_id?: string;
 }
 
 export interface BannerConfig {
+  placement?: "hero" | "promo";
   desktop_id: string;
   mobile_id: string;
   alt: string;

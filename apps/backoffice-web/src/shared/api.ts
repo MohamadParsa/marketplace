@@ -17,8 +17,15 @@ const messages: Record<number, string> = {
   429: "تعداد تلاش‌ها بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.",
 };
 export class ApiError extends Error {
-  constructor(public status: number) {
-    super(messages[status] ?? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید.");
+  constructor(
+    public status: number,
+    public code?: string,
+  ) {
+    super(
+      code === "invalid_reauthentication"
+        ? "کد تأیید معتبر نیست یا منقضی شده است."
+        : (messages[status] ?? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید."),
+    );
   }
 }
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -31,11 +38,36 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
       ...init.headers,
     },
   });
-  if (!response.ok) throw new ApiError(response.status);
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body?.code);
+  }
   if (response.status === 204) return undefined as T;
   return response.json();
 }
 export const api = {
+  profile: (token: string) =>
+    request<{ name: string; email?: string; password_available: boolean }>(
+      "/backoffice/account/profile",
+      { headers: { Authorization: `Bearer ${token}` } },
+    ),
+  updateProfile: (
+    token: string,
+    input: { name: string; email: string; password: string },
+  ) =>
+    request<void>("/backoffice/account/profile", {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(input),
+    }),
+  catalogMedia: async (token: string, id: string) => {
+    const response = await fetch(
+      base + `/backoffice/catalog/media/${encodeURIComponent(id)}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!response.ok) throw new ApiError(response.status);
+    return response.blob();
+  },
   banners: (token: string) =>
     request<BannerList>("/backoffice/banners", {
       headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +124,7 @@ export const api = {
   uploadIcon: (
     token: string,
     input: {
-      kind: "category" | "brand";
+      kind: "category" | "brand" | "product";
       target: string;
       version: number;
       key: string;
@@ -112,16 +144,35 @@ export const api = {
       },
     );
   },
+  logout: (token: string, surface = "backoffice") =>
+    request<void>(`/${surface}/auth/logout`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    }),
   requestCode: (phone: string, surface = "backoffice") =>
-    request<{ request_id: string; test_code?: string }>(
-      `/${surface}/auth/request-otp`,
-      { method: "POST", body: JSON.stringify({ phone }) },
-    ),
+    request<{
+      request_id: string;
+      test_code?: string;
+      password_available?: boolean;
+    }>(`/${surface}/auth/request-otp`, {
+      method: "POST",
+      body: JSON.stringify({ phone }),
+    }),
+  passwordLogin: (phone: string, password: string) =>
+    request<Session>("/backoffice/auth/password-login", {
+      method: "POST",
+      body: JSON.stringify({ phone, password }),
+    }),
   verify: (request_id: string, code: string, surface = "backoffice") =>
     request<Session>(`/${surface}/auth/verify-otp`, {
       method: "POST",
       body: JSON.stringify({ request_id, code }),
     }),
+  requestAdminCode: (token: string) =>
+    request<{ request_id: string; test_code?: string }>(
+      "/backoffice/auth/request-admin-otp",
+      { method: "POST", headers: { Authorization: `Bearer ${token}` } },
+    ),
   workspace: (token: string, surface = "backoffice") =>
     request<Workspace>(`/${surface}/workspace`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -134,10 +185,5 @@ export const api = {
         ...command,
         idempotency_key: command.idempotency_key ?? crypto.randomUUID(),
       }),
-    }),
-  logout: (token: string, surface = "backoffice") =>
-    request<void>(`/${surface}/auth/logout`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
     }),
 };

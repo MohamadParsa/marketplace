@@ -81,7 +81,7 @@
 | تصمیم | قواعد/تجربه جاری | کار متأثر و شاهد بعدی |
 | --- | --- | --- |
 | موبایل نخست، OTP بدون رمز و لینک رمز پس از موبایل، بازیابی | [هویت](../domains/identity/README.md) | #1..3؛ AC10 و قرارداد بازیابی؛ تغییر موبایل هنوز پیشنهاد |
-| admin، مجموع مجوز scoped، عضویت چندبه‌چند | [نقش‌ها](../product/roles.md) | #1/#2/#12؛ درخواست مستقیم خارج scope و اعطای نقش بدون اختیار رد شود |
+| admin، مجموع مجوز scoped، عضویت چندبه‌چند | [نقش‌ها](../product/roles.md) | [CV-R2-01 / #1](../delivery/review-v1-1/tasks/cv-r2-01-single-user.md#نتیجه-برش-آزمون): هویت/مالکیت خرید آزمون، مرز فروشگاه، نقش سفارشی، سیاست ادمین و ماندگاری PostgreSQL شاهد دارند. #2/#12 همچنان متأثرند. |
 | خصوصیت مشترک بدون ارث و سقف عمومی کارت | [کاتالوگ](../domains/catalog/README.md) | #5/#6/#11؛ شارژر حافظه والد را نگیرد، سقف کارت از تنظیم بیاید |
 | CMS معوق، خانه ثابت؛ تنظیمات عمومی مستقل | [مدیریت](../experiences/backoffice/management.md) | #7..9 معوق؛ dependency آن‌ها در #11/#12 در مرحله۲ اصلاح شود |
 | اسلات ظرفیت‌دار/حمل حداقل‌حداکثر، تقویم و snapshot | [ارسال](../domains/shipping/README.md) و [سفارش](../domains/orders/README.md) | #10/#11 و کار مستقل ظرفیت؛ قبل از شاهد هم‌زمانی و سیاست رزرو، پذیرش اسلات ادعا نشود |
@@ -109,4 +109,9 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 
 ## مسیر انتشار اولیه و جریان وجه
 
-درخواست مالک → [ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [برنامه و چهار Issue #27 تا #30](../delivery/initial-launch/README.md) → [۲۲ سناریوی مستند](../bdd/features/experiences/initial-launch.feature) → گیت اولیه #12. هر Issue بک‌آفیس/API/سایت دارد و todo است؛ هیچ شاهد اجرا در این بازچینی تولید نشده. LCH-Q01 با پاسخ مالک حل شد: ورودی وجه ابتدا شارژ، تأیید کارت‌به‌کارت دستی/بصری و سپس تأیید سفارش با مصرف جدا. LCH-Q02 تا04 فقط بخش وابسته را متوقف می‌کنند. خانه/PLP/PDP با طرح A و C حرف اول Cherriva پیش می‌روند.
+درخواست مالک → [ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [برنامه و چهار Issue #27 تا #30](../delivery/initial-launch/README.md) → [۲۴ سناریوی مستند](../bdd/features/experiences/initial-launch.feature) → گیت اولیه #12. هر Issue بک‌آفیس/API/سایت دارد؛ خانه با دستور مالک done و سایر مراحل todo هستند. [شاهد اجرای خانه](../delivery/initial-launch/issue-27-verification.md) و [ADR-008 ورود مشترک](../decisions/adr-008-shared-login-modes.md) به همین مسیر اضافه شده‌اند. LCH-Q01 با پاسخ مالک حل شد: ورودی وجه ابتدا شارژ، تأیید کارت‌به‌کارت دستی/بصری و سپس تأیید سفارش با مصرف جدا. LCH-Q02 تا04 فقط بخش وابسته را متوقف می‌کنند. خانه/PLP/PDP با طرح A و C حرف اول Cherriva پیش می‌روند.
+
+
+## اجرای خانه — CV-LCH-01
+
+[PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا done و #27 با دستور مالک بسته شد؛ #11 باز و #28/#29/#30 اجرا نشده‌اند. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
