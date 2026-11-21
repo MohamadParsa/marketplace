@@ -8,7 +8,7 @@
   "design": "A-balanced",
   "payment": "card-to-card-only",
   "payment_wallet_mapping": "confirmed:wallet-credit-before-separate-consumption",
-  "note": "Owner-confirmed sequence and wallet-first funding; homepage implemented locally and awaiting owner review. Later slices remain todo. No deployment or license approval implied.",
+  "note": "Owner requested closure of completed homepage slice #27. Later slices remain todo; parent #11 remains open. No deployment or blanket specification approval implied.",
   "tasks": [
     {
       "id": "CV-LCH-01",
@@ -54,11 +54,16 @@
       "file": "tasks/cv-lch-01-homepage.md",
       "number": 27,
       "parent_issue": 11,
-      "implementation_status": "review",
+      "implementation_status": "done",
       "verification": "issue-27-verification.md",
       "pull_request": 32,
       "integration_commit": "8f45c9be80dc4690120da4b61fb5c33b39fb70d5",
-      "source_branch": "codex/issue-27-homepage"
+      "source_branch": "codex/issue-27-homepage",
+      "completion": {
+        "date": "2026-11-21",
+        "basis": "owner-requested-issue-closure",
+        "public_deployment": false
+      }
     },
     {
       "id": "CV-LCH-02",

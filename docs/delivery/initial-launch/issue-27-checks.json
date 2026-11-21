@@ -1,7 +1,7 @@
 {
   "date": "2026-11-21",
   "issue": 27,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "document_status": "in-review",
   "go": {
     "passed_tests_and_subtests": 96,
@@ -151,5 +151,15 @@
     "banners_unchanged": true,
     "product_photo_persisted": true,
     "local_admin_password_login_persisted": true
+  },
+  "closure_authorized_by": "product-owner",
+  "github_ci": {
+    "implementation_commit": "8c9ba90e0338aaea66e6e537f716147c0c76a2ca",
+    "api": "success",
+    "backoffice-web": "success",
+    "storefront-web": "success",
+    "seller-portal-web": "success",
+    "contracts": "success",
+    "api_includes_race": true
   }
 }

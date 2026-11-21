@@ -23,7 +23,7 @@ implementation_status: in-progress
 
 | ترتیب | تسک / Issue | خروجی مشترک بک‌آفیس و سایت | اولویت / وضعیت | وابستگی تحویل |
 | --- | --- | --- | --- | --- |
-| 1 | [CV-LCH-01](tasks/cv-lch-01-homepage.md) · [#27](https://github.com/MohamadParsa/marketplace/issues/27) | صفحه اصلی واقعی با چهار کروسل؛ بک‌آفیس و سایت | P0 / review | حداقل کاتالوگ/ذخیره پایدار در همین کار |
+| 1 | [CV-LCH-01](tasks/cv-lch-01-homepage.md) · [#27](https://github.com/MohamadParsa/marketplace/issues/27) | صفحه اصلی واقعی با چهار کروسل؛ بک‌آفیس و سایت | P0 / done | حداقل کاتالوگ/ذخیره پایدار در همین کار |
 | 2 | [CV-LCH-02](tasks/cv-lch-02-plp-search.md) · [#28](https://github.com/MohamadParsa/marketplace/issues/28) | PLP و جست‌وجوی واقعی؛ بک‌آفیس و سایت | P0 / todo | CV-LCH-01 |
 | 3 | [CV-LCH-03](tasks/cv-lch-03-pdp.md) · [#29](https://github.com/MohamadParsa/marketplace/issues/29) | PDP مستقل و انتخاب تنوع/فروشنده؛ بک‌آفیس و سایت | P0 / todo | CV-LCH-02 |
 | 4 | [CV-LCH-04](tasks/cv-lch-04-checkout-wallet-card-transfer.md) · [#30](https://github.com/MohamadParsa/marketplace/issues/30) | سبد تا پرداخت کارت‌به‌کارت و کیف پول؛ بک‌آفیس و سایت | P0 / todo | CV-LCH-03 |
@@ -71,4 +71,4 @@ LCH-Q01 با پاسخ مستقیم مالک حل شده است. LCH-Q02 (مدر�
 
 ## وضعیت و شاهد
 
-خانه #27 در وضعیت review و منتظر بازبینی مالک است؛ سه مرحله بعد todo هستند. [گزارش اجرای خانه](issue-27-verification.md) شواهد کد، ذخیره PostgreSQL آزمون، ورود مشترک و طراحی A را ثبت می‌کند. [سناریوهای مستند](../../bdd/features/experiences/initial-launch.feature) معیار پذیرش‌اند؛ اجرای فنی در گزارش مربوط مشخص می‌شود و این فایل اجرای خودکار Gherkin را ادعا نمی‌کند. هیچ استقرار عمومی یا اتصال مالی واقعی انجام نشده است.
+خانه #27 با دستور مالک در۲۰۲۶-۱۱-۲۱ done و بسته شد؛ سه مرحله بعد todo هستند. PR اجرایی هنوز باز است و استقرار جداگانه با پارسا انجام می‌شود. [گزارش اجرای خانه](issue-27-verification.md) شواهد کد، ذخیره PostgreSQL آزمون، ورود مشترک و طراحی A را ثبت می‌کند. [سناریوهای مستند](../../bdd/features/experiences/initial-launch.feature) معیار پذیرش‌اند؛ اجرای فنی در گزارش مربوط مشخص می‌شود و این فایل اجرای خودکار Gherkin را ادعا نمی‌کند. هیچ استقرار عمومی یا اتصال مالی واقعی انجام نشده است.
