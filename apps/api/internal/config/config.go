@@ -3,6 +3,8 @@ package config
 import "os"
 
 type Config struct {
+	WebRoot           string
+	WebSurface        string
 	Address           string
 	Environment       string
 	ReviewDatabaseURL string
@@ -24,5 +26,5 @@ func Load() Config {
 	if baseURL == "" {
 		baseURL = "https://api.kavenegar.com"
 	}
-	return Config{Address: address, Environment: env, ReviewDatabaseURL: os.Getenv("REVIEW_DATABASE_URL"), KavenegarAPIKey: os.Getenv("KAVENEGAR_API_KEY"), KavenegarTemplate: os.Getenv("KAVENEGAR_TEMPLATE"), KavenegarBaseURL: baseURL}
+	return Config{WebRoot: os.Getenv("WEB_ROOT"), WebSurface: os.Getenv("WEB_SURFACE"), Address: address, Environment: env, ReviewDatabaseURL: os.Getenv("REVIEW_DATABASE_URL"), KavenegarAPIKey: os.Getenv("KAVENEGAR_API_KEY"), KavenegarTemplate: os.Getenv("KAVENEGAR_TEMPLATE"), KavenegarBaseURL: baseURL}
 }

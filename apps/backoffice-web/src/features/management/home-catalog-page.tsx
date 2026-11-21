@@ -9,7 +9,12 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "../../shared/workspace";
-import type { CatalogInput, HomeSettings, Product } from "../../shared/types";
+import type {
+  CatalogInput,
+  HomeSettings,
+  Product,
+  CategorySEO,
+} from "../../shared/types";
 import { ProductQuickDialog } from "./product-workspace";
 const empty: CatalogInput = {
   name: "",
@@ -19,6 +24,8 @@ const empty: CatalogInput = {
   brand_id: "",
   parent_id: "",
   published: false,
+  seo: { meta_title: "", meta_keywords: "", meta_description: "" },
+  attributes: [],
 };
 const titles = ["موبایل", "هندزفری", "پاوربانک", "ساعت هوشمند"];
 function ManagedPhoto({ id }: { id?: string }) {
@@ -100,6 +107,8 @@ export function HomeCatalogPage() {
       published?: boolean;
       active?: boolean;
       status?: string;
+      seo?: CategorySEO;
+      attributes?: { attribute_id: string; value: string }[];
     },
   ) {
     setError("");
@@ -113,6 +122,12 @@ export function HomeCatalogPage() {
             name: row.name,
             english_name: row.english_name ?? "",
             description: row.description ?? "",
+            seo: row.seo ?? {
+              meta_title: "",
+              meta_keywords: "",
+              meta_description: "",
+            },
+            attributes: row.attributes ?? [],
             category_id: row.category_id ?? "",
             brand_id: row.brand_id ?? "",
             parent_id: row.parent_id ?? "",
@@ -140,6 +155,17 @@ export function HomeCatalogPage() {
       /* form stays open */
     }
   }
+  const categoryLabel = (id: string) => {
+    const names: string[] = [];
+    const seen = new Set<string>();
+    let c = state.categories?.find((c) => c.id === id);
+    while (c && !seen.has(c.id)) {
+      seen.add(c.id);
+      names.push(c.name);
+      c = state.categories?.find((x) => x.id === c?.parent_id);
+    }
+    return names.reverse().join(" / ");
+  };
   const editable = can("catalog.product.update", "management");
   return (
     <>
@@ -258,6 +284,7 @@ export function HomeCatalogPage() {
                   <article key={c.id}>
                     <div>
                       <b>{c.name}</b>
+                      <small>{categoryLabel(c.id)}</small>
                       <small>
                         {c.published ? "منتشرشده" : "پیش‌نویس"} ·{" "}
                         {c.english_name || "نام انگلیسی ثبت نشده"}
@@ -353,7 +380,7 @@ export function HomeCatalogPage() {
                         .filter((c) => c.published && !c.archived)
                         .map((c) => (
                           <option key={c.id} value={c.id}>
-                            {c.name}
+                            {categoryLabel(c.id)}
                           </option>
                         ))}
                     </select>
@@ -464,6 +491,44 @@ export function HomeCatalogPage() {
                       </label>
                     </>
                   )}
+                  {editing.kind === "category" && (
+                    <fieldset className="home-admin-form">
+                      <legend>سئوی فهرست این دسته</legend>
+                      {(
+                        [
+                          ["meta_title", "عنوان متا", 160],
+                          ["meta_keywords", "کلمات کلیدی متا", 500],
+                          ["meta_description", "توضیحات متا", 400],
+                        ] as const
+                      ).map(([key, label, max]) => (
+                        <label key={key}>
+                          {label}
+                          <input
+                            maxLength={max}
+                            value={editing.input.seo?.[key] ?? ""}
+                            onChange={(e) =>
+                              setEditing({
+                                ...editing,
+                                input: {
+                                  ...editing.input,
+                                  seo: {
+                                    meta_title: "",
+                                    meta_keywords: "",
+                                    meta_description: "",
+                                    ...editing.input.seo,
+                                    [key]: e.target.value,
+                                  },
+                                },
+                              })
+                            }
+                          />
+                        </label>
+                      ))}
+                      <small>
+                        این مقادیر فقط در PLP همین دسته استفاده می‌شوند.
+                      </small>
+                    </fieldset>
+                  )}
                   {editing.kind === "product" && (
                     <>
                       <label>
@@ -487,7 +552,7 @@ export function HomeCatalogPage() {
                             .filter((c) => !c.archived)
                             .map((c) => (
                               <option key={c.id} value={c.id}>
-                                {c.name}
+                                {categoryLabel(c.id)}
                               </option>
                             ))}
                         </select>
@@ -517,6 +582,73 @@ export function HomeCatalogPage() {
                         </select>
                       </label>
                     </>
+                  )}
+                  {editing.kind === "product" && (
+                    <fieldset className="home-admin-form">
+                      <legend>ویژگی‌های نمایشی و فیلتر</legend>
+                      {(
+                        state.categories?.find(
+                          (c) => c.id === editing.input.category_id,
+                        )?.bindings ?? []
+                      )
+                        .filter((b) => !b.axis)
+                        .map((b) => {
+                          const a = state.attributes?.find(
+                            (x) => x.id === b.attribute_id,
+                          );
+                          if (!a) return null;
+                          const value =
+                            editing.input.attributes?.find(
+                              (x) => x.attribute_id === a.id,
+                            )?.value ?? "";
+                          const setValue = (v: string) =>
+                            setEditing({
+                              ...editing,
+                              input: {
+                                ...editing.input,
+                                attributes: [
+                                  ...(editing.input.attributes ?? []).filter(
+                                    (x) => x.attribute_id !== a.id,
+                                  ),
+                                  ...(v
+                                    ? [{ attribute_id: a.id, value: v }]
+                                    : []),
+                                ],
+                              },
+                            });
+                          return (
+                            <label key={a.id}>
+                              {a.name}
+                              {a.unit ? " (" + a.unit + ")" : ""}
+                              {a.kind === "enum" ? (
+                                <select
+                                  value={value}
+                                  onChange={(e) => setValue(e.target.value)}
+                                >
+                                  <option value="">ثبت نشده</option>
+                                  {a.options.map((o) => (
+                                    <option key={o} value={o}>
+                                      {o}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : (
+                                <input
+                                  type={a.kind === "number" ? "number" : "text"}
+                                  step="any"
+                                  maxLength={160}
+                                  value={value}
+                                  onChange={(e) => setValue(e.target.value)}
+                                />
+                              )}
+                            </label>
+                          );
+                        })}
+                      <small>
+                        ویژگی‌ها فقط از انتساب صریح همین دسته می‌آیند. محورهای
+                        تنوع از فرم تنوع مدیریت می‌شوند.
+                      </small>
+                    </fieldset>
                   )}
                   {editing.kind === "category" && (
                     <label>

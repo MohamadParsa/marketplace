@@ -10,7 +10,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { useWorkspace, can } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
 import type { AttributeDefinition, Category } from "../../shared/types";
 
@@ -19,7 +19,7 @@ const message = (e: unknown) =>
   e instanceof Error ? e.message : "تغییر ثبت نشد؛ دوباره تلاش کنید.";
 
 export function SharedAttributesPage() {
-  const { state, role, execute } = useWorkspace();
+  const { state, execute, can: may } = useWorkspace();
   const [editor, setEditor] = useState<AttributeDefinition>();
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(
@@ -31,7 +31,7 @@ export function SharedAttributesPage() {
   const [settingsKey, setSettingsKey] = useState(crypto.randomUUID());
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const editable = can(role, "management");
+  const editable = may("attribute.create", "management");
   return (
     <>
       <PageHeader
@@ -114,7 +114,7 @@ export function SharedAttributesPage() {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            if (pending || role !== "super-admin") return;
+            if (pending || !may("settings.card-limit", "management")) return;
             setPending(true);
             setError("");
             try {
@@ -139,7 +139,7 @@ export function SharedAttributesPage() {
             label="حداکثر ویژگی کارت"
             type="number"
             value={limit}
-            disabled={role !== "super-admin" || pending}
+            disabled={!may("settings.card-limit", "management") || pending}
             onChange={(e) => {
               setLimit(e.target.value);
               setSettingsKey(crypto.randomUUID());
@@ -150,7 +150,7 @@ export function SharedAttributesPage() {
           <Button
             type="submit"
             variant="contained"
-            disabled={role !== "super-admin" || pending}
+            disabled={!may("settings.card-limit", "management") || pending}
           >
             ثبت سقف کارت
           </Button>
@@ -215,7 +215,7 @@ function AttributeEditor({
   attribute: AttributeDefinition;
   close: () => void;
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, execute, can: may } = useWorkspace();
   const [draft, setDraft] = useState(attribute);
   const [options, setOptions] = useState(attribute.options.join("\n"));
   const [error, setError] = useState("");
@@ -230,13 +230,17 @@ function AttributeEditor({
     (state.products ?? []).some((p) =>
       p.attributes?.some((v) => v.attribute_id === attribute.id),
     );
-  const editable = can(role, "management");
+  const editable = may(
+    attribute.id ? "attribute.update" : "attribute.create",
+    "management",
+  );
   const change = (field: keyof AttributeDefinition, value: string) => {
     setDraft({ ...draft, [field]: value });
     setKey(crypto.randomUUID());
   };
   async function save(remove = false) {
-    if (pending || !editable) return;
+    if (pending || !(remove ? may("attribute.delete", "management") : editable))
+      return;
     const values = options
       .split("\n")
       .map((x) => x.trim())
@@ -363,7 +367,9 @@ function AttributeEditor({
           {attribute.id && (
             <Button
               color="error"
-              disabled={!editable || pending || used}
+              disabled={
+                !may("attribute.delete", "management") || pending || used
+              }
               onClick={() => void save(true)}
             >
               حذف خصوصیت بدون استفاده
@@ -389,13 +395,14 @@ export function CategoryBindingsDialog({
   category: Category;
   close: () => void;
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, execute, can: may } = useWorkspace();
   const [original] = useState(category);
   const [bindings, setBindings] = useState(category.bindings ?? []);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [key, setKey] = useState(crypto.randomUUID());
-  const editable = can(role, "management") && !category.archived;
+  const editable =
+    may("category.bindings.set", "management") && !category.archived;
   const used = (state.products ?? []).some(
     (p) => p.category_id === category.id,
   );

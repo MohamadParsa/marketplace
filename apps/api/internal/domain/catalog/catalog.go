@@ -1,6 +1,15 @@
 package catalog
 
+import "time"
+
+type SEO struct {
+	MetaTitle       string `json:"meta_title"`
+	MetaKeywords    string `json:"meta_keywords"`
+	MetaDescription string `json:"meta_description"`
+}
+
 type Category struct {
+	SEO         SEO                `json:"seo"`
 	EnglishName string             `json:"english_name,omitempty"`
 	Description string             `json:"description,omitempty"`
 	Published   bool               `json:"published"`
@@ -27,6 +36,7 @@ type IconMedia struct {
 	Data []byte `json:"data"`
 }
 type Product struct {
+	CreatedAt      time.Time        `json:"created_at,omitempty"`
 	EnglishName    string           `json:"english_name,omitempty"`
 	Description    string           `json:"description,omitempty"`
 	BrandID        string           `json:"brand_id,omitempty"`

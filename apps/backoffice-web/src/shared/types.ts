@@ -37,7 +37,13 @@ export interface Store {
   active: boolean;
   lead_days: number;
 }
+export interface CategorySEO {
+  meta_title: string;
+  meta_keywords: string;
+  meta_description: string;
+}
 export interface Category {
+  seo?: CategorySEO;
   english_name?: string;
   description?: string;
   published: boolean;
@@ -188,6 +194,8 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  seo?: CategorySEO;
+  attributes?: { attribute_id: string; value: string }[];
   name: string;
   english_name: string;
   description: string;

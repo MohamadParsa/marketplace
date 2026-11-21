@@ -5,6 +5,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"sort"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -18,13 +19,15 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
-	Name        string `json:"name"`
-	EnglishName string `json:"english_name"`
-	Description string `json:"description"`
-	CategoryID  string `json:"category_id"`
-	BrandID     string `json:"brand_id"`
-	ParentID    string `json:"parent_id"`
-	Published   bool   `json:"published"`
+	SEO         *catalog.SEO              `json:"seo,omitempty"`
+	Attributes  *[]catalog.AttributeValue `json:"attributes,omitempty"`
+	Name        string                    `json:"name"`
+	EnglishName string                    `json:"english_name"`
+	Description string                    `json:"description"`
+	CategoryID  string                    `json:"category_id"`
+	BrandID     string                    `json:"brand_id"`
+	ParentID    string                    `json:"parent_id"`
+	Published   bool                      `json:"published"`
 }
 
 var homeKeys = []string{"mobile", "earbuds", "power-bank", "smartwatch"}
@@ -43,13 +46,34 @@ func IsHomeCatalogAction(a string) bool {
 func validCatalogText(c CatalogInput) bool {
 	return strings.TrimSpace(c.Name) != "" && utf8.RuneCountInString(c.Name) <= 160 && utf8.RuneCountInString(c.EnglishName) <= 160 && utf8.RuneCountInString(c.Description) <= 4000
 }
+
+// Public visibility requires every ancestor to remain published; stored child flags are untouched.
 func publicCategory(w Workspace, id string) *catalog.Category {
+	byID := map[string]catalog.Category{}
 	for _, c := range w.Categories {
-		if c.ID == id && c.Published && !c.Archived {
-			return &c
-		}
+		byID[c.ID] = c
 	}
-	return nil
+	c, ok := byID[id]
+	if !ok {
+		return nil
+	}
+	seen := map[string]bool{}
+	current := c
+	for {
+		if seen[current.ID] || !current.Published || current.Archived {
+			return nil
+		}
+		seen[current.ID] = true
+		if current.ParentID == "" {
+			break
+		}
+		parent, exists := byID[current.ParentID]
+		if !exists {
+			return nil
+		}
+		current = parent
+	}
+	return &c
 }
 func validBrand(w Workspace, id string) bool {
 	if id == "" {
@@ -76,7 +100,7 @@ func imageAttached(w Workspace, id string) bool {
 func canPublishProduct(w Workspace, p catalog.Product) bool {
 	return strings.TrimSpace(p.Name) != "" && publicCategory(w, p.CategoryID) != nil && validBrand(w, p.BrandID) && imageAttached(w, p.ImageID) && len(publicOffers(w, p)) > 0
 }
-func applyHomeCatalog(w *Workspace, c Command, id string) error {
+func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 	if c.Action == "homepage.save" {
 		if c.Home == nil || c.Version != w.HomeSettings.Version {
 			return ErrConflict
@@ -110,6 +134,9 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 	in.EnglishName = strings.TrimSpace(in.EnglishName)
 	switch c.Action {
 	case "catalog.category.create", "catalog.category.update":
+		if in.SEO != nil && !validCategorySEO(*in.SEO) {
+			return ErrInvalid
+		}
 		if in.ParentID != "" {
 			found := false
 			for _, x := range w.Categories {
@@ -122,7 +149,11 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 			}
 		}
 		if c.Action == "catalog.category.create" {
-			w.Categories = append(w.Categories, catalog.Category{ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
+			seo := catalog.SEO{}
+			if in.SEO != nil {
+				seo = *in.SEO
+			}
+			w.Categories = append(w.Categories, catalog.Category{SEO: seo, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
 			return nil
 		}
 		for i := range w.Categories {
@@ -143,6 +174,9 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 			x.EnglishName = in.EnglishName
 			x.Description = in.Description
 			x.Published = in.Published
+			if in.SEO != nil {
+				x.SEO = *in.SEO
+			}
 			x.Version++
 			return nil
 		}
@@ -177,7 +211,13 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 			if in.Published {
 				return ErrInvalid
 			}
-			p := catalog.Product{ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: "shared", Status: "draft", Version: 1, VariantVersion: 1}
+			if in.Attributes != nil && !validProductAttributes(*w, in.CategoryID, *in.Attributes) {
+				return ErrInvalid
+			}
+			p := catalog.Product{CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: "shared", Status: "draft", Version: 1, VariantVersion: 1}
+			if in.Attributes != nil {
+				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
+			}
 			w.Products = append(w.Products, p)
 			if len(productAxes(*w, p)) == 0 {
 				w.Variants = append(w.Variants, catalog.Variant{ID: "base-" + id, ProductID: id, SKU: "BASE-" + id, Values: []catalog.AttributeValue{}, Version: 1})
@@ -197,8 +237,14 @@ func applyHomeCatalog(w *Workspace, c Command, id string) error {
 			}
 			candidate := *p
 			candidate.Name, candidate.BrandID = in.Name, in.BrandID
-			if in.Published && !canPublishProduct(*w, candidate) {
+			if in.Published && p.Status != "published" && !canPublishProduct(*w, candidate) {
 				return ErrInvalid
+			}
+			if in.Attributes != nil {
+				if !validProductAttributes(*w, p.CategoryID, *in.Attributes) {
+					return ErrInvalid
+				}
+				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
 			}
 			p.Name = in.Name
 			p.EnglishName = in.EnglishName

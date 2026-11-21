@@ -114,9 +114,13 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 
 ## اجرای خانه — CV-LCH-01
 
-[PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا done و #27 با دستور مالک بسته شد؛ #11 باز و #28/#29/#30 اجرا نشده‌اند. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
+[PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا done و #27 با دستور مالک بسته شد؛ در زمان گزارش خانه #28/#29/#30 اجرا نشده بودند. وضعیت جاری #28 در بخش پایان آن آمده است. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
 
 
 ## رفع هم‌پوشانی صف با مراجع کاتالوگ — ۲۰۲۶-۱۱-۲۱
 
-[تصمیم تکمیلی ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [صف و مالکیت یکتای اجرا](../delivery/initial-launch/README.md#execution-ownership) → #24 / CV-R2-16-AC01..04 فقط از شواهد #28 و #25 / CV-R2-17-AC01..05 فقط از شواهد #29 استفاده می‌کنند؛ پایه موجود #27 بازنویسی نمی‌شود. شناسه‌های BDD ثابت‌اند و تست/PR تکراری برای مراجع ساخته نمی‌شود. معیار شرطی تعامل همچنان باز است؛ نوع reference مجوز حذف معیار نیست. فقط #27 done؛ #28/#29/#30 todo و #11 والد در حال پیگیری است. این اصلاح فقط مستندات و برنامه GitHub است و اجرای تازه‌ای ندارد.
+[تصمیم تکمیلی ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [صف و مالکیت یکتای اجرا](../delivery/initial-launch/README.md#execution-ownership) → #24 / CV-R2-16-AC01..04 فقط از شواهد #28 و #25 / CV-R2-17-AC01..05 فقط از شواهد #29 استفاده می‌کنند؛ پایه موجود #27 بازنویسی نمی‌شود. شناسه‌های BDD ثابت‌اند و تست/PR تکراری برای مراجع ساخته نمی‌شود. معیار شرطی تعامل همچنان باز است؛ نوع reference مجوز حذف معیار نیست. در زمان آن اصلاح برنامه، فقط #27 done بود و کار اجرایی تازه انجام نشده بود؛ وضعیت پس از اجرای #28 در بخش بعد آمده است.
+
+## شاهد پایان #28 و پوشش مشترک #24 — ۲۰۲۶-۱۱-۲۱
+
+[گزارش PLP/جست‌وجو](../delivery/initial-launch/issue-28-verification.md) → CV-LCH-02-AC01..05 و CV-R2-16-AC01..04 → [قرارداد واقعی](../architecture/contracts/plp-search.md)، آزمون HTTP/PostgreSQL و مرورگر. #27/#28 done؛ #11 پیشرفت۲از۴ و #29 بعدی است. چهار معیار مرجع #24 از همان PR شاهد دارند؛ #25 و معیارهای شرطی تعامل بازند. Breadcrumb در PLP اجرا و در #29 به ترتیب خانه، دسته‌ها، برند و نام محصول الزامی شد. merge/deploy یا پذیرش تولید از این وضعیت نتیجه نمی‌شود.

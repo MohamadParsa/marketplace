@@ -34,3 +34,5 @@
 
 
 [خانه واقعی و برش کاتالوگ/پنل انتشار اولیه — API-HOMEPAGE-LAUNCH-001](homepage-launch.md) قیمت نهایی، تخفیف ساده، بنر/میان‌بر دسته، کنترل دسترسی و مرز storage بررسی را مشخص می‌کند.
+
+- [API-PLP-SEARCH-001: PLP، جست‌وجو، دسته/SEO و HTML اولیه](plp-search.md)

@@ -44,7 +44,7 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 				return ErrConflict
 			}
 			if c.Action == "product.publish" {
-				if !canPublishProduct(*state, *p) {
+				if p.Status != "published" && !canPublishProduct(*state, *p) {
 					return ErrInvalid
 				}
 				p.Status = "published"

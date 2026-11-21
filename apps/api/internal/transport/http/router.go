@@ -9,18 +9,30 @@ import (
 )
 
 type RouterConfig struct {
-	Home             *HomeHandler
-	Auth             *AuthHandler
-	Backoffice       *BackofficeHandler
-	CatalogIcons     *CatalogIconHandler
-	ProductWorkspace *ProductWorkspaceHandler
-	Banners          *BannerHandler
-	SellerOffers     *SellerOffersHandler
-	CustomerAccount  *CustomerAccountHandler
+	Listing           *ListingHandler
+	StaticRoot        string
+	StorefrontSurface bool
+	Home              *HomeHandler
+	Auth              *AuthHandler
+	Backoffice        *BackofficeHandler
+	CatalogIcons      *CatalogIconHandler
+	ProductWorkspace  *ProductWorkspaceHandler
+	Banners           *BannerHandler
+	SellerOffers      *SellerOffersHandler
+	CustomerAccount   *CustomerAccountHandler
 }
 
 func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
+	if cfg.Listing != nil {
+		mux.HandleFunc("GET /storefront/catalog", cfg.Listing.Read)
+		mux.HandleFunc("GET /storefront/suggestions", cfg.Listing.Suggest)
+		if cfg.StorefrontSurface {
+			mux.HandleFunc("GET /category/{id}", cfg.Listing.Page)
+			mux.HandleFunc("GET /search", cfg.Listing.Page)
+			mux.HandleFunc("GET /offers", cfg.Listing.Page)
+		}
+	}
 	if cfg.Home != nil {
 		mux.HandleFunc("GET /storefront/home", cfg.Home.Read)
 	}
@@ -72,7 +84,11 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("POST /storefront/auth/recover/reset", cfg.Auth.RecoverPassword(identity.SurfaceCustomer))
 		mux.HandleFunc("POST /storefront/auth/logout", cfg.Auth.Logout)
 	}
-	if root := os.Getenv("WEB_ROOT"); root != "" {
+	root := cfg.StaticRoot
+	if root == "" {
+		root = os.Getenv("WEB_ROOT")
+	}
+	if root != "" {
 		mux.Handle("GET /", staticSite(root))
 	} else {
 		mux.HandleFunc("GET /{$}", health("marketplace-api"))

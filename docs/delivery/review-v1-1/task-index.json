@@ -3,7 +3,7 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Current execution queue: initial-launch/task-index.json. #11 is tracking parent (1/4 complete); #24/#25 are requirements-only, executed in #28/#29 with #27 reuse. No separate W1 execution or duplicate PR/test. Other historical task states are unchanged.",
+  "note": "Current execution queue: initial-launch/task-index.json. #11 tracking parent: 2/4 complete (#27/#28); next #29 then #30. #24 has all four criteria verified by #28; #25 remains requirements-only, implemented by #29. No separate execution/PR/test for references.",
   "task_count": 17,
   "active_count": 15,
   "deferred_ids": [
@@ -718,7 +718,7 @@
       "title": "مرجع کنترل نیازمندی‌های دسته و SEO؛ اجرا در #28",
       "priority": "P0",
       "wave": "reference",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -746,7 +746,7 @@
         "داده عمومی و متادیتای دسته الف به همان PLP وصل شود و با دسته ب یا تنظیم عمومی جایگزین نشود؛ پذیرش HTML واقعی در #28 گزارش مستقل داشته باشد.",
         "API فاقد مجوز، ورودی نامعتبر و نسخه قدیمی را بدون تغییر قبلی رد کند؛ ذخیره محتوای دسته قیمت/موجودی محصولات را تغییر ندهد."
       ],
-      "blocked": "جزئیات validation و انتشار در R2-Q07/R2-Q08؛ فقط بخش وابسته متوقف است.",
+      "blocked": "بخش دسته R2-Q08 با پاسخ مالک #28 حل شده؛ validation نسخه بررسی در API-PLP-SEARCH-001 ثبت و چهار AC شاهد دارند.",
       "technical": "قرارداد typed، نسخه/مجوز server-side، متن امن و انتشار مستقل از موجودی؛ راه‌حل پیشنهادی در سند مرجع.",
       "evidence": "همان شواهد و PR #28، با ارجاع به ACهای پایدار؛ شاهد جداگانه تکراری تولید نشود.",
       "amends": [
@@ -758,7 +758,8 @@
       "independent_execution": false,
       "execution_issue": 28,
       "execution_dependencies": [],
-      "dependencies_kind": "capability-references-not-issue-closure-gates"
+      "dependencies_kind": "capability-references-not-issue-closure-gates",
+      "verification": "../initial-launch/issue-28-verification.md"
     },
     {
       "id": "CV-R2-17",

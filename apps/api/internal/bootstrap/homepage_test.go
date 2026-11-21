@@ -257,6 +257,11 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 		w.Products[0].Name = "پایدار پس از راه‌اندازی"
 		w.Offers[0].Price = 1234
 		w.HomeSettings.Rails[0].Limit = 2
+		w.Categories[0].SEO = catalog.SEO{MetaTitle: "عنوان دسته پایدار", MetaDescription: "متادیتای پایدار"}
+		w.Categories[0].Bindings = []catalog.AttributeBinding{{AttributeID: "persisted-memory", Card: true, Filter: true}}
+		w.Attributes = append(w.Attributes, catalog.AttributeDefinition{ID: "persisted-memory", Code: "persisted-memory", Name: "حافظه", Kind: "enum", Options: []string{"128"}})
+		w.Products[0].Attributes = []catalog.AttributeValue{{AttributeID: "persisted-memory", Value: "128"}}
+		w.Products[0].CreatedAt = time.Date(2026, 11, 21, 1, 2, 3, 0, time.UTC)
 		return nil
 	}); err != nil {
 		t.Fatal(err)
@@ -275,6 +280,10 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 	data, res := homeHTTP(t, h, "")
 	if res.Code != 200 || data.Rails[0].Products[0].Name != "پایدار پس از راه‌اندازی" || data.Rails[0].Products[0].Price != 1234 {
 		t.Fatal("restart lost home", res.Body.String())
+	}
+	listing, _ := listingRequest(t, h, "?category=mobile&attr.persisted-memory=128", 200)
+	if listing.SEO.MetaTitle != "عنوان دسته پایدار" || len(listing.Products) != 1 || len(listing.Products[0].Features) != 1 || listing.Products[0].Features[0].Value != "128" {
+		t.Fatal("listing metadata/attributes lost after PostgreSQL restart")
 	}
 	req := httptest.NewRequest("GET", data.Rails[0].Products[0].ImageURL, nil)
 	out := httptest.NewRecorder()

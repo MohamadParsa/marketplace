@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SearchBox } from "./search-box";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 interface HomeCategory {
   id: string;
@@ -7,7 +8,14 @@ interface HomeCategory {
   image_url: string;
   count: number;
 }
-interface Card {
+export interface Card {
+  available?: boolean;
+  features?: {
+    attribute_id: string;
+    name: string;
+    value: string;
+    unit?: string;
+  }[];
   regular_price?: number;
   discount_percent?: number;
   id: string;
@@ -15,9 +23,9 @@ interface Card {
   category_name: string;
   url: string;
   image_url: string;
-  price: number;
-  offer_id: string;
-  variant_id: string;
+  price: number | null;
+  offer_id?: string;
+  variant_id?: string;
 }
 interface Rail {
   key: string;
@@ -83,7 +91,7 @@ const paths: Record<string, React.ReactNode> = {
   ),
   arrow: <path d="m20 6-10 10 10 10" />,
 };
-function Icon({ name }: { name: string }) {
+export function Icon({ name }: { name: string }) {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -110,11 +118,15 @@ function Price({ value }: { value: number }) {
     </span>
   );
 }
-function ProductCard({ card }: { card: Card }) {
+export function ProductCard({ card }: { card: Card }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [card.image_url]);
   return (
-    <a className="lh-product" href={card.url}>
+    <a
+      className={`lh-product ${card.available === false ? "is-unavailable" : ""}`}
+      href={card.url}
+      data-product-id={card.id}
+    >
       <div className="lh-product-image">
         {failed ? (
           <div className="lh-image-fallback">
@@ -133,8 +145,24 @@ function ProductCard({ card }: { card: Card }) {
       </div>
       <span className="lh-category-name">{card.category_name}</span>
       <h3>{card.name}</h3>
+      {card.features?.length ? (
+        <ul className="lh-card-features">
+          {card.features.map((f) => (
+            <li key={f.attribute_id}>
+              <span>{f.name}</span>
+              <b dir="auto">
+                {f.value}
+                {f.unit ? " " + f.unit : ""}
+              </b>
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <div className="lh-product-price">
-        {card.regular_price && card.regular_price > card.price ? (
+        {card.price !== null &&
+        card.available !== false &&
+        card.regular_price &&
+        card.regular_price > card.price ? (
           <span className="lh-before-price">
             <del>
               {new Intl.NumberFormat("fa-IR", {
@@ -148,9 +176,15 @@ function ProductCard({ card }: { card: Card }) {
             </b>
           </span>
         ) : (
-          <span>قیمت نقدی از</span>
+          <span>
+            {card.available === false ? "فعلاً قابل خرید نیست" : "قیمت نقدی از"}
+          </span>
         )}
-        <Price value={card.price} />
+        {card.price !== null && card.available !== false ? (
+          <Price value={card.price} />
+        ) : (
+          <strong className="lh-unavailable">ناموجود</strong>
+        )}
       </div>
     </a>
   );
@@ -357,6 +391,21 @@ function PromoBanners({ banners }: { banners: Banner[] }) {
   ) : null;
 }
 export function HomePage() {
+  useEffect(() => {
+    document.title = "Cherriva | دنیایی برای انتخاب تو";
+    for (const [name, content] of [
+      [
+        "description",
+        "چریوا؛ انتخاب‌های دیجیتال با اطلاعات روشن و قیمت نقدی مشخص.",
+      ],
+      ["keywords", ""],
+    ]) {
+      const m = document.head.querySelector<HTMLMetaElement>(
+        'meta[name="' + name + '"]',
+      );
+      if (m) m.content = content;
+    }
+  }, []);
   const [availableCategories, setAvailableCategories] = useState<
     HomeCategory[]
   >([]);
@@ -402,6 +451,11 @@ export function HomePage() {
       .catch(() => {});
     return () => controller.abort();
   }, [attempt]);
+  useEffect(() => {
+    if (loading || location.pathname !== "/" || !location.hash) return;
+    const target = document.getElementById(location.hash.slice(1));
+    target?.scrollIntoView();
+  }, [loading]);
   const categories = rails.filter((r) => r.url);
   const isHome = location.pathname === "/";
   return (
@@ -409,47 +463,7 @@ export function HomePage() {
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
-      <div className="lh-topline">چریوا؛ انتخابی ساده برای زندگی امروز</div>
-      <header className="lh-header">
-        <div className="lh-header-main lh-wrap">
-          <a href="/" className="lh-logo" aria-label="چریوا؛ صفحه اصلی">
-            <img
-              src="/brand/cherriva-wordmark.svg"
-              alt="Cherriva"
-              width="177"
-              height="48"
-            />
-          </a>
-          <div className="lh-search">
-            <Icon name="search" />
-            <input
-              type="search"
-              placeholder="جست‌وجو در چریوا"
-              aria-label="جست‌وجو در چریوا"
-              disabled
-            />
-          </div>
-          <div className="lh-header-actions">
-            <button disabled aria-label="حساب کاربری">
-              <Icon name="user" />
-            </button>
-            <span />
-            <button disabled aria-label="سبد خرید">
-              <Icon name="bag" />
-            </button>
-          </div>
-        </div>
-        <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">
-          <a href="/#home-categories" className="lh-menu-label">
-            <span>☰</span> دسته‌بندی کالاها
-          </a>
-          {categories.map((c) => (
-            <a key={c.key} href={c.url}>
-              {c.title}
-            </a>
-          ))}
-        </nav>
-      </header>
+      <SiteHeader categories={categories} />
       <main id="main" className="lh-wrap">
         {!isHome ? (
           <section className="lh-route-unavailable">
@@ -548,38 +562,85 @@ export function HomePage() {
           </div>
         </div>
       </main>
-      <footer className="lh-footer">
-        <div className="lh-wrap lh-footer-main">
-          <div>
-            <a href="/" className="lh-logo">
-              <img
-                src="/brand/cherriva-wordmark.svg"
-                alt="Cherriva"
-                width="160"
-                height="44"
-              />
-            </a>
-            <p>انتخابی ساده، برای همراه‌های هر روز.</p>
-          </div>
-          <div>
-            <h2>دسته‌های چریوا</h2>
-            {categories.map((r) => (
-              <a href={r.url} key={r.key}>
-                {r.title}
-              </a>
-            ))}
-          </div>
-          <div>
-            <h2>درباره چریوا</h2>
-            <a href="/#about">آشنایی با چریوا</a>
-            <a href="/#home-categories">دسته‌بندی کالاها</a>
-          </div>
-        </div>
-        <div className="lh-wrap lh-copyright">
-          <span>تمام حقوق این وب‌سایت برای چریوا محفوظ است.</span>
-          <span dir="ltr">cherriva.ir</span>
-        </div>
-      </footer>
+      <SiteFooter categories={categories} />
     </div>
+  );
+}
+
+type HeaderCategory = { key: string; title: string; url: string };
+export function SiteHeader({ categories }: { categories: HeaderCategory[] }) {
+  return (
+    <>
+      {" "}
+      <div className="lh-topline">چریوا؛ انتخابی ساده برای زندگی امروز</div>
+      <header className="lh-header">
+        <div className="lh-header-main lh-wrap">
+          <a href="/" className="lh-logo" aria-label="چریوا؛ صفحه اصلی">
+            <img
+              src="/brand/cherriva-wordmark.svg"
+              alt="Cherriva"
+              width="177"
+              height="48"
+            />
+          </a>
+          <SearchBox />
+          <div className="lh-header-actions">
+            <button disabled aria-label="حساب کاربری">
+              <Icon name="user" />
+            </button>
+            <span />
+            <button disabled aria-label="سبد خرید">
+              <Icon name="bag" />
+            </button>
+          </div>
+        </div>
+        <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">
+          <a href="/#home-categories" className="lh-menu-label">
+            <span>☰</span> دسته‌بندی کالاها
+          </a>
+          {categories.map((c) => (
+            <a key={c.key} href={c.url}>
+              {c.title}
+            </a>
+          ))}
+        </nav>
+      </header>
+    </>
+  );
+}
+export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
+  return (
+    <footer className="lh-footer">
+      <div className="lh-wrap lh-footer-main">
+        <div>
+          <a href="/" className="lh-logo">
+            <img
+              src="/brand/cherriva-wordmark.svg"
+              alt="Cherriva"
+              width="160"
+              height="44"
+            />
+          </a>
+          <p>انتخابی ساده، برای همراه‌های هر روز.</p>
+        </div>
+        <div>
+          <h2>دسته‌های چریوا</h2>
+          {categories.map((r) => (
+            <a href={r.url} key={r.key}>
+              {r.title}
+            </a>
+          ))}
+        </div>
+        <div>
+          <h2>درباره چریوا</h2>
+          <a href="/#about">آشنایی با چریوا</a>
+          <a href="/#home-categories">دسته‌بندی کالاها</a>
+        </div>
+      </div>
+      <div className="lh-wrap lh-copyright">
+        <span>تمام حقوق این وب‌سایت برای چریوا محفوظ است.</span>
+        <span dir="ltr">cherriva.ir</span>
+      </div>
+    </footer>
   );
 }

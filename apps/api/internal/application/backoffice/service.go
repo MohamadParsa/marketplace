@@ -169,7 +169,7 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, event *Audit) error {
 	switch c.Action {
 	case "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update":
-		return applyHomeCatalog(state, c, id)
+		return applyHomeCatalog(state, c, id, s.clock.Now())
 	case "product.icon.remove":
 		return removeIcon(state, c)
 	case "banner.create", "banner.save", "banner.publish", "banner.media.remove":

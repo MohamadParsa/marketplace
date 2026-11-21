@@ -107,19 +107,20 @@
         "ناموجود منتشرشده برچسب داشته باشد، draft نشت نکند و کارت CTA خرید نداشته باشد؛ انتخاب کارت URL/شناسه صحیح PDP را بسازد؛ رندر مقصد در مرحله۳ و گیت نهایی بررسی می‌شود.",
         "متای PLP هر دسته متعلق به خودش، مقدار متن امن و loading/empty/error در۳۹۰/۱۴۴۰ مطابق A باشد؛ ورودی فیلتر نامعتبر در سرور رد شود."
       ],
-      "blocked": "R2-Q07/R2-Q08 و تجمیع PLP والد در CHQ-09 برای مسیر مرتبط؛ semantics پیش‌فرض sort و سنجه‌های واقعی قبل از فعال‌سازی گزینه نهایی شوند. فیلتر روشن و درخت مستقل ادامه یابند.",
+      "blocked": "تصمیم‌های CHQ-09 و بخش دسته R2-Q08 با پاسخ مستقیم مالک حل شد؛ گزارش اجرای #28 مرجع است. بخش‌های خارج دامنه در دفتر پرسش‌ها باز می‌مانند.",
       "file": "tasks/cv-lch-02-plp-search.md",
       "number": 28,
       "parent_issue": 11,
       "task_type": "execution",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "priority": "P0",
       "execution_rank": 2,
       "requirement_issue_ids": [
         24
       ],
-      "next_in_queue": true,
-      "scope_ownership": "Sole executor of remaining category content/SEO and PLP/search, reusing #27; #24 is requirements-only."
+      "next_in_queue": false,
+      "scope_ownership": "Sole executor of remaining category content/SEO and PLP/search, reusing #27; #24 is requirements-only.",
+      "verification": "issue-28-verification.md"
     },
     {
       "id": "CV-LCH-03",
@@ -167,8 +168,9 @@
       "requirement_issue_ids": [
         25
       ],
-      "next_in_queue": false,
-      "scope_ownership": "Sole executor of remaining product content/gallery/SEO and PDP; conditional interaction acceptance stays open in #25."
+      "next_in_queue": true,
+      "scope_ownership": "Sole executor of remaining product content/gallery/SEO and PDP; conditional interaction acceptance stays open in #25.",
+      "breadcrumb": "home > category ancestors > product category > brand (if assigned) > product"
     },
     {
       "id": "CV-LCH-04",
@@ -247,12 +249,12 @@
   ],
   "parent_has_independent_implementation": false,
   "login_decision": "ADR-008",
-  "next_issue": 28,
+  "next_issue": 29,
   "completed_execution_issues": [
-    27
+    27,
+    28
   ],
   "pending_execution_issues": [
-    28,
     29,
     30
   ],
@@ -262,35 +264,40 @@
       "task_id": "CV-R2-16",
       "task_type": "requirements-tracking",
       "independent_execution": false,
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "primary_executor": 28,
       "reuses_execution_issue": 27,
       "acceptance_mapping": [
         {
           "id": "CV-R2-16-AC01",
           "execution_issue": 28,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-28-verification.md"
         },
         {
           "id": "CV-R2-16-AC02",
           "execution_issue": 28,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-28-verification.md"
         },
         {
           "id": "CV-R2-16-AC03",
           "execution_issue": 28,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-28-verification.md"
         },
         {
           "id": "CV-R2-16-AC04",
           "execution_issue": 28,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-28-verification.md"
         }
-      ]
+      ],
+      "verification": "issue-28-verification.md"
     },
     {
       "issue": 25,

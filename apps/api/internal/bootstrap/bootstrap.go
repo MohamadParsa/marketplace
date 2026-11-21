@@ -30,7 +30,11 @@ func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repos
 	testData := cfg.Environment == "local" || cfg.Environment == "test"
 	handler := httptransport.NewAuthHandler(service, notifier, testData)
 	workspace := backoffice.NewService(repository, authmemory.Clock{}, authmemory.Random{})
-	router := httptransport.RouterConfig{Home: httptransport.NewHomeHandler(workspace), Auth: handler, Backoffice: httptransport.NewBackofficeHandler(workspace, service), CatalogIcons: httptransport.NewCatalogIconHandler(workspace, service), ProductWorkspace: httptransport.NewProductWorkspaceHandler(workspace, service), Banners: httptransport.NewBannerHandler(workspace, service)}
+	storefrontRoot := ""
+	if cfg.WebSurface == "storefront" {
+		storefrontRoot = cfg.WebRoot
+	}
+	router := httptransport.RouterConfig{StaticRoot: cfg.WebRoot, Listing: httptransport.NewListingHandler(workspace, storefrontRoot), StorefrontSurface: cfg.WebSurface == "storefront", Home: httptransport.NewHomeHandler(workspace), Auth: handler, Backoffice: httptransport.NewBackofficeHandler(workspace, service), CatalogIcons: httptransport.NewCatalogIconHandler(workspace, service), ProductWorkspace: httptransport.NewProductWorkspaceHandler(workspace, service), Banners: httptransport.NewBannerHandler(workspace, service)}
 	if testData {
 		router.SellerOffers = httptransport.NewSellerOffersHandler(seller.NewOffers(repository), service)
 		router.CustomerAccount = httptransport.NewCustomerAccountHandler(customer.NewAccounts(repository), service)
