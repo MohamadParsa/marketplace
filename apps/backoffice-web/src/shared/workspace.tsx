@@ -38,7 +38,7 @@ export interface WorkspaceContext {
   ) => Promise<VariantResolution>;
 
   uploadIcon: (input: {
-    kind: "category" | "brand" | "product";
+    kind: "category" | "brand" | "product" | "product-gallery";
     target: string;
     version: number;
     key: string;

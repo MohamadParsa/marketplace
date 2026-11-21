@@ -61,7 +61,7 @@
 | [CV-R2-14](review-v1-1/tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | W2 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-15](review-v1-1/tasks/cv-r2-15-stock-alert.md) · [#17](https://github.com/MohamadParsa/marketplace/issues/17) | W2 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-16](review-v1-1/tasks/cv-r2-16-category-content-seo.md) · [#24](https://github.com/MohamadParsa/marketplace/issues/24) | reference؛ اجرا در #28 | done / مرجع | چهار AC با [شاهد #28](initial-launch/issue-28-verification.md)؛ بدون اجرای مستقل |
-| [CV-R2-17](review-v1-1/tasks/cv-r2-17-product-content-seo.md) · [#25](https://github.com/MohamadParsa/marketplace/issues/25) | reference؛ اجرا در #29 | todo / مرجع | کنترل پوشش محصول؛ موارد شرطی تعامل باز می‌مانند |
+| [CV-R2-17](review-v1-1/tasks/cv-r2-17-product-content-seo.md) · [#25](https://github.com/MohamadParsa/marketplace/issues/25) | reference؛ اجرا در #29 | in-progress / مرجع | [شاهد #29](initial-launch/issue-29-verification.md)؛ بررسی مجدد فروشنده و تعامل بازند |
 
 <a id="issue-13-scope"></a>
 

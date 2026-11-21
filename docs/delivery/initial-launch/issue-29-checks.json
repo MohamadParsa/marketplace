@@ -1,0 +1,527 @@
+{
+  "date": "2026-11-22",
+  "issue": 29,
+  "implementation_status": "done",
+  "document_status": "in-review",
+  "go": {
+    "passed_tests_and_subtests": 120,
+    "failures": 0,
+    "postgres_integration_tests": [
+      "TestHomePostgresRestartRetainsCatalogAndMedia",
+      "TestPostgresReviewIdentitySurvivesRestart"
+    ],
+    "vet": "passed",
+    "local_race": "not-run-windows-cgo-disabled"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "product-content-fields-and-mm-units",
+        "pass": true
+      },
+      {
+        "id": "rich-editor-saved-as-safe-format",
+        "pass": true
+      },
+      {
+        "id": "independent-interaction-toggles",
+        "pass": true
+      },
+      {
+        "id": "content-save-preserves-other-offers-and-stock",
+        "pass": true
+      },
+      {
+        "id": "initial-html-product-seo",
+        "pass": true
+      },
+      {
+        "id": "content-edit-visible-in-pdp",
+        "pass": true
+      },
+      {
+        "id": "breadcrumb-categories-brand-product-order",
+        "pass": true
+      },
+      {
+        "id": "server-buybox-and-seller-list",
+        "pass": true
+      },
+      {
+        "id": "purchase-not-faked-before-checkout",
+        "pass": true
+      },
+      {
+        "id": "selection-payload-real-api-without-cart",
+        "pass": true
+      },
+      {
+        "id": "diagonal-decrement-control",
+        "pass": true
+      },
+      {
+        "id": "seller-selection-resolves-and-url",
+        "pass": true
+      },
+      {
+        "id": "deep-link-reload-preserves-offer",
+        "pass": true
+      },
+      {
+        "id": "unavailable-variant-retains-page-no-price",
+        "pass": true
+      },
+      {
+        "id": "notify-not-pretended-ready",
+        "pass": true
+      },
+      {
+        "id": "another-variant-still-purchasable",
+        "pass": true
+      },
+      {
+        "id": "invalid-gallery-upload-keeps-images",
+        "pass": true
+      },
+      {
+        "id": "valid-gallery-upload-attached",
+        "pass": true
+      },
+      {
+        "id": "gallery-order-and-variant-image-persist",
+        "pass": true
+      },
+      {
+        "id": "variant-image-resolves-public-gallery",
+        "pass": true
+      },
+      {
+        "id": "gallery-lightbox-keyboard",
+        "pass": true
+      },
+      {
+        "id": "lightbox-restores-focus",
+        "pass": true
+      },
+      {
+        "id": "desktop-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-390-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-breadcrumb-present",
+        "pass": true
+      },
+      {
+        "id": "mobile-320-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "server-error-retry",
+        "pass": true
+      },
+      {
+        "id": "retry-recovers",
+        "pass": true
+      },
+      {
+        "id": "invalid-combination-actionable-error",
+        "pass": true
+      },
+      {
+        "id": "draft-product-not-public",
+        "pass": true
+      },
+      {
+        "id": "unauthorized-content-write-rejected",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "passed": 32,
+    "total": 32,
+    "runtimeErrors": [],
+    "productId": "7d585035c0fff83881cf91f251bae9a85dbf2dba8a76e5c6",
+    "remainingScope": {
+      "checkout": 30,
+      "interactionsReference": 25
+    }
+  },
+  "navigation_regression": {
+    "checks": [
+      {
+        "id": "plp-to-independent-pdp-at-top",
+        "pass": true
+      },
+      {
+        "id": "pdp-back-restores-plp",
+        "pass": true
+      },
+      {
+        "id": "broken-product-image-fallback",
+        "pass": true
+      },
+      {
+        "id": "no-navigation-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 4,
+    "total": 4,
+    "runtimeErrors": []
+  },
+  "listing_regression": {
+    "checks": [
+      {
+        "id": "seven-category-content-fields",
+        "pass": true
+      },
+      {
+        "id": "category-seo-saved-and-links-preserved",
+        "pass": true
+      },
+      {
+        "id": "initial-html-category-seo",
+        "pass": true
+      },
+      {
+        "id": "plp-category-breadcrumb",
+        "pass": true
+      },
+      {
+        "id": "direct-category-only-and-child-navigation",
+        "pass": true
+      },
+      {
+        "id": "cards-link-without-quick-buy",
+        "pass": true
+      },
+      {
+        "id": "configured-three-card-features",
+        "pass": true
+      },
+      {
+        "id": "product-images-decoded",
+        "pass": true
+      },
+      {
+        "id": "desktop-no-horizontal-overflow",
+        "pass": true
+      },
+      {
+        "id": "cash-price-sort-and-url",
+        "pass": true
+      },
+      {
+        "id": "no-fake-popular-or-sales-sort",
+        "pass": true
+      },
+      {
+        "id": "pagination-and-unavailable-price-hidden",
+        "pass": true
+      },
+      {
+        "id": "refresh-preserves-list-state",
+        "pass": true
+      },
+      {
+        "id": "back-preserves-filter-sort-page",
+        "pass": true
+      },
+      {
+        "id": "back-restores-scroll",
+        "pass": true
+      },
+      {
+        "id": "attribute-filter-url-and-real-values",
+        "pass": true
+      },
+      {
+        "id": "available-only-filter",
+        "pass": true
+      },
+      {
+        "id": "price-range-uses-server-cash-price",
+        "pass": true
+      },
+      {
+        "id": "admin-card-limit-consumed-by-site",
+        "pass": true
+      },
+      {
+        "id": "admin-card-filter-binding-consumed-by-site",
+        "pass": true
+      },
+      {
+        "id": "product-attribute-editor-updates-plp",
+        "pass": true
+      },
+      {
+        "id": "leaf-category-has-no-child-or-inherited-filter",
+        "pass": true
+      },
+      {
+        "id": "parent-plp-not-aggregated",
+        "pass": true
+      },
+      {
+        "id": "live-search-popup-real-results",
+        "pass": true
+      },
+      {
+        "id": "search-keyboard-active-option",
+        "pass": true
+      },
+      {
+        "id": "search-escape-closes-popup-preserves-query",
+        "pass": true
+      },
+      {
+        "id": "search-enter-results-route",
+        "pass": true
+      },
+      {
+        "id": "stale-search-response-ignored",
+        "pass": true
+      },
+      {
+        "id": "mobile-breadcrumb-present",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-horizontal-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-filter-sheet-and-state",
+        "pass": true
+      },
+      {
+        "id": "320-no-horizontal-overflow",
+        "pass": true
+      },
+      {
+        "id": "parent-unpublish-hides-branch-without-child-mutation",
+        "pass": true
+      },
+      {
+        "id": "listing-server-error-retry",
+        "pass": true
+      },
+      {
+        "id": "listing-retry-recovers",
+        "pass": true
+      },
+      {
+        "id": "invalid-filter-actionable-error",
+        "pass": true
+      },
+      {
+        "id": "viewer-category-edit-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "runtimeErrors": [],
+    "passed": 38,
+    "total": 38,
+    "categoryId": "ef25753326d3bf084e9f770be202f253321291254efc8bb8",
+    "remainingScope": {
+      "pdp": 29,
+      "checkout": 30
+    }
+  },
+  "homepage_regression": {
+    "checks": [
+      {
+        "id": "mobile-choice-before-otp",
+        "pass": true
+      },
+      {
+        "id": "email-password-only",
+        "pass": true
+      },
+      {
+        "id": "password-login-real-api",
+        "pass": true
+      },
+      {
+        "id": "catalog-content-edit-public",
+        "pass": true
+      },
+      {
+        "id": "cash-and-discount-edit-public",
+        "pass": true
+      },
+      {
+        "id": "out-of-stock-hidden-on-home",
+        "pass": true
+      },
+      {
+        "id": "invalid-product-image-keeps-previous",
+        "pass": true
+      },
+      {
+        "id": "valid-image-upload-real-api",
+        "pass": true
+      },
+      {
+        "id": "four-typed-admin-mappings",
+        "pass": true
+      },
+      {
+        "id": "four-category-rails",
+        "pass": true
+      },
+      {
+        "id": "real-special-offers",
+        "pass": true
+      },
+      {
+        "id": "available-categories",
+        "pass": true
+      },
+      {
+        "id": "cards-link-without-cart-controls",
+        "pass": true
+      },
+      {
+        "id": "unique-products-within-rails",
+        "pass": true
+      },
+      {
+        "id": "two-managed-promo-banners",
+        "pass": true
+      },
+      {
+        "id": "hero-uses-mobile-asset",
+        "pass": true
+      },
+      {
+        "id": "storefront-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "hero-uses-desktop-asset",
+        "pass": true
+      },
+      {
+        "id": "storefront-desktop-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "backoffice-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "broken-image-fallback",
+        "pass": true
+      },
+      {
+        "id": "server-error-retry-state",
+        "pass": true
+      },
+      {
+        "id": "retry-recovers-real-data",
+        "pass": true
+      },
+      {
+        "id": "storefront-320-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "empty-home-without-fake-products",
+        "pass": true
+      },
+      {
+        "id": "viewer-catalog-writes-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "runtimeErrors": [],
+    "passed": 27,
+    "total": 27
+  },
+  "process_restart": {
+    "checks": [
+      {
+        "id": "restart-/storefront/home",
+        "pass": true
+      },
+      {
+        "id": "restart-/storefront/products/7d585035c0fff83881cf91f251bae9a85dbf2dba8a76e5c6",
+        "pass": true
+      },
+      {
+        "id": "restart-/product/7d585035c0fff83881cf91f251bae9a85dbf2dba8a76e5c6",
+        "pass": true
+      },
+      {
+        "id": "restart-image_url",
+        "pass": true
+      },
+      {
+        "id": "restart-image_sha",
+        "pass": true
+      }
+    ],
+    "passed": 5,
+    "total": 5
+  },
+  "existing_local_admin_login_after_restart": true,
+  "local_bind": "127.0.0.1",
+  "web": {
+    "backoffice_lint": "passed",
+    "backoffice_build": "passed",
+    "storefront_lint": "passed",
+    "storefront_build": "passed",
+    "editor": "lazy-loaded chunk; existing main bundle warning remains"
+  },
+  "reference_25": {
+    "verified": [
+      "CV-R2-17-AC01",
+      "CV-R2-17-AC02",
+      "CV-R2-17-AC05"
+    ],
+    "partial": [
+      "CV-R2-17-AC03",
+      "CV-R2-17-AC04"
+    ],
+    "remain_open": true
+  },
+  "execution_queue": {
+    "completed": [
+      27,
+      28,
+      29
+    ],
+    "next": 30,
+    "parent": 11,
+    "parent_progress": "3/4"
+  },
+  "limitations": [
+    "No seller content re-review workflow",
+    "Interaction APIs and notify not enabled",
+    "Checkout and payment are issue30",
+    "Review repository remains local/test",
+    "No merge or Liara deployment"
+  ],
+  "snapshot_manifest": {
+    "entries": 664,
+    "changed": 0
+  },
+  "local_credentials_documented_by_explicit_owner_request": "../local-review-access.md"
+}

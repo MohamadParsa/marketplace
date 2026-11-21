@@ -61,6 +61,16 @@ func normalizeRaster(input []byte, maxBytes, maxDimension, maxPixels int) ([]byt
 
 func iconReference(state *Workspace, kind, target string) (*string, *int, error) {
 	switch kind {
+	case "product-gallery":
+		p, err := findProduct(state, target)
+		if err != nil {
+			return nil, nil, err
+		}
+		if len(p.GalleryIDs) >= MaxGalleryImages {
+			return nil, nil, ErrInvalid
+		}
+		p.GalleryIDs = append(p.GalleryIDs, "")
+		return &p.GalleryIDs[len(p.GalleryIDs)-1], &p.Version, nil
 	case "product":
 		for i := range state.Products {
 			p := &state.Products[i]
@@ -97,7 +107,13 @@ func iconReference(state *Workspace, kind, target string) (*string, *int, error)
 
 func collectUnusedIcons(state *Workspace) {
 	used := map[string]bool{}
+	for _, v := range state.Variants {
+		used[v.ImageID] = true
+	}
 	for _, p := range state.Products {
+		for _, id := range p.GalleryIDs {
+			used[id] = true
+		}
 		if p.ImageID != "" {
 			used[p.ImageID] = true
 		}
@@ -135,15 +151,18 @@ func removeIcon(state *Workspace, c Command) error {
 // SetCatalogIcon attaches the validated icon and audit in the same repository transaction.
 func (s *Service) SetCatalogIcon(ctx context.Context, actor identity.User, kind, target string, version int, key string, input []byte) error {
 	action := kind + ".icon.set"
+	if kind == "product-gallery" {
+		action = "product.icon.set"
+	}
 	if !allowsAction(actor, action) {
 		return ErrForbidden
 	}
-	if (kind != "category" && kind != "brand" && kind != "product") || target == "" || version < 0 || strings.TrimSpace(key) == "" || len(key) > 128 {
+	if (kind != "category" && kind != "brand" && kind != "product" && kind != "product-gallery") || target == "" || version < 0 || strings.TrimSpace(key) == "" || len(key) > 128 {
 		return ErrInvalid
 	}
 	var data []byte
 	var err error
-	if kind == "product" {
+	if kind == "product" || kind == "product-gallery" {
 		data, err = normalizeProductPhoto(input)
 	} else {
 		data, err = normalizeIcon(input)
@@ -202,7 +221,7 @@ func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error
 	}
 	attached := false
 	for _, p := range state.Products {
-		if p.Status == "published" && p.ImageID == id && publicCategory(state, p.CategoryID) != nil && validBrand(state, p.BrandID) {
+		if p.Status == "published" && productHasImage(state, p, id) && publicCategory(state, p.CategoryID) != nil && validBrand(state, p.BrandID) {
 			attached = true
 		}
 	}
@@ -277,4 +296,21 @@ func normalizeProductPhoto(input []byte) ([]byte, error) {
 		return nil, ErrInvalidIcon
 	}
 	return out.Bytes(), nil
+}
+
+func productHasImage(w Workspace, p catalog.Product, id string) bool {
+	if p.ImageID == id {
+		return true
+	}
+	for _, x := range p.GalleryIDs {
+		if x == id {
+			return true
+		}
+	}
+	for _, v := range w.Variants {
+		if v.ProductID == p.ID && v.ImageID == id {
+			return true
+		}
+	}
+	return false
 }

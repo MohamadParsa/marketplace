@@ -1,6 +1,6 @@
 {
   "id": "PLAN-INITIAL-LAUNCH-001",
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "document_status": "in-review",
   "implementation_status": "in-progress",
   "parent_issue": 11,
@@ -157,20 +157,21 @@
         "طرح A، لوگوی C، CTA و کنترل تعداد مشابه نمونه در۳۹۰/۱۴۴۰ و قرارداد افزودن همان Offer/Variant بررسی شوند؛ مصرف واقعی سبد در مرحله۴ شاهد مستقل دارد و شرط بستن مرحله۳، تکمیل مرحله۴ نیست.",
         "اسکریپت در متن/متادیتا اجرا نشود؛ چهار حالت robots مستقل و مرز دسترسی محتوای مشترک در API بررسی شوند؛ تعامل/خبرم‌کن آماده‌نشده فعال نباشند."
       ],
-      "blocked": "R2-Q07 واحدها/رسانه/اعتبارسنجی، R2-Q08 انتشار/robots و R2-Q09 محتوای تعامل؛ بخش مستقل روشن ادامه یابد. انتخاب عرضه نقدی ثبت‌شده از قرارداد #27 مصرف شود؛ فرمول طلا و قوانین مالی انتخاب‌نشده حدس زده نشوند.",
+      "blocked": "گرم/میلی‌متر، ویرایشگر قالب‌بندی‌شده و پیش‌فرض SEO با پاسخ مالک حل شد؛ سبد در #30 و معیارهای شرطی #25 مستقل‌اند.",
       "file": "tasks/cv-lch-03-pdp.md",
       "number": 29,
       "parent_issue": 11,
       "task_type": "execution",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "priority": "P0",
       "execution_rank": 3,
       "requirement_issue_ids": [
         25
       ],
-      "next_in_queue": true,
+      "next_in_queue": false,
       "scope_ownership": "Sole executor of remaining product content/gallery/SEO and PDP; conditional interaction acceptance stays open in #25.",
-      "breadcrumb": "home > category ancestors > product category > brand (if assigned) > product"
+      "breadcrumb": "home > category ancestors > product category > brand (if assigned) > product",
+      "verification": "issue-29-verification.md"
     },
     {
       "id": "CV-LCH-04",
@@ -228,7 +229,7 @@
       "priority": "P0",
       "execution_rank": 4,
       "requirement_issue_ids": [],
-      "next_in_queue": false,
+      "next_in_queue": true,
       "scope_ownership": "Sole executor of checkout/customer account/address/shipping/order/wallet/card-transfer; consumes catalog from #28/#29 without rebuilding it."
     }
   ],
@@ -249,13 +250,13 @@
   ],
   "parent_has_independent_implementation": false,
   "login_decision": "ADR-008",
-  "next_issue": 29,
+  "next_issue": 30,
   "completed_execution_issues": [
     27,
-    28
+    28,
+    29
   ],
   "pending_execution_issues": [
-    29,
     30
   ],
   "requirements_tracking": [
@@ -304,32 +305,36 @@
       "task_id": "CV-R2-17",
       "task_type": "requirements-tracking",
       "independent_execution": false,
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "primary_executor": 29,
       "reuses_execution_issue": 27,
       "acceptance_mapping": [
         {
           "id": "CV-R2-17-AC01",
           "execution_issue": 29,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-29-verification.md"
         },
         {
           "id": "CV-R2-17-AC02",
           "execution_issue": 29,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-29-verification.md"
         },
         {
           "id": "CV-R2-17-AC03",
           "execution_issue": 29,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "partially-verified",
+          "conditional_followup": false,
+          "evidence": "issue-29-verification.md",
+          "remaining": "Seller content re-review and preservation of approved content; not implemented by current admin publication flow."
         },
         {
           "id": "CV-R2-17-AC04",
           "execution_issue": 29,
-          "status": "pending-complete-evidence",
+          "status": "partially-verified",
           "conditional_followup": true,
           "launch_scope": "independent-toggle-settings-and-disabled-ui",
           "conditional_followup_references": [
@@ -337,15 +342,18 @@
             "CV-WEB-16"
           ],
           "conditional_scope": "Interaction write API and previous-content behavior after feature/policy readiness; not implemented or accepted by this planning change.",
-          "full_acceptance_required_for_reference_closure": true
+          "full_acceptance_required_for_reference_closure": true,
+          "evidence": "issue-29-verification.md"
         },
         {
           "id": "CV-R2-17-AC05",
           "execution_issue": 29,
-          "status": "pending-complete-evidence",
-          "conditional_followup": false
+          "status": "verified",
+          "conditional_followup": false,
+          "evidence": "issue-29-verification.md"
         }
-      ]
+      ],
+      "verification": "issue-29-verification.md"
     }
   ]
 }

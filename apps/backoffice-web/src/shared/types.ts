@@ -67,7 +67,28 @@ export interface IconPolicy {
   max_dimension: number;
   content_types: string[];
 }
+export interface ProductContent {
+  short_description: string;
+  full_description: string;
+  advantages: string[];
+  disadvantages: string[];
+  reviews_enabled: boolean;
+  qa_enabled: boolean;
+  shipping: {
+    weight?: number;
+    length?: number;
+    width?: number;
+    height?: number;
+    weight_unit: string;
+    dimension_unit: string;
+  };
+  seo: CategorySEO;
+  noindex: boolean;
+  nofollow: boolean;
+}
 export interface Product {
+  content?: ProductContent;
+  gallery_ids?: string[];
   english_name?: string;
   description?: string;
   brand_id?: string;
@@ -110,6 +131,7 @@ export interface Offer {
   version: number;
 }
 export interface Variant {
+  image_id?: string;
   id: string;
   product_id: string;
   sku: string;
@@ -194,6 +216,7 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  content?: ProductContent;
   seo?: CategorySEO;
   attributes?: { attribute_id: string; value: string }[];
   name: string;
@@ -205,6 +228,7 @@ export interface CatalogInput {
   published: boolean;
 }
 export interface Workspace {
+  variants?: Variant[];
   home_settings: HomeSettings;
   access?: {
     roles: CustomRole[] | null;
@@ -283,6 +307,10 @@ export interface Session {
   };
 }
 export interface Command {
+  product_media?: {
+    gallery_ids: string[];
+    variant_images: Record<string, string>;
+  };
   catalog?: CatalogInput;
   home?: HomeSettings;
   banner?: BannerConfig;

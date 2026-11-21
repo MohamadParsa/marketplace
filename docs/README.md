@@ -2,7 +2,7 @@
 
 | نیاز خواننده | مرجع |
 | --- | --- |
-| مالکیت اجرا و رفع هم‌پوشانی #24/#25 با #28/#29 | [صف یکتا؛ فقط #27 انجام شده](delivery/initial-launch/README.md#execution-ownership) |
+| مالکیت اجرا و رفع هم‌پوشانی #24/#25 با #28/#29 | [صف یکتا؛ خانه، PLP و PDP تحویل شده‌اند](delivery/initial-launch/README.md#execution-ownership) |
 | صف مقدم انتشار اولیه | [چهار کار بک‌آفیس/API/سایت: خانه، PLP، PDP، خرید کارت‌به‌کارت و کیف پول](delivery/initial-launch/README.md) |
 | پاسخ‌های الیاس برای تسک #13 و دامنه شروع نسخه۱.۱ | [متن کامل، مثال‌ها، پیشنهاد تغییر موبایل و اثر بر تسک‌ها](decisions/adr-005-review-v1-1-product-responses.md) |
 | مرور مشترک طرح‌ها پیش از نهایی‌کردن تسک‌ها | [بسته یکپارچه سایت و بک‌آفیس، تصاویر و راهنمای مشاهده](review-packages/README.md) |
@@ -25,6 +25,8 @@
 | پیگیری پوشش نیازمندی | [ردیابی](governance/traceability.md) |
 | سناریوهای رفتاری و داده آزمون | [BDD](bdd/README.md) |
 | افزودن سند | [راهنما](governance/documentation-guide.md)، [قالب‌ها](templates/README.md) |
+
+[دسترسی حساب ادمین نسخه محلی تیم](delivery/local-review-access.md)
 
 ## مسیر مطالعه برای یک قابلیت
 

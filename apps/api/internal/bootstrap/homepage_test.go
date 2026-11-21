@@ -262,6 +262,10 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 		w.Attributes = append(w.Attributes, catalog.AttributeDefinition{ID: "persisted-memory", Code: "persisted-memory", Name: "حافظه", Kind: "enum", Options: []string{"128"}})
 		w.Products[0].Attributes = []catalog.AttributeValue{{AttributeID: "persisted-memory", Value: "128"}}
 		w.Products[0].CreatedAt = time.Date(2026, 11, 21, 1, 2, 3, 0, time.UTC)
+		grams := 120.5
+		w.Products[0].Content = &catalog.ProductContent{ShortDescription: "محتوای پایدار PDP", FullDescription: "<p><strong>متن پایدار</strong></p>", Shipping: catalog.ShippingDimensions{Weight: &grams, WeightUnit: "g", DimensionUnit: "mm"}, SEO: catalog.SEO{MetaTitle: "عنوان محصول پایدار"}, ReviewsEnabled: true}
+		w.Products[0].GalleryIDs = []string{"home-photo"}
+		w.Variants[0].ImageID = "home-photo"
 		return nil
 	}); err != nil {
 		t.Fatal(err)
@@ -284,6 +288,10 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 	listing, _ := listingRequest(t, h, "?category=mobile&attr.persisted-memory=128", 200)
 	if listing.SEO.MetaTitle != "عنوان دسته پایدار" || len(listing.Products) != 1 || len(listing.Products[0].Features) != 1 || listing.Products[0].Features[0].Value != "128" {
 		t.Fatal("listing metadata/attributes lost after PostgreSQL restart")
+	}
+	pdp, _ := pdpRequest(t, h, "/storefront/products/mobile", 200)
+	if pdp.Content.ShortDescription != "محتوای پایدار PDP" || pdp.Content.SEO.MetaTitle != "عنوان محصول پایدار" || len(pdp.Gallery) != 1 || pdp.Variants[0].ImageURL == "" || pdp.Content.Shipping.Weight == nil || *pdp.Content.Shipping.Weight != 120.5 {
+		t.Fatal("PDP content/media lost after PostgreSQL restart")
 	}
 	req := httptest.NewRequest("GET", data.Rails[0].Products[0].ImageURL, nil)
 	out := httptest.NewRecorder()

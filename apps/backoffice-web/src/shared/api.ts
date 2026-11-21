@@ -124,7 +124,7 @@ export const api = {
   uploadIcon: (
     token: string,
     input: {
-      kind: "category" | "brand" | "product";
+      kind: "category" | "brand" | "product" | "product-gallery";
       target: string;
       version: number;
       key: string;

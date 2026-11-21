@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"net"
+	"os"
+)
 
 type Config struct {
 	WebRoot           string
@@ -14,10 +17,12 @@ type Config struct {
 }
 
 func Load() Config {
-	address := ":8080"
-	if port := os.Getenv("PORT"); port != "" {
-		address = ":" + port
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
+	address := net.JoinHostPort(os.Getenv("BIND_HOST"), port)
+
 	env := os.Getenv("APP_ENV")
 	if env == "" {
 		env = "local"

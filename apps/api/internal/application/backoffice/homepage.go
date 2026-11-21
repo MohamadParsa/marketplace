@@ -19,6 +19,7 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
+	Content     *catalog.ProductContent   `json:"content,omitempty"`
 	SEO         *catalog.SEO              `json:"seo,omitempty"`
 	Attributes  *[]catalog.AttributeValue `json:"attributes,omitempty"`
 	Name        string                    `json:"name"`
@@ -198,6 +199,14 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			}
 		}
 	case "catalog.product.create", "catalog.product.update":
+		if in.Content != nil && !validProductContent(*in.Content) {
+			return ErrInvalid
+		}
+		if in.Content != nil {
+			c := *in.Content
+			c.FullDescription = sanitizeProductHTML(c.FullDescription)
+			in.Content = &c
+		}
 		found := false
 		for _, x := range w.Categories {
 			if x.ID == in.CategoryID && !x.Archived {
@@ -217,6 +226,10 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			p := catalog.Product{CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: "shared", Status: "draft", Version: 1, VariantVersion: 1}
 			if in.Attributes != nil {
 				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
+			}
+			if in.Content != nil {
+				content := *in.Content
+				p.Content = &content
 			}
 			w.Products = append(w.Products, p)
 			if len(productAxes(*w, p)) == 0 {
@@ -245,6 +258,10 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 					return ErrInvalid
 				}
 				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
+			}
+			if in.Content != nil {
+				content := *in.Content
+				p.Content = &content
 			}
 			p.Name = in.Name
 			p.EnglishName = in.EnglishName
@@ -275,7 +292,7 @@ type PublicOffer struct {
 func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 	result := []PublicOffer{}
 	for _, o := range w.Offers {
-		if o.ProductID != p.ID || o.Price <= 0 || o.Stock-o.Reserved <= 0 {
+		if o.ProductID != p.ID || o.Price <= 0 || o.Stock-o.Reserved <= 0 || (p.Model == "independent" && p.OwnerStoreID != o.StoreID) {
 			continue
 		}
 		valid := false

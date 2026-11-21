@@ -42,12 +42,12 @@ func (h *CatalogIconHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnauthorized, "unauthorized")
 		return
 	}
-	if session.User.Role != identity.RoleSuperAdmin && session.User.Role != identity.RoleOperations && !slices.Contains(session.User.Permissions, r.PathValue("kind")+".icon.set") {
+	if session.User.Role != identity.RoleSuperAdmin && session.User.Role != identity.RoleOperations && !slices.Contains(session.User.Permissions, iconUploadPermission(r.PathValue("kind"))) {
 		iconError(w, backoffice.ErrForbidden)
 		return
 	}
 	maxBytes := int64(backoffice.MaxIconBytes)
-	if r.PathValue("kind") == "product" {
+	if r.PathValue("kind") == "product" || r.PathValue("kind") == "product-gallery" {
 		maxBytes = backoffice.MaxProductImageBytes
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, maxBytes+16*1024)
@@ -129,4 +129,11 @@ func (h *CatalogIconHandler) Preview(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/png")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	_, _ = w.Write(data)
+}
+
+func iconUploadPermission(kind string) string {
+	if kind == "product-gallery" {
+		return "product.icon.set"
+	}
+	return kind + ".icon.set"
 }

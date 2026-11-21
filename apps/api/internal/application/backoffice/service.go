@@ -24,7 +24,7 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
-	case "category.publish", "banner.media.set", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.icon.set", "product.icon.remove", "banner.create", "banner.save", "banner.publish", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
+	case "product.media.update", "category.publish", "banner.media.set", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.icon.set", "product.icon.remove", "banner.create", "banner.save", "banner.publish", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
 		return role == identity.RoleOperations
 	case "case.start", "case.close", "case.refund", "case.assign", "order.deliver":
 		return role == identity.RoleSupport
@@ -170,6 +170,8 @@ func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, 
 	switch c.Action {
 	case "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update":
 		return applyHomeCatalog(state, c, id, s.clock.Now())
+	case "product.media.update":
+		return applyProductMedia(state, c)
 	case "product.icon.remove":
 		return removeIcon(state, c)
 	case "banner.create", "banner.save", "banner.publish", "banner.media.remove":

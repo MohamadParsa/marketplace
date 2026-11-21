@@ -32,7 +32,8 @@ export function installNavigation() {
       (next.pathname !== "/" &&
         next.pathname !== "/search" &&
         next.pathname !== "/offers" &&
-        !next.pathname.startsWith("/category/"))
+        !next.pathname.startsWith("/category/") &&
+        !next.pathname.startsWith("/product/"))
     )
       return;
     if (

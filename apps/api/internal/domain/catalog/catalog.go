@@ -35,7 +35,31 @@ type IconMedia struct {
 	ID   string `json:"id"`
 	Data []byte `json:"data"`
 }
+type ProductContent struct {
+	ShortDescription string             `json:"short_description"`
+	FullDescription  string             `json:"full_description"`
+	Advantages       []string           `json:"advantages"`
+	Disadvantages    []string           `json:"disadvantages"`
+	ReviewsEnabled   bool               `json:"reviews_enabled"`
+	QAEnabled        bool               `json:"qa_enabled"`
+	Shipping         ShippingDimensions `json:"shipping"`
+	SEO              SEO                `json:"seo"`
+	NoIndex          bool               `json:"noindex"`
+	NoFollow         bool               `json:"nofollow"`
+}
+
+// Shipping measurements never represent gold mass or a pricing input.
+type ShippingDimensions struct {
+	Weight        *float64 `json:"weight,omitempty"`
+	Length        *float64 `json:"length,omitempty"`
+	Width         *float64 `json:"width,omitempty"`
+	Height        *float64 `json:"height,omitempty"`
+	WeightUnit    string   `json:"weight_unit"`
+	DimensionUnit string   `json:"dimension_unit"`
+}
 type Product struct {
+	Content        *ProductContent  `json:"content,omitempty"`
+	GalleryIDs     []string         `json:"gallery_ids,omitempty"`
 	CreatedAt      time.Time        `json:"created_at,omitempty"`
 	EnglishName    string           `json:"english_name,omitempty"`
 	Description    string           `json:"description,omitempty"`
@@ -53,6 +77,7 @@ type Product struct {
 }
 
 type Variant struct {
+	ImageID   string           `json:"image_id,omitempty"`
 	ID        string           `json:"id"`
 	ProductID string           `json:"product_id"`
 	SKU       string           `json:"sku"`

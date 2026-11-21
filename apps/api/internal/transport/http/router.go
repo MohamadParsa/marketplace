@@ -9,6 +9,7 @@ import (
 )
 
 type RouterConfig struct {
+	ProductDetail     *ProductDetailHandler
 	Listing           *ListingHandler
 	StaticRoot        string
 	StorefrontSurface bool
@@ -24,6 +25,14 @@ type RouterConfig struct {
 
 func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
+	if cfg.ProductDetail != nil {
+		mux.HandleFunc("GET /storefront/products/{id}", cfg.ProductDetail.Read)
+		mux.HandleFunc("POST /storefront/products/{id}/selection", cfg.ProductDetail.Selection)
+		if cfg.StorefrontSurface {
+			mux.HandleFunc("GET /product/{id}", cfg.ProductDetail.Page)
+		}
+	}
+
 	if cfg.Listing != nil {
 		mux.HandleFunc("GET /storefront/catalog", cfg.Listing.Read)
 		mux.HandleFunc("GET /storefront/suggestions", cfg.Listing.Suggest)

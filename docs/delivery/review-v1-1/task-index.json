@@ -1,9 +1,9 @@
 {
-  "date": "2026-11-21",
+  "date": "2026-11-22",
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Current execution queue: initial-launch/task-index.json. #11 tracking parent: 2/4 complete (#27/#28); next #29 then #30. #24 has all four criteria verified by #28; #25 remains requirements-only, implemented by #29. No separate execution/PR/test for references.",
+  "note": "Current queue: #27/#28/#29 done, #30 next; #11 tracks 3/4 complete. #24 done; #25 partial (fields/media/SEO verified, seller re-review and interaction API policies remain open). References have no separate implementation.",
   "task_count": 17,
   "active_count": 15,
   "deferred_ids": [
@@ -768,7 +768,7 @@
       "title": "مرجع کنترل نیازمندی‌های محصول، رسانه، تعامل و SEO؛ اجرا در #29",
       "priority": "P0",
       "wave": "reference",
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -818,7 +818,8 @@
       "independent_execution": false,
       "execution_issue": 29,
       "execution_dependencies": [],
-      "dependencies_kind": "capability-references-not-issue-closure-gates"
+      "dependencies_kind": "capability-references-not-issue-closure-gates",
+      "verification": "../initial-launch/issue-29-verification.md"
     }
   ],
   "launch_plan": "../initial-launch/task-index.json"

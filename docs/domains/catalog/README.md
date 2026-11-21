@@ -3,7 +3,7 @@ id: DOM-CATALOG-001
 title: کاتالوگ، فروشگاه و موجودی
 status: in-review
 owner: product-owner
-updated: 2026-11-21
+updated: 2026-11-22
 related: []
 approved_by: []
 ---
@@ -101,4 +101,4 @@ approved_by: []
 
 ## تکمیل محتوای دسته و محصول — ۲۰۲۶-۱۱-۲۱
 
-[محتوا، انتشار و SEO](content-and-seo.md) مرجع نیازمندی صریح جدید، فهرست فیلدها و تطبیق با مدل اجرایی است؛ [CV-R2-16](../../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) و [CV-R2-17](../../delivery/review-v1-1/tasks/cv-r2-17-product-content-seo.md) اجرای تکمیلی todo هستند. R16/R17 همچنان معتبرند؛ توضیحات و گالری قبلاً مستند بوده‌اند و وجودشان به معنی پیاده‌سازی نیست.
+[محتوا، انتشار و SEO](content-and-seo.md) مرجع نیازمندی صریح جدید، فهرست فیلدها و تطبیق با مدل اجرایی است؛ [CV-R2-16](../../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) و [CV-R2-17](../../delivery/review-v1-1/tasks/cv-r2-17-product-content-seo.md) مراجع پوشش نیازمندی‌اند؛ #24 با شاهد #28 تکمیل و #25 با شاهد #29 برای فیلد/رسانه/SEO پیش رفته است، ولی بررسی مجدد فروشنده و تعاملات باز می‌مانند. R16/R17 همچنان معتبرند؛ توضیحات و گالری قبلاً مستند بوده‌اند و وجودشان به معنی پیاده‌سازی نیست.

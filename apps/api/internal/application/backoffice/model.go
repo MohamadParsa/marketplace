@@ -121,6 +121,7 @@ type PurchaseOwner struct {
 	UserID     string
 }
 type Command struct {
+	ProductMedia   *ProductMediaInput           `json:"product_media,omitempty"`
 	Catalog        *CatalogInput                `json:"catalog,omitempty"`
 	Home           *HomeSettings                `json:"home,omitempty"`
 	Scope          identity.RoleScope           `json:"scope,omitempty"`

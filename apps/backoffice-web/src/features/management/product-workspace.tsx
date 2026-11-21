@@ -1,3 +1,4 @@
+import { ProductMediaDialog } from "./product-media-dialog";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
@@ -84,7 +85,8 @@ export function ProductDetailsPage() {
 }
 
 function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
-  const { loadProduct, surface } = useWorkspace();
+  const { loadProduct, surface, can } = useWorkspace();
+  const [mediaOpen, setMediaOpen] = useState(false);
   const [tab, setTab] = useState(initialTab);
   const [editor, setEditor] = useState<
     "variant" | "offer" | { offer: OfferView; field: "price" | "stock" }
@@ -112,6 +114,26 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
   const w = query.data;
   return (
     <div className="product-workspace" data-testid={`product-workspace-${id}`}>
+      {mediaOpen && (
+        <ProductMediaDialog id={id} close={() => setMediaOpen(false)} />
+      )}
+      {surface === "backoffice" && (
+        <div className="product-workspace-toolbar">
+          <Button
+            disabled={!can("catalog.product.update", "management")}
+            component={Link}
+            to={"/home-catalog?product=" + encodeURIComponent(id)}
+          >
+            ویرایش محتوای محصول
+          </Button>
+          <Button
+            disabled={!can("product.media.update", "management")}
+            onClick={() => setMediaOpen(true)}
+          >
+            گالری و تصویر تنوع
+          </Button>
+        </div>
+      )}
       <div className="product-workspace-heading">
         <div>
           <h2>{w.product.name}</h2>

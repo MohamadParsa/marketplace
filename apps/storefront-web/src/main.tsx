@@ -1,6 +1,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { HomePage } from "./home-page";
+import { ProductPage } from "./product-page";
+import "./product.css";
 import { ListingPage } from "./listing-page";
 import { installNavigation } from "./navigation";
 import "./home.css";
@@ -18,6 +20,8 @@ function App() {
       removeEventListener("cherriva:navigate", sync);
     };
   }, []);
+  if (url.startsWith("/product/"))
+    return <ProductPage key={url.split("?")[0]} url={url} />;
   return url.startsWith("/category/") ||
     /^\/(search|offers)(\?|$)/.test(url) ? (
     <ListingPage url={url} />

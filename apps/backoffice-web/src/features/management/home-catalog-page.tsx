@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   Alert,
   Button,
@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useWorkspace } from "../../shared/workspace";
 import type {
   CatalogInput,
@@ -16,6 +16,11 @@ import type {
   CategorySEO,
 } from "../../shared/types";
 import { ProductQuickDialog } from "./product-workspace";
+import {
+  ProductContentFields,
+  emptyProductContent,
+} from "./product-content-fields";
+import { ProductMediaDialog } from "./product-media-dialog";
 const empty: CatalogInput = {
   name: "",
   english_name: "",
@@ -56,6 +61,8 @@ function ManagedPhoto({ id }: { id?: string }) {
 }
 export function HomeCatalogPage() {
   const { state, execute, busy, can, uploadIcon } = useWorkspace();
+  const [params] = useSearchParams();
+  const opened = useRef("");
   const [tab, setTab] = useState("products");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -66,6 +73,7 @@ export function HomeCatalogPage() {
     key: string;
     input: CatalogInput;
   }>();
+  const [media, setMedia] = useState<string>();
   const [quick, setQuick] = useState<string>();
   const [image, setImage] = useState<Product>();
   const [file, setFile] = useState<File>();
@@ -108,6 +116,7 @@ export function HomeCatalogPage() {
       active?: boolean;
       status?: string;
       seo?: CategorySEO;
+      content?: Product["content"];
       attributes?: { attribute_id: string; value: string }[];
     },
   ) {
@@ -127,6 +136,18 @@ export function HomeCatalogPage() {
               meta_keywords: "",
               meta_description: "",
             },
+            content: row.content ?? {
+              ...emptyProductContent(),
+              full_description: row.description
+                ? "<p>" +
+                  row.description
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\n/g, "<br>") +
+                  "</p>"
+                : "",
+            },
             attributes: row.attributes ?? [],
             category_id: row.category_id ?? "",
             brand_id: row.brand_id ?? "",
@@ -134,9 +155,17 @@ export function HomeCatalogPage() {
             published:
               row.published ?? row.active ?? row.status === "published",
           }
-        : { ...empty },
+        : { ...empty, content: emptyProductContent() },
     });
   }
+  useEffect(() => {
+    const id = params.get("product");
+    const row = state.products?.find((p) => p.id === id);
+    if (row && id && opened.current !== id) {
+      opened.current = id;
+      open("product", row);
+    }
+  }, [params, state.products]);
   async function save(e: FormEvent) {
     e.preventDefault();
     if (!editing) return;
@@ -147,7 +176,21 @@ export function HomeCatalogPage() {
           target: editing.id,
           version: editing.version,
           idempotency_key: editing.key,
-          catalog: editing.input,
+          catalog: {
+            ...editing.input,
+            content:
+              editing.kind === "product" && editing.input.content
+                ? {
+                    ...editing.input.content,
+                    advantages: editing.input.content.advantages
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                    disadvantages: editing.input.content.disadvantages
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  }
+                : undefined,
+          },
         }),
       );
       setEditing(undefined);
@@ -242,6 +285,14 @@ export function HomeCatalogPage() {
                         onClick={() => open("product", p)}
                       >
                         ویرایش محتوا
+                      </Button>
+                      <Button
+                        disabled={
+                          !can("product.media.update", "management") || busy
+                        }
+                        onClick={() => setMedia(p.id)}
+                      >
+                        گالری و تصویر تنوع
                       </Button>
                       <Button onClick={() => setQuick(p.id)}>
                         تنوع، قیمت و موجودی
@@ -418,6 +469,9 @@ export function HomeCatalogPage() {
           </>
         )}
       </section>
+      {media && (
+        <ProductMediaDialog id={media} close={() => setMedia(undefined)} />
+      )}
       <Dialog
         open={!!editing}
         onClose={() => !busy && setEditing(undefined)}
@@ -472,23 +526,25 @@ export function HomeCatalogPage() {
                           }
                         />
                       </label>
-                      <label>
-                        توضیحات
-                        <textarea
-                          maxLength={4000}
-                          rows={4}
-                          value={editing.input.description}
-                          onChange={(e) =>
-                            setEditing({
-                              ...editing,
-                              input: {
-                                ...editing.input,
-                                description: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </label>
+                      {editing.kind === "category" && (
+                        <label>
+                          توضیحات
+                          <textarea
+                            maxLength={4000}
+                            rows={4}
+                            value={editing.input.description}
+                            onChange={(e) =>
+                              setEditing({
+                                ...editing,
+                                input: {
+                                  ...editing.input,
+                                  description: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </label>
+                      )}
                     </>
                   )}
                   {editing.kind === "category" && (
@@ -582,6 +638,17 @@ export function HomeCatalogPage() {
                         </select>
                       </label>
                     </>
+                  )}
+                  {editing.kind === "product" && (
+                    <ProductContentFields
+                      value={editing.input.content ?? emptyProductContent()}
+                      onChange={(content) =>
+                        setEditing({
+                          ...editing,
+                          input: { ...editing.input, content },
+                        })
+                      }
+                    />
                   )}
                   {editing.kind === "product" && (
                     <fieldset className="home-admin-form">
