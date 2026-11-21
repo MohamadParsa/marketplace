@@ -193,5 +193,13 @@
     "LCH-Q03",
     "LCH-Q04"
   ],
-  "confirmed_financial_decision": "LCH-Q01"
+  "confirmed_financial_decision": "LCH-Q01",
+  "parent_task_type": "tracking-epic",
+  "implementation_issue_numbers": [
+    27,
+    28,
+    29,
+    30
+  ],
+  "parent_has_independent_implementation": false
 }

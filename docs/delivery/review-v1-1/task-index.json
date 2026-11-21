@@ -501,7 +501,9 @@
       ],
       "future_acceptance": [
         "مسیر انتخاب اسلات دارای ظرفیت و ثبت خبرم‌کن با backend آزمون و قرارداد تصمیم‌گرفته تکمیل شود."
-      ]
+      ],
+      "task_type": "tracking-epic",
+      "execution_policy": "Implementation only in CV-LCH-01..04; reuse child evidence, no independent feature/PR or duplicate tests under #11."
     },
     {
       "id": "CV-R2-12",
