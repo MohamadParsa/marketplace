@@ -2,7 +2,7 @@
 
 تاریخ:۲۰۲۶-۱۱-۲۱ | وضعیت مشخصات: in-review | مالک بررسی: محصول و راهبر فنی؛ فرد/موعد انتساب نشده | [فرایند #14](https://github.com/MohamadParsa/marketplace/issues/14)
 
-این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۲ کار فعال (۹todo و۳review) و۳ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
+این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۳ کار فعال (۹todo و۴review) و۲ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
 
 ## ترتیب و وابستگی
 
@@ -14,7 +14,7 @@
 | [CV-R2-04](tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | آیکن دسته و برند با پیش‌فرض | P1 / W1 | review | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
 | [CV-R2-05](tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | کتابخانه خصوصیت، انتساب صریح و سقف کارت | P0 / W1 | review | CV-CAT-01، CV-CAT-02، CV-R2-13 |
 | [CV-R2-06](tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | اکشن سریع تنوع، قیمت و موجودی در محصول | P0 / W1 | review | CV-R2-05، CV-CAT-04، CV-CAT-06 |
-| [CV-R2-07](tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | سکشن بنر با تصویر دسکتاپ و موبایل | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-R2-04 |
+| [CV-R2-07](tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | سکشن بنر با تصویر دسکتاپ و موبایل | P1 / W1 | review | CV-CMS-01، CV-CMS-02، CV-R2-04 |
 | [CV-R2-08](tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | کروسل اختصاصی با انتخاب و ترتیب دستی کالا | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-CAT-09، CV-PRC-07 |
 | [CV-R2-09](tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | سکشن استیکی با کنترل نمایش و بستن | P1 / later | deferred | CV-R2-07 |
 | [CV-R2-10](tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش | P0 / W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-01، CV-R2-13 |
@@ -26,7 +26,7 @@
 
 W0: هویت/مجوز/ورود و پروفایل. W1: تنظیمات عمومی، کاتالوگ و فضای محصول. W2: وقفه/وعده، ظرفیت اسلات و سرویس خبرم‌کن با آداپتر آزمون؛ در کنار تمام عملیات/مالی پنل پایه. W3: سایت اصلی با طرح A و پذیرش یکپارچه، پس از قبولی کل دامنه پنل/سلر با آزمون. later: CMS معوق پس از فعال‌سازی صریح مالک. وابستگی داخل موج هم رعایت شود؛ P0 به معنی دورزدن dependency نیست.
 
-#7/#8/#9 در شرط شروع #11/#12 نیستند؛ خانه چیدمان ثابت و داده خرید معتبر دارد. زیرسایت‌ها و نشست میان‌میزبانی در شروع نیستند. سه کار جدید، خلأ دامنه را روشن می‌کنند؛ اولویت/اندازه نهایی و مسئول در kickoff مشخص شوند و کار بزرگ با حفظ شناسه مادر خرد شود.
+#7 به دستور مالک فقط در برش بنر فعال شد و #8/#9 معوق‌اند؛ این سه در شرط اجباری شروع #11/#12 نیستند؛ خانه چیدمان ثابت و داده خرید معتبر دارد. زیرسایت‌ها و نشست میان‌میزبانی در شروع نیستند. سه کار جدید، خلأ دامنه را روشن می‌کنند؛ اولویت/اندازه نهایی و مسئول در kickoff مشخص شوند و کار بزرگ با حفظ شناسه مادر خرد شود.
 
 ## پاسخ به Issue و سند متأثر
 
@@ -61,3 +61,7 @@ Issue پیاده‌سازی فقط با نتیجه و شواهد AC همان ک�
 ## اجرای Issue#6
 
 فرم مشترک تنوع و عرضه از گرید/جزئیات، stock/reserved و scope فروشگاه پیاده شد؛ [گزارش و تصاویر](issue-6-verification.md). وضعیت کد review است؛ بسته‌شدن Issue به دستور مالک، ادغام یا استقرار را اعلام نمی‌کند. این برش روی شاخه #5 است؛ ترتیب ادغام #18 سپس #19 و PR این کار رعایت شود.
+
+## اجرای Issue#7
+
+[ADR-006](../../decisions/adr-006-responsive-banner-activation.md) فعال‌سازی محدود مالک را ثبت می‌کند. بنر دو اندازه، draft/private preview و انتشار دستی نسخه‌دار در نسخه آزمون اجرا شد؛ [گزارش و تصاویر](issue-7-verification.md). #8/#9 معوق‌اند؛ اتصال خانه، storage واقعی و پذیرش تولید جداست.

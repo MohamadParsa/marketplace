@@ -5,8 +5,18 @@ import type {
   Workspace,
   ProductWorkspace,
   VariantResolution,
+  BannerList,
 } from "./types";
 export interface WorkspaceContext {
+  loadBanners: () => Promise<BannerList>;
+  loadBannerAsset: (id: string) => Promise<Blob>;
+  uploadBanner: (input: {
+    id: string;
+    slot: "desktop" | "mobile";
+    version: number;
+    key: string;
+    file: File;
+  }) => Promise<{ asset_id: string; version: number }>;
   state: Workspace;
   role: Role;
   surface: "backoffice" | "seller";

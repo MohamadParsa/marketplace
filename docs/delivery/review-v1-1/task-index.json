@@ -3,11 +3,10 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Task alignment with implementation review evidence for issues 4, 5 and 6; no merge/deployment implied. Historical snapshot unchanged.",
+  "note": "Current task state includes review evidence for issues 4-7; issue 7 narrowly activated by direct owner request. Issues 8/9 deferred; no merge/deployment implied.",
   "task_count": 15,
-  "active_count": 12,
+  "active_count": 13,
   "deferred_ids": [
-    "CV-R2-07",
     "CV-R2-08",
     "CV-R2-09"
   ],
@@ -269,8 +268,8 @@
       "file": "tasks/cv-r2-07-responsive-banner.md",
       "title": "سکشن بنر با تصویر دسکتاپ و موبایل",
       "priority": "P1",
-      "wave": "later",
-      "implementation_status": "deferred",
+      "wave": "W1",
+      "implementation_status": "review",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -284,22 +283,23 @@
       "related": [
         "FEAT-BO-001"
       ],
-      "business": "در فاز آینده، فرم مدیریتی بنر با تصاویر مستقل دو اندازه فراهم شود.",
+      "business": "مدیریت بنر با دو تصویر مستقل، پیش‌نویس و انتشار نسخه‌دار پس از فعال‌سازی محدود مالک در ۲۰۲۶-۱۱-۲۱.",
       "scope": [
-        "معوق طبق تصمیم صریح R2-Q04؛ الزام خانه شروع یا وابستگی تسک فعال نیست.",
-        "پس از بازگشایی دامنه CMS، schema typed، media دو اندازه و draft/preview/publish بررسی شود."
+        "فقط بنر دو اندازه با schema اختصاصی، upload/preview/remove مستقل و draft/publish اتمیک؛ #8/#9 معوق‌اند.",
+        "نمایش responsive snapshot منتشرشده با دو asset؛ خانه ثابت خودکار به CMS متصل نمی‌شود."
       ],
       "acceptance": [
         "پس از فعال‌شدن فاز، تصویر و preview مستقل دسکتاپ/موبایل باشند.",
         "تغییر draft تا انتشار روی صفحه عمومی اثر نگذارد و رسانه/لینک نامعتبر انتشار را متوقف کند."
       ],
-      "blocked": "شرط شروع: مالک فاز CMS را دوباره فعال و ابعاد/حجم/نسبت و سیاست انتشار را تعیین کند. این کار done یا implemented نیست؛ باز می‌ماند و از مسیر بحرانی شروع حذف است.",
-      "technical": "پیشنهاد آینده: schema اختصاصی بنر و انتشار نسخه‌دار؛ backend محصول برای این کار اکنون لازم نیست.",
+      "blocked": "دستور مالک شروع همین برش را فعال کرد؛ سیاست فنی آزمون در API-RESPONSIVE-BANNERS-001 ثبت شد. storage و سیاست تولید و باقی CMS مستقل‌اند.",
+      "technical": "Banner draft/published مستقل، version و audit و retry؛ public فقط رسانه snapshot فعال را می‌دهد. محدودیت آیکن قبلی حفظ شد.",
       "evidence": "فقط در فاز فعال‌شده: نمایش ۳۹۰/۱۴۴۰ و شاهد دو asset و انتشار نسخه. تصویر فعلی بسته، شاهد اجرای آینده نیست.",
       "amends": [
         "CV-CMS-01",
         "CV-CMS-02"
-      ]
+      ],
+      "verification": "issue-7-verification.md"
     },
     {
       "id": "CV-R2-08",

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/finance"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
@@ -60,6 +61,7 @@ type Notification struct {
 	Retries   int    `json:"retries"`
 }
 type Audit struct {
+	ResultID    string    `json:"result_id,omitempty"`
 	Fingerprint string    `json:"fingerprint"`
 	ID          string    `json:"id"`
 	Actor       string    `json:"actor"`
@@ -69,6 +71,8 @@ type Audit struct {
 	At          time.Time `json:"at"`
 }
 type Workspace struct {
+	Banners         []content.Banner              `json:"banners,omitempty"`
+	BannerAssets    []content.BannerAsset         `json:"banner_assets,omitempty"`
 	Users           []User                        `json:"users,omitempty"`
 	Stores          []store.Store                 `json:"stores,omitempty"`
 	Categories      []catalog.Category            `json:"categories,omitempty"`
@@ -93,6 +97,7 @@ type Workspace struct {
 	Audit           []Audit                       `json:"audit,omitempty"`
 }
 type Command struct {
+	Banner         *content.BannerConfig        `json:"banner,omitempty"`
 	Phone          string                       `json:"phone"`
 	Action         string                       `json:"action"`
 	Target         string                       `json:"target"`

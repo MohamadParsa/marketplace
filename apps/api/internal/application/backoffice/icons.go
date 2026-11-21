@@ -35,11 +35,15 @@ func CatalogIconPolicy() *IconPolicy {
 
 // Icons are decoded and re-encoded, stripping filenames, metadata and trailing content.
 func normalizeIcon(input []byte) ([]byte, error) {
-	if len(input) > MaxIconBytes {
+	return normalizeRaster(input, MaxIconBytes, MaxIconDimension, MaxIconDimension*MaxIconDimension)
+}
+
+func normalizeRaster(input []byte, maxBytes, maxDimension, maxPixels int) ([]byte, error) {
+	if len(input) > maxBytes {
 		return nil, ErrIconTooLarge
 	}
 	cfg, format, err := image.DecodeConfig(bytes.NewReader(input))
-	if err != nil || (format != "png" && format != "jpeg" && format != "webp") || cfg.Width < 1 || cfg.Height < 1 || cfg.Width > MaxIconDimension || cfg.Height > MaxIconDimension {
+	if err != nil || (format != "png" && format != "jpeg" && format != "webp") || cfg.Width < 1 || cfg.Height < 1 || cfg.Width > maxDimension || cfg.Height > maxDimension || cfg.Width > maxPixels/cfg.Height {
 		return nil, ErrInvalidIcon
 	}
 	decoded, _, err := image.Decode(bytes.NewReader(input))
