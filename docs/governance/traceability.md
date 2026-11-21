@@ -105,3 +105,8 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## تکمیل محتوای کاتالوگ — ۲۰۲۶-۱۱-۲۱
 
 درخواست مالک ← [تطبیق و نیازمندی‌ها](../domains/catalog/content-and-seo.md) ← [CV-R2-16 / #24](../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) و [CV-R2-17 / #25](../delivery/review-v1-1/tasks/cv-r2-17-product-content-seo.md) ← [سناریوهای مستند](../bdd/features/experiences/catalog-content-seo.feature) ← مصرف سایت #11 و پذیرش #12. تسک‌ها todo و اسناد in-review هستند؛ سناریوها اجرا نشده‌اند. این تغییر مستندات است و شاهد تکمیل محصول ندارد؛ جزئیات باز R2-Q07 تا R2-Q09 در دفتر پرسش‌هاست.
+
+
+## مسیر انتشار اولیه و جریان وجه
+
+درخواست مالک → [ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [برنامه و چهار Issue #27 تا #30](../delivery/initial-launch/README.md) → [۲۲ سناریوی مستند](../bdd/features/experiences/initial-launch.feature) → گیت اولیه #12. هر Issue بک‌آفیس/API/سایت دارد و todo است؛ هیچ شاهد اجرا در این بازچینی تولید نشده. LCH-Q01 با پاسخ مالک حل شد: ورودی وجه ابتدا شارژ، تأیید کارت‌به‌کارت دستی/بصری و سپس تأیید سفارش با مصرف جدا. LCH-Q02 تا04 فقط بخش وابسته را متوقف می‌کنند. خانه/PLP/PDP با طرح A و C حرف اول Cherriva پیش می‌روند.

@@ -4,6 +4,7 @@
 
 | شناسه | تصمیم | وضعیت سند |
 | --- | --- | --- |
+| [ADR-007](adr-007-initial-launch-sequence.md) | انتشار مرحله‌ای خانه→PLP→PDP→خرید، طرح A/C و کارت‌به‌کارت→شارژ→مصرف با تأیید دستی | in-review؛ اصل تصمیم صریح مالک، جزئیات باز جداست |
 | [ADR-006](adr-006-responsive-banner-activation.md) | فعال‌سازی محدود #7 به دستور مالک؛ حفظ تعویق #8/#9 و استقلال انتشار | in-review؛ دستور اجرا از سیاست فنی آزمون جداست |
 | [ADR-001](adr-001-pricing-and-payment-boundaries.md) | مرز اعتبار کمیسیون، قیمت پایه و جلسه پرداخت؛ اصلاح تصمیم قبلی | in-review؛ اصل اصلاحات صریح کاربر است |
 | [ADR-002](adr-002-codebase-architecture.md) | ساختار monorepo، backend گولنگ، Hexagonal در سطح ماژول و stack اولیه بک‌آفیس | approved |

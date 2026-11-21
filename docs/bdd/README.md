@@ -13,10 +13,11 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۹۴ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO (اجرانشده). اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
+در این نسخه ۲۱۶ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO و۲۲ سناریوی انتشار اولیه (این دو گروه اجرا نشده‌اند). اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| انتشار اولیه چهار برش (CV-LCH-01 تا04) | [initial-launch.feature](features/experiences/initial-launch.feature) | 22 | [برنامه](../delivery/initial-launch/README.md) |
 | محتوای دسته/محصول و SEO (CV-R2-16/17) | [catalog-content-seo.feature](features/experiences/catalog-content-seo.feature) | 9 | [مرجع](../domains/catalog/content-and-seo.md) |
 | بنر دو اندازه (CV-R2-07) | [features/experiences/responsive-banners.feature](features/experiences/responsive-banners.feature) | 2 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) |
 | تنوع و عرضه محصول (CV-R2-06) | [features/experiences/product-workspace.feature](features/experiences/product-workspace.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) |
@@ -50,3 +51,6 @@
 این خروجی بخشی از مستندات `in-review` است. مالک قواعد همان مالک سند مرجع است و مالک اجرای آینده باید هنگام آماده‌سازی برش تحویل تعیین شود. هیچ سناریویی در این پوشه `approved` یا `passed` تلقی نمی‌شود مگر اینکه مالک تصمیم و شواهد اجرای مستقل ثبت شده باشد.
 
 اجرای برش بنر در [گزارش Issue#7](../delivery/review-v1-1/issue-7-verification.md) ثبت شده است؛ وجود فایل Gherkin به معنی اجرای runner مستقل نیست.
+
+
+در گیت انتشار اولیه فقط دامنه ADR-007 و سناریوهای CV-LCH مربوط پذیرفته شوند؛ سناریوهای BNPL/برداشت/اتصال درگاه در محصول کامل شرط این گیت نیستند. سناریوی قدیمی BNPL مستقیم (DOM-PAYMENTS-001-AC03) پس از تصمیم جدید معوق و نیازمند بازنگری قرارداد است.

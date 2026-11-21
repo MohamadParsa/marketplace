@@ -1,5 +1,10 @@
 # تسک‌های فعال نسخه۱.۱ پس از پاسخ #13
 
+## مسیر اجرای مقدم برای انتشار اولیه
+
+به دستور مالک۲۰۲۶-۱۱-۲۱، [برنامه چهارمرحله‌ای](../initial-launch/README.md) و [ADR-007](../../decisions/adr-007-initial-launch-sequence.md) مرجع صف اجرا هستند. #11 والد #27 خانه → #28 PLP → #29 PDP → #30 خرید/کیف پول کارت‌به‌کارت است. هر تسک بک‌آفیس+API+سایت را شامل می‌شود. فهرست۱۷تایی پایین تسک‌های مادر/اصلاحات را حفظ می‌کند؛ وابستگی‌های W3 یا پنل کامل در متن قدیمی نباید گیت این انتشار فرض شوند. طرح A و C حرف اول Cherriva قطعی‌اند؛ ثبت رسید، شارژ کیف پول و تأیید سفارش سه رویداد مستقل‌اند.
+
+
 تاریخ:۲۰۲۶-۱۱-۲۱ | وضعیت مشخصات: in-review | مالک بررسی: محصول و راهبر فنی؛ فرد/موعد انتساب نشده | [فرایند #14](https://github.com/MohamadParsa/marketplace/issues/14)
 
 این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۷ شرح کار داریم: ۱۵ کار فعال (۱۱todo و۴review) و۲ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
@@ -18,7 +23,7 @@
 | [CV-R2-08](tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | کروسل اختصاصی با انتخاب و ترتیب دستی کالا | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-CAT-09، CV-PRC-07 |
 | [CV-R2-09](tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | سکشن استیکی با کنترل نمایش و بستن | P1 / later | deferred | CV-R2-07 |
 | [CV-R2-10](tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش | P0 / W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-01، CV-R2-13 |
-| [CV-R2-11](tasks/cv-r2-11-storefront-alignment.md) · [#11](https://github.com/MohamadParsa/marketplace/issues/11) | همگام‌سازی سایت اصلی با تصمیم‌های نسخه۱.۱ | P0 / W3 | todo | CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-13، CV-R2-14، CV-R2-15، CV-R2-16، CV-R2-17 |
+| [CV-R2-11](tasks/cv-r2-11-storefront-alignment.md) · [#11](https://github.com/MohamadParsa/marketplace/issues/11) | والد انتشار اولیه | P0 / L0 | todo | CV-LCH-01 تا04 |
 | [CV-R2-12](tasks/cv-r2-12-revision-acceptance.md) · [#12](https://github.com/MohamadParsa/marketplace/issues/12) | پذیرش اصلاحات و ردیابی با دامنه فعال | P0 / W3 | todo | CV-R2-01، CV-R2-02، CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-11، CV-R2-13، CV-R2-14، CV-R2-15، CV-R2-16، CV-R2-17 |
 | [CV-R2-13](tasks/cv-r2-13-general-settings.md) · [#15](https://github.com/MohamadParsa/marketplace/issues/15) | تنظیمات عمومی دسته‌بندی‌شده سایت | P0 / W1 | todo | CV-R2-01، CV-FND-03، CV-FND-04 |
 | [CV-R2-14](tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | اسلات ارسال ظرفیت‌دار و کنترل رزرو | P0 / W2 | todo | CV-R2-10، CV-R2-13، CV-OPS-05، CV-OPS-06، CV-FIN-03 |
