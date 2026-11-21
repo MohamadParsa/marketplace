@@ -1,3 +1,14 @@
+import { CommerceProvider } from "./commerce";
+import {
+  LoginPage,
+  CartPage,
+  CheckoutPage,
+  OrderPage,
+  WalletPage,
+  AccountPage,
+  BusinessPage,
+} from "./commerce-pages";
+import "./commerce.css";
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { HomePage } from "./home-page";
@@ -20,6 +31,17 @@ function App() {
       removeEventListener("cherriva:navigate", sync);
     };
   }, []);
+  const path = url.split("?")[0];
+  if (path === "/login") return <LoginPage />;
+  if (path === "/cart") return <CartPage />;
+  if (path === "/checkout") return <CheckoutPage />;
+  if (path === "/wallet") return <WalletPage />;
+  if (path === "/account/orders" || path.startsWith("/account/orders/"))
+    return <OrderPage key={path} id={path.split("/")[3]} />;
+  if (path === "/account" || path === "/account/addresses")
+    return <AccountPage key={path} addresses={path.endsWith("/addresses")} />;
+  if (path.startsWith("/info/"))
+    return <BusinessPage slug={path.split("/")[2]} />;
   if (url.startsWith("/product/"))
     return <ProductPage key={url.split("?")[0]} url={url} />;
   return url.startsWith("/category/") ||
@@ -31,6 +53,8 @@ function App() {
 }
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <CommerceProvider>
+      <App />
+    </CommerceProvider>
   </StrictMode>,
 );

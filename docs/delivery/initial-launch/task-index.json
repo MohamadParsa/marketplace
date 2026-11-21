@@ -6,9 +6,9 @@
   "parent_issue": 11,
   "task_count": 4,
   "design": "A-balanced",
-  "payment": "card-to-card-only",
+  "payment": "card-transfer-and-manual-in-person-via-wallet",
   "payment_wallet_mapping": "confirmed:wallet-credit-before-separate-consumption",
-  "note": "Owner-confirmed reconciliation: only #27 completed. Execute #28, then #29, then #30. #24/#25 are open requirements trackers, not separate execution tasks. No new implementation, merge or deployment.",
+  "note": "Implementation #27/#28/#29/#30 delivered as reviewable branches; no merge or Liara deployment. Public AC07 remains open with Parsa under #12/#11. #25 remains a partial requirements tracker.",
   "tasks": [
     {
       "id": "CV-LCH-01",
@@ -199,7 +199,7 @@
       "backend": [
         "ورود مشتری و ذخیره نشانی پایدار با owner check؛ سبد با Offer/Variant/quantity، idempotent merge مهمان بعد از OTP و حفظ پس از refresh. مشتری نتواند نشانی یا سبد دیگری را بخواند/ویرایش کند.",
         "quote معتبر سرور شامل قیمت نقدی فعلی، هزینه ارسال و جمع؛ مبلغ کلاینت مرجع نیست. جلسه/رزرو/انقضا و snapshot طبق قرارداد checkout، با کنترل هم‌زمانی آخرین موجودی و جلوگیری از سفارش تکراری.",
-        "فقط کارت‌به‌کارت به‌عنوان مسیر تأمین وجه این انتشار؛ BNPL و درگاه آنلاین فعال نشوند. طبق پاسخ مالک، هر واریز اول فقط شارژ کیف پول است؛ سپس پرداخت/عملیات دیگر یک مصرف مستقل است. adapter تأمین وجه قابل تغییر بماند.",
+        "کارت‌به‌کارت و پرداخت محلی حضوری به‌عنوان روش‌های تأمین وجه این انتشار؛ BNPL و درگاه آنلاین فعال نشوند. طبق پاسخ مالک، هر واریز اول فقط شارژ کیف پول است؛ سپس پرداخت/عملیات دیگر یک مصرف مستقل است. adapter تأمین وجه قابل تغییر بماند.",
         "دفتر گردش کیف پول پایدار با credit/debit و منشأ وجه؛ تأیید دستی/بصری واریز توسط کاربر مالی مجاز؛ آپلود مشتری به‌تنهایی اثر مالی ندارد؛ idempotency/قید یکتا/تراکنش اتمیک جلوی credit یا debit و سفارش مضاعف را بگیرد. تطبیق مرجع بانکی و مبلغ طبق LCH-Q02.",
         "جریان قطعی: اعلام واریز → بررسی و تأیید دستی/بصری بک‌آفیس → یک credit کیف پول → اقدام تأیید نهایی سفارش در بک‌آفیس با کنترل مبلغِ مورد قبول مشتری/جلسه/موجودی → یک debit و ثبت پرداخت و تأیید سفارش به‌صورت اتمیک. تأیید واریز و تأیید سفارش دو عملیات مستقل و قابل ردیابی‌اند؛ تأیید وجه دیررس به‌تنهایی سفارش منقضی/گران‌تر را نهایی نکند. قیمت جدید تأیید دوباره مشتری می‌خواهد.",
         "رسید/تصویر/شناسه تماس خصوصی با validate و دسترسی مالک/مالی؛ اطلاعات کامل کارت مبدأ و secret در log/DTO عمومی نباشد. صفرشدن رزرو یا نامشخص‌بودن پرداخت مجوز retry مالی دوباره نیست."
@@ -207,8 +207,8 @@
       "site": [
         "افزودن از PDP به همان سبد، حذف/تغییر تعداد، نمایش گروه فروشگاه و خطای موجودی/قیمت؛ ورود OTP و برگشت امن به همان خرید، انتخاب/ثبت/ویرایش نشانی با گیرنده.",
         "روش و هزینه/بازه ارسال هر فروشگاه از تنظیم پنل؛ جمع نهایی و تأیید روشن تغییرات؛ یک مقصد مشترک و حفظ دفترچه آدرس و snapshot سفارش.",
-        "پرداخت فقط کارت‌به‌کارت: اطلاعات مقصد و مبلغ معتبر، فرم اعلام واریز/مدرک طبق قرارداد و نتیجه «در انتظار بررسی»؛ پیام پرداخت موفق فقط پس از تأیید واقعی و ثبت پرداخت سفارش.",
-        "کیف پول: موجودی قابل مصرف، گردش و وضعیت شارژ و مصرف؛ شارژ مستقل و رفع کسری با کارت‌به‌کارت، سپس مصرف مستقل؛ طبق پاسخ حل‌شده LCH-Q01. برداشت و refund واقعی تا سیاست LCH-Q03 مستقل از این انتشار فعال نشوند؛ قابلیت‌های کامل قبلی حذف نشده‌اند.",
+        "پرداخت کارت‌به‌کارت یا محلی حضوری: اطلاعات مقصد و مبلغ معتبر، فرم اعلام واریز/مدرک طبق قرارداد و نتیجه «در انتظار بررسی»؛ پیام پرداخت موفق فقط پس از تأیید واقعی و ثبت پرداخت سفارش.",
+        "کیف پول: موجودی قابل مصرف، گردش و وضعیت شارژ و مصرف؛ شارژ مستقل و رفع کسری با کارت‌به‌کارت، سپس مصرف مستقل؛ طبق پاسخ حل‌شده LCH-Q01. بازپرداخت دستی طبق پاسخ LCH-Q03 با درخواست/hold/مرجع/نتیجه؛ برداشت/refund خودکار فعال نیست؛ قابلیت‌های کامل قبلی حذف نشده‌اند.",
         "تأیید/رد/انتظار، انقضا، تغییر مبلغ/موجودی، برگشت و تکرار درخواست قابل بازیابی؛ صفحه رسید خرید و مشاهده مجدد سفارش از حساب. دامنه cherriva.ir، HTTPS و صفحات تماس/معرفی/رویه خرید/ارسال/مرجوعی/حریم خصوصی با متن واقعی کسب‌وکار پیش از انتشار تکمیل شوند."
       ],
       "acceptance": [
@@ -217,29 +217,64 @@
         "ثبت اعلام واریز به‌تنهایی موجودی/پرداخت موفق نسازد؛ تأیید دستی/بصری مجاز فقط credit بسازد و سفارش تا اقدام تأیید نهایی/یک debit در انتظار بماند؛ رد با دلیل بدون credit/debit نادرست باشد.",
         "تأیید مالی یا پرداخت هم‌زمان/retry فقط یک اثر مالی و یک سفارش بسازد؛ آخرین موجودی و کیف پول دوبار مصرف نشوند و مبلغ دست‌کاری‌شده کلاینت رد شود.",
         "تأیید دیررس پس از انقضا/تغییر قیمت/ناموجودی خرید را خودکار موفق نکند؛ طبق سیاست منتخب، منشأ وجه و وضعیت سفارش مستقل و قابل پیگیری بمانند.",
-        "فقط مسیر کارت‌به‌کارت مصوب و کیف پول مربوط دیده شوند؛ دکمه درگاه/BNPL/برداشت آماده‌نشده نباشد؛ رسید خصوصی، داده پایدار، خطا/انتظار و طرح A در۳۹۰/۱۴۴۰ بررسی شوند.",
+        "فقط مسیر کارت‌به‌کارت و محلی حضوری مصوب و کیف پول مربوط دیده شوند؛ دکمه درگاه/BNPL/برداشت آماده‌نشده نباشد؛ رسید خصوصی، داده پایدار، خطا/انتظار و طرح A در۳۹۰/۱۴۴۰ بررسی شوند.",
         "روی دامنه HTTPS، مسیر خانه→PLP→PDP→سبد→آدرس→ارسال→پرداخت→وضعیت سفارش با داده مجاز بررسی شود؛ شماره مقصد واقعی، متن کسب‌وکار، backup/restore و نبود fixture/کد OTP نمایان در محیط عمومی تأیید شوند."
       ],
-      "blocked": "LCH-Q01 با پاسخ مالک حل شد؛ ورودی وجه همیشه شارژ و سپس مصرف مستقل، تأیید واریز و سفارش دستی است. LCH-Q02 جزئیات مبلغ/مرجع/مدرک؛ LCH-Q03 پاسخ‌گویی وجوه و استرداد؛ LCH-Q04 زمان‌بندی رزرو در انتظار بررسی. مالی وابسته تا پاسخ متوقف است؛ سبد، نشانی، ارسال، UI انتظار و قرارداد draft مستقل ادامه یابند. نیازهای مجوز دقیق با مرجع صدور جدا بررسی شود.",
+      "blocked": "Implementation decisions resolved by owner. External public HTTPS / real payment destination / SMS / backup-restore acceptance remains open under AC07 and #12; deployment by Parsa.",
       "file": "tasks/cv-lch-04-checkout-wallet-card-transfer.md",
       "number": 30,
       "parent_issue": 11,
       "task_type": "execution",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "priority": "P0",
       "execution_rank": 4,
       "requirement_issue_ids": [],
-      "next_in_queue": true,
-      "scope_ownership": "Sole executor of checkout/customer account/address/shipping/order/wallet/card-transfer; consumes catalog from #28/#29 without rebuilding it."
+      "next_in_queue": false,
+      "scope_ownership": "Sole executor of checkout/customer account/address/shipping/order/wallet/card-transfer; consumes catalog from #28/#29 without rebuilding it.",
+      "verification": "issue-30-verification.md",
+      "public_acceptance_status": "pending-external-environment",
+      "acceptance_mapping": [
+        {
+          "id": "CV-LCH-04-AC01",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC02",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC03",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC04",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC05",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC06",
+          "status": "verified-local",
+          "evidence": "issue-30-verification.md"
+        },
+        {
+          "id": "CV-LCH-04-AC07",
+          "status": "pending-external-acceptance",
+          "evidence": "issue-30-verification.md"
+        }
+      ]
     }
   ],
   "milestone_number": 1,
   "milestone_url": "https://github.com/MohamadParsa/marketplace/milestone/1",
-  "financial_questions": [
-    "LCH-Q02",
-    "LCH-Q03",
-    "LCH-Q04"
-  ],
+  "financial_questions": [],
   "confirmed_financial_decision": "LCH-Q01",
   "parent_task_type": "tracking-epic",
   "implementation_issue_numbers": [
@@ -355,5 +390,12 @@
       ],
       "verification": "issue-29-verification.md"
     }
-  ]
+  ],
+  "resolved_financial_questions": [
+    "LCH-Q01",
+    "LCH-Q02",
+    "LCH-Q03",
+    "LCH-Q04"
+  ],
+  "public_release_status": "pending-external-acceptance"
 }

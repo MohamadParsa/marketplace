@@ -1,0 +1,303 @@
+{
+  "date": "2026-11-22",
+  "issue": 30,
+  "implementation_status": "done",
+  "document_status": "in-review",
+  "go": {
+    "passed_tests_and_subtests": 139,
+    "failures": 0,
+    "skipped_tests": 0,
+    "postgres_integration_tests": [
+      "TestCommercePostgresLedgerReceiptAndRestart",
+      "TestHomePostgresRestartRetainsCatalogAndMedia",
+      "TestPostgresReviewIdentitySurvivesRestart"
+    ],
+    "vet": "passed",
+    "local_race": "not-run-windows-cgo-disabled"
+  },
+  "browser": {
+    "checks": [
+      {
+        "name": "published purchasable product",
+        "passed": true
+      },
+      {
+        "name": "PDP add opens actual cart popup",
+        "passed": true
+      },
+      {
+        "name": "cart has price and seller",
+        "passed": true
+      },
+      {
+        "name": "OTP login returns to checkout with merged cart",
+        "passed": true
+      },
+      {
+        "name": "saved owner address selected",
+        "passed": true
+      },
+      {
+        "name": "registered order is unpaid",
+        "passed": true
+      },
+      {
+        "name": "declaration does not pay order",
+        "passed": true
+      },
+      {
+        "name": "finance approval credits only; order remains unpaid",
+        "passed": true
+      },
+      {
+        "name": "admin order separates payment and order status",
+        "passed": true
+      },
+      {
+        "name": "separate admin confirmation pays order",
+        "passed": true
+      },
+      {
+        "name": "refresh preserves account/order state",
+        "passed": true
+      },
+      {
+        "name": "390px order no overflow",
+        "passed": true
+      },
+      {
+        "name": "wallet shows credit and debit separately",
+        "passed": true
+      },
+      {
+        "name": "390px wallet no overflow",
+        "passed": true
+      },
+      {
+        "name": "390px admin settings no overflow",
+        "passed": true
+      },
+      {
+        "name": "no page runtime errors",
+        "passed": true
+      }
+    ],
+    "runtimeErrors": [],
+    "purchaseID": "a840e7b18673047db09b46a7bfc23ad4b1356b745ac52962"
+  },
+  "mobile_browser": {
+    "checks": [
+      {
+        "id": "mobile-popup-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-cart-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "explicit-variant-seller-selector",
+        "pass": true
+      },
+      {
+        "id": "mobile-checkout-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "non-gold-local-method-eligible",
+        "pass": true
+      },
+      {
+        "id": "customer-unpaid-cancel-releases-order",
+        "pass": true
+      }
+    ],
+    "passed": 6,
+    "source": "tests/e2e/checkout-mobile.cjs"
+  },
+  "frontend": {
+    "storefront_lint": "passed",
+    "storefront_build": "passed",
+    "backoffice_lint": "passed",
+    "backoffice_build": "passed",
+    "warnings": [
+      "backoffice bundle size >500kB"
+    ]
+  },
+  "immutable_snapshot": {
+    "files": 664,
+    "sha256": "all-unchanged"
+  },
+  "public_acceptance": {
+    "id": "CV-LCH-04-AC07",
+    "status": "not-run-external-public-environment",
+    "tracking_issues": [
+      11,
+      12
+    ],
+    "deployment_by": "Parsa"
+  },
+  "ci": "pending-pr",
+  "restart": [
+    {
+      "id": "restart-purchase",
+      "pass": true
+    },
+    {
+      "id": "restart-wallet",
+      "pass": true
+    },
+    {
+      "id": "restart-orders",
+      "pass": true
+    },
+    {
+      "id": "restart-addresses",
+      "pass": true
+    },
+    {
+      "id": "restart-receipt",
+      "pass": true
+    },
+    {
+      "id": "team-local-password-login",
+      "pass": true
+    }
+  ],
+  "pdp_regression": {
+    "source": "tests/e2e/product.cjs",
+    "checks": [
+      {
+        "id": "product-content-fields-and-mm-units",
+        "pass": true
+      },
+      {
+        "id": "rich-editor-saved-as-safe-format",
+        "pass": true
+      },
+      {
+        "id": "independent-interaction-toggles",
+        "pass": true
+      },
+      {
+        "id": "content-save-preserves-other-offers-and-stock",
+        "pass": true
+      },
+      {
+        "id": "initial-html-product-seo",
+        "pass": true
+      },
+      {
+        "id": "content-edit-visible-in-pdp",
+        "pass": true
+      },
+      {
+        "id": "breadcrumb-categories-brand-product-order",
+        "pass": true
+      },
+      {
+        "id": "server-buybox-and-seller-list",
+        "pass": true
+      },
+      {
+        "id": "real-cart-capability-without-fake-interactions",
+        "pass": true
+      },
+      {
+        "id": "selection-payload-real-api-without-cart",
+        "pass": true
+      },
+      {
+        "id": "diagonal-decrement-control",
+        "pass": true
+      },
+      {
+        "id": "seller-selection-resolves-and-url",
+        "pass": true
+      },
+      {
+        "id": "deep-link-reload-preserves-offer",
+        "pass": true
+      },
+      {
+        "id": "unavailable-variant-retains-page-no-price",
+        "pass": true
+      },
+      {
+        "id": "notify-not-pretended-ready",
+        "pass": true
+      },
+      {
+        "id": "another-variant-still-purchasable",
+        "pass": true
+      },
+      {
+        "id": "invalid-gallery-upload-keeps-images",
+        "pass": true
+      },
+      {
+        "id": "valid-gallery-upload-attached",
+        "pass": true
+      },
+      {
+        "id": "gallery-order-and-variant-image-persist",
+        "pass": true
+      },
+      {
+        "id": "variant-image-resolves-public-gallery",
+        "pass": true
+      },
+      {
+        "id": "gallery-lightbox-keyboard",
+        "pass": true
+      },
+      {
+        "id": "lightbox-restores-focus",
+        "pass": true
+      },
+      {
+        "id": "desktop-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-390-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-breadcrumb-present",
+        "pass": true
+      },
+      {
+        "id": "mobile-320-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "server-error-retry",
+        "pass": true
+      },
+      {
+        "id": "retry-recovers",
+        "pass": true
+      },
+      {
+        "id": "invalid-combination-actionable-error",
+        "pass": true
+      },
+      {
+        "id": "draft-product-not-public",
+        "pass": true
+      },
+      {
+        "id": "unauthorized-content-write-rejected",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "passed": 32,
+    "runtime_errors": [],
+    "screenshots": "private-runtime-output; historical issue-29 images preserved"
+  }
+}

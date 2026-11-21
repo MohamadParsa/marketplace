@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useCommerce } from "./commerce";
 import { SearchBox } from "./search-box";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 interface HomeCategory {
@@ -569,6 +570,7 @@ export function HomePage() {
 
 type HeaderCategory = { key: string; title: string; url: string };
 export function SiteHeader({ categories }: { categories: HeaderCategory[] }) {
+  const { token, cart, logout } = useCommerce();
   return (
     <>
       {" "}
@@ -585,13 +587,31 @@ export function SiteHeader({ categories }: { categories: HeaderCategory[] }) {
           </a>
           <SearchBox />
           <div className="lh-header-actions">
-            <button disabled aria-label="حساب کاربری">
-              <Icon name="user" />
-            </button>
+            <details className="lh-profile-menu">
+              <summary aria-label="حساب کاربری">
+                <Icon name="user" />
+              </summary>
+              <nav aria-label="منوی حساب">
+                {token ? (
+                  <>
+                    <a href="/account">پروفایل</a>
+                    <a href="/account/addresses">آدرس‌ها</a>
+                    <a href="/account/orders">سفارش‌ها</a>
+                    <a href="/wallet">کیف پول</a>
+                    <button onClick={logout}>خروج</button>
+                  </>
+                ) : (
+                  <a href="/login">ورود / ثبت‌نام</a>
+                )}
+              </nav>
+            </details>
             <span />
-            <button disabled aria-label="سبد خرید">
+            <a href="/cart" className="lh-cart-link" aria-label="سبد خرید">
               <Icon name="bag" />
-            </button>
+              {!!cart?.item_count && (
+                <b className="lh-cart-count">{cart.item_count}</b>
+              )}
+            </a>
           </div>
         </div>
         <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">
@@ -633,7 +653,12 @@ export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
         </div>
         <div>
           <h2>درباره چریوا</h2>
-          <a href="/#about">آشنایی با چریوا</a>
+          <a href="/info/about">آشنایی با چریوا</a>
+          <a href="/info/contact">تماس با ما</a>
+          <a href="/info/shipping">شرایط ارسال</a>
+          <a href="/info/returns">شرایط بازگشت</a>
+          <a href="/info/terms">قوانین خرید</a>
+          <a href="/info/privacy">حریم خصوصی</a>
           <a href="/#home-categories">دسته‌بندی کالاها</a>
         </div>
       </div>

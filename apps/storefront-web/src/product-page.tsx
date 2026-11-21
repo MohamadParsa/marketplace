@@ -1,3 +1,6 @@
+import { useCommerce, apiBase } from "./commerce";
+import { Modal } from "./components";
+import { money as tomanMoney } from "../../../packages/commerce-client/types";
 import { useEffect, useRef, useState } from "react";
 import { SiteHeader, SiteFooter, Icon } from "./home-page";
 import { navigate } from "./navigation";
@@ -126,6 +129,29 @@ function Lightbox({
   );
 }
 export function ProductPage({ url }: { url: string }) {
+  const commerce = useCommerce();
+  const [adding, setAdding] = useState(false),
+    [addError, setAddError] = useState(""),
+    [added, setAdded] = useState(false);
+  async function addToCart() {
+    if (!data || !commerce.cart || adding) return;
+    setAdding(true);
+    setAddError("");
+    try {
+      await commerce.mutate({
+        action: "add",
+        offer_id: data.selected_offer_id,
+        quantity,
+        version: commerce.cart.version,
+      });
+      setAdded(true);
+    } catch (e) {
+      setAddError((e as Error).message);
+      await commerce.refreshCart().catch(() => {});
+    } finally {
+      setAdding(false);
+    }
+  }
   const [data, setData] = useState<Detail>(),
     [loading, setLoading] = useState(true),
     [status, setStatus] = useState(0),
@@ -133,13 +159,18 @@ export function ProductPage({ url }: { url: string }) {
     [photo, setPhoto] = useState(0),
     [zoom, setZoom] = useState(false),
     [quantity, setQuantity] = useState(1);
-  const initialPosition=useRef(true);
+  const initialPosition = useRef(true);
   useEffect(() => {
     const abort = new AbortController();
     setLoading(true);
     setStatus(0);
-    document.title="محصول | Cherriva";
-    for(const name of ["description","keywords"]){const m=document.head.querySelector<HTMLMetaElement>('meta[name="'+name+'"]');if(m)m.content=""}
+    document.title = "محصول | Cherriva";
+    for (const name of ["description", "keywords"]) {
+      const m = document.head.querySelector<HTMLMetaElement>(
+        'meta[name="' + name + '"]',
+      );
+      if (m) m.content = "";
+    }
 
     const current = new URL(url, location.origin);
     let id = "";
@@ -160,7 +191,11 @@ export function ProductPage({ url }: { url: string }) {
         const d = (await r.json()) as Detail;
         if (abort.signal.aborted) return;
         setData(d);
-        if(initialPosition.current){initialPosition.current=false;const top=history.state?.cherrivaScroll??0;requestAnimationFrame(()=>scrollTo({top,behavior:"instant"}))}
+        if (initialPosition.current) {
+          initialPosition.current = false;
+          const top = history.state?.cherrivaScroll ?? 0;
+          requestAnimationFrame(() => scrollTo({ top, behavior: "instant" }));
+        }
 
         setPhoto(0);
         setQuantity(1);
@@ -497,14 +532,22 @@ export function ProductPage({ url }: { url: string }) {
                   data-variant-id={data.selected_variant_id}
                   data-offer-id={data.selected_offer_id}
                   data-quantity={quantity}
-                  disabled
+                  disabled={
+                    !canPurchase ||
+                    checking ||
+                    !!selectionError ||
+                    adding ||
+                    !commerce.cart
+                  }
+                  onClick={() => void addToCart()}
                   aria-describedby="pdp-purchase-note"
                 >
                   افزودن به سبد خرید
                 </button>
+                {addError && <p role="alert">{addError}</p>}
                 <p id="pdp-purchase-note" className="pdp-purchase-note">
                   {available
-                    ? "خرید آنلاین به‌زودی فعال می‌شود."
+                    ? "قیمت نقدی بدون هزینه ارسال؛ روش پرداخت در ادامه مشخص می‌شود."
                     : "در حال حاضر امکان خرید این انتخاب وجود ندارد."}
                 </p>
               </aside>
@@ -668,6 +711,36 @@ export function ProductPage({ url }: { url: string }) {
           url: c.url,
         }))}
       />
+      {added && (
+        <Modal
+          title="به سبد خرید اضافه شد"
+          className="buy-add-popup"
+          onClose={() => setAdded(false)}
+        >
+          <ul>
+            {commerce.cart?.items.map((i) => (
+              <li key={i.offer_id}>
+                <img src={apiBase + i.image_url} alt="" />
+                <div>
+                  <b>{i.name}</b>
+                  <small>
+                    {i.variant_label} · {i.store_name} · تعداد {i.quantity}
+                  </small>
+                  <strong>{tomanMoney(i.total_toman)}</strong>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="buy-row">
+            <a className="buy-primary" href="/cart">
+              مشاهده سبد خرید
+            </a>
+            <button className="buy-secondary" onClick={() => setAdded(false)}>
+              ادامه خرید
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

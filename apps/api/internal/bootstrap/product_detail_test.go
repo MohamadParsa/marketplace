@@ -41,7 +41,7 @@ func TestProductDetailSelectionsVisibilityAndPrivacy(t *testing.T) {
 	repo := backofficememory.New(w)
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
 	d, r := pdpRequest(t, h, "/storefront/products/mobile", 200)
-	if len(d.Breadcrumbs) != 2 || d.Brand == nil || d.Brand.Name != "برند آزمون" || d.SelectedOfferID != "mobile" || d.Content.ShortDescription != "شرح کوتاه" || d.Interactions.Reviews || d.CheckoutEnabled {
+	if len(d.Breadcrumbs) != 2 || d.Brand == nil || d.Brand.Name != "برند آزمون" || d.SelectedOfferID != "mobile" || d.Content.ShortDescription != "شرح کوتاه" || d.Interactions.Reviews || !d.CheckoutEnabled {
 		t.Fatal("public DTO", r.Body.String())
 	}
 	for _, private := range []string{`"stock"`, `"reserved"`, `"owner"`, `"users"`, `"icon_media"`, `"password"`, `"sku"`} {

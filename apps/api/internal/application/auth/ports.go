@@ -31,3 +31,8 @@ type Sessions interface {
 type OTPNotifier interface {
 	Send(context.Context, identity.Surface, string, string) error
 }
+
+// Called only after consuming a valid mobile OTP; never grants staff roles.
+type CustomerRegistration interface {
+	RegisterVerifiedCustomer(context.Context, string, string) (identity.User, error)
+}

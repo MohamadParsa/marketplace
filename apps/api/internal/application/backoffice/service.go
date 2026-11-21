@@ -24,6 +24,12 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case CommerceSettingsRead, CommerceOrdersRead:
+		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance
+	case CommerceShippingWrite, CommerceBusinessWrite:
+		return role == identity.RoleOperations
+	case CommerceDepositsRead, CommerceDepositsReview, CommerceOrdersConfirm, CommerceRefundsResolve:
+		return role == identity.RoleFinance
 	case "product.media.update", "category.publish", "banner.media.set", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.icon.set", "product.icon.remove", "banner.create", "banner.save", "banner.publish", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
 		return role == identity.RoleOperations
 	case "case.start", "case.close", "case.refund", "case.assign", "order.deliver":
@@ -73,6 +79,8 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 			return event.Action == "transfer.resolve" || event.Action == "rule.toggle"
 		})
 	}
+	state.Commerce = nil
+	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") })
 	state.IconMedia = nil
 	state.BannerAssets = nil
 	state.Banners = nil

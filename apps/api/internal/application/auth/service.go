@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/hex"
+	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"golang.org/x/crypto/bcrypt"
 	"net/mail"
@@ -45,10 +46,12 @@ func (s *Service) RequestOTP(ctx context.Context, surface identity.Surface, phon
 		return "", identity.ErrInvalidCredentials
 	}
 	user, err := s.users.FindByPhone(ctx, surface, phone)
-	if err != nil {
+	_, registration := s.users.(CustomerRegistration)
+	newCustomer := errors.Is(err, identity.ErrUnknown) && surface == identity.SurfaceCustomer && registration
+	if err != nil && !newCustomer {
 		return "", err
 	}
-	if !user.Active {
+	if !newCustomer && !user.Active {
 		return "", identity.ErrInactive
 	}
 	requestID, _, err := s.issueOTP(ctx, identity.Challenge{Phone: phone, Surface: surface})
@@ -131,6 +134,15 @@ func (s *Service) VerifyOTP(ctx context.Context, surface identity.Surface, reque
 		return identity.Session{}, err
 	}
 	user, err := s.users.FindByPhone(ctx, surface, challenge.Phone)
+	if errors.Is(err, identity.ErrUnknown) && surface == identity.SurfaceCustomer {
+		if registrar, ok := s.users.(CustomerRegistration); ok {
+			id, e := s.random.Token()
+			if e != nil {
+				return identity.Session{}, e
+			}
+			user, err = registrar.RegisterVerifiedCustomer(ctx, challenge.Phone, id)
+		}
+	}
 	if err != nil {
 		return identity.Session{}, err
 	}

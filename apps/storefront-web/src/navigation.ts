@@ -30,6 +30,11 @@ export function installNavigation() {
     if (
       next.origin !== location.origin ||
       (next.pathname !== "/" &&
+        !["/login", "/cart", "/checkout", "/wallet", "/account"].includes(
+          next.pathname,
+        ) &&
+        !next.pathname.startsWith("/account/") &&
+        !next.pathname.startsWith("/info/") &&
         next.pathname !== "/search" &&
         next.pathname !== "/offers" &&
         !next.pathname.startsWith("/category/") &&

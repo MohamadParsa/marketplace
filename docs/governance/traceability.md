@@ -128,3 +128,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## شاهد پایان #29 — ۲۰۲۶-۱۱-۲۲
 
 [گزارش PDP](../delivery/initial-launch/issue-29-verification.md) → CV-LCH-03-AC01..05 و زیرمجموعه مشخص CV-R2-17 → [قرارداد](../architecture/contracts/product-detail.md)، آزمون HTTP/PostgreSQL و مرورگر. #11 پیشرفت۳از۴؛ #30 طبق دستور مالک ادامه دارد. #25 فقط AC01/02/05 کامل و AC03/04 بخشی شاهد دارند؛ مرجع باز می‌ماند. اطلاعات حساب محلی به درخواست صریح مالک در راهنمای دسترسی تیم ثبت شده است؛ نمونه عمومی یا حساب production فرض نشود.
+
+## برش خرید و کیف پول انتشار اولیه — CV-LCH-04
+
+[شرح #30](../delivery/initial-launch/tasks/cv-lch-04-checkout-wallet-card-transfer.md)، [قرارداد API-CHECKOUT-WALLET-LAUNCH-001](../architecture/contracts/checkout-wallet-launch.md)، [BDD با همان ACها](../bdd/features/experiences/initial-launch.feature)، [شاهد اجرا](../delivery/initial-launch/issue-30-verification.md) و [گیت عمومی](../delivery/initial-launch/production-handoff.md) به هم متصل‌اند. LCH-Q02/03/04 حل‌شده‌اند؛ وضعیت مستقل سفارش/پرداخت و تاریخچه در هر دو سطح ثبت شد. AC07 محیط عمومی همچنان unverified است؛ #12 و #11 بازند و اجرای محلی به معنی پذیرش کل محصول نیست.

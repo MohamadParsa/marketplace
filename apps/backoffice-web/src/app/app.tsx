@@ -41,6 +41,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@mui/icons-material";
+import { CommercePage, SellerCheckoutPage } from "../features/commerce/commerce-page";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
@@ -127,6 +128,16 @@ const menu = [
   {
     heading: "عملیات و پشتیبانی",
     items: [
+      {
+        path: "/commerce",
+        label: "سفارش و پرداخت سایت",
+        icon: <ReceiptLongOutlined />,
+      },
+      {
+        path: "/commerce-settings",
+        label: "تنظیمات خرید و حمل",
+        icon: <LocalShippingOutlined />,
+      },
       { path: "/orders", label: "سفارش‌ها", icon: <ReceiptLongOutlined /> },
       {
         path: "/support",
@@ -247,7 +258,7 @@ function Workspace({
               {group.items
                 .filter((i) =>
                   session.user.Surface === "seller"
-                    ? i.path === "/products"
+                    ? ["/products","/commerce"].includes(i.path)
                     : visible("roles" in i ? i.roles : undefined),
                 )
                 .map((item) => (
@@ -390,6 +401,26 @@ function Workspace({
               }}
             >
               <Routes>
+                <Route
+                  path="/commerce"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <SellerCheckoutPage token={session.token} />
+                    ) : (
+                      <CommercePage token={session.token} />
+                    )
+                  }
+                />
+                <Route
+                  path="/commerce-settings"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" />
+                    ) : (
+                      <CommercePage token={session.token} settingsOnly />
+                    )
+                  }
+                />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route
                   path="/home-catalog"

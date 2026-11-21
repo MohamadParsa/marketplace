@@ -19,7 +19,7 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 		if account.Phone != phone {
 			continue
 		}
-		user := identity.User{ID: account.ID, Name: account.Name, Phone: phone, Email: account.Email, PasswordHash: account.PasswordHash, Surface: surface, Active: account.Active}
+		user := identity.User{ID: account.ID, Name: account.Name, Phone: phone, Email: account.Email, PasswordHash: account.PasswordHash, Surface: surface, Active: account.Active, AccessVersion: account.AccessVersion}
 		switch surface {
 		case identity.SurfaceBackoffice:
 			if authenticated, ok := state.BackofficeIdentity(account); ok && (!account.SellerOnly || len(authenticated.Permissions) > 0) {
@@ -87,4 +87,23 @@ func (u *Users) UpdateProfile(ctx context.Context, surface identity.Surface, use
 		}
 		return nil
 	})
+}
+
+func (u *Users) RegisterVerifiedCustomer(ctx context.Context, phone, id string) (identity.User, error) {
+	err := u.repository.Update(ctx, func(w *backoffice.Workspace) error {
+		for _, a := range w.Users {
+			if a.Phone == phone {
+				if !a.Active {
+					return identity.ErrInactive
+				}
+				return nil
+			}
+		}
+		w.Users = append(w.Users, backoffice.User{ID: id, Name: "مشتری", Phone: phone, Active: true, AccessVersion: 1})
+		return nil
+	})
+	if err != nil {
+		return identity.User{}, err
+	}
+	return u.FindByPhone(ctx, identity.SurfaceCustomer, phone)
 }

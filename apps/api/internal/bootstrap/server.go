@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficememory"
+	"github.com/cherriva/marketplace/apps/api/internal/adapters/postgresrepo"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/reviewpostgres"
 	"github.com/cherriva/marketplace/apps/api/internal/config"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -13,30 +14,52 @@ import (
 )
 
 func NewHTTPServer(cfg config.Config, lifecycle fx.Lifecycle) (*http.Server, error) {
-	server := &http.Server{Addr: cfg.Address, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second}
-	if cfg.ReviewDatabaseURL == "" {
+	server := &http.Server{Addr: cfg.Address, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second}
+	review := cfg.Environment == "local" || cfg.Environment == "test"
+	if review && cfg.DatabaseURL != "" {
+		return nil, errors.New("live database requires a public environment; test OTP is disabled for live data")
+	}
+	if cfg.ReviewDatabaseURL != "" && cfg.DatabaseURL != "" {
+		return nil, errors.New("configure only one database mode")
+	}
+	if !review && cfg.ReviewDatabaseURL != "" {
+		return nil, errors.New("review database is restricted to local/test")
+	}
+	if !review && cfg.DatabaseURL == "" {
+		return nil, errors.New("public environments require DATABASE_URL; memory fixtures are disabled")
+	}
+	if !review && (cfg.KavenegarAPIKey == "" || cfg.KavenegarTemplate == "") {
+		return nil, errors.New("public checkout requires the configured OTP sender")
+	}
+	dsn := cfg.DatabaseURL
+	if dsn == "" {
+		dsn = cfg.ReviewDatabaseURL
+	}
+	if dsn == "" {
 		server.Handler = NewHTTPHandler(cfg)
 		return server, nil
 	}
-	if cfg.Environment != "local" && cfg.Environment != "test" {
-		return nil, errors.New("review database is restricted to local/test")
-	}
-	options, err := pgxpool.ParseConfig(cfg.ReviewDatabaseURL)
-	if err != nil {
-		return nil, errors.New("invalid REVIEW_DATABASE_URL")
+	options, e := pgxpool.ParseConfig(dsn)
+	if e != nil {
+		return nil, errors.New("invalid database configuration")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	db, err := pgxpool.NewWithConfig(ctx, options)
-	if err != nil {
-		return nil, err
+	db, e := pgxpool.NewWithConfig(ctx, options)
+	if e != nil {
+		return nil, e
 	}
-	repository, err := reviewpostgres.New(ctx, db, backofficememory.Fixture())
-	if err != nil {
+	var repo *postgresrepo.Repository
+	if cfg.DatabaseURL != "" {
+		repo, e = postgresrepo.NewLive(ctx, db)
+	} else {
+		repo, e = reviewpostgres.New(ctx, db, backofficememory.Fixture())
+	}
+	if e != nil {
 		db.Close()
-		return nil, err
+		return nil, e
 	}
 	lifecycle.Append(fx.Hook{OnStop: func(context.Context) error { db.Close(); return nil }})
-	server.Handler = NewHTTPHandlerWithRepository(cfg, repository)
+	server.Handler = NewHTTPHandlerWithRepository(cfg, repo)
 	return server, nil
 }

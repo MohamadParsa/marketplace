@@ -9,6 +9,7 @@ import (
 )
 
 type RouterConfig struct {
+	Commerce          *CommerceHandler
 	ProductDetail     *ProductDetailHandler
 	Listing           *ListingHandler
 	StaticRoot        string
@@ -25,6 +26,23 @@ type RouterConfig struct {
 
 func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
+	if h := cfg.Commerce; h != nil {
+		mux.HandleFunc("GET /storefront/commerce/config", h.Config)
+		mux.HandleFunc("POST /storefront/cart/guest", h.CreateGuest)
+		mux.HandleFunc("GET /storefront/cart", h.Cart)
+		mux.HandleFunc("POST /storefront/cart", h.Cart)
+		for _, route := range []string{"POST /storefront/cart/merge", "GET /storefront/account/addresses", "POST /storefront/account/addresses", "GET /storefront/checkout", "POST /storefront/checkout/preview", "POST /storefront/checkout/quotes", "POST /storefront/checkout/purchases", "GET /storefront/account/orders", "GET /storefront/account/orders/{id}", "POST /storefront/account/orders/{id}/cancel", "GET /storefront/wallet", "POST /storefront/wallet/deposits", "POST /storefront/wallet/refunds"} {
+			mux.HandleFunc(route, h.Customer)
+		}
+		for _, route := range []string{"GET /backoffice/commerce", "GET /backoffice/commerce/settings", "PATCH /backoffice/commerce/settings", "POST /backoffice/commerce/deposits/review", "POST /backoffice/commerce/orders/confirm", "POST /backoffice/commerce/orders/cancel", "POST /backoffice/commerce/refunds/resolve"} {
+			mux.HandleFunc(route, h.Admin)
+		}
+		mux.HandleFunc("POST /storefront/wallet/deposits/{id}/receipt", h.UploadReceipt)
+		mux.HandleFunc("GET /storefront/wallet/receipts/{id}", h.Receipt)
+		mux.HandleFunc("GET /backoffice/commerce/receipts/{id}", h.Receipt)
+		mux.HandleFunc("GET /seller/checkout/orders", h.Seller)
+		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
+	}
 	if cfg.ProductDetail != nil {
 		mux.HandleFunc("GET /storefront/products/{id}", cfg.ProductDetail.Read)
 		mux.HandleFunc("POST /storefront/products/{id}/selection", cfg.ProductDetail.Selection)

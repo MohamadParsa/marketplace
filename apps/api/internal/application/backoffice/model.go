@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/finance"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
@@ -81,6 +82,7 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
+	Commerce         *commerce.State               `json:"commerce,omitempty"`
 	HomeSettings     HomeSettings                  `json:"home_settings"`
 	StoreMemberships []identity.StoreMembership    `json:"-"`
 	Access           *AccessDirectory              `json:"access,omitempty"`

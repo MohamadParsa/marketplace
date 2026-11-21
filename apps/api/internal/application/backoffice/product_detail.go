@@ -106,7 +106,7 @@ func productPhotoURL(w Workspace, id string) string {
 }
 
 func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDetail, error) {
-	result := ProductDetail{Gallery: []string{}, Features: []catalog.CardFeature{}, Variants: []PublicProductVariant{}, Offers: []PublicProductOffer{}, Breadcrumbs: []CatalogNav{}, Specifications: []catalog.CardFeature{}, Navigation: publicNavigation(w)}
+	result := ProductDetail{CheckoutEnabled: true, Gallery: []string{}, Features: []catalog.CardFeature{}, Variants: []PublicProductVariant{}, Offers: []PublicProductOffer{}, Breadcrumbs: []CatalogNav{}, Specifications: []catalog.CardFeature{}, Navigation: publicNavigation(w)}
 	p, err := publicProduct(w, id)
 	if err != nil {
 		return result, err

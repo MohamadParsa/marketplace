@@ -131,6 +131,10 @@ func TestPostgresReviewIdentitySurvivesRestart(t *testing.T) {
 	if len(purchases) != 1 || purchases[0].ID != "BUY-501" || len(purchases[0].Orders) != 2 {
 		t.Fatalf("purchase ownership reset: %+v", purchases)
 	}
+	commerceDown, err := os.ReadFile(filepath.Join(migrations, "000003-commerce-ledger.down.sql"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	credentialsDown, err := os.ReadFile(filepath.Join(migrations, "000002-review-credentials.down.sql"))
 	if err != nil {
 		t.Fatal(err)
@@ -140,13 +144,16 @@ func TestPostgresReviewIdentitySurvivesRestart(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := pgx.BeginFunc(ctx, pool, func(tx pgx.Tx) error {
+		if _, err := tx.Exec(ctx, string(commerceDown)); err != nil {
+			return err
+		}
 		if _, err := tx.Exec(ctx, string(credentialsDown)); err != nil {
 			return err
 		}
 		if _, err := tx.Exec(ctx, string(down)); err != nil {
 			return err
 		}
-		_, err := tx.Exec(ctx, "DELETE FROM review_schema_migrations WHERE name IN ('000001-review-identity.up.sql','000002-review-credentials.up.sql')")
+		_, err := tx.Exec(ctx, "DELETE FROM review_schema_migrations WHERE name IN ('000001-review-identity.up.sql','000002-review-credentials.up.sql','000003-commerce-ledger.up.sql')")
 		return err
 	}); err != nil {
 		t.Fatal(err)
