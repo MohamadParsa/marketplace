@@ -13,10 +13,11 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۸۵ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه. اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
+در این نسخه ۱۹۴ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO (اجرانشده). اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| محتوای دسته/محصول و SEO (CV-R2-16/17) | [catalog-content-seo.feature](features/experiences/catalog-content-seo.feature) | 9 | [مرجع](../domains/catalog/content-and-seo.md) |
 | بنر دو اندازه (CV-R2-07) | [features/experiences/responsive-banners.feature](features/experiences/responsive-banners.feature) | 2 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) |
 | تنوع و عرضه محصول (CV-R2-06) | [features/experiences/product-workspace.feature](features/experiences/product-workspace.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) |
 | خصوصیات مشترک و کارت (CV-R2-05) | [features/experiences/shared-attributes.feature](features/experiences/shared-attributes.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) |

@@ -36,7 +36,7 @@
 
 ## اصلاحات نسخه ۱.۱
 
-پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت ۱۳ کار فعال پس از بازگشایی محدود #7 در فهرست جاری پیگیری می‌شود؛ پس از فعال‌سازی محدود #7 طبق [ADR-006](../decisions/adr-006-responsive-banner-activation.md)، فقط #8/#9 از این سه کار deferred هستند؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
+پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت ۱۵ کار فعال پس از بازگشایی محدود #7 در فهرست جاری پیگیری می‌شود؛ پس از فعال‌سازی محدود #7 طبق [ADR-006](../decisions/adr-006-responsive-banner-activation.md)، فقط #8/#9 از این سه کار deferred هستند؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
 
 | کار و Issue | موج پیشنهادی | وضعیت اجرا | اصلاح پایه/منشأ |
 | --- | --- | --- | --- |
@@ -55,6 +55,8 @@
 | [CV-R2-13](review-v1-1/tasks/cv-r2-13-general-settings.md) · [#15](https://github.com/MohamadParsa/marketplace/issues/15) | W1 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-14](review-v1-1/tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | W2 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-15](review-v1-1/tasks/cv-r2-15-stock-alert.md) · [#17](https://github.com/MohamadParsa/marketplace/issues/17) | W2 | todo | تفکیک جدید از پاسخ مالک |
+| [CV-R2-16](review-v1-1/tasks/cv-r2-16-category-content-seo.md) · [#24](https://github.com/MohamadParsa/marketplace/issues/24) | W1 | todo | مکمل کاتالوگ؛ CV-CAT-01، CV-WEB-04، CV-WEB-14 |
+| [CV-R2-17](review-v1-1/tasks/cv-r2-17-product-content-seo.md) · [#25](https://github.com/MohamadParsa/marketplace/issues/25) | W1 | todo | مکمل کاتالوگ؛ CV-CAT-03، CV-CAT-04، CV-CAT-07، CV-CAT-08، CV-WEB-05، CV-WEB-14، CV-WEB-15، CV-WEB-16 |
 
 <a id="issue-13-scope"></a>
 
@@ -69,3 +71,6 @@
 - اتصال میان زیرسایت‌ها از محدوده شروع خارج و A پنل در پذیرش ثبت شود. رفتار خاموش‌بودن خود PDP و خرید مستقیم صفحه فروشگاه در Q-027 باز باقی است.
 
 تغییرات حوزه به معنی تکمیل کد/API یا پذیرش سناریوهای قبلی نیستند. مرحله۲ باید سناریوها، قراردادها، وابستگی و شواهد لازم بستن هر کار را یکپارچه کند.
+
+
+تکمیل۲۰۲۶-۱۱-۲۱: دو تسک محتوای دسته/محصول به درخواست مالک افزوده شد؛ [مرجع تطبیق و فیلدها](../domains/catalog/content-and-seo.md). فهرست جاری۱۷ کار (۱۵ فعال،۲معوق) دارد؛ شمار۹۱ تسک snapshot تاریخی تغییر نکرده است.

@@ -100,3 +100,8 @@
 ## شواهد پیاده‌سازی CV-R2-04
 
 AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/contracts/catalog-icons.md)، [گزارش بررسی](../delivery/review-v1-1/issue-4-verification.md) و [تست API و مرورگر](../../tests/e2e/catalog-icons.cjs) متصل‌اند. وضعیت review و منتظر ادغام؛ Go tests/vet و frontend lint/build و۱۴ بررسی مرورگر موفق‌اند. storage حافظه‌ای آزمون است و قبولی production اعلام نشده است.
+
+
+## تکمیل محتوای کاتالوگ — ۲۰۲۶-۱۱-۲۱
+
+درخواست مالک ← [تطبیق و نیازمندی‌ها](../domains/catalog/content-and-seo.md) ← [CV-R2-16 / #24](../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) و [CV-R2-17 / #25](../delivery/review-v1-1/tasks/cv-r2-17-product-content-seo.md) ← [سناریوهای مستند](../bdd/features/experiences/catalog-content-seo.feature) ← مصرف سایت #11 و پذیرش #12. تسک‌ها todo و اسناد in-review هستند؛ سناریوها اجرا نشده‌اند. این تغییر مستندات است و شاهد تکمیل محصول ندارد؛ جزئیات باز R2-Q07 تا R2-Q09 در دفتر پرسش‌هاست.

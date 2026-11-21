@@ -2,7 +2,7 @@
 
 تاریخ:۲۰۲۶-۱۱-۲۱ | وضعیت مشخصات: in-review | مالک بررسی: محصول و راهبر فنی؛ فرد/موعد انتساب نشده | [فرایند #14](https://github.com/MohamadParsa/marketplace/issues/14)
 
-این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۵ شرح کار داریم: ۱۳ کار فعال (۹todo و۴review) و۲ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
+این پوشه بازنویسی اجرایی تسک‌های #1 تا #12 با پاسخ‌های [ADR-005](../../decisions/adr-005-review-v1-1-product-responses.md) است. اصل snapshot۱.۱ و manifest آن محفوظ‌اند. ۱۷ شرح کار داریم: ۱۵ کار فعال (۱۱todo و۴review) و۲ کار معوق؛ هیچ پیاده‌سازی با تدوین این سند done نشده است. سه کار جدید تنظیمات عمومی، ظرفیت اسلات و خبرم‌کن از پاسخ مالک تفکیک شده‌اند.
 
 ## ترتیب و وابستگی
 
@@ -18,15 +18,17 @@
 | [CV-R2-08](tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | کروسل اختصاصی با انتخاب و ترتیب دستی کالا | P1 / later | deferred | CV-CMS-01، CV-CMS-02، CV-CAT-09، CV-PRC-07 |
 | [CV-R2-09](tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | سکشن استیکی با کنترل نمایش و بستن | P1 / later | deferred | CV-R2-07 |
 | [CV-R2-10](tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش | P0 / W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-01، CV-R2-13 |
-| [CV-R2-11](tasks/cv-r2-11-storefront-alignment.md) · [#11](https://github.com/MohamadParsa/marketplace/issues/11) | همگام‌سازی سایت اصلی با تصمیم‌های نسخه۱.۱ | P0 / W3 | todo | CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-13، CV-R2-14، CV-R2-15 |
-| [CV-R2-12](tasks/cv-r2-12-revision-acceptance.md) · [#12](https://github.com/MohamadParsa/marketplace/issues/12) | پذیرش اصلاحات و ردیابی با دامنه فعال | P0 / W3 | todo | CV-R2-01، CV-R2-02، CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-11، CV-R2-13، CV-R2-14، CV-R2-15 |
+| [CV-R2-11](tasks/cv-r2-11-storefront-alignment.md) · [#11](https://github.com/MohamadParsa/marketplace/issues/11) | همگام‌سازی سایت اصلی با تصمیم‌های نسخه۱.۱ | P0 / W3 | todo | CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-13، CV-R2-14، CV-R2-15، CV-R2-16، CV-R2-17 |
+| [CV-R2-12](tasks/cv-r2-12-revision-acceptance.md) · [#12](https://github.com/MohamadParsa/marketplace/issues/12) | پذیرش اصلاحات و ردیابی با دامنه فعال | P0 / W3 | todo | CV-R2-01، CV-R2-02، CV-R2-03، CV-R2-04، CV-R2-05، CV-R2-06، CV-R2-10، CV-R2-11، CV-R2-13، CV-R2-14، CV-R2-15، CV-R2-16، CV-R2-17 |
 | [CV-R2-13](tasks/cv-r2-13-general-settings.md) · [#15](https://github.com/MohamadParsa/marketplace/issues/15) | تنظیمات عمومی دسته‌بندی‌شده سایت | P0 / W1 | todo | CV-R2-01، CV-FND-03، CV-FND-04 |
 | [CV-R2-14](tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | اسلات ارسال ظرفیت‌دار و کنترل رزرو | P0 / W2 | todo | CV-R2-10، CV-R2-13، CV-OPS-05، CV-OPS-06، CV-FIN-03 |
 | [CV-R2-15](tasks/cv-r2-15-stock-alert.md) · [#17](https://github.com/MohamadParsa/marketplace/issues/17) | درخواست اطلاع موجودشدن همان تنوع | P1 / W2 | todo | CV-CAT-05، CV-CAT-06، CV-FND-06 |
+| [CV-R2-16](tasks/cv-r2-16-category-content-seo.md) · [#24](https://github.com/MohamadParsa/marketplace/issues/24) | تکمیل محتوای دسته، انتشار و سئوی PLP | P0 / W1 | todo | CV-R2-04، CV-R2-05، CV-CAT-01 |
+| [CV-R2-17](tasks/cv-r2-17-product-content-seo.md) · [#25](https://github.com/MohamadParsa/marketplace/issues/25) | تکمیل محتوای محصول، رسانه، تعامل و سئوی PDP | P0 / W1 | todo | CV-R2-06، CV-R2-16، CV-CAT-03، CV-CAT-04، CV-CAT-07، CV-CAT-08 |
 
 W0: هویت/مجوز/ورود و پروفایل. W1: تنظیمات عمومی، کاتالوگ و فضای محصول. W2: وقفه/وعده، ظرفیت اسلات و سرویس خبرم‌کن با آداپتر آزمون؛ در کنار تمام عملیات/مالی پنل پایه. W3: سایت اصلی با طرح A و پذیرش یکپارچه، پس از قبولی کل دامنه پنل/سلر با آزمون. later: CMS معوق پس از فعال‌سازی صریح مالک. وابستگی داخل موج هم رعایت شود؛ P0 به معنی دورزدن dependency نیست.
 
-#7 به دستور مالک فقط در برش بنر فعال شد و #8/#9 معوق‌اند؛ این سه در شرط اجباری شروع #11/#12 نیستند؛ خانه چیدمان ثابت و داده خرید معتبر دارد. زیرسایت‌ها و نشست میان‌میزبانی در شروع نیستند. سه کار جدید، خلأ دامنه را روشن می‌کنند؛ اولویت/اندازه نهایی و مسئول در kickoff مشخص شوند و کار بزرگ با حفظ شناسه مادر خرد شود.
+#7 به دستور مالک فقط در برش بنر فعال شد و #8/#9 معوق‌اند؛ این سه در شرط اجباری شروع #11/#12 نیستند؛ خانه چیدمان ثابت و داده خرید معتبر دارد. زیرسایت‌ها و نشست میان‌میزبانی در شروع نیستند. کارهای تکمیلی، خلأ دامنه را روشن می‌کنند؛ اولویت/اندازه نهایی و مسئول در kickoff مشخص شوند و کار بزرگ با حفظ شناسه مادر خرد شود.
 
 ## پاسخ به Issue و سند متأثر
 
@@ -65,3 +67,8 @@ Issue پیاده‌سازی فقط با نتیجه و شواهد AC همان ک�
 ## اجرای Issue#7
 
 [ADR-006](../../decisions/adr-006-responsive-banner-activation.md) فعال‌سازی محدود مالک را ثبت می‌کند. بنر دو اندازه، draft/private preview و انتشار دستی نسخه‌دار در نسخه آزمون اجرا شد؛ [گزارش و تصاویر](issue-7-verification.md). #8/#9 معوق‌اند؛ اتصال خانه، storage واقعی و پذیرش تولید جداست.
+
+
+## تکمیل مدل محتوا و SEO — ۲۰۲۶-۱۱-۲۱
+
+[تطبیق مدل فعلی با درخواست و فهرست کامل فیلدها](../../domains/catalog/content-and-seo.md) ثبت شد. [#24](https://github.com/MohamadParsa/marketplace/issues/24) برای دسته و [#25](https://github.com/MohamadParsa/marketplace/issues/25) برای محصول، کارهای جدید todo هستند؛ اولویت P0/W1 پیشنهادی است. #11 مصرف فرم‌های تکمیل‌شده در PLP/PDP و #12 پذیرش آن‌ها را پیگیری می‌کنند. مدل‌های قبلی #4/#5/#6 محدود به آیکن/خصوصیات/تنوع/عرضه بوده‌اند و انجام آن‌ها تکمیل محتوای محصول نیست. R2-Q07 تا R2-Q09 در دفتر پرسش‌ها جزئیات باز را جدا می‌کنند؛ کد محصول در این تغییر دست نخورده است.
