@@ -3,7 +3,7 @@ id: CV-R2-11
 title: همگام‌سازی سایت اصلی با تصمیم‌های نسخه۱.۱
 status: in-review
 owner: unassigned
-updated: 2026-11-20
+updated: 2026-11-21
 related: [FEAT-SF-001, DOM-CHECKOUT-001]
 approved_by: []
 implementation_status: todo
@@ -73,3 +73,8 @@ Issue: [#11](https://github.com/MohamadParsa/marketplace/issues/11) · پاسخ�
 اصلاح تسک‌های پایه: CV-WEB-02، CV-WEB-03، CV-WEB-04، CV-WEB-05، CV-WEB-06، CV-WEB-07، CV-WEB-08.
 
 [فهرست فعال](../README.md) · [پرسش‌های جاری](../../../product/open-questions.md) · [بسته تاریخی](../../../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/task-index-fa.md). شناسه CV، شماره Issue و شناسه Q سه فضای متفاوت‌اند؛ مثلاً CV-R2-14، خود Issue فرایندی #14 نیست.
+
+
+## وابستگی تکمیلی محتوای کاتالوگ — ۲۰۲۶-۱۱-۲۱
+
+[CV-R2-16 / #24](cv-r2-16-category-content-seo.md) و [CV-R2-17 / #25](cv-r2-17-product-content-seo.md) به وابستگی این کار اضافه شدند. [مرجع مشترک](../../../domains/catalog/content-and-seo.md) و R2-Q07 تا R2-Q09 مبنای اجرا هستند. #11 متادیتای HTML اختصاصی PLP/PDP، حالت robots، نمایش محتوا/گالری و تنظیم مستقل نظر/Q&A را با cache عمومی امن مصرف و بررسی می‌کند؛ #12 شواهد ACهای هر دو تسک و مصرف نهایی را در ماتریس پذیرش می‌آورد. وجود DTO پنل به معنی تکمیل سایت نیست.
