@@ -1,0 +1,155 @@
+{
+  "date": "2026-11-21",
+  "issue": 27,
+  "implementation_status": "review",
+  "document_status": "in-review",
+  "go": {
+    "passed_tests_and_subtests": 89,
+    "failures": 0,
+    "postgres_integration_tests": [
+      "TestHomePostgresRestartRetainsCatalogAndMedia",
+      "TestPostgresReviewIdentitySurvivesRestart"
+    ],
+    "vet": "passed",
+    "local_race": "not-run-windows-cgo-disabled"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "mobile-choice-before-otp",
+        "pass": true
+      },
+      {
+        "id": "email-password-only",
+        "pass": true
+      },
+      {
+        "id": "password-login-real-api",
+        "pass": true
+      },
+      {
+        "id": "catalog-content-edit-public",
+        "pass": true
+      },
+      {
+        "id": "cash-and-discount-edit-public",
+        "pass": true
+      },
+      {
+        "id": "out-of-stock-hidden-on-home",
+        "pass": true
+      },
+      {
+        "id": "invalid-product-image-keeps-previous",
+        "pass": true
+      },
+      {
+        "id": "valid-image-upload-real-api",
+        "pass": true
+      },
+      {
+        "id": "four-typed-admin-mappings",
+        "pass": true
+      },
+      {
+        "id": "four-category-rails",
+        "pass": true
+      },
+      {
+        "id": "real-special-offers",
+        "pass": true
+      },
+      {
+        "id": "available-categories",
+        "pass": true
+      },
+      {
+        "id": "cards-link-without-cart-controls",
+        "pass": true
+      },
+      {
+        "id": "unique-products-within-rails",
+        "pass": true
+      },
+      {
+        "id": "two-managed-promo-banners",
+        "pass": true
+      },
+      {
+        "id": "hero-uses-mobile-asset",
+        "pass": true
+      },
+      {
+        "id": "storefront-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "hero-uses-desktop-asset",
+        "pass": true
+      },
+      {
+        "id": "storefront-desktop-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "backoffice-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "broken-image-fallback",
+        "pass": true
+      },
+      {
+        "id": "server-error-retry-state",
+        "pass": true
+      },
+      {
+        "id": "retry-recovers-real-data",
+        "pass": true
+      },
+      {
+        "id": "storefront-320-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "empty-home-without-fake-products",
+        "pass": true
+      },
+      {
+        "id": "viewer-catalog-writes-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "runtimeErrors": [],
+    "passed": 27,
+    "total": 27
+  },
+  "web": {
+    "backoffice_lint": "passed",
+    "backoffice_build": "passed",
+    "storefront_lint": "passed",
+    "storefront_build": "passed",
+    "seller_lint": "passed",
+    "seller_build": "passed",
+    "contracts_lint": "passed",
+    "contracts_build": "passed"
+  },
+  "scope": {
+    "real_sms": false,
+    "real_payment": false,
+    "public_deployment": false,
+    "owner_visual_approval": false,
+    "customer_login_ui_issue": 30
+  },
+  "process_restart": {
+    "api_process_restarted": true,
+    "public_home_unchanged": true,
+    "banners_unchanged": true,
+    "product_photo_persisted": true,
+    "local_admin_password_login_persisted": true
+  }
+}

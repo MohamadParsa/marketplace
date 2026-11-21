@@ -15,7 +15,7 @@ import (
 )
 
 func sellerActor() identity.User {
-	return identity.User{ID: "seller-test", Surface: identity.SurfaceSeller, Role: identity.RoleViewer, Active: true}
+	return identity.User{ID: "catalog-seller-a", Surface: identity.SurfaceSeller, Role: identity.RoleViewer, Active: true}
 }
 func pricePtr(n int64) *int64 { return &n }
 func stockPtr(n int) *int     { return &n }
@@ -132,8 +132,16 @@ func TestProductWorkspaceScopedPermissionsAndRevocation(t *testing.T) {
 	}
 	// Grant read of B only: union must not transfer A's write permission to B.
 	_ = repo.Update(ctx, func(state *backoffice.Workspace) error {
-		state.Memberships = append(state.Memberships, backoffice.StoreMembership{UserID: seller.ID, StoreID: "s2", Active: true})
-		state.Memberships[0].EditStock = false
+		state.StoreMemberships = append(state.StoreMemberships, identity.StoreMembership{UserID: seller.ID, StoreID: "s2"})
+		state.Access.Grants = append(state.Access.Grants, identity.RoleGrant{UserID: seller.ID, StoreID: "s2", RoleID: "store-view"})
+		grants := state.Access.Grants[:0]
+		for _, g := range state.Access.Grants {
+			if g.UserID == seller.ID && g.RoleID == "catalog-stock" {
+				continue
+			}
+			grants = append(grants, g)
+		}
+		state.Access.Grants = grants
 		return nil
 	})
 	foreign.Target = "mob-b-black"
@@ -151,9 +159,7 @@ func TestProductWorkspaceScopedPermissionsAndRevocation(t *testing.T) {
 		t.Fatal(err)
 	}
 	_ = repo.Update(ctx, func(state *backoffice.Workspace) error {
-		for i := range state.Memberships {
-			state.Memberships[i].Active = false
-		}
+		state.StoreMemberships = nil
 		return nil
 	})
 	if err := s.Execute(ctx, seller, foreign); !errors.Is(err, backoffice.ErrForbidden) {

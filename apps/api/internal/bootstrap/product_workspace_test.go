@@ -36,12 +36,15 @@ func productCall(t *testing.T, h http.Handler, method, path, token string, body 
 
 func sellerLogin(t *testing.T, h http.Handler, phone string) string {
 	t.Helper()
-	var challenge map[string]string
+	var challenge struct {
+		RequestID string `json:"request_id"`
+		TestCode  string `json:"test_code"`
+	}
 	w := productCall(t, h, "POST", "/seller/auth/request-otp", "", map[string]string{"phone": phone}, 202)
 	if err := json.Unmarshal(w.Body.Bytes(), &challenge); err != nil {
 		t.Fatal(err)
 	}
-	w = productCall(t, h, "POST", "/seller/auth/verify-otp", "", map[string]string{"request_id": challenge["request_id"], "code": challenge["test_code"]}, 200)
+	w = productCall(t, h, "POST", "/seller/auth/verify-otp", "", map[string]string{"request_id": challenge.RequestID, "code": challenge.TestCode}, 200)
 	var session struct {
 		Token string `json:"token"`
 	}
@@ -53,8 +56,8 @@ func TestProductWorkspaceHTTPReadWriteResolveAndPrivacy(t *testing.T) {
 	h := bootstrap.NewHTTPHandler(config.Config{Environment: "test"})
 	admin := login(t, h, "09000000001")
 	viewer := login(t, h, "09000000005")
-	seller := sellerLogin(t, h, "09120000002")
-	sellerB := sellerLogin(t, h, "09120000003")
+	seller := sellerLogin(t, h, "09120000012")
+	sellerB := sellerLogin(t, h, "09120000013")
 	path := "/backoffice/products/mobile-sample/workspace"
 	productCall(t, h, "GET", path, "", nil, 401)
 	productCall(t, h, "GET", path, seller, nil, 401)

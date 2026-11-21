@@ -202,7 +202,8 @@ function BannerEditor({
   const dirty =
     draft.alt !== saved.alt ||
     draft.link !== saved.link ||
-    draft.enabled !== saved.enabled;
+    draft.enabled !== saved.enabled ||
+    draft.placement !== saved.placement;
   const change = (next: typeof draft) => {
     setDraft(next);
     setSaveKey(crypto.randomUUID());
@@ -306,6 +307,23 @@ function BannerEditor({
         )}
         {notice && <Alert severity="success">{notice}</Alert>}
         <div className="banner-fields">
+          <label className="home-admin-form">
+            جایگاه بنر
+            <select
+              aria-label="جایگاه بنر"
+              disabled={!editable || busy}
+              value={draft.placement ?? "hero"}
+              onChange={(e) =>
+                change({
+                  ...draft,
+                  placement: e.target.value as "hero" | "promo",
+                })
+              }
+            >
+              <option value="hero">بنر اصلی صفحه</option>
+              <option value="promo">بنر مکمل کنار هم</option>
+            </select>
+          </label>
           <TextField
             label="متن جایگزین تصویر"
             value={draft.alt}

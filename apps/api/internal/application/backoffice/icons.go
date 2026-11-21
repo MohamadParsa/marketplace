@@ -14,11 +14,13 @@ import (
 
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"golang.org/x/image/draw"
 	_ "golang.org/x/image/webp"
 )
 
 const MaxIconBytes = 1 << 20
 const MaxIconDimension = 1024
+const MaxProductImageBytes = 5 << 20
 
 var ErrIconTooLarge = errors.New("icon_too_large")
 var ErrInvalidIcon = errors.New("invalid_icon")
@@ -59,6 +61,14 @@ func normalizeRaster(input []byte, maxBytes, maxDimension, maxPixels int) ([]byt
 
 func iconReference(state *Workspace, kind, target string) (*string, *int, error) {
 	switch kind {
+	case "product":
+		for i := range state.Products {
+			p := &state.Products[i]
+			if p.ID == target {
+				return &p.ImageID, &p.Version, nil
+			}
+		}
+		return nil, nil, ErrNotFound
 	case "category":
 		for i := range state.Categories {
 			x := &state.Categories[i]
@@ -87,6 +97,11 @@ func iconReference(state *Workspace, kind, target string) (*string, *int, error)
 
 func collectUnusedIcons(state *Workspace) {
 	used := map[string]bool{}
+	for _, p := range state.Products {
+		if p.ImageID != "" {
+			used[p.ImageID] = true
+		}
+	}
 	for _, x := range state.Categories {
 		used[x.IconID] = true
 	}
@@ -120,13 +135,19 @@ func removeIcon(state *Workspace, c Command) error {
 // SetCatalogIcon attaches the validated icon and audit in the same repository transaction.
 func (s *Service) SetCatalogIcon(ctx context.Context, actor identity.User, kind, target string, version int, key string, input []byte) error {
 	action := kind + ".icon.set"
-	if !roleAllows(actor.Role, action) {
+	if !allowsAction(actor, action) {
 		return ErrForbidden
 	}
-	if (kind != "category" && kind != "brand") || target == "" || version < 0 || strings.TrimSpace(key) == "" || len(key) > 128 {
+	if (kind != "category" && kind != "brand" && kind != "product") || target == "" || version < 0 || strings.TrimSpace(key) == "" || len(key) > 128 {
 		return ErrInvalid
 	}
-	data, err := normalizeIcon(input)
+	var data []byte
+	var err error
+	if kind == "product" {
+		data, err = normalizeProductPhoto(input)
+	} else {
+		data, err = normalizeIcon(input)
+	}
 	if err != nil {
 		return err
 	}
@@ -142,11 +163,11 @@ func (s *Service) SetCatalogIcon(ctx context.Context, actor identity.User, kind,
 	sum := sha256.Sum256(encoded)
 	fingerprint := hex.EncodeToString(sum[:])
 	return s.repository.Update(ctx, func(state *Workspace) error {
-		current, err := currentActor(*state, actor.ID)
+		current, err := currentActor(*state, actor)
 		if err != nil {
 			return err
 		}
-		if !roleAllows(current.Role, action) {
+		if !allowsAction(current, action) {
 			return ErrForbidden
 		}
 		for _, event := range state.Audit {
@@ -180,6 +201,11 @@ func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error
 		return nil, err
 	}
 	attached := false
+	for _, p := range state.Products {
+		if p.Status == "published" && p.ImageID == id && publicCategory(state, p.CategoryID) != nil && validBrand(state, p.BrandID) {
+			attached = true
+		}
+	}
 	for _, x := range state.Categories {
 		attached = attached || (!x.Archived && x.IconID == id)
 	}
@@ -195,4 +221,60 @@ func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error
 		}
 	}
 	return nil, ErrNotFound
+}
+
+func (s *Service) ReadManagedIcon(ctx context.Context, actor identity.User, id string) ([]byte, error) {
+	state, err := s.repository.Snapshot(ctx)
+	if err != nil {
+		return nil, err
+	}
+	current, err := currentActor(state, actor)
+	if err != nil || !allowsAction(current, "product.icon.set") {
+		return nil, ErrForbidden
+	}
+	for _, m := range state.IconMedia {
+		if m.ID == id {
+			return m.Data, nil
+		}
+	}
+	return nil, ErrNotFound
+}
+
+func normalizeProductPhoto(input []byte) ([]byte, error) {
+	if len(input) > MaxProductImageBytes {
+		return nil, ErrIconTooLarge
+	}
+	cfg, format, err := image.DecodeConfig(bytes.NewReader(input))
+	if err != nil || (format != "png" && format != "jpeg" && format != "webp") || cfg.Width < 1 || cfg.Height < 1 || cfg.Width > 4096 || cfg.Height > 4096 || cfg.Width > (16*1024*1024)/cfg.Height {
+		return nil, ErrInvalidIcon
+	}
+	source, _, err := image.Decode(bytes.NewReader(input))
+	if err != nil {
+		return nil, ErrInvalidIcon
+	}
+	var normalized image.Image = source
+	if cfg.Width > 1024 || cfg.Height > 1024 {
+		width, height := cfg.Width, cfg.Height
+		if width >= height {
+			height = height * 1024 / width
+			width = 1024
+		} else {
+			width = width * 1024 / height
+			height = 1024
+		}
+		if width < 1 {
+			width = 1
+		}
+		if height < 1 {
+			height = 1
+		}
+		target := image.NewRGBA(image.Rect(0, 0, width, height))
+		draw.ApproxBiLinear.Scale(target, target.Bounds(), source, source.Bounds(), draw.Src, nil)
+		normalized = target
+	}
+	var out bytes.Buffer
+	if err := png.Encode(&out, normalized); err != nil {
+		return nil, ErrInvalidIcon
+	}
+	return out.Bytes(), nil
 }

@@ -1,13 +1,16 @@
 package catalog
 
 type Category struct {
-	ID       string             `json:"id"`
-	Name     string             `json:"name"`
-	ParentID string             `json:"parent_id,omitempty"`
-	Bindings []AttributeBinding `json:"bindings"`
-	Archived bool               `json:"archived"`
-	IconID   string             `json:"icon_id,omitempty"`
-	Version  int                `json:"version"`
+	EnglishName string             `json:"english_name,omitempty"`
+	Description string             `json:"description,omitempty"`
+	Published   bool               `json:"published"`
+	ID          string             `json:"id"`
+	Name        string             `json:"name"`
+	ParentID    string             `json:"parent_id,omitempty"`
+	Bindings    []AttributeBinding `json:"bindings"`
+	Archived    bool               `json:"archived"`
+	IconID      string             `json:"icon_id,omitempty"`
+	Version     int                `json:"version"`
 }
 
 type Brand struct {
@@ -24,6 +27,10 @@ type IconMedia struct {
 	Data []byte `json:"data"`
 }
 type Product struct {
+	EnglishName    string           `json:"english_name,omitempty"`
+	Description    string           `json:"description,omitempty"`
+	BrandID        string           `json:"brand_id,omitempty"`
+	ImageID        string           `json:"image_id,omitempty"`
 	ID             string           `json:"id"`
 	Name           string           `json:"name"`
 	CategoryID     string           `json:"category_id"`
@@ -79,12 +86,13 @@ type CardPreview struct {
 	Features  []CardFeature `json:"features"`
 }
 type Offer struct {
-	ID        string `json:"id"`
-	ProductID string `json:"product_id"`
-	StoreID   string `json:"store_id"`
-	Stock     int    `json:"stock"`
-	Price     int64  `json:"price"`
-	VariantID string `json:"variant_id"`
-	Reserved  int    `json:"reserved"`
-	Version   int    `json:"version"`
+	RegularPrice int64  `json:"regular_price,omitempty"`
+	ID           string `json:"id"`
+	ProductID    string `json:"product_id"`
+	StoreID      string `json:"store_id"`
+	Stock        int    `json:"stock"`
+	Price        int64  `json:"price"`
+	VariantID    string `json:"variant_id"`
+	Reserved     int    `json:"reserved"`
+	Version      int    `json:"version"`
 }

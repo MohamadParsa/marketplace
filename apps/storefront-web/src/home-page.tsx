@@ -1,0 +1,585 @@
+import { useEffect, useRef, useState } from "react";
+const api = import.meta.env.VITE_API_BASE_URL ?? "";
+interface HomeCategory {
+  id: string;
+  name: string;
+  url: string;
+  image_url: string;
+  count: number;
+}
+interface Card {
+  regular_price?: number;
+  discount_percent?: number;
+  id: string;
+  name: string;
+  category_name: string;
+  url: string;
+  image_url: string;
+  price: number;
+  offer_id: string;
+  variant_id: string;
+}
+interface Rail {
+  key: string;
+  title: string;
+  category_id: string;
+  url: string;
+  products: Card[];
+}
+interface Banner {
+  id: string;
+  config: {
+    desktop_id: string;
+    mobile_id: string;
+    alt: string;
+    link: string;
+    placement?: string;
+  };
+}
+const keys = ["mobile", "earbuds", "power-bank", "smartwatch"];
+const paths: Record<string, React.ReactNode> = {
+  mobile: (
+    <>
+      <rect x="8" y="3" width="16" height="26" rx="3" />
+      <path d="M13 7h6M14 25h4" />
+    </>
+  ),
+  earbuds: (
+    <>
+      <path d="M5 15V11a11 11 0 0 1 22 0v4" />
+      <rect x="3" y="13" width="6" height="12" rx="3" />
+      <rect x="23" y="13" width="6" height="12" rx="3" />
+    </>
+  ),
+  "power-bank": (
+    <>
+      <rect x="6" y="7" width="20" height="20" rx="4" />
+      <path d="M12 3h8M17 12l-4 7h6l-4 5" />
+    </>
+  ),
+  smartwatch: (
+    <>
+      <rect x="8" y="9" width="16" height="15" rx="4" />
+      <path d="M12 9V3h8v6m-8 15v5h8v-5m-4-12v5l3 2" />
+    </>
+  ),
+  search: (
+    <>
+      <circle cx="14" cy="14" r="8" />
+      <path d="m20 20 7 7" />
+    </>
+  ),
+  user: (
+    <>
+      <circle cx="16" cy="10" r="5" />
+      <path d="M6 29v-3a10 10 0 0 1 20 0v3" />
+    </>
+  ),
+  bag: (
+    <>
+      <path d="M6 10h20l2 19H4L6 10Z" />
+      <path d="M11 11V7a5 5 0 0 1 10 0v4" />
+    </>
+  ),
+  arrow: <path d="m20 6-10 10 10 10" />,
+};
+function Icon({ name }: { name: string }) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name] ?? paths.mobile}
+    </svg>
+  );
+}
+function Price({ value }: { value: number }) {
+  return (
+    <span className="lh-price">
+      <strong>
+        {new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 1 }).format(
+          value / 10,
+        )}
+      </strong>
+      <small>تومان</small>
+    </span>
+  );
+}
+function ProductCard({ card }: { card: Card }) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [card.image_url]);
+  return (
+    <a className="lh-product" href={card.url}>
+      <div className="lh-product-image">
+        {failed ? (
+          <div className="lh-image-fallback">
+            <Icon name="bag" />
+            <span>تصویر در دسترس نیست</span>
+          </div>
+        ) : (
+          <img
+            src={api + card.image_url}
+            alt={card.name}
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailed(true)}
+          />
+        )}
+      </div>
+      <span className="lh-category-name">{card.category_name}</span>
+      <h3>{card.name}</h3>
+      <div className="lh-product-price">
+        {card.regular_price && card.regular_price > card.price ? (
+          <span className="lh-before-price">
+            <del>
+              {new Intl.NumberFormat("fa-IR", {
+                maximumFractionDigits: 1,
+              }).format(card.regular_price / 10)}
+            </del>
+            <b>
+              {card.discount_percent
+                ? `${new Intl.NumberFormat("fa-IR").format(card.discount_percent)}٪`
+                : "ویژه"}
+            </b>
+          </span>
+        ) : (
+          <span>قیمت نقدی از</span>
+        )}
+        <Price value={card.price} />
+      </div>
+    </a>
+  );
+}
+function ProductRail({
+  rail,
+  index,
+  special = false,
+}: {
+  rail: Rail;
+  index: number;
+  special?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  return (
+    <section
+      className={`lh-rail ${special ? "lh-special" : ""}`}
+      aria-labelledby={`rail-${rail.key}`}
+      data-rail={rail.key}
+    >
+      <div className="lh-section-heading">
+        <div>
+          <span className="lh-section-index">
+            {special ? "٪" : `۰${index + 1}`}
+          </span>
+          <h2 id={`rail-${rail.key}`}>{rail.title}</h2>
+        </div>
+        <div className="lh-rail-tools">
+          {rail.url && (
+            <a href={rail.url}>
+              {special ? "مشاهده همه تخفیف‌ها" : "مشاهده همه"}{" "}
+              <Icon name="arrow" />
+            </a>
+          )}
+          <button
+            aria-label={`پیمایش ${rail.title}`}
+            onClick={() =>
+              ref.current?.scrollBy({
+                left: -280,
+                behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+              })
+            }
+            disabled={!rail.products.length}
+          >
+            <Icon name="arrow" />
+          </button>
+        </div>
+      </div>
+      {rail.products.length ? (
+        <div
+          className="lh-products"
+          ref={ref}
+          tabIndex={0}
+          aria-label={`محصولات ${rail.title}`}
+        >
+          {rail.products.map((p) => (
+            <ProductCard key={p.id} card={p} />
+          ))}
+        </div>
+      ) : (
+        <div className="lh-empty">
+          <Icon name={rail.key} />
+          <p>
+            {special
+              ? "در حال حاضر تخفیف فعالی وجود ندارد."
+              : "در حال حاضر کالایی برای این دسته موجود نیست."}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+function Hero({ banners, photos }: { banners: Banner[]; photos: Card[] }) {
+  const [index, setIndex] = useState(0);
+  const [broken, setBroken] = useState<string[]>([]);
+  const valid = banners.filter(
+    (b) => b.config.placement !== "promo" && !broken.includes(b.id),
+  );
+  const b = valid[index % Math.max(1, valid.length)];
+  const visual = b ? (
+    <picture>
+      <source
+        media="(max-width: 600px)"
+        srcSet={
+          api +
+          `/content/banner-media/${encodeURIComponent(b.config.mobile_id)}`
+        }
+      />
+      <img
+        src={
+          api +
+          `/content/banner-media/${encodeURIComponent(b.config.desktop_id)}`
+        }
+        alt={b.config.alt}
+        fetchPriority="high"
+        onError={() => setBroken((x) => [...x, b.id])}
+      />
+    </picture>
+  ) : null;
+  return (
+    <section
+      className={`lh-hero ${b ? "with-media" : ""}`}
+      aria-label="پیشنهادهای چریوا"
+    >
+      {b ? (
+        b.config.link ? (
+          <a className="lh-hero-media" href={b.config.link}>
+            {visual}
+          </a>
+        ) : (
+          <div className="lh-hero-media">{visual}</div>
+        )
+      ) : (
+        <>
+          <div className="lh-hero-copy">
+            <span className="lh-eyebrow">CHERRIVA / انتخابی به سلیقه تو</span>
+            <h1>
+              دنیایی برای
+              <br />
+              انتخاب تو<span>.</span>
+            </h1>
+            <p>
+              تازه‌های دیجیتال، همراه انتخاب‌های خوب تو.
+              <br />
+              اطلاعات روشن، قیمت نقدی مشخص.
+            </p>
+            <a href="#home-categories" className="lh-primary">
+              دسته‌ها را ببین <Icon name="arrow" />
+            </a>
+          </div>
+          <div
+            className={`lh-hero-art ${photos.length ? "has-photos" : ""}`}
+            aria-hidden="true"
+          >
+            {photos.length > 0 && (
+              <div className="lh-hero-photos">
+                {photos.slice(0, 2).map((p) => (
+                  <img src={api + p.image_url} alt="" key={p.id} />
+                ))}
+              </div>
+            )}
+            <span className="lh-orbit one" />
+            <span className="lh-orbit two" />
+            <div className="lh-art-phone">
+              <span />
+              <i />
+              <b>C</b>
+            </div>
+            <div className="lh-art-watch">
+              <Icon name="smartwatch" />
+            </div>
+            <span className="lh-art-label">cherriva</span>
+          </div>
+        </>
+      )}
+      {valid.length > 1 && (
+        <div className="lh-hero-dots">
+          {valid.map((x, i) => (
+            <button
+              key={x.id}
+              aria-label={`بنر ${i + 1}`}
+              aria-pressed={index % valid.length === i}
+              onClick={() => setIndex(i)}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+function PromoBanners({ banners }: { banners: Banner[] }) {
+  const [broken, setBroken] = useState<string[]>([]);
+  const promos = banners
+    .filter((b) => b.config.placement === "promo" && !broken.includes(b.id))
+    .slice(0, 2);
+  return promos.length ? (
+    <section className="lh-promos" aria-label="بنرهای منتخب">
+      {promos.map((b) => {
+        const visual = (
+          <picture>
+            <source
+              media="(max-width:600px)"
+              srcSet={api + `/content/banner-media/${b.config.mobile_id}`}
+            />
+            <img
+              src={api + `/content/banner-media/${b.config.desktop_id}`}
+              alt={b.config.alt}
+              loading="lazy"
+              onError={() => setBroken((x) => [...x, b.id])}
+            />
+          </picture>
+        );
+        return b.config.link ? (
+          <a href={b.config.link} key={b.id}>
+            {visual}
+          </a>
+        ) : (
+          <div key={b.id}>{visual}</div>
+        );
+      })}
+    </section>
+  ) : null;
+}
+export function HomePage() {
+  const [availableCategories, setAvailableCategories] = useState<
+    HomeCategory[]
+  >([]);
+  const [special, setSpecial] = useState<Card[]>([]);
+  const [specialUrl, setSpecialUrl] = useState("/offers");
+  const [rails, setRails] = useState<Rail[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    void fetch(api + "/storefront/home", { signal: controller.signal })
+      .then(async (r) => {
+        if (!r.ok) throw Error();
+        const data = (await r.json()) as {
+          rails: Rail[];
+          categories: HomeCategory[];
+          special_offers: Card[];
+          special_offers_url: string;
+        };
+        if (
+          data.rails.length !== 4 ||
+          data.rails.some((r, i) => r.key !== keys[i])
+        )
+          throw Error();
+        setRails(data.rails);
+        setAvailableCategories(data.categories);
+        setSpecial(data.special_offers);
+        setSpecialUrl(data.special_offers_url);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    void fetch(api + "/content/banners", { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: Banner[]) => setBanners(data))
+      .catch(() => {});
+    return () => controller.abort();
+  }, [attempt]);
+  const categories = rails.filter((r) => r.url);
+  const isHome = location.pathname === "/";
+  return (
+    <div className="launch-home" dir="rtl">
+      <a className="lh-skip" href="#main">
+        رفتن به محتوا
+      </a>
+      <div className="lh-topline">چریوا؛ انتخابی ساده برای زندگی امروز</div>
+      <header className="lh-header">
+        <div className="lh-header-main lh-wrap">
+          <a href="/" className="lh-logo" aria-label="چریوا؛ صفحه اصلی">
+            <img
+              src="/brand/cherriva-wordmark.svg"
+              alt="Cherriva"
+              width="177"
+              height="48"
+            />
+          </a>
+          <div className="lh-search">
+            <Icon name="search" />
+            <input
+              type="search"
+              placeholder="جست‌وجو در چریوا"
+              aria-label="جست‌وجو در چریوا"
+              disabled
+            />
+          </div>
+          <div className="lh-header-actions">
+            <button disabled aria-label="حساب کاربری">
+              <Icon name="user" />
+            </button>
+            <span />
+            <button disabled aria-label="سبد خرید">
+              <Icon name="bag" />
+            </button>
+          </div>
+        </div>
+        <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">
+          <a href="/#home-categories" className="lh-menu-label">
+            <span>☰</span> دسته‌بندی کالاها
+          </a>
+          {categories.map((c) => (
+            <a key={c.key} href={c.url}>
+              {c.title}
+            </a>
+          ))}
+        </nav>
+      </header>
+      <main id="main" className="lh-wrap">
+        {!isHome ? (
+          <section className="lh-route-unavailable">
+            <h1>این صفحه در دسترس نیست.</h1>
+            <a href="/" className="lh-primary">
+              بازگشت به صفحه اصلی
+            </a>
+          </section>
+        ) : (
+          <>
+            <Hero
+              banners={banners}
+              photos={rails.slice(0, 2).flatMap((r) => r.products.slice(0, 1))}
+            />
+            <section
+              className="lh-categories"
+              id="home-categories"
+              aria-label="دسته‌های دارای محصول"
+            >
+              {availableCategories.map((r) => (
+                <a key={r.id} href={r.url}>
+                  <span>
+                    {r.image_url ? (
+                      <img src={api + r.image_url} alt="" />
+                    ) : (
+                      <Icon name="bag" />
+                    )}
+                  </span>
+                  <b>{r.name}</b>
+                  <small>
+                    {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
+                  </small>
+                </a>
+              ))}
+            </section>
+            {loading ? (
+              <div className="lh-loading" role="status">
+                <span />
+                در حال دریافت محصولات…
+              </div>
+            ) : error ? (
+              <div className="lh-error" role="alert">
+                <h2>دریافت محصولات انجام نشد.</h2>
+                <p>ارتباط را بررسی کنید و دوباره تلاش کنید.</p>
+                <button
+                  className="lh-primary"
+                  onClick={() => setAttempt((x) => x + 1)}
+                >
+                  تلاش دوباره
+                </button>
+              </div>
+            ) : (
+              <>
+                <ProductRail
+                  special
+                  rail={{
+                    key: "special",
+                    title: "تخفیف‌های ویژه",
+                    category_id: "",
+                    url: specialUrl,
+                    products: special,
+                  }}
+                  index={0}
+                />
+                {rails.map((rail, i) => (
+                  <div key={rail.key}>
+                    <ProductRail rail={rail} index={i} />
+                    {i === 0 && <PromoBanners banners={banners} />}
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        )}
+        <section className="lh-about" id="about">
+          <span className="lh-eyebrow">یک انتخاب، هزار همراه</span>
+          <h2>چریوا؛ همراه انتخاب‌های شما</h2>
+          <p>
+            در چریوا، موبایل، هندزفری، پاوربانک و ساعت هوشمند را کنار هم ببینید.
+            مشخصات و قیمت‌ها را بررسی کنید و همراه دیجیتال مناسب خود را انتخاب
+            کنید.
+          </p>
+        </section>
+        <div className="lh-values">
+          <div>
+            <Icon name="search" />
+            <b>اطلاعات روشن کالا</b>
+          </div>
+          <div>
+            <Icon name="mobile" />
+            <b>انتخاب‌های دیجیتال</b>
+          </div>
+          <div>
+            <Icon name="bag" />
+            <b>قیمت نقدی مشخص</b>
+          </div>
+        </div>
+      </main>
+      <footer className="lh-footer">
+        <div className="lh-wrap lh-footer-main">
+          <div>
+            <a href="/" className="lh-logo">
+              <img
+                src="/brand/cherriva-wordmark.svg"
+                alt="Cherriva"
+                width="160"
+                height="44"
+              />
+            </a>
+            <p>انتخابی ساده، برای همراه‌های هر روز.</p>
+          </div>
+          <div>
+            <h2>دسته‌های چریوا</h2>
+            {categories.map((r) => (
+              <a href={r.url} key={r.key}>
+                {r.title}
+              </a>
+            ))}
+          </div>
+          <div>
+            <h2>درباره چریوا</h2>
+            <a href="/#about">آشنایی با چریوا</a>
+            <a href="/#home-categories">دسته‌بندی کالاها</a>
+          </div>
+        </div>
+        <div className="lh-wrap lh-copyright">
+          <span>تمام حقوق این وب‌سایت برای چریوا محفوظ است.</span>
+          <span dir="ltr">cherriva.ir</span>
+        </div>
+      </footer>
+    </div>
+  );
+}

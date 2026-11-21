@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Link,
@@ -43,10 +43,12 @@ import {
 } from "@mui/icons-material";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
+import { ProfilePage } from "../features/management/profile-page";
+import { HomeCatalogPage } from "../features/management/home-catalog-page";
 import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
-import { WorkspaceContext } from "../shared/workspace";
+import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
@@ -61,7 +63,7 @@ const theme = createTheme({
     fontFamily: "Vazirmatn, Tahoma, sans-serif",
     button: { textTransform: "none", fontWeight: 600 },
   },
-  palette: { primary: { main: "#207863" }, background: { default: "#f5f7f8" } },
+  palette: { primary: { main: "#B51F46" }, background: { default: "#F7F7F9" } },
   shape: { borderRadius: 10 },
   components: {
     MuiButton: { defaultProps: { disableElevation: true } },
@@ -76,6 +78,11 @@ const menu = [
   {
     heading: "مدیریت بازارگاه",
     items: [
+      {
+        path: "/home-catalog",
+        label: "کاتالوگ و صفحه اصلی",
+        icon: <Inventory2Outlined />,
+      },
       {
         path: "/users",
         label: "کاربران و نقش‌ها",
@@ -166,6 +173,14 @@ function Workspace({
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const loadCatalogMedia = useCallback(
+    (id: string) => api.catalogMedia(session.token, id),
+    [session.token],
+  );
+  const loadProfile = useCallback(
+    () => api.profile(session.token),
+    [session.token],
+  );
   const query = useQuery({
     queryKey: ["workspace", session.token],
     queryFn: () => api.workspace(session.token, session.user.Surface),
@@ -182,6 +197,9 @@ function Workspace({
         command.action.startsWith("banner.") ? "" : "تغییر با موفقیت ثبت شد.",
       );
     },
+    onError: (error) => {
+      if (error instanceof ApiError && error.status === 401) logout();
+    },
   });
   useEffect(() => {
     if (query.error instanceof ApiError && query.error.status === 401) logout();
@@ -190,15 +208,30 @@ function Workspace({
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
   const role = session.user.Role;
-  const visible = (roles?: string[]) => !roles || roles.includes(role);
+  const permissions = session.user.Permissions ?? [];
+  const financeVisible =
+    role === "super-admin" ||
+    role === "finance" ||
+    permissions.includes("finance.read");
+  const visible = (roles?: string[]) =>
+    !roles ||
+    roles.includes(role) ||
+    (roles.includes("finance") && financeVisible);
   return (
     <div className="app-layout">
       <aside className={"sidebar " + (menuOpen ? "is-open" : "")}>
         <Link className="brand" to="/">
-          <span className="brand-mark">م</span>
-          <span>
-            مارکت‌پلیس<small>مرکز مدیریت بازارگاه</small>
-          </span>
+          <img
+            src="/brand/cherriva-wordmark.svg"
+            alt="Cherriva"
+            width="160"
+            height="44"
+          />
+          <small>
+            فضای مدیریت
+            <br />
+            چریوا
+          </small>
         </Link>
         <div className="workspace-badge">
           <span className="workspace-symbol">◈</span>
@@ -241,7 +274,9 @@ function Workspace({
           <div className="avatar">{role === "super-admin" ? "م" : "ک"}</div>
           <div>
             <b>کاربر آزمایشی</b>
-            <small>{role}</small>
+            <small>
+              {role === "super-admin" ? "ادمین" : role || "نقش سفارشی"}
+            </small>
           </div>
           <button aria-label="خروج از حساب" onClick={logout}>
             <LogoutOutlined />
@@ -284,7 +319,13 @@ function Workspace({
             <Link aria-label="اعلان‌ها" to="/notifications">
               <NotificationsNoneOutlined />
             </Link>
-            <div className="avatar small-avatar">م</div>
+            <Link
+              to="/profile"
+              className="avatar small-avatar"
+              aria-label="پروفایل و تنظیم رمز"
+            >
+              ک
+            </Link>
           </div>
         </header>
         <main className="content">
@@ -308,6 +349,10 @@ function Workspace({
                 state: query.data,
                 role,
                 surface: session.user.Surface,
+                loadProfile,
+                updateProfile: (input) =>
+                  api.updateProfile(session.token, input),
+                loadCatalogMedia,
                 loadBanners: () => api.banners(session.token),
                 loadBannerAsset: (id) => api.bannerAsset(session.token, id),
                 uploadBanner: async (input) => {
@@ -324,7 +369,6 @@ function Workspace({
                     values,
                     session.user.Surface,
                   ),
-                execute: (command) => mutation.mutateAsync(command),
                 uploadIcon: async (input) => {
                   try {
                     await api.uploadIcon(session.token, input);
@@ -336,10 +380,27 @@ function Workspace({
                     throw error;
                   }
                 },
+                can: (action, area) =>
+                  role === "super-admin" ||
+                  (!!area && can(role, area)) ||
+                  permissions.includes(action),
+                execute: (command) => mutation.mutateAsync(command),
+                requestAdminCode: () => api.requestAdminCode(session.token),
                 busy: mutation.isPending,
               }}
             >
               <Routes>
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route
+                  path="/home-catalog"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/" replace />
+                    ) : (
+                      <HomeCatalogPage />
+                    )
+                  }
+                />
                 <Route
                   path="/"
                   element={
@@ -380,8 +441,7 @@ function Workspace({
                       (session.user.Surface === "seller" &&
                         section !== "products") ||
                       (section === "users" && role !== "super-admin") ||
-                      (section === "pricing" &&
-                        !["super-admin", "finance"].includes(role)) ? (
+                      (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (
                         <ManagementPage key={section} section={section} />
@@ -411,7 +471,7 @@ function Workspace({
                 <Route
                   path="/finance"
                   element={
-                    ["super-admin", "finance"].includes(role) ? (
+                    financeVisible ? (
                       <FinancePage />
                     ) : (
                       <Navigate to="/" replace />

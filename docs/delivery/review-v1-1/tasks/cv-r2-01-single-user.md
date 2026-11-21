@@ -3,10 +3,10 @@ id: CV-R2-01
 title: هویت واحد، نقش admin و عضویت چندبه‌چند
 status: in-review
 owner: unassigned
-updated: 2026-11-20
+updated: 2026-11-21
 related: [DOM-IDENTITY-001, PROD-ROLES-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 priority: P0
 wave: W0
 ---
@@ -15,7 +15,7 @@ wave: W0
 
 Issue: [#1](https://github.com/MohamadParsa/marketplace/issues/1) · پاسخ‌های مالک: [R2-Q01](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری)، [R2-Q02](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
-این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.
+این مشخصات بازنویسی پس از #13 و در وضعیت in-review است. اجرای CV-R2-01 در دامنه داده آزمون کامل است؛ تأیید سند، گیت کل پنل‌ها و اتصال واقعی جدا هستند.
 
 ## هدف بیزینسی و نتیجه
 
@@ -42,7 +42,7 @@ Issue: [#1](https://github.com/MohamadParsa/marketplace/issues/1) · پاسخ‌
 
 ## بخش مسدود، خارج محدوده یا شرط شروع
 
-نگاشت admin به super-admin نسخه آزمون، سیاست آخرین admin و ابطال اختیار باید پیش از پذیرش افزایش اختیار در قرارداد امن مشخص شوند؛ اصل چندنقشی/عضویت حل‌شده است.
+[R2-Q02](../../../decisions/adr-005-review-v1-1-product-responses.md#r2-q02) سیاست ادمین را تعیین کرده است. بخش‌های مورد نیاز این کار از CV-IAM-03 و CV-FND-04 (رجیستری، مدیریت نقش و schema هویت آزمون) بررسی شده‌اند؛ این تحویل پذیرش سایر دامنه‌ها و schema عملیاتی آن تسک‌ها نیست.
 
 اصل پنل/سلر کامل با داده آزمون پیش از سایت حفظ شود. مخزن/پروژه، provider، مقررات و تصمیم باز از fixture یا رابط استنباط نشود؛ اتصال واقعی گیت مستقل دارد.
 
@@ -56,7 +56,19 @@ Issue: [#1](https://github.com/MohamadParsa/marketplace/issues/1) · پاسخ‌
 
 گزارش integration/API با حداقل دو فروشگاه و یک کاربر چندنقشی؛ درخواست مثبت/منفی و سابقه تغییر نقش. تصویر منوی مخفی‌شده به‌تنهایی کافی نیست.
 
-گزارش تحویل: شناسه کار، فایل/قرارداد، رفتار قبل/بعد، داده آزمون و نتیجه هر AC، مجوز/scope، موارد باز و لینک شاهد. mock، integration/API، browser و provider مستقل گزارش شوند؛ هیچ نتیجه‌ای در مرحله تدوین این سند ثبت نشده است.
+گزارش تحویل: شناسه کار، فایل/قرارداد، رفتار قبل/بعد، داده آزمون و نتیجه هر AC، مجوز/scope، موارد باز و لینک شاهد. mock، integration/API، browser و provider مستقل گزارش شوند.
+
+## نتیجه برش آزمون
+
+[قرارداد API آزمون](../../../architecture/contracts/backoffice-review.md#برش-آزمون-هویت-و-اختیار-فروشگاه) · [آزمون هویت و نقش سفارشی](../../../../apps/api/internal/bootstrap/identity_acceptance_test.go) · [آزمون PostgreSQL](../../../../apps/api/internal/bootstrap/review_postgres_test.go) · [آزمون مرز فروشگاه](../../../../apps/api/internal/bootstrap/seller_offers_test.go) · [آزمون ادمین](../../../../apps/api/internal/bootstrap/admin_roles_test.go).
+
+| معیار | نتیجه |
+| --- | --- |
+| AC01 | پاس در API آزمایشی: همان شماره برای بک‌آفیس، دو عضویت فروشنده، پروفایل و خرید ساختگیِ دو فروشگاهی یک شناسه دارد. خرید کاربر دیگر در پاسخ نیست و تغییر محیط حساب تازه نمی‌سازد. |
+| AC02 | پاس در API و مرورگر فروشنده: دیدن A و B و نوشتن A موفق است؛ نوشتن B، دیدن فروشگاه بدون عضویت، شناسه عرضه نامنطبق و دسترسی پس از لغو عضویت رد می‌شوند. حساب دوم عضو A است و فقط اجازه خواندن دارد. |
+| AC03 | پاس در API و مرورگر بک‌آفیس: نقش سفارشیِ فقط مشاهده مجوز انتشار نمی‌گیرد؛ دو نقش با هم اعمال می‌شوند و کاربر فاقد اختیار نمی‌تواند نقش یا مجوز تغییر دهد. اعطای ادمین نیاز به احراز مجدد دارد، تنزل آخرین ادمین رد می‌شود، لغو از درخواست بعدی اثر دارد و سابقه ثبت می‌شود. |
+
+آزمون Go با race detector و PostgreSQL 17، بررسی `go vet`، ساخت هر دو پنل و آزمون Chrome برای [بک‌آفیس](../../../../tests/e2e/backoffice-smoke.py) و [فروشنده](../../../../tests/e2e/seller-access-smoke.py) موفق بودند. PostgreSQL اجرای دوباره و برگشت migration در schema موقت، قیود عضویت/دامنه و ماندگاری نقش، عضویت، مالکیت خرید، موجودی و سابقه پس از راه‌اندازی مجدد را پوشش داد. خرید نمونه قبلاً در داده آزمون ثبت شده است؛ ساخت خرید زنده، پرداخت، انتشار و اتصال‌دهنده پیامک در این برش اجرا نشده‌اند.
 
 ## ردیابی و سابقه
 

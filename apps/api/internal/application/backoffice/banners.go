@@ -41,7 +41,10 @@ func bannerActor(state Workspace, actor identity.User, write bool) error {
 	if err != nil || current.Surface == identity.SurfaceSeller {
 		return ErrForbidden
 	}
-	if write && !roleAllows(current.Role, "banner.save") {
+	if !write && current.Role == "" && !allowsAction(current, "banner.read") {
+		return ErrForbidden
+	}
+	if write && !allowsAction(current, "banner.save") {
 		return ErrForbidden
 	}
 	return nil
@@ -60,7 +63,7 @@ func (s *Service) ReadBanners(ctx context.Context, actor identity.User) (BannerL
 	if rows == nil {
 		rows = []content.Banner{}
 	}
-	return BannerList{Banners: rows, CanEdit: roleAllows(current.Role, "banner.save"), Policy: BannerPolicy{MaxBannerBytes, MaxBannerDimension, MaxBannerPixels, []string{"image/png", "image/jpeg", "image/webp"}}}, nil
+	return BannerList{Banners: rows, CanEdit: allowsAction(current, "banner.save"), Policy: BannerPolicy{MaxBannerBytes, MaxBannerDimension, MaxBannerPixels, []string{"image/png", "image/jpeg", "image/webp"}}}, nil
 }
 
 func findBanner(state *Workspace, id string) (*content.Banner, error) {
@@ -92,6 +95,9 @@ func validBannerLink(link string) bool {
 }
 
 func validBannerConfig(config content.BannerConfig) bool {
+	if config.Placement != "" && config.Placement != "hero" && config.Placement != "promo" {
+		return false
+	}
 	return utf8.RuneCountInString(config.Alt) <= 200 && !strings.ContainsAny(config.Alt, "\x00\r\n") && validBannerLink(config.Link)
 }
 
@@ -176,7 +182,7 @@ func applyBanner(state *Workspace, c Command, id string) error {
 }
 
 func (s *Service) SetBannerMedia(ctx context.Context, actor identity.User, target, slot string, version int, key string, input []byte) (BannerMediaResult, error) {
-	if actor.Surface == identity.SurfaceSeller || !roleAllows(actor.Role, "banner.media.set") {
+	if actor.Surface == identity.SurfaceSeller || !allowsAction(actor, "banner.media.set") {
 		return BannerMediaResult{}, ErrForbidden
 	}
 	if (slot != "desktop" && slot != "mobile") || strings.TrimSpace(key) == "" || len(key) > 128 || version < 1 {
@@ -203,7 +209,11 @@ func (s *Service) SetBannerMedia(ctx context.Context, actor identity.User, targe
 	fingerprint := hex.EncodeToString(sum[:])
 	var result BannerMediaResult
 	err = s.repository.Update(ctx, func(state *Workspace) error {
-		if err := bannerActor(*state, actor, true); err != nil {
+		current, err := catalogActor(*state, actor)
+		if err != nil || current.Surface == identity.SurfaceSeller || !allowsAction(current, "banner.media.set") {
+			return ErrForbidden
+		}
+		if err := bannerActor(*state, current, false); err != nil {
 			return err
 		}
 		b, err := findBanner(state, target)

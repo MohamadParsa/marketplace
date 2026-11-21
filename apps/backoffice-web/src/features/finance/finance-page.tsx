@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Button, Tab, Tabs } from "@mui/material";
-import { useWorkspace, can } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
 import {
   ActionDialog,
   DataTable,
@@ -10,7 +10,7 @@ import {
 import { labels, money, number } from "../../shared/format";
 import type { Transfer } from "../../shared/types";
 export function FinancePage() {
-  const { state, role, execute } = useWorkspace();
+  const { state, can, execute } = useWorkspace();
   const [tab, setTab] = useState("all");
   const [selected, setSelected] = useState<Transfer | null>(null);
   const transfers = state.transfers ?? [];
@@ -102,7 +102,7 @@ export function FinancePage() {
               render: (t) => (
                 <Button
                   disabled={
-                    !can(role, "finance") ||
+                    !can("transfer.resolve", "finance") ||
                     !["pending", "unknown"].includes(t.status)
                   }
                   onClick={() => setSelected(t)}
