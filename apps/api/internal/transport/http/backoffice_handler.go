@@ -21,7 +21,11 @@ func NewBackofficeHandler(service *backoffice.Service, authService *auth.Service
 }
 func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
-	session, err := h.auth.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), identity.SurfaceBackoffice)
+	surface := identity.SurfaceBackoffice
+	if strings.HasPrefix(r.URL.Path, "/seller/") {
+		surface = identity.SurfaceSeller
+	}
+	session, err := h.auth.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), surface)
 	if err != nil {
 		writeError(w, 401, "unauthorized")
 		return
@@ -29,7 +33,7 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		state, err := h.service.Read(r.Context(), session.User)
 		if err != nil {
-			writeError(w, 500, "internal_error")
+			iconError(w, err)
 			return
 		}
 		writeJSON(w, 200, state)

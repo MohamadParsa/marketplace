@@ -3,12 +3,14 @@ id: FEAT-SP-001
 title: مدیریت عرضه فروشگاه
 status: in-review
 owner: product-owner
-updated: 2026-11-20
+updated: 2026-11-21
 related: [DOM-CATALOG-001]
 approved_by: []
 ---
 
 # مدیریت عرضه فروشگاه
+
+برش آزمون #6 از همان رابط مدیریتی با عضویت محدود فروشگاه استفاده می‌کند: فقط عرضه‌های قابل مشاهده خودش، مجوز جداگانه قیمت/موجودی، وقفه خواندنی و عدم ویرایش محتوای مشترک. [قرارداد](../../architecture/contracts/product-workspace.md) و [شواهد](../../delivery/review-v1-1/issue-6-verification.md). این برش، تکمیل پنل فروشنده یا نقش سفارشی #1 نیست.
 
 ## هدف و دسترسی
 

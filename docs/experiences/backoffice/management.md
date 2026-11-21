@@ -3,12 +3,14 @@ id: FEAT-BO-001
 title: مدیریت فروشگاه و سیاست‌ها
 status: in-review
 owner: product-owner
-updated: 2026-11-20
+updated: 2026-11-21
 related: [DOM-CATALOG-001, DOM-PRICING-001]
 approved_by: []
 ---
 
 # مدیریت فروشگاه، کاتالوگ و سیاست‌ها
+
+برش آزمون تنوع/عرضه #6: اکشن گرید و تب جزئیات به فرم مشترک متصل‌اند؛ ساخت ترکیب، عرضه فروشنده و ویرایش مستقل قیمت/موجودی با version و scope در سرور انجام می‌شود. [قرارداد](../../architecture/contracts/product-workspace.md) و [گزارش و تصاویر](../../delivery/review-v1-1/issue-6-verification.md) مرجع اجرا هستند؛ مدل قیمت فرمولی طلا فعال نشده است.
 
 برش آزمون خصوصیات مشترک: [قرارداد اجرا](../../architecture/contracts/catalog-attributes.md) و [گزارش و تصاویر Issue#5](../../delivery/review-v1-1/issue-5-verification.md). کتابخانه، انتساب مستقل از گرید دسته و پیش‌نمایش کارت اضافه شده‌اند؛ تغییر محور دسته دارای محصول تا تصمیم R2-Q03 قفل است و تنظیمات کامل #15 مستقل می‌ماند.
 

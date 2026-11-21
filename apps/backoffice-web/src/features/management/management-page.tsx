@@ -12,6 +12,8 @@ import {
 import { labels, money } from "../../shared/format";
 import type { Command, Category } from "../../shared/types";
 import { CategoryBindingsDialog } from "./shared-attributes";
+import { Link } from "react-router-dom";
+import { ProductQuickDialog } from "./product-workspace";
 import {
   CatalogIcon,
   CatalogIconDialog,
@@ -40,6 +42,10 @@ export function ManagementPage({
   const [search, setSearch] = useState("");
   const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [bindingTarget, setBindingTarget] = useState<Category>();
+  const [productTarget, setProductTarget] = useState<{
+    id: string;
+    tab: number;
+  }>();
   const [dialog, setDialog] = useState<{
     title: string;
     fields: Field[];
@@ -326,6 +332,7 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <b>{p.name}</b>
+                    <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
                     <small>
                       نسخه {p.version} · {p.id}
                     </small>
@@ -343,6 +350,16 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (p) => (
                   <>
+                    <Button
+                      onClick={() => setProductTarget({ id: p.id, tab: 0 })}
+                    >
+                      تنوع‌ها
+                    </Button>
+                    <Button
+                      onClick={() => setProductTarget({ id: p.id, tab: 1 })}
+                    >
+                      قیمت و موجودی
+                    </Button>
                     <Button
                       disabled={!editable || p.status === "published"}
                       onClick={() =>
@@ -463,6 +480,13 @@ export function ManagementPage({
         <CatalogIconDialog
           target={iconTarget}
           close={() => setIconTarget(undefined)}
+        />
+      )}
+      {productTarget && (
+        <ProductQuickDialog
+          id={productTarget.id}
+          initialTab={productTarget.tab}
+          close={() => setProductTarget(undefined)}
         />
       )}
       {bindingTarget && (

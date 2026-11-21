@@ -39,14 +39,18 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if err != nil {
 		return Workspace{}, err
 	}
-	actor, err = currentActor(state, actor.ID)
+	actor, err = catalogActor(state, actor)
 	if err != nil {
 		return Workspace{}, err
+	}
+	if actor.Surface == identity.SurfaceSeller {
+		return sellerWorkspace(state, actor), nil
 	}
 	if actor.Role != identity.RoleSuperAdmin {
 		state.Users = nil
 	}
 	state.IconMedia = nil
+	state.Memberships = nil
 	state.IconPolicy = CatalogIconPolicy()
 	state.CardPreviews = BuildCardPreviews(state)
 	if actor.Role != identity.RoleSuperAdmin && actor.Role != identity.RoleFinance {
@@ -57,7 +61,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	return state, nil
 }
 func (s *Service) Execute(ctx context.Context, actor identity.User, command Command) error {
-	if !roleAllows(actor.Role, command.Action) {
+	if !isProductAction(command.Action) && (actor.Surface == identity.SurfaceSeller || !roleAllows(actor.Role, command.Action)) {
 		return ErrForbidden
 	}
 	if strings.TrimSpace(command.IdempotencyKey) == "" || len(command.IdempotencyKey) > 128 || len(command.Name) > 160 || len(command.Reason) > 2000 {
@@ -78,7 +82,11 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 		if err != nil {
 			return err
 		}
-		if !roleAllows(current.Role, command.Action) {
+		if isProductAction(command.Action) {
+			if err := authorizeProductCommand(*state, actor, command); err != nil {
+				return err
+			}
+		} else if !roleAllows(current.Role, command.Action) {
 			return ErrForbidden
 		}
 		for _, event := range state.Audit {
@@ -98,6 +106,8 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 }
 func (s *Service) apply(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "variant.create", "offer.create", "offer.price.update", "offer.stock.update":
+		return applyProduct(state, c, id)
 	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit":
 		return applyAttributes(state, c, id)
 	case "category.icon.remove", "brand.icon.remove":

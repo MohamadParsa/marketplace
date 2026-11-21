@@ -889,3 +889,66 @@ dd {
     padding: 16px;
   }
 }
+.product-detail {
+  padding: 24px;
+}
+.product-workspace {
+  min-width: 0;
+}
+.product-workspace-heading,
+.product-workspace-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0;
+}
+.product-workspace-heading h2 {
+  margin: 0 0 8px;
+}
+.product-workspace small {
+  display: block;
+  color: #64756d;
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}
+.product-workspace-section {
+  padding: 20px 0;
+}
+.product-form {
+  display: grid;
+  gap: 20px;
+  padding-top: 12px !important;
+}
+.product-form small {
+  display: block;
+  margin: 8px 0;
+  color: #64756d;
+  overflow-wrap: anywhere;
+}
+.offer-stock-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #f1f6f3;
+  border-radius: 12px;
+  padding: 16px;
+}
+.variant-chip-group {
+  margin: 20px 0;
+}
+.variant-chip-group > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+@media (max-width: 650px) {
+  .product-detail {
+    padding: 16px;
+  }
+  .product-workspace-heading h2 {
+    font-size: 18px;
+  }
+}

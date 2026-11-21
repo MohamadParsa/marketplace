@@ -17,6 +17,7 @@ export interface Store {
   city: string;
   model: string;
   active: boolean;
+  lead_days: number;
 }
 export interface Category {
   id: string;
@@ -47,6 +48,8 @@ export interface Product {
   status: string;
   version: number;
   attributes?: { attribute_id: string; value: string }[];
+  owner_store_id?: string;
+  variant_version: number;
 }
 export interface AttributeDefinition {
   id: string;
@@ -70,6 +73,38 @@ export interface Offer {
   store_id: string;
   price: number;
   stock: number;
+  variant_id: string;
+  reserved: number;
+  version: number;
+}
+export interface Variant {
+  id: string;
+  product_id: string;
+  sku: string;
+  values: { attribute_id: string; value: string }[];
+  version: number;
+}
+export interface OfferView extends Offer {
+  available: number;
+  lead_days: number;
+  store_active: boolean;
+}
+export interface ProductWorkspace {
+  product: Product;
+  axes: AttributeDefinition[];
+  variants: Variant[];
+  offers: OfferView[];
+  stores: Store[];
+  permissions: {
+    create_variant: boolean;
+    create_offer_stores: string[];
+    price_stores: string[];
+    stock_stores: string[];
+  };
+}
+export interface VariantResolution {
+  variant: Variant;
+  offers: OfferView[];
 }
 export interface OrderItem {
   id: string;
@@ -186,7 +221,7 @@ export interface Workspace {
 export interface Session {
   token: string;
   expires_at: string;
-  user: { ID: string; Role: Role };
+  user: { ID: string; Role: Role; Surface: "backoffice" | "seller" };
 }
 export interface Command {
   action: string;
@@ -200,4 +235,16 @@ export interface Command {
   idempotency_key?: string;
   attribute?: AttributeDefinition;
   bindings?: AttributeBinding[];
+  variant?: {
+    product_id: string;
+    sku: string;
+    values: { attribute_id: string; value: string }[];
+  };
+  offer?: {
+    product_id?: string;
+    variant_id?: string;
+    store_id?: string;
+    price?: number;
+    stock?: number;
+  };
 }

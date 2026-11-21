@@ -1,0 +1,166 @@
+{
+  "date": "2026-11-21",
+  "issue": 6,
+  "scope": "Implemented and verified with test memory repository; not merged/deployed",
+  "go": {
+    "all_tests_passed": true,
+    "passing_tests_and_subtests": 56,
+    "vet_passed": true,
+    "local_race_run": false,
+    "local_race_reason": "Windows runtime CGO/C compiler unavailable; CI Linux runs race",
+    "product_workspace_tests": [
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceOfferUpdatesPreserveContentAndHistory"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/below-reserved"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/stale"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/negative-stock"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/nonpositive-price"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/mixed-permission-payload"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/reparent-offer"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback/overflow"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceStockValidationAndRollback"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceScopedPermissionsAndRevocation"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceVariantValidationAndResolution"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceCreateOfferAndConcurrentWrites"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestProductWorkspaceArbitraryAxisCountAndCurrentReservation"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestProductWorkspaceHTTPReadWriteResolveAndPrivacy"
+      }
+    ]
+  },
+  "frontend": {
+    "lint_passed": true,
+    "build_passed": true
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "grid-shared-offer-workspace",
+        "pass": true
+      },
+      {
+        "id": "grid-price-saved-to-offer",
+        "pass": true
+      },
+      {
+        "id": "details-same-offer-and-price",
+        "pass": true
+      },
+      {
+        "id": "stock-reservation-visible",
+        "pass": true
+      },
+      {
+        "id": "stock-below-reservation-client-blocked",
+        "pass": true
+      },
+      {
+        "id": "details-stock-saved",
+        "pass": true
+      },
+      {
+        "id": "stale-version-preserves-draft",
+        "pass": true
+      },
+      {
+        "id": "stale-version-requires-review",
+        "pass": true
+      },
+      {
+        "id": "conflict-reviewed-and-retried",
+        "pass": true
+      },
+      {
+        "id": "create-variant-from-dynamic-axes",
+        "pass": true
+      },
+      {
+        "id": "seller-lead-read-only",
+        "pass": true
+      },
+      {
+        "id": "new-offer-on-existing-variant",
+        "pass": true
+      },
+      {
+        "id": "black-selection-exact-variant",
+        "pass": true
+      },
+      {
+        "id": "white-selection-excludes-fully-reserved",
+        "pass": true
+      },
+      {
+        "id": "mobile-page-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-form-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "seller-only-own-offers",
+        "pass": true
+      },
+      {
+        "id": "seller-own-stock-write",
+        "pass": true
+      },
+      {
+        "id": "seller-cannot-edit-global-variants",
+        "pass": true
+      },
+      {
+        "id": "viewer-price-and-stock-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-errors",
+        "pass": true
+      }
+    ],
+    "passed": 21,
+    "total": 21,
+    "runtimeErrors": [],
+    "realConcurrentConflict": true
+  }
+}

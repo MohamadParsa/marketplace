@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+برش آزمون CV-R2-06: [شرح](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) ← [قرارداد](../architecture/contracts/product-workspace.md) ← [سه سناریو](../bdd/features/experiences/product-workspace.feature) ← [گزارش API/مرورگر و تصاویر](../delivery/review-v1-1/issue-6-verification.md). پایان برش آزمون با تکمیل محصول، ادغام یا پذیرش اتصال واقعی یکی نیست.
+
 برش آزمون CV-R2-05: [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) ← [قرارداد](../architecture/contracts/catalog-attributes.md) ← [سه سناریوی BDD](../bdd/features/experiences/shared-attributes.feature) ← [گزارش و شواهد اجرا](../delivery/review-v1-1/issue-5-verification.md). وضعیت بازبینی کد از وضعیت تأیید مشخصات جداست.
 
 این جدول فقط نقشه لینک‌هاست؛ قانون و سناریو در محل مرجع نگهداری می‌شوند. بخش‌هایی از بک‌آفیس برای مرور با داده آزمون پیاده شده‌اند؛ وضعیت دقیق و شواهد در گزارش مرحله ۱ آمده است. شناسه‌های `AC` داخل سند قابلیت، شواهد طراحی پذیرش‌اند، نه گزارش آزمون موفق. صورت Gherkin همین سناریوها در [مستندات BDD](../bdd/README.md) نگهداری می‌شود.

@@ -1,9 +1,9 @@
 {
-  "date": "2026-11-20",
+  "date": "2026-11-21",
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Task alignment only; no implementation done. Original snapshot remains unchanged.",
+  "note": "Task alignment with implementation review evidence for issues 4, 5 and 6; no merge/deployment implied. Historical snapshot unchanged.",
   "task_count": 15,
   "active_count": 12,
   "deferred_ids": [
@@ -226,7 +226,7 @@
       "title": "اکشن سریع تنوع، قیمت و موجودی در محصول",
       "priority": "P0",
       "wave": "W1",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -260,7 +260,8 @@
         "CV-CAT-04",
         "CV-CAT-05",
         "CV-CAT-06"
-      ]
+      ],
+      "verification": "issue-6-verification.md"
     },
     {
       "id": "CV-R2-07",

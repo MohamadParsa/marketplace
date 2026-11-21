@@ -24,13 +24,23 @@ type IconMedia struct {
 	Data []byte `json:"data"`
 }
 type Product struct {
-	ID         string           `json:"id"`
-	Name       string           `json:"name"`
-	CategoryID string           `json:"category_id"`
-	Model      string           `json:"model"`
-	Status     string           `json:"status"`
-	Version    int              `json:"version"`
-	Attributes []AttributeValue `json:"attributes,omitempty"`
+	ID             string           `json:"id"`
+	Name           string           `json:"name"`
+	CategoryID     string           `json:"category_id"`
+	Model          string           `json:"model"`
+	Status         string           `json:"status"`
+	Version        int              `json:"version"`
+	Attributes     []AttributeValue `json:"attributes,omitempty"`
+	OwnerStoreID   string           `json:"owner_store_id,omitempty"`
+	VariantVersion int              `json:"variant_version"`
+}
+
+type Variant struct {
+	ID        string           `json:"id"`
+	ProductID string           `json:"product_id"`
+	SKU       string           `json:"sku"`
+	Values    []AttributeValue `json:"values"`
+	Version   int              `json:"version"`
 }
 
 // Definitions are shared; usage and ordering belong to an explicit category binding.
@@ -74,4 +84,7 @@ type Offer struct {
 	StoreID   string `json:"store_id"`
 	Stock     int    `json:"stock"`
 	Price     int64  `json:"price"`
+	VariantID string `json:"variant_id"`
+	Reserved  int    `json:"reserved"`
+	Version   int    `json:"version"`
 }

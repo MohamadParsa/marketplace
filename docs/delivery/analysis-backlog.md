@@ -45,7 +45,7 @@
 | [CV-R2-03](review-v1-1/tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | W0 | todo | CV-IAM-02، CV-IAM-07، CV-WEB-07 |
 | [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | review | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
 | [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | review | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
-| [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | todo | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
+| [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | review | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
 | [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | later | deferred | CV-CMS-01، CV-CMS-02 |
 | [CV-R2-08](review-v1-1/tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
 | [CV-R2-09](review-v1-1/tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
