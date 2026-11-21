@@ -137,7 +137,38 @@
     ],
     "deployment_by": "Parsa"
   },
-  "ci": "pending-pr",
+  "ci": {
+    "status": "passed",
+    "checked_source_commit": "7d0e32502301d53c8266ca0b844865b4d10184fe",
+    "checks": [
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44955011404/job/137001068924"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44955011404/job/137001068871"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44955011404/job/137001068708"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44955011404/job/137001068644"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44955011404/job/137001068456"
+      }
+    ],
+    "api_check": "Linux go test -race with PostgreSQL and go vet"
+  },
   "restart": [
     {
       "id": "restart-purchase",
