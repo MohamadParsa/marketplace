@@ -952,3 +952,63 @@ dd {
     font-size: 18px;
   }
 }
+.banner-form {
+  display: grid;
+  gap: 18px;
+  padding-top: 12px !important;
+}
+.banner-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.banner-preview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.banner-media {
+  border: 1px solid #dce5df;
+  border-radius: 14px;
+  padding: 16px;
+  min-width: 0;
+}
+.banner-media h3 {
+  margin: 0 0 8px;
+}
+.banner-image-frame {
+  background: #f1f5f3;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+}
+.banner-image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.banner-media-mobile .banner-image-frame {
+  max-width: 300px;
+  margin: auto;
+}
+.banner-media-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.banner-actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 650px) {
+  .banner-fields,
+  .banner-preview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .banner-media {
+    padding: 12px;
+  }
+}

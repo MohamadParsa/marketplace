@@ -224,6 +224,7 @@ export interface Session {
   user: { ID: string; Role: Role; Surface: "backoffice" | "seller" };
 }
 export interface Command {
+  banner?: BannerConfig;
   action: string;
   target?: string;
   name?: string;
@@ -246,5 +247,30 @@ export interface Command {
     store_id?: string;
     price?: number;
     stock?: number;
+  };
+}
+
+export interface BannerConfig {
+  desktop_id: string;
+  mobile_id: string;
+  alt: string;
+  link: string;
+  enabled: boolean;
+}
+export interface Banner {
+  id: string;
+  name: string;
+  version: number;
+  draft: BannerConfig;
+  published?: { config: BannerConfig; revision: number };
+}
+export interface BannerList {
+  banners: Banner[];
+  can_edit: boolean;
+  policy: {
+    max_bytes: number;
+    max_dimension: number;
+    max_pixels: number;
+    content_types: string[];
   };
 }

@@ -19,5 +19,5 @@ func NewHTTPHandler(cfg config.Config) http.Handler {
 	service := auth.NewService(users, store, store, notifier, authmemory.Clock{}, authmemory.Random{})
 	handler := httptransport.NewAuthHandler(service, notifier, cfg.Environment == "local" || cfg.Environment == "test")
 	workspace := backoffice.NewService(repository, authmemory.Clock{}, authmemory.Random{})
-	return httptransport.NewRouter(httptransport.RouterConfig{Auth: handler, Backoffice: httptransport.NewBackofficeHandler(workspace, service), CatalogIcons: httptransport.NewCatalogIconHandler(workspace, service), ProductWorkspace: httptransport.NewProductWorkspaceHandler(workspace, service)})
+	return httptransport.NewRouter(httptransport.RouterConfig{Auth: handler, Backoffice: httptransport.NewBackofficeHandler(workspace, service), CatalogIcons: httptransport.NewCatalogIconHandler(workspace, service), ProductWorkspace: httptransport.NewProductWorkspaceHandler(workspace, service), Banners: httptransport.NewBannerHandler(workspace, service)})
 }

@@ -8,6 +8,7 @@ export default defineConfig({
       "/backoffice": "http://localhost:8080",
       "/seller": "http://localhost:8080",
       "/catalog/icons": "http://localhost:8080",
+      "/content": "http://localhost:8080",
     },
   },
   build: {

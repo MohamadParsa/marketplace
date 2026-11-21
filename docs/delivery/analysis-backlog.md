@@ -36,7 +36,7 @@
 
 ## اصلاحات نسخه ۱.۱
 
-پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت ۱۲ کار فعال در فهرست جاری پیگیری می‌شود؛ سه کار CMS deferred هستند؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
+پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت ۱۳ کار فعال پس از بازگشایی محدود #7 در فهرست جاری پیگیری می‌شود؛ پس از فعال‌سازی محدود #7 طبق [ADR-006](../decisions/adr-006-responsive-banner-activation.md)، فقط #8/#9 از این سه کار deferred هستند؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
 
 | کار و Issue | موج پیشنهادی | وضعیت اجرا | اصلاح پایه/منشأ |
 | --- | --- | --- | --- |
@@ -46,7 +46,7 @@
 | [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | review | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
 | [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | review | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
 | [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | review | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
-| [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | later | deferred | CV-CMS-01، CV-CMS-02 |
+| [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | W1 | review | CV-CMS-01، CV-CMS-02 |
 | [CV-R2-08](review-v1-1/tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
 | [CV-R2-09](review-v1-1/tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
 | [CV-R2-10](review-v1-1/tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-05، CV-OPS-06 |

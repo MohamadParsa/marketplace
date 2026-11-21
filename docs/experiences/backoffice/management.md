@@ -10,6 +10,8 @@ approved_by: []
 
 # مدیریت فروشگاه، کاتالوگ و سیاست‌ها
 
+استثنای محدود CMS در۲۰۲۶-۱۱-۲۱: طبق [ADR-006](../../decisions/adr-006-responsive-banner-activation.md) فقط فرم بنر دو اندازه #7 فعال شد؛ `/banners` پیش‌نویس/دو تصویر/انتشار مستقل دارد. [قرارداد](../../architecture/contracts/responsive-banners.md) و [گزارش](../../delivery/review-v1-1/issue-7-verification.md). متن کلی «CMS معوق» در بخش‌های پایین با همین استثنا خوانده شود؛ #8/#9 معوق‌اند.
+
 برش آزمون تنوع/عرضه #6: اکشن گرید و تب جزئیات به فرم مشترک متصل‌اند؛ ساخت ترکیب، عرضه فروشنده و ویرایش مستقل قیمت/موجودی با version و scope در سرور انجام می‌شود. [قرارداد](../../architecture/contracts/product-workspace.md) و [گزارش و تصاویر](../../delivery/review-v1-1/issue-6-verification.md) مرجع اجرا هستند؛ مدل قیمت فرمولی طلا فعال نشده است.
 
 برش آزمون خصوصیات مشترک: [قرارداد اجرا](../../architecture/contracts/catalog-attributes.md) و [گزارش و تصاویر Issue#5](../../delivery/review-v1-1/issue-5-verification.md). کتابخانه، انتساب مستقل از گرید دسته و پیش‌نمایش کارت اضافه شده‌اند؛ تغییر محور دسته دارای محصول تا تصمیم R2-Q03 قفل است و تنظیمات کامل #15 مستقل می‌ماند.

@@ -43,6 +43,7 @@ import {
 } from "@mui/icons-material";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
+import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
 import { WorkspaceContext } from "../shared/workspace";
@@ -88,6 +89,11 @@ const menu = [
         icon: <CategoryOutlined />,
       },
       { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
+      {
+        path: "/banners",
+        label: "بنرهای دو اندازه",
+        icon: <Inventory2Outlined />,
+      },
       {
         path: "/attributes",
         label: "کتابخانه خصوصیات",
@@ -167,11 +173,14 @@ function Workspace({
   const mutation = useMutation({
     mutationFn: (command: Command) =>
       api.execute(session.token, command, session.user.Surface),
-    onSuccess: async () => {
+    onSuccess: async (_result, command) => {
       await cache.invalidateQueries({ queryKey: ["workspace"] });
       await cache.invalidateQueries({ queryKey: ["product"] });
+      await cache.invalidateQueries({ queryKey: ["banners"] });
       await cache.invalidateQueries({ queryKey: ["variant-resolution"] });
-      setNotice("تغییر با موفقیت ثبت شد.");
+      setNotice(
+        command.action.startsWith("banner.") ? "" : "تغییر با موفقیت ثبت شد.",
+      );
     },
   });
   useEffect(() => {
@@ -299,6 +308,13 @@ function Workspace({
                 state: query.data,
                 role,
                 surface: session.user.Surface,
+                loadBanners: () => api.banners(session.token),
+                loadBannerAsset: (id) => api.bannerAsset(session.token, id),
+                uploadBanner: async (input) => {
+                  const result = await api.uploadBanner(session.token, input);
+                  await cache.invalidateQueries({ queryKey: ["banners"] });
+                  return result;
+                },
                 loadProduct: (id) =>
                   api.productWorkspace(session.token, id, session.user.Surface),
                 resolveVariant: (id, values) =>
@@ -335,6 +351,16 @@ function Workspace({
                   }
                 />
                 <Route path="/products/:id" element={<ProductDetailsPage />} />
+                <Route
+                  path="/banners"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <BannersPage />
+                    )
+                  }
+                />
                 <Route path="/attributes" element={<SharedAttributesPage />} />
                 {(
                   [

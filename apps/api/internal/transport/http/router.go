@@ -13,12 +13,24 @@ type RouterConfig struct {
 	Backoffice       *BackofficeHandler
 	CatalogIcons     *CatalogIconHandler
 	ProductWorkspace *ProductWorkspaceHandler
+	Banners          *BannerHandler
 }
 
 func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health/live", health("ok"))
 	mux.HandleFunc("GET /health/ready", health("ready"))
+	if cfg.Banners != nil {
+		mux.HandleFunc("GET /backoffice/banners", cfg.Banners.List)
+		mux.HandleFunc("POST /backoffice/banners/{id}/media/{slot}", cfg.Banners.Upload)
+		mux.HandleFunc("GET /backoffice/banner-media/{id}", func(w http.ResponseWriter, r *http.Request) {
+			r.SetPathValue("access", "private")
+			cfg.Banners.Media(w, r)
+		})
+		mux.HandleFunc("GET /content/banners", cfg.Banners.PublicList)
+		mux.HandleFunc("GET /content/banners/{id}/view", cfg.Banners.View)
+		mux.HandleFunc("GET /content/banner-media/{id}", cfg.Banners.Media)
+	}
 	if cfg.Backoffice != nil {
 		mux.Handle("GET /backoffice/workspace", cfg.Backoffice)
 		mux.Handle("POST /backoffice/commands", cfg.Backoffice)

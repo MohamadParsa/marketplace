@@ -4,6 +4,7 @@ import type {
   Workspace,
   ProductWorkspace,
   VariantResolution,
+  BannerList,
 } from "./types";
 const base = import.meta.env.VITE_API_BASE_URL ?? "";
 const messages: Record<number, string> = {
@@ -35,6 +36,39 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return response.json();
 }
 export const api = {
+  banners: (token: string) =>
+    request<BannerList>("/backoffice/banners", {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+  bannerViewUrl: (id: string) =>
+    base + `/content/banners/${encodeURIComponent(id)}/view`,
+  bannerAsset: async (token: string, id: string) => {
+    const response = await fetch(
+      base + `/backoffice/banner-media/${encodeURIComponent(id)}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!response.ok) throw new ApiError(response.status);
+    return response.blob();
+  },
+  uploadBanner: (
+    token: string,
+    input: {
+      id: string;
+      slot: "desktop" | "mobile";
+      version: number;
+      key: string;
+      file: File;
+    },
+  ) => {
+    const body = new FormData();
+    body.set("file", input.file);
+    body.set("version", String(input.version));
+    body.set("idempotency_key", input.key);
+    return request<{ asset_id: string; version: number }>(
+      `/backoffice/banners/${encodeURIComponent(input.id)}/media/${input.slot}`,
+      { method: "POST", body, headers: { Authorization: `Bearer ${token}` } },
+    );
+  },
   productWorkspace: (token: string, id: string, surface = "backoffice") =>
     request<ProductWorkspace>(
       `/${surface}/products/${encodeURIComponent(id)}/workspace`,
