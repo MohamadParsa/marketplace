@@ -2,11 +2,11 @@
   "date": "2026-11-22",
   "issues": {
     "24": "closed-rechecked",
-    "25": "in-progress-pending-owner-R2-Q09"
+    "25": "done-owner-confirmed-scope"
   },
   "document_status": "in-review",
   "go": {
-    "passed_tests_and_subtests": 147,
+    "passed_tests_and_subtests": 154,
     "failures": 0,
     "postgres_tests": [
       "TestCommercePostgresLedgerReceiptAndRestart",
@@ -15,7 +15,12 @@
     ],
     "skipped_tests": [],
     "vet": "passed",
-    "local_race": "not-run-windows-cgo-disabled"
+    "local_race": "not-run-windows-cgo-disabled",
+    "interaction_tests": [
+      "TestProductInteractionSettingsDefaultOffAndRemainIndependent",
+      "TestDisabledSubmissionsPreserveApprovedHistoryAndTeamReplies",
+      "TestNewProductInteractionDefaultsAndServiceReadiness"
+    ]
   },
   "browser": {
     "passed": 11,
@@ -98,12 +103,32 @@
         "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481172"
       }
     ],
-    "api": "Linux Go race + PostgreSQL + vet"
+    "api": "Linux Go race + PostgreSQL + vet",
+    "note": "Passing historical content-review source; final policy source will be checked after push."
   },
-  "remaining": [
-    "CV-R2-17-AC04",
-    "R2-Q09",
-    "owner confirmation of interaction-service scope"
-  ],
-  "backoffice_lint": "passed"
+  "remaining": [],
+  "backoffice_lint": "passed",
+  "owner_confirmed_policy": {
+    "date": "2026-11-22",
+    "defaults": {
+      "reviews_enabled": false,
+      "qa_enabled": false
+    },
+    "disable_blocks": "new-submissions-only",
+    "approved_history": "preserved",
+    "team_replies": "allowed-subject-to-authorization",
+    "scope": "settings-contract-and-shared-guards"
+  },
+  "deferred_full_interaction_services": {
+    "implementation_status": "not-implemented",
+    "references": [
+      "CV-WEB-15",
+      "CV-WEB-16"
+    ],
+    "document": "../product-interactions-followup.md",
+    "not_a_current_issue_closure_gate": true,
+    "open_questions": [
+      "CHQ-10"
+    ]
+  }
 }

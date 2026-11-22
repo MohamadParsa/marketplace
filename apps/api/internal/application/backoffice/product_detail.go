@@ -113,6 +113,10 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	}
 	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, "/product/"+url.PathEscape(p.ID), p.Version
 	result.Content = productContent(p)
+	// Full interaction services remain deferred (CV-WEB-15/16); toggles alone do not enable them.
+	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{})
+	result.Interactions.Reviews = policy.Reviews.NewSubmissions
+	result.Interactions.QA = policy.QA.NewSubmissions
 	category := publicCategory(w, p.CategoryID)
 	result.Category = catalogNav(w, *category)
 	chain := []CatalogNav{}

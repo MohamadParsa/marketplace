@@ -8,7 +8,7 @@
   "design": "A-balanced",
   "payment": "card-transfer-and-manual-in-person-via-wallet",
   "payment_wallet_mapping": "confirmed:wallet-credit-before-separate-consumption",
-  "note": "Implementation #27/#28/#29/#30 delivered as reviewable branches; no merge or Liara deployment. Public AC07 remains open with Parsa under #12/#11. #25 remains a partial requirements tracker.",
+  "note": "Implementation #27/#28/#29/#30 delivered as reviewable branches; no merge or Liara deployment. Public acceptance remains open under #12/#11. #24/#25 requirements trackers done within owner-confirmed scope; full interaction services deferred to CV-WEB-15/16.",
   "tasks": [
     {
       "id": "CV-LCH-01",
@@ -169,7 +169,7 @@
         25
       ],
       "next_in_queue": false,
-      "scope_ownership": "Sole executor of remaining product content/gallery/SEO and PDP; conditional interaction acceptance stays open in #25.",
+      "scope_ownership": "#29 with same-model corrective PR #37; full interaction integration deferred to CV-WEB-15/16 with owner approval.",
       "breadcrumb": "home > category ancestors > product category > brand (if assigned) > product",
       "verification": "issue-29-verification.md"
     },
@@ -340,7 +340,7 @@
       "task_id": "CV-R2-17",
       "task_type": "requirements-tracking",
       "independent_execution": false,
-      "implementation_status": "in-progress",
+      "implementation_status": "done",
       "primary_executor": 29,
       "reuses_execution_issue": 27,
       "acceptance_mapping": [
@@ -368,16 +368,18 @@
         {
           "id": "CV-R2-17-AC04",
           "execution_issue": 29,
-          "status": "partially-verified",
+          "status": "verified-current-scope",
           "conditional_followup": true,
-          "launch_scope": "independent-toggle-settings-and-disabled-ui",
+          "launch_scope": "independent-settings-defaults-and-shared-policy-guards",
           "conditional_followup_references": [
             "CV-WEB-15",
             "CV-WEB-16"
           ],
-          "conditional_scope": "Interaction write API and previous-content behavior after feature/policy readiness; not implemented or accepted by this planning change.",
-          "full_acceptance_required_for_reference_closure": true,
-          "evidence": "issue-29-verification.md"
+          "conditional_scope": "Full review/Q&A API integration remains deferred, not implemented. Owner accepted policy and scope boundary on 2026-11-22.",
+          "full_acceptance_required_for_reference_closure": false,
+          "evidence": "../review-v1-1/issue-25-verification.md",
+          "conditional_followup_document": "../product-interactions-followup.md",
+          "owner_confirmed_scope": "2026-11-22: settings and shared guards in #25; full services CV-WEB-15/16"
         },
         {
           "id": "CV-R2-17-AC05",
@@ -387,7 +389,7 @@
           "evidence": "issue-29-verification.md"
         }
       ],
-      "verification": "issue-29-verification.md"
+      "verification": "../review-v1-1/issue-25-verification.md"
     }
   ],
   "resolved_financial_questions": [

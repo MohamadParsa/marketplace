@@ -3,6 +3,7 @@ package bootstrap_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficememory"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/bootstrap"
@@ -45,5 +46,30 @@ func TestSellerContentHTTPPublicProjectionAndReview(t *testing.T) {
 	p, _ = pdpRequest(t, h, "/storefront/products/product", 200)
 	if p.Name != "نام پیشنهادی فروشنده" {
 		t.Fatal("approval not public")
+	}
+}
+
+func TestProductInteractionSettingsDefaultOffAndRemainIndependent(t *testing.T) {
+	repo := backofficememory.New(commerceSeed())
+	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
+	admin := login(t, h, "09000000001")
+	p, _ := pdpRequest(t, h, "/storefront/products/product", 200)
+	if p.Content.ReviewsEnabled || p.Content.QAEnabled {
+		t.Fatal("new product defaults")
+	}
+	for _, flags := range []struct{ reviews, qa bool }{{true, false}, {true, true}, {false, true}, {false, false}} {
+		state, _ := repo.Snapshot(context.Background())
+		product := state.Products[0]
+		c := catalog.ProductContent{ReviewsEnabled: flags.reviews, QAEnabled: flags.qa}
+		command := backoffice.Command{Action: "catalog.product.update", Target: product.ID, Version: product.Version, IdempotencyKey: fmt.Sprintf("interaction-flags-%t-%t", flags.reviews, flags.qa), Catalog: &backoffice.CatalogInput{Name: product.Name, CategoryID: product.CategoryID, Published: true, Content: &c}}
+		raw, _ := json.Marshal(command)
+		requestAs(t, h, admin, "POST", "/backoffice/commands", string(raw), 204)
+		view, _ := pdpRequest(t, h, "/storefront/products/product", 200)
+		if view.Content.ReviewsEnabled != flags.reviews || view.Content.QAEnabled != flags.qa {
+			t.Fatal("settings coupled or not persisted")
+		}
+		if view.Interactions.Reviews || view.Interactions.QA {
+			t.Fatal("deferred services became ready just by changing flags")
+		}
 	}
 }

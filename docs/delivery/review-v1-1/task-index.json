@@ -3,7 +3,7 @@
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
-  "note": "Current queue: #27/#28/#29 done, #30 next; #11 tracks 3/4 complete. #24 done; #25 partial (fields/media/SEO verified, seller re-review and interaction API policies remain open). References have no separate implementation.",
+  "note": "Implementation #27/#28/#29/#30 delivered in reviewable branches. #24/#25 done within owner-confirmed scope; #11/#12 public acceptance remains open. Full review/Q&A services deferred to CV-WEB-15/16.",
   "task_count": 17,
   "active_count": 15,
   "deferred_ids": [
@@ -768,7 +768,7 @@
       "title": "مرجع کنترل نیازمندی‌های محصول، رسانه، تعامل و SEO؛ اجرا در #29",
       "priority": "P0",
       "wave": "reference",
-      "implementation_status": "in-progress",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -779,11 +779,7 @@
         "CV-CAT-07",
         "CV-CAT-08"
       ],
-      "questions": [
-        "R2-Q07",
-        "R2-Q08",
-        "R2-Q09"
-      ],
+      "questions": [],
       "related": [
         "DOM-CATALOG-CONTENT-001",
         "DOM-CATALOG-001",
@@ -792,18 +788,18 @@
       "business": "تکمیل محتوای محصول و تنظیمات PDP بدون تغییر مرز تنوع و عرضه.",
       "scope": [
         "مرجع پوشش نیازمندی؛ همه تغییرات اجرایی/فرم/مدل/ذخیره/API/سایت و آزمون در #29، با استفاده از پایه #27.",
-        "بدون صف/PR/تست اجرایی مستقل؛ معیارهای کامل‌نشده باز باقی می‌مانند."
+        "اصلاح تکمیلی همان Product/Content در PR #37؛ سرویس کامل تعامل در CV-WEB-15/16 معوق است."
       ],
       "acceptance": [
         "مدیر مجاز همه فیلدهای جدول را ذخیره و پس از بارگذاری بازیابی کند؛ انتخاب برند/دسته معتبر باشد و تصویر/ترتیب گالری حفظ شود.",
         "فروشنده نتواند محتوای مشترک یا محتوای فروشگاه دیگر را با درخواست مستقیم تغییر دهد؛ نامعتبر/نسخه قدیمی بدون تغییر قبلی رد شوند و قیمت/رزرو محفوظ بمانند.",
         "published و وضعیت بررسی متناقض نشوند؛ draft عمومی نشود، و ناموجودشدن تنوع انتشار محصول را تغییر ندهد؛ نسخه محتوای تأییدشده هنگام بررسی بعدی محفوظ باشد.",
-        "تغییر reviews_enabled مقدار qa_enabled را تغییر ندهد و برعکس؛ پس از اتصال API تعامل، ثبت مستقیم در بخش خاموش رد شود؛ تکلیف محتوای قبلی طبق R2-Q09 با شاهد جدا بررسی شود.",
+        "تغییر reviews_enabled مقدار qa_enabled را تغییر ندهد و برعکس؛ پیش‌فرض هر دو خاموش باشد. کنترل مشترک با سرویس آماده، ثبت جدید در بخش خاموش را ببندد اما سابقه تأییدشده و پاسخ مجاز تیم را حفظ کند؛ سرویس ناآماده هیچ قابلیت عمومی اعلام نکند. آزمون اتصال API کامل طبق تصمیم مالک در CV-WEB-15/16 محفوظ است.",
         "سه فیلد متا و چهار ترکیب noindex/nofollow در خروجی PDP همان محصول قابل تفکیک باشند؛ noindex محتوا را خصوصی نکند، نام/متادیتا script اجرا نکنند و متادیتای محصول دیگر نشت نکند؛ HTML و invalidation نهایی در #29 شاهد بگیرند."
       ],
-      "blocked": "جزئیات validation و انتشار در R2-Q07/R2-Q08 و رفتار تعامل در R2-Q09؛ فقط بخش وابسته متوقف است.",
+      "blocked": "none-current-scope",
       "technical": "قرارداد typed، نسخه/مجوز server-side، متن امن و انتشار مستقل از موجودی؛ راه‌حل پیشنهادی در سند مرجع.",
-      "evidence": "همان شواهد و PR #29، با ارجاع به ACهای پایدار؛ شاهد جداگانه تکراری تولید نشود.",
+      "evidence": "شواهد #29 و issue-25-verification.md؛ دامنه تعامل با پذیرش صریح مالک۲۰۲۶-۱۱-۲۲ نهایی شد.",
       "amends": [
         "CV-CAT-03",
         "CV-CAT-04",
@@ -819,7 +815,13 @@
       "execution_issue": 29,
       "execution_dependencies": [],
       "dependencies_kind": "capability-references-not-issue-closure-gates",
-      "verification": "issue-25-verification.md"
+      "verification": "issue-25-verification.md",
+      "resolved_questions": [
+        "R2-Q07",
+        "R2-Q08",
+        "R2-Q09"
+      ],
+      "conditional_followup_document": "../product-interactions-followup.md"
     }
   ],
   "launch_plan": "../initial-launch/task-index.json"

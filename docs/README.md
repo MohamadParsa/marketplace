@@ -7,6 +7,7 @@
 | پاسخ‌های الیاس برای تسک #13 و دامنه شروع نسخه۱.۱ | [متن کامل، مثال‌ها، پیشنهاد تغییر موبایل و اثر بر تسک‌ها](decisions/adr-005-review-v1-1-product-responses.md) |
 | مرور مشترک طرح‌ها پیش از نهایی‌کردن تسک‌ها | [بسته یکپارچه سایت و بک‌آفیس، تصاویر و راهنمای مشاهده](review-packages/README.md) |
 | فیلدهای تکمیلی دسته/محصول و SEO | [تطبیق مدل و تسک‌های #24/#25](domains/catalog/content-and-seo.md) |
+| ادامه سرویس‌های نظر و پرسش‌وپاسخ پس از #25 | [مرز و پذیرش CV-WEB-15/16](delivery/product-interactions-followup.md) |
 | شناخت محصول و مرز دامنه | [دامنه](product/scope.md)، [واژه‌نامه](product/glossary.md) |
 | شناخت نقش و داده مجاز | [نقش‌ها](product/roles.md) |
 | پیدا کردن قانون مشترک | [حوزه‌ها](domains/README.md) |
