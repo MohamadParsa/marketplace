@@ -1,0 +1,35 @@
+{
+  "source_commit": "8921ca0497aa016d9373ae240c12025046bd3a6d",
+  "go": {
+    "passed_tests_and_subtests": 184,
+    "failed": 0,
+    "skipped": 0,
+    "vet": "passed"
+  },
+  "snapshot_validation": {
+    "applied": false,
+    "validation": "passed_with_media",
+    "dataset_id": "gooshishop-public-catalog-2026-11-22",
+    "file_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+    "products": 3534,
+    "variants": 5029,
+    "offers": 5992,
+    "brands": 1277,
+    "categories": 248,
+    "media": 10058,
+    "normalized_media_bytes": 3349387289
+  },
+  "postgres_real_snapshot_smoke": {
+    "accounts_and_finance_unchanged": true,
+    "http_checks": 23,
+    "media": 101,
+    "offers": 35,
+    "products": 20,
+    "restart": true,
+    "retry": true,
+    "schema_removed_on_exit": true,
+    "variants": 34,
+    "workspace_inline_media": 0
+  },
+  "ci": "pending PR run"
+}
