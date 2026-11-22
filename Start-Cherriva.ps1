@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param([switch]$NoBuild)
 $ErrorActionPreference = 'Stop'
+if ($env:DATABASE_URL) { throw 'Local startup requires an isolated REVIEW_DATABASE_URL; clear DATABASE_URL first.' }
 $projectRoot = $PSScriptRoot
 $runtimeRoot = Join-Path $env:USERPROFILE '.codex/local-runtimes/cherriva'
 New-Item -ItemType Directory -Force -Path $runtimeRoot | Out-Null
