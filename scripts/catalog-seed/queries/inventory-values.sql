@@ -1,0 +1,1 @@
+SELECT Id,Name,NameEn,ProductInventoryAttributeId,Color_HexCode,Guarantee_Months,Guarantee_Note,Weight_Value,Weight_UnitId,Deleted FROM ProductInventoryAttributeValue

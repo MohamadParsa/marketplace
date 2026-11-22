@@ -1,0 +1,1 @@
+SELECT Name,Value FROM Setting WHERE Name IN ('currencysettings.primarystorecurrencyid','currencysettings.primaryexchangeratecurrencyid','mediasettings.picturesarestoredintodatabase','directorysettings.baseweightid','directorysettings.basedimensionid')

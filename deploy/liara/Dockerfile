@@ -13,13 +13,14 @@ WORKDIR /api
 COPY apps/api/go.mod apps/api/go.sum ./
 RUN go mod download
 COPY apps/api/ ./
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /server ./cmd/api && CGO_ENABLED=0 go build -trimpath -o /migrate ./cmd/migrate && CGO_ENABLED=0 go build -trimpath -o /bootstrap-admin ./cmd/bootstrap-admin
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /server ./cmd/api && CGO_ENABLED=0 go build -trimpath -o /migrate ./cmd/migrate && CGO_ENABLED=0 go build -trimpath -o /bootstrap-admin ./cmd/bootstrap-admin && CGO_ENABLED=0 go build -trimpath -o /catalog-import ./cmd/catalog-import
 
 FROM alpine:3.22
 RUN apk add --no-cache ca-certificates tzdata && addgroup -S app && adduser -S -G app app
 COPY --from=api /server /usr/local/bin/server
 COPY --from=api /migrate /usr/local/bin/migrate
 COPY --from=api /bootstrap-admin /usr/local/bin/bootstrap-admin
+COPY --from=api /catalog-import /usr/local/bin/catalog-import
 COPY --from=web /repo/apps/backoffice-web/build /app/backoffice
 COPY --from=web /repo/apps/storefront-web/build /app/storefront
 COPY db/migrations/ /app/migrations/
