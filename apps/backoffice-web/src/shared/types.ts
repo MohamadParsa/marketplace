@@ -29,6 +29,8 @@ export interface User {
   active: boolean;
 }
 export interface Store {
+  content_policy?: "review" | "direct";
+  content_policy_version?: number;
   id: string;
   name: string;
   owner: string;
@@ -86,7 +88,24 @@ export interface ProductContent {
   noindex: boolean;
   nofollow: boolean;
 }
+export interface ProductContentRevision {
+  id: string;
+  state: string;
+  base_fingerprint: string;
+  submitted_by: string;
+  submitted_at: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
+  reason?: string;
+  name: string;
+  english_name: string;
+  description: string;
+  brand_id: string;
+  content?: ProductContent;
+  attributes: { attribute_id: string; value: string }[];
+}
 export interface Product {
+  content_revision?: ProductContentRevision;
   content?: ProductContent;
   gallery_ids?: string[];
   english_name?: string;
@@ -150,6 +169,8 @@ export interface ProductWorkspace {
   offers: OfferView[];
   stores: Store[];
   permissions: {
+    edit_content: boolean;
+    review_content: boolean;
     create_variant: boolean;
     create_offer_stores: string[];
     price_stores: string[];
@@ -216,6 +237,8 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  model?: "shared" | "independent";
+  owner_store_id?: string;
   content?: ProductContent;
   seo?: CategorySEO;
   attributes?: { attribute_id: string; value: string }[];

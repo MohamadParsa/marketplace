@@ -24,6 +24,8 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case "product.content.review", "store.content-policy.set":
+		return role == identity.RoleOperations
 	case CommerceSettingsRead, CommerceOrdersRead:
 		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance
 	case CommerceShippingWrite, CommerceBusinessWrite:
@@ -97,7 +99,7 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 }
 
 func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identity.User, command Command, confirm func() error) error {
-	if !isProductAction(command.Action) && !allowsAction(actor, command.Action) {
+	if command.Action != "product.content.submit" && command.Action != "product.content.approve" && command.Action != "product.content.reject" && !isProductAction(command.Action) && !allowsAction(actor, command.Action) {
 		return ErrForbidden
 	}
 	if strings.TrimSpace(command.IdempotencyKey) == "" || len(command.IdempotencyKey) > 128 || len(command.Name) > 160 || len(command.Reason) > 2000 {
@@ -122,12 +124,26 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 			if err != nil {
 				return err
 			}
-			if isProductAction(command.Action) {
+			if command.Action == "store.content-policy.set" && current.Surface != identity.SurfaceBackoffice {
+				return ErrForbidden
+			}
+			if command.Action == "product.content.submit" {
+				if err := authorizeContentSubmission(*state, current, command.Target); err != nil {
+					return err
+				}
+			} else if isProductAction(command.Action) {
 				if err := authorizeProductCommand(*state, actor, command); err != nil {
 					return err
 				}
-			} else if !allowsAction(current, command.Action) {
+			} else if (command.Action == "product.content.approve" || command.Action == "product.content.reject") && (current.Surface != identity.SurfaceBackoffice || !allowsAction(current, "product.content.review")) {
 				return ErrForbidden
+			} else if command.Action != "product.content.approve" && command.Action != "product.content.reject" && !allowsAction(current, command.Action) {
+				return ErrForbidden
+			}
+			if command.Action == "product.publish" || command.Action == "product.reject" {
+				if p, e := findProduct(state, command.Target); e == nil && p.ContentRevision != nil && p.ContentRevision.State == "pending" {
+					return ErrConflict
+				}
 			}
 			if command.Action == "catalog.category.update" && command.Catalog != nil {
 				for _, cat := range state.Categories {
@@ -176,6 +192,12 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 }
 func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, event *Audit) error {
 	switch c.Action {
+	case "store.content-policy.set":
+		return setStoreContentPolicy(state, c)
+	case "product.content.submit":
+		return submitProductContent(state, c, id, event.Actor, s.clock.Now())
+	case "product.content.approve", "product.content.reject":
+		return reviewProductContent(state, c, event.Actor, s.clock.Now())
 	case "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update":
 		return applyHomeCatalog(state, c, id, s.clock.Now())
 	case "product.media.update":

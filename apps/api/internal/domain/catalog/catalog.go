@@ -57,23 +57,41 @@ type ShippingDimensions struct {
 	WeightUnit    string   `json:"weight_unit"`
 	DimensionUnit string   `json:"dimension_unit"`
 }
+type ProductContentRevision struct {
+	ID              string           `json:"id"`
+	State           string           `json:"state"`
+	BaseFingerprint string           `json:"base_fingerprint"`
+	SubmittedBy     string           `json:"submitted_by"`
+	SubmittedAt     time.Time        `json:"submitted_at"`
+	ReviewedBy      string           `json:"reviewed_by,omitempty"`
+	ReviewedAt      *time.Time       `json:"reviewed_at,omitempty"`
+	Reason          string           `json:"reason,omitempty"`
+	Name            string           `json:"name"`
+	EnglishName     string           `json:"english_name"`
+	Description     string           `json:"description"`
+	BrandID         string           `json:"brand_id"`
+	Content         *ProductContent  `json:"content,omitempty"`
+	Attributes      []AttributeValue `json:"attributes"`
+}
+
 type Product struct {
-	Content        *ProductContent  `json:"content,omitempty"`
-	GalleryIDs     []string         `json:"gallery_ids,omitempty"`
-	CreatedAt      time.Time        `json:"created_at,omitempty"`
-	EnglishName    string           `json:"english_name,omitempty"`
-	Description    string           `json:"description,omitempty"`
-	BrandID        string           `json:"brand_id,omitempty"`
-	ImageID        string           `json:"image_id,omitempty"`
-	ID             string           `json:"id"`
-	Name           string           `json:"name"`
-	CategoryID     string           `json:"category_id"`
-	Model          string           `json:"model"`
-	Status         string           `json:"status"`
-	Version        int              `json:"version"`
-	Attributes     []AttributeValue `json:"attributes,omitempty"`
-	OwnerStoreID   string           `json:"owner_store_id,omitempty"`
-	VariantVersion int              `json:"variant_version"`
+	ContentRevision *ProductContentRevision `json:"content_revision,omitempty"`
+	Content         *ProductContent         `json:"content,omitempty"`
+	GalleryIDs      []string                `json:"gallery_ids,omitempty"`
+	CreatedAt       time.Time               `json:"created_at,omitempty"`
+	EnglishName     string                  `json:"english_name,omitempty"`
+	Description     string                  `json:"description,omitempty"`
+	BrandID         string                  `json:"brand_id,omitempty"`
+	ImageID         string                  `json:"image_id,omitempty"`
+	ID              string                  `json:"id"`
+	Name            string                  `json:"name"`
+	CategoryID      string                  `json:"category_id"`
+	Model           string                  `json:"model"`
+	Status          string                  `json:"status"`
+	Version         int                     `json:"version"`
+	Attributes      []AttributeValue        `json:"attributes,omitempty"`
+	OwnerStoreID    string                  `json:"owner_store_id,omitempty"`
+	VariantVersion  int                     `json:"variant_version"`
 }
 
 type Variant struct {

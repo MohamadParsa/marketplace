@@ -26,6 +26,8 @@ type OfferInput struct {
 	Stock        *int   `json:"stock,omitempty"`
 }
 type ProductPermissions struct {
+	EditContent       bool     `json:"edit_content"`
+	ReviewContent     bool     `json:"review_content"`
 	CreateVariant     bool     `json:"create_variant"`
 	CreateOfferStores []string `json:"create_offer_stores"`
 	PriceStores       []string `json:"price_stores"`
@@ -79,7 +81,7 @@ func canStore(state Workspace, actor identity.User, storeID, permission string) 
 }
 
 func visibleProduct(state Workspace, actor identity.User, p catalog.Product) bool {
-	return actor.Surface != identity.SurfaceSeller || p.Model == "shared" || (p.OwnerStoreID != "" && canStore(state, actor, p.OwnerStoreID, "read"))
+	return actor.Surface != identity.SurfaceSeller || p.Model == "shared" || (p.OwnerStoreID != "" && (canStore(state, actor, p.OwnerStoreID, "read") || sellerCanEditContent(state, actor, p)))
 }
 
 func findProduct(state *Workspace, id string) (*catalog.Product, error) {
@@ -133,14 +135,14 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 	if !visibleProduct(state, actor, *p) {
 		return ProductWorkspace{}, ErrForbidden
 	}
-	result := ProductWorkspace{Product: *p, Axes: productAxes(state, *p), Variants: []catalog.Variant{}, Offers: []OfferView{}, Stores: []store.Store{}, Permissions: ProductPermissions{CreateVariant: actor.Surface != identity.SurfaceSeller && allowsAction(actor, "variant.create"), CreateOfferStores: []string{}, PriceStores: []string{}, StockStores: []string{}}}
+	result := ProductWorkspace{Product: *p, Axes: productAxes(state, *p), Variants: []catalog.Variant{}, Offers: []OfferView{}, Stores: []store.Store{}, Permissions: ProductPermissions{EditContent: actor.Surface == identity.SurfaceSeller && sellerCanEditContent(state, actor, *p), ReviewContent: actor.Surface != identity.SurfaceSeller && allowsAction(actor, "product.content.review"), CreateVariant: actor.Surface != identity.SurfaceSeller && allowsAction(actor, "variant.create"), CreateOfferStores: []string{}, PriceStores: []string{}, StockStores: []string{}}}
 	for _, v := range state.Variants {
 		if v.ProductID == id {
 			result.Variants = append(result.Variants, v)
 		}
 	}
 	for _, st := range state.Stores {
-		if actor.Surface == identity.SurfaceSeller && !canStore(state, actor, st.ID, "read") {
+		if actor.Surface == identity.SurfaceSeller && !canStore(state, actor, st.ID, "read") && !hasContentStoreAccess(state, actor, st.ID) {
 			continue
 		}
 		result.Stores = append(result.Stores, st)
@@ -218,7 +220,7 @@ func sellerWorkspace(state Workspace, actor identity.User) Workspace {
 		}
 	}
 	for _, st := range state.Stores {
-		if canStore(state, actor, st.ID, "read") {
+		if canStore(state, actor, st.ID, "read") || hasContentStoreAccess(state, actor, st.ID) {
 			result.Stores = append(result.Stores, st)
 		}
 	}

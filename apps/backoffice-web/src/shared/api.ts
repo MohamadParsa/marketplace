@@ -46,16 +46,17 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return response.json();
 }
 export const api = {
-  profile: (token: string) =>
+  profile: (token: string, surface="backoffice") =>
     request<{ name: string; email?: string; password_available: boolean }>(
-      "/backoffice/account/profile",
+      `/${surface}/account/profile`,
       { headers: { Authorization: `Bearer ${token}` } },
     ),
   updateProfile: (
     token: string,
     input: { name: string; email: string; password: string },
+    surface="backoffice",
   ) =>
-    request<void>("/backoffice/account/profile", {
+    request<void>(`/${surface}/account/profile`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(input),
@@ -158,8 +159,8 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ phone }),
     }),
-  passwordLogin: (phone: string, password: string) =>
-    request<Session>("/backoffice/auth/password-login", {
+  passwordLogin: (phone: string, password: string, surface="backoffice") =>
+    request<Session>(`/${surface}/auth/password-login`, {
       method: "POST",
       body: JSON.stringify({ phone, password }),
     }),

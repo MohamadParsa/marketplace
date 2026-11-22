@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom";
 import { useState } from "react";
 import { Alert, Button, TextField } from "@mui/material";
 import {
@@ -13,7 +14,7 @@ const normalize = (value: string) =>
     .trim()
     .replace(/[۰-۹]/g, (c) => String(c.charCodeAt(0) - 1776))
     .replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 1632));
-export function LoginPage({ onLogin }: { onLogin: (s: Session) => void }) {
+export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Session) => void; surface?:"backoffice"|"seller" }) {
   const [identifier, setIdentifier] = useState("");
   const [stage, setStage] = useState<
     "identifier" | "method" | "password" | "otp"
@@ -186,7 +187,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: Session) => void }) {
                 disabled={busy}
                 onClick={() =>
                   void run(async () => {
-                    const r = await api.requestCode(identifier);
+                    const r = await api.requestCode(identifier,surface);
                     setChallenge(r.request_id);
                     setTestCode(r.test_code ?? "");
                     setStage("otp");
@@ -202,7 +203,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: Session) => void }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 void run(async () =>
-                  onLogin(await api.passwordLogin(identifier, password)),
+                  onLogin(await api.passwordLogin(identifier, password,surface)),
                 );
               }}
             >
@@ -245,7 +246,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: Session) => void }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 void run(async () =>
-                  onLogin(await api.verify(challenge, normalize(code))),
+                  onLogin(await api.verify(challenge, normalize(code),surface)),
                 );
               }}
             >
@@ -291,7 +292,7 @@ export function LoginPage({ onLogin }: { onLogin: (s: Session) => void }) {
             </form>
           )}
           <p className="login-security-note">
-            ورود به این بخش فقط برای کاربران دارای دسترسی مجاز است.
+            ورود به این بخش فقط برای کاربران دارای دسترسی مجاز است.<br/><Link to={surface==="seller"?"/":"/seller-login"}>{surface==="seller"?"ورود کارکنان بک‌آفیس":"ورود اعضای فروشگاه"}</Link>
           </p>
         </div>
       </section>

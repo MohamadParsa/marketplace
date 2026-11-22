@@ -264,6 +264,7 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 		w.Products[0].CreatedAt = time.Date(2026, 11, 21, 1, 2, 3, 0, time.UTC)
 		grams := 120.5
 		w.Products[0].Content = &catalog.ProductContent{ShortDescription: "محتوای پایدار PDP", FullDescription: "<p><strong>متن پایدار</strong></p>", Shipping: catalog.ShippingDimensions{Weight: &grams, WeightUnit: "g", DimensionUnit: "mm"}, SEO: catalog.SEO{MetaTitle: "عنوان محصول پایدار"}, ReviewsEnabled: true}
+		w.Products[0].ContentRevision = &catalog.ProductContentRevision{ID: "persisted-review", State: "pending", Name: "عنوان پیشنهادی خصوصی", SubmittedBy: "seller-test", BaseFingerprint: "review-fingerprint", Content: &catalog.ProductContent{ShortDescription: "شرح پیشنهادی خصوصی"}}
 		w.Products[0].GalleryIDs = []string{"home-photo"}
 		w.Variants[0].ImageID = "home-photo"
 		return nil
@@ -280,8 +281,15 @@ func TestHomePostgresRestartRetainsCatalogAndMedia(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	saved, readErr := repo.Snapshot(ctx)
+	if readErr != nil || saved.Products[0].ContentRevision == nil || saved.Products[0].ContentRevision.Name != "عنوان پیشنهادی خصوصی" || saved.Products[0].ContentRevision.State != "pending" {
+		t.Fatal("pending revision lost after PostgreSQL restart", readErr)
+	}
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
 	data, res := homeHTTP(t, h, "")
+	if strings.Contains(res.Body.String(), "عنوان پیشنهادی خصوصی") || strings.Contains(res.Body.String(), "شرح پیشنهادی خصوصی") {
+		t.Fatal("pending review leaked to home")
+	}
 	if res.Code != 200 || data.Rails[0].Products[0].Name != "پایدار پس از راه‌اندازی" || data.Rails[0].Products[0].Price != 1234 {
 		t.Fatal("restart lost home", res.Body.String())
 	}

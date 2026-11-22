@@ -361,10 +361,9 @@
         {
           "id": "CV-R2-17-AC03",
           "execution_issue": 29,
-          "status": "partially-verified",
+          "status": "verified",
           "conditional_followup": false,
-          "evidence": "issue-29-verification.md",
-          "remaining": "Seller content re-review and preservation of approved content; not implemented by current admin publication flow."
+          "evidence": "../review-v1-1/issue-25-verification.md"
         },
         {
           "id": "CV-R2-17-AC04",

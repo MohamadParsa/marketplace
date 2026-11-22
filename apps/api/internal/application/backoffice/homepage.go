@@ -19,16 +19,18 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
-	Content     *catalog.ProductContent   `json:"content,omitempty"`
-	SEO         *catalog.SEO              `json:"seo,omitempty"`
-	Attributes  *[]catalog.AttributeValue `json:"attributes,omitempty"`
-	Name        string                    `json:"name"`
-	EnglishName string                    `json:"english_name"`
-	Description string                    `json:"description"`
-	CategoryID  string                    `json:"category_id"`
-	BrandID     string                    `json:"brand_id"`
-	ParentID    string                    `json:"parent_id"`
-	Published   bool                      `json:"published"`
+	Model        string                    `json:"model,omitempty"`
+	OwnerStoreID string                    `json:"owner_store_id,omitempty"`
+	Content      *catalog.ProductContent   `json:"content,omitempty"`
+	SEO          *catalog.SEO              `json:"seo,omitempty"`
+	Attributes   *[]catalog.AttributeValue `json:"attributes,omitempty"`
+	Name         string                    `json:"name"`
+	EnglishName  string                    `json:"english_name"`
+	Description  string                    `json:"description"`
+	CategoryID   string                    `json:"category_id"`
+	BrandID      string                    `json:"brand_id"`
+	ParentID     string                    `json:"parent_id"`
+	Published    bool                      `json:"published"`
 }
 
 var homeKeys = []string{"mobile", "earbuds", "power-bank", "smartwatch"}
@@ -223,7 +225,28 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			if in.Attributes != nil && !validProductAttributes(*w, in.CategoryID, *in.Attributes) {
 				return ErrInvalid
 			}
-			p := catalog.Product{CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: "shared", Status: "draft", Version: 1, VariantVersion: 1}
+			model := in.Model
+			if model == "" {
+				model = "shared"
+			}
+			if model != "shared" && model != "independent" {
+				return ErrInvalid
+			}
+			if model == "shared" && in.OwnerStoreID != "" {
+				return ErrInvalid
+			}
+			if model == "independent" {
+				valid := false
+				for _, st := range w.Stores {
+					if st.ID == in.OwnerStoreID && st.Active {
+						valid = true
+					}
+				}
+				if !valid {
+					return ErrInvalid
+				}
+			}
+			p := catalog.Product{OwnerStoreID: in.OwnerStoreID, CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: model, Status: "draft", Version: 1, VariantVersion: 1}
 			if in.Attributes != nil {
 				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
 			}
@@ -245,7 +268,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			if p.Version != c.Version {
 				return ErrConflict
 			}
-			if p.CategoryID != in.CategoryID {
+			if p.CategoryID != in.CategoryID || in.Model != "" && in.Model != p.Model || in.OwnerStoreID != "" && in.OwnerStoreID != p.OwnerStoreID {
 				return ErrConflict
 			}
 			candidate := *p

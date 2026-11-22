@@ -51,7 +51,7 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			Code      string `json:"code"`
 		} `json:"reauthentication"`
 	}
-	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16384))
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 128*1024))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&input); err != nil {
 		writeError(w, 400, "invalid_request")

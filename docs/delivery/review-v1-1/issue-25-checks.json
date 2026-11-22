@@ -1,0 +1,77 @@
+{
+  "date": "2026-11-22",
+  "issues": {
+    "24": "closed-rechecked",
+    "25": "in-progress-pending-owner-R2-Q09"
+  },
+  "document_status": "in-review",
+  "go": {
+    "passed_tests_and_subtests": 147,
+    "failures": 0,
+    "postgres_tests": [
+      "TestCommercePostgresLedgerReceiptAndRestart",
+      "TestHomePostgresRestartRetainsCatalogAndMedia",
+      "TestPostgresReviewIdentitySurvivesRestart"
+    ],
+    "skipped_tests": [],
+    "vet": "passed",
+    "local_race": "not-run-windows-cgo-disabled"
+  },
+  "browser": {
+    "passed": 11,
+    "checks": [
+      {
+        "id": "shared-panel-seller-login",
+        "pass": true
+      },
+      {
+        "id": "pending-preserves-public-approved-name",
+        "pass": true
+      },
+      {
+        "id": "seller-cannot-self-approve-ui",
+        "pass": true
+      },
+      {
+        "id": "seller-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "rejection-preserves-public-approved-name",
+        "pass": true
+      },
+      {
+        "id": "rejected-draft-preserved",
+        "pass": true
+      },
+      {
+        "id": "approved-content-visible-in-pdp",
+        "pass": true
+      },
+      {
+        "id": "content-review-preserves-offer-price-stock-reservation",
+        "pass": true
+      },
+      {
+        "id": "store-policy-save-success",
+        "pass": true
+      },
+      {
+        "id": "store-policy-editor-present",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "runtime_page_errors": []
+  },
+  "backoffice_build": "passed",
+  "ci": "pending-PR",
+  "remaining": [
+    "CV-R2-17-AC04",
+    "R2-Q09",
+    "owner confirmation of interaction-service scope"
+  ]
+}

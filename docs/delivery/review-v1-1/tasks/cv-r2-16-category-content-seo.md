@@ -3,7 +3,7 @@ id: CV-R2-16
 title: "مرجع کنترل نیازمندی‌های دسته، انتشار و سئوی PLP؛ اجرا در #28"
 status: in-review
 owner: unassigned
-updated: 2026-11-21
+updated: 2026-11-22
 related: [DOM-CATALOG-CONTENT-001, DOM-CATALOG-001, FEAT-BO-001]
 approved_by: []
 implementation_status: done
@@ -56,3 +56,7 @@ Issue: [#24](https://github.com/MohamadParsa/marketplace/issues/24) · محل ا
 4. اعتبارسنجی، کنترل مجوز/مالکیت در سرور، تعارض نسخه، حفظ draft پس از خطا، حالت‌های loading/empty/error و متن/رسانه امن در همان کار اجرایی بررسی شوند. قیمت و موجودی Offer با ویرایش محتوا بازنویسی نشوند.
 
 [فهرست مراجع](../README.md) · [صف و مرز کارها](../../initial-launch/README.md#execution-ownership) · [پرسش‌ها](../../../product/open-questions.md#catalog-content-questions). مشخصات in-review است؛ اجرا در شاخه #28 انجام شده، ادغام و استقرار عمومی جدا هستند.
+
+## بازبینی دوباره طبق دستور مالک — ۲۰۲۶-۱۱-۲۲
+
+Issue#24 از قبل بسته است؛ هر چهار معیار همان شواهد #28 را دارند و مجموعه جاری Go/PostgreSQL نیز تست‌های مربوط را پاس کرده است. کامنت بازبینی در همان Issue ثبت شد؛ مدل/تسک/PR دسته دوباره ایجاد نشد. تغییر در وضعیت انتشار عمومی ادعا نمی‌شود.

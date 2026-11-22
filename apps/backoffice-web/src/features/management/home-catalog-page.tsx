@@ -613,6 +613,58 @@ export function HomeCatalogPage() {
                             ))}
                         </select>
                       </label>
+                      {!editing.id && (
+                        <>
+                          <label>
+                            نوع محصول
+                            <select
+                              value={editing.input.model ?? "shared"}
+                              onChange={(e) =>
+                                setEditing({
+                                  ...editing,
+                                  input: {
+                                    ...editing.input,
+                                    model: e.target.value as
+                                      | "shared"
+                                      | "independent",
+                                    owner_store_id: "",
+                                  },
+                                })
+                              }
+                            >
+                              <option value="shared">مشترک</option>
+                              <option value="independent">مستقل فروشگاه</option>
+                            </select>
+                          </label>
+                          {editing.input.model === "independent" && (
+                            <label>
+                              فروشگاه مالک
+                              <select
+                                required
+                                value={editing.input.owner_store_id ?? ""}
+                                onChange={(e) =>
+                                  setEditing({
+                                    ...editing,
+                                    input: {
+                                      ...editing.input,
+                                      owner_store_id: e.target.value,
+                                    },
+                                  })
+                                }
+                              >
+                                <option value="">انتخاب فروشگاه</option>
+                                {state.stores
+                                  ?.filter((s) => s.active)
+                                  .map((s) => (
+                                    <option key={s.id} value={s.id}>
+                                      {s.name}
+                                    </option>
+                                  ))}
+                              </select>
+                            </label>
+                          )}
+                        </>
+                      )}
                       <label>
                         برند
                         <select

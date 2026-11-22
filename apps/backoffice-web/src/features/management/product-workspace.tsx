@@ -1,3 +1,4 @@
+import { ProductContentReview } from "./product-content-review";
 import { ProductMediaDialog } from "./product-media-dialog";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -143,6 +144,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
           label={w.product.model === "shared" ? "محصول مشترک" : "محصول مستقل"}
         />
       </div>
+      <ProductContentReview workspace={w} />
       <Tabs
         value={tab}
         onChange={(_, value: number) => setTab(value)}

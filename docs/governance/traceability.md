@@ -132,3 +132,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## برش خرید و کیف پول انتشار اولیه — CV-LCH-04
 
 [شرح #30](../delivery/initial-launch/tasks/cv-lch-04-checkout-wallet-card-transfer.md)، [قرارداد API-CHECKOUT-WALLET-LAUNCH-001](../architecture/contracts/checkout-wallet-launch.md)، [BDD با همان ACها](../bdd/features/experiences/initial-launch.feature)، [شاهد اجرا](../delivery/initial-launch/issue-30-verification.md) و [گیت عمومی](../delivery/initial-launch/production-handoff.md) به هم متصل‌اند. LCH-Q02/03/04 حل‌شده‌اند؛ وضعیت مستقل سفارش/پرداخت و تاریخچه در هر دو سطح ثبت شد. AC07 محیط عمومی همچنان unverified است؛ #12 و #11 بازند و اجرای محلی به معنی پذیرش کل محصول نیست.
+
+## بازبینی #24/#25 پس از خرید اولیه
+
+#24 با همان شواهد #28 بسته و بازبینی شد. [گردش مستقل فروشنده](../architecture/contracts/catalog-content-review.md) و [گزارش تکمیلی](../delivery/review-v1-1/issue-25-verification.md) بخش باقی‌مانده CV-R2-17-AC03 را پوشش می‌دهند؛ قیمت/موجودی/رزرو مستقل و نسخه عمومی قبلی محفوظ‌اند. AC04 به پاسخ مالک درباره R2-Q09 و دامنه تعامل وابسته است و #25 هنوز بسته اعلام نشده است.

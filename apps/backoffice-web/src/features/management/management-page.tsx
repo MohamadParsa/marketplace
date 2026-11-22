@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Switch } from "@mui/material";
+import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { AccessPanel } from "./access-panel";
 import { useWorkspace, can } from "../../shared/workspace";
@@ -39,7 +39,8 @@ export function ManagementPage({
     | "pricing"
     | "shipping";
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, role, execute, busy, can: allowed } = useWorkspace();
+  const [policyError, setError] = useState("");
   const [search, setSearch] = useState("");
   const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [bindingTarget, setBindingTarget] = useState<Category>();
@@ -104,6 +105,7 @@ export function ManagementPage({
           ) : undefined
         }
       />
+      {policyError && <Alert severity="error">{policyError}</Alert>}
       <section className="panel">
         <div className="toolbar">
           <input
@@ -194,6 +196,32 @@ export function ManagementPage({
               { title: "مالک", render: (s) => s.owner },
               { title: "شهر", render: (s) => s.city },
               { title: "مدل کاتالوگ", render: (s) => labels[s.model] },
+              {
+                title: "بررسی محتوای فروشنده",
+                render: (s) => (
+                  <select
+                    className="content-policy-select"
+                    aria-label={"سیاست محتوا " + s.name}
+                    disabled={
+                      busy || !allowed("store.content-policy.set", "management")
+                    }
+                    value={s.content_policy || "review"}
+                    onChange={(e) => {
+                      setError("");
+                      void execute({
+                        action: "store.content-policy.set",
+                        target: s.id,
+                        version: s.content_policy_version ?? 0,
+                        value: e.target.value,
+                        idempotency_key: crypto.randomUUID(),
+                      }).catch((e) => setError(e.message));
+                    }}
+                  >
+                    <option value="review">نیازمند تأیید</option>
+                    <option value="direct">انتشار مستقیم</option>
+                  </select>
+                ),
+              },
               {
                 title: "وضعیت",
                 render: (s) => (
@@ -333,6 +361,11 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <b>{p.name}</b>
+                    {p.content_revision?.state === "pending" && (
+                      <small>
+                        ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                      </small>
+                    )}
                     <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
                     <small>
                       نسخه {p.version} · {p.id}
@@ -362,7 +395,11 @@ export function ManagementPage({
                       قیمت و موجودی
                     </Button>
                     <Button
-                      disabled={!editable || p.status === "published"}
+                      disabled={
+                        !editable ||
+                        p.status === "published" ||
+                        p.content_revision?.state === "pending"
+                      }
                       onClick={() =>
                         open(
                           "تأیید و انتشار محتوا",
@@ -379,7 +416,11 @@ export function ManagementPage({
                     </Button>
                     <Button
                       color="error"
-                      disabled={!editable || p.status === "rejected"}
+                      disabled={
+                        !editable ||
+                        p.status === "rejected" ||
+                        p.content_revision?.state === "pending"
+                      }
                       onClick={() =>
                         open(
                           "رد محتوای محصول",

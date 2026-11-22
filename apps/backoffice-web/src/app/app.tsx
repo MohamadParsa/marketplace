@@ -7,6 +7,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import {
   QueryClient,
@@ -189,7 +190,7 @@ function Workspace({
     [session.token],
   );
   const loadProfile = useCallback(
-    () => api.profile(session.token),
+    () => api.profile(session.token,session.user.Surface),
     [session.token],
   );
   const query = useQuery({
@@ -362,7 +363,7 @@ function Workspace({
                 surface: session.user.Surface,
                 loadProfile,
                 updateProfile: (input) =>
-                  api.updateProfile(session.token, input),
+                  api.updateProfile(session.token, input,session.user.Surface),
                 loadCatalogMedia,
                 loadBanners: () => api.banners(session.token),
                 loadBannerAsset: (id) => api.bannerAsset(session.token, id),
@@ -537,6 +538,8 @@ function Workspace({
   );
 }
 function SessionApp() {
+  const location=useLocation(),navigate=useNavigate();
+  const loginSurface=location.pathname==="/seller-login"?"seller":"backoffice";
   const [session, setSession] = useState<Session | null>(null);
   const logout = () => {
     if (session)
@@ -549,7 +552,7 @@ function SessionApp() {
   return session ? (
     <Workspace session={session} logout={logout} />
   ) : (
-    <LoginPage onLogin={setSession} />
+    <LoginPage key={loginSurface} surface={loginSurface} onLogin={s=>{setSession(s);if(s.user.Surface==="seller")navigate("/products",{replace:true})}} />
   );
 }
 export function App() {

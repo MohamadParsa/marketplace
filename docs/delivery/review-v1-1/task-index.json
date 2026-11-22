@@ -819,7 +819,7 @@
       "execution_issue": 29,
       "execution_dependencies": [],
       "dependencies_kind": "capability-references-not-issue-closure-gates",
-      "verification": "../initial-launch/issue-29-verification.md"
+      "verification": "issue-25-verification.md"
     }
   ],
   "launch_plan": "../initial-launch/task-index.json"
