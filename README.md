@@ -1,4 +1,23 @@
-# Marketplace
+# Cherriva — سورس Go و React
+
+سورس اجرایی در `apps/api`، `apps/storefront-web`، `apps/backoffice-web` و `apps/seller-portal-web` و کد مشترک در `packages` است. مسیر کاری این سیستم **`D:\Cherriva`** است. پنل فروشنده از `/seller-login` در همان رابط بک‌آفیس باز می‌شود. مستندات و بسته‌های طراحی، جایگزین سورس نیستند.
+
+برای بررسی محلی از پوشه پروژه اجرا کنید:
+
+```powershell
+Set-Location D:\Cherriva
+.\Start-Cherriva.ps1
+```
+
+بک‌آفیس: http://localhost:8098 · سایت: http://localhost:5197. اجرای سریع پس از build: `.\Start-Cherriva.ps1 -NoBuild`. [پیش‌نیازها و حساب محلی تیم](docs/delivery/local-review-access.md) · [اصلاحات و تصاویر خرید](docs/delivery/initial-launch/purchase-refinements-verification.md) · [تطبیق کامیت سورس و مستندات](docs/delivery/source-document-map.md).
+
+راه‌اندازی محلی با PostgreSQL جداگانه و `APP_ENV=test` است؛ انتشار لیارا توسط پارسا جداگانه انجام می‌شود.
+
+
+## اولویت جاری انتشار اولیه — ۲۰۲۶-۱۱-۲۱
+
+[برنامه چهارمرحله‌ای انتشار و Issueها](docs/delivery/initial-launch/README.md): خانه → PLP → PDP → خرید/کیف پول، هر کدام با بک‌آفیس و API و سایت. کارت‌به‌کارت و محلی حضوری با تأیید دستی/بصری؛ ورودی وجه ابتدا شارژ و مصرف جدا. طرح A و نشان C حرف اول Cherriva مرجع‌اند. [ADR-007](docs/decisions/adr-007-initial-launch-sequence.md) شرط قدیمی انتظار کل پنل‌ها را فقط برای همین انتشار جایگزین می‌کند. خانه #27، PLP #28 و PDP #29 با شاهد فنی تکمیل شدند؛ خرید/کیف پول #30 نیز با [شاهد محلی](docs/delivery/initial-launch/issue-30-verification.md) تحویل شده است؛ گیت عمومی HTTPS/بانک/SMS/backup با پارسا و در #12 باز است. PRها و استقرار جدا هستند. [دسترسی تیم به نسخه محلی](docs/delivery/local-review-access.md).
+
 
 ## پاسخ تصمیم‌های نسخه۱.۱ — ۲۰۲۶-۱۱-۲۰
 
@@ -64,6 +83,6 @@ packages/                 قراردادها و کد مشترک آینده
 APP_ENV=test WEB_ROOT=../backoffice-web/build PORT=8087 go run ./cmd/api
 ```
 
-رابط در `http://localhost:8087` باز می‌شود. حساب مدیر آزمون `09000000001` است؛ کد آزمون در مرحله دوم فرم نمایش داده می‌شود. سایر نقش‌ها از دکمه‌های حساب آزمون انتخاب می‌شوند. داده‌ها با restart بازنشانی می‌شوند؛ این نسخه برای داده واقعی یا انتقال بانکی نیست.
+رابط در `http://localhost:8087` باز می‌شود. حساب مدیر آزمون `09000000001` است؛ کد آزمون در مرحله دوم فرم نمایش داده می‌شود. ایمیل فقط با رمز و شماره موبایل با انتخاب رمز یا OTP وارد می‌شود؛ انتخاب نقش از فرم ورود حذف شده است. داده پیش‌فرض با restart بازنشانی می‌شود؛ برای نگهداری داده ساختگی، [PostgreSQL جداگانه آزمون](docs/architecture/contracts/backoffice-review.md#اجرای-نسخه-پایدار-آزمون) را تنظیم کنید.
 
 [وضعیت مرحله ۱](docs/delivery/stage-1-progress.md) و [بسته استقرار Liara](deploy/liara/README.md) محدودیت‌ها و شواهد اجرا را مشخص می‌کنند.

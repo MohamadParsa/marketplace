@@ -13,10 +13,15 @@
 
 ## پوشش فعلی
 
-در این نسخه ۱۷۷ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش موجود و ۱۱ سناریوی تصمیم/جریان ترکیبی برای سیاست‌های جدید کمیسیون، OTP، پیامک، مبلغ و PWA.
+در این نسخه ۲۱۸ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO و۲۴ سناریوی انتشار اولیه؛ اجرای فنی برش خانه در [گزارش #27](../delivery/initial-launch/issue-27-verification.md) و بقیه مراحل در کارهای خودشان ردیابی می‌شوند. اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| انتشار اولیه چهار برش (CV-LCH-01 تا04) | [initial-launch.feature](features/experiences/initial-launch.feature) | 24 | [برنامه](../delivery/initial-launch/README.md) |
+| محتوای دسته/محصول و SEO (CV-R2-16/17) | [catalog-content-seo.feature](features/experiences/catalog-content-seo.feature) | 9 | [مرجع](../domains/catalog/content-and-seo.md) |
+| بنر دو اندازه (CV-R2-07) | [features/experiences/responsive-banners.feature](features/experiences/responsive-banners.feature) | 2 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) |
+| تنوع و عرضه محصول (CV-R2-06) | [features/experiences/product-workspace.feature](features/experiences/product-workspace.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) |
+| خصوصیات مشترک و کارت (CV-R2-05) | [features/experiences/shared-attributes.feature](features/experiences/shared-attributes.feature) | 3 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) |
 | کاتالوگ، فروشگاه و موجودی (DOM-CATALOG-001) | [`features/domains/catalog.feature`](features/domains/catalog.feature) | 15 | [`domains/catalog/README.md`](../domains/catalog/README.md) |
 | سبد، رزرو موجودی و جلسه پرداخت (DOM-CHECKOUT-001) | [`features/domains/checkout.feature`](features/domains/checkout.feature) | 12 | [`domains/checkout/README.md`](../domains/checkout/README.md) |
 | حساب و هویت (DOM-IDENTITY-001) | [`features/domains/identity.feature`](features/domains/identity.feature) | 11 | [`domains/identity/README.md`](../domains/identity/README.md) |
@@ -44,3 +49,10 @@
 ## وضعیت و مالکیت
 
 این خروجی بخشی از مستندات `in-review` است. مالک قواعد همان مالک سند مرجع است و مالک اجرای آینده باید هنگام آماده‌سازی برش تحویل تعیین شود. هیچ سناریویی در این پوشه `approved` یا `passed` تلقی نمی‌شود مگر اینکه مالک تصمیم و شواهد اجرای مستقل ثبت شده باشد.
+
+اجرای برش بنر در [گزارش Issue#7](../delivery/review-v1-1/issue-7-verification.md) ثبت شده است؛ وجود فایل Gherkin به معنی اجرای runner مستقل نیست.
+
+
+در گیت انتشار اولیه فقط دامنه ADR-007 و سناریوهای CV-LCH مربوط پذیرفته شوند؛ سناریوهای BNPL/برداشت/اتصال درگاه در محصول کامل شرط این گیت نیستند. سناریوی قدیمی BNPL مستقیم (DOM-PAYMENTS-001-AC03) پس از تصمیم جدید معوق و نیازمند بازنگری قرارداد است.
+
+شواهد API/دیتابیس/مرورگر خرید در [گزارش #30](../delivery/initial-launch/issue-30-verification.md) ثبت شد؛ تعداد سناریوهای مستند۲۱۸ باقی است. تگ مسدود LCH-Q02/03/04 حذف شد؛ AC07 محیط عمومی همچنان نیازمند شاهد خارجی است.

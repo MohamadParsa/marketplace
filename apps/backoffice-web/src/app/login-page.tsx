@@ -1,181 +1,299 @@
+import {Link} from "react-router-dom";
 import { useState } from "react";
 import { Alert, Button, TextField } from "@mui/material";
-import { ArrowBack, ShieldOutlined } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  LockOutlined,
+  PersonOutline,
+  StorefrontOutlined,
+  ArrowBack,
+} from "@mui/icons-material";
 import { api } from "../shared/api";
 import type { Session } from "../shared/types";
-const phoneSchema = z.object({
-  phone: z.string().regex(/^09\d{9}$/, "شماره باید ۱۱ رقم و با ۰۹ شروع شود."),
-});
-const accounts = [
-  { name: "مدیر کل", phone: "09000000001" },
-  { name: "عملیات", phone: "09000000002" },
-  { name: "پشتیبانی", phone: "09000000003" },
-  { name: "مالی", phone: "09000000004" },
-  { name: "مشاهده‌گر", phone: "09000000005" },
-];
-export function LoginPage({
-  onLogin,
-}: {
-  onLogin: (session: Session) => void;
-}) {
-  const [challenge, setChallenge] = useState("");
+const normalize = (value: string) =>
+  value
+    .trim()
+    .replace(/[۰-۹]/g, (c) => String(c.charCodeAt(0) - 1776))
+    .replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 1632));
+export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Session) => void; surface?:"backoffice"|"seller" }) {
+  const [identifier, setIdentifier] = useState("");
+  const [stage, setStage] = useState<
+    "identifier" | "method" | "password" | "otp"
+  >("identifier");
+  const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+  const [challenge, setChallenge] = useState("");
+  const [testCode, setTestCode] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [testCode, setTestCode] = useState("");
-  const form = useForm<{ phone: string }>({
-    resolver: zodResolver(phoneSchema),
-    defaultValues: { phone: "09000000001" },
-  });
-  const handleError = (error: unknown) =>
-    setError(
-      error instanceof Error ? error.message : "ارتباط با سرور برقرار نشد.",
-    );
+  const isEmail = identifier.includes("@");
+  async function run(fn: () => Promise<void>) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await fn();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "ارتباط با سرور برقرار نشد.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  function reset() {
+    setStage("identifier");
+    setPassword("");
+    setCode("");
+    setChallenge("");
+    setError("");
+    setTestCode("");
+  }
   return (
-    <div className="login-layout">
+    <div className="login-layout design-a-login">
       <section className="login-story">
-        <div className="brand">
-          <span className="brand-mark">م</span>
+        <div className="login-brand-row">
+          <img
+            src="/brand/cherriva-wordmark-white.svg"
+            alt="Cherriva"
+            width="180"
+            height="50"
+          />
           <span>
-            مارکت‌پلیس<small>مرکز مدیریت بازارگاه</small>
+            یک حساب
+            <br />
+            برای همه نقش‌ها
           </span>
         </div>
-        <div>
-          <span className="overline">همه‌چیز، در یک نگاه.</span>
+        <div className="login-story-copy">
+          <span className="overline">همان شما، در هر نقش</span>
           <h1>
-            یک فضای روشن
+            یک حساب،
             <br />
-            برای مدیریت
+            چند تجربه.
             <br />
-            <em>تمام بازارگاه.</em>
+            <em>ساده و یکپارچه.</em>
           </h1>
           <p>
-            از اولین عرضه تا آخرین تسویه؛
+            خرید کنید، در بک‌آفیس فعالیت کنید یا عضو فروشگاه باشید؛
             <br />
-            عملیات، فروشندگان و تجربه مشتری را دنبال کنید.
+            همه با یک هویت و دسترسی‌های مشخص.
           </p>
         </div>
-        <span className="story-footer">بک‌آفیس بازارگاه · نسخه بررسی</span>
+        <div className="login-identity-card">
+          <div>
+            <PersonOutline />
+            <span>
+              <b>کاربر واحد</b>
+              <small>خریدار، مدیر و عضو فروشگاه</small>
+            </span>
+          </div>
+          <div>
+            <StorefrontOutlined />
+            <span>
+              <b>دسترسی متناسب با نقش</b>
+              <small>یک تجربه مشترک، با محدوده‌های مستقل</small>
+            </span>
+          </div>
+        </div>
+        <div className="story-footer">
+          <span>Cherriva / فضای مدیریت</span>
+        </div>
       </section>
       <section className="login-form">
         <div className="login-card">
-          <ShieldOutlined className="login-icon" />
-          <h2>ورود به بک‌آفیس</h2>
-          <p>برای دسترسی به پنل، شماره حساب آزمایشی را وارد کنید.</p>
-          <Alert severity="info" sx={{ my: 3 }}>
-            محیط آزمون با داده ساختگی؛ ارسال پیامک و انتقال وجه واقعی غیرفعال
-            است.
-          </Alert>
-          {!challenge ? (
+          <div className="login-icon-box">
+            <LockOutlined />
+          </div>
+          <h2>
+            {stage === "identifier"
+              ? "ورود به فضای مدیریت"
+              : stage === "method"
+                ? "روش ورود را انتخاب کنید"
+                : stage === "password"
+                  ? "ورود با رمز عبور"
+                  : "کد یک‌بارمصرف را وارد کنید"}
+          </h2>
+          <p>
+            {stage === "identifier"
+              ? "با شماره موبایل یا ایمیل متصل به حساب خود وارد شوید."
+              : isEmail
+                ? "ورود با ایمیل، با رمز عبور حساب انجام می‌شود."
+                : "ورود با رمز عبور یا دریافت کد روی شماره موبایل."}
+          </p>
+          {stage !== "identifier" && (
+            <div className="login-identifier">
+              <b dir="ltr">{identifier}</b>
+              <button disabled={busy} onClick={reset}>
+                تغییر نام کاربری
+              </button>
+            </div>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ my: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {stage === "identifier" && (
             <form
-              onSubmit={form.handleSubmit(async (values) => {
-                setBusy(true);
+              onSubmit={(e) => {
+                e.preventDefault();
                 setError("");
-                try {
-                  const result = await api.requestCode(values.phone);
-                  setChallenge(result.request_id);
-                  setTestCode(result.test_code ?? "");
-                } catch (error) {
-                  handleError(error);
-                } finally {
-                  setBusy(false);
+                const v = normalize(identifier);
+                const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                if (!/^09\d{9}$/.test(v) && !email) {
+                  setError("شماره موبایل یا ایمیل معتبر وارد کنید.");
+                  return;
                 }
-              })}
+                setIdentifier(email ? v.toLowerCase() : v);
+                setStage(email ? "password" : "method");
+              }}
             >
               <TextField
-                label="شماره تلفن"
                 fullWidth
-                dir="ltr"
-                {...form.register("phone")}
-                error={!!form.formState.errors.phone}
-                helperText={form.formState.errors.phone?.message}
+                label="شماره موبایل یا ایمیل"
+                autoComplete="username"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                inputProps={{ dir: "ltr", maxLength: 254 }}
+                required
               />
               <Button
-                fullWidth
-                size="large"
                 type="submit"
+                fullWidth
                 variant="contained"
-                disabled={busy}
-                sx={{ mt: 2 }}
+                size="large"
                 endIcon={<ArrowBack />}
               >
-                {busy ? "در حال درخواست…" : "دریافت کد ورود"}
+                ادامه
               </Button>
             </form>
-          ) : (
-            <form
-              onSubmit={async (event) => {
-                event.preventDefault();
-                setBusy(true);
-                setError("");
-                try {
-                  onLogin(await api.verify(challenge, code));
-                } catch (error) {
-                  handleError(error);
-                } finally {
-                  setBusy(false);
+          )}
+          {stage === "method" && (
+            <div className="login-methods">
+              <Button
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={busy}
+                onClick={() => {
+                  setError("");
+                  setStage("password");
+                }}
+              >
+                ورود با رمز عبور
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                size="large"
+                disabled={busy}
+                onClick={() =>
+                  void run(async () => {
+                    const r = await api.requestCode(identifier,surface);
+                    setChallenge(r.request_id);
+                    setTestCode(r.test_code ?? "");
+                    setStage("otp");
+                  })
                 }
+              >
+                دریافت کد یک‌بارمصرف
+              </Button>
+            </div>
+          )}
+          {stage === "password" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void run(async () =>
+                  onLogin(await api.passwordLogin(identifier, password,surface)),
+                );
+              }}
+            >
+              <input type="hidden" name="username" autoComplete="username" value={identifier}/><TextField
+                fullWidth
+                label="رمز عبور"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                inputProps={{ dir: "ltr", maxLength: 128 }}
+                required
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={busy}
+              >
+                ورود با رمز عبور
+              </Button>
+              {!isEmail && (
+                <Button
+                  fullWidth
+                  disabled={busy}
+                  onClick={() => {
+                    setPassword("");
+                    setError("");
+                    setStage("method");
+                  }}
+                >
+                  انتخاب روش دیگر
+                </Button>
+              )}
+            </form>
+          )}
+          {stage === "otp" && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void run(async () =>
+                  onLogin(await api.verify(challenge, normalize(code),surface)),
+                );
               }}
             >
               {testCode && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
-                  کد آزمون: <b dir="ltr">{testCode}</b>
+                <Alert severity="warning" sx={{ my: 2 }}>
+                  کد آزمون: {testCode}
                 </Alert>
               )}
               <TextField
                 fullWidth
                 label="کد یک‌بارمصرف"
+                autoComplete="one-time-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                inputProps={{ inputMode: "numeric", maxLength: 6 }}
+                onChange={(e) => setCode(normalize(e.target.value))}
+                inputProps={{
+                  dir: "ltr",
+                  inputMode: "numeric",
+                  pattern: "[0-9]{6}",
+                  maxLength: 6,
+                }}
+                required
               />
               <Button
                 fullWidth
-                size="large"
                 type="submit"
                 variant="contained"
+                size="large"
                 disabled={busy}
-                sx={{ mt: 2 }}
               >
-                {busy ? "در حال بررسی…" : "ورود به پنل"}
+                ورود به پنل
               </Button>
               <Button
+                fullWidth
+                disabled={busy}
                 onClick={() => {
-                  setChallenge("");
                   setCode("");
+                  setError("");
+                  setStage("method");
                 }}
-                sx={{ mt: 1 }}
               >
-                تغییر شماره
+                انتخاب روش دیگر
               </Button>
             </form>
           )}
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {error}
-            </Alert>
-          )}
-          <div className="test-accounts">
-            <span>حساب‌های ساختگی برای بررسی نقش‌ها</span>
-            <div>
-              {accounts.map((account) => (
-                <button
-                  key={account.phone}
-                  disabled={!!challenge}
-                  onClick={() => form.setValue("phone", account.phone)}
-                >
-                  {account.name}
-                </button>
-              ))}
-            </div>
-          </div>
-          <small className="muted">
-            ورود صرفاً برای محیط آزمون است. سیاست رمزعبور بک‌آفیس هنوز نهایی نشده
-            است.
-          </small>
+          <p className="login-security-note">
+            ورود به این بخش فقط برای کاربران دارای دسترسی مجاز است.<br/><Link to={surface==="seller"?"/":"/seller-login"}>{surface==="seller"?"ورود کارکنان بک‌آفیس":"ورود اعضای فروشگاه"}</Link>
+          </p>
         </div>
       </section>
     </div>

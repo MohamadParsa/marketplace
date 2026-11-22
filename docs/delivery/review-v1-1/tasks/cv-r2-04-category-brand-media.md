@@ -6,7 +6,7 @@ owner: unassigned
 updated: 2026-11-20
 related: [DOM-CATALOG-001, FEAT-BO-001]
 approved_by: []
-implementation_status: todo
+implementation_status: review
 priority: P1
 wave: W1
 ---
@@ -15,7 +15,7 @@ wave: W1
 
 Issue: [#4](https://github.com/MohamadParsa/marketplace/issues/4) · پاسخ‌های مالک: [R2-Q04](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
-این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.
+این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. پیاده‌سازی و بررسی محلی انجام شده و در انتظار بازبینی/ادغام است؛ وضعیت محصول اصلی یا deploy از این متن نتیجه نمی‌شود.
 
 ## هدف بیزینسی و نتیجه
 
@@ -42,7 +42,7 @@ media reference اختیاری و alt/fallback؛ validate محتوا در سرو
 
 ## بخش مسدود، خارج محدوده یا شرط شروع
 
-نوع/حجم/ابعاد نهایی آیکن در قرارداد رسانه همین قابلیت ثبت شود؛ ابعاد بنر/CMS معوق، مانع آیکن نیست. سقف نمونه، خودکار سیاست production نشود.
+قرارداد فنی برش آزمون در API-CATALOG-ICONS-001 ثبت شده است: PNG/JPEG/WebP واقعی تا۱MiB و هر ضلع۱۰۲۴. ابعاد بنر/CMS معوق، مانع آیکن نیست. ذخیره‌سازی/پذیرش production همچنان جداست.
 
 اصل پنل/سلر کامل با داده آزمون پیش از سایت حفظ شود. مخزن/پروژه، provider، مقررات و تصمیم باز از fixture یا رابط استنباط نشود؛ اتصال واقعی گیت مستقل دارد.
 
@@ -63,3 +63,7 @@ media reference اختیاری و alt/fallback؛ validate محتوا در سرو
 اصلاح تسک‌های پایه: CV-CAT-01، CV-CAT-03، CV-CAT-07.
 
 [فهرست فعال](../README.md) · [پرسش‌های جاری](../../../product/open-questions.md) · [بسته تاریخی](../../../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/task-index-fa.md). شناسه CV، شماره Issue و شناسه Q سه فضای متفاوت‌اند؛ مثلاً CV-R2-14، خود Issue فرایندی #14 نیست.
+
+## نتیجه اجرای درخواست مالک
+
+[گزارش بررسی](../issue-4-verification.md) و [خلاصه JSON](../issue-4-checks.json) و [قرارداد رسانه](../../../architecture/contracts/catalog-icons.md) شواهد۱۴ بررسی مرورگر و تست API/مجوز/هم‌زمانی را ثبت می‌کنند. وضعیت review است و پس از ادغام و پذیرش تعیین تکلیف شود؛ کل کاتالوگ برند/ذخیره‌سازی واقعی done نشده است.

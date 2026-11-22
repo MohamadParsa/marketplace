@@ -13,6 +13,8 @@ type Random interface {
 }
 type Users interface {
 	FindByPhone(context.Context, identity.Surface, string) (identity.User, error)
+	FindByEmail(context.Context, identity.Surface, string) (identity.User, error)
+	UpdateProfile(context.Context, identity.Surface, string, string, string, string) error
 }
 type Challenges interface {
 	PutChallenge(context.Context, string, identity.Challenge) error
@@ -28,4 +30,9 @@ type Sessions interface {
 }
 type OTPNotifier interface {
 	Send(context.Context, identity.Surface, string, string) error
+}
+
+// Called only after consuming a valid mobile OTP; never grants staff roles.
+type CustomerRegistration interface {
+	RegisterVerifiedCustomer(context.Context, string, string) (identity.User, error)
 }

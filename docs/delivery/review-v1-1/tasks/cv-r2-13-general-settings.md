@@ -13,6 +13,8 @@ wave: W1
 
 # CV-R2-13 — تنظیمات عمومی دسته‌بندی‌شده سایت
 
+وابستگی #5: فقط برش `display_settings.card_attribute_limit` با فرم typeدار، مجوز مدیرکل، version و audit در [قرارداد خصوصیات](../../../architecture/contracts/catalog-attributes.md) پیاده شد. این پیشرفت جزئی، وضعیت todo کل #15 یا قواعد باز تقویم/سفارش را done نمی‌کند؛ این تسک در ادامه همان داده/فرمان را گسترش دهد و تنظیم موازی نسازد.
+
 Issue: [#15](https://github.com/MohamadParsa/marketplace/issues/15) · پاسخ‌های مالک: [R2-Q03](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری)، [R2-Q05](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
 این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.

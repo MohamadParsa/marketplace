@@ -1,5 +1,10 @@
 # نقشه تسک‌های تحلیل پایه چریوا
 
+## صف انتشار اولیه جاری
+
+[برنامه انتشار و چهار برش مشترک](initial-launch/README.md) مرجع اجرای بعدی‌اند: #27 خانه، #28 PLP، #29 PDP و #30 خرید/کیف پول کارت‌به‌کارت، زیر والد #11. این‌ها برش اجرایی تسک‌های مادرند و به معنی تکرار نیازمندی‌های کاتالوگ نیستند. #12 گیت محدود را جدا از پذیرش کامل ثبت می‌کند؛ [ADR-007](../decisions/adr-007-initial-launch-sequence.md) تقدم بر شرط قبلی پنل کامل را توضیح می‌دهد.
+
+
 تحلیل ۱.۰ مورخ ۲۰۲۶-۱۱-۱۷ شامل ۹۱ تسک در ۱۱ گروه است. وضعیت ثبت‌شده تمام تسک‌ها در نسخه بسته `todo` است. وضعیت اجرای فعلی هر قابلیت در رودمپ و گزارش تحویل همان محیط پیگیری می‌شود. شناسه اصلی، اندازه، موج، وابستگی، مانع و پذیرش هر تسک در فهرست مبدأ باقی می‌ماند.
 
 [فهرست انسانی تسک‌ها](../review-packages/cherriva-2026-11-17-v1-1/03-analysis-v1-0/tasks/README.md) · [فهرست ماشین‌خوان](../review-packages/cherriva-2026-11-17-v1-1/03-analysis-v1-0/task-index.json) · [ماتریس ۲۹ ردیف پوشش](../review-packages/cherriva-2026-11-17-v1-1/03-analysis-v1-0/14-coverage.md) · [رودمپ جاری](roadmap.md)
@@ -17,6 +22,8 @@
 | CV-WEB | ۱۸ | کشف، حساب، سبد، خرید، پیگیری، SEO و تعامل محتوایی. [تجربه سایت](../experiences/storefront/README.md) · [پرسش‌های محصول](../product/open-questions.md#پرسشهای-تحلیل-پایه) |
 | CV-INT | ۷ | اتصال درگاه‌ها، پیامک، عملیات، رسانه و انتشار. [قراردادها](../architecture/contracts/README.md) · [محیط‌ها](environments.md) |
 | CV-QA | ۶ | پذیرش دسترسی، قیمت، هم‌زمانی، عملیات، رابط و انتشار. [کیفیت](../architecture/quality.md) · [BDD](../bdd/README.md) |
+
+[پیگیری فعال CV-WEB-15/16](product-interactions-followup.md): پذیرش API کامل تعامل از دامنه #25 با تأیید مالک به همین کارهای موجود منتقل شد؛ سرویس‌ها هنوز معوق‌اند.
 
 ## موج‌ها و ترتیب تحویل
 
@@ -36,17 +43,17 @@
 
 ## اصلاحات نسخه ۱.۱
 
-پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت اجرای ۱۲ کار فعال todo و سه کار CMS deferred است؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
+پس از پاسخ #13، [فهرست و شرح‌های فعال](review-v1-1/README.md) مرجع دامنه، وابستگی، AC و شاهد پایان هر کار است. ۱۲ Issue اصلی بازنویسی و سه نیاز تازه به #15/#16/#17 تفکیک شدند. snapshot نسخه۱.۱ بدون تغییر مرجع تاریخی است. وضعیت ۱۵ کار فعال پس از بازگشایی محدود #7 در فهرست جاری پیگیری می‌شود؛ پس از فعال‌سازی محدود #7 طبق [ADR-006](../decisions/adr-006-responsive-banner-activation.md)، فقط #8/#9 از این سه کار deferred هستند؛ همگام‌سازی #14 به معنی تکمیل محصول نیست.
 
 | کار و Issue | موج پیشنهادی | وضعیت اجرا | اصلاح پایه/منشأ |
 | --- | --- | --- | --- |
 | [CV-R2-01](review-v1-1/tasks/cv-r2-01-single-user.md) · [#1](https://github.com/MohamadParsa/marketplace/issues/1) | W0 | todo | CV-IAM-04، CV-IAM-05، CV-IAM-07 |
 | [CV-R2-02](review-v1-1/tasks/cv-r2-02-mobile-first-login.md) · [#2](https://github.com/MohamadParsa/marketplace/issues/2) | W0 | todo | CV-IAM-01، CV-IAM-02 |
 | [CV-R2-03](review-v1-1/tasks/cv-r2-03-profile-password-recovery.md) · [#3](https://github.com/MohamadParsa/marketplace/issues/3) | W0 | todo | CV-IAM-02، CV-IAM-07، CV-WEB-07 |
-| [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | todo | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
-| [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | todo | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
-| [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | todo | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
-| [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | later | deferred | CV-CMS-01، CV-CMS-02 |
+| [CV-R2-04](review-v1-1/tasks/cv-r2-04-category-brand-media.md) · [#4](https://github.com/MohamadParsa/marketplace/issues/4) | W1 | review | CV-CAT-01، CV-CAT-03، CV-CAT-07 |
+| [CV-R2-05](review-v1-1/tasks/cv-r2-05-shared-attributes.md) · [#5](https://github.com/MohamadParsa/marketplace/issues/5) | W1 | review | CV-CAT-02، CV-CAT-05، CV-CAT-08 |
+| [CV-R2-06](review-v1-1/tasks/cv-r2-06-product-workspace.md) · [#6](https://github.com/MohamadParsa/marketplace/issues/6) | W1 | review | CV-CAT-04، CV-CAT-05، CV-CAT-06 |
+| [CV-R2-07](review-v1-1/tasks/cv-r2-07-responsive-banner.md) · [#7](https://github.com/MohamadParsa/marketplace/issues/7) | W1 | review | CV-CMS-01، CV-CMS-02 |
 | [CV-R2-08](review-v1-1/tasks/cv-r2-08-manual-product-rail.md) · [#8](https://github.com/MohamadParsa/marketplace/issues/8) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
 | [CV-R2-09](review-v1-1/tasks/cv-r2-09-sticky-banner.md) · [#9](https://github.com/MohamadParsa/marketplace/issues/9) | later | deferred | CV-CMS-01، CV-CMS-02، CV-WEB-03 |
 | [CV-R2-10](review-v1-1/tasks/cv-r2-10-seller-lead-snapshot.md) · [#10](https://github.com/MohamadParsa/marketplace/issues/10) | W2 | todo | CV-IAM-06، CV-CAT-06، CV-OPS-05، CV-OPS-06 |
@@ -55,6 +62,8 @@
 | [CV-R2-13](review-v1-1/tasks/cv-r2-13-general-settings.md) · [#15](https://github.com/MohamadParsa/marketplace/issues/15) | W1 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-14](review-v1-1/tasks/cv-r2-14-shipment-slots.md) · [#16](https://github.com/MohamadParsa/marketplace/issues/16) | W2 | todo | تفکیک جدید از پاسخ مالک |
 | [CV-R2-15](review-v1-1/tasks/cv-r2-15-stock-alert.md) · [#17](https://github.com/MohamadParsa/marketplace/issues/17) | W2 | todo | تفکیک جدید از پاسخ مالک |
+| [CV-R2-16](review-v1-1/tasks/cv-r2-16-category-content-seo.md) · [#24](https://github.com/MohamadParsa/marketplace/issues/24) | reference؛ اجرا در #28 | done / مرجع | چهار AC با [شاهد #28](initial-launch/issue-28-verification.md)؛ بدون اجرای مستقل |
+| [CV-R2-17](review-v1-1/tasks/cv-r2-17-product-content-seo.md) · [#25](https://github.com/MohamadParsa/marketplace/issues/25) | reference؛ اجرا در #29 | done / مرجع | [شاهد تکمیلی #25](review-v1-1/issue-25-verification.md)؛ پذیرش سرویس کامل در CV-WEB-15/16 معوق است |
 
 <a id="issue-13-scope"></a>
 
@@ -69,3 +78,6 @@
 - اتصال میان زیرسایت‌ها از محدوده شروع خارج و A پنل در پذیرش ثبت شود. رفتار خاموش‌بودن خود PDP و خرید مستقیم صفحه فروشگاه در Q-027 باز باقی است.
 
 تغییرات حوزه به معنی تکمیل کد/API یا پذیرش سناریوهای قبلی نیستند. مرحله۲ باید سناریوها، قراردادها، وابستگی و شواهد لازم بستن هر کار را یکپارچه کند.
+
+
+تکمیل۲۰۲۶-۱۱-۲۱: دو تسک محتوای دسته/محصول به درخواست مالک افزوده شد؛ [مرجع تطبیق و فیلدها](../domains/catalog/content-and-seo.md). فهرست جاری۱۷ کار (۱۵ فعال،۲معوق) دارد؛ شمار۹۱ تسک snapshot تاریخی تغییر نکرده است.

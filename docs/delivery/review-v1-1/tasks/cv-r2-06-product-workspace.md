@@ -3,10 +3,10 @@ id: CV-R2-06
 title: اکشن سریع تنوع، قیمت و موجودی در محصول
 status: in-review
 owner: unassigned
-updated: 2026-11-20
+updated: 2026-11-21
 related: [DOM-CATALOG-001, FEAT-BO-001]
 approved_by: []
-implementation_status: todo
+implementation_status: review
 priority: P0
 wave: W1
 ---
@@ -15,7 +15,7 @@ wave: W1
 
 Issue: [#6](https://github.com/MohamadParsa/marketplace/issues/6) · پاسخ‌های مالک: [R2-Q02](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری)، [R2-Q03](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
-این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.
+این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. برش آزمون به درخواست مالک پیاده و محلی بررسی شد؛ وضعیت کد review و ادغام/استقرار مستقل است.
 
 ## هدف بیزینسی و نتیجه
 
@@ -64,3 +64,7 @@ API و مرورگر از هر دو entry point؛ حداقل دو فروشگاه�
 اصلاح تسک‌های پایه: CV-CAT-04، CV-CAT-05، CV-CAT-06.
 
 [فهرست فعال](../README.md) · [پرسش‌های جاری](../../../product/open-questions.md) · [بسته تاریخی](../../../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/task-index-fa.md). شناسه CV، شماره Issue و شناسه Q سه فضای متفاوت‌اند؛ مثلاً CV-R2-14، خود Issue فرایندی #14 نیست.
+
+## نتیجه اجرای ۲۰۲۶-۱۱-۲۱
+
+[گزارش و تصاویر](../issue-6-verification.md) و [خلاصه ماشین‌خوان](../issue-6-checks.json) شواهد API/سرویس و۲۱ بررسی مرورگر را به ACها وصل می‌کنند. [قرارداد اجرایی](../../../architecture/contracts/product-workspace.md) مرجع نسخه، مجوز scoped، resolver و مرز عضویت آزمون است. storage حافظه‌ای، نقش سفارشی #1 و کل تسک‌های پایه جدا هستند؛ پیش‌نمایش انتخاب، اتصال نهایی PDP مشتری #11 نیست. بستن Issue با ادغام و انتشار یکی فرض نشود.

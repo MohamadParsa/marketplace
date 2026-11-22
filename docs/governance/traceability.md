@@ -1,5 +1,11 @@
 # ردیابی قابلیت تا پذیرش
 
+برش فعال‌شده CV-R2-07: [ADR-006](../decisions/adr-006-responsive-banner-activation.md) ← [شرح](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) ← [قرارداد](../architecture/contracts/responsive-banners.md) ← [دو سناریو](../bdd/features/experiences/responsive-banners.feature) ← [گزارش و تصاویر](../delivery/review-v1-1/issue-7-verification.md). فعال‌شدن این برش، سایر CMS را فعال نمی‌کند.
+
+برش آزمون CV-R2-06: [شرح](../delivery/review-v1-1/tasks/cv-r2-06-product-workspace.md) ← [قرارداد](../architecture/contracts/product-workspace.md) ← [سه سناریو](../bdd/features/experiences/product-workspace.feature) ← [گزارش API/مرورگر و تصاویر](../delivery/review-v1-1/issue-6-verification.md). پایان برش آزمون با تکمیل محصول، ادغام یا پذیرش اتصال واقعی یکی نیست.
+
+برش آزمون CV-R2-05: [شرح کار](../delivery/review-v1-1/tasks/cv-r2-05-shared-attributes.md) ← [قرارداد](../architecture/contracts/catalog-attributes.md) ← [سه سناریوی BDD](../bdd/features/experiences/shared-attributes.feature) ← [گزارش و شواهد اجرا](../delivery/review-v1-1/issue-5-verification.md). وضعیت بازبینی کد از وضعیت تأیید مشخصات جداست.
+
 این جدول فقط نقشه لینک‌هاست؛ قانون و سناریو در محل مرجع نگهداری می‌شوند. بخش‌هایی از بک‌آفیس برای مرور با داده آزمون پیاده شده‌اند؛ وضعیت دقیق و شواهد در گزارش مرحله ۱ آمده است. شناسه‌های `AC` داخل سند قابلیت، شواهد طراحی پذیرش‌اند، نه گزارش آزمون موفق. صورت Gherkin همین سناریوها در [مستندات BDD](../bdd/README.md) نگهداری می‌شود.
 
 | قابلیت / پذیرش همان سند | مرجع قواعد | عملیات قرارداد منطقی | کنترل کیفیت مرتبط | مرحله |
@@ -75,7 +81,7 @@
 | تصمیم | قواعد/تجربه جاری | کار متأثر و شاهد بعدی |
 | --- | --- | --- |
 | موبایل نخست، OTP بدون رمز و لینک رمز پس از موبایل، بازیابی | [هویت](../domains/identity/README.md) | #1..3؛ AC10 و قرارداد بازیابی؛ تغییر موبایل هنوز پیشنهاد |
-| admin، مجموع مجوز scoped، عضویت چندبه‌چند | [نقش‌ها](../product/roles.md) | #1/#2/#12؛ درخواست مستقیم خارج scope و اعطای نقش بدون اختیار رد شود |
+| admin، مجموع مجوز scoped، عضویت چندبه‌چند | [نقش‌ها](../product/roles.md) | [CV-R2-01 / #1](../delivery/review-v1-1/tasks/cv-r2-01-single-user.md#نتیجه-برش-آزمون): هویت/مالکیت خرید آزمون، مرز فروشگاه، نقش سفارشی، سیاست ادمین و ماندگاری PostgreSQL شاهد دارند. #2/#12 همچنان متأثرند. |
 | خصوصیت مشترک بدون ارث و سقف عمومی کارت | [کاتالوگ](../domains/catalog/README.md) | #5/#6/#11؛ شارژر حافظه والد را نگیرد، سقف کارت از تنظیم بیاید |
 | CMS معوق، خانه ثابت؛ تنظیمات عمومی مستقل | [مدیریت](../experiences/backoffice/management.md) | #7..9 معوق؛ dependency آن‌ها در #11/#12 در مرحله۲ اصلاح شود |
 | اسلات ظرفیت‌دار/حمل حداقل‌حداکثر، تقویم و snapshot | [ارسال](../domains/shipping/README.md) و [سفارش](../domains/orders/README.md) | #10/#11 و کار مستقل ظرفیت؛ قبل از شاهد هم‌زمانی و سیاست رزرو، پذیرش اسلات ادعا نشود |
@@ -90,3 +96,47 @@
 [ماتریس پاسخ→Issue→سند](../delivery/review-v1-1/README.md#پاسخ-به-issue-و-سند-متأثر) مرجع بند اول #14 است. هر یک از ۱۵ شرح کار نیز پاسخ، مرجع، dependency، بخش مسدود و AC قابل ارزیابی دارد. source snapshot تغییر نکرده و شناسه‌های CV-R2-01..12 حفظ شده‌اند؛ CV-R2-13/14/15 شناسه کارهای جدید #15/#16/#17 هستند و با شماره Issue فرایندی #13/#14 یکی نیستند.
 
 [گزارش کنترل همگام‌سازی](../delivery/review-v1-1/verification.md) بررسی لینک/گراف و تطبیق متن Issueها را از شاهد اجرای محصول جدا نگه می‌دارد.
+
+## شواهد پیاده‌سازی CV-R2-04
+
+AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/contracts/catalog-icons.md)، [گزارش بررسی](../delivery/review-v1-1/issue-4-verification.md) و [تست API و مرورگر](../../tests/e2e/catalog-icons.cjs) متصل‌اند. وضعیت review و منتظر ادغام؛ Go tests/vet و frontend lint/build و۱۴ بررسی مرورگر موفق‌اند. storage حافظه‌ای آزمون است و قبولی production اعلام نشده است.
+
+
+## تکمیل محتوای کاتالوگ — ۲۰۲۶-۱۱-۲۱
+
+درخواست مالک ← [تطبیق و نیازمندی‌ها](../domains/catalog/content-and-seo.md) ← [CV-R2-16 / #24](../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) و [CV-R2-17 / #25](../delivery/review-v1-1/tasks/cv-r2-17-product-content-seo.md) ← [سناریوهای مستند](../bdd/features/experiences/catalog-content-seo.feature) ← مصرف سایت #11 و پذیرش #12. تسک‌ها todo و اسناد in-review هستند؛ سناریوها اجرا نشده‌اند. این تغییر مستندات است و شاهد تکمیل محصول ندارد؛ جزئیات باز R2-Q07 تا R2-Q09 در دفتر پرسش‌هاست.
+
+
+## مسیر انتشار اولیه و جریان وجه
+
+درخواست مالک → [ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [برنامه و چهار Issue #27 تا #30](../delivery/initial-launch/README.md) → [۲۴ سناریوی مستند](../bdd/features/experiences/initial-launch.feature) → گیت اولیه #12. هر Issue بک‌آفیس/API/سایت دارد؛ خانه با دستور مالک done و سایر مراحل todo هستند. [شاهد اجرای خانه](../delivery/initial-launch/issue-27-verification.md) و [ADR-008 ورود مشترک](../decisions/adr-008-shared-login-modes.md) به همین مسیر اضافه شده‌اند. LCH-Q01 با پاسخ مالک حل شد: ورودی وجه ابتدا شارژ، تأیید کارت‌به‌کارت دستی/بصری و سپس تأیید سفارش با مصرف جدا. LCH-Q02 تا04 فقط بخش وابسته را متوقف می‌کنند. خانه/PLP/PDP با طرح A و C حرف اول Cherriva پیش می‌روند.
+
+
+## اجرای خانه — CV-LCH-01
+
+[PR #32](https://github.com/MohamadParsa/marketplace/pull/32) → [قرارداد API-HOMEPAGE-LAUNCH-001](../architecture/contracts/homepage-launch.md) و [ADR-008](../decisions/adr-008-shared-login-modes.md) → [هفت معیار پذیرش](../delivery/initial-launch/tasks/cv-lch-01-homepage.md) → [شواهد Go/PostgreSQL/مرورگر و تصاویر](../delivery/initial-launch/issue-27-verification.md). اجرا done و #27 با دستور مالک بسته شد؛ در زمان گزارش خانه #28/#29/#30 اجرا نشده بودند. وضعیت جاری #28 در بخش پایان آن آمده است. ادغام feature با پیش‌نیاز هویت، انتشار لیارا یا پذیرش production نیست.
+
+
+## رفع هم‌پوشانی صف با مراجع کاتالوگ — ۲۰۲۶-۱۱-۲۱
+
+[تصمیم تکمیلی ADR-007](../decisions/adr-007-initial-launch-sequence.md) → [صف و مالکیت یکتای اجرا](../delivery/initial-launch/README.md#execution-ownership) → #24 / CV-R2-16-AC01..04 فقط از شواهد #28 و #25 / CV-R2-17-AC01..05 فقط از شواهد #29 استفاده می‌کنند؛ پایه موجود #27 بازنویسی نمی‌شود. شناسه‌های BDD ثابت‌اند و تست/PR تکراری برای مراجع ساخته نمی‌شود. معیار شرطی تعامل همچنان باز است؛ نوع reference مجوز حذف معیار نیست. در زمان آن اصلاح برنامه، فقط #27 done بود و کار اجرایی تازه انجام نشده بود؛ وضعیت پس از اجرای #28 در بخش بعد آمده است.
+
+## شاهد پایان #28 و پوشش مشترک #24 — ۲۰۲۶-۱۱-۲۱
+
+[گزارش PLP/جست‌وجو](../delivery/initial-launch/issue-28-verification.md) → CV-LCH-02-AC01..05 و CV-R2-16-AC01..04 → [قرارداد واقعی](../architecture/contracts/plp-search.md)، آزمون HTTP/PostgreSQL و مرورگر. #27/#28 done؛ #11 پیشرفت۲از۴ و #29 بعدی است. چهار معیار مرجع #24 از همان PR شاهد دارند؛ #25 و معیارهای شرطی تعامل بازند. Breadcrumb در PLP اجرا و در #29 به ترتیب خانه، دسته‌ها، برند و نام محصول الزامی شد. merge/deploy یا پذیرش تولید از این وضعیت نتیجه نمی‌شود.
+
+## شاهد پایان #29 — ۲۰۲۶-۱۱-۲۲
+
+[گزارش PDP](../delivery/initial-launch/issue-29-verification.md) → CV-LCH-03-AC01..05 و زیرمجموعه مشخص CV-R2-17 → [قرارداد](../architecture/contracts/product-detail.md)، آزمون HTTP/PostgreSQL و مرورگر. #11 پیشرفت۳از۴؛ #30 طبق دستور مالک ادامه دارد. #25 فقط AC01/02/05 کامل و AC03/04 بخشی شاهد دارند؛ مرجع باز می‌ماند. اطلاعات حساب محلی به درخواست صریح مالک در راهنمای دسترسی تیم ثبت شده است؛ نمونه عمومی یا حساب production فرض نشود.
+
+## برش خرید و کیف پول انتشار اولیه — CV-LCH-04
+
+[شرح #30](../delivery/initial-launch/tasks/cv-lch-04-checkout-wallet-card-transfer.md)، [قرارداد API-CHECKOUT-WALLET-LAUNCH-001](../architecture/contracts/checkout-wallet-launch.md)، [BDD با همان ACها](../bdd/features/experiences/initial-launch.feature)، [شاهد اجرا](../delivery/initial-launch/issue-30-verification.md) و [گیت عمومی](../delivery/initial-launch/production-handoff.md) به هم متصل‌اند. LCH-Q02/03/04 حل‌شده‌اند؛ وضعیت مستقل سفارش/پرداخت و تاریخچه در هر دو سطح ثبت شد. AC07 محیط عمومی همچنان unverified است؛ #12 و #11 بازند و اجرای محلی به معنی پذیرش کل محصول نیست.
+
+## بازبینی #24/#25 پس از خرید اولیه
+
+#24 با همان شواهد #28 بسته و بازبینی شد. [گردش مستقل فروشنده](../architecture/contracts/catalog-content-review.md) و [گزارش تکمیلی](../delivery/review-v1-1/issue-25-verification.md) بخش باقی‌مانده CV-R2-17-AC03 را پوشش می‌دهند؛ قیمت/موجودی/رزرو مستقل و نسخه عمومی قبلی محفوظ‌اند. مالک در۲۰۲۶-۱۱-۲۲ پیشنهادها و تفکیک دامنه را پذیرفت؛ AC04 با آزمون HTTP استقلال تنظیمات/پیش‌فرض و تست کنترل مشترک تکمیل است. #25 در دامنه جاری done؛ [پذیرش API کامل](../delivery/product-interactions-followup.md) در CV-WEB-15/16 معوق و CHQ-10 برای آن مرحله باز است.
+
+## اصلاح تجربه خرید و دسته‌های موجود — ۲۰۲۶-۱۱-۲۲
+
+درخواست مالک → [قرارداد اصلاح تجربه](../architecture/contracts/purchase-experience.md) → [گزارش و شواهد](../delivery/initial-launch/purchase-refinements-verification.md) → تست‌های شماره سفارش/مالکیت/هم‌زمانی/پایداری PostgreSQL، ویزارد و روش ارسال متناسب شهر، سه محصول نمونه تنوع و میان‌بر دسته خانه. همان Product/Variant/Offer و کیف پول مصرف شده‌اند؛ مدل مالی یا مسیر موازی ساخته نشده و گیت عمومی هنوز باز است.

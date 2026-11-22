@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Link,
@@ -7,6 +7,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import {
   QueryClient,
@@ -28,6 +29,7 @@ import {
   PeopleOutline,
   StorefrontOutlined,
   CategoryOutlined,
+  LabelOutlined,
   Inventory2Outlined,
   PercentOutlined,
   LocalShippingOutlined,
@@ -40,9 +42,15 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@mui/icons-material";
+import { CommercePage, SellerCheckoutPage } from "../features/commerce/commerce-page";
+import { SharedAttributesPage } from "../features/management/shared-attributes";
+import { ProductDetailsPage } from "../features/management/product-workspace";
+import { ProfilePage } from "../features/management/profile-page";
+import { HomeCatalogPage } from "../features/management/home-catalog-page";
+import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
-import { WorkspaceContext } from "../shared/workspace";
+import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
@@ -57,7 +65,7 @@ const theme = createTheme({
     fontFamily: "Vazirmatn, Tahoma, sans-serif",
     button: { textTransform: "none", fontWeight: 600 },
   },
-  palette: { primary: { main: "#207863" }, background: { default: "#f5f7f8" } },
+  palette: { primary: { main: "#B51F46" }, background: { default: "#F7F7F9" } },
   shape: { borderRadius: 10 },
   components: {
     MuiButton: { defaultProps: { disableElevation: true } },
@@ -73,6 +81,11 @@ const menu = [
     heading: "مدیریت بازارگاه",
     items: [
       {
+        path: "/home-catalog",
+        label: "کاتالوگ و صفحه اصلی",
+        icon: <Inventory2Outlined />,
+      },
+      {
         path: "/users",
         label: "کاربران و نقش‌ها",
         icon: <PeopleOutline />,
@@ -82,6 +95,17 @@ const menu = [
       {
         path: "/categories",
         label: "دسته‌ها و خصوصیات",
+        icon: <CategoryOutlined />,
+      },
+      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
+      {
+        path: "/banners",
+        label: "بنرهای دو اندازه",
+        icon: <Inventory2Outlined />,
+      },
+      {
+        path: "/attributes",
+        label: "کتابخانه خصوصیات",
         icon: <CategoryOutlined />,
       },
       {
@@ -105,6 +129,16 @@ const menu = [
   {
     heading: "عملیات و پشتیبانی",
     items: [
+      {
+        path: "/commerce",
+        label: "سفارش و پرداخت سایت",
+        icon: <ReceiptLongOutlined />,
+      },
+      {
+        path: "/commerce-settings",
+        label: "تنظیمات خرید و حمل",
+        icon: <LocalShippingOutlined />,
+      },
       { path: "/orders", label: "سفارش‌ها", icon: <ReceiptLongOutlined /> },
       {
         path: "/support",
@@ -151,15 +185,32 @@ function Workspace({
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const loadCatalogMedia = useCallback(
+    (id: string) => api.catalogMedia(session.token, id),
+    [session.token],
+  );
+  const loadProfile = useCallback(
+    () => api.profile(session.token,session.user.Surface),
+    [session.token],
+  );
   const query = useQuery({
     queryKey: ["workspace", session.token],
-    queryFn: () => api.workspace(session.token),
+    queryFn: () => api.workspace(session.token, session.user.Surface),
   });
   const mutation = useMutation({
-    mutationFn: (command: Command) => api.execute(session.token, command),
-    onSuccess: async () => {
+    mutationFn: (command: Command) =>
+      api.execute(session.token, command, session.user.Surface),
+    onSuccess: async (_result, command) => {
       await cache.invalidateQueries({ queryKey: ["workspace"] });
-      setNotice("تغییر با موفقیت ثبت شد.");
+      await cache.invalidateQueries({ queryKey: ["product"] });
+      await cache.invalidateQueries({ queryKey: ["banners"] });
+      await cache.invalidateQueries({ queryKey: ["variant-resolution"] });
+      setNotice(
+        command.action.startsWith("banner.") ? "" : "تغییر با موفقیت ثبت شد.",
+      );
+    },
+    onError: (error) => {
+      if (error instanceof ApiError && error.status === 401) logout();
     },
   });
   useEffect(() => {
@@ -169,15 +220,30 @@ function Workspace({
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
   const role = session.user.Role;
-  const visible = (roles?: string[]) => !roles || roles.includes(role);
+  const permissions = session.user.Permissions ?? [];
+  const financeVisible =
+    role === "super-admin" ||
+    role === "finance" ||
+    permissions.includes("finance.read");
+  const visible = (roles?: string[]) =>
+    !roles ||
+    roles.includes(role) ||
+    (roles.includes("finance") && financeVisible);
   return (
     <div className="app-layout">
       <aside className={"sidebar " + (menuOpen ? "is-open" : "")}>
         <Link className="brand" to="/">
-          <span className="brand-mark">م</span>
-          <span>
-            مارکت‌پلیس<small>مرکز مدیریت بازارگاه</small>
-          </span>
+          <img
+            src="/brand/cherriva-wordmark.svg"
+            alt="Cherriva"
+            width="160"
+            height="44"
+          />
+          <small>
+            فضای مدیریت
+            <br />
+            چریوا
+          </small>
         </Link>
         <div className="workspace-badge">
           <span className="workspace-symbol">◈</span>
@@ -191,7 +257,11 @@ function Workspace({
             <div className="nav-group" key={group.heading}>
               <h3>{group.heading}</h3>
               {group.items
-                .filter((i) => visible("roles" in i ? i.roles : undefined))
+                .filter((i) =>
+                  session.user.Surface === "seller"
+                    ? ["/products","/commerce"].includes(i.path)
+                    : visible("roles" in i ? i.roles : undefined),
+                )
                 .map((item) => (
                   <NavLink
                     key={item.path}
@@ -216,7 +286,9 @@ function Workspace({
           <div className="avatar">{role === "super-admin" ? "م" : "ک"}</div>
           <div>
             <b>کاربر آزمایشی</b>
-            <small>{role}</small>
+            <small>
+              {role === "super-admin" ? "ادمین" : role || "نقش سفارشی"}
+            </small>
           </div>
           <button aria-label="خروج از حساب" onClick={logout}>
             <LogoutOutlined />
@@ -240,9 +312,16 @@ function Workspace({
             >
               <MenuOutlined />
             </button>
-            <span>بک‌آفیس</span>
+            <span>
+              {session.user.Surface === "seller" ? "پنل فروشنده" : "بک‌آفیس"}
+            </span>
             <i>/</i>
-            <strong>{current?.label ?? "جزئیات سفارش"}</strong>
+            <strong>
+              {current?.label ??
+                (location.pathname.startsWith("/products/")
+                  ? "جزئیات محصول"
+                  : "جزئیات سفارش")}
+            </strong>
           </div>
           <div className="topbar-actions">
             <span className="environment">
@@ -252,7 +331,13 @@ function Workspace({
             <Link aria-label="اعلان‌ها" to="/notifications">
               <NotificationsNoneOutlined />
             </Link>
-            <div className="avatar small-avatar">م</div>
+            <Link
+              to="/profile"
+              className="avatar small-avatar"
+              aria-label="پروفایل و تنظیم رمز"
+            >
+              ک
+            </Link>
           </div>
         </header>
         <main className="content">
@@ -275,17 +360,107 @@ function Workspace({
               value={{
                 state: query.data,
                 role,
+                surface: session.user.Surface,
+                loadProfile,
+                updateProfile: (input) =>
+                  api.updateProfile(session.token, input,session.user.Surface),
+                loadCatalogMedia,
+                loadBanners: () => api.banners(session.token),
+                loadBannerAsset: (id) => api.bannerAsset(session.token, id),
+                uploadBanner: async (input) => {
+                  const result = await api.uploadBanner(session.token, input);
+                  await cache.invalidateQueries({ queryKey: ["banners"] });
+                  return result;
+                },
+                loadProduct: (id) =>
+                  api.productWorkspace(session.token, id, session.user.Surface),
+                resolveVariant: (id, values) =>
+                  api.resolveVariant(
+                    session.token,
+                    id,
+                    values,
+                    session.user.Surface,
+                  ),
+                uploadIcon: async (input) => {
+                  try {
+                    await api.uploadIcon(session.token, input);
+                    await cache.invalidateQueries({ queryKey: ["workspace"] });
+                    setNotice("آیکن با موفقیت ثبت شد.");
+                  } catch (error) {
+                    if (error instanceof ApiError && error.status === 401)
+                      logout();
+                    throw error;
+                  }
+                },
+                can: (action, area) =>
+                  role === "super-admin" ||
+                  (!!area && can(role, area)) ||
+                  permissions.includes(action),
                 execute: (command) => mutation.mutateAsync(command),
+                requestAdminCode: () => api.requestAdminCode(session.token),
                 busy: mutation.isPending,
               }}
             >
               <Routes>
-                <Route path="/" element={<DashboardPage />} />
+                <Route
+                  path="/commerce"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <SellerCheckoutPage token={session.token} />
+                    ) : (
+                      <CommercePage token={session.token} />
+                    )
+                  }
+                />
+                <Route
+                  path="/commerce-settings"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" />
+                    ) : (
+                      <CommercePage token={session.token} settingsOnly />
+                    )
+                  }
+                />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route
+                  path="/home-catalog"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/" replace />
+                    ) : (
+                      <HomeCatalogPage />
+                    )
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <DashboardPage />
+                    )
+                  }
+                />
+                <Route path="/products/:id" element={<ProductDetailsPage />} />
+                <Route
+                  path="/banners"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <BannersPage />
+                    )
+                  }
+                />
+                <Route path="/attributes" element={<SharedAttributesPage />} />
                 {(
                   [
                     "users",
                     "stores",
                     "categories",
+                    "brands",
                     "products",
                     "pricing",
                     "shipping",
@@ -295,9 +470,10 @@ function Workspace({
                     key={section}
                     path={"/" + section}
                     element={
+                      (session.user.Surface === "seller" &&
+                        section !== "products") ||
                       (section === "users" && role !== "super-admin") ||
-                      (section === "pricing" &&
-                        !["super-admin", "finance"].includes(role)) ? (
+                      (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (
                         <ManagementPage key={section} section={section} />
@@ -327,7 +503,7 @@ function Workspace({
                 <Route
                   path="/finance"
                   element={
-                    ["super-admin", "finance"].includes(role) ? (
+                    financeVisible ? (
                       <FinancePage />
                     ) : (
                       <Navigate to="/" replace />
@@ -362,16 +538,21 @@ function Workspace({
   );
 }
 function SessionApp() {
+  const location=useLocation(),navigate=useNavigate();
+  const loginSurface=location.pathname==="/seller-login"?"seller":"backoffice";
   const [session, setSession] = useState<Session | null>(null);
   const logout = () => {
-    if (session) void api.logout(session.token).catch(() => undefined);
+    if (session)
+      void api
+        .logout(session.token, session.user.Surface)
+        .catch(() => undefined);
     setSession(null);
     queryClient.clear();
   };
   return session ? (
     <Workspace session={session} logout={logout} />
   ) : (
-    <LoginPage onLogin={setSession} />
+    <LoginPage key={loginSurface} surface={loginSurface} onLogin={s=>{setSession(s);if(s.user.Surface==="seller")navigate("/products",{replace:true})}} />
   );
 }
 export function App() {

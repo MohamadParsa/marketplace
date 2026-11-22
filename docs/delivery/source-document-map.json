@@ -1,0 +1,52 @@
+{
+  "updated": "2026-11-22",
+  "workspace": "D:\\Cherriva",
+  "current_source_commit": "2cab27adffbc1632f5a60dedad86da5f4a49934f",
+  "rows": [
+    {
+      "issue": 27,
+      "source_commit": "8c9ba90e0338aaea66e6e537f716147c0c76a2ca",
+      "documentation_commit": "31be4ce4d3ff08d8fcc672d62b65195429c0972f",
+      "verification": "docs/delivery/initial-launch/issue-27-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 28,
+      "source_commit": "8cc37732270b3a7b1e470ec8879db8c81fd82e15",
+      "documentation_commit": "8cc37732270b3a7b1e470ec8879db8c81fd82e15",
+      "verification": "docs/delivery/initial-launch/issue-28-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 29,
+      "source_commit": "d6e666235efd70123c0f9279751620f902ab42f3",
+      "documentation_commit": "d6e666235efd70123c0f9279751620f902ab42f3",
+      "verification": "docs/delivery/initial-launch/issue-29-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 30,
+      "source_commit": "7d0e32502301d53c8266ca0b844865b4d10184fe",
+      "documentation_commit": "5da8c48cdad5a0bef8ab76181886b653859df33b",
+      "verification": "docs/delivery/initial-launch/issue-30-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 25,
+      "source_commit": "e2deacce9d1d6fe249c2c00bf5618f21bc51e58f",
+      "documentation_commit": "79a48df1ab03e817703de2318de3ea88e0dff881",
+      "verification": "docs/delivery/review-v1-1/issue-25-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": null,
+      "delivery": "purchase-refinements-and-D-source-sync",
+      "source_commit": "2cab27adffbc1632f5a60dedad86da5f4a49934f",
+      "feature_implementation_commit": "a52e599a917bc4c5a1816484d81a05b11a057541",
+      "documentation_commit": "fe72552341bc2a878bacc37f2b2f96ddcb9ba17b",
+      "verification": "docs/delivery/initial-launch/purchase-refinements-verification.md",
+      "source_tree_matches_documentation_revision": true
+    }
+  ],
+  "scope": "Source publication is distinct from Liara deployment and public acceptance."
+}

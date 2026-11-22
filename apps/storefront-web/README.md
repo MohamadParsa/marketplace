@@ -1,5 +1,8 @@
 # سایت مشتری Cherriva
 
+برای مسیر واقعی انتشار اولیه، [گزارش #30](../../docs/delivery/initial-launch/issue-30-verification.md)، [قرارداد](../../docs/architecture/contracts/checkout-wallet-launch.md) و [راهنمای اجرا/انتشار](../../docs/delivery/initial-launch/production-handoff.md) را بخوانید. سایت شامل `/cart`، `/checkout`، `/account` و `/wallet` است؛ پنل `/commerce` و `/commerce-settings` دارد. داده پایدار در PostgreSQL است و داده بررسی از محیط live جداست. اطلاعات پایین درباره نسخه‌های نمایشی پیشین به معنی فعال‌بودن درگاه یا BNPL در انتشار جاری نیست.
+
+
 رابط بررسی با داده ساختگی؛ وضعیت، دامنه، رنگ برند و موارد باز در [گزارش تحویل](../../docs/delivery/storefront-review.md) ثبت شده‌اند.
 
 ## اجرای محلی

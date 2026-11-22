@@ -24,12 +24,13 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 		if c.Name == "" {
 			return ErrInvalid
 		}
-		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Attributes: []string{}})
+		state.Categories = append(state.Categories, catalog.Category{ID: id, Name: c.Name, Bindings: []catalog.AttributeBinding{}, Version: 1})
 		return nil
 	case "category.archive":
 		for i := range state.Categories {
 			if state.Categories[i].ID == c.Target {
 				state.Categories[i].Archived = true
+				state.Categories[i].Version++
 				return nil
 			}
 		}
@@ -43,6 +44,9 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 				return ErrConflict
 			}
 			if c.Action == "product.publish" {
+				if p.Status != "published" && !canPublishProduct(*state, *p) {
+					return ErrInvalid
+				}
 				p.Status = "published"
 			} else {
 				if c.Reason == "" {

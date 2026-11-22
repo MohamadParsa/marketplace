@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
-import { can, useWorkspace } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
 import {
   ActionDialog,
   DataTable,
@@ -16,7 +16,7 @@ export function OperationsPage({
 }: {
   section: "orders" | "support" | "assignments" | "notifications" | "reports";
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, can, execute } = useWorkspace();
   const { id } = useParams();
   const [dialog, setDialog] = useState<{
     title: string;
@@ -59,7 +59,11 @@ export function OperationsPage({
   return (
     <>
       <PageHeader
-        title={selected ? `جزئیات ${selected.id}` : titles[section]}
+        title={
+          selected
+            ? `جزئیات سفارش ${selected.purchase_number ?? selected.id}`
+            : titles[section]
+        }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
         action={
           section === "reports" ? (
@@ -77,7 +81,7 @@ export function OperationsPage({
               <h2>اطلاعات سفارش</h2>
               <dl>
                 <dt>خرید چندفروشگاهی</dt>
-                <dd>{selected.purchase_id}</dd>
+                <dd>{selected.purchase_number ?? selected.purchase_id}</dd>
                 <dt>فروشگاه</dt>
                 <dd>{seller(selected.store_id)}</dd>
                 <dt>شهر مقصد</dt>
@@ -99,7 +103,7 @@ export function OperationsPage({
               </dl>
               {selected.status === "shipped" && (
                 <Button
-                  disabled={!can(role, "support")}
+                  disabled={!can("order.deliver", "support")}
                   variant="contained"
                   onClick={() =>
                     open("تأیید دریافت توسط پشتیبانی", {
@@ -155,9 +159,13 @@ export function OperationsPage({
                   render: (o) => (
                     <>
                       <Link to={"/orders/" + o.id}>
-                        <b>{o.id}</b>
+                        <b>سفارش {o.purchase_number ?? o.id}</b>
                       </Link>
-                      <small>{o.purchase_id}</small>
+                      <small>
+                        {o.purchase_number
+                          ? "گروه ارسال فروشگاه"
+                          : o.purchase_id}
+                      </small>
                     </>
                   ),
                 },
@@ -223,7 +231,9 @@ export function OperationsPage({
                   render: (c) => (
                     <div className="action-group">
                       <Button
-                        disabled={!can(role, "support") || c.status !== "open"}
+                        disabled={
+                          !can("case.start", "support") || c.status !== "open"
+                        }
                         onClick={() =>
                           open("شروع رسیدگی", {
                             action: "case.start",
@@ -236,7 +246,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") ||
+                          !can("case.refund", "support") ||
                           c.status === "closed" ||
                           c.status === "refund-pending"
                         }
@@ -252,7 +262,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") ||
+                          !can("case.assign", "support") ||
                           c.status === "closed" ||
                           c.status === "assigned"
                         }
@@ -288,7 +298,7 @@ export function OperationsPage({
                       </Button>
                       <Button
                         disabled={
-                          !can(role, "support") || c.status === "closed"
+                          !can("case.close", "support") || c.status === "closed"
                         }
                         onClick={() =>
                           open("بستن پرونده", {
@@ -354,7 +364,7 @@ export function OperationsPage({
                   render: (n) => (
                     <Button
                       disabled={
-                        role !== "super-admin" ||
+                        !can("notification.retry") ||
                         n.retries >= 3 ||
                         n.status === "success"
                       }

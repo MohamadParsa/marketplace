@@ -1,20 +1,36 @@
 package config
 
-import "os"
+import (
+	"net"
+	"os"
+)
 
 type Config struct {
-	Address     string
-	Environment string
+	DatabaseURL       string
+	WebRoot           string
+	WebSurface        string
+	Address           string
+	Environment       string
+	ReviewDatabaseURL string
+	KavenegarAPIKey   string
+	KavenegarTemplate string
+	KavenegarBaseURL  string
 }
 
 func Load() Config {
-	address := ":8080"
-	if port := os.Getenv("PORT"); port != "" {
-		address = ":" + port
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
+	address := net.JoinHostPort(os.Getenv("BIND_HOST"), port)
+
 	env := os.Getenv("APP_ENV")
 	if env == "" {
 		env = "local"
 	}
-	return Config{Address: address, Environment: env}
+	baseURL := os.Getenv("KAVENEGAR_BASE_URL")
+	if baseURL == "" {
+		baseURL = "https://api.kavenegar.com"
+	}
+	return Config{DatabaseURL: os.Getenv("DATABASE_URL"), WebRoot: os.Getenv("WEB_ROOT"), WebSurface: os.Getenv("WEB_SURFACE"), Address: address, Environment: env, ReviewDatabaseURL: os.Getenv("REVIEW_DATABASE_URL"), KavenegarAPIKey: os.Getenv("KAVENEGAR_API_KEY"), KavenegarTemplate: os.Getenv("KAVENEGAR_TEMPLATE"), KavenegarBaseURL: baseURL}
 }

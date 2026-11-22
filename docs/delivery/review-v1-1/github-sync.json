@@ -35,7 +35,7 @@
       "issue": 2,
       "url": "https://github.com/MohamadParsa/marketplace/issues/2",
       "state": "open",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "title_matches": true,
       "body_matches": true,
       "response_linked": true,

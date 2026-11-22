@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Button, Switch } from "@mui/material";
+import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { AccessPanel } from "./access-panel";
 import { useWorkspace, can } from "../../shared/workspace";
 import {
   ActionDialog,
@@ -10,7 +11,15 @@ import {
   type Field,
 } from "../../shared/components";
 import { labels, money } from "../../shared/format";
-import type { Command } from "../../shared/types";
+import type { Command, Category } from "../../shared/types";
+import { CategoryBindingsDialog } from "./shared-attributes";
+import { Link } from "react-router-dom";
+import { ProductQuickDialog } from "./product-workspace";
+import {
+  CatalogIcon,
+  CatalogIconDialog,
+  type IconTarget,
+} from "./catalog-icon";
 const roleOptions = [
   "super-admin",
   "operations",
@@ -22,10 +31,23 @@ export function ManagementPage({
   section,
 }: {
   section:
-    "users" | "stores" | "categories" | "products" | "pricing" | "shipping";
+    | "users"
+    | "stores"
+    | "categories"
+    | "brands"
+    | "products"
+    | "pricing"
+    | "shipping";
 }) {
-  const { state, role, execute } = useWorkspace();
+  const { state, role, execute, busy, can: allowed } = useWorkspace();
+  const [policyError, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [iconTarget, setIconTarget] = useState<IconTarget>();
+  const [bindingTarget, setBindingTarget] = useState<Category>();
+  const [productTarget, setProductTarget] = useState<{
+    id: string;
+    tab: number;
+  }>();
   const [dialog, setDialog] = useState<{
     title: string;
     fields: Field[];
@@ -38,6 +60,7 @@ export function ManagementPage({
     users: "کاربران و نقش‌ها",
     stores: "فروشگاه‌ها",
     categories: "دسته‌ها و خصوصیات",
+    brands: "برندها",
     products: "محصولات و بررسی محتوا",
     pricing: "قوانین کمیسیون",
     shipping: "ارسال و تقویم کاری",
@@ -82,6 +105,7 @@ export function ManagementPage({
           ) : undefined
         }
       />
+      {policyError && <Alert severity="error">{policyError}</Alert>}
       <section className="panel">
         <div className="toolbar">
           <input
@@ -173,6 +197,32 @@ export function ManagementPage({
               { title: "شهر", render: (s) => s.city },
               { title: "مدل کاتالوگ", render: (s) => labels[s.model] },
               {
+                title: "بررسی محتوای فروشنده",
+                render: (s) => (
+                  <select
+                    className="content-policy-select"
+                    aria-label={"سیاست محتوا " + s.name}
+                    disabled={
+                      busy || !allowed("store.content-policy.set", "management")
+                    }
+                    value={s.content_policy || "review"}
+                    onChange={(e) => {
+                      setError("");
+                      void execute({
+                        action: "store.content-policy.set",
+                        target: s.id,
+                        version: s.content_policy_version ?? 0,
+                        value: e.target.value,
+                        idempotency_key: crypto.randomUUID(),
+                      }).catch((e) => setError(e.message));
+                    }}
+                  >
+                    <option value="review">نیازمند تأیید</option>
+                    <option value="direct">انتشار مستقیم</option>
+                  </select>
+                ),
+              },
+              {
                 title: "وضعیت",
                 render: (s) => (
                   <span className={s.active ? "active-dot" : "muted"}>
@@ -204,11 +254,30 @@ export function ManagementPage({
           <DataTable
             rows={filtered(state.categories ?? [])}
             columns={[
-              { title: "دسته", render: (c) => <b>{c.name}</b> },
+              {
+                title: "دسته",
+                render: (c) => (
+                  <div className="catalog-name">
+                    <CatalogIcon
+                      kind="category"
+                      name={c.name}
+                      iconId={c.icon_id}
+                    />
+                    <b>{c.name}</b>
+                  </div>
+                ),
+              },
               {
                 title: "خصوصیات",
                 render: (c) =>
-                  c.attributes.join("، ") || "هنوز تعریفی ثبت نشده",
+                  (c.bindings ?? [])
+                    .map(
+                      (b) =>
+                        state.attributes?.find((a) => a.id === b.attribute_id)
+                          ?.name,
+                    )
+                    .filter(Boolean)
+                    .join("، ") || "بدون انتساب صریح",
               },
               {
                 title: "وضعیت",
@@ -217,17 +286,66 @@ export function ManagementPage({
               {
                 title: "عملیات",
                 render: (c) => (
+                  <>
+                    <Button
+                      disabled={c.archived}
+                      onClick={() => setBindingTarget(c)}
+                    >
+                      تنظیم خصوصیات
+                    </Button>
+                    <Button
+                      disabled={!editable || c.archived}
+                      onClick={() => setIconTarget({ ...c, kind: "category" })}
+                    >
+                      آیکن
+                    </Button>
+                    <Button
+                      disabled={!editable || c.archived}
+                      onClick={() =>
+                        open(
+                          "آرشیو دسته",
+                          { action: "category.archive", target: c.id },
+                          [{ name: "reason", label: "دلیل آرشیو" }],
+                        )
+                      }
+                    >
+                      آرشیو
+                    </Button>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
+        {section === "brands" && (
+          <DataTable
+            rows={filtered(state.brands ?? [])}
+            columns={[
+              {
+                title: "برند",
+                render: (b) => (
+                  <div className="catalog-name">
+                    <CatalogIcon
+                      kind="brand"
+                      name={b.name}
+                      iconId={b.icon_id}
+                    />
+                    <b>{b.name}</b>
+                  </div>
+                ),
+              },
+              {
+                title: "وضعیت",
+                render: (b) => (b.active ? "فعال" : "غیرفعال"),
+              },
+              {
+                title: "عملیات",
+                render: (b) => (
                   <Button
-                    disabled={!editable || c.archived}
-                    onClick={() =>
-                      open(
-                        "آرشیو دسته",
-                        { action: "category.archive", target: c.id },
-                        [{ name: "reason", label: "دلیل آرشیو" }],
-                      )
-                    }
+                    disabled={!editable || !b.active}
+                    onClick={() => setIconTarget({ ...b, kind: "brand" })}
                   >
-                    آرشیو
+                    آیکن
                   </Button>
                 ),
               },
@@ -243,6 +361,12 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <b>{p.name}</b>
+                    {p.content_revision?.state === "pending" && (
+                      <small>
+                        ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                      </small>
+                    )}
+                    <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
                     <small>
                       نسخه {p.version} · {p.id}
                     </small>
@@ -261,7 +385,21 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <Button
-                      disabled={!editable || p.status === "published"}
+                      onClick={() => setProductTarget({ id: p.id, tab: 0 })}
+                    >
+                      تنوع‌ها
+                    </Button>
+                    <Button
+                      onClick={() => setProductTarget({ id: p.id, tab: 1 })}
+                    >
+                      قیمت و موجودی
+                    </Button>
+                    <Button
+                      disabled={
+                        !editable ||
+                        p.status === "published" ||
+                        p.content_revision?.state === "pending"
+                      }
                       onClick={() =>
                         open(
                           "تأیید و انتشار محتوا",
@@ -278,7 +416,11 @@ export function ManagementPage({
                     </Button>
                     <Button
                       color="error"
-                      disabled={!editable || p.status === "rejected"}
+                      disabled={
+                        !editable ||
+                        p.status === "rejected" ||
+                        p.content_revision?.state === "pending"
+                      }
                       onClick={() =>
                         open(
                           "رد محتوای محصول",
@@ -376,6 +518,27 @@ export function ManagementPage({
           </>
         )}
       </section>
+      {section === "users" && <AccessPanel />}
+      {iconTarget && (
+        <CatalogIconDialog
+          target={iconTarget}
+          close={() => setIconTarget(undefined)}
+        />
+      )}
+      {productTarget && (
+        <ProductQuickDialog
+          id={productTarget.id}
+          initialTab={productTarget.tab}
+          close={() => setProductTarget(undefined)}
+        />
+      )}
+      {bindingTarget && (
+        <CategoryBindingsDialog
+          key={bindingTarget.id}
+          category={bindingTarget}
+          close={() => setBindingTarget(undefined)}
+        />
+      )}
       {dialog && (
         <ActionDialog
           key={dialog.command.action + dialog.command.target}

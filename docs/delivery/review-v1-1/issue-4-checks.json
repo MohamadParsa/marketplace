@@ -1,0 +1,165 @@
+{
+  "date": "2026-11-20",
+  "issue": 4,
+  "scope": "Implemented and locally verified; test memory storage; not deployed",
+  "go": {
+    "all_tests_passed": true,
+    "passing_tests_and_subtests": 37,
+    "packages": [
+      "github.com/cherriva/marketplace/apps/api/internal/application/auth",
+      "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+      "github.com/cherriva/marketplace/apps/api/cmd/api",
+      "github.com/cherriva/marketplace/apps/api/internal/transport/http",
+      "github.com/cherriva/marketplace/apps/api/internal/bootstrap"
+    ],
+    "icon_tests": [
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestConcurrentIconUpdatesAreAtomic/false"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestConcurrentIconUpdatesAreAtomic/true"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestConcurrentIconUpdatesAreAtomic"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestIconAuthorizationRechecksCurrentActor"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestUnattachedAndArchivedIconsAreNotPublic"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconHTTPRoundTripAndRemoval/category"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconHTTPRoundTripAndRemoval/brand"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconHTTPRoundTripAndRemoval"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/anonymous"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/viewer"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/fake-png"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/truncated"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/oversize"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation/dimensions"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconPermissionsAndValidation"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconAcceptsRasterFormats/png"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconAcceptsRasterFormats/jpeg"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconAcceptsRasterFormats/webp"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestCatalogIconAcceptsRasterFormats"
+      }
+    ],
+    "vet_passed": true,
+    "race_run": false,
+    "race_reason": "CGO disabled; no C compiler in PATH"
+  },
+  "frontend": {
+    "lint_passed": true,
+    "build_passed": true
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "category-default",
+        "pass": true
+      },
+      {
+        "id": "preview-without-upload",
+        "pass": true
+      },
+      {
+        "id": "cancel-does-not-publish",
+        "pass": true
+      },
+      {
+        "id": "category-upload",
+        "pass": true
+      },
+      {
+        "id": "invalid-keeps-current",
+        "pass": true
+      },
+      {
+        "id": "broken-image-fallback-and-name",
+        "pass": true
+      },
+      {
+        "id": "category-remove",
+        "pass": true
+      },
+      {
+        "id": "brand-default",
+        "pass": true
+      },
+      {
+        "id": "mobile-dialog-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-upload-mobile",
+        "pass": true
+      },
+      {
+        "id": "mobile-list-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-remove-mobile",
+        "pass": true
+      },
+      {
+        "id": "viewer-write-disabled",
+        "pass": true
+      },
+      {
+        "id": "runtime-errors",
+        "pass": true
+      }
+    ],
+    "passed": 14,
+    "total": 14,
+    "runtimeErrors": [],
+    "uploads": 2
+  }
+}

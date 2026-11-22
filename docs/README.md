@@ -1,9 +1,15 @@
 # نقشه مستندات
 
+[سورس Go/React و راه‌اندازی در D:\Cherriva](../README.md) · [تطبیق نسخه سورس و مدارک](delivery/source-document-map.md) · [اصلاح خرید، ویزارد و استان/شهر](delivery/initial-launch/purchase-refinements-verification.md)
+
 | نیاز خواننده | مرجع |
 | --- | --- |
+| مالکیت اجرا و رفع هم‌پوشانی #24/#25 با #28/#29 | [صف یکتا؛ چهار برش محلی تحویل و گیت عمومی باز است](delivery/initial-launch/README.md#execution-ownership) |
+| صف مقدم انتشار اولیه | [چهار کار بک‌آفیس/API/سایت: خانه، PLP، PDP، خرید کارت‌به‌کارت و کیف پول](delivery/initial-launch/README.md) |
 | پاسخ‌های الیاس برای تسک #13 و دامنه شروع نسخه۱.۱ | [متن کامل، مثال‌ها، پیشنهاد تغییر موبایل و اثر بر تسک‌ها](decisions/adr-005-review-v1-1-product-responses.md) |
 | مرور مشترک طرح‌ها پیش از نهایی‌کردن تسک‌ها | [بسته یکپارچه سایت و بک‌آفیس، تصاویر و راهنمای مشاهده](review-packages/README.md) |
+| فیلدهای تکمیلی دسته/محصول و SEO | [تطبیق مدل و تسک‌های #24/#25](domains/catalog/content-and-seo.md) |
+| ادامه سرویس‌های نظر و پرسش‌وپاسخ پس از #25 | [مرز و پذیرش CV-WEB-15/16](delivery/product-interactions-followup.md) |
 | شناخت محصول و مرز دامنه | [دامنه](product/scope.md)، [واژه‌نامه](product/glossary.md) |
 | شناخت نقش و داده مجاز | [نقش‌ها](product/roles.md) |
 | پیدا کردن قانون مشترک | [حوزه‌ها](domains/README.md) |
@@ -12,7 +18,7 @@
 | طراحی ارتباطات و آزمون شکست | [قراردادها](architecture/contracts/README.md)، [کیفیت](architecture/quality.md) |
 | تصمیم‌گیری روی ابهام | [پرسش‌ها](product/open-questions.md) |
 | فهم اصلاح تصمیم قبلی | [دفتر تصمیم‌ها](decisions/README.md) |
-| تسک‌های بازنویسی‌شده پس از پاسخ #13 | [۱۵ شرح فعال/معوق، وابستگی و AC و شاهد پایان](delivery/review-v1-1/README.md) |
+| تسک‌های بازنویسی‌شده پس از پاسخ #13 | [۱۷ شرح فعال/معوق، وابستگی و AC و شاهد پایان](delivery/review-v1-1/README.md) |
 | انتخاب مسیر ساخت | [برش‌ها](delivery/README.md)، [رودمپ](delivery/roadmap.md)، [آمادگی](delivery/readiness.md) |
 | ردیابی تسک‌های تحلیل پایه | [نقشه ۹۱ تسک و موج‌های پیشنهادی](delivery/analysis-backlog.md) |
 | اجرای سرویس و CI/CD | [راهنمای استقرار Liara](delivery/liara-deployment.md)، [ADR-003](decisions/adr-003-liara-deployment.md) |
@@ -23,8 +29,12 @@
 | سناریوهای رفتاری و داده آزمون | [BDD](bdd/README.md) |
 | افزودن سند | [راهنما](governance/documentation-guide.md)، [قالب‌ها](templates/README.md) |
 
+[دسترسی حساب ادمین نسخه محلی تیم](delivery/local-review-access.md)
+
 ## مسیر مطالعه برای یک قابلیت
 
 دامنه و نقش ← قواعد حوزه مرتبط ← تجربه محیط ← قرارداد و کیفیت ← پرسش‌های مرتبط ← آمادگی همان برش. خواندن کل مخزن برای هر تغییر لازم نیست.
 
 مرجع اصلاح مهم قیمت‌گذاری، [ADR-001](decisions/adr-001-pricing-and-payment-boundaries.md) است؛ از تصمیم قدیمی حفظ اجباری قانون روی قیمت پایه جدید استفاده نکنید.
+
+[گزارش خرید و کیف پول #30](delivery/initial-launch/issue-30-verification.md) · [تحویل انتشار به پارسا](delivery/initial-launch/production-handoff.md)

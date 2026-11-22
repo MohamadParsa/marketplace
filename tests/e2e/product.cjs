@@ -1,0 +1,508 @@
+/* Run seed-product.cjs first; real loopback Go API and PostgreSQL, synthetic account only. */
+async (page) => {
+  const api = "http://127.0.0.1:8098",
+    site = "http://127.0.0.1:5197",
+    checks = [],
+    errors = [];
+  let token = "";
+  const check = (id, pass) => {
+    checks.push({ id, pass: !!pass });
+    if (!pass) throw Error(id);
+  };
+  page.on("pageerror", (e) => errors.push(e.message));
+  const call = async (path, body, method = "GET") => {
+    const r = await page.request[method.toLowerCase()](api + path, {
+      headers: { Authorization: "Bearer " + token },
+      ...(body ? { data: body } : {}),
+    });
+    if (!r.ok()) throw Error(path + " " + r.status());
+    return r.status() === 204 ? null : r.json();
+  };
+  const state = () => call("/backoffice/workspace");
+  const command = (c) =>
+    call(
+      "/backoffice/commands",
+      { ...c, idempotency_key: crypto.randomUUID() },
+      "POST",
+    );
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(api);
+  await page
+    .getByLabel(/شماره موبایل یا ایمیل/)
+    .fill("review-admin@example.invalid");
+  await page.getByRole("button", { name: "ادامه", exact: true }).click();
+  await page.getByLabel(/^رمز عبور/).fill("Review-only-27-pass");
+  const login = page.waitForResponse((r) =>
+    r.url().endsWith("/backoffice/auth/password-login"),
+  );
+  await page
+    .getByRole("button", { name: "ورود با رمز عبور", exact: true })
+    .click();
+  token = (await (await login).json()).token;
+  await page
+    .getByRole("heading", { name: "نمای کلی بازارگاه", exact: true })
+    .waitFor();
+  let w = await state();
+  let p = w.products.find((p) => p.name === "گوشی چریوا مدل نمونه پرو");
+  if (!p) throw Error("Run seed-product.cjs");
+  const original = p,
+    offersBefore = JSON.stringify(
+      w.offers.filter((o) => o.product_id === p.id),
+    );
+  await page.locator('nav a[href="/home-catalog"]').click();
+  await page
+    .locator(".home-admin-list article")
+    .filter({ has: page.locator("b").filter({ hasText: p.name }) })
+    .getByRole("button", { name: "ویرایش محتوا", exact: true })
+    .click();
+  const dialog = () => page.getByRole("dialog").last();
+  await dialog()
+    .getByRole("textbox", { name: "توضیح کامل", exact: true })
+    .waitFor();
+  await dialog()
+    .getByRole("textbox", { name: "عنوان متای محصول", exact: true })
+    .waitFor({ state: "visible" });
+  check(
+    "product-content-fields-and-mm-units",
+    (await dialog()
+      .getByRole("textbox", { name: "توضیح کوتاه", exact: true })
+      .isVisible()) &&
+      (await dialog()
+        .getByRole("combobox", { name: "واحد ابعاد", exact: true })
+        .inputValue()) === "mm" &&
+      (await dialog()
+        .getByRole("spinbutton", { name: "وزن حمل", exact: true })
+        .inputValue()) === "210.5" &&
+      (await dialog()
+        .getByRole("textbox", { name: "عنوان متای محصول", exact: true })
+        .isVisible()) &&
+      (await dialog()
+        .getByRole("checkbox", { name: "عدم ایندکس (noindex)", exact: true })
+        .isVisible()),
+  );
+  await dialog()
+    .getByRole("textbox", { name: "توضیح کوتاه", exact: true })
+    .fill("توضیح کوتاه ثبت‌شده از پنل — بررسی PDP");
+  const editor = dialog().getByRole("textbox", {
+    name: "توضیح کامل",
+    exact: true,
+  });
+  await editor.fill("توضیح قالب‌بندی‌شده از پنل");
+  await editor.press("Control+a");
+  await dialog().getByRole("button", { name: "پررنگ", exact: true }).click();
+  await dialog()
+    .getByRole("checkbox", { name: "اجازه ثبت نظر مشتری", exact: true })
+    .check();
+  await dialog()
+    .getByRole("checkbox", { name: "اجازه پرسش و پاسخ", exact: true })
+    .uncheck();
+  await dialog()
+    .getByRole("textbox", { name: "عنوان متای محصول", exact: true })
+    .fill("محصول ویرایش‌شده | Cherriva");
+  await page.screenshot({
+    path: "output/playwright/purchase-refinements/product/backoffice-product-content-a.png",
+    fullPage: true,
+    animations: "disabled",
+  });
+  await dialog().getByRole("button", { name: "ذخیره", exact: true }).click();
+  await dialog().waitFor({ state: "hidden" });
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  check(
+    "rich-editor-saved-as-safe-format",
+    p.content.full_description.includes("<strong>") &&
+      p.content.full_description.includes("قالب‌بندی"),
+  );
+  check(
+    "independent-interaction-toggles",
+    p.content.reviews_enabled && !p.content.qa_enabled,
+  );
+  check(
+    "content-save-preserves-other-offers-and-stock",
+    JSON.stringify(w.offers.filter((o) => o.product_id === p.id)) ===
+      offersBefore,
+  );
+  const shop = await page.context().newPage();
+  shop.on("pageerror", (e) => errors.push(e.message));
+  await shop.setViewportSize({ width: 1440, height: 1000 });
+  const first = await shop.goto(site + "/product/" + p.id);
+  await shop.locator(".pdp-overview").waitFor();
+  await shop.waitForFunction(() => !document.querySelector(".pdp-progress"));
+  const html = await first.text();
+  check(
+    "initial-html-product-seo",
+    html.includes("محصول ویرایش‌شده | Cherriva") &&
+      html.match(/<title>/g).length === 1 &&
+      html.match(/name="robots"/g).length === 1 &&
+      html.includes("noindex, nofollow"),
+  );
+  check(
+    "content-edit-visible-in-pdp",
+    (await shop.locator(".pdp-short").textContent()) ===
+      "توضیح کوتاه ثبت‌شده از پنل — بررسی PDP" &&
+      (await shop.locator(".pdp-full-description strong").isVisible()),
+  );
+  const crumbs = await shop.locator(".plp-breadcrumb li").allTextContents();
+  check(
+    "breadcrumb-categories-brand-product-order",
+    crumbs.at(-1) === p.name &&
+      crumbs.at(-2) === w.brands.find((b) => b.id === p.brand_id).name &&
+      crumbs.at(-3) === w.categories.find((c) => c.id === p.category_id).name &&
+      crumbs[0] === "خانه",
+  );
+  let detail = await (
+    await shop.request.get(site + "/storefront/products/" + p.id)
+  ).json();
+  const best = detail.offers[0];
+  check(
+    "server-buybox-and-seller-list",
+    (await shop.locator(".pdp-buybox h2").textContent()) === best.store_name &&
+      (await shop.locator(".pdp-sellers article").count()) ===
+        detail.offers.length,
+  );
+  await shop.waitForFunction(
+    () =>
+      document.querySelector(".purchase-control-add") &&
+      !document.querySelector(".purchase-control-add").disabled,
+  );
+  check(
+    "real-cart-capability-without-fake-interactions",
+    detail.checkout_enabled === true &&
+      (await shop
+        .getByRole("button", { name: "افزودن به سبد خرید", exact: true })
+        .isEnabled()) &&
+      (await shop
+        .getByRole("button", { name: "ثبت نظر", exact: true })
+        .count()) === 0,
+  );
+  await shop
+    .getByRole("button", { name: "افزودن به سبد خرید", exact: true })
+    .click();
+  await shop.getByRole("dialog").waitFor();
+  await shop.getByRole("button", { name: "بستن", exact: true }).click();
+  let mutation = shop.waitForResponse(
+    (r) =>
+      r.url().endsWith("/storefront/cart") &&
+      r.request().method() === "POST" &&
+      r.request().postDataJSON()?.quantity === 2,
+  );
+  await shop
+    .getByRole("button", { name: "افزایش تعداد " + p.name, exact: true })
+    .click();
+  const checked = await mutation;
+  const payload = checked.request().postDataJSON();
+  check(
+    "selected-offer-quantity-persists-in-real-cart",
+    checked.status() === 200 &&
+      payload.offer_id === detail.selected_offer_id &&
+      payload.quantity === 2,
+  );
+  check(
+    "diagonal-decrement-control",
+    await shop
+      .locator(".purchase-control-less")
+      .evaluate((e) => getComputedStyle(e).clipPath.startsWith("polygon")),
+  );
+  await shop
+    .getByRole("button", { name: "کاهش تعداد " + p.name, exact: true })
+    .click();
+  await shop
+    .getByRole("button", { name: "حذف از سبد " + p.name, exact: true })
+    .click();
+
+  const seller = shop.locator(".pdp-sellers article").last();
+  const secondId = detail.offers.at(-1).id;
+  await seller
+    .getByRole("button", { name: "انتخاب فروشنده", exact: true })
+    .click();
+  await shop.waitForFunction(
+    (id) =>
+      document.querySelector(".pdp-purchase")?.getAttribute("data-offer-id") ===
+      id,
+    secondId,
+  );
+  check(
+    "seller-selection-resolves-and-url",
+    new URL(shop.url()).searchParams.get("offer") === secondId,
+  );
+  const selectedURL = shop.url();
+  await shop.reload();
+  await shop.waitForFunction(
+    (id) =>
+      document.querySelector(".pdp-purchase")?.getAttribute("data-offer-id") ===
+      id,
+    secondId,
+  );
+  check("deep-link-reload-preserves-offer", shop.url() === selectedURL);
+  await shop.getByRole("button", { name: "سفید", exact: true }).click();
+  await shop.waitForFunction(() => !document.querySelector(".pdp-progress"));
+  await shop
+    .getByRole("button", { name: "۲۴ ماهه نمونه", exact: true })
+    .click();
+  await shop.waitForFunction(() => document.querySelector(".pdp-unavailable"));
+  check(
+    "unavailable-variant-retains-page-no-price",
+    (await shop.locator(".pdp-price").count()) === 0 &&
+      (await shop.locator(".pdp-buybox .pdp-unavailable").isVisible()) &&
+      (await shop.locator("h1").textContent()) === p.name,
+  );
+  check(
+    "notify-not-pretended-ready",
+    (await shop.getByRole("button", { name: "موجود شد خبرم کن" }).count()) ===
+      0,
+  );
+  await shop.screenshot({
+    path: "output/playwright/purchase-refinements/product/pdp-unavailable-a.png",
+    fullPage: true,
+    animations: "disabled",
+  });
+  await shop.getByRole("button", { name: "مشکی", exact: true }).click();
+  await shop.locator(".pdp-price").waitFor();
+  check(
+    "another-variant-still-purchasable",
+    await shop.locator(".pdp-price strong").isVisible(),
+  );
+  await page
+    .locator(".home-admin-list article")
+    .filter({ has: page.locator("b").filter({ hasText: p.name }) })
+    .getByRole("button", { name: "گالری و تصویر تنوع", exact: true })
+    .click();
+  await dialog()
+    .getByLabel("انتخاب تصویر گالری", { exact: true })
+    .setInputFiles("tests/e2e/fixtures/invalid-icon.png");
+  await dialog()
+    .getByRole("button", { name: "ذخیره تصویر گالری", exact: true })
+    .click();
+  await dialog().getByRole("alert").waitFor();
+  w = await state();
+  check(
+    "invalid-gallery-upload-keeps-images",
+    JSON.stringify(w.products.find((x) => x.id === p.id).gallery_ids) ===
+      JSON.stringify(p.gallery_ids),
+  );
+  await dialog()
+    .getByLabel("انتخاب تصویر گالری", { exact: true })
+    .setInputFiles("tests/e2e/fixtures/catalog-icon.png");
+  await dialog()
+    .getByRole("button", { name: "ذخیره تصویر گالری", exact: true })
+    .click();
+  await page.waitForFunction(
+    () => !document.querySelector('img[alt="پیش‌نمایش تصویر گالری"]'),
+  );
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  check(
+    "valid-gallery-upload-attached",
+    p.gallery_ids.length === original.gallery_ids.length + 1,
+  );
+  await dialog()
+    .getByRole("button", { name: "بالا بردن تصویر 2", exact: true })
+    .click();
+  const firstVariant = w.variants.find((v) => v.product_id === p.id);
+  const select = dialog().locator("select").first();
+  await select.selectOption(original.gallery_ids[1]);
+  await page.screenshot({
+    path: "output/playwright/purchase-refinements/product/backoffice-product-gallery-a.png",
+    fullPage: true,
+    animations: "disabled",
+  });
+  await dialog()
+    .getByRole("button", { name: "ذخیره ترتیب و تصاویر تنوع", exact: true })
+    .click();
+  await page.waitForFunction(
+    () => document.querySelectorAll(".product-media-list li").length === 3,
+  );
+  await dialog().getByRole("button", { name: "بستن", exact: true }).click();
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  check(
+    "gallery-order-and-variant-image-persist",
+    p.gallery_ids[0] === original.gallery_ids[1] &&
+      w.variants.find((v) => v.id === firstVariant.id).image_id ===
+        original.gallery_ids[1],
+  );
+  await shop.goto(site + "/product/" + p.id + "?variant=" + firstVariant.id);
+  await shop.locator(".pdp-overview").waitFor();
+  await shop.locator(".pdp-large-photo img").evaluate((i) => i.decode());
+  check(
+    "variant-image-resolves-public-gallery",
+    (await shop.locator(".pdp-large-photo img").getAttribute("src")).endsWith(
+      original.gallery_ids[1],
+    ),
+  );
+  await shop
+    .getByRole("button", { name: "نمایش تصویر بزرگ", exact: true })
+    .click();
+  await shop.getByRole("dialog").waitFor();
+  check(
+    "gallery-lightbox-keyboard",
+    await shop
+      .getByRole("button", { name: "بستن تصویر بزرگ", exact: true })
+      .isVisible(),
+  );
+  await shop.keyboard.press("Escape");
+  await shop.getByRole("dialog").waitFor({ state: "hidden" });
+  check(
+    "lightbox-restores-focus",
+    await shop
+      .getByRole("button", { name: "نمایش تصویر بزرگ", exact: true })
+      .evaluate((e) => e === document.activeElement),
+  );
+  // Restore fixture content and gallery before the final screenshots.
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  await command({
+    action: "product.media.update",
+    target: p.id,
+    version: p.version,
+    product_media: {
+      gallery_ids: original.gallery_ids,
+      variant_images: Object.fromEntries(
+        w.variants.filter((v) => v.product_id === p.id).map((v) => [v.id, ""]),
+      ),
+    },
+  });
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  await command({
+    action: "catalog.product.update",
+    target: p.id,
+    version: p.version,
+    catalog: {
+      name: p.name,
+      english_name: p.english_name,
+      description: p.description,
+      category_id: p.category_id,
+      brand_id: p.brand_id,
+      published: true,
+      content: original.content,
+      attributes: original.attributes,
+    },
+  });
+  await shop.goto(site + "/product/" + p.id);
+  await shop.locator(".pdp-overview").waitFor();
+  await shop
+    .locator(".pdp-gallery img")
+    .evaluateAll((imgs) => Promise.all(imgs.map((i) => i.decode())));
+  await shop.evaluate(() => document.fonts.ready);
+  await shop.screenshot({
+    path: "output/playwright/purchase-refinements/product/pdp-desktop-a.png",
+    fullPage: true,
+    animations: "disabled",
+  });
+  await shop.screenshot({
+    path: "output/playwright/purchase-refinements/product/pdp-desktop-first-screen.png",
+    animations: "disabled",
+  });
+  check(
+    "desktop-no-overflow",
+    await shop.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  );
+  await shop.setViewportSize({ width: 390, height: 900 });
+  await shop.screenshot({
+    path: "output/playwright/purchase-refinements/product/pdp-mobile-a.png",
+    fullPage: true,
+    animations: "disabled",
+  });
+  await shop.screenshot({
+    path: "output/playwright/purchase-refinements/product/pdp-mobile-first-screen.png",
+    animations: "disabled",
+  });
+  check(
+    "mobile-390-no-overflow",
+    await shop.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  );
+  check(
+    "mobile-breadcrumb-present",
+    await shop
+      .getByRole("navigation", { name: "مسیر صفحه", exact: true })
+      .isVisible(),
+  );
+  await shop.setViewportSize({ width: 320, height: 900 });
+  check(
+    "mobile-320-no-overflow",
+    await shop.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  );
+  await shop.route("**/storefront/products/" + p.id, (route) =>
+    route.fulfill({ status: 503, json: { code: "product_unavailable" } }),
+  );
+  await shop.reload();
+  await shop.getByRole("button", { name: "تلاش مجدد", exact: true }).waitFor();
+  check("server-error-retry", await shop.getByRole("alert").isVisible());
+  await shop.unroute("**/storefront/products/" + p.id);
+  await shop.getByRole("button", { name: "تلاش مجدد", exact: true }).click();
+  await shop.locator(".pdp-overview").waitFor();
+  check("retry-recovers", (await shop.locator("h1").textContent()) === p.name);
+  await shop.goto(site + "/product/" + p.id + "?variant=wrong");
+  await shop
+    .getByRole("button", { name: "بازنشانی انتخاب", exact: true })
+    .waitFor();
+  check(
+    "invalid-combination-actionable-error",
+    await shop.getByRole("alert").isVisible(),
+  );
+  await shop
+    .getByRole("button", { name: "بازنشانی انتخاب", exact: true })
+    .click();
+  await shop.locator(".pdp-overview").waitFor();
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  const input = {
+    name: p.name,
+    english_name: p.english_name,
+    description: p.description,
+    category_id: p.category_id,
+    brand_id: p.brand_id,
+    content: p.content,
+    attributes: p.attributes,
+  };
+  await command({
+    action: "catalog.product.update",
+    target: p.id,
+    version: p.version,
+    catalog: { ...input, published: false },
+  });
+  await shop.reload();
+  await shop
+    .getByRole("heading", { name: "این محصول در دسترس نیست.", exact: true })
+    .waitFor();
+  check(
+    "draft-product-not-public",
+    (await shop.locator(".pdp-overview").count()) === 0,
+  );
+  w = await state();
+  p = w.products.find((x) => x.id === p.id);
+  await command({
+    action: "catalog.product.update",
+    target: p.id,
+    version: p.version,
+    catalog: { ...input, published: true },
+  });
+  await shop.reload();
+  await shop.locator(".pdp-overview").waitFor();
+  const unauthorized = await shop.request.post(api + "/backoffice/commands", {
+    data: {
+      action: "catalog.product.update",
+      target: p.id,
+      version: p.version,
+      idempotency_key: crypto.randomUUID(),
+      catalog: { ...input, published: true },
+    },
+  });
+  check("unauthorized-content-write-rejected", unauthorized.status() === 401);
+  check("no-runtime-page-errors", errors.length === 0);
+  return {
+    checks,
+    passed: checks.filter((c) => c.pass).length,
+    total: checks.length,
+    runtimeErrors: errors,
+    productId: p.id,
+    remainingScope: { fullInteractions: ["CV-WEB-15", "CV-WEB-16"] },
+  };
+}

@@ -15,6 +15,9 @@ func applySupport(state *Workspace, c Command, id string) error {
 			if o.ID != c.Target {
 				continue
 			}
+			if o.CheckoutID != "" {
+				return ErrForbidden
+			}
 			if o.Version != c.Version || o.Status != "shipped" {
 				return ErrConflict
 			}
@@ -59,6 +62,9 @@ func applySupport(state *Workspace, c Command, id string) error {
 				order := &state.Orders[j]
 				if order.ID != ticket.OrderID {
 					continue
+				}
+				if order.CheckoutID != "" {
+					return ErrForbidden
 				}
 				seller = order.StoreID
 				for k := range order.Items {

@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-21",
+  "issue": 7,
+  "scope": "Narrowly activated banner slice; memory test storage; not merged/deployed",
+  "go": {
+    "all_tests_passed": true,
+    "passing_tests_and_subtests": 64,
+    "vet_passed": true,
+    "local_race_run": false,
+    "local_race_reason": "Windows CGO disabled; CI Linux runs race",
+    "banner_tests": [
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/bootstrap",
+        "test": "TestBannerHTTPPublicationResponsiveHTMLAndPrivateAssets"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerDraftPublicationAndMediaIsolation"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerInvalidMediaLinksAndMissingAssetCannotPublish"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerDisabledDraftDoesNotHidePublicUntilPublished"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerConcurrentPublishRetryAndCurrentPermissions/false"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerConcurrentPublishRetryAndCurrentPermissions/true"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerConcurrentPublishRetryAndCurrentPermissions"
+      },
+      {
+        "package": "github.com/cherriva/marketplace/apps/api/internal/application/backoffice",
+        "test": "TestBannerUploadRetryReturnsOriginalReceipt"
+      }
+    ]
+  },
+  "frontend": {
+    "lint_passed": true,
+    "build_passed": true
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "empty-banner-state",
+        "pass": true
+      },
+      {
+        "id": "incomplete-publish-disabled",
+        "pass": true
+      },
+      {
+        "id": "local-selection-does-not-upload",
+        "pass": true
+      },
+      {
+        "id": "cancel-keeps-public-empty",
+        "pass": true
+      },
+      {
+        "id": "independent-preview-images",
+        "pass": true
+      },
+      {
+        "id": "draft-assets-not-public",
+        "pass": true
+      },
+      {
+        "id": "saved-draft-not-public",
+        "pass": true
+      },
+      {
+        "id": "manual-publish-two-assets",
+        "pass": true
+      },
+      {
+        "id": "public-desktop-source",
+        "pass": true
+      },
+      {
+        "id": "public-view-noindex",
+        "pass": true
+      },
+      {
+        "id": "public-mobile-source",
+        "pass": true
+      },
+      {
+        "id": "unsafe-link-rejected-draft-preserved",
+        "pass": true
+      },
+      {
+        "id": "invalid-file-keeps-published-media",
+        "pass": true
+      },
+      {
+        "id": "replacement-draft-preserves-old-public",
+        "pass": true
+      },
+      {
+        "id": "second-publication-atomic",
+        "pass": true
+      },
+      {
+        "id": "mobile-editor-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "missing-media-blocks-publish-preserves-public",
+        "pass": true
+      },
+      {
+        "id": "viewer-create-disabled",
+        "pass": true
+      },
+      {
+        "id": "viewer-publish-upload-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-errors",
+        "pass": true
+      }
+    ],
+    "passed": 20,
+    "total": 20,
+    "runtimeErrors": [],
+    "uploads": 3
+  }
+}
