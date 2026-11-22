@@ -59,3 +59,5 @@ go test ./cmd/catalog-import -run TestCatalogSnapshotPostgresRoundTrip -v
 ## نتیجه CI
 
 [CI روی d301f72](https://github.com/MohamadParsa/marketplace/actions/runs/45036665925) با هر پنج job موفق شد: API شامل Linux race/PostgreSQL/vet، بک‌آفیس، سایت، پنل فروشنده و contracts. کامیت بعدی فقط ثبت همین نتیجه در مدارک است و tree سورس/JSON آن با head آزمایش‌شده یکسان کنترل می‌شود. همگام‌سازی main با پیام `[skip ci]` انجام می‌شود تا workflow استقرار خودکار Liara شروع نشود؛ هیچ تنظیم workflow غیرفعال نشده است.
+
+اصلاح محدود راه‌انداز در `5e588a7`: اگر `DATABASE_URL` محیط عملیاتی در نشست وجود داشته باشد، اجرای لوکال پیش از هر migration متوقف می‌شود. آزمون PowerShell با اتصال ساختگی نامعتبر، ردشدن پیش از هر اتصال/نوشتن را تأیید کرد. سورس Go و JSON این اصلاح تغییری ندارند.
