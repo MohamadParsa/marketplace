@@ -2,6 +2,8 @@
 
 مسیر کاری و سورس محلی: **D:\Cherriva**. سورس Go/React در `apps` و `packages` است؛ تمام dependencyها با lockfile ثبت‌اند و `node_modules` و خروجی build سورس محسوب نمی‌شوند.
 
+سورس کامل با [PR #38](https://github.com/MohamadParsa/marketplace/pull/38) در `main` ادغام شد: [کامیت 3163d17](https://github.com/MohamadParsa/marketplace/commit/3163d1702f2396d8d1818d12c7bf92bcab9a35bf). درخت کد اجرایی این کامیت با سورس تأییدشده `2cab27a` یکسان است. همگام‌سازی سورس، استقرار Liara ایجاد نکرد. [راهنمای اجرای محلی](../local-development.md).
+
 ## ارتباط نسخه‌ها
 
 | تحویل | کامیت سورس | کامیت مستندات | شاهد |

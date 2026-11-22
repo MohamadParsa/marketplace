@@ -9,7 +9,7 @@ Set-Location D:\Cherriva
 .\Start-Cherriva.ps1
 ```
 
-بک‌آفیس: http://localhost:8098 · سایت: http://localhost:5197. اجرای سریع پس از build: `.\Start-Cherriva.ps1 -NoBuild`. [پیش‌نیازها و حساب محلی تیم](docs/delivery/local-review-access.md) · [اصلاحات و تصاویر خرید](docs/delivery/initial-launch/purchase-refinements-verification.md) · [تطبیق کامیت سورس و مستندات](docs/delivery/source-document-map.md).
+بک‌آفیس: http://localhost:8098 · سایت: http://localhost:5197. اجرای سریع پس از build: `.\Start-Cherriva.ps1 -NoBuild`. [راهنمای کامل اجرای لوکال](docs/local-development.md) · [حساب محلی تیم](docs/delivery/local-review-access.md) · [اصلاحات و تصاویر خرید](docs/delivery/initial-launch/purchase-refinements-verification.md) · [تطبیق کامیت سورس و مستندات](docs/delivery/source-document-map.md).
 
 راه‌اندازی محلی با PostgreSQL جداگانه و `APP_ENV=test` است؛ انتشار لیارا توسط پارسا جداگانه انجام می‌شود.
 
@@ -31,7 +31,7 @@ Set-Location D:\Cherriva
 
 مرجع محصول، مستندات و codebase سه محیط **سایت فروش PWA، پنل فروشگاه PWA و بک‌آفیس وب**. تصمیم‌های معماری اولیه در [ADR-002](docs/decisions/adr-002-codebase-architecture.md) و deployment در [ADR-003](docs/decisions/adr-003-liara-deployment.md) ثبت شده‌اند.
 
-اولویت جاری: **ابتدا بک‌آفیس و پنل فروشندگان، سپس سایت مشتری**. رودمپ کامل در [رودمپ پیاده‌سازی](docs/delivery/roadmap.md) و جزئیات برش‌ها در [برنامه تحویل](docs/delivery/README.md) است.
+اولویت اولیه تاریخی، بک‌آفیس و پنل فروشندگان پیش از سایت مشتری بود؛ اولویت جاری همان چهار برش انتشار اولیه و ADR-007 در ابتدای این صفحه است. رودمپ کامل در [رودمپ پیاده‌سازی](docs/delivery/roadmap.md) و جزئیات برش‌ها در [برنامه تحویل](docs/delivery/README.md) است.
 
 ## از اینجا شروع کنید
 

@@ -48,5 +48,7 @@
       "source_tree_matches_documentation_revision": true
     }
   ],
-  "scope": "Source publication is distinct from Liara deployment and public acceptance."
+  "scope": "Source publication is distinct from Liara deployment and public acceptance.",
+  "published_main_commit": "3163d1702f2396d8d1818d12c7bf92bcab9a35bf",
+  "publication_pull_request": 38
 }
