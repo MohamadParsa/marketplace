@@ -191,7 +191,7 @@ export function CommercePage({
     });
   }, [load]);
   const mutation = async (path: string, input: unknown, key: string) => {
-    await request("/backoffice/commerce/" + path, token, input, key);
+    await request("/backoffice/commerce/" + path, token, input, key, path === "settings" ? "PATCH" : undefined);
     await load();
     setSelected(null);
     setNotice("عملیات ثبت شد؛ وضعیت جدید را بررسی کنید.");
