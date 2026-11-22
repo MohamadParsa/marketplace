@@ -31,5 +31,17 @@
     "variants": 34,
     "workspace_inline_media": 0
   },
-  "ci": "pending PR run"
+  "ci": {
+    "conclusion": "success",
+    "run_id": 45036665925,
+    "head_commit": "d301f72beb0ea146df0ba96093b33ece4efbf466",
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45036665925",
+    "jobs": [
+      "api (Linux race + PostgreSQL + vet)",
+      "backoffice-web",
+      "storefront-web",
+      "seller-portal-web",
+      "contracts"
+    ]
+  }
 }
