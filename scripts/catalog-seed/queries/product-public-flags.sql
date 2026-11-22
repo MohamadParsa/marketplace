@@ -1,0 +1,1 @@
+SELECT Id,AvailableStartDateTimeUtc,AvailableEndDateTimeUtc,AvailableForPreOrder,DisableBuyButton,CallForPrice FROM Product WHERE Published=1 AND Deleted=0

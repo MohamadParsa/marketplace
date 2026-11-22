@@ -2,10 +2,14 @@ package postgresrepo
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/jackc/pgx/v5"
@@ -171,6 +175,19 @@ func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
 		batch.Queue("INSERT INTO review_purchase_owners VALUES ($1,$2) ON CONFLICT (purchase_id) DO NOTHING", owner.PurchaseID, owner.UserID)
 	}
 	state.Users, state.Access = nil, nil
+	// Keep catalog images out of the JSON workspace. Other reads load references only.
+	state.IconMedia = append([]catalog.IconMedia{}, state.IconMedia...)
+	mediaIDs := make([]string, 0, len(state.IconMedia))
+	for i := range state.IconMedia {
+		m := &state.IconMedia[i]
+		if len(m.Data) > 0 {
+			batch.Queue("INSERT INTO catalog_media(id,data) VALUES ($1,$2) ON CONFLICT (id) DO NOTHING", m.ID, m.Data)
+			m.Stored = true
+			m.Data = nil
+		}
+		mediaIDs = append(mediaIDs, m.ID)
+	}
+	batch.Queue("DELETE FROM catalog_media WHERE NOT (id = ANY($1::text[]))", mediaIDs)
 	financialState := state.Commerce
 	if financialState != nil {
 		copyState := *financialState
@@ -189,4 +206,45 @@ func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
 		return err
 	}
 	return saveCommerce(ctx, tx, financialState)
+}
+
+// Only application services decide whether this ID is public or visible to the actor.
+func (r *Repository) ReadCatalogMedia(ctx context.Context, id string) ([]byte, error) {
+	var data []byte
+	err := r.db.QueryRow(ctx, "SELECT data FROM catalog_media WHERE id=$1", id).Scan(&data)
+	if err == pgx.ErrNoRows {
+		return nil, backoffice.ErrNotFound
+	}
+	return data, err
+}
+
+// UpdateCatalogWithFiles streams bounded-size media into the same workspace transaction.
+func (r *Repository) UpdateCatalogWithFiles(ctx context.Context, files []backoffice.CatalogSeedFile, apply func(*backoffice.Workspace) error) error {
+	return pgx.BeginFunc(ctx, r.db, func(tx pgx.Tx) error {
+		state, e := load(ctx, tx, true)
+		if e != nil {
+			return e
+		}
+		if e = apply(&state); e != nil {
+			return e
+		}
+		for _, f := range files {
+			info, e := os.Stat(f.Path)
+			if e != nil || info.Size() != f.Bytes || info.Size() > backoffice.MaxProductImageBytes {
+				return fmt.Errorf("invalid seed media file")
+			}
+			data, e := os.ReadFile(f.Path)
+			if e != nil {
+				return e
+			}
+			sum := sha256.Sum256(data)
+			if hex.EncodeToString(sum[:]) != f.SHA256 {
+				return fmt.Errorf("seed media changed during import")
+			}
+			if _, e = tx.Exec(ctx, "INSERT INTO catalog_media(id,data) VALUES($1,$2) ON CONFLICT(id) DO NOTHING", f.ID, data); e != nil {
+				return e
+			}
+		}
+		return save(ctx, tx, state)
+	})
 }

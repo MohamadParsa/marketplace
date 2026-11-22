@@ -36,6 +36,8 @@ foreach ($port in @(8098,5197)) {
         Stop-Process -Id $listener.OwningProcess
     }
 }
+& $go -C (Join-Path $projectRoot 'apps/api') run ./cmd/migrate -dir (Join-Path $projectRoot 'db/migrations')
+if ($LASTEXITCODE -ne 0) { throw 'Review database migrations failed.' }
 & $go -C (Join-Path $projectRoot 'apps/api') build -o $apiExe ./cmd/api
 if ($LASTEXITCODE -ne 0) { throw 'API build failed.' }
 $env:APP_ENV = 'test'

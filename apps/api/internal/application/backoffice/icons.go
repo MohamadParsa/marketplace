@@ -236,7 +236,7 @@ func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error
 	}
 	for _, x := range state.IconMedia {
 		if x.ID == id {
-			return x.Data, nil
+			return s.catalogMediaBytes(ctx, x)
 		}
 	}
 	return nil, ErrNotFound
@@ -253,7 +253,7 @@ func (s *Service) ReadManagedIcon(ctx context.Context, actor identity.User, id s
 	}
 	for _, m := range state.IconMedia {
 		if m.ID == id {
-			return m.Data, nil
+			return s.catalogMediaBytes(ctx, m)
 		}
 	}
 	return nil, ErrNotFound
@@ -313,4 +313,19 @@ func productHasImage(w Workspace, p catalog.Product, id string) bool {
 		}
 	}
 	return false
+}
+
+// Authorization is performed by ReadCatalogIcon/ReadManagedIcon before reading any blob.
+func (s *Service) catalogMediaBytes(ctx context.Context, m catalog.IconMedia) ([]byte, error) {
+	if len(m.Data) > 0 {
+		return m.Data, nil
+	}
+	if m.Stored {
+		if reader, ok := s.repository.(interface {
+			ReadCatalogMedia(context.Context, string) ([]byte, error)
+		}); ok {
+			return reader.ReadCatalogMedia(ctx, m.ID)
+		}
+	}
+	return nil, ErrNotFound
 }

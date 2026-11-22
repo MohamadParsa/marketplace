@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-22",
+  "dataset_id": "gooshishop-public-catalog-2026-11-22",
+  "source_commit": "8921ca0497aa016d9373ae240c12025046bd3a6d",
+  "file": "data/catalog/gooshishop-2026-11-22.json",
+  "sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "bytes": 50573814,
+  "currency": "IRT",
+  "counts": {
+    "categories": 248,
+    "brands": 1277,
+    "attributes": 242,
+    "products": 3534,
+    "variants": 5029,
+    "offers": 5992,
+    "stores": 44
+  },
+  "media": {
+    "references": 10058,
+    "primary_missing": 0,
+    "optional_unavailable": 437,
+    "source_download_bytes": 492203684,
+    "normalized_bytes": 3349387289,
+    "storage": "catalog_media.data bytea; workspace stores references only"
+  },
+  "target_import": {
+    "current_local_database": false,
+    "server": false,
+    "isolated_sample_products": 20
+  },
+  "coverage": {
+    "brands": {
+      "met": 58,
+      "source_shortage": 1215,
+      "selection_shortage": 0
+    },
+    "categories": {
+      "met": 51,
+      "source_shortage": 195,
+      "selection_shortage": 0
+    }
+  }
+}

@@ -1,0 +1,1 @@
+SELECT m.ProductId,m.ProductInventoryAttributeId,m.ProductInventoryAttributeValueId FROM ProductInventoryAttributeValueProductMapping m JOIN Product p ON p.Id=m.ProductId WHERE p.Published=1 AND p.Deleted=0

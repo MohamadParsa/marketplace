@@ -1,0 +1,1 @@
+SELECT Id,Name,VendorId,ProfitPercentage,FeePercentage FROM GoldPricingProfile

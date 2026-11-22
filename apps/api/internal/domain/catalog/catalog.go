@@ -30,10 +30,12 @@ type Brand struct {
 	Version int    `json:"version"`
 }
 
-// IconMedia is held only by the test repository, never in a workspace response.
+// IconMedia keeps inline bytes in memory; PostgreSQL stores bytes separately and returns a stored reference.
+// This collection never appears in a workspace HTTP response.
 type IconMedia struct {
-	ID   string `json:"id"`
-	Data []byte `json:"data"`
+	Stored bool   `json:"stored,omitempty"`
+	ID     string `json:"id"`
+	Data   []byte `json:"data"`
 }
 type ProductContent struct {
 	ShortDescription string             `json:"short_description"`

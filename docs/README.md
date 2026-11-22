@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[داده تست واقعی کاتالوگ، JSON و پرامپت ورود](delivery/catalog-seed/README.md)
+
 [راهنمای اجرای لوکال از D:\Cherriva](local-development.md)
 
 [سورس Go/React و راه‌اندازی در D:\Cherriva](../README.md) · [تطبیق نسخه سورس و مدارک](delivery/source-document-map.md) · [اصلاح خرید، ویزارد و استان/شهر](delivery/initial-launch/purchase-refinements-verification.md)

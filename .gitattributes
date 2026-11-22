@@ -1,0 +1,2 @@
+# Large catalog snapshot: keep downloads intact and avoid a single multi-megabyte diff line.
+data/catalog/*.json -diff -text

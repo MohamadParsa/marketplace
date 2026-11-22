@@ -94,7 +94,7 @@ func imageAttached(w Workspace, id string) bool {
 		return false
 	}
 	for _, m := range w.IconMedia {
-		if m.ID == id && len(m.Data) > 0 {
+		if m.ID == id && (len(m.Data) > 0 || m.Stored) {
 			return true
 		}
 	}
