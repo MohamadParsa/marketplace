@@ -68,10 +68,42 @@
     "runtime_page_errors": []
   },
   "backoffice_build": "passed",
-  "ci": "pending-PR",
+  "ci": {
+    "status": "passed",
+    "source_commit": "0c678d5",
+    "checks": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481379"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481357"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481323"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481298"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481172"
+      }
+    ],
+    "api": "Linux Go race + PostgreSQL + vet"
+  },
   "remaining": [
     "CV-R2-17-AC04",
     "R2-Q09",
     "owner confirmation of interaction-service scope"
-  ]
+  ],
+  "backoffice_lint": "passed"
 }
