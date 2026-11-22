@@ -1,0 +1,492 @@
+{
+  "date": "2026-11-22",
+  "source_commit": "2cab27adffbc1632f5a60dedad86da5f4a49934f",
+  "workspace": "D:\\Cherriva",
+  "document_status": "in-review",
+  "implementation_status": "done-local-review",
+  "go": {
+    "passed_tests_and_subtests": 160,
+    "failures": 0,
+    "skipped_tests": [],
+    "postgres": "passed-including-restart",
+    "vet": "passed",
+    "local_race": "not-run"
+  },
+  "frontend": {
+    "storefront_build": "passed",
+    "backoffice_build": "passed",
+    "storefront_lint": "passed",
+    "backoffice_lint": "passed"
+  },
+  "browser": {
+    "passed_checks": 94,
+    "scenarios": {
+      "checkout": {
+        "checks": [
+          {
+            "name": "published purchasable product",
+            "passed": true
+          },
+          {
+            "name": "single-designed-PDP-purchase-control",
+            "passed": true
+          },
+          {
+            "name": "PDP add opens actual cart popup",
+            "passed": true
+          },
+          {
+            "name": "cart-uses-same-diagonal-purchase-control",
+            "passed": true
+          },
+          {
+            "name": "cart has price and seller",
+            "passed": true
+          },
+          {
+            "name": "OTP login returns to checkout with merged cart",
+            "passed": true
+          },
+          {
+            "name": "saved owner address selected",
+            "passed": true
+          },
+          {
+            "name": "wizard-step-one-hides-payment",
+            "passed": true
+          },
+          {
+            "name": "wizard-step-two-hides-editable-address",
+            "passed": true
+          },
+          {
+            "name": "wizard-back-preserves-address-and-shipping",
+            "passed": true
+          },
+          {
+            "name": "friendly-numeric-order-number",
+            "passed": true
+          },
+          {
+            "name": "registered order is unpaid",
+            "passed": true
+          },
+          {
+            "name": "declaration does not pay order",
+            "passed": true
+          },
+          {
+            "name": "finance approval credits only; order remains unpaid",
+            "passed": true
+          },
+          {
+            "name": "admin-order-details-in-readable-boxes",
+            "passed": true
+          },
+          {
+            "name": "admin order separates payment and order status",
+            "passed": true
+          },
+          {
+            "name": "separate admin confirmation pays order",
+            "passed": true
+          },
+          {
+            "name": "refresh preserves account/order state",
+            "passed": true
+          },
+          {
+            "name": "390px order no overflow",
+            "passed": true
+          },
+          {
+            "name": "wallet shows credit and debit separately",
+            "passed": true
+          },
+          {
+            "name": "390px wallet no overflow",
+            "passed": true
+          },
+          {
+            "name": "390px admin settings no overflow",
+            "passed": true
+          },
+          {
+            "name": "no page runtime errors",
+            "passed": true
+          }
+        ],
+        "runtimeErrors": [],
+        "purchaseID": "1010"
+      },
+      "mobile": {
+        "checks": [
+          {
+            "id": "mobile-popup-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "mobile-cart-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "explicit-variant-seller-selector",
+            "pass": true
+          },
+          {
+            "id": "mobile-checkout-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "non-gold-local-method-eligible",
+            "pass": true
+          },
+          {
+            "id": "customer-unpaid-cancel-releases-order",
+            "pass": true
+          }
+        ],
+        "passed": 6
+      },
+      "wizard-and-variants": {
+        "checks": [
+          {
+            "id": "two-visible-axes-1",
+            "pass": true
+          },
+          {
+            "id": "axis-changes-selected-price-1",
+            "pass": true
+          },
+          {
+            "id": "unavailable-combination-keeps-other-choices-1",
+            "pass": true
+          },
+          {
+            "id": "two-visible-axes-2",
+            "pass": true
+          },
+          {
+            "id": "axis-changes-selected-price-2",
+            "pass": true
+          },
+          {
+            "id": "unavailable-combination-keeps-other-choices-2",
+            "pass": true
+          },
+          {
+            "id": "two-visible-axes-3",
+            "pass": true
+          },
+          {
+            "id": "axis-changes-selected-price-3",
+            "pass": true
+          },
+          {
+            "id": "unavailable-combination-keeps-other-choices-3",
+            "pass": true
+          },
+          {
+            "id": "two-seller-cart",
+            "pass": true
+          },
+          {
+            "id": "cart-quantity-up-and-down-confirmed",
+            "pass": true
+          },
+          {
+            "id": "mobile-cart-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "address-cascade-starts-with-disabled-city",
+            "pass": true
+          },
+          {
+            "id": "shipping-cards-per-seller-and-city",
+            "pass": true
+          },
+          {
+            "id": "mobile-wizard-step-one-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "two-confirmed-shipments-on-payment-step",
+            "pass": true
+          },
+          {
+            "id": "mobile-wizard-step-two-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "province-switch-clears-city",
+            "pass": true
+          },
+          {
+            "id": "changed-city-removes-ineligible-shipping",
+            "pass": true
+          },
+          {
+            "id": "address-change-invalidates-old-payment-consent",
+            "pass": true
+          },
+          {
+            "id": "homepage-only-available-category-shortcuts",
+            "pass": true
+          },
+          {
+            "id": "PLP-sort-without-dropdown",
+            "pass": true
+          },
+          {
+            "id": "mobile-PLP-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "no-runtime-pageerror",
+            "pass": true
+          }
+        ],
+        "passed": 24,
+        "errors": [],
+        "products": [
+          {
+            "name": "گوشی نمونه چریوا — انتخاب رنگ و گارانتی",
+            "url": "/product/31a52c47395b09bb22215e710745f41fbee606343d141484"
+          },
+          {
+            "name": "هندزفری نمونه چریوا — انتخاب رنگ و گارانتی",
+            "url": "/product/5658d87fefdcd49882bf5ee36de8f2bb9b9fa0ada3ad3132"
+          },
+          {
+            "name": "ساعت هوشمند نمونه چریوا — انتخاب رنگ و گارانتی",
+            "url": "/product/59d969a3ef871c3a7b0234ef9d4ebe67beb767a5827c7afd"
+          }
+        ]
+      },
+      "admin-and-geography": {
+        "checks": [
+          {
+            "id": "admin-order-five-distinct-boxes",
+            "pass": true
+          },
+          {
+            "id": "payment-rows-read-as-list",
+            "pass": true
+          },
+          {
+            "id": "shipment-and-line-details-visible",
+            "pass": true
+          },
+          {
+            "id": "admin-order-mobile-no-horizontal-overflow",
+            "pass": true
+          },
+          {
+            "id": "admin-order-content-scrolls",
+            "pass": true
+          },
+          {
+            "id": "operations-panel-shows-public-order-number",
+            "pass": true
+          },
+          {
+            "id": "admin-created-province-city-reaches-site",
+            "pass": true
+          },
+          {
+            "id": "deactivated-province-excluded-from-public-directory",
+            "pass": true
+          },
+          {
+            "id": "no-admin-runtime-pageerror",
+            "pass": true
+          }
+        ],
+        "passed": 9,
+        "errors": []
+      },
+      "pdp-regression": {
+        "checks": [
+          {
+            "id": "product-content-fields-and-mm-units",
+            "pass": true
+          },
+          {
+            "id": "rich-editor-saved-as-safe-format",
+            "pass": true
+          },
+          {
+            "id": "independent-interaction-toggles",
+            "pass": true
+          },
+          {
+            "id": "content-save-preserves-other-offers-and-stock",
+            "pass": true
+          },
+          {
+            "id": "initial-html-product-seo",
+            "pass": true
+          },
+          {
+            "id": "content-edit-visible-in-pdp",
+            "pass": true
+          },
+          {
+            "id": "breadcrumb-categories-brand-product-order",
+            "pass": true
+          },
+          {
+            "id": "server-buybox-and-seller-list",
+            "pass": true
+          },
+          {
+            "id": "real-cart-capability-without-fake-interactions",
+            "pass": true
+          },
+          {
+            "id": "selected-offer-quantity-persists-in-real-cart",
+            "pass": true
+          },
+          {
+            "id": "diagonal-decrement-control",
+            "pass": true
+          },
+          {
+            "id": "seller-selection-resolves-and-url",
+            "pass": true
+          },
+          {
+            "id": "deep-link-reload-preserves-offer",
+            "pass": true
+          },
+          {
+            "id": "unavailable-variant-retains-page-no-price",
+            "pass": true
+          },
+          {
+            "id": "notify-not-pretended-ready",
+            "pass": true
+          },
+          {
+            "id": "another-variant-still-purchasable",
+            "pass": true
+          },
+          {
+            "id": "invalid-gallery-upload-keeps-images",
+            "pass": true
+          },
+          {
+            "id": "valid-gallery-upload-attached",
+            "pass": true
+          },
+          {
+            "id": "gallery-order-and-variant-image-persist",
+            "pass": true
+          },
+          {
+            "id": "variant-image-resolves-public-gallery",
+            "pass": true
+          },
+          {
+            "id": "gallery-lightbox-keyboard",
+            "pass": true
+          },
+          {
+            "id": "lightbox-restores-focus",
+            "pass": true
+          },
+          {
+            "id": "desktop-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "mobile-390-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "mobile-breadcrumb-present",
+            "pass": true
+          },
+          {
+            "id": "mobile-320-no-overflow",
+            "pass": true
+          },
+          {
+            "id": "server-error-retry",
+            "pass": true
+          },
+          {
+            "id": "retry-recovers",
+            "pass": true
+          },
+          {
+            "id": "invalid-combination-actionable-error",
+            "pass": true
+          },
+          {
+            "id": "draft-product-not-public",
+            "pass": true
+          },
+          {
+            "id": "unauthorized-content-write-rejected",
+            "pass": true
+          },
+          {
+            "id": "no-runtime-page-errors",
+            "pass": true
+          }
+        ],
+        "passed": 32,
+        "total": 32,
+        "runtimeErrors": [],
+        "productId": "7d585035c0fff83881cf91f251bae9a85dbf2dba8a76e5c6",
+        "remainingScope": {
+          "fullInteractions": [
+            "CV-WEB-15",
+            "CV-WEB-16"
+          ]
+        }
+      }
+    }
+  },
+  "ci": {
+    "status": "passed",
+    "source_commit": "2cab27adffbc1632f5a60dedad86da5f4a49934f",
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096",
+    "checks": [
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096/job/137220924032"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096/job/137220924283"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096/job/137220924295"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096/job/137220924330"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45026613096/job/137220924385"
+      }
+    ],
+    "api": "Linux Go race + PostgreSQL + vet"
+  },
+  "public_release": "not-performed-by-agent",
+  "open_public_gate": [
+    "CV-R2-11-AC06",
+    "CV-LCH-04-AC07"
+  ],
+  "deferred_slots_issue": 16
+}

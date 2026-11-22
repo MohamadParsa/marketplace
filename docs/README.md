@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[سورس Go/React و راه‌اندازی در D:\Cherriva](../README.md) · [تطبیق نسخه سورس و مدارک](delivery/source-document-map.md) · [اصلاح خرید، ویزارد و استان/شهر](delivery/initial-launch/purchase-refinements-verification.md)
+
 | نیاز خواننده | مرجع |
 | --- | --- |
 | مالکیت اجرا و رفع هم‌پوشانی #24/#25 با #28/#29 | [صف یکتا؛ چهار برش محلی تحویل و گیت عمومی باز است](delivery/initial-launch/README.md#execution-ownership) |

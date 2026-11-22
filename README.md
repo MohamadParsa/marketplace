@@ -1,4 +1,18 @@
-# Marketplace
+# Cherriva — سورس Go و React
+
+سورس اجرایی در `apps/api`، `apps/storefront-web`، `apps/backoffice-web` و `apps/seller-portal-web` و کد مشترک در `packages` است. مسیر کاری این سیستم **`D:\Cherriva`** است. پنل فروشنده از `/seller-login` در همان رابط بک‌آفیس باز می‌شود. مستندات و بسته‌های طراحی، جایگزین سورس نیستند.
+
+برای بررسی محلی از پوشه پروژه اجرا کنید:
+
+```powershell
+Set-Location D:\Cherriva
+.\Start-Cherriva.ps1
+```
+
+بک‌آفیس: http://localhost:8098 · سایت: http://localhost:5197. اجرای سریع پس از build: `.\Start-Cherriva.ps1 -NoBuild`. [پیش‌نیازها و حساب محلی تیم](docs/delivery/local-review-access.md) · [اصلاحات و تصاویر خرید](docs/delivery/initial-launch/purchase-refinements-verification.md) · [تطبیق کامیت سورس و مستندات](docs/delivery/source-document-map.md).
+
+راه‌اندازی محلی با PostgreSQL جداگانه و `APP_ENV=test` است؛ انتشار لیارا توسط پارسا جداگانه انجام می‌شود.
+
 
 ## اولویت جاری انتشار اولیه — ۲۰۲۶-۱۱-۲۱
 
