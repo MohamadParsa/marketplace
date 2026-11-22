@@ -75,36 +75,36 @@
   "backoffice_build": "passed",
   "ci": {
     "status": "passed",
-    "source_commit": "0c678d5",
+    "source_commit": "e2deacce9d1d6fe249c2c00bf5618f21bc51e58f",
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188",
     "checks": [
-      {
-        "name": "backoffice-web",
-        "conclusion": "success",
-        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481379"
-      },
       {
         "name": "seller-portal-web",
         "conclusion": "success",
-        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481357"
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188/job/137127855162"
       },
       {
         "name": "storefront-web",
         "conclusion": "success",
-        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481323"
-      },
-      {
-        "name": "api",
-        "conclusion": "success",
-        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481298"
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188/job/137127855350"
       },
       {
         "name": "contracts",
         "conclusion": "success",
-        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44993499167/job/137119481172"
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188/job/137127855371"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188/job/137127855445"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/44996266188/job/137127855531"
       }
     ],
-    "api": "Linux Go race + PostgreSQL + vet",
-    "note": "Passing historical content-review source; final policy source will be checked after push."
+    "api": "Linux Go race + PostgreSQL + vet"
   },
   "remaining": [],
   "backoffice_lint": "passed",

@@ -25,7 +25,7 @@
 
 ## بررسی اجرا
 
-۱۵۴ تست/زیرتست Go با PostgreSQL پاس شدند؛ تست دارای پیش‌شرط دیتابیس skip نشد. go vet و lint/build پنل پاس شد. [هر۵ job در CI](https://github.com/MohamadParsa/marketplace/actions/runs/44993499167) روی کامیت کد `0c678d5` موفق شدند، شامل Go race با PostgreSQL و vet؛ نتایج در JSON ثبت است. هشدار اندازه chunk پنل باقی است. race محلی ویندوز اجرا نشده و نتیجه Linux CI جای آن را می‌گیرد.
+۱۵۴ تست/زیرتست Go با PostgreSQL پاس شدند؛ تست دارای پیش‌شرط دیتابیس skip نشد. go vet و lint/build پنل پاس شد. [هر۵ job در CI](https://github.com/MohamadParsa/marketplace/actions/runs/44996266188) روی کامیت نهایی کد `e2deacc` موفق شدند، شامل Go race با PostgreSQL و vet؛ نتایج در JSON ثبت است. هشدار اندازه chunk پنل باقی است. race محلی ویندوز اجرا نشده و نتیجه Linux CI جای آن را می‌گیرد.
 
 ۱۱ بررسی مرورگر پاس شد، با صفر runtime pageerror: ورود scoped سلر در همان پنل، ارسال pending و عدم نشت عمومی، نبود خودتأییدی، موبایل۳۹۰ بدون overflow، رد و حفظ نسخه قبلی، حفظ draft و ارسال دوباره، تأیید و نمایش در PDP، حفظ تمام عرضه‌های همان محصول و تنظیم موفق سیاست فروشگاه. [سناریوی مرورگر](../../../tests/e2e/content-review.cjs) و [seed ساختگی loopback](../../../tests/e2e/seed-content-review.cjs) قابل اجرا هستند. داده آزمون برای بررسی است؛ انتشار عمومی یا داده واقعی تغییر نکرده است.
 
@@ -40,3 +40,5 @@
 مالک در۲۰۲۶-۱۱-۲۲ با دستور «موارد را طبق پیشنهاد خودت انجام بده» پیشنهادهای R2-Q09 و تفکیک دامنه را پذیرفت: پیش‌فرض هر دو خاموش، تغییر مستقل، خاموشی فقط ثبت جدید، حفظ محتوای تأییدشده قبلی و پاسخ مجاز تیم. دامنه #25 شامل تنظیمات و کنترل مشترک است؛ ساخت سرویس کامل در [CV-WEB-15/16](../product-interactions-followup.md) معوق می‌ماند. شرط قبلی الزام اتصال کامل برای بستن مرجع با این تصمیم صریح جایگزین شد. همه پنج معیار در دامنه جاری شاهد دارند؛ این به معنی اجرای سرویس کامل یا انتشار عمومی نیست.
 
 آزمون `TestProductInteractionSettingsDefaultOffAndRemainIndependent` پیش‌فرض و هر چهار ترکیب تنظیمات را از command تا خواندن عمومی می‌سنجد. `TestDisabledSubmissionsPreserveApprovedHistoryAndTeamReplies` و `TestNewProductInteractionDefaultsAndServiceReadiness` کنترل مشترک را می‌سنجند. با نبود سرویس آماده، PDP هیچ قابلیت ثبت اعلام نمی‌کند. تست قواعد مجوز داده یا API کامل تعامل را شبیه‌سازی نمی‌کند؛ معیار اتصال آینده محفوظ است. CHQ-10 مانع مرحله آینده است، نه پایان دامنه جاری #25.
+
+کد نهایی روی شاخه `codex/catalog-content-followup` پوش شده و [PR #37](https://github.com/MohamadParsa/marketplace/pull/37) آماده بررسی است. نسخه محلی پس از بازسازی API روی پورت‌های۸۰۹۸ و۵۱۹۷ پاسخ۲۰۰ داد؛ انتشار لیارا انجام نشده است.
