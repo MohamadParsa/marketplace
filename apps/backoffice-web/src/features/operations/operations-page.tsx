@@ -59,7 +59,11 @@ export function OperationsPage({
   return (
     <>
       <PageHeader
-        title={selected ? `جزئیات ${selected.id}` : titles[section]}
+        title={
+          selected
+            ? `جزئیات سفارش ${selected.purchase_number ?? selected.id}`
+            : titles[section]
+        }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
         action={
           section === "reports" ? (
@@ -77,7 +81,7 @@ export function OperationsPage({
               <h2>اطلاعات سفارش</h2>
               <dl>
                 <dt>خرید چندفروشگاهی</dt>
-                <dd>{selected.purchase_id}</dd>
+                <dd>{selected.purchase_number ?? selected.purchase_id}</dd>
                 <dt>فروشگاه</dt>
                 <dd>{seller(selected.store_id)}</dd>
                 <dt>شهر مقصد</dt>
@@ -155,9 +159,13 @@ export function OperationsPage({
                   render: (o) => (
                     <>
                       <Link to={"/orders/" + o.id}>
-                        <b>{o.id}</b>
+                        <b>سفارش {o.purchase_number ?? o.id}</b>
                       </Link>
-                      <small>{o.purchase_id}</small>
+                      <small>
+                        {o.purchase_number
+                          ? "گروه ارسال فروشگاه"
+                          : o.purchase_id}
+                      </small>
                     </>
                   ),
                 },
@@ -223,7 +231,9 @@ export function OperationsPage({
                   render: (c) => (
                     <div className="action-group">
                       <Button
-                        disabled={!can("case.start", "support") || c.status !== "open"}
+                        disabled={
+                          !can("case.start", "support") || c.status !== "open"
+                        }
                         onClick={() =>
                           open("شروع رسیدگی", {
                             action: "case.start",

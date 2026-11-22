@@ -600,3 +600,130 @@
 .buy-page img {
   max-width: 100%;
 }
+.buy-shipping-group {
+  margin: 24px 0;
+}
+.buy-shipping-group legend {
+  font-weight: 700;
+  font-size: 15px;
+}
+.buy-step-title {
+  outline: none;
+  margin-block: 12px 24px;
+}
+.buy-steps li.complete {
+  color: #478264;
+}
+.buy-cart-row .purchase-control {
+  flex: 0 1 240px;
+}
+.buy-delivery-confirmed {
+  border-inline-start: 4px solid #b51f46;
+}
+.buy-steps {
+  gap: 24px;
+  position: relative;
+  padding: 22px 28px;
+}
+.buy-steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  position: relative;
+  font-weight: 600;
+}
+.buy-steps li:first-child::after {
+  content: "";
+  height: 2px;
+  background: #eee1e7;
+  flex: 1;
+  margin-inline: 14px;
+}
+.buy-steps li.complete:first-child::after {
+  background: #b51f46;
+}
+.buy-steps button {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 0;
+  text-align: right;
+  font: inherit;
+}
+.buy-steps button:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.buy-step-number {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid #e6dbe1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #faf7f9;
+}
+.buy-steps li.active .buy-step-number {
+  background: #b51f46;
+  color: white;
+  border-color: #b51f46;
+  box-shadow: 0 0 0 5px #b51f4610;
+}
+.buy-steps li.complete .buy-step-number {
+  background: #fff1f6;
+  border-color: #b51f46;
+  color: #b51f46;
+}
+.buy-steps small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 3px;
+  color: #9a8493;
+}
+.buy-wizard-back {
+  margin-bottom: 15px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .buy-wizard-stage {
+    animation: buy-step-in 0.2s ease-out;
+  }
+  @keyframes buy-step-in {
+    from {
+      opacity: 0.4;
+      transform: translateY(7px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+@media (max-width: 600px) {
+  .buy-steps {
+    padding: 18px 14px;
+    gap: 12px;
+  }
+  .buy-step-number {
+    width: 30px;
+    height: 30px;
+  }
+  .buy-steps li {
+    gap: 8px;
+    font-size: 12px;
+  }
+  .buy-steps small {
+    font-size: 10px;
+  }
+  .buy-steps li:first-child::after {
+    margin-inline: 2px;
+  }
+  .buy-steps button {
+    gap: 8px;
+  }
+}

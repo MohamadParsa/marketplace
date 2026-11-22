@@ -72,7 +72,10 @@ func TestHomePublicationBuyboxAndProjection(t *testing.T) {
 	if got := backoffice.BuildHome(w).Rails[0].Products[0].OfferID; got != "mobile" {
 		t.Fatal("price precedence", got)
 	}
-	tests := map[string]func(*backoffice.Workspace){"draft": func(w *backoffice.Workspace) { w.Products[0].Status = "draft" }, "unpublished category": func(w *backoffice.Workspace) { w.Categories[0].Published = false }, "archived": func(w *backoffice.Workspace) { w.Categories[0].Archived = true }, "no image": func(w *backoffice.Workspace) { w.Products[0].ImageID = "missing" }, "reserved": func(w *backoffice.Workspace) { w.Offers[0].Reserved = 2 }, "inactive seller": func(w *backoffice.Workspace) {
+	tests := map[string]func(*backoffice.Workspace){"zero stock": func(w *backoffice.Workspace) { w.Offers[0].Stock = 0 }, "hidden ancestor": func(w *backoffice.Workspace) {
+		w.Categories[0].ParentID = "hidden-parent"
+		w.Categories = append(w.Categories, catalog.Category{ID: "hidden-parent", Published: false})
+	}, "draft": func(w *backoffice.Workspace) { w.Products[0].Status = "draft" }, "unpublished category": func(w *backoffice.Workspace) { w.Categories[0].Published = false }, "archived": func(w *backoffice.Workspace) { w.Categories[0].Archived = true }, "no image": func(w *backoffice.Workspace) { w.Products[0].ImageID = "missing" }, "reserved": func(w *backoffice.Workspace) { w.Offers[0].Reserved = 2 }, "inactive seller": func(w *backoffice.Workspace) {
 		for i := range w.Stores {
 			if w.Stores[i].ID == "slow" {
 				w.Stores[i].Active = false
@@ -84,6 +87,11 @@ func TestHomePublicationBuyboxAndProjection(t *testing.T) {
 			state := homeFixture(t)
 			change(&state)
 			data := backoffice.BuildHome(state)
+			for _, cat := range data.Categories {
+				if cat.ID == state.Products[0].CategoryID {
+					t.Fatal("unbuyable category shortcut leaked", name)
+				}
+			}
 			if len(data.Rails) != 4 || len(data.Rails[0].Products) != 0 {
 				t.Fatalf("invalid product leaked %+v", data.Rails[0])
 			}

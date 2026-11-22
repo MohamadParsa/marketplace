@@ -23,6 +23,8 @@ const errors: Record<string, string> = {
     "قیمت یا شرایط سفارش تغییر کرده؛ مبلغ تازه را دوباره بررسی کنید.",
   insufficient_wallet: "موجودی قابل استفاده کیف پول کافی نیست.",
   payment_method_not_eligible: "این روش برای مبلغ یا دسته‌های سفارش مجاز نیست.",
+  address_unavailable:
+    "استان و شهر این آدرس فعال یا معتبر نیست؛ آدرس را ویرایش کنید.",
   invalid_request: "اطلاعات واردشده معتبر نیست.",
   invalid_receipt: "تصویر رسید معتبر نیست؛ PNG، JPEG یا WebP انتخاب کنید.",
   receipt_too_large: "حجم رسید باید حداکثر ۲ مگابایت باشد.",

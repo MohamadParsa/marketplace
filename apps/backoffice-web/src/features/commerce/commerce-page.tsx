@@ -1,3 +1,4 @@
+import { GeographyEditor } from "./geography-editor";
 import {
   useCallback,
   useEffect,
@@ -276,7 +277,9 @@ export function CommercePage({
                         <b>
                           {p.customer_name || "مشتری"} · {p.customer_phone}
                         </b>
-                        <small dir="ltr">{p.id}</small>
+                        <small>
+                          شماره سفارش: <b>#{p.number}</b>
+                        </small>
                         <p>
                           سفارش: {label(p.order_status)} · پرداخت:{" "}
                           {label(p.payment_status)}
@@ -364,7 +367,7 @@ export function CommercePage({
               <Empty />
             )}
           </section>
-          <section className="panel">
+          <section className="panel commerce-audit">
             <h2>رویدادهای مالی مجاز</h2>
             {data.audit
               .slice(-30)
@@ -412,6 +415,8 @@ export function CommercePage({
             <PurchaseReview
               key={selectedPurchase.id + ":" + selectedPurchase.version}
               purchase={selectedPurchase}
+              token={token}
+              canReadDeposits={!!data?.permissions["commerce.deposits.read"]}
               busy={busy}
               allowed={!!data?.permissions["commerce.orders.confirm"]}
               submit={(cancel, reason) =>
@@ -597,11 +602,15 @@ function DepositReview({
 }
 function PurchaseReview({
   purchase: p,
+  token,
+  canReadDeposits,
   busy,
   allowed,
   submit,
 }: {
   purchase: Purchase;
+  token: string;
+  canReadDeposits: boolean;
   busy: boolean;
   allowed: boolean;
   submit: (cancel: boolean, reason: string) => void;
@@ -610,47 +619,151 @@ function PurchaseReview({
     [checked, setChecked] = useState(false);
   return (
     <>
-      <States p={p} />
-      <div className="commerce-status">
+      <div className="commerce-order-heading">
         <div>
-          مبلغ نهایی<strong>{money(p.quote.total_toman)}</strong>
+          <small>شماره سفارش</small>
+          <h2>#{p.number}</h2>
         </div>
-        <div>
-          اعتبار قابل استفاده<strong>{money(p.wallet_available_toman)}</strong>
-        </div>
+        <span>{new Date(p.created_at).toLocaleString("fa-IR")}</span>
       </div>
-      <p>کسری: {money(p.shortfall_toman)}</p>
-      {p.quote.lines.map((l) => (
-        <p key={l.offer_id}>
-          {l.name} · {l.variant_label} · تعداد {l.quantity} ·{" "}
-          {money(l.total_toman)}
-        </p>
-      ))}
-      {p.quote.shipments.map((s) => (
-        <p key={s.store_id}>
-          {s.store_name} · {s.method_name} · {money(s.fee_toman)} ·{" "}
-          {s.delivery_from} تا {s.delivery_to}
-        </p>
-      ))}
-      <h3>مقصد</h3>
-      <p>
-        {p.quote.address.recipient} · {p.quote.address.phone}
-      </p>
-      <p>
-        {p.quote.address.province}، {p.quote.address.city}،{" "}
-        {p.quote.address.street} · {p.quote.address.postal_code}
-      </p>
+      <States p={p} />
+      <div className="commerce-order-grid">
+        <section
+          className="commerce-order-box commerce-payment-box"
+          aria-label="اطلاعات پرداخت"
+        >
+          <h3>اطلاعات پرداخت</h3>
+          <dl>
+            <div>
+              <dt>روش انتخاب‌شده</dt>
+              <dd>{p.quote.payment_method.name}</dd>
+            </div>
+            <div>
+              <dt>جمع کالاها</dt>
+              <dd>{money(p.quote.subtotal_toman)}</dd>
+            </div>
+            <div>
+              <dt>هزینه ارسال</dt>
+              <dd>{money(p.quote.shipping_toman)}</dd>
+            </div>
+            <div className="commerce-order-grand">
+              <dt>مبلغ نهایی</dt>
+              <dd>{money(p.quote.total_toman)}</dd>
+            </div>
+            <div>
+              <dt>اعتبار قابل استفاده</dt>
+              <dd>
+                {p.wallet_available_toman
+                  ? money(p.wallet_available_toman)
+                  : "—"}
+              </dd>
+            </div>
+            <div>
+              <dt>کسری اعتبار</dt>
+              <dd>{p.shortfall_toman ? money(p.shortfall_toman) : "—"}</dd>
+            </div>
+          </dl>
+        </section>
+        <section className="commerce-order-box" aria-label="گیرنده و آدرس">
+          <h3>گیرنده و آدرس</h3>
+          <b>{p.quote.address.recipient}</b>
+          <p dir="ltr" className="commerce-phone">
+            {p.quote.address.phone}
+          </p>
+          <p>
+            {p.quote.address.province}، {p.quote.address.city}،{" "}
+            {p.quote.address.street}
+          </p>
+          <small>کد پستی: {p.quote.address.postal_code}</small>
+        </section>
+        <section
+          className="commerce-order-box commerce-order-wide"
+          aria-label="اقلام سفارش"
+        >
+          <h3>
+            اقلام سفارش <small>({p.quote.lines.length})</small>
+          </h3>
+          {p.quote.lines.map((l) => (
+            <article className="commerce-order-item" key={l.offer_id}>
+              <img src={base + l.image_url} alt={l.name} />
+              <div>
+                <b>{l.name}</b>
+                <small>{l.variant_label || "تنوع پیش‌فرض"}</small>
+                <small>قیمت واحد: {money(l.unit_price_toman)}</small>
+              </div>
+              <div>
+                <small>تعداد {l.quantity.toLocaleString("fa-IR")}</small>
+                <strong>{money(l.total_toman)}</strong>
+              </div>
+            </article>
+          ))}
+        </section>
+        <section
+          className="commerce-order-box commerce-order-wide"
+          aria-label="مرسوله‌ها و ارسال"
+        >
+          <h3>مرسوله‌ها و ارسال</h3>
+          <div className="commerce-order-grid">
+            {p.quote.shipments.map((s) => (
+              <article key={s.store_id} className="commerce-shipment-card">
+                <b>{s.store_name}</b>
+                <p>
+                  {s.method_name} · {money(s.fee_toman)}
+                </p>
+                <small>وقفه تأمین: {s.lead_days} روز کاری</small>
+                <p>
+                  تحویل از{" "}
+                  {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
+                  {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
+                </p>
+                <small>
+                  {p.quote.lines
+                    .filter((l) => l.store_id === s.store_id)
+                    .map((l) => l.name)
+                    .join("، ")}
+                </small>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section
+          className="commerce-order-box commerce-order-wide"
+          aria-label="واریزهای مرتبط"
+        >
+          <h3>واریزهای مرتبط</h3>
+          {!canReadDeposits ? (
+            <p>مجوز مشاهده واریزها را ندارید.</p>
+          ) : p.deposits.length ? (
+            p.deposits.map((d) => (
+              <article className="commerce-shipment-card" key={d.id}>
+                <div className="commerce-order-heading">
+                  <strong>{money(d.amount_toman)}</strong>
+                  <span className={"commerce-deposit-state " + d.status}>
+                    {label(d.status)}
+                  </span>
+                </div>
+                <p>
+                  {d.method_name} · {d.date}
+                </p>
+                <p>
+                  شماره پیگیری: <b dir="ltr">{d.reference}</b>
+                </p>
+                {d.reason && <p>{d.reason}</p>}
+                {d.receipt_id && <Receipt id={d.receipt_id} token={token} />}
+              </article>
+            ))
+          ) : (
+            <p className="commerce-order-empty">
+              هنوز واریزی برای این سفارش ثبت نشده است.
+            </p>
+          )}
+        </section>
+      </div>
       {p.cancellation_requested && (
         <Alert severity="warning">
           درخواست لغو مشتری: {p.cancellation_reason}
         </Alert>
       )}
-      <h3>واریزهای مرتبط</h3>
-      {p.deposits.map((d) => (
-        <p key={d.id}>
-          {money(d.amount_toman)} · {label(d.status)} · {d.reference}
-        </p>
-      ))}
       {allowed && p.status !== "cancelled" && (
         <fieldset disabled={busy}>
           <Field
@@ -852,6 +965,12 @@ function SettingsForm({
   );
   return (
     <>
+      <GeographyEditor
+        value={s.geography ?? []}
+        busy={busy}
+        allowed={can("geography.write")}
+        save={(geography) => save({ version: s.version, geography })}
+      />
       {section(
         "روش‌های پرداخت و مقصد وجه",
         <fieldset disabled={busy || !can("payment.settings.write")}>

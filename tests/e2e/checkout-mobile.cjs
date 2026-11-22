@@ -34,7 +34,7 @@ async (page) => {
     .getByRole("button", { name: "افزایش تعداد " + product.name, exact: true })
     .waitFor({ state: "visible" });
   await page.screenshot({
-    path: "output/playwright/issue-30/cart-mobile.png",
+    path: "output/playwright/purchase-refinements/cart-mobile.png",
     fullPage: true,
     animations: "disabled",
   });
@@ -50,18 +50,24 @@ async (page) => {
   await page.getByRole("dialog").waitFor();
   check(
     "explicit-variant-seller-selector",
-    (await page.getByRole("dialog").getByRole("combobox").count()) === 2,
+    (await page.getByRole("dialog").getByRole("combobox").count()) === 0 &&
+      (await page.getByRole("dialog").locator(".choice-group").count()) === 2,
   );
   await page.getByRole("button", { name: "بستن", exact: true }).click();
   await page.getByRole("link", { name: "ادامه و انتخاب آدرس" }).click();
   await page.getByRole("radio", { name: "انتخاب این آدرس" }).first().check();
-  await page.locator(".buy-field select").first().selectOption("post-review");
   await page
-    .getByRole("button", { name: "محاسبه مبلغ و روش‌های پرداخت" })
+    .locator(".buy-shipping-group")
+    .first()
+    .getByRole("radio")
+    .first()
+    .check();
+  await page
+    .getByRole("button", { name: "تأیید آدرس و ارسال؛ ادامه به پرداخت" })
     .click();
   await page.getByRole("radio", { name: /پرداخت محلی/ }).check();
   await page.screenshot({
-    path: "output/playwright/issue-30/checkout-mobile.png",
+    path: "output/playwright/purchase-refinements/checkout-mobile.png",
     fullPage: true,
     animations: "disabled",
   });

@@ -38,6 +38,8 @@ func commerceError(w http.ResponseWriter, e error) {
 		status, code = 403, "forbidden"
 	case errors.Is(e, backoffice.ErrNotFound):
 		status, code = 404, "not_found"
+	case errors.Is(e, backoffice.ErrAddressUnavailable):
+		status, code = 400, "address_unavailable"
 	case errors.Is(e, backoffice.ErrInvalid):
 		status, code = 400, "invalid_request"
 	case errors.Is(e, backoffice.ErrConflict):
@@ -63,7 +65,11 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		writeError(w, 400, "json_required")
 		return false
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, 128*1024)
+	limit := int64(128 * 1024)
+	if r.URL.Path == "/backoffice/commerce/settings" {
+		limit = 1024 * 1024
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, limit)
 	d := json.NewDecoder(r.Body)
 	d.DisallowUnknownFields()
 	if d.Decode(out) != nil || d.Decode(new(any)) != io.EOF {

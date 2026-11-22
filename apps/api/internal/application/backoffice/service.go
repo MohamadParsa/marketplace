@@ -28,7 +28,7 @@ func roleAllows(role identity.Role, action string) bool {
 		return role == identity.RoleOperations
 	case CommerceSettingsRead, CommerceOrdersRead:
 		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance
-	case CommerceShippingWrite, CommerceBusinessWrite:
+	case CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite:
 		return role == identity.RoleOperations
 	case CommerceDepositsRead, CommerceDepositsReview, CommerceOrdersConfirm, CommerceRefundsResolve:
 		return role == identity.RoleFinance
@@ -49,6 +49,9 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	state, err := s.repository.Snapshot(ctx)
 	if err != nil {
 		return Workspace{}, err
+	}
+	if state.Commerce != nil {
+		commerceState(&state)
 	}
 	if actor.Surface == identity.SurfaceSeller {
 		return sellerWorkspace(state, actor), nil

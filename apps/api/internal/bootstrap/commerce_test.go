@@ -41,6 +41,7 @@ func commerceSeed() backoffice.Workspace {
 	w.Variants = []catalog.Variant{{ID: "variant", ProductID: "product", Version: 1}}
 	w.Offers = []catalog.Offer{{ID: "offer", ProductID: "product", VariantID: "variant", StoreID: "s1", Price: 1000000, Stock: 10, Version: 1}}
 	settings := commerce.DefaultSettings()
+	settings.Geography = []commerce.Province{{ID: "tehran", Name: "تهران", Active: true, Cities: []commerce.City{{ID: "tehran-city", Name: "تهران", Active: true}}}, {ID: "qom", Name: "قم", Active: true, Cities: []commerce.City{{ID: "qom-city", Name: "قم", Active: true}}}}
 	settings.Destination = commerce.Destination{ID: "test-card", CardNumber: "4242424242424242", Holder: "آزمون", Bank: "آزمایشی"}
 	for i := range settings.Methods {
 		settings.Methods[i].Active = true
@@ -101,6 +102,10 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	var cart backoffice.CartView
 	json.Unmarshal(get(customer, "GET", "/storefront/cart", nil, "", 200), &cart)
 	var address commerce.Address
+	mismatch := get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "قم", Street: "نشانی آزمون", PostalCode: "1234567890"}, "wrong-province-city", 400)
+	if !strings.Contains(string(mismatch), "address_unavailable") {
+		t.Fatal("missing actionable geography error")
+	}
 	json.Unmarshal(get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمون", PostalCode: "1234567890"}, "address", 200), &address)
 	get(other, "POST", "/storefront/account/addresses", backoffice.AddressInput{ID: address.ID, Version: 1, Delete: true}, "foreign", 404)
 	in := backoffice.QuoteInput{CartVersion: cart.Version, AddressID: address.ID, Shipping: map[string]string{"s1": "post"}, PaymentMethodID: "card-transfer"}
@@ -110,10 +115,12 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: "1"}, "tamper", 409)
 	var p backoffice.PurchaseView
 	json.Unmarshal(get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: quote.TotalToman}, "accept", 200), &p)
-	if p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" {
+	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" {
 		t.Fatal(p)
 	}
 	get(other, "GET", "/storefront/account/orders/"+p.ID, nil, "", 404)
+	get(other, "GET", "/storefront/account/orders/"+p.Number, nil, "", 404)
+	get(customer, "GET", "/storefront/account/orders/"+p.Number, nil, "", 200)
 	var d backoffice.DepositView
 	json.Unmarshal(get(customer, "POST", "/storefront/wallet/deposits", backoffice.DepositInput{MethodID: "card-transfer", PurchaseID: p.ID, DestinationID: "test-card", AmountToman: quote.TotalToman, Date: time.Now().UTC().Format("2006-01-02"), Reference: "HTTP-001"}, "deposit", 200), &d)
 	var before backoffice.WalletView
@@ -240,6 +247,16 @@ func TestCommercePostgresLedgerReceiptAndRestart(t *testing.T) {
 	other = loginAt(t, h, "storefront", "09000000004")["token"].(string)
 	admin = login(t, h, "09000000001")
 	walletAfter := commerceHTTP(t, h, buyer, "", "GET", "/storefront/wallet", nil, "", 200)
+	var numbered backoffice.PurchaseView
+	json.Unmarshal(commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/1000", nil, "", 200), &numbered)
+	if numbered.Number != "1000" {
+		t.Fatal("public number changed across PostgreSQL restart")
+	}
+	restored, restoreErr := repo.Snapshot(ctx)
+	if restoreErr != nil || restored.Commerce.NextPurchaseNumber != 1001 || len(restored.Commerce.Settings.Geography) != 2 {
+		t.Fatal("number counter not persisted", restoreErr)
+	}
+
 	if !bytes.Equal(walletBefore, walletAfter) {
 		t.Fatal("wallet restart mismatch")
 	}

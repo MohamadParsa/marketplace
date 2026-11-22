@@ -57,6 +57,7 @@ func newCommerceHarness(t *testing.T) *commerceHarness {
 	w.Variants = []catalog.Variant{{ID: "phone-v", ProductID: "phone", Version: 1}, {ID: "gold-v", ProductID: "gold-product", Version: 1}}
 	w.Offers = []catalog.Offer{{ID: "offer1", ProductID: "phone", VariantID: "phone-v", StoreID: "store1", Stock: 5, Price: 1000000, Version: 1}, {ID: "offer2", ProductID: "phone", VariantID: "phone-v", StoreID: "store2", Stock: 5, Price: 1200000, Version: 1}, {ID: "gold-offer", ProductID: "gold-product", VariantID: "gold-v", StoreID: "store1", Stock: 5, Price: 1000000, Version: 1}}
 	settings := commerce.DefaultSettings()
+	settings.Geography = []commerce.Province{{ID: "tehran", Name: "تهران", Active: true, Cities: []commerce.City{{ID: "tehran-city", Name: "تهران", Active: true}}}, {ID: "qom", Name: "قم", Active: true, Cities: []commerce.City{{ID: "qom-city", Name: "قم", Active: true}}}}
 	settings.Destination = commerce.Destination{ID: "test-destination", CardNumber: "4242424242424242", Holder: "فروشگاه نمونه", Bank: "بانک آزمایشی"}
 	for i := range settings.Methods {
 		settings.Methods[i].Active = true
@@ -608,5 +609,61 @@ func TestCommerceShippingAndAddressSnapshotsSurviveSettingsEdits(t *testing.T) {
 	old := rows[0].Quote
 	if old.ShippingToman != q.ShippingToman || old.Shipments[0].LeadDays != 1 || old.Address.Street != q.Address.Street {
 		t.Fatal("accepted shipping/address snapshot changed")
+	}
+}
+
+func TestCommercePublicNumbersConcurrentPrivateAndRetry(t *testing.T) {
+	h := newCommerceHarness(t)
+	h.add(t, h.buyer, "offer1", 1)
+	h.add(t, h.other, "offer1", 1)
+	q1, q2 := h.quote(t, h.buyer, "local"), h.quote(t, h.other, "local")
+	results := make(chan backoffice.PurchaseView, 2)
+	var wg sync.WaitGroup
+	for i, q := range []backoffice.QuoteView{q1, q2} {
+		a := h.buyer
+		if i == 1 {
+			a = h.other
+		}
+		wg.Add(1)
+		go func(i int, a identity.User, q backoffice.QuoteView) {
+			defer wg.Done()
+			raw, err := h.s.AcceptQuote(context.Background(), a, backoffice.AcceptQuoteInput{QuoteID: q.ID, AcceptedTotalToman: q.TotalToman}, fmt.Sprintf("number-%d", i))
+			if err != nil {
+				t.Error(err)
+				return
+			}
+			var p backoffice.PurchaseView
+			if err = json.Unmarshal(raw, &p); err != nil {
+				t.Error(err)
+				return
+			}
+			results <- p
+		}(i, a, q)
+	}
+	wg.Wait()
+	close(results)
+	numbers := map[string]bool{}
+	for p := range results {
+		numbers[p.Number] = true
+	}
+	if len(numbers) != 2 || !numbers["1000"] || !numbers["1001"] {
+		t.Fatal(numbers)
+	}
+	mine, err := h.s.ReadPurchases(context.Background(), h.buyer, "")
+	if err != nil || len(mine) != 1 {
+		t.Fatal(err)
+	}
+	own := mine[0]
+	byNumber, err := h.s.ReadPurchases(context.Background(), h.buyer, own.Number)
+	if err != nil || len(byNumber) != 1 || byNumber[0].ID != own.ID {
+		t.Fatal("number lookup", err)
+	}
+	if _, err = h.s.ReadPurchases(context.Background(), h.other, own.Number); err != backoffice.ErrNotFound {
+		t.Fatal("enumerable number bypassed ownership", err)
+	}
+	raw, err := h.s.AcceptQuote(context.Background(), h.buyer, backoffice.AcceptQuoteInput{QuoteID: q1.ID, AcceptedTotalToman: q1.TotalToman}, "number-0")
+	retry := decodeCommerce[backoffice.PurchaseView](t, raw, err)
+	if retry.ID != own.ID || retry.Number != own.Number {
+		t.Fatal("retry assigned new order number")
 	}
 }

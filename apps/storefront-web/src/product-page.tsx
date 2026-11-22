@@ -1,3 +1,4 @@
+import { PurchaseControl } from "./purchase-control";
 import { useCommerce, apiBase } from "./commerce";
 import { Modal } from "./components";
 import { money as tomanMoney } from "../../../packages/commerce-client/types";
@@ -133,18 +134,21 @@ export function ProductPage({ url }: { url: string }) {
   const [adding, setAdding] = useState(false),
     [addError, setAddError] = useState(""),
     [added, setAdded] = useState(false);
-  async function addToCart() {
+  async function changeCartQuantity(next: number) {
     if (!data || !commerce.cart || adding) return;
     setAdding(true);
     setAddError("");
     try {
+      const existing = commerce.cart.items.find(
+        (i) => i.offer_id === data.selected_offer_id,
+      );
       await commerce.mutate({
-        action: "add",
+        action: next === 0 ? "remove" : existing ? "set" : "add",
         offer_id: data.selected_offer_id,
-        quantity,
+        quantity: next,
         version: commerce.cart.version,
       });
-      setAdded(true);
+      if (!existing && next > 0) setAdded(true);
     } catch (e) {
       setAddError((e as Error).message);
       await commerce.refreshCart().catch(() => {});
@@ -157,8 +161,8 @@ export function ProductPage({ url }: { url: string }) {
     [status, setStatus] = useState(0),
     [attempt, setAttempt] = useState(0),
     [photo, setPhoto] = useState(0),
-    [zoom, setZoom] = useState(false),
-    [quantity, setQuantity] = useState(1);
+    [zoom, setZoom] = useState(false);
+  const quantity = 1;
   const initialPosition = useRef(true);
   useEffect(() => {
     const abort = new AbortController();
@@ -198,7 +202,6 @@ export function ProductPage({ url }: { url: string }) {
         }
 
         setPhoto(0);
-        setQuantity(1);
         document.title = d.content.seo.meta_title;
         for (const [name, content] of Object.entries({
           ...d.content.seo,
@@ -497,28 +500,6 @@ export function ProductPage({ url }: { url: string }) {
                 ) : (
                   <p className="pdp-unavailable">ناموجود</p>
                 )}
-                {canPurchase && (
-                  <div className="pdp-quantity" aria-label="تعداد انتخابی">
-                    <button
-                      aria-label="افزایش تعداد"
-                      disabled={quantity >= 99}
-                      onClick={() => setQuantity((q) => q + 1)}
-                    >
-                      +
-                    </button>
-                    <output aria-live="polite">
-                      {new Intl.NumberFormat("fa-IR").format(quantity)}
-                    </output>
-                    <button
-                      className="pdp-decrease"
-                      aria-label="کاهش تعداد"
-                      disabled={quantity <= 1}
-                      onClick={() => setQuantity((q) => q - 1)}
-                    >
-                      −
-                    </button>
-                  </div>
-                )}
                 <div className="pdp-selection-status" aria-live="polite">
                   {checking ? (
                     "در حال بررسی تعداد…"
@@ -526,24 +507,24 @@ export function ProductPage({ url }: { url: string }) {
                     <p role="alert">{selectionError}</p>
                   ) : null}
                 </div>
-                <button
-                  className="pdp-add"
-                  data-product-id={data.id}
-                  data-variant-id={data.selected_variant_id}
+                <div
+                  className="pdp-purchase"
                   data-offer-id={data.selected_offer_id}
-                  data-quantity={quantity}
-                  disabled={
-                    !canPurchase ||
-                    checking ||
-                    !!selectionError ||
-                    adding ||
-                    !commerce.cart
-                  }
-                  onClick={() => void addToCart()}
+                  data-variant-id={data.selected_variant_id}
                   aria-describedby="pdp-purchase-note"
                 >
-                  افزودن به سبد خرید
-                </button>
+                  <PurchaseControl
+                    name={data.name}
+                    quantity={
+                      commerce.cart?.items.find(
+                        (i) => i.offer_id === data.selected_offer_id,
+                      )?.quantity ?? 0
+                    }
+                    busy={adding || loading || checking || !commerce.cart}
+                    canIncrease={canPurchase && !selectionError}
+                    onChange={(next) => void changeCartQuantity(next)}
+                  />
+                </div>
                 {addError && <p role="alert">{addError}</p>}
                 <p id="pdp-purchase-note" className="pdp-purchase-note">
                   {available

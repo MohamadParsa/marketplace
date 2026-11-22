@@ -1,3 +1,4 @@
+import { ChoiceGroup } from "./choice-group";
 import { useEffect, useState } from "react";
 import {
   Icon,
@@ -431,48 +432,33 @@ export function ListingPage({ url }: { url: string }) {
                       فیلترها
                     </button>
                   )}
-                  <label>
-                    مرتب‌سازی
-                    <select
-                      aria-label="مرتب‌سازی کالاها"
-                      value={params.get("sort") ?? "default"}
-                      onChange={(e) =>
-                        change((p) => p.set("sort", e.target.value))
-                      }
-                    >
-                      {(data?.sort_options ?? Object.keys(sortLabels)).map(
-                        (s) => (
-                          <option value={s} key={s}>
-                            {sortLabels[s]}
-                          </option>
-                        ),
-                      )}
-                    </select>
-                  </label>
+                  <ChoiceGroup
+                    label="مرتب‌سازی کالاها"
+                    value={params.get("sort") ?? "default"}
+                    options={(
+                      data?.sort_options ?? Object.keys(sortLabels)
+                    ).map((v) => ({ value: v, label: sortLabels[v] }))}
+                    onChange={(v) => change((p) => p.set("sort", v))}
+                  />
                   {current.pathname === "/search" && data && (
-                    <label>
-                      دسته
-                      <select
-                        aria-label="دسته نتایج جست‌وجو"
-                        value={params.get("category") ?? ""}
-                        onChange={(e) =>
-                          change((p) => {
-                            e.target.value
-                              ? p.set("category", e.target.value)
-                              : p.delete("category");
-                            for (const k of [...p.keys()])
-                              if (k.startsWith("attr.")) p.delete(k);
-                          })
-                        }
-                      >
-                        <option value="">همه دسته‌ها</option>
-                        {data.navigation.map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                    <ChoiceGroup
+                      label="دسته نتایج جست‌وجو"
+                      value={params.get("category") ?? ""}
+                      options={[
+                        { value: "", label: "همه دسته‌ها" },
+                        ...data.navigation.map((c) => ({
+                          value: c.id,
+                          label: c.name,
+                        })),
+                      ]}
+                      onChange={(v) =>
+                        change((p) => {
+                          v ? p.set("category", v) : p.delete("category");
+                          for (const k of [...p.keys()])
+                            if (k.startsWith("attr.")) p.delete(k);
+                        })
+                      }
+                    />
                   )}
                 </div>
                 {loading && (

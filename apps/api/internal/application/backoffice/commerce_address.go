@@ -109,6 +109,11 @@ func (s *Service) SaveAddress(ctx context.Context, a identity.User, in AddressIn
 		if e != nil {
 			return nil, e
 		}
+		province, city, valid := canonicalDestination(c.Settings.Geography, address.Province, address.City)
+		if !valid {
+			return nil, ErrAddressUnavailable
+		}
+		address.Province, address.City = province, city
 		if index < 0 {
 			c.Addresses = append(c.Addresses, address)
 		} else {

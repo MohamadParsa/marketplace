@@ -8,6 +8,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -63,6 +64,7 @@ type QuoteView struct {
 	Currency      string               `json:"currency"`
 }
 type PurchaseView struct {
+	Number                string           `json:"number"`
 	OrderStatus           string           `json:"order_status"`
 	PaymentStatus         string           `json:"payment_status"`
 	Events                []OrderEventView `json:"events"`
@@ -110,7 +112,7 @@ func quoteView(q commerce.Quote) QuoteView {
 func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	q := findQuote(c, p.QuoteID)
 	orderStatus, paymentStatus := purchaseStatuses(p)
-	v := PurchaseView{OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
+	v := PurchaseView{Number: strconv.FormatInt(p.Number, 10), OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
 	for _, e := range p.Events {
 		v.Events = append(v.Events, OrderEventView{e.Action, e.FlowStatus, e.OrderStatus, e.PaymentStatus, e.ActorKind, e.At})
 	}
@@ -145,6 +147,11 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 	if !found {
 		return q, ErrNotFound
 	}
+	province, city, valid := canonicalDestination(c.Settings.Geography, q.Address.Province, q.Address.City)
+	if !valid {
+		return q, ErrAddressUnavailable
+	}
+	q.Address.Province, q.Address.City = province, city
 	lines := []commerce.CartLine{}
 	ownHeld := map[string]int{}
 	if in.PurchaseID != "" {
@@ -333,7 +340,7 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 	p.OrderIDs = []string{}
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
-		order := orders.Order{ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
+		order := orders.Order{PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
 				order.Items = append(order.Items, orders.Item{ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})
@@ -407,7 +414,8 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 			if pending >= 10 {
 				return nil, ErrConflict
 			}
-			c.Purchases = append(c.Purchases, commerce.Purchase{ID: id, UserID: a.ID, QuoteID: q.ID, Status: "awaiting-confirmation", Version: 1, CreatedAt: now, PreviousQuotes: []string{}})
+			c.Purchases = append(c.Purchases, commerce.Purchase{Number: c.NextPurchaseNumber, ID: id, UserID: a.ID, QuoteID: q.ID, Status: "awaiting-confirmation", Version: 1, CreatedAt: now, PreviousQuotes: []string{}})
+			c.NextPurchaseNumber++
 			p = &c.Purchases[len(c.Purchases)-1]
 			w.Purchases = append(w.Purchases, PurchaseOwner{PurchaseID: id, UserID: a.ID})
 		}
@@ -462,7 +470,7 @@ func (s *Service) ReadPurchases(ctx context.Context, a identity.User, id string)
 	c := commerceState(&w)
 	out := []PurchaseView{}
 	for _, p := range c.Purchases {
-		if p.UserID == a.ID && (id == "" || p.ID == id) {
+		if p.UserID == a.ID && (id == "" || p.ID == id || strconv.FormatInt(p.Number, 10) == id) {
 			out = append(out, purchaseView(c, p))
 		}
 	}
@@ -578,5 +586,5 @@ func (s *Service) PublicCommerceConfig(ctx context.Context) (map[string]any, err
 	if loc == nil {
 		loc = time.FixedZone("Tehran", 12600)
 	}
-	return map[string]any{"methods": methods, "destination": destination, "business": settings.Business, "currency": "toman", "reservation_minutes": commerce.ReservationMinutes, "server_date": s.clock.Now().In(loc).Format("2006-01-02")}, nil
+	return map[string]any{"geography": publicGeography(settings.Geography), "methods": methods, "destination": destination, "business": settings.Business, "currency": "toman", "reservation_minutes": commerce.ReservationMinutes, "server_date": s.clock.Now().In(loc).Format("2006-01-02")}, nil
 }

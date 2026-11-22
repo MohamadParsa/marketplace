@@ -11,6 +11,7 @@ type Item struct {
 	Status    string `json:"status"`
 }
 type Order struct {
+	PurchaseNumber string   `json:"purchase_number,omitempty"`
 	CheckoutID     string   `json:"checkout_id,omitempty"`
 	ShippingFee    int64    `json:"shipping_fee,omitempty"`
 	ShippingMethod string   `json:"shipping_method,omitempty"`

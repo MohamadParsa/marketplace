@@ -13,18 +13,31 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
-	Settings   Settings        `json:"settings"`
-	Carts      []Cart          `json:"carts"`
-	Addresses  []Address       `json:"addresses"`
-	Quotes     []Quote         `json:"quotes"`
-	Purchases  []Purchase      `json:"purchases"`
-	Deposits   []Deposit       `json:"deposits"`
-	Receipts   []Receipt       `json:"receipts"`
-	Entries    []WalletEntry   `json:"entries"`
-	Refunds    []RefundRequest `json:"refunds"`
-	Operations []Operation     `json:"operations"`
+	NextPurchaseNumber int64           `json:"next_purchase_number"`
+	Settings           Settings        `json:"settings"`
+	Carts              []Cart          `json:"carts"`
+	Addresses          []Address       `json:"addresses"`
+	Quotes             []Quote         `json:"quotes"`
+	Purchases          []Purchase      `json:"purchases"`
+	Deposits           []Deposit       `json:"deposits"`
+	Receipts           []Receipt       `json:"receipts"`
+	Entries            []WalletEntry   `json:"entries"`
+	Refunds            []RefundRequest `json:"refunds"`
+	Operations         []Operation     `json:"operations"`
+}
+type City struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Active bool   `json:"active"`
+}
+type Province struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Active bool   `json:"active"`
+	Cities []City `json:"cities"`
 }
 type Settings struct {
+	Geography          []Province       `json:"geography"`
 	DestinationHistory []Destination    `json:"destination_history,omitempty"`
 	Version            int              `json:"version"`
 	Methods            []PaymentMethod  `json:"methods"`
@@ -141,6 +154,7 @@ type Quote struct {
 	PurchaseID         string             `json:"purchase_id,omitempty"`
 }
 type Purchase struct {
+	Number                int64        `json:"number"`
 	Events                []OrderEvent `json:"events"`
 	CancellationRequested bool         `json:"cancellation_requested"`
 	CancellationReason    string       `json:"cancellation_reason,omitempty"`

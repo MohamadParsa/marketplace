@@ -74,7 +74,14 @@ export interface Business {
   privacy: string;
   terms: string;
 }
+export interface Province {
+  id: string;
+  name: string;
+  active: boolean;
+  cities: { id: string; name: string; active: boolean }[];
+}
 export interface Config {
+  geography: Province[];
   methods: Method[];
   destination: Destination;
   business: Business;
@@ -83,6 +90,7 @@ export interface Config {
   server_date: string;
 }
 export interface Settings {
+  geography: Province[];
   version: number;
   methods: Method[];
   shipping: Shipping[];
@@ -157,6 +165,7 @@ export interface Deposit {
   created_at: string;
 }
 export interface Purchase {
+  number: string;
   id: string;
   status: string;
   version: number;

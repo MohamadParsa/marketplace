@@ -14,6 +14,7 @@ import (
 const CommerceSettingsRead = "commerce.settings.read"
 const CommercePaymentWrite = "commerce.payment.settings.write"
 const CommerceShippingWrite = "commerce.shipping.write"
+const CommerceGeographyWrite = "commerce.geography.write"
 const CommerceBusinessWrite = "commerce.business.write"
 const CommerceOrdersRead = "commerce.orders.read"
 const CommerceOrdersConfirm = "commerce.orders.confirm"
@@ -54,12 +55,14 @@ type ShippingSettingsInput struct {
 	Holidays       []string              `json:"holidays"`
 }
 type CommerceSettingsInput struct {
-	Version  int                    `json:"version"`
-	Payment  *PaymentSettingsInput  `json:"payment,omitempty"`
-	Shipping *ShippingSettingsInput `json:"shipping,omitempty"`
-	Business *commerce.Business     `json:"business,omitempty"`
+	Geography *[]commerce.Province   `json:"geography,omitempty"`
+	Version   int                    `json:"version"`
+	Payment   *PaymentSettingsInput  `json:"payment,omitempty"`
+	Shipping  *ShippingSettingsInput `json:"shipping,omitempty"`
+	Business  *commerce.Business     `json:"business,omitempty"`
 }
 type CommerceSettingsView struct {
+	Geography          []commerce.Province   `json:"geography"`
 	Version            int                   `json:"version"`
 	Methods            []PaymentMethodInput  `json:"methods"`
 	Shipping           []ShippingMethodInput `json:"shipping"`
@@ -79,7 +82,7 @@ func methodInput(m commerce.PaymentMethod) PaymentMethodInput {
 	return PaymentMethodInput{m.ID, m.Name, m.Kind, m.Active, commerce.Toman(m.Min), max, m.AllCategories, append([]string{}, m.AllowedCategories...), append([]string{}, m.ExcludedCategories...), m.Instructions}
 }
 func settingsView(s commerce.Settings) CommerceSettingsView {
-	v := CommerceSettingsView{Version: s.Version, Methods: []PaymentMethodInput{}, Shipping: []ShippingMethodInput{}, ClosedWeekdays: s.ClosedWeekdays, Holidays: s.Holidays, Destination: s.Destination, Business: s.Business, Currency: "toman", ReservationMinutes: commerce.ReservationMinutes}
+	v := CommerceSettingsView{Geography: append([]commerce.Province{}, s.Geography...), Version: s.Version, Methods: []PaymentMethodInput{}, Shipping: []ShippingMethodInput{}, ClosedWeekdays: s.ClosedWeekdays, Holidays: s.Holidays, Destination: s.Destination, Business: s.Business, Currency: "toman", ReservationMinutes: commerce.ReservationMinutes}
 	for _, m := range s.Methods {
 		v.Methods = append(v.Methods, methodInput(m))
 	}
@@ -234,13 +237,13 @@ func parseMethods(w Workspace, inputs []PaymentMethodInput, d commerce.Destinati
 }
 func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in CommerceSettingsInput, key string) (json.RawMessage, error) {
 	guard := func(w Workspace) error {
-		if in.Payment == nil && in.Shipping == nil && in.Business == nil {
+		if in.Payment == nil && in.Shipping == nil && in.Business == nil && in.Geography == nil {
 			return ErrInvalid
 		}
 		for _, v := range []struct {
 			yes        bool
 			permission string
-		}{{in.Payment != nil, CommercePaymentWrite}, {in.Shipping != nil, CommerceShippingWrite}, {in.Business != nil, CommerceBusinessWrite}} {
+		}{{in.Payment != nil, CommercePaymentWrite}, {in.Shipping != nil, CommerceShippingWrite}, {in.Geography != nil, CommerceGeographyWrite}, {in.Business != nil, CommerceBusinessWrite}} {
 			if v.yes {
 				if e := requireCommerceAdmin(w, a, v.permission); e != nil {
 					return e
@@ -253,6 +256,13 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 		c := commerceState(w)
 		if c.Settings.Version != in.Version {
 			return nil, ErrConflict
+		}
+		if in.Geography != nil {
+			directory, err := parseGeography(c.Settings.Geography, *in.Geography)
+			if err != nil {
+				return nil, err
+			}
+			c.Settings.Geography = directory
 		}
 		if in.Payment != nil {
 			d := in.Payment.Destination

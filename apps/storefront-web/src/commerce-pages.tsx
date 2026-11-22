@@ -1,3 +1,5 @@
+import { ChoiceGroup } from "./choice-group";
+import { PurchaseControl } from "./purchase-control";
 import {
   useCallback,
   useEffect,
@@ -23,6 +25,7 @@ import {
   type QuoteInput,
   type Wallet,
   type Method,
+  type Province,
 } from "../../../packages/commerce-client/types";
 export function useAction() {
   const [busy, setBusy] = useState(false),
@@ -513,55 +516,22 @@ export function CartPage() {
                     </p>
                   )}
                   <div className="buy-row">
-                    <button
-                      aria-label={"کاهش تعداد " + item.name}
-                      disabled={action.busy || item.quantity <= 1}
-                      onClick={() =>
+                    <PurchaseControl
+                      name={item.name}
+                      quantity={item.quantity}
+                      canIncrease={item.available}
+                      busy={action.busy}
+                      onChange={(next) =>
                         void action.run(async () => {
                           await mutate({
-                            action: "set",
+                            action: next === 0 ? "remove" : "set",
                             offer_id: item.offer_id,
-                            quantity: item.quantity - 1,
+                            quantity: next,
                             version: cart.version,
                           });
                         })
                       }
-                    >
-                      −
-                    </button>
-                    <b>{item.quantity}</b>
-                    <button
-                      aria-label={"افزایش تعداد " + item.name}
-                      disabled={action.busy || item.quantity >= 99}
-                      onClick={() =>
-                        void action.run(async () => {
-                          await mutate({
-                            action: "set",
-                            offer_id: item.offer_id,
-                            quantity: item.quantity + 1,
-                            version: cart.version,
-                          });
-                        })
-                      }
-                    >
-                      +
-                    </button>
-                    <button
-                      className="buy-link"
-                      disabled={action.busy}
-                      onClick={() =>
-                        void action.run(async () => {
-                          await mutate({
-                            action: "remove",
-                            offer_id: item.offer_id,
-                            quantity: 0,
-                            version: cart.version,
-                          });
-                        })
-                      }
-                    >
-                      حذف
-                    </button>
+                    />
                     <button
                       className="buy-link"
                       disabled={action.busy}
@@ -608,41 +578,35 @@ export function CartPage() {
       </div>
       {edit && cart && (
         <Modal title="انتخاب تنوع و فروشنده" onClose={() => setEdit(null)}>
-          <label className="buy-field">
-            تنوع
-            <select
-              value={variant}
-              onChange={(e) =>
-                void action.run(async () => {
-                  await loadOffers(
-                    cart.items.find((i) => i.offer_id === edit)!.product_id,
-                    e.target.value,
-                  );
-                })
-              }
-            >
-              {variants.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.values.map((x) => x.value).join(" / ") || "پیش‌فرض"}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="buy-field">
-            فروشنده
-            <select
-              value={newOffer}
-              onChange={(e) => setNewOffer(e.target.value)}
-            >
-              <option value="">انتخاب کنید</option>
-              {offers.map((o) => (
-                <option key={o.id} value={o.id} disabled={!o.available}>
-                  {o.store_name} · {money(String(o.price / 10))}
-                  {!o.available ? " · ناموجود" : ""}
-                </option>
-              ))}
-            </select>
-          </label>
+          <ChoiceGroup
+            label="تنوع"
+            value={variant}
+            disabled={action.busy}
+            options={variants.map((v) => ({
+              value: v.id,
+              label: v.values.map((x) => x.value).join(" / ") || "پیش‌فرض",
+            }))}
+            onChange={(id) =>
+              void action.run(async () => {
+                await loadOffers(
+                  cart.items.find((i) => i.offer_id === edit)!.product_id,
+                  id,
+                );
+              })
+            }
+          />
+          <ChoiceGroup
+            label="فروشنده"
+            value={newOffer}
+            disabled={action.busy}
+            options={offers.map((o) => ({
+              value: o.id,
+              label: o.store_name,
+              detail: o.available ? money(String(o.price / 10)) : "ناموجود",
+              disabled: !o.available,
+            }))}
+            onChange={setNewOffer}
+          />
           <p>تغییر تنها با تأیید شما در سبد ثبت می‌شود.</p>
           <button
             className="buy-primary"
@@ -679,14 +643,24 @@ const emptyAddress: Address = {
   street: "",
   postal_code: "",
 };
+function destinationAvailable(address: Address, geography: Province[]) {
+  const norm = (v: string) =>
+    v.trim().replace(/ي/g, "ی").replace(/ك/g, "ک").toLowerCase();
+  return geography.some(
+    (p) =>
+      p.active &&
+      norm(p.name) === norm(address.province) &&
+      p.cities.some((c) => c.active && norm(c.name) === norm(address.city)),
+  );
+}
 export function AddressBook({
   onSelect,
   selected,
 }: {
-  onSelect?: (id: string) => void;
+  onSelect?: (id: string, address?: Address) => void;
   selected?: string;
 }) {
-  const { token } = useCommerce(),
+  const { token, config } = useCommerce(),
     action = useAction(),
     [rows, setRows] = useState<Address[] | null>(null),
     [draft, setDraft] = useState<Address | null>(null);
@@ -701,6 +675,9 @@ export function AddressBook({
         await load();
       });
   }, [token, load]);
+  const geography = config?.geography ?? [];
+  const province = geography.find((p) => p.name === draft?.province);
+  const cityValid = !!province?.cities.some((c) => c.name === draft?.city);
   return (
     <section>
       <div className="buy-heading">
@@ -732,10 +709,16 @@ export function AddressBook({
                   name="address"
                   value={a.id}
                   checked={selected === a.id}
-                  onChange={() => onSelect(a.id)}
+                  disabled={!destinationAvailable(a, geography)}
+                  onChange={() => onSelect(a.id, a)}
                 />{" "}
                 انتخاب این آدرس
               </label>
+            )}
+            {!destinationAvailable(a, geography) && (
+              <p className="buy-alert">
+                مقصد این آدرس فعال نیست؛ استان و شهر را ویرایش کنید.
+              </p>
             )}
             <h3>
               {a.recipient} · {a.city}
@@ -802,7 +785,7 @@ export function AddressBook({
                   key,
                 );
                 await load();
-                onSelect?.(a.id);
+                onSelect?.(a.id, a);
                 setDraft(null);
               }, JSON.stringify(input));
             }}
@@ -811,8 +794,6 @@ export function AddressBook({
               {[
                 ["recipient", "نام گیرنده"],
                 ["phone", "موبایل گیرنده"],
-                ["province", "استان"],
-                ["city", "شهر"],
                 ["street", "نشانی کامل"],
                 ["postal_code", "کد پستی"],
               ].map(([name, caption]) => (
@@ -825,8 +806,53 @@ export function AddressBook({
                   maxLength={name === "street" ? 1000 : 100}
                 />
               ))}
+              <label className="buy-field">
+                استان
+                <select
+                  name="province"
+                  required
+                  value={province ? draft.province : ""}
+                  onChange={(e) =>
+                    setDraft({ ...draft, province: e.target.value, city: "" })
+                  }
+                >
+                  <option value="">انتخاب استان</option>
+                  {geography.map((p) => (
+                    <option key={p.id} value={p.name}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="buy-field">
+                شهر
+                <select
+                  name="city"
+                  required
+                  disabled={!province}
+                  value={cityValid ? draft.city : ""}
+                  onChange={(e) => setDraft({ ...draft, city: e.target.value })}
+                >
+                  <option value="">ابتدا استان، سپس شهر را انتخاب کنید</option>
+                  {province?.cities.map((c) => (
+                    <option key={c.id} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {!geography.length && (
+                <p className="buy-alert">
+                  فهرست استان و شهر هنوز در پنل تنظیم نشده است.
+                </p>
+              )}
               <Feedback action={action} />
-              <button className="buy-primary">ذخیره آدرس</button>
+              <button
+                className="buy-primary"
+                disabled={!province || !cityValid}
+              >
+                ذخیره آدرس
+              </button>
             </fieldset>
           </form>
         </Modal>
@@ -843,15 +869,17 @@ export function CheckoutPage() {
   );
 }
 function CheckoutForm() {
-  const { token, refreshCart } = useCommerce(),
+  const { token, refreshCart, config } = useCommerce(),
     action = useAction();
   const [prepare, setPrepare] = useState<Prepare | null>(null),
-    [address, setAddress] = useState(""),
+    [address, setAddress] = useState<Address | null>(null),
     [shipping, setShipping] = useState<Record<string, string>>({}),
     [preview, setPreview] = useState<Preview | null>(null),
     [method, setMethod] = useState(""),
     [quote, setQuote] = useState<Quote | null>(null),
-    [consent, setConsent] = useState(false);
+    [consent, setConsent] = useState(false),
+    [step, setStep] = useState<1 | 2>(1);
+  const heading = useRef<HTMLHeadingElement>(null);
   const purchaseID = new URLSearchParams(location.search).get("purchase") ?? "";
   const [oldPurchase, setOldPurchase] = useState<Purchase | null>(null);
   useEffect(() => {
@@ -864,215 +892,342 @@ function CheckoutForm() {
           token,
         );
         setOldPurchase(old);
-        setAddress(old.quote.address.id);
+        setAddress(
+          p.addresses.find((a) => a.id === old.quote.address.id) ?? null,
+        );
       }
     });
   }, [token, purchaseID]);
+  useEffect(() => {
+    heading.current?.focus();
+  }, [step]);
   const change = () => {
     setPreview(null);
+    setMethod("");
     setQuote(null);
     setConsent(false);
+    setStep(1);
   };
   const input: QuoteInput = {
     cart_version: prepare?.cart.version ?? 0,
-    address_id: address,
+    address_id: address?.id ?? "",
     shipping,
     payment_method_id: method,
-    ...(purchaseID ? { purchase_id: purchaseID } : {}),
+    ...(purchaseID ? { purchase_id: oldPurchase?.id ?? purchaseID } : {}),
   };
   const stores = oldPurchase
     ? oldPurchase.quote.shipments.map((s) => ({
         id: s.store_id,
         name: s.store_name,
+        lead_days: s.lead_days,
       }))
     : Array.from(
         new Map(
           prepare?.cart.items.map((i) => [
             i.store_id,
-            { id: i.store_id, name: i.store_name },
+            { id: i.store_id, name: i.store_name, lead_days: i.lead_days },
           ]),
         ).values(),
       );
+  const normalize = (s: string) =>
+    s
+      .trim()
+      .replace(/ي/g, "ی")
+      .replace(/ك/g, "ک")
+      .replace(/\s+/g, " ")
+      .toLowerCase();
   return (
     <>
-      <ol className="buy-steps">
-        <li className="active">۱ آدرس</li>
-        <li className={address ? "active" : ""}>۲ ارسال</li>
-        <li className={preview ? "active" : ""}>۳ پرداخت</li>
-        <li className={quote ? "active" : ""}>۴ ثبت سفارش</li>
-      </ol>
+      <nav aria-label="مراحل تکمیل خرید">
+        <ol className="buy-steps">
+          <li
+            className={step === 1 ? "active" : "complete"}
+            aria-current={step === 1 ? "step" : undefined}
+          >
+            <button
+              type="button"
+              disabled={action.busy || step === 1}
+              onClick={change}
+            >
+              <span className="buy-step-number">{step === 2 ? "✓" : "۱"}</span>
+              <span>
+                آدرس و ارسال
+                <small>{step === 2 ? "تأیید شد" : "انتخاب مقصد و تحویل"}</small>
+              </span>
+            </button>
+          </li>
+          <li
+            className={step === 2 ? "active" : ""}
+            aria-current={step === 2 ? "step" : undefined}
+          >
+            <span className="buy-step-number">۲</span>
+            <span>
+              پرداخت و ثبت سفارش
+              <small>{step === 2 ? "مرحله جاری" : "پس از تأیید ارسال"}</small>
+            </span>
+          </li>
+        </ol>
+      </nav>
+      <h2 ref={heading} tabIndex={-1} className="buy-step-title">
+        {step === 1 ? "آدرس و روش ارسال" : "روش پرداخت و تأیید سفارش"}
+      </h2>
       <Feedback action={action} />
       {!prepare ? (
         <p role="status">در حال دریافت شرایط خرید…</p>
       ) : (
         <div className="buy-layout">
-          <section>
-            <AddressBook
-              selected={address}
-              onSelect={(id) => {
-                setAddress(id);
-                change();
-              }}
-            />
-            <section className="buy-panel">
-              <h2>روش ارسال برای هر فروشنده</h2>
-              {stores.map((st) => (
-                <label key={st.id} className="buy-field">
-                  {st.name}
-                  <select
-                    value={shipping[st.id] ?? ""}
-                    onChange={(e) => {
-                      setShipping({ ...shipping, [st.id]: e.target.value });
+          <section className="buy-wizard-stage" key={step}>
+            {step === 1 ? (
+              <>
+                <fieldset disabled={action.busy}>
+                  <AddressBook
+                    selected={address?.id}
+                    onSelect={(_id, a) => {
+                      setAddress(a ?? null);
+                      setShipping({});
                       change();
                     }}
-                  >
-                    <option value="">انتخاب روش ارسال</option>
-                    {prepare.shipping
-                      .filter(
-                        (s) =>
-                          !s.store_ids?.length || s.store_ids.includes(st.id),
-                      )
-                      .map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} · {money(s.fee_toman)} · {s.min_days} تا{" "}
-                          {s.max_days} روز کاری پس از تأمین
-                        </option>
-                      ))}
-                  </select>
-                </label>
-              ))}
-              {!prepare.shipping.length && (
-                <p className="buy-alert">
-                  هنوز روش ارسال فعالی تنظیم نشده است.
-                </p>
-              )}
-              <button
-                className="buy-secondary"
-                disabled={
-                  action.busy ||
-                  !address ||
-                  !stores.length ||
-                  stores.some((s) => !shipping[s.id])
-                }
-                onClick={() =>
-                  void action.run(async () => {
-                    const result = await call<Preview>(
-                      "/storefront/checkout/preview",
-                      token,
-                      { ...input, payment_method_id: "" },
-                    );
-                    setPreview(result);
-                    setMethod("");
-                    setQuote(null);
-                  })
-                }
-              >
-                محاسبه مبلغ و روش‌های پرداخت
-              </button>
-            </section>
-            {preview && (
-              <section className="buy-panel">
-                <h2>روش پرداخت</h2>
-                <p>
-                  موجودی قابل استفاده کیف پول:{" "}
-                  <b>{money(prepare.wallet_available_toman)}</b>
-                </p>
-                {preview.methods.map((m) => (
-                  <label
-                    key={m.id}
-                    className={"buy-choice " + (!m.eligible ? "disabled" : "")}
-                  >
-                    <input
-                      type="radio"
-                      name="payment_method"
-                      checked={method === m.id}
-                      disabled={!m.eligible || action.busy}
-                      onChange={() => {
-                        setMethod(m.id);
+                  />
+                </fieldset>
+                <section className="buy-panel" aria-label="روش‌های ارسال">
+                  <h2>ارسال سفارش شما</h2>
+                  {!address ? (
+                    <p className="buy-note">
+                      ابتدا آدرس تحویل را انتخاب کنید تا روش‌های ارسال همان مقصد
+                      نمایش داده شوند.
+                    </p>
+                  ) : (
+                    stores.map((st) => {
+                      const methods = prepare.shipping.filter(
+                        (m) =>
+                          m.active &&
+                          (!m.store_ids?.length ||
+                            m.store_ids.includes(st.id)) &&
+                          (m.all_cities ||
+                            m.cities.some(
+                              (c) => normalize(c) === normalize(address.city),
+                            )),
+                      );
+                      return (
+                        <fieldset
+                          key={st.id}
+                          className="buy-shipping-group"
+                          disabled={action.busy}
+                        >
+                          <legend>{st.name}</legend>
+                          {methods.length ? (
+                            methods.map((m) => (
+                              <label key={m.id} className="buy-choice">
+                                <input
+                                  type="radio"
+                                  name={"shipping-" + st.id}
+                                  checked={shipping[st.id] === m.id}
+                                  onChange={() => {
+                                    setShipping({ ...shipping, [st.id]: m.id });
+                                    change();
+                                  }}
+                                />
+                                <span>
+                                  <b>{m.name}</b>
+                                  <small>{money(m.fee_toman)}</small>
+                                  <small>
+                                    تحویل {st.lead_days + m.min_days} تا{" "}
+                                    {st.lead_days + m.max_days} روز کاری با
+                                    احتساب تأمین
+                                  </small>
+                                  <small>
+                                    وقفه تأمین فروشنده: {st.lead_days} روز کاری
+                                  </small>
+                                </span>
+                              </label>
+                            ))
+                          ) : (
+                            <p className="buy-alert">
+                              برای این فروشنده در {address.city} روش ارسال فعالی
+                              وجود ندارد؛ آدرس دیگری انتخاب کنید.
+                            </p>
+                          )}
+                        </fieldset>
+                      );
+                    })
+                  )}
+                  <button
+                    className="buy-primary"
+                    disabled={
+                      action.busy ||
+                      !address ||
+                      !destinationAvailable(address, config?.geography ?? []) ||
+                      !stores.length ||
+                      stores.some((s) => !shipping[s.id])
+                    }
+                    onClick={() =>
+                      void action.run(async () => {
+                        const result = await call<Preview>(
+                          "/storefront/checkout/preview",
+                          token,
+                          { ...input, payment_method_id: "" },
+                        );
+                        setPreview(result);
+                        setMethod("");
                         setQuote(null);
                         setConsent(false);
-                      }}
-                    />
-                    <span>
-                      <b>{m.name}</b>
-                      <small>{m.eligible ? m.instructions : m.reason}</small>
-                      {m.max_toman && (
-                        <small>سقف کل سفارش: {money(m.max_toman)}</small>
-                      )}
-                    </span>
-                  </label>
-                ))}
-                <p className="buy-note">
-                  هر واریز ابتدا کیف پول را شارژ می‌کند. تأیید واریز به‌تنهایی
-                  سفارش را پرداخت‌شده نمی‌کند؛ تیم پس از کنترل اعتبار و رزرو،
-                  سفارش را تأیید می‌کند.
-                </p>
-                <button
-                  className="buy-primary"
-                  disabled={action.busy || !method}
-                  onClick={() =>
-                    void action.run(async (key) => {
-                      setQuote(
-                        await call<Quote>(
-                          "/storefront/checkout/quotes",
-                          token,
-                          input,
-                          undefined,
-                          key,
-                        ),
-                      );
-                      setConsent(false);
-                    }, JSON.stringify(input))
-                  }
-                >
-                  بررسی نهایی سفارش
-                </button>
-              </section>
-            )}
-            {quote && (
-              <section className="buy-panel">
-                <h2>بازبینی و تأیید مبلغ</h2>
-                <OrderSummary quote={quote} />
-                <label className="buy-choice">
-                  <input
-                    type="checkbox"
-                    checked={consent}
-                    onChange={(e) => setConsent(e.target.checked)}
-                  />
-                  <span>
-                    مبلغ {money(quote.total_toman)}، آدرس و شرایط ارسال را تأیید
-                    می‌کنم. رزرو ۳۰ دقیقه اعتبار دارد.
-                  </span>
-                </label>
-                <button
-                  className="buy-primary"
-                  disabled={action.busy || !consent}
-                  onClick={() =>
-                    void action.run(async (key) => {
-                      const result = await call<Purchase>(
-                        "/storefront/checkout/purchases",
-                        token,
-                        {
-                          quote_id: quote.id,
-                          accepted_total_toman: quote.total_toman,
-                        },
-                        undefined,
-                        key,
-                      );
-                      await refreshCart();
-                      navigate("/account/orders/" + result.id);
-                    }, "accept:" + quote.id)
-                  }
-                >
-                  ثبت سفارش و ادامه پرداخت
-                </button>
-              </section>
+                        setStep(2);
+                      })
+                    }
+                  >
+                    تأیید آدرس و ارسال؛ ادامه به پرداخت
+                  </button>
+                </section>
+              </>
+            ) : (
+              preview && (
+                <>
+                  <button
+                    className="buy-link buy-wizard-back"
+                    disabled={action.busy}
+                    onClick={change}
+                  >
+                    ← بازگشت به مرحله آدرس و ارسال
+                  </button>
+                  <section className="buy-panel buy-delivery-confirmed">
+                    <div className="buy-heading">
+                      <h2>آدرس و ارسال تأییدشده</h2>
+                      <button
+                        className="buy-link"
+                        disabled={action.busy}
+                        onClick={change}
+                      >
+                        ویرایش آدرس و ارسال
+                      </button>
+                    </div>
+                    <p>
+                      {preview.quote.address.recipient} ·{" "}
+                      {preview.quote.address.city}،{" "}
+                      {preview.quote.address.street}
+                    </p>
+                    {preview.quote.shipments.map((s) => (
+                      <div className="buy-shipment" key={s.store_id}>
+                        <b>
+                          {s.store_name} · {s.method_name}
+                        </b>
+                        <p>
+                          تحویل{" "}
+                          {new Date(s.delivery_from).toLocaleDateString(
+                            "fa-IR",
+                          )}{" "}
+                          تا{" "}
+                          {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
+                        </p>
+                      </div>
+                    ))}
+                  </section>
+                  <section className="buy-panel" aria-label="انتخاب روش پرداخت">
+                    <h2>روش پرداخت</h2>
+                    <p>
+                      موجودی قابل استفاده کیف پول:{" "}
+                      <b>{money(prepare.wallet_available_toman)}</b>
+                    </p>
+                    {preview.methods.map((m) => (
+                      <label
+                        key={m.id}
+                        className={
+                          "buy-choice " + (!m.eligible ? "disabled" : "")
+                        }
+                      >
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          checked={method === m.id}
+                          disabled={!m.eligible || action.busy}
+                          onChange={() => {
+                            setMethod(m.id);
+                            setQuote(null);
+                            setConsent(false);
+                          }}
+                        />
+                        <span>
+                          <b>{m.name}</b>
+                          <small>
+                            {m.eligible ? m.instructions : m.reason}
+                          </small>
+                          {m.max_toman && (
+                            <small>سقف کل سفارش: {money(m.max_toman)}</small>
+                          )}
+                        </span>
+                      </label>
+                    ))}
+                    <p className="buy-note">
+                      هر واریز ابتدا کیف پول را شارژ می‌کند. تیم پس از بررسی
+                      واریز، اعتبار و رزرو، سفارش را جداگانه تأیید می‌کند.
+                    </p>
+                    <button
+                      className="buy-primary"
+                      disabled={action.busy || !method}
+                      onClick={() =>
+                        void action.run(async (key) => {
+                          setQuote(
+                            await call<Quote>(
+                              "/storefront/checkout/quotes",
+                              token,
+                              input,
+                              undefined,
+                              key,
+                            ),
+                          );
+                          setConsent(false);
+                        }, JSON.stringify(input))
+                      }
+                    >
+                      بررسی نهایی سفارش
+                    </button>
+                  </section>
+                  {quote && (
+                    <section className="buy-panel">
+                      <h2>بازبینی و تأیید مبلغ</h2>
+                      <OrderSummary quote={quote} />
+                      <label className="buy-choice">
+                        <input
+                          type="checkbox"
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                        />
+                        <span>
+                          مبلغ {money(quote.total_toman)}، آدرس و شرایط ارسال را
+                          تأیید می‌کنم. رزرو ۳۰ دقیقه اعتبار دارد.
+                        </span>
+                      </label>
+                      <button
+                        className="buy-primary"
+                        disabled={action.busy || !consent}
+                        onClick={() =>
+                          void action.run(async (key) => {
+                            const result = await call<Purchase>(
+                              "/storefront/checkout/purchases",
+                              token,
+                              {
+                                quote_id: quote.id,
+                                accepted_total_toman: quote.total_toman,
+                              },
+                              undefined,
+                              key,
+                            );
+                            await refreshCart();
+                            navigate("/account/orders/" + result.number);
+                          }, "accept:" + quote.id)
+                        }
+                      >
+                        ثبت سفارش و ادامه پرداخت
+                      </button>
+                    </section>
+                  )}
+                </>
+              )
             )}
           </section>
           <aside className="buy-panel buy-summary">
             <h2>خلاصه خرید</h2>
             {preview ? (
-              <OrderSummary quote={preview.quote} />
+              <OrderSummary quote={quote ?? preview.quote} />
             ) : (
               <>
                 <p>{prepare.cart.item_count} کالا</p>
@@ -1222,11 +1377,11 @@ function OrderContent({ id }: { id?: string }) {
                 {id ? (
                   "سفارش شما"
                 ) : (
-                  <a href={"/account/orders/" + p.id}>مشاهده سفارش</a>
+                  <a href={"/account/orders/" + p.number}>مشاهده سفارش</a>
                 )}
               </h2>
-              <p className="buy-note" dir="ltr">
-                {p.id}
+              <p className="buy-order-number">
+                شماره سفارش: <b>{p.number}</b>
               </p>
               <PurchaseStatus purchase={p} />
               {!id ? (
@@ -1553,18 +1708,14 @@ export function DepositForm({
       }}
     >
       <fieldset disabled={action.busy}>
-        <label className="buy-field">
-          روش تأمین اعتبار
-          <select value={method} onChange={(e) => setMethod(e.target.value)}>
-            {methods
-              .filter((m) => m.kind !== "wallet")
-              .map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))}
-          </select>
-        </label>
+        <ChoiceGroup
+          label="روش تأمین اعتبار"
+          value={method}
+          onChange={setMethod}
+          options={methods
+            .filter((m) => m.kind !== "wallet")
+            .map((m) => ({ value: m.id, label: m.name }))}
+        />
         {chosen?.kind === "card-transfer" && (
           <div className="buy-destination">
             <p>شماره کارت مقصد</p>

@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -22,6 +23,14 @@ var ErrStock = errors.New("insufficient_stock")
 func commerceState(w *Workspace) *commerce.State {
 	if w.Commerce == nil {
 		w.Commerce = &commerce.State{Settings: commerce.DefaultSettings()}
+	}
+	w.Commerce.EnsurePurchaseNumbers()
+	for _, p := range w.Commerce.Purchases {
+		for i := range w.Orders {
+			if w.Orders[i].PurchaseID == p.ID {
+				w.Orders[i].PurchaseNumber = strconv.FormatInt(p.Number, 10)
+			}
+		}
 	}
 	return w.Commerce
 }

@@ -76,7 +76,7 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 		return CommerceAdminView{}, e
 	}
 	v := CommerceAdminView{Purchases: []AdminPurchaseView{}, Deposits: []AdminDepositView{}, Refunds: []AdminRefundView{}, Audit: []Audit{}, Permissions: map[string]bool{}, Currency: "toman"}
-	for _, p := range []string{CommerceSettingsRead, CommercePaymentWrite, CommerceShippingWrite, CommerceBusinessWrite, CommerceOrdersRead, CommerceOrdersConfirm, CommerceDepositsRead, CommerceDepositsReview, CommerceRefundsResolve} {
+	for _, p := range []string{CommerceSettingsRead, CommercePaymentWrite, CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite, CommerceOrdersRead, CommerceOrdersConfirm, CommerceDepositsRead, CommerceDepositsReview, CommerceRefundsResolve} {
 		v.Permissions[p] = allowsAction(a, p)
 	}
 	if !v.Permissions[CommerceOrdersRead] && !v.Permissions[CommerceDepositsRead] && !v.Permissions[CommerceSettingsRead] && !v.Permissions[CommerceRefundsResolve] {

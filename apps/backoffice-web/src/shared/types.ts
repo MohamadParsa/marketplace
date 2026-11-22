@@ -189,6 +189,7 @@ export interface OrderItem {
   status: string;
 }
 export interface Order {
+  purchase_number?: string;
   id: string;
   purchase_id: string;
   store_id: string;

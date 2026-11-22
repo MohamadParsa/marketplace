@@ -436,7 +436,9 @@ export function HomePage() {
         )
           throw Error();
         setRails(data.rails);
-        setAvailableCategories(data.categories);
+        setAvailableCategories(
+          data.categories.filter((c: { count: number }) => c.count > 0),
+        );
         setSpecial(data.special_offers);
         setSpecialUrl(data.special_offers_url);
       })
@@ -482,7 +484,7 @@ export function HomePage() {
             <section
               className="lh-categories"
               id="home-categories"
-              aria-label="دسته‌های دارای محصول"
+              aria-label="دسته‌های دارای کالای موجود"
             >
               {availableCategories.map((r) => (
                 <a key={r.id} href={r.url}>

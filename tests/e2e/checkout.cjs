@@ -10,7 +10,7 @@ async (page) => {
   const wait = async () => page.waitForTimeout(250);
   const shot = async (name) => {
     await page.screenshot({
-      path: "output/playwright/issue-30/" + name + ".png",
+      path: "output/playwright/purchase-refinements/" + name + ".png",
       fullPage: true,
       animations: "disabled",
     });
@@ -33,6 +33,11 @@ async (page) => {
   await page
     .getByRole("button", { name: "افزودن به سبد خرید", exact: true })
     .waitFor();
+  check(
+    "single-designed-PDP-purchase-control",
+    (await page.locator(".purchase-control").count()) === 1 &&
+      (await page.locator(".pdp-quantity").count()) === 0,
+  );
   await page
     .getByRole("button", { name: "افزودن به سبد خرید", exact: true })
     .click();
@@ -50,6 +55,12 @@ async (page) => {
     .click();
   await page.getByRole("heading", { name: "سبد خرید", exact: true }).waitFor();
   await shot("cart-desktop");
+  check(
+    "cart-uses-same-diagonal-purchase-control",
+    await page
+      .locator(".purchase-control-less")
+      .evaluate((e) => getComputedStyle(e).clipPath.startsWith("polygon")),
+  );
   check(
     "cart has price and seller",
     (await page.getByText("جمع کالاها", { exact: true }).count()) === 1,
@@ -89,11 +100,11 @@ async (page) => {
     .getByRole("textbox", { name: "موبایل گیرنده", exact: true })
     .fill(customerPhone);
   await address
-    .getByRole("textbox", { name: "استان", exact: true })
-    .fill("تهران");
+    .getByRole("combobox", { name: "استان", exact: true })
+    .selectOption("تهران");
   await address
-    .getByRole("textbox", { name: "شهر", exact: true })
-    .fill("تهران");
+    .getByRole("combobox", { name: "شهر", exact: true })
+    .selectOption("تهران");
   await address
     .getByRole("textbox", { name: "نشانی کامل", exact: true })
     .fill("نشانی ساختگی برای آزمون مسیر خرید");
@@ -108,13 +119,49 @@ async (page) => {
     "saved owner address selected",
     await page.getByRole("radio", { name: "انتخاب این آدرس" }).isChecked(),
   );
-  await page.locator(".buy-field select").first().selectOption("post-review");
+  check(
+    "wizard-step-one-hides-payment",
+    (await page
+      .getByRole("heading", { name: "روش پرداخت", exact: true })
+      .count()) === 0 && (await page.locator("select").count()) === 0,
+  );
   await page
-    .getByRole("button", { name: "محاسبه مبلغ و روش‌های پرداخت" })
+    .locator(".buy-shipping-group")
+    .first()
+    .getByRole("radio")
+    .first()
+    .check();
+  await page
+    .getByRole("button", { name: "تأیید آدرس و ارسال؛ ادامه به پرداخت" })
     .click();
   await page
     .getByRole("heading", { name: "روش پرداخت", exact: true })
     .waitFor();
+  check(
+    "wizard-step-two-hides-editable-address",
+    (await page
+      .getByRole("radio", { name: "انتخاب این آدرس", exact: true })
+      .count()) === 0,
+  );
+  await page
+    .getByRole("button", {
+      name: "← بازگشت به مرحله آدرس و ارسال",
+      exact: true,
+    })
+    .click();
+  check(
+    "wizard-back-preserves-address-and-shipping",
+    (await page
+      .getByRole("radio", { name: "انتخاب این آدرس", exact: true })
+      .isChecked()) &&
+      (await page.locator(".buy-shipping-group input:checked").count()) === 1,
+  );
+  await page
+    .getByRole("button", {
+      name: "تأیید آدرس و ارسال؛ ادامه به پرداخت",
+      exact: true,
+    })
+    .click();
   await page.getByRole("radio", { name: /کارت‌به‌کارت/ }).check();
   await shot("checkout-desktop");
   await page.getByRole("button", { name: "بررسی نهایی سفارش" }).click();
@@ -124,6 +171,11 @@ async (page) => {
     .getByRole("heading", { name: "جزئیات سفارش", exact: true })
     .waitFor();
   const purchaseID = page.url().split("/").pop();
+  check(
+    "friendly-numeric-order-number",
+    /^\d{4,}$/.test(purchaseID) && Number(purchaseID) >= 1000,
+  );
+
   await page.getByText("پرداخت نشده", { exact: true }).first().waitFor();
   check(
     "registered order is unpaid",
@@ -208,6 +260,13 @@ async (page) => {
     .click();
   const order = admin.getByRole("dialog");
   check(
+    "admin-order-details-in-readable-boxes",
+    (await order.locator(".commerce-order-box").count()) === 5 &&
+      (await order
+        .getByRole("heading", { name: "#" + purchaseID, exact: true })
+        .isVisible()),
+  );
+  check(
     "admin order separates payment and order status",
     (await order
       .locator(".commerce-status>div")
@@ -219,7 +278,7 @@ async (page) => {
         .count()) === 1,
   );
   await admin.screenshot({
-    path: "output/playwright/issue-30/backoffice-order.png",
+    path: "output/playwright/purchase-refinements/backoffice-order.png",
     fullPage: true,
     animations: "disabled",
   });
@@ -273,7 +332,7 @@ async (page) => {
     .waitFor();
   await admin.setViewportSize({ width: 390, height: 844 });
   await admin.screenshot({
-    path: "output/playwright/issue-30/backoffice-settings-mobile.png",
+    path: "output/playwright/purchase-refinements/backoffice-settings-mobile.png",
     fullPage: true,
     animations: "disabled",
   });

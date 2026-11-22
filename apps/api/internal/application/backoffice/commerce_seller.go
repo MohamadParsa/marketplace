@@ -15,6 +15,7 @@ type SellerCheckoutLine struct {
 	UnitPriceToman string `json:"unit_price_toman"`
 }
 type SellerCheckoutOrder struct {
+	PurchaseNumber string               `json:"purchase_number"`
 	ID             string               `json:"id"`
 	PurchaseID     string               `json:"purchase_id"`
 	StoreID        string               `json:"store_id"`
@@ -39,6 +40,9 @@ func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User,
 	if e != nil {
 		return nil, e
 	}
+	if w.Commerce != nil {
+		commerceState(&w)
+	}
 	out := []SellerCheckoutOrder{}
 	for _, o := range w.Orders {
 		if o.CheckoutID == "" || id != "" && o.ID != id {
@@ -47,7 +51,7 @@ func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User,
 		if w.Access == nil || !identity.AllowsStore(w.StoreMemberships, w.Access.Roles, w.Access.Grants, a.ID, o.StoreID, "orders.read") {
 			continue
 		}
-		v := SellerCheckoutOrder{ID: o.ID, PurchaseID: o.PurchaseID, StoreID: o.StoreID, City: o.City, Status: o.Status, PaymentStatus: o.Payment, Items: []SellerCheckoutLine{}, ShippingMethod: o.ShippingMethod, DeliveryFrom: o.DeliveryFrom, DeliveryTo: o.DeliveryTo}
+		v := SellerCheckoutOrder{PurchaseNumber: o.PurchaseNumber, ID: o.ID, PurchaseID: o.PurchaseID, StoreID: o.StoreID, City: o.City, Status: o.Status, PaymentStatus: o.Payment, Items: []SellerCheckoutLine{}, ShippingMethod: o.ShippingMethod, DeliveryFrom: o.DeliveryFrom, DeliveryTo: o.DeliveryTo}
 		for _, l := range o.Items {
 			v.Items = append(v.Items, SellerCheckoutLine{ProductID: l.ProductID, VariantID: l.VariantID, OfferID: l.OfferID, Name: l.Name, Quantity: l.Quantity, UnitPriceToman: commerce.Toman(commerce.Amount(l.UnitPrice))})
 		}
