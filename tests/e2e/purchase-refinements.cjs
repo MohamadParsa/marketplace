@@ -150,7 +150,7 @@ async (page) => {
     .getByRole("link", { name: "ادامه و انتخاب آدرس", exact: true })
     .click();
   await page.getByRole("link", { name: "ورود و ادامه", exact: true }).click();
-  const phone = "0900000" + String(Date.now()).slice(-4);
+  const phone = "090" + String(Date.now()).slice(-8);
   await page
     .getByRole("textbox", { name: "موبایل یا ایمیل", exact: true })
     .fill(phone);

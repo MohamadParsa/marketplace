@@ -1,5 +1,5 @@
 async (page) => {
-  const customerPhone = "0900000" + String(Date.now()).slice(-4);
+  const customerPhone = "090" + String(Date.now()).slice(-8);
   const results = [];
   const check = (name, ok) => {
     results.push({ name, passed: !!ok });
