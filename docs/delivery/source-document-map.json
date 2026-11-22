@@ -57,6 +57,7 @@
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
-  "published_main_commit": "3163d1702f2396d8d1818d12c7bf92bcab9a35bf",
-  "publication_pull_request": 38
+  "published_main_commit": "e8d59e0b5260c29582334aa62aadd8d4f6e1dee4",
+  "publication_pull_request": 39,
+  "previous_source_publication_commit": "3163d1702f2396d8d1818d12c7bf92bcab9a35bf"
 }
