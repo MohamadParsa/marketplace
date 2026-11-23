@@ -56,3 +56,7 @@
 ## پرفروش‌ترین — #45
 
 سورس و شواهد اولیه در [b92469a](https://github.com/MohamadParsa/marketplace/commit/b92469a6cec09df95ec7c89dc4d9e37fb1f854db) ثبت شدند؛ [گزارش](storefront-followups/issue-45-verification.md) شامل سنجه خالص، بازه، کش مستقل و آزمون‌هاست. انتشار لیارا جداست.
+
+## منوی درختی — #46
+
+سورس و شواهد اولیه در [3ebdf64](https://github.com/MohamadParsa/marketplace/commit/3ebdf64e7e6cc363c10740163fda63308941ba1b) ثبت شدند؛ [گزارش منو](storefront-followups/issue-46-verification.md). #45 پیش‌تر در PR #55 ادغام و بسته شد.
