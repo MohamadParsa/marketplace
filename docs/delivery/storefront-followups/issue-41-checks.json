@@ -1,0 +1,663 @@
+{
+  "date": "2026-11-23",
+  "issue": 41,
+  "code_status": "review",
+  "baseline_products": 3580,
+  "final_products": 3534,
+  "benchmarks_before_fixture_cleanup": {
+    "before": {
+      "mode": "before",
+      "concurrency": 1,
+      "date": "2026-11-23",
+      "results": [
+        {
+          "path": "/storefront/home",
+          "samples": 30,
+          "errors": 0,
+          "p50": 1351.561600000001,
+          "p95": 1935.761300000002,
+          "bytes": 24954
+        },
+        {
+          "path": "/storefront/catalog?category=gsp-cat-1",
+          "samples": 30,
+          "errors": 0,
+          "p50": 735.9752999999982,
+          "p95": 1013.2828000000009,
+          "bytes": 44121
+        },
+        {
+          "path": "/storefront/products/gsp-product-37354",
+          "samples": 30,
+          "errors": 0,
+          "p50": 422.1811000000016,
+          "p95": 851.5004999999946,
+          "bytes": 37803
+        },
+        {
+          "path": "/catalog/icons/gsp-media-44593",
+          "samples": 30,
+          "errors": 0,
+          "p50": 428.10020000000077,
+          "p95": 522.3882000000012,
+          "bytes": 598106
+        }
+      ]
+    },
+    "cold": {
+      "mode": "cold",
+      "concurrency": 1,
+      "date": "2026-11-23",
+      "results": [
+        {
+          "path": "/storefront/home",
+          "samples": 30,
+          "errors": 0,
+          "p50": 357.8287999999993,
+          "p95": 491.58750000000055,
+          "bytes": 24954
+        },
+        {
+          "path": "/storefront/catalog?category=gsp-cat-1",
+          "samples": 30,
+          "errors": 0,
+          "p50": 334.02709999999934,
+          "p95": 387.4916000000012,
+          "bytes": 44121
+        },
+        {
+          "path": "/storefront/products/gsp-product-37354",
+          "samples": 30,
+          "errors": 0,
+          "p50": 93.08030000000144,
+          "p95": 121.78130000000237,
+          "bytes": 37803
+        },
+        {
+          "path": "/catalog/icons/gsp-media-44593",
+          "samples": 30,
+          "errors": 0,
+          "p50": 5.165200000003097,
+          "p95": 20.8153999999995,
+          "bytes": 598106
+        }
+      ]
+    },
+    "warm": {
+      "mode": "warm",
+      "concurrency": 1,
+      "date": "2026-11-23",
+      "results": [
+        {
+          "path": "/storefront/home",
+          "samples": 30,
+          "errors": 0,
+          "p50": 2.0571999999999946,
+          "p95": 3.5112999999999985,
+          "bytes": 24954
+        },
+        {
+          "path": "/storefront/catalog?category=gsp-cat-1",
+          "samples": 30,
+          "errors": 0,
+          "p50": 1.892799999999994,
+          "p95": 2.5080000000000098,
+          "bytes": 44121
+        },
+        {
+          "path": "/storefront/products/gsp-product-37354",
+          "samples": 30,
+          "errors": 0,
+          "p50": 1.795599999999979,
+          "p95": 3.573599999999999,
+          "bytes": 37803
+        },
+        {
+          "path": "/catalog/icons/gsp-media-44593",
+          "samples": 30,
+          "errors": 0,
+          "p50": 3.98580000000004,
+          "p95": 27.06479999999999,
+          "bytes": 598106
+        }
+      ]
+    },
+    "backoffice_before": {
+      "mode": "before",
+      "path": "/backoffice/workspace",
+      "samples": 30,
+      "errors": 0,
+      "p50": 557.6586000000002,
+      "p95": 667.2556999999997,
+      "bytes": 13054219
+    },
+    "backoffice_after": {
+      "mode": "after",
+      "path": "/backoffice/workspace",
+      "samples": 30,
+      "errors": 0,
+      "p50": 351.0968,
+      "p95": 447.8928999999998,
+      "bytes": 13054219
+    }
+  },
+  "go": {
+    "passed": 203,
+    "failed": 0,
+    "skipped": [
+      "TestCatalogSnapshotPostgresRoundTrip"
+    ]
+  },
+  "browser": {
+    "passed": 109,
+    "total": 109,
+    "checks": [
+      {
+        "id": "only-stocked-root-shortcuts",
+        "pass": true
+      },
+      {
+        "id": "eight-primary-shortcuts",
+        "pass": true
+      },
+      {
+        "id": "other-roots-collapsed",
+        "pass": true
+      },
+      {
+        "id": "promo-link-gsp-cat-755",
+        "pass": true
+      },
+      {
+        "id": "promo-real-photo-gsp-cat-755",
+        "pass": true
+      },
+      {
+        "id": "promo-target-has-products-gsp-cat-755",
+        "pass": true
+      },
+      {
+        "id": "promo-link-gsp-cat-163",
+        "pass": true
+      },
+      {
+        "id": "promo-real-photo-gsp-cat-163",
+        "pass": true
+      },
+      {
+        "id": "promo-target-has-products-gsp-cat-163",
+        "pass": true
+      },
+      {
+        "id": "all-roots-accessible",
+        "pass": true
+      },
+      {
+        "id": "all-root-links-preserved",
+        "pass": true
+      },
+      {
+        "id": "rail-mobile",
+        "pass": true
+      },
+      {
+        "id": "rail-earbuds",
+        "pass": true
+      },
+      {
+        "id": "rail-power-bank",
+        "pass": true
+      },
+      {
+        "id": "rail-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "rail-special",
+        "pass": true
+      },
+      {
+        "id": "home-no-mobile-overflow",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-present",
+        "pass": true
+      },
+      {
+        "id": "pdp-no-mobile-overflow",
+        "pass": true
+      },
+      {
+        "id": "products-page-size-20",
+        "pass": true
+      },
+      {
+        "id": "product-next-page",
+        "pass": true
+      },
+      {
+        "id": "page-size-choice-no-dropdown",
+        "pass": true
+      },
+      {
+        "id": "search-resets-pagination",
+        "pass": true
+      },
+      {
+        "id": "product-explicit-edit-form",
+        "pass": true
+      },
+      {
+        "id": "categories-page-size-20",
+        "pass": true
+      },
+      {
+        "id": "category-edit-tree",
+        "pass": true
+      },
+      {
+        "id": "create-parent-tree-selection",
+        "pass": true
+      },
+      {
+        "id": "home-catalog-paged",
+        "pass": true
+      },
+      {
+        "id": "sticky-actions",
+        "pass": true
+      },
+      {
+        "id": "backoffice-no-mobile-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-actions-inside-viewport",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-mobile",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-earbuds",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-power-bank",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "special-offers-visible",
+        "pass": true
+      },
+      {
+        "id": "stocked-root-category-shortcuts",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-mobile-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-mobile-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-mobile",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-earbuds-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-earbuds-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-earbuds",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-power-bank-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-power-bank-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-power-bank",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-smartwatch-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-smartwatch-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-coin-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-coin-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-coin",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-bar-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-bar-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-melted-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-melted-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-melted",
+        "pass": true
+      },
+      {
+        "id": "add-to-cart-popup",
+        "pass": true
+      },
+      {
+        "id": "cart-unit-price-in-toman",
+        "pass": true
+      },
+      {
+        "id": "cart-quantity-increase",
+        "pass": true
+      },
+      {
+        "id": "cart-quantity-decrease",
+        "pass": true
+      },
+      {
+        "id": "cart-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "verification-cart-cleaned",
+        "pass": true
+      },
+      {
+        "id": "plp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "pdp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ]
+  },
+  "warmup": {
+    "products": 100,
+    "listings": 4,
+    "failures": 0,
+    "budget_seconds": 45,
+    "workers": 2
+  },
+  "cleanup": {
+    "removed": {
+      "products": 46,
+      "categories": 20,
+      "brands": 3,
+      "attributes": 11,
+      "variants": 59,
+      "offers": 76,
+      "unreferenced_media": 36
+    },
+    "renamed_imported_stores": 44,
+    "retained_operational_stores": 4,
+    "retained_historical_media": 6,
+    "source_sha256_unchanged": true,
+    "stale_payment_category_mappings_removed": 1,
+    "repeat_already_applied": true,
+    "verification": {
+      "categories": 248,
+      "checks": {
+        "addresses_retained": true,
+        "attributes_exact": true,
+        "bank_destination_retained": true,
+        "brands_exact": true,
+        "card_limit_15m": true,
+        "categories_exact": true,
+        "deposits_retained": true,
+        "imported_media_retained": true,
+        "imported_stores_only_names_changed": true,
+        "local_category_mapping_clean": true,
+        "local_limit_30m": true,
+        "offers_exact": true,
+        "orders_retained": true,
+        "products_exact": true,
+        "purchases_retained": true,
+        "quotes_retained": true,
+        "receipts_retained": true,
+        "refunds_retained": true,
+        "shipping_retained": true,
+        "variants_exact": true,
+        "wallet_entries_retained": true
+      },
+      "media_bytes": 3349387289,
+      "media_rows": 10058,
+      "passed": true,
+      "products": 3534
+    }
+  },
+  "limitations": [
+    "Optional large private-media snapshot roundtrip skipped; PostgreSQL and Redis integration tests executed.",
+    "Benchmark baseline and comparison used the same 3580-product dataset before the separate cleanup.",
+    "Backoffice pagination is client-side; workspace payload remains large.",
+    "No Liara deployment or live-provider connection."
+  ],
+  "catalog_promos": {
+    "categories": [
+      "gsp-cat-755",
+      "gsp-cat-163"
+    ],
+    "stock_driven": true,
+    "actual_catalog_images": true,
+    "legacy_promo_assets_removed": 4
+  },
+  "source_commit": "c2617fcd72c82fad01a51291360a4189f576f719"
+}

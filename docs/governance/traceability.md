@@ -1,6 +1,6 @@
 # ردیابی قابلیت تا پذیرش
 
-پیگیری۲۰۲۶-۱۱-۲۳: [FEAT-SF-CACHE-001](../delivery/storefront-followups/cache-policy.md) و [FEAT-CATALOG-PUBLIC-URL-001](../delivery/storefront-followups/public-catalog-urls.md) ← [صف و مسئولیت](../delivery/storefront-followups/README.md). تحلیل/تسک ثبت شده‌اند؛ شاهد پیاده‌سازی/کارایی یا مهاجرت URL وجود ندارد و ACها اجرا نشده‌اند.
+پیگیری۲۰۲۶-۱۱-۲۳: [FEAT-SF-CACHE-001](../delivery/storefront-followups/cache-policy.md) و [FEAT-CATALOG-PUBLIC-URL-001](../delivery/storefront-followups/public-catalog-urls.md) ← [صف و مسئولیت](../delivery/storefront-followups/README.md). سیاست کش با تأیید مالک محلی اجرا شد؛ [شاهد #41، کنترل‌های حفاظت و تصاویر](../delivery/storefront-followups/issue-41-verification.md). مهاجرت URL در #42 پس از پایان #41 است و هنوز اجرا نشده است.
 
 برش فعال‌شده CV-R2-07: [ADR-006](../decisions/adr-006-responsive-banner-activation.md) ← [شرح](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) ← [قرارداد](../architecture/contracts/responsive-banners.md) ← [دو سناریو](../bdd/features/experiences/responsive-banners.feature) ← [گزارش و تصاویر](../delivery/review-v1-1/issue-7-verification.md). فعال‌شدن این برش، سایر CMS را فعال نمی‌کند.
 

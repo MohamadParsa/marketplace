@@ -1,6 +1,6 @@
 # اجرای محلی چریوا — Windows / D:\Cherriva
 
-به‌روزرسانی: ۲۰۲۶-۱۱-۲۲. سورس کامل از [PR #38](https://github.com/MohamadParsa/marketplace/pull/38) در شاخه `main` موجود است؛ [کامیت ادغام سورس](https://github.com/MohamadParsa/marketplace/commit/3163d1702f2396d8d1818d12c7bf92bcab9a35bf). این راهنما اجرای بررسی محلی با PostgreSQL پایدار را توضیح می‌دهد.
+به‌روزرسانی: ۲۰۲۶-۱۱-۲۳. سورس کامل از [PR #38](https://github.com/MohamadParsa/marketplace/pull/38) در شاخه `main` موجود است؛ [کامیت ادغام سورس](https://github.com/MohamadParsa/marketplace/commit/3163d1702f2396d8d1818d12c7bf92bcab9a35bf). این راهنما اجرای بررسی محلی با PostgreSQL پایدار را توضیح می‌دهد.
 
 ## اجرای سریع روی سیستم فعلی الیاس
 
@@ -85,3 +85,27 @@ node .\tests\e2e\seed-variant-showcase.cjs
 لاگ‌ها و فایل اجرایی در `%USERPROFILE%\.codex\local-runtimes\cherriva` هستند؛ از جمله `backoffice.err.log` و `storefront.err.log`. فرآیندهای API در پس‌زمینه اجرا می‌شوند و بستن پنجره راه‌انداز آن‌ها را متوقف نمی‌کند. اجرای دوباره راه‌انداز، APIهای متعلق به خودش را جایگزین می‌کند.
 
 این تحویل روی Liara منتشر نشده است؛ انتشار عمومی با پارسا و گیت باز #12 است. [راهنمای استقرار](delivery/liara-deployment.md) · [تطبیق کامیت سورس و مستندات](delivery/source-document-map.md).
+
+## Redis و warmup کاتالوگ عمومی — #41
+
+روی سیستم فعلی Redis۷ در WSL موجود است. راه‌انداز، در نبود `REDIS_URL`، [اسکریپت محلی](../scripts/start-review-redis.sh) را اجرا می‌کند: loopback، پورت اختصاصی۵۶۳۷۹، سقف۱۲۸MiB، allkeys-lru و بدون ذخیره دیسکی کش. اگر WSL/Redis موجود نباشد، warning می‌دهد و برنامه از PostgreSQL اجرا می‌شود؛ روی سیستم دیگر می‌توان یک Redis خصوصی آماده را از طریق env داد. secret/اتصال در Git ثبت نشود.
+
+| تنظیم محیط | رفتار |
+| --- | --- |
+| `PUBLIC_CACHE_ENABLED=true` و `REDIS_URL` خصوصی | کش JSON عمومی فعال؛ در اجرای دستی/سرور باید صریحاً تنظیم شوند. |
+| `CACHE_WARMUP_ENABLED=false` | فقط warmer خاموش؛ پیش‌فرض true است. |
+| `CACHE_HOME_TTL_SECONDS` | ۱تا۳۰۰؛ پیش‌فرض۳۰۰. |
+| `CACHE_PRODUCT_TTL_SECONDS` | ۱تا۶۰۰؛ پیش‌فرض۶۰۰. |
+| `CACHE_LISTING_TTL_SECONDS` | ۱تا۶۰؛ پیش‌فرض۶۰. |
+| `CACHE_SUGGESTIONS_TTL_SECONDS` | ۱تا۳۰؛ پیش‌فرض۳۰. |
+
+مقدار نامعتبر/بیش از سقف به پیش‌فرض برمی‌گردد. در هر startup سایت، خانه/بنر و۴PLP و حداکثر۱۰۰PDP اولویت‌دار با۲worker و۴۵ثانیه آماده می‌شوند؛ همه PDPها و باینری‌ها یکجا preload نمی‌شوند. warmer در پس‌زمینه است؛ خراب‌شدن Redis سایت را از دسترس خارج نمی‌کند. cache hit نسخه جاری را از PostgreSQL بررسی می‌کند؛ بعد از ویرایش قیمت/موجودی منتظر TTL نمی‌ماند.
+
+```powershell
+.\Start-Cherriva.ps1 -NoBuild -NoCache
+# اگر در همان PowerShell دوباره کش می‌خواهید:
+$env:PUBLIC_CACHE_ENABLED = 'true'
+.\Start-Cherriva.ps1 -NoBuild
+```
+
+migrationهای۰۰۰۰۰۵و۰۰۰۰۰۶، نمای عمومی و نسخه‌های پایدار را اضافه می‌کنند و حتی بدون Redis نیز پیش‌نیاز همین سورس‌اند؛ راه‌انداز قبل از اجرا آن‌ها را اعمال می‌کند. سبد/مالی/OTP/نشست/پنل خصوصی در Redis نیستند. `public cache warmup` و سپس شمارنده‌های عمومی هر دقیقه در لاگ سرور دیده می‌شوند؛ اتصال یا اطلاعات کاربر در گزارش cache چاپ نمی‌شود. [گزارش، سرعت، تصاویر و محدودیت‌ها](delivery/storefront-followups/issue-41-verification.md).
