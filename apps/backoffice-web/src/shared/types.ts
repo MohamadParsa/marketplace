@@ -268,7 +268,11 @@ export interface Workspace {
   stores?: Store[];
   categories?: Category[];
   attributes?: AttributeDefinition[];
-  display_settings: { card_attribute_limit: number; version: number };
+  display_settings: {
+    card_attribute_limit: number;
+    sales_window_days?: number;
+    version: number;
+  };
   card_previews?: {
     product_id: string;
     features: {

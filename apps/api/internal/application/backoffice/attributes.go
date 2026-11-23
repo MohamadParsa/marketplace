@@ -55,6 +55,17 @@ func attributeUsed(state *Workspace, id string) bool {
 
 func applyAttributes(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "settings.sales-window":
+		if c.Target != "display" || c.Amount < 1 || c.Amount > MaxSalesWindowDays {
+			return ErrInvalid
+		}
+		if state.DisplaySettings.Version != c.Version {
+			return ErrConflict
+		}
+		state.DisplaySettings.SalesWindowDays = int(c.Amount)
+		state.DisplaySettings.Version++
+		return nil
+
 	case "settings.card-limit":
 		if c.Target != "display" || c.Amount < 1 || c.Amount > MaxCardAttributeLimit {
 			return ErrInvalid

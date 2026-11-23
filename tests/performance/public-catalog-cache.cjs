@@ -14,7 +14,7 @@ async function measure(path,headers={}){
    // Only disposable Cherriva public DTOs on the isolated local Redis are removed.
    const command=process.platform==='win32'?'wsl.exe':'redis-cli';
    const prefix=process.platform==='win32'?['--exec','redis-cli']:[];
-   const keys=cp.execFileSync(command,[...prefix,'-h','127.0.0.1','-p','56379','--scan','--pattern','cherriva:public:v3:*'],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+   const keys=cp.execFileSync(command,[...prefix,'-h','127.0.0.1','-p','56379','--scan','--pattern','cherriva:public:v4:*'],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
    if(keys.length)cp.execFileSync(command,[...prefix,'-h','127.0.0.1','-p','56379','unlink',...keys]);
   }
   const start=performance.now();

@@ -38,6 +38,7 @@ type Listing = {
 const sortLabels: Record<string, string> = {
   default: "پیش‌فرض",
   newest: "جدیدترین",
+  "best-selling": "پرفروش‌ترین",
   "price-asc": "ارزان‌ترین",
   "price-desc": "گران‌ترین",
 };

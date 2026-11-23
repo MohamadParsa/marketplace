@@ -1,0 +1,60 @@
+{
+  "issue": 45,
+  "date": "2026-11-23",
+  "implementation_status": "review",
+  "go_pass": 212,
+  "optional_go_skip": 1,
+  "vet": "passed",
+  "builds": [
+    "backoffice-web",
+    "storefront-web"
+  ],
+  "browser": {
+    "checks": [
+      {
+        "id": "api-best-selling-option",
+        "pass": true
+      },
+      {
+        "id": "public-response-no-sales-records",
+        "pass": true
+      },
+      {
+        "id": "selected-best-selling",
+        "pass": true
+      },
+      {
+        "id": "refresh-preserves-sort",
+        "pass": true
+      },
+      {
+        "id": "back-preserves-sort",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "search-sort-selected",
+        "pass": true
+      },
+      {
+        "id": "backoffice-window-default",
+        "pass": true
+      },
+      {
+        "id": "window-invalid-client-input",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "no_order_or_payment_created": true,
+    "no_settings_write": true
+  },
+  "ci": "pending"
+}

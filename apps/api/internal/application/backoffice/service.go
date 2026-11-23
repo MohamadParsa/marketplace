@@ -212,7 +212,7 @@ func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, 
 		return applyBanner(state, c, id)
 	case "variant.create", "offer.create", "offer.price.update", "offer.stock.update":
 		return applyProduct(state, c, id)
-	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit":
+	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window":
 		return applyAttributes(state, c, id)
 	case "category.icon.remove", "brand.icon.remove":
 		return removeIcon(state, c)

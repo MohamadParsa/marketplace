@@ -11,7 +11,7 @@ implementation_status: todo
 
 # اصلاحات جدید تجربه سایت — ۲۰۲۶-۱۱-۲۳
 
-این بسته فقط برای **ثبت تسک** است. اجرای هیچ‌یک شروع نشده؛ انتخاب تسک آغاز و ترتیب انجام با الیاس است. همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
+این بسته با ثبت۱۰تسک شروع شد. مالک اکنون اجرای **#45، #46 و #47 به ترتیب** را خواسته است؛ سایر تسک‌ها همچنان منتظر انتخاب‌اند. همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
 
 ## قواعد مشترک
 
@@ -26,7 +26,7 @@ implementation_status: todo
 
 | کد | کار | اولویت پیشنهادی | وضعیت |
 | --- | --- | --- | --- |
-| CV-SF-UX-01 · [#45](https://github.com/MohamadParsa/marketplace/issues/45) | [افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش](tasks/cv-sf-ux-01-best-selling-sort.md) | P2 | todo؛ منتظر انتخاب مالک |
+| CV-SF-UX-01 · [#45](https://github.com/MohamadParsa/marketplace/issues/45) | [افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش](tasks/cv-sf-ux-01-best-selling-sort.md) | P2 | review؛ [شواهد](issue-45-verification.md) |
 | CV-SF-UX-02 · [#46](https://github.com/MohamadParsa/marketplace/issues/46) | [منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی](tasks/cv-sf-ux-02-hierarchical-category-menu.md) | P2 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-03 · [#47](https://github.com/MohamadParsa/marketplace/issues/47) | [بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند](tasks/cv-sf-ux-03-header-account-cart-icons.md) | P3 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-04 · [#48](https://github.com/MohamadParsa/marketplace/issues/48) | [اسلایدر قیمت و نمایش بیشتر فیلترهای دارای بیش از۵گزینه در PLP](tasks/cv-sf-ux-04-plp-price-slider-filter-disclosure.md) | P2 | todo؛ منتظر انتخاب مالک |

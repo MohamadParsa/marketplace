@@ -52,6 +52,9 @@ func initialize(ctx context.Context, db *pgxpool.Pool, seed backoffice.Workspace
 		return nil, fmt.Errorf("initialize marketplace repository: %w", err)
 	}
 	repo := &Repository{db: db}
+	if err = repo.ensureCatalogSales(ctx); err != nil {
+		return nil, err
+	}
 	if err = repo.ensureCatalogURLs(ctx); err != nil {
 		return nil, err
 	}

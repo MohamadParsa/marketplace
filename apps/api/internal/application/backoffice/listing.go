@@ -112,7 +112,7 @@ func ParseListingQuery(v url.Values) (ListingQuery, error) {
 				return q, ErrListingQuery
 			}
 		case "sort":
-			if value != "default" && value != "newest" && value != "price-asc" && value != "price-desc" {
+			if value != "default" && value != "newest" && value != "price-asc" && value != "price-desc" && value != "best-selling" {
 				return q, ErrListingQuery
 			}
 			q.Sort = value
@@ -336,11 +336,14 @@ func listingCard(w Workspace, p catalog.Product, q ListingQuery) (ListingCard, b
 	return card, true
 }
 func BuildListing(w Workspace, q ListingQuery) (ListingResult, error) {
+	return BuildListingWithSales(w, q, BuildCatalogSales(w).Counts(time.Now()))
+}
+func BuildListingWithSales(w Workspace, q ListingQuery, sales map[string]int64) (ListingResult, error) {
 	w = indexedCatalog(w)
 	if q.Page < 1 || q.Page > 10000 || q.PageSize < 1 || q.PageSize > 40 {
 		return ListingResult{}, ErrListingQuery
 	}
-	result := ListingResult{Breadcrumbs: []CatalogNav{}, Children: []CatalogNav{}, Navigation: publicNavigation(w), Products: []ListingCard{}, Filters: []ListingFilter{}, Page: q.Page, PageSize: q.PageSize, Sort: q.Sort, SortOptions: []string{"default", "newest", "price-asc", "price-desc"}, Title: "جست‌وجوی کالا", Query: q.Q}
+	result := ListingResult{Breadcrumbs: []CatalogNav{}, Children: []CatalogNav{}, Navigation: publicNavigation(w), Products: []ListingCard{}, Filters: []ListingFilter{}, Page: q.Page, PageSize: q.PageSize, Sort: q.Sort, SortOptions: []string{"default", "newest", "price-asc", "price-desc", "best-selling"}, Title: "جست‌وجوی کالا", Query: q.Q}
 	var scope map[string]bool
 	if q.CategoryID != "" {
 		c := publicCategory(w, q.CategoryID)
@@ -460,6 +463,9 @@ func BuildListing(w Workspace, q ListingQuery) (ListingResult, error) {
 				return *a.Price > *b.Price
 			}
 		}
+		if q.Sort == "best-selling" && sales[a.ID] != sales[b.ID] {
+			return sales[a.ID] > sales[b.ID]
+		}
 		if !dates[a.ID].Equal(dates[b.ID]) {
 			return dates[a.ID].After(dates[b.ID])
 		}
@@ -512,12 +518,47 @@ func (s *Service) PublicListing(ctx context.Context, q ListingQuery) (ListingRes
 	if q.Sort == "" {
 		q.Sort = "default"
 	}
-	return cachedPublic(ctx, s, "listing", "", q, time.Minute, func(ctx context.Context) (ListingResult, error) {
+	var salesRevision int64
+	now := s.clock.Now()
+	if q.Sort == "best-selling" {
+		if r, ok := s.repository.(CatalogSalesRepository); ok {
+			var e error
+			salesRevision, e = r.CatalogSalesRevision(ctx)
+			if e != nil {
+				return ListingResult{}, e
+			}
+		}
+	}
+	var cacheArgs any = q
+	if q.Sort == "best-selling" {
+		cacheArgs = struct {
+			Query         ListingQuery
+			SalesRevision int64
+			Minute        int64
+		}{q, salesRevision, now.Unix() / 60}
+	}
+	return cachedPublic(ctx, s, "listing", "", cacheArgs, time.Minute, func(ctx context.Context) (ListingResult, error) {
 		w, e := s.publicSnapshot(ctx, "")
 		if e != nil {
 			return ListingResult{}, e
 		}
-		return BuildListing(w, q)
+		if q.Sort == "best-selling" {
+			var projection CatalogSales
+			if r, ok := s.repository.(CatalogSalesRepository); ok {
+				projection, e = r.CatalogSales(ctx)
+			} else {
+				var private Workspace
+				private, e = s.repository.Snapshot(ctx)
+				if e == nil {
+					projection = BuildCatalogSales(private)
+				}
+			}
+			if e != nil {
+				return ListingResult{}, e
+			}
+			return BuildListingWithSales(w, q, projection.Counts(now))
+		}
+		return BuildListingWithSales(w, q, nil)
 	})
 }
 
