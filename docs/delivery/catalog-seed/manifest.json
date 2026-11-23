@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-22",
+  "updated": "2026-11-23",
   "dataset_id": "gooshishop-public-catalog-2026-11-22",
-  "source_commit": "8921ca0497aa016d9373ae240c12025046bd3a6d",
+  "source_commit": "6342eb9e38213664c2d8dfde6f865b4cf1cc0571",
   "file": "data/catalog/gooshishop-2026-11-22.json",
   "sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
   "bytes": 50573814,
@@ -25,9 +25,10 @@
     "storage": "catalog_media.data bytea; workspace stores references only"
   },
   "target_import": {
-    "current_local_database": false,
+    "current_local_database": true,
     "server": false,
-    "isolated_sample_products": 20
+    "isolated_sample_products": 20,
+    "report": "docs/delivery/catalog-seed/local-import-2026-11-23.md"
   },
   "coverage": {
     "brands": {
@@ -40,5 +41,6 @@
       "source_shortage": 195,
       "selection_shortage": 0
     }
-  }
+  },
+  "initial_export_source_commit": "8921ca0497aa016d9373ae240c12025046bd3a6d"
 }

@@ -48,5 +48,6 @@
     "commit": "5e588a7e047d0aa7d077f959ed6cc3d1c6634e6e",
     "database_url_set": "rejected before runtime or migrations",
     "result": "passed"
-  }
+  },
+  "latest_local_execution": "local-import-2026-11-23.json"
 }
