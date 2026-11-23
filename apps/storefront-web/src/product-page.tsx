@@ -205,7 +205,26 @@ export function ProductPage({ url }: { url: string }) {
         if (initialPosition.current) {
           initialPosition.current = false;
           const top = history.state?.cherrivaScroll ?? 0;
-          requestAnimationFrame(() => scrollTo({ top, behavior: "instant" }));
+          requestAnimationFrame(() => {
+            let target = "";
+            try {
+              target = decodeURIComponent(location.hash.slice(1));
+            } catch {
+              /* Invalid fragment uses restored scroll. */
+            }
+            const section = [
+              "introduction",
+              "specifications",
+              "pros-cons",
+              "reviews",
+              "questions",
+            ].includes(target)
+              ? document.getElementById(target)
+              : null;
+            if (section)
+              section.scrollIntoView({ block: "start", behavior: "instant" });
+            else scrollTo({ top, behavior: "instant" });
+          });
         }
 
         setPhoto(0);
@@ -574,6 +593,7 @@ export function ProductPage({ url }: { url: string }) {
             <nav className="pdp-tabs" aria-label="بخش‌های محصول">
               <a href="#introduction">معرفی محصول</a>
               <a href="#specifications">مشخصات فنی</a>
+              <a href="#pros-cons">مزایا و معایب</a>
               <a href="#reviews">نظرات کاربران</a>
               <a href="#questions">پرسش و پاسخ</a>
             </nav>
@@ -590,28 +610,6 @@ export function ProductPage({ url }: { url: string }) {
                 ) : (
                   <p>توضیح تکمیلی هنوز ثبت نشده است.</p>
                 )}
-                <div className="pdp-pros-cons">
-                  {content.advantages.length > 0 && (
-                    <div>
-                      <h3>مزایا</h3>
-                      <ul>
-                        {content.advantages.map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {content.disadvantages.length > 0 && (
-                    <div>
-                      <h3>معایب</h3>
-                      <ul>
-                        {content.disadvantages.map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
               </ExpandableContent>
             </section>
             <section className="pdp-section" id="specifications">
@@ -657,6 +655,37 @@ export function ProductPage({ url }: { url: string }) {
                       </div>
                     ))}
                 </dl>
+              </ExpandableContent>
+            </section>
+            <section className="pdp-section" id="pros-cons" tabIndex={-1}>
+              <h2>مزایا و معایب</h2>
+              <ExpandableContent label="مزایا و معایب" resetKey={data.id}>
+                <div className="pdp-pros-cons">
+                  {content.advantages.length > 0 && (
+                    <div>
+                      <h3>مزایا</h3>
+                      <ul>
+                        {content.advantages.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {content.disadvantages.length > 0 && (
+                    <div>
+                      <h3>معایب</h3>
+                      <ul>
+                        {content.disadvantages.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                {!content.advantages.length &&
+                  !content.disadvantages.length && (
+                    <p>مزایا و معایب این محصول هنوز ثبت نشده است.</p>
+                  )}
               </ExpandableContent>
             </section>
             <section className="pdp-section" id="reviews">

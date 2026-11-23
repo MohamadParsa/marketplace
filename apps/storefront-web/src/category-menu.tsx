@@ -1,5 +1,12 @@
 import { LoadingPlaceholder } from "./busy-region";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import "./category-menu.css";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 export type CategoryNode = {
@@ -8,6 +15,45 @@ export type CategoryNode = {
   url: string;
   parent_id?: string;
 };
+function useHoverIntent(action?: () => void) {
+  const timer = useRef<ReturnType<typeof setTimeout>>(),
+    current = useRef(action);
+  current.current = action;
+  const cancel = () => {
+    if (timer.current) clearTimeout(timer.current);
+  };
+  useEffect(() => cancel, []);
+  return {
+    onPointerEnter: (event: ReactPointerEvent) => {
+      cancel();
+      if (
+        event.pointerType !== "mouse" ||
+        !matchMedia("(min-width:601px) and (hover:hover) and (pointer:fine)")
+          .matches
+      )
+        return;
+      timer.current = setTimeout(() => current.current?.(), 120);
+    },
+    onPointerLeave: cancel,
+    onPointerDown: cancel,
+  };
+}
+function HoverItem({
+  children,
+  className,
+  onHover,
+}: {
+  children: ReactNode;
+  className?: string;
+  onHover?: () => void;
+}) {
+  const hover = useHoverIntent(onHover);
+  return (
+    <li className={className} {...hover}>
+      {children}
+    </li>
+  );
+}
 function Branch({
   node,
   children,
@@ -20,7 +66,10 @@ function Branch({
   const [open, setOpen] = useState(false);
   const nested = children.get(node.id) ?? [];
   return (
-    <li className="category-branch">
+    <HoverItem
+      className="category-branch"
+      onHover={nested.length ? () => setOpen(true) : undefined}
+    >
       <div>
         <a data-category-link href={node.url} onClick={onNavigate}>
           {node.name}
@@ -48,7 +97,7 @@ function Branch({
           ))}
         </ul>
       )}
-    </li>
+    </HoverItem>
   );
 }
 function Chevron({ open = false }: { open?: boolean }) {
@@ -74,6 +123,11 @@ export function CategoryMenu() {
   const [mobile, setMobile] = useState(
     () => matchMedia("(max-width: 600px)").matches,
   );
+  const hoverOpened = useRef(false);
+  const triggerHover = useHoverIntent(() => {
+    hoverOpened.current = true;
+    setOpen(true);
+  });
   const trigger = useRef<HTMLButtonElement>(null),
     panel = useRef<HTMLDivElement>(null);
   const close = (restore = false) => {
@@ -101,6 +155,29 @@ export function CategoryMenu() {
       });
     return () => controller.abort();
   }, [attempt]);
+  useLayoutEffect(() => {
+    if (!open) return;
+    const update = () => {
+      const el = panel.current;
+      if (!el) return;
+      const viewport = window.visualViewport;
+      const height =
+        (viewport?.height ?? innerHeight) + (viewport?.offsetTop ?? 0);
+      el.style.setProperty(
+        "--category-available-height",
+        `${Math.max(60, height - el.getBoundingClientRect().top - 12)}px`,
+      );
+    };
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    window.visualViewport?.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+      window.visualViewport?.removeEventListener("resize", update);
+    };
+  }, [open, mobile]);
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
@@ -122,8 +199,12 @@ export function CategoryMenu() {
           "a[href],button:not(:disabled)",
         );
         if (!els?.length) return;
-        const first = els[0],
-          last = els[els.length - 1];
+        const visible = Array.from(els).filter(
+          (el) => el.getClientRects().length > 0,
+        );
+        if (!visible.length) return;
+        const first = visible[0],
+          last = visible[visible.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
@@ -147,11 +228,12 @@ export function CategoryMenu() {
     document.addEventListener("keydown", key);
     addEventListener("cherriva:navigate", route);
     addEventListener("popstate", route);
-    const frame = requestAnimationFrame(() =>
-      panel.current
-        ?.querySelector<HTMLElement>("[data-category-link],button")
-        ?.focus(),
-    );
+    const frame = requestAnimationFrame(() => {
+      if (!hoverOpened.current || mobile)
+        panel.current
+          ?.querySelector<HTMLElement>("[data-category-link],button")
+          ?.focus();
+    });
     return () => {
       cancelAnimationFrame(frame);
       if (mobile) document.body.style.overflow = previous;
@@ -181,18 +263,21 @@ export function CategoryMenu() {
     <div className="category-menu">
       <button
         ref={trigger}
+        {...triggerHover}
         className="lh-menu-label category-menu-trigger"
         type="button"
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls="catalog-category-menu"
         onClick={() => {
+          hoverOpened.current = false;
           setActive("");
           setOpen(!open);
         }}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
             e.preventDefault();
+            hoverOpened.current = false;
             setOpen(true);
           }
         }}
@@ -230,9 +315,7 @@ export function CategoryMenu() {
                 ×
               </button>
             </div>
-            {!nodes && !error && (
-              <LoadingPlaceholder label="دریافت دسته‌ها" />
-            )}
+            {!nodes && !error && <LoadingPlaceholder label="دریافت دسته‌ها" />}
             {error && (
               <div className="category-menu-message" role="alert">
                 <p>دسته‌ها دریافت نشدند.</p>
@@ -251,8 +334,11 @@ export function CategoryMenu() {
                   >
                     <ul>
                       {roots.map((n) => (
-                        <li
+                        <HoverItem
                           key={n.id}
+                          onHover={() =>
+                            setActive(children.has(n.id) ? n.id : "")
+                          }
                           className={n.id === active ? "is-active" : ""}
                         >
                           <a
@@ -272,7 +358,7 @@ export function CategoryMenu() {
                               <Chevron open={n.id === active} />
                             </button>
                           )}
-                        </li>
+                        </HoverItem>
                       ))}
                     </ul>
                   </nav>
