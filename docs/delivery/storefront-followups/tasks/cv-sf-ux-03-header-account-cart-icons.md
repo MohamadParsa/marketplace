@@ -12,6 +12,8 @@ priority: P3
 
 # CV-SF-UX-03 — بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند
 
+Issue: [#47](https://github.com/MohamadParsa/marketplace/issues/47) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: منتظر انتخاب مالک.
+
 ## مسئله و نتیجه
 
 آیکن‌های هدر در طرح A خوانا، جذاب و با هویت چریوا هماهنگ شوند.

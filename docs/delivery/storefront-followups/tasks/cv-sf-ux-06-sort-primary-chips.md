@@ -12,6 +12,8 @@ priority: P3
 
 # CV-SF-UX-06 — چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary
 
+Issue: [#50](https://github.com/MohamadParsa/marketplace/issues/50) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: منتظر انتخاب مالک.
+
 ## مسئله و نتیجه
 
 مرتب‌سازی شبیه انتخاب چیپ در طرح A دیده شود و دایره radio ظاهر آن را شلوغ نکند.

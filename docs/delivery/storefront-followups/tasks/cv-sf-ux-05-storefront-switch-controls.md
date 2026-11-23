@@ -12,6 +12,8 @@ priority: P2
 
 # CV-SF-UX-05 — جایگزینی نمایش checkboxهای storefront با Switch مشترک
 
+Issue: [#49](https://github.com/MohamadParsa/marketplace/issues/49) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: منتظر انتخاب مالک.
+
 ## مسئله و نتیجه
 
 کنترل‌های دوحالته سایت مشتری ظاهر یکدست و هماهنگ با درخواست مالک داشته باشند.
