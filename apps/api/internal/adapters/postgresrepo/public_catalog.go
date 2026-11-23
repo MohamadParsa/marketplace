@@ -17,6 +17,9 @@ func catalogHash(data []byte) string { sum := sha256.Sum256(data); return hex.En
 
 // Runs inside the same workspace transaction for every writer, including the importer.
 func savePublicCatalog(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
+	if e := saveCatalogSales(ctx, tx, state); e != nil {
+		return e
+	}
 	w := backoffice.CatalogReadWorkspace(state)
 	parts := map[string]*backoffice.Workspace{}
 	for _, p := range w.Products {

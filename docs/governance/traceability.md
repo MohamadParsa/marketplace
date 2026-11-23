@@ -154,3 +154,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## صف تجربه storefront — CV-SF-UX-01 تا10
 
 [۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا todo و منتظر انتخاب مالک است؛ Issueهای #45تا#54 همگی باز و اساین به eliassarband هستند. سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
+
+## اجرای UX-01 — #45
+
+SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-followups/tasks/cv-sf-ux-01-best-selling-sort.md) ← `catalog_sales_test.go` در application/bootstrap و [گزارش/تصاویر](../delivery/storefront-followups/issue-45-verification.md). هر تغییر وضعیت پیاده‌سازی جدا از تأیید سند ثبت می‌شود.

@@ -129,6 +129,7 @@ type AttributeValue struct {
 	Value       string `json:"value"`
 }
 type DisplaySettings struct {
+	SalesWindowDays    int `json:"sales_window_days,omitempty"`
 	CardAttributeLimit int `json:"card_attribute_limit"`
 	Version            int `json:"version"`
 }

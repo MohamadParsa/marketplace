@@ -127,7 +127,7 @@ func TestListingFiltersVariantsCashSortAndUnavailable(t *testing.T) {
 }
 func TestListingQueryValidationSearchAndSuggestions(t *testing.T) {
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, backofficememory.New(listingFixture(t)))
-	for _, q := range []string{"?sort=best-selling", "?sort=popular", "?page=0", "?page_size=41", "?page=1&page=2", "?min_price=-1", "?min_price=20&max_price=10", "?attr.memory=64", "?category=charger&attr.memory=64", "?category=mobile&attr.secret=1", "?category=mobile&attr.memory=evil", "?category=mobile&attr.ram=NaN", "?in_stock=yes", "?unknown=1", "?q=%zz"} {
+	for _, q := range []string{"?sort=unsupported", "?sort=popular", "?page=0", "?page_size=41", "?page=1&page=2", "?min_price=-1", "?min_price=20&max_price=10", "?attr.memory=64", "?category=charger&attr.memory=64", "?category=mobile&attr.secret=1", "?category=mobile&attr.memory=evil", "?category=mobile&attr.ram=NaN", "?in_stock=yes", "?unknown=1", "?q=%zz"} {
 		listingRequest(t, h, q, 400)
 	}
 	for _, q := range []string{"گوشي یک", "PHONE one"} {

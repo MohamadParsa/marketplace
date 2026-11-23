@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -31,6 +31,10 @@ export function SharedAttributesPage() {
   const [settingsKey, setSettingsKey] = useState(crypto.randomUUID());
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  useEffect(
+    () => setSettingsVersion(state.display_settings.version),
+    [state.display_settings.version],
+  );
   const editable = may("attribute.create", "management");
   return (
     <>
@@ -164,6 +168,7 @@ export function SharedAttributesPage() {
           · تغییر سقف فقط روی نمایش جاری اثر دارد.
         </p>
       </section>
+      <SalesWindowSettings />
       <section className="panel attribute-settings">
         <h2>پیش‌نمایش کارت با داده سرور</h2>
         <p className="muted">
@@ -560,5 +565,80 @@ export function CategoryBindingsDialog({
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+function SalesWindowSettings() {
+  const { state, execute, can } = useWorkspace();
+  const [days, setDays] = useState(
+    String(state.display_settings.sales_window_days || 30),
+  );
+  const [pending, setPending] = useState(false),
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState("");
+  const [key, setKey] = useState(crypto.randomUUID());
+  const allowed = can("settings.sales-window");
+  return (
+    <section className="panel attribute-settings">
+      <h2>مرتب‌سازی پرفروش‌ترین</h2>
+      <p className="muted">
+        تعداد خالص فروش در بازه لغزان؛ پیش‌فرض ۳۰ روز. زمان پرداخت قطعی مبناست و
+        لغو/استرداد قلم از فروش کم می‌شود.
+      </p>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (pending || !allowed) return;
+          setPending(true);
+          setError("");
+          setNotice("");
+          try {
+            await execute({
+              action: "settings.sales-window",
+              target: "display",
+              amount: Number(days),
+              version: state.display_settings.version,
+              idempotency_key: key,
+            });
+            setNotice("بازه فروش ذخیره شد.");
+            setKey(crypto.randomUUID());
+          } catch (e) {
+            setError(message(e));
+          } finally {
+            setPending(false);
+          }
+        }}
+      >
+        <TextField
+          label="بازه پرفروش‌ترین (روز)"
+          type="number"
+          size="small"
+          value={days}
+          onChange={(e) => {
+            setDays(e.target.value);
+            setKey(crypto.randomUUID());
+          }}
+          disabled={!allowed || pending}
+          inputProps={{ min: 1, max: 3650, step: 1 }}
+          required
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!allowed || pending}
+        >
+          ثبت بازه فروش
+        </Button>
+      </form>
+      <p>
+        بازه ثبت‌شده:{" "}
+        <b data-testid="saved-sales-window">
+          {state.display_settings.sales_window_days || 30}
+        </b>{" "}
+        روز؛ تازگی آمار حداکثر ۶۰ ثانیه.
+      </p>
+      {error && <Alert severity="error">{error}</Alert>}
+      {notice && <Alert severity="success">{notice}</Alert>}
+    </section>
   );
 }
