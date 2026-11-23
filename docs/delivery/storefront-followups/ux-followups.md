@@ -11,7 +11,7 @@ implementation_status: todo
 
 # اصلاحات جدید تجربه سایت — ۲۰۲۶-۱۱-۲۳
 
-این بسته با ثبت۱۰تسک شروع شد. مالک اکنون اجرای **#45، #46 و #47 به ترتیب** را خواسته است؛ سایر تسک‌ها همچنان منتظر انتخاب‌اند. همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
+این بسته با ثبت۱۰تسک شروع شد. مالک ابتدا اجرای #45، #46 و #47 را خواست؛ هر سه با شواهد بسته شدند. اکنون **#48 و سپس #49** انتخاب شده‌اند؛ سایر تسک‌ها منتظر انتخاب‌اند. همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
 
 ## قواعد مشترک
 
@@ -28,7 +28,7 @@ implementation_status: todo
 | --- | --- | --- | --- |
 | CV-SF-UX-01 · [#45](https://github.com/MohamadParsa/marketplace/issues/45) | [افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش](tasks/cv-sf-ux-01-best-selling-sort.md) | P2 | done؛ با کامنت بسته شد؛ [شواهد](issue-45-verification.md) |
 | CV-SF-UX-02 · [#46](https://github.com/MohamadParsa/marketplace/issues/46) | [منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی](tasks/cv-sf-ux-02-hierarchical-category-menu.md) | P2 | done؛ با کامنت بسته شد؛ [شواهد](issue-46-verification.md) |
-| CV-SF-UX-03 · [#47](https://github.com/MohamadParsa/marketplace/issues/47) | [بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند](tasks/cv-sf-ux-03-header-account-cart-icons.md) | P3 | review؛ [شواهد](issue-47-verification.md) |
+| CV-SF-UX-03 · [#47](https://github.com/MohamadParsa/marketplace/issues/47) | [بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند](tasks/cv-sf-ux-03-header-account-cart-icons.md) | P3 | done؛ با کامنت بسته شد؛ [شواهد](issue-47-verification.md) |
 | CV-SF-UX-04 · [#48](https://github.com/MohamadParsa/marketplace/issues/48) | [اسلایدر قیمت و نمایش بیشتر فیلترهای دارای بیش از۵گزینه در PLP](tasks/cv-sf-ux-04-plp-price-slider-filter-disclosure.md) | P2 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-05 · [#49](https://github.com/MohamadParsa/marketplace/issues/49) | [جایگزینی نمایش checkboxهای storefront با Switch مشترک](tasks/cv-sf-ux-05-storefront-switch-controls.md) | P2 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-06 · [#50](https://github.com/MohamadParsa/marketplace/issues/50) | [چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary](tasks/cv-sf-ux-06-sort-primary-chips.md) | P3 | todo؛ منتظر انتخاب مالک |

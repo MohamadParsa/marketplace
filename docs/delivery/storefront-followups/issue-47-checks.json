@@ -1,7 +1,7 @@
 {
   "issue": 47,
   "date": "2026-11-23",
-  "implementation_status": "review",
+  "implementation_status": "done",
   "storefront_build": "passed",
   "browser": {
     "checks": [
@@ -122,6 +122,9 @@
     "no_order_or_payment_created": true,
     "existing_synthetic_account_only": true
   },
-  "ci": "pending",
-  "application_backend_changes": false
+  "ci": "5 jobs passed including race/vet",
+  "application_backend_changes": false,
+  "pr": 57,
+  "merge_commit": "c9a83e519767b3d133dcc5f6d8a09376ecaf970c",
+  "issue_state": "closed"
 }

@@ -105,7 +105,10 @@
       "source_commit": "1c890daee14ab2e5320f859e831398ed142757b4",
       "documentation_commit": "1c890daee14ab2e5320f859e831398ed142757b4",
       "verification": "docs/delivery/storefront-followups/issue-47-verification.md",
-      "source_tree_matches_documentation_revision": true
+      "source_tree_matches_documentation_revision": true,
+      "pr": 57,
+      "merge_commit": "c9a83e519767b3d133dcc5f6d8a09376ecaf970c",
+      "issue_state": "closed"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

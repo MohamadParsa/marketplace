@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-003, FEAT-SF-UX-002]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #47
@@ -37,3 +37,5 @@ build/typecheck storefront موفق است. کد Go، APIهای پرداخت/ا�
 ## تحویل
 
 سورس در `D:\Cherriva` و اجرا با `Start-Cherriva.ps1` است. لینک محلی: [خانه](http://localhost:5197) و [سبد](http://localhost:5197/cart). تغییرات به storefront محدود است؛ #45/#46 پیش‌تر با کامنت و شواهد بسته شدند. PR/CI و بستن #47 پس از گیت تحویل ثبت می‌شوند؛ انتشار لیارا با پارساست.
+
+[PR #57](https://github.com/MohamadParsa/marketplace/pull/57) با merge `c9a83e519767b3d133dcc5f6d8a09376ecaf970c` و `[skip ci]` ادغام شد؛ هر۵ job CI شامل race/vet موفق و #47 با کامنت پایان بسته است.
