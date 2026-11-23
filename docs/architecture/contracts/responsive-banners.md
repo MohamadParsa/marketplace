@@ -3,7 +3,7 @@ id: API-RESPONSIVE-BANNERS-001
 title: قرارداد بنر دو اندازه در نسخه آزمون
 status: in-review
 owner: product-owner
-updated: 2026-11-21
+updated: 2026-11-23
 related: [ADR-006, CV-R2-07, FEAT-BO-001]
 approved_by: []
 ---

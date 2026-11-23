@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "6342eb9e38213664c2d8dfde6f865b4cf1cc0571",
+  "current_source_commit": "c2617fcd72c82fad01a51291360a4189f576f719",
   "rows": [
     {
       "issue": 27,
@@ -61,6 +61,13 @@
       "source_commit": "6342eb9e38213664c2d8dfde6f865b4cf1cc0571",
       "documentation_commit": "d35855e7ab4b4474e2d0b49f55def39ea5fc5d16",
       "verification": "docs/delivery/catalog-seed/local-import-2026-11-23.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 41,
+      "source_commit": "c2617fcd72c82fad01a51291360a4189f576f719",
+      "documentation_commit": "63c73ac2486ed9587da2330439f3cb4bb1463e1f",
+      "verification": "docs/delivery/storefront-followups/issue-41-verification.md",
       "source_tree_matches_documentation_revision": true
     }
   ],
