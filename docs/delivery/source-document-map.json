@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "1c890daee14ab2e5320f859e831398ed142757b4",
+  "current_source_commit": "f812e36e26e05e6dcbce483f130c66a2dec24908",
   "rows": [
     {
       "issue": 27,
@@ -109,6 +109,13 @@
       "pr": 57,
       "merge_commit": "c9a83e519767b3d133dcc5f6d8a09376ecaf970c",
       "issue_state": "closed"
+    },
+    {
+      "issue": 48,
+      "source_commit": "f812e36e26e05e6dcbce483f130c66a2dec24908",
+      "documentation_commit": "f812e36e26e05e6dcbce483f130c66a2dec24908",
+      "verification": "docs/delivery/storefront-followups/issue-48-verification.md",
+      "source_tree_matches_documentation_revision": true
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

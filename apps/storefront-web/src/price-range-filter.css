@@ -1,0 +1,133 @@
+.price-slider {
+  height: 44px;
+  position: relative;
+  margin: 8px 12px 6px;
+  touch-action: pan-y;
+}
+.price-slider-track {
+  position: absolute;
+  inset-inline: 0;
+  top: 20px;
+  height: 4px;
+  border-radius: 8px;
+  background: #eadde3;
+  pointer-events: none;
+}
+.price-slider-track > span {
+  position: absolute;
+  left: var(--range-start);
+  right: calc(100% - var(--range-end));
+  height: 100%;
+  background: var(--cherry, #b51f46);
+  border-radius: 8px;
+}
+.launch-home .plp-price-filter .price-slider input[type="range"] {
+  position: absolute;
+  inset: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 44px;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  outline: 0;
+  z-index: 2;
+  min-width: 0;
+}
+.launch-home .plp-price-filter .price-slider input.range-high {
+  z-index: 3;
+}
+.price-slider input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--cherry, #b51f46);
+  box-shadow:
+    0 0 0 1px #d291a7,
+    0 2px 6px #45203222;
+  cursor: grab;
+}
+.price-slider input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--cherry, #b51f46);
+  box-shadow: 0 0 0 1px #d291a7;
+  cursor: grab;
+}
+.price-slider input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--cherry, #b51f46);
+  outline-offset: 3px;
+}
+.price-slider input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--cherry, #b51f46);
+  outline-offset: 3px;
+}
+.price-slider[data-enabled="false"] {
+  opacity: 0.45;
+}
+.price-slider input:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+.price-slider input:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+.price-slider-inputs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.price-slider-inputs label {
+  min-width: 0;
+}
+.launch-home .price-slider-inputs input {
+  width: 100%;
+  min-width: 0;
+}
+.price-slider-note {
+  font-size: 11px;
+  color: #8a7a84;
+}
+.plp-filter-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0 9px;
+}
+.plp-filter-selected button {
+  border: 1px solid #ead0da;
+  border-radius: 9px;
+  background: #fff8fa;
+  color: var(--cherry, #b51f46);
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 11px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.plp-filter-more {
+  border: 0;
+  background: transparent;
+  color: var(--cherry, #b51f46);
+  font: inherit;
+  font-size: 12px;
+  min-height: 40px;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.plp-attribute-options {
+  display: grid;
+  gap: 6px;
+}
+/* The sheet owns scrolling; each expanded filter must not create a second scroller. */
+.launch-home .plp-filter-sheet .plp-attribute {max-height:none;overflow:visible}
