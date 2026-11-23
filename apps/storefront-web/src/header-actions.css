@@ -1,0 +1,115 @@
+.launch-home .lh-header-actions {
+  gap: 14px;
+}
+.launch-home .lh-header-actions .header-action {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  min-height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #f0dfe5;
+  border-radius: 14px;
+  background: #fff8fa;
+  color: var(--cherry);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 0.16s,
+    border-color 0.16s,
+    box-shadow 0.16s;
+}
+.launch-home .header-action .header-action-icon {
+  width: 27px;
+  height: 27px;
+  display: block;
+}
+.launch-home .lh-header-actions .header-action:hover,
+.launch-home .lh-header-actions .header-action[aria-current="page"],
+.launch-home .lh-profile-menu[open] > .header-action {
+  background: #f7e8ee;
+  border-color: #dfafbf;
+  box-shadow: 0 3px 10px #b51f460a;
+}
+.launch-home .lh-header-actions .header-action:focus-visible {
+  outline: 2px solid var(--cherry);
+  outline-offset: 3px;
+}
+.launch-home .lh-header-actions > .header-action-divider {
+  height: 20px;
+  background: #f0dfe5;
+}
+.launch-home .lh-header-actions .lh-cart-count {
+  top: -5px;
+  right: auto;
+  inset-inline-end: -5px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  max-width: 36px;
+  padding: 0 5px;
+  border-radius: 9px;
+  border: 2px solid #fff;
+  background: var(--cherry);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+.launch-home .header-account-dot {
+  position: absolute;
+  bottom: 4px;
+  inset-inline-end: 4px;
+  width: 8px;
+  height: 8px;
+  background: var(--cherry);
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+.launch-home .lh-profile-menu nav {
+  top: calc(100% + 10px);
+  z-index: 45;
+  border-color: #eadde3;
+  min-width: 200px;
+}
+.launch-home .lh-profile-menu nav a:focus-visible,
+.launch-home .lh-profile-menu nav button:focus-visible {
+  outline: 2px solid var(--cherry);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.header-action-description {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 600px) {
+  .launch-home .lh-header-actions {
+    gap: 10px;
+  }
+  .launch-home .lh-header-actions .header-action {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 13px;
+  }
+  .launch-home .lh-profile-menu nav {
+    min-width: 190px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-home .lh-header-actions .header-action {
+    transition: none;
+  }
+}

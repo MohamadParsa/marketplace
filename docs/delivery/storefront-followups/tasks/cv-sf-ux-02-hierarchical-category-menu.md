@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-001, API-PLP-SEARCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P2
 ---
 
 # CV-SF-UX-02 — منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی
 
-Issue: [#46](https://github.com/MohamadParsa/marketplace/issues/46) · اساین: `eliassarband` · وضعیت GitHub: **open؛ بررسی تحویل** · شروع اجرا: به درخواست مالک.
+Issue: [#46](https://github.com/MohamadParsa/marketplace/issues/46) · اساین: `eliassarband` · وضعیت GitHub: **closed؛ کامنت پایان ثبت شد** · شروع اجرا: به درخواست مالک.
 
 ## مسئله و نتیجه
 

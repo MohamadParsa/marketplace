@@ -153,8 +153,12 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 
 ## صف تجربه storefront — CV-SF-UX-01 تا10
 
-[۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا todo و منتظر انتخاب مالک است؛ Issueهای #45تا#54 همگی باز و اساین به eliassarband هستند. سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
+[۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا todo و منتظر انتخاب مالک است؛ Issueهای #45تا#54 هنگام ثبت باز و اساین به eliassarband بودند؛ وضعیت جاری در فهرست ماشین‌خوان است. سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
 
 ## اجرای UX-01 — #45
 
 SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-followups/tasks/cv-sf-ux-01-best-selling-sort.md) ← `catalog_sales_test.go` در application/bootstrap و [گزارش/تصاویر](../delivery/storefront-followups/issue-45-verification.md). هر تغییر وضعیت پیاده‌سازی جدا از تأیید سند ثبت می‌شود.
+
+## اجرای UX-02/03 — #46 و #47
+
+[منوی درختی و شواهد #46](../delivery/storefront-followups/issue-46-verification.md) به تست API ناوبری و `category-menu.cjs` وصل است؛ [آیکن‌ها و شواهد #47](../delivery/storefront-followups/issue-47-verification.md) به `header-actions.cjs` و تصاویر قبل/بعد وصل است. #45/#46 بسته شده‌اند؛ وضعیت نهایی #47 پس از گیت CI ثبت می‌شود.
