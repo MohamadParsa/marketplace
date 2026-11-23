@@ -3,8 +3,8 @@
   "updated": "2026-11-23",
   "owner": "eliassarband",
   "document_status": "in-review",
-  "execution_authorized": false,
-  "execution": "planning-only-awaiting-owner-selection",
+  "execution_authorized": true,
+  "execution": "selected-80-83-84-85-86-in-review",
   "items": [
     {
       "n": 1,
@@ -21,7 +21,8 @@
       "number": 62,
       "url": "https://github.com/MohamadParsa/marketplace/issues/62",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 2,
@@ -38,7 +39,8 @@
       "number": 63,
       "url": "https://github.com/MohamadParsa/marketplace/issues/63",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 3,
@@ -55,7 +57,8 @@
       "number": 64,
       "url": "https://github.com/MohamadParsa/marketplace/issues/64",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 4,
@@ -72,7 +75,8 @@
       "number": 65,
       "url": "https://github.com/MohamadParsa/marketplace/issues/65",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 5,
@@ -89,7 +93,8 @@
       "number": 66,
       "url": "https://github.com/MohamadParsa/marketplace/issues/66",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 6,
@@ -112,7 +117,8 @@
       "github_dependencies": [
         66,
         72
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 7,
@@ -139,7 +145,8 @@
         67,
         70,
         73
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 8,
@@ -164,7 +171,8 @@
         66,
         68,
         70
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 9,
@@ -191,7 +199,8 @@
         67,
         72,
         73
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 10,
@@ -208,7 +217,8 @@
       "number": 71,
       "url": "https://github.com/MohamadParsa/marketplace/issues/71",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 11,
@@ -225,7 +235,8 @@
       "number": 72,
       "url": "https://github.com/MohamadParsa/marketplace/issues/72",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 12,
@@ -248,7 +259,8 @@
       "github_dependencies": [
         66,
         72
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 13,
@@ -265,7 +277,8 @@
       "number": 74,
       "url": "https://github.com/MohamadParsa/marketplace/issues/74",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 14,
@@ -282,7 +295,8 @@
       "number": 75,
       "url": "https://github.com/MohamadParsa/marketplace/issues/75",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 15,
@@ -299,7 +313,8 @@
       "number": 76,
       "url": "https://github.com/MohamadParsa/marketplace/issues/76",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 16,
@@ -316,7 +331,8 @@
       "number": 77,
       "url": "https://github.com/MohamadParsa/marketplace/issues/77",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 17,
@@ -337,7 +353,8 @@
       "assignee": "eliassarband",
       "github_dependencies": [
         79
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 18,
@@ -354,7 +371,8 @@
       "number": 79,
       "url": "https://github.com/MohamadParsa/marketplace/issues/79",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 19,
@@ -365,17 +383,14 @@
       "priority": "P2",
       "wave": "W1",
       "kind": "design-then-implementation",
-      "deps": [
-        18
-      ],
-      "implementation_status": "todo",
+      "deps": [],
+      "implementation_status": "review",
       "state": "open",
       "number": 80,
       "url": "https://github.com/MohamadParsa/marketplace/issues/80",
       "assignee": "eliassarband",
-      "github_dependencies": [
-        79
-      ]
+      "github_dependencies": [],
+      "execution_authorized": true
     },
     {
       "n": 20,
@@ -396,7 +411,8 @@
       "assignee": "eliassarband",
       "github_dependencies": [
         71
-      ]
+      ],
+      "execution_authorized": false
     },
     {
       "n": 21,
@@ -413,7 +429,8 @@
       "number": 82,
       "url": "https://github.com/MohamadParsa/marketplace/issues/82",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 22,
@@ -425,12 +442,13 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 83,
       "url": "https://github.com/MohamadParsa/marketplace/issues/83",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": true
     },
     {
       "n": 23,
@@ -442,12 +460,13 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 84,
       "url": "https://github.com/MohamadParsa/marketplace/issues/84",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": true
     },
     {
       "n": 24,
@@ -459,12 +478,13 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 85,
       "url": "https://github.com/MohamadParsa/marketplace/issues/85",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": true
     },
     {
       "n": 25,
@@ -476,12 +496,13 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 86,
       "url": "https://github.com/MohamadParsa/marketplace/issues/86",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": true
     },
     {
       "n": 26,
@@ -498,7 +519,8 @@
       "number": 87,
       "url": "https://github.com/MohamadParsa/marketplace/issues/87",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 27,
@@ -515,7 +537,8 @@
       "number": 88,
       "url": "https://github.com/MohamadParsa/marketplace/issues/88",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 28,
@@ -532,7 +555,8 @@
       "number": 89,
       "url": "https://github.com/MohamadParsa/marketplace/issues/89",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 29,
@@ -549,7 +573,8 @@
       "number": 90,
       "url": "https://github.com/MohamadParsa/marketplace/issues/90",
       "assignee": "eliassarband",
-      "github_dependencies": []
+      "github_dependencies": [],
+      "execution_authorized": false
     },
     {
       "n": 30,
@@ -570,7 +595,8 @@
       "assignee": "eliassarband",
       "github_dependencies": [
         73
-      ]
+      ],
+      "execution_authorized": false
     }
   ],
   "reused_issues": [
@@ -592,5 +618,12 @@
       "implementation_status": "per-original-issue",
       "state": "open"
     }
+  ],
+  "authorized_issue_numbers": [
+    80,
+    83,
+    84,
+    85,
+    86
   ]
 }

@@ -1,0 +1,158 @@
+{
+  "checks": [
+    {
+      "id": "attributes-use-checkboxes",
+      "pass": true
+    },
+    {
+      "id": "stock-keeps-switch",
+      "pass": true
+    },
+    {
+      "id": "keyboard-selects-checkbox",
+      "pass": true
+    },
+    {
+      "id": "styled-primary-marker",
+      "pass": true
+    },
+    {
+      "id": "hidden-sixth-selection-visible-chip",
+      "pass": true
+    },
+    {
+      "id": "chips-above-same-attribute-options",
+      "pass": true
+    },
+    {
+      "id": "refresh-preserves-two-values",
+      "pass": true
+    },
+    {
+      "id": "chip-removes-only-own-value",
+      "pass": true
+    },
+    {
+      "id": "back-restores-value",
+      "pass": true
+    },
+    {
+      "id": "mobile-checkboxes-and-chips",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "clear-removes-chips",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "actual_catalog_filters": true,
+  "no_private_writes": true,
+  "regression_checks": [
+    {
+      "id": "server-wide-price-domain",
+      "pass": true
+    },
+    {
+      "id": "slider-domain-in-rial",
+      "pass": true
+    },
+    {
+      "id": "keyboard-rial-toman-sync",
+      "pass": true
+    },
+    {
+      "id": "numeric-rial-toman-sync",
+      "pass": true
+    },
+    {
+      "id": "price-domain-stays-wide",
+      "pass": true
+    },
+    {
+      "id": "invalid-reversed-range-blocked",
+      "pass": true
+    },
+    {
+      "id": "drag-updates-filter",
+      "pass": true
+    },
+    {
+      "id": "drag-bounded-requests",
+      "pass": true
+    },
+    {
+      "id": "real-many-option-filter",
+      "pass": true
+    },
+    {
+      "id": "first-five-only",
+      "pass": true
+    },
+    {
+      "id": "all-options-expanded",
+      "pass": true
+    },
+    {
+      "id": "selected-sixth-visible-as-chip",
+      "pass": true
+    },
+    {
+      "id": "sixth-persists-after-refresh",
+      "pass": true
+    },
+    {
+      "id": "back-restores-selected-value",
+      "pass": true
+    },
+    {
+      "id": "chip-removes-hidden-selection",
+      "pass": true
+    },
+    {
+      "id": "mobile-slider-present",
+      "pass": true
+    },
+    {
+      "id": "no-nested-mobile-filter-scroller",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "out-of-range-no-results-still-adjustable",
+      "pass": true
+    },
+    {
+      "id": "five-options-no-more-button",
+      "pass": true
+    },
+    {
+      "id": "single-price-slider-disabled",
+      "pass": true
+    },
+    {
+      "id": "no-price-slider-disabled",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-page-errors",
+      "pass": true
+    }
+  ],
+  "issue": 80,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23"
+}
