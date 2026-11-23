@@ -64,3 +64,7 @@
 ## آیکن‌های هدر — #47
 
 سورس و شواهد اولیه در [1c890da](https://github.com/MohamadParsa/marketplace/commit/1c890daee14ab2e5320f859e831398ed142757b4) ثبت شدند؛ [گزارش و قبل/بعد](storefront-followups/issue-47-verification.md). #46 پیش‌تر در PR #56 ادغام و بسته شد.
+
+## فیلترهای PLP — #48
+
+سورس و شواهد اولیه در [f812e36](https://github.com/MohamadParsa/marketplace/commit/f812e36e26e05e6dcbce483f130c66a2dec24908) ثبت شدند؛ [گزارش دامنه قیمت و گزینه‌های جمع‌شونده](storefront-followups/issue-48-verification.md).
