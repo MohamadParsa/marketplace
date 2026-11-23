@@ -337,7 +337,7 @@ export function ListingPage({ url }: { url: string }) {
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
-      <SiteHeader categories={categories} />
+      <SiteHeader />
       <main className="lh-wrap plp-main" id="main">
         <nav className="plp-breadcrumb" aria-label="مسیر صفحه">
           <ol>

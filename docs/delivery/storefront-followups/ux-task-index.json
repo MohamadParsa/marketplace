@@ -12,9 +12,9 @@
       "number": 45,
       "owner": "eliassarband",
       "priority": "P2",
-      "implementation_status": "review",
+      "implementation_status": "done",
       "url": "https://github.com/MohamadParsa/marketplace/issues/45",
-      "state": "open"
+      "state": "closed"
     },
     {
       "code": "CV-SF-UX-02",
@@ -24,7 +24,7 @@
       "number": 46,
       "owner": "eliassarband",
       "priority": "P2",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "url": "https://github.com/MohamadParsa/marketplace/issues/46",
       "state": "open"
     },

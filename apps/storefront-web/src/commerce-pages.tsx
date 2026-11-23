@@ -95,7 +95,7 @@ export function CommerceShell({
   }, [title]);
   return (
     <div className="launch-home">
-      <SiteHeader categories={[]} />
+      <SiteHeader />
       <main className="lh-wrap buy-page">
         <nav className="buy-breadcrumb" aria-label="مسیر صفحه">
           <a href="/">خانه</a>

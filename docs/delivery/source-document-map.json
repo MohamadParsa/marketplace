@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "b92469a6cec09df95ec7c89dc4d9e37fb1f854db",
+  "current_source_commit": "3ebdf64e7e6cc363c10740163fda63308941ba1b",
   "rows": [
     {
       "issue": 27,
@@ -82,9 +82,19 @@
     },
     {
       "issue": 45,
-      "source_commit": "b92469a6cec09df95ec7c89dc4d9e37fb1f854db",
-      "documentation_commit": "b92469a6cec09df95ec7c89dc4d9e37fb1f854db",
+      "source_commit": "8560243bbec399af17227453a6c65ab6cff703ae",
+      "documentation_commit": "8560243bbec399af17227453a6c65ab6cff703ae",
       "verification": "docs/delivery/storefront-followups/issue-45-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "pr": 55,
+      "merge_commit": "64dad3684c3a82db674c57adc074c64580c3890f",
+      "issue_state": "closed"
+    },
+    {
+      "issue": 46,
+      "source_commit": "3ebdf64e7e6cc363c10740163fda63308941ba1b",
+      "documentation_commit": "3ebdf64e7e6cc363c10740163fda63308941ba1b",
+      "verification": "docs/delivery/storefront-followups/issue-46-verification.md",
       "source_tree_matches_documentation_revision": true
     }
   ],

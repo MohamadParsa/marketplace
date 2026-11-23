@@ -52,6 +52,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	}
 
 	if cfg.Listing != nil {
+		mux.HandleFunc("GET /storefront/navigation", cfg.Listing.Navigation)
 		mux.HandleFunc("GET /storefront/catalog", cfg.Listing.Read)
 		mux.HandleFunc("GET /storefront/suggestions", cfg.Listing.Suggest)
 		if cfg.StorefrontSurface {

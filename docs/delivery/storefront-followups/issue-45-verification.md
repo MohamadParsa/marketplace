@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-001, DOM-CATALOG-001, FEAT-SF-CACHE-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #45
@@ -32,7 +32,7 @@ migration۸ جدول مشتق‌شده `catalog_sales_state` را اضافه م�
 ## شواهد
 
 - Go: **۲۱۲تست/زیرتست موفق**، از جمله خالص واحد، مرز۳۰روزه/زمان آینده، کسر دوباره‌نشده استرداد، PostgreSQL، ابطال کش فروش/لغو، عدم نشت ورودی مالی، تنظیم/مجوز/version/retry و restart. یک roundtrip اختیاری۳GB اجرا نشد.
-- `go vet ./...` و build/typecheck هر دو فرانت موفق؛ هشدار قبلی bundle بزرگ پنل غیرمسدودکننده است. race محلی Windows اجرا نشد؛ نتیجه CI هنگام تحویل ثبت می‌شود.
+- `go vet ./...` و build/typecheck هر دو فرانت موفق؛ هشدار قبلی bundle بزرگ پنل غیرمسدودکننده است. race محلی Windows اجرا نشد؛ هر۵ job CI در PR #55، از جمله race و vet لینوکس، موفق شدند.
 - [۱۰کنترل مرورگر](../../../tests/e2e/best-selling.cjs): گزینه و API، عدم نشت ورودی فروش، انتخاب و Refresh/Back، جست‌وجو، موبایل۳۹۰، تنظیم پیش‌فرض و ورودی نامعتبر، بدون runtime pageerror. context مستقل و بدون ساخت سفارش/پرداخت یا تغییر تنظیم محلی.
 - [دسکتاپ](../../../output/playwright/issue-45/plp-desktop.png)، [موبایل](../../../output/playwright/issue-45/plp-mobile.png)، [تنظیم بک‌آفیس](../../../output/playwright/issue-45/backoffice-window.png).
 
@@ -41,3 +41,5 @@ migration۸ جدول مشتق‌شده `catalog_sales_state` را اضافه م�
 از `D:\Cherriva`، `Start-Cherriva.ps1`، migration۸ و build/startup را اجرا می‌کند؛ راهنمای اتصال خصوصی در [اجرای محلی](../../local-development.md) است. نمونه: [PLP پرفروش‌ترین](http://localhost:5197/category/mobile?sort=best-selling). انتشار لیارا با پارساست. کامیت/PR/CI و بستن ایشو پس از گیت تحویل در [نقشه سورس](../source-document-map.md) ثبت می‌شوند.
 
 کامیت سورس و شواهد اولیه: [b92469a](https://github.com/MohamadParsa/marketplace/commit/b92469a6cec09df95ec7c89dc4d9e37fb1f854db).
+
+[PR #55](https://github.com/MohamadParsa/marketplace/pull/55) با merge `64dad3684c3a82db674c57adc074c64580c3890f` و `[skip ci]` ادغام شد؛ #45 با کامنت شواهد بسته است. اصلاح نهایی مجوز UI در سورس [8560243](https://github.com/MohamadParsa/marketplace/commit/8560243bbec399af17227453a6c65ab6cff703ae) است.

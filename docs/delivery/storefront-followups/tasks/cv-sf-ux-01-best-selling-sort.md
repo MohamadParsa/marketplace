@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-001, API-PLP-SEARCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P2
 ---
 
 # CV-SF-UX-01 — افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش
 
-Issue: [#45](https://github.com/MohamadParsa/marketplace/issues/45) · اساین: `eliassarband` · وضعیت GitHub: **open؛ تحویل در حال بررسی** · شروع اجرا: به درخواست مالک.
+Issue: [#45](https://github.com/MohamadParsa/marketplace/issues/45) · اساین: `eliassarband` · وضعیت GitHub: **closed؛ کامنت پایان ثبت شد** · شروع اجرا: به درخواست مالک.
 
 ## مسئله و نتیجه
 
@@ -20,7 +20,7 @@ Issue: [#45](https://github.com/MohamadParsa/marketplace/issues/45) · اسای�
 
 ## دامنه و وضعیت
 
-سایت مشتری برای مهمان/مشتری، API سنجه و بخش محدود تنظیم مجاز بازه در بک‌آفیس. **به درخواست مالک اجرا و محلی آزموده شد؛ در انتظار تحویل Git**. اولویت P2 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
+سایت مشتری برای مهمان/مشتری، API سنجه و بخش محدود تنظیم مجاز بازه در بک‌آفیس. **به درخواست مالک اجرا و محلی آزموده شد؛ تحویل و با کامنت بسته شد**. اولویت P2 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
 
 ## خواسته قطعی مالک
 

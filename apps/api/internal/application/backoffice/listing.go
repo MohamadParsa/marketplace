@@ -613,3 +613,13 @@ func (s *Service) buildSuggestions(ctx context.Context, query string) ([]Suggest
 	}
 	return result, nil
 }
+
+func (s *Service) PublicNavigation(ctx context.Context) ([]CatalogNav, error) {
+	return cachedPublic(ctx, s, "navigation", "__shared__", nil, 5*time.Minute, func(ctx context.Context) ([]CatalogNav, error) {
+		w, e := s.publicSnapshot(ctx, "__shared__")
+		if e != nil {
+			return nil, e
+		}
+		return publicNavigation(indexedCatalog(w)), nil
+	})
+}

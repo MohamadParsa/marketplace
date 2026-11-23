@@ -1,7 +1,7 @@
 {
   "issue": 45,
   "date": "2026-11-23",
-  "implementation_status": "review",
+  "implementation_status": "done",
   "go_pass": 212,
   "optional_go_skip": 1,
   "vet": "passed",
@@ -56,5 +56,8 @@
     "no_order_or_payment_created": true,
     "no_settings_write": true
   },
-  "ci": "pending"
+  "ci": "5 jobs passed including race/vet",
+  "pr": 55,
+  "merge_commit": "64dad3684c3a82db674c57adc074c64580c3890f",
+  "issue_state": "closed"
 }
