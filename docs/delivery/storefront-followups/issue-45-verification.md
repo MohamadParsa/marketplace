@@ -39,3 +39,5 @@ migration۸ جدول مشتق‌شده `catalog_sales_state` را اضافه م�
 ## اجرا و تحویل
 
 از `D:\Cherriva`، `Start-Cherriva.ps1`، migration۸ و build/startup را اجرا می‌کند؛ راهنمای اتصال خصوصی در [اجرای محلی](../../local-development.md) است. نمونه: [PLP پرفروش‌ترین](http://localhost:5197/category/mobile?sort=best-selling). انتشار لیارا با پارساست. کامیت/PR/CI و بستن ایشو پس از گیت تحویل در [نقشه سورس](../source-document-map.md) ثبت می‌شوند.
+
+کامیت سورس و شواهد اولیه: [b92469a](https://github.com/MohamadParsa/marketplace/commit/b92469a6cec09df95ec7c89dc4d9e37fb1f854db).

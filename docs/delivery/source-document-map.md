@@ -52,3 +52,7 @@
 سورس [1f4fdd0](https://github.com/MohamadParsa/marketplace/commit/1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b) و مدارک [4a1a6d8](https://github.com/MohamadParsa/marketplace/commit/4a1a6d8720c8f19a8361f1c572ae669efcafed95) درخت اجرایی یکسان دارند. [گزارش، نگاشت، migration و تصاویر](storefront-followups/issue-42-verification.md) شامل dry-run/apply محلی، حفظ داده، repeat/restart و آزمون301 است. انتشار لیارا جداست.
 
 #42 با [PR #44](https://github.com/MohamadParsa/marketplace/pull/44) و merge `deb949d2782bff9fed982fe9d886870c2321cbcf` روی main است؛ هر۵ job CI از جمله race/vet موفق و Issue با کامنت پایان بسته شد. نسخه محلی با همین سورس راه‌اندازی و warmup شد؛ انتشار لیارا انجام نشده است.
+
+## پرفروش‌ترین — #45
+
+سورس و شواهد اولیه در [b92469a](https://github.com/MohamadParsa/marketplace/commit/b92469a6cec09df95ec7c89dc4d9e37fb1f854db) ثبت شدند؛ [گزارش](storefront-followups/issue-45-verification.md) شامل سنجه خالص، بازه، کش مستقل و آزمون‌هاست. انتشار لیارا جداست.
