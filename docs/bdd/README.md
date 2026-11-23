@@ -13,10 +13,11 @@
 
 ## پوشش فعلی
 
-در این نسخه ۲۱۸ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO و۲۴ سناریوی انتشار اولیه؛ اجرای فنی برش خانه در [گزارش #27](../delivery/initial-launch/issue-27-verification.md) و بقیه مراحل در کارهای خودشان ردیابی می‌شوند. اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
+در این نسخه ۲۲۸ سناریو ثبت شده است: ۱۶۶ سناریوی پذیرش پایه، ۱۱ سناریوی تصمیم/جریان ترکیبی،۳ سناریوی خصوصیات مشترک،۳ سناریوی تنوع/عرضه و۲ سناریوی بنر دو اندازه و۹ سناریوی مستند تکمیل محتوا/SEO و۲۴ سناریوی انتشار اولیه و۱۰سناریوی صف UX؛ اجرای فنی برش خانه در [گزارش #27](../delivery/initial-launch/issue-27-verification.md) و بقیه مراحل در کارهای خودشان ردیابی می‌شوند. اجرای مستقل برش‌ها در [گزارش Issue#5](../delivery/review-v1-1/issue-5-verification.md) و [گزارش Issue#6](../delivery/review-v1-1/issue-6-verification.md) ثبت می‌شود؛ runner Gherkin مستقلی اجرا نشده است.
 
 | بخش | فایل | سناریو | مرجع |
 | --- | --- | ---: | --- |
+| اصلاحات storefront (CV-SF-UX-01 تا10) | [storefront-ux-followups.feature](features/experiences/storefront-ux-followups.feature) | 10 | [صف و تسک‌های todo](../delivery/storefront-followups/ux-followups.md) |
 | انتشار اولیه چهار برش (CV-LCH-01 تا04) | [initial-launch.feature](features/experiences/initial-launch.feature) | 24 | [برنامه](../delivery/initial-launch/README.md) |
 | محتوای دسته/محصول و SEO (CV-R2-16/17) | [catalog-content-seo.feature](features/experiences/catalog-content-seo.feature) | 9 | [مرجع](../domains/catalog/content-and-seo.md) |
 | بنر دو اندازه (CV-R2-07) | [features/experiences/responsive-banners.feature](features/experiences/responsive-banners.feature) | 2 | [شرح کار](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) |

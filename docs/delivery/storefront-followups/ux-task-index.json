@@ -1,0 +1,108 @@
+{
+  "updated": "2026-11-23",
+  "owner": "eliassarband",
+  "execution": "awaiting-owner-selection",
+  "document_status": "in-review",
+  "items": [
+    {
+      "code": "CV-SF-UX-01",
+      "id": "FEAT-SF-UX-001",
+      "title": "افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-01-best-selling-sort.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-02",
+      "id": "FEAT-SF-UX-002",
+      "title": "منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-02-hierarchical-category-menu.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-03",
+      "id": "FEAT-SF-UX-003",
+      "title": "بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-03-header-account-cart-icons.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P3",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-04",
+      "id": "FEAT-SF-UX-004",
+      "title": "اسلایدر قیمت و نمایش بیشتر فیلترهای دارای بیش از۵گزینه در PLP",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-04-plp-price-slider-filter-disclosure.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-05",
+      "id": "FEAT-SF-UX-005",
+      "title": "جایگزینی نمایش checkboxهای storefront با Switch مشترک",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-05-storefront-switch-controls.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-06",
+      "id": "FEAT-SF-UX-006",
+      "title": "چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-06-sort-primary-chips.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P3",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-07",
+      "id": "FEAT-SF-UX-007",
+      "title": "Progress overlay یکپارچه و بدون جابه‌جایی محتوا در انتخاب، سبد و تمام مسیر خرید",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-07-stable-overlay-progress.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P1",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-08",
+      "id": "FEAT-SF-UX-008",
+      "title": "ارتفاع محدود معرفی و مشخصات فنی PDP با مشاهده بیشتر/کمتر",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-08-pdp-content-read-more.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-09",
+      "id": "FEAT-SF-UX-009",
+      "title": "یکسان‌سازی متن مشتری به «ارسال از … روز کاری»",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-09-storefront-dispatch-wording.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    },
+    {
+      "code": "CV-SF-UX-10",
+      "id": "FEAT-SF-UX-010",
+      "title": "چیدمان جمع‌وجور چیپ‌های محور تنوع، مخصوص وزن‌های متعدد طلا",
+      "path": "docs/delivery/storefront-followups/tasks/cv-sf-ux-10-pdp-dense-variant-chips.md",
+      "number": null,
+      "owner": "eliassarband",
+      "priority": "P2",
+      "implementation_status": "todo"
+    }
+  ]
+}

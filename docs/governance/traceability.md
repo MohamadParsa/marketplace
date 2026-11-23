@@ -150,3 +150,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## URL عمومی کاتالوگ — #42
 
 [نیازمندی و AC01..07](../delivery/storefront-followups/public-catalog-urls.md) ← [نگاشت و گزارش اجرا](../delivery/storefront-followups/issue-42-verification.md) ← تست‌های `catalog_urls_test.go` و [مرورگر](../../tests/e2e/catalog-public-urls.cjs). وضعیت سند in-review و اجرای قابلیت done است؛ #41 پیش از شروع این کار بسته شد و #42 پس از عبور CI و ادغام PR #44 با کامنت پایان بسته شد.
+
+## صف تجربه storefront — CV-SF-UX-01 تا10
+
+[۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا todo و منتظر انتخاب مالک است؛ سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
