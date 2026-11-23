@@ -356,6 +356,7 @@ export function ListingPage({ url }: { url: string }) {
                   )}
                   <ChoiceGroup
                     label="مرتب‌سازی کالاها"
+                    appearance="chips"
                     value={params.get("sort") ?? "default"}
                     options={(
                       data?.sort_options ?? Object.keys(sortLabels)

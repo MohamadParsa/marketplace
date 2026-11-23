@@ -6,6 +6,7 @@ export function ChoiceGroup({
   options,
   onChange,
   disabled = false,
+  appearance = "default",
 }: {
   label: string;
   value: string;
@@ -17,10 +18,11 @@ export function ChoiceGroup({
   }[];
   onChange: (value: string) => void;
   disabled?: boolean;
+  appearance?: "default" | "chips";
 }) {
   const name = useId();
   return (
-    <fieldset className="choice-group" disabled={disabled}>
+    <fieldset className={`choice-group choice-group--${appearance}`} disabled={disabled}>
       <legend>{label}</legend>
       <div className="choice-group-options">
         {options.map((o) => (
