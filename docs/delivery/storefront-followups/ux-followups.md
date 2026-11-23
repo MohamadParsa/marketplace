@@ -11,7 +11,7 @@ implementation_status: todo
 
 # اصلاحات جدید تجربه سایت — ۲۰۲۶-۱۱-۲۳
 
-این بسته با ثبت۱۰تسک شروع شد. مالک ابتدا اجرای #45، #46 و #47 را خواست؛ هر سه با شواهد بسته شدند. سپس #48 و #49 انتخاب شدند و آن‌ها هم اجرا، آزموده و با کامنت بسته شدند. **#45تا#52 تمام شده‌اند و با کامنت بسته‌اند؛ #53/#54 منتظر انتخاب‌اند.** همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
+این بسته با ثبت۱۰تسک شروع شد. مالک ابتدا اجرای #45، #46 و #47 را خواست؛ هر سه با شواهد بسته شدند. سپس #48 و #49 انتخاب شدند و آن‌ها هم اجرا، آزموده و با کامنت بسته شدند. **#45تا#52 تمام شده‌اند و با کامنت بسته‌اند؛ #53/#54 با انتخاب مالک پیاده/آزموده شده و در review تحویل‌اند.** همه Issueها به `eliassarband` تخصیص می‌یابند و تا اجرای واقعی، ثبت شواهد و کامنت پایان باز می‌مانند. P1/P2/P3 پیشنهاد برنامه‌ریزی‌اند، نه دستور شروع. شماره ردیف، ترتیب متن مالک را دنبال می‌کند.
 
 ## قواعد مشترک
 
@@ -34,8 +34,8 @@ implementation_status: todo
 | CV-SF-UX-06 · [#50](https://github.com/MohamadParsa/marketplace/issues/50) | [چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary](tasks/cv-sf-ux-06-sort-primary-chips.md) | P3 | done؛ با کامنت بسته شد؛ [شواهد](issue-50-verification.md) |
 | CV-SF-UX-07 · [#51](https://github.com/MohamadParsa/marketplace/issues/51) | [Progress overlay یکپارچه و بدون جابه‌جایی محتوا در انتخاب، سبد و تمام مسیر خرید](tasks/cv-sf-ux-07-stable-overlay-progress.md) | P1 | done؛ با کامنت بسته شد؛ [شواهد](issue-51-verification.md) |
 | CV-SF-UX-08 · [#52](https://github.com/MohamadParsa/marketplace/issues/52) | [ارتفاع محدود معرفی و مشخصات فنی PDP با مشاهده بیشتر/کمتر](tasks/cv-sf-ux-08-pdp-content-read-more.md) | P2 | done؛ با کامنت بسته شد؛ [شواهد](issue-52-verification.md) |
-| CV-SF-UX-09 · [#53](https://github.com/MohamadParsa/marketplace/issues/53) | [یکسان‌سازی متن مشتری به «ارسال از … روز کاری»](tasks/cv-sf-ux-09-storefront-dispatch-wording.md) | P2 | todo؛ منتظر انتخاب مالک |
-| CV-SF-UX-10 · [#54](https://github.com/MohamadParsa/marketplace/issues/54) | [چیدمان جمع‌وجور چیپ‌های محور تنوع، مخصوص وزن‌های متعدد طلا](tasks/cv-sf-ux-10-pdp-dense-variant-chips.md) | P2 | todo؛ منتظر انتخاب مالک |
+| CV-SF-UX-09 · [#53](https://github.com/MohamadParsa/marketplace/issues/53) | [یکسان‌سازی متن مشتری به «ارسال از … روز کاری»](tasks/cv-sf-ux-09-storefront-dispatch-wording.md) | P2 | review؛ اجرا/شواهد آماده |
+| CV-SF-UX-10 · [#54](https://github.com/MohamadParsa/marketplace/issues/54) | [چیدمان جمع‌وجور چیپ‌های محور تنوع، مخصوص وزن‌های متعدد طلا](tasks/cv-sf-ux-10-pdp-dense-variant-chips.md) | P2 | review؛ اجرا/شواهد آماده |
 
 ## مرزهای جلوگیری از هم‌پوشانی
 

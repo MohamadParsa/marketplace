@@ -82,3 +82,10 @@
 - #52: سورس و مدرک اولیه در [7f57d07](https://github.com/MohamadParsa/marketplace/commit/7f57d07a85ec60af267fed1036a321016807f6f9)؛ [گزارش و تصاویر](storefront-followups/issue-52-verification.md).
 
 هر سه پیاده و محلی آزموده شده‌اند؛۵۸کنترل مرورگر در مجموع موفق است. هر۵ job CI در PR #60 موفق، هر سه Issue با کامنت بسته و merge 17c9d4890168d4f57e1b94ca8dae0d414bf80d9b روی main است؛ آخرین کد اجرایی با اصلاح اسکرول #51 در f236335e7d06b4f74fa1460fdf792b2236ff97c0 ثبت شده است.
+
+## دو اصلاح پایانی تجربه storefront — #53/#54
+
+- #53: سورس و مدرک اولیه [fec61ea](https://github.com/MohamadParsa/marketplace/commit/fec61eac457bdbac0901d43e2464f9b808ededa9)؛ [گزارش/تصاویر](storefront-followups/issue-53-verification.md).
+- #54: سورس و مدرک اولیه [964824d](https://github.com/MohamadParsa/marketplace/commit/964824df0a40d7c5bdb3abcb7256613ccff0f982)؛ [گزارش/تصاویر](storefront-followups/issue-54-verification.md).
+
+۳۹کنترل جدید و۲۳رگرسیون موفق، build/lint موفق؛ وضعیت CI/ادغام و بسته‌شدن جدا تکمیل می‌شود.

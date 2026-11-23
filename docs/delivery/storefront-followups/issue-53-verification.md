@@ -26,6 +26,6 @@ implementation_status: review
 
 ## شواهد
 
-build/typecheck موفق؛ [۱۱کنترل مرورگر](../../../tests/e2e/dispatch-wording.cjs) برای صفر/یک/۱۲، انتخاب سلر و Refresh، سبد/ارسال/خلاصه quote، حفظ محاسبه حمل و نبود عبارت قدیمی، موبایل۳۹۰ و نبود runtime pageerror موفق است. پاسخ‌های خصوصی و عرضه‌ها fixture شبکه مرورگرند؛ هیچ سفارش/واریز یا تغییر داده کاتالوگ در مقصد ثبت نشد.
+build/typecheck و lint موفق؛ [۱۱کنترل مرورگر](../../../tests/e2e/dispatch-wording.cjs) برای صفر/یک/۱۲، انتخاب سلر و Refresh، سبد/ارسال/خلاصه quote، حفظ محاسبه حمل و نبود عبارت قدیمی، موبایل۳۹۰ و نبود runtime pageerror موفق است. پاسخ‌های خصوصی و عرضه‌ها fixture شبکه مرورگرند؛ هیچ سفارش/واریز یا تغییر داده کاتالوگ در مقصد ثبت نشد.
 
 [دسکتاپ](../../../output/playwright/issue-53/dispatch-desktop.png) · [موبایل](../../../output/playwright/issue-53/dispatch-mobile.png) · [شرح و AC](tasks/cv-sf-ux-09-storefront-dispatch-wording.md). کد در D:\Cherriva؛ انتشار لیارا با پارساست؛ نتیجه ادغام/CI جدا ثبت می‌شود.

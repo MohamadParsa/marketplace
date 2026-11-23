@@ -34,3 +34,7 @@ API موجود برای محور unit را نیز برمی‌گرداند؛ فق
 [واقعی دسکتاپ](../../../output/playwright/issue-54/real-gold-desktop.png) · [واقعی موبایل](../../../output/playwright/issue-54/real-gold-mobile.png) · [۱۵گزینه دسکتاپ](../../../output/playwright/issue-54/collapsed-desktop.png) · [منتخب بیرون محدوده، موبایل](../../../output/playwright/issue-54/selected-mobile.png) · [بازشده موبایل](../../../output/playwright/issue-54/expanded-mobile.png).
 
 [شرح و AC](tasks/cv-sf-ux-10-pdp-dense-variant-chips.md). کد در D:\Cherriva؛ انتشار لیارا با پارساست؛ وضعیت CI/ادغام جدا ثبت می‌شود.
+
+## رگرسیون مسیر خرید
+
+۲۳کنترل موجود [stable-progress.cjs](../../../tests/e2e/stable-progress.cjs) روی سورس جدید موفق شد؛ انتخاب تنوع، قطع ارتباط/تلاش دوباره سبد، آدرس، wizard، رضایت، واریز fixture، reduced-motion و نوار قابل‌مشاهده هنگام اسکرول پوشش داده شدند. [نتیجه ماشین‌خوان](issue-54-regression-checks.json) و [تصویر تازه رگرسیون](../../../output/playwright/issue-54/regression/pdp-loading-desktop.png) جدا ثبت‌اند؛ تصاویر تاریخی #51 به نسخه قبلی بازگردانده شدند. مجموع کنترل‌های این تحویل:۳۹کنترل جدید و۲۳رگرسیون، همگی موفق.
