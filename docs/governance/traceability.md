@@ -161,7 +161,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 
 ## اجرای UX-02/03 — #46 و #47
 
-[منوی درختی و شواهد #46](../delivery/storefront-followups/issue-46-verification.md) به تست API ناوبری و `category-menu.cjs` وصل است؛ [آیکن‌ها و شواهد #47](../delivery/storefront-followups/issue-47-verification.md) به `header-actions.cjs` و تصاویر قبل/بعد وصل است. #45/#46 بسته شده‌اند؛ وضعیت نهایی #47 پس از گیت CI ثبت می‌شود.
+[منوی درختی و شواهد #46](../delivery/storefront-followups/issue-46-verification.md) به تست API ناوبری و `category-menu.cjs` وصل است؛ [آیکن‌ها و شواهد #47](../delivery/storefront-followups/issue-47-verification.md) به `header-actions.cjs` و تصاویر قبل/بعد وصل است. #45/#46/#47 بسته‌اند و نتیجه CI در گزارش همان تسک ثبت است.
 
 ## اجرای UX-04 — #48
 
@@ -170,3 +170,5 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای UX-05 — #49
 
 [Switch مشترک و فهرست پوشش](../delivery/storefront-followups/issue-49-verification.md) به `storefront-switches.cjs` (۲۰کنترل) و رگرسیون `plp-filters.cjs` (۲۳کنترل) وصل است؛ تأیید خرید فقط fixture مرورگر و بدون write مالی تست شد.
+
+تحویل انتخاب #45تا#49: هر پنج Issue با کامنت پایان و شواهد بسته، سورس/مدارک روی main و هر۵ job CI در PR متناظر موفق است. شاخص JSON صف وضعیت done این پنج و todo کارهای #50تا#54 را جدا نگه می‌دارد؛ تأیید سند همچنان از اجرای قابلیت مستقل است.

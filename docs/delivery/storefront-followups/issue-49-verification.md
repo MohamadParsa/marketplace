@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-005, FEAT-SF-UX-004]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #49
@@ -39,3 +39,5 @@ checkboxهای سایت به Switch مشترک با primary فعلی، track ر�
 تصاویر رگرسیون جدید در پوشه [رگرسیون](../../../output/playwright/issue-49/regression/filters-mobile.png) ذخیره شدند؛ تصاویر تحویل اصلی #48 بازنویسی نشدند. [شرح/ACها](tasks/cv-sf-ux-05-storefront-switch-controls.md) و نتایج ماشین‌خوان کنار همین گزارش‌اند.
 
 اجرا از D:\Cherriva با Start-Cherriva.ps1؛ لینک [فیلترهای موبایل](http://localhost:5197/category/mobile). #45تا#48 پیش‌تر با کامنت بسته شدند؛ #49 پس از تحویل سورس/CI با کامنت بسته می‌شود. انتشار لیارا با پارساست.
+
+[PR #59](https://github.com/MohamadParsa/marketplace/pull/59) با merge `1408196e0ddfb360b86642c9114fc88322d61f7f` و `[skip ci]` ادغام شد؛ هر۵ job CI شامل race/vet موفق و #49 با کامنت شواهد بسته است. بررسی HTTP نهایی، catalog/navigation با200، sort پرفروش‌ترین و price_range، ریدایرکت301 نمونه قدیمی و bundle زنده دارای `sf-switch-input` را تأیید کرد. SHA فایل کاتالوگ منبع نیز همان مقدار manifest مانده است.

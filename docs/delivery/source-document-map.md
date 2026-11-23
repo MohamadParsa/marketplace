@@ -72,3 +72,5 @@
 ## Switchهای storefront — #49
 
 سورس و شواهد اولیه در [b3b918e](https://github.com/MohamadParsa/marketplace/commit/b3b918ec68bf63cca5c22f92361b9d1f6aa91e07) ثبت شدند؛ [گزارش پوشش و تصاویر](storefront-followups/issue-49-verification.md). #48 پیش‌تر در PR #58 ادغام و بسته شد.
+
+تحویل انتخاب‌شده #45تا#49 کامل است: PRهای #55تا#59 با هر۵ job موفق CI و mergeهای `[skip ci]` روی main هستند و هر Issue کامنت پایان دارد و بسته است. مسیر `D:\Cherriva` همگام و نسخه محلی آماده بررسی است؛ انتشار لیارا انجام نشده است.
