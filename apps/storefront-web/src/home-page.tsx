@@ -1,7 +1,7 @@
 import { LoadingPlaceholder } from "./busy-region";
 import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useCommerce } from "./commerce";
 import { SearchBox } from "./search-box";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
@@ -95,6 +95,7 @@ const paths: Record<string, React.ReactNode> = {
     </>
   ),
   arrow: <path d="m20 6-10 10 10 10" />,
+  chevron: <path d="m8 12 8 8 8-8" />,
 };
 export function Icon({ name }: { name: string }) {
   return (
@@ -439,6 +440,76 @@ function PromoBanners({
     </section>
   ) : null;
 }
+function HomeCategories({ categories }: { categories: HomeCategory[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const remainderId = useId();
+
+  const categoryLink = (category: HomeCategory, lazy = false) => (
+    <a
+      key={category.id}
+      href={category.url}
+      tabIndex={lazy && !expanded ? -1 : undefined}
+    >
+      <span>
+        {category.image_url ? (
+          <img
+            src={api + category.image_url}
+            alt=""
+            loading={lazy ? "lazy" : undefined}
+          />
+        ) : (
+          <Icon name="bag" />
+        )}
+      </span>
+      <b>{category.name}</b>
+      <small>{category.count.toLocaleString("fa-IR")} کالا</small>
+    </a>
+  );
+
+  return (
+    <section
+      className="lh-category-block"
+      id="home-categories"
+      aria-label="دسته‌های دارای کالای موجود"
+    >
+      <div className="lh-category-heading">
+        <h2>دسته‌های اصلی</h2>
+        <span>انتخاب از دسته‌های موجود چریوا</span>
+      </div>
+      <div className="lh-categories lh-category-strip">
+        {categories.slice(0, 8).map((category) => categoryLink(category))}
+      </div>
+      {categories.length > 8 && (
+        <>
+          <div
+            id={remainderId}
+            className="lh-all-categories"
+            data-expanded={expanded}
+            aria-hidden={!expanded}
+          >
+            <div className="lh-category-clip">
+              <div className="lh-categories lh-category-remainder">
+                {categories
+                  .slice(8)
+                  .map((category) => categoryLink(category, true))}
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="lh-category-toggle"
+            aria-expanded={expanded}
+            aria-controls={remainderId}
+            aria-label={expanded ? "بستن دسته‌ها" : "باز کردن دسته‌ها"}
+            onClick={() => setExpanded(!expanded)}
+          >
+            <Icon name="chevron" />
+          </button>
+        </>
+      )}
+    </section>
+  );
+}
 export function HomePage() {
   useEffect(() => {
     document.title = "Cherriva | دنیایی برای انتخاب تو";
@@ -529,65 +600,7 @@ export function HomePage() {
               banners={banners}
               photos={rails.slice(0, 2).flatMap((r) => r.products.slice(0, 1))}
             />
-            <section
-              className="lh-category-block"
-              id="home-categories"
-              aria-label="دسته‌های دارای کالای موجود"
-            >
-              <div className="lh-category-heading">
-                <h2>دسته‌های اصلی</h2>
-                <span>انتخاب از دسته‌های موجود چریوا</span>
-              </div>
-              <div className="lh-categories lh-category-strip">
-                {availableCategories.slice(0, 8).map((r) => (
-                  <a key={r.id} href={r.url}>
-                    <span>
-                      {r.image_url ? (
-                        <img src={api + r.image_url} alt="" />
-                      ) : (
-                        <Icon name="bag" />
-                      )}
-                    </span>
-                    <b>{r.name}</b>
-                    <small>
-                      {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
-                    </small>
-                  </a>
-                ))}
-              </div>
-              {availableCategories.length > 8 && (
-                <details className="lh-all-categories">
-                  <summary>
-                    مشاهده همه دسته‌ها (
-                    {new Intl.NumberFormat("fa-IR").format(
-                      availableCategories.length,
-                    )}
-                    )
-                  </summary>
-                  <div className="lh-categories lh-category-remainder">
-                    {availableCategories.slice(8).map((r) => (
-                      <a key={r.id} href={r.url}>
-                        <span>
-                          {r.image_url ? (
-                            <img
-                              src={api + r.image_url}
-                              alt=""
-                              loading="lazy"
-                            />
-                          ) : (
-                            <Icon name="bag" />
-                          )}
-                        </span>
-                        <b>{r.name}</b>
-                        <small>
-                          {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
-                        </small>
-                      </a>
-                    ))}
-                  </div>
-                </details>
-              )}
-            </section>
+            <HomeCategories categories={availableCategories} />
             {loading ? (
               <LoadingPlaceholder label="دریافت محصولات" />
             ) : error ? (

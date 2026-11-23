@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from "react";
 import { SiteHeader, SiteFooter, Icon } from "./home-page";
 import { navigate } from "./navigation";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
+// Keep the PDP add button visible while new additions are paused.
+const pdpAddPaused = import.meta.env.VITE_PDP_ADD_TO_CART !== "true";
 type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Feature = {
   attribute_id: string;
@@ -143,12 +145,13 @@ export function ProductPage({ url }: { url: string }) {
     [added, setAdded] = useState(false);
   async function changeCartQuantity(next: number) {
     if (!data || !commerce.cart || adding) return;
+    const existing = commerce.cart.items.find(
+      (i) => i.offer_id === data.selected_offer_id,
+    );
+    if (!existing && pdpAddPaused) return;
     setAdding(true);
     setAddError("");
     try {
-      const existing = commerce.cart.items.find(
-        (i) => i.offer_id === data.selected_offer_id,
-      );
       await commerce.mutate({
         action: next === 0 ? "remove" : existing ? "set" : "add",
         offer_id: data.selected_offer_id,
@@ -342,7 +345,7 @@ export function ProductPage({ url }: { url: string }) {
     if (target) choose(target.id);
   };
   return (
-    <div className="launch-home product-page" dir="rtl">
+    <div className={`launch-home product-page${data && !status ? " has-purchase-bar" : ""}`} dir="rtl">
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
@@ -391,6 +394,7 @@ export function ProductPage({ url }: { url: string }) {
             </nav>
             <BusyRegion
               busy={loading || checking}
+              className="pdp-layout"
               label="به‌روزرسانی انتخاب محصول"
             >
               <section className="pdp-overview">
@@ -473,26 +477,28 @@ export function ProductPage({ url }: { url: string }) {
                     </div>
                   )}
                 </div>
-                <aside
-                  className="pdp-buybox"
-                  aria-label="انتخاب فروشنده و خرید"
-                >
-                  <span className="pdp-buybox-tag">
-                    {available
-                      ? "قیمت نقدی این انتخاب"
-                      : "این انتخاب موجود نیست"}
-                  </span>
-                  <h2>{offer?.store_name ?? "فروشنده فعالی ندارد"}</h2>
-                  {offer && (
-                    <p>
-                      <Icon name="bag" />
-                      {dispatchTime(offer.lead_days)}
-                    </p>
-                  )}
-                  <small>
-                    هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص
-                    می‌شود.
-                  </small>
+              </section>
+              <aside
+                className="pdp-buybox"
+                aria-label="انتخاب فروشنده و خرید"
+              >
+                <span className="pdp-buybox-tag">
+                  {available
+                    ? "قیمت نقدی این انتخاب"
+                    : "این انتخاب موجود نیست"}
+                </span>
+                <h2>{offer?.store_name ?? "فروشنده فعالی ندارد"}</h2>
+                {offer && (
+                  <p>
+                    <Icon name="bag" />
+                    {dispatchTime(offer.lead_days)}
+                  </p>
+                )}
+                <small>
+                  هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص
+                  می‌شود.
+                </small>
+                <div className="pdp-buy-actions">
                   {available && offer?.price != null ? (
                     <div className="pdp-price">
                       {offer.regular_price &&
@@ -516,11 +522,6 @@ export function ProductPage({ url }: { url: string }) {
                   ) : (
                     <p className="pdp-unavailable">ناموجود</p>
                   )}
-                  <div className="pdp-selection-status" aria-live="polite">
-                    {selectionError ? (
-                      <p role="alert">{selectionError}</p>
-                    ) : null}
-                  </div>
                   <div
                     className="pdp-purchase"
                     data-offer-id={data.selected_offer_id}
@@ -535,175 +536,183 @@ export function ProductPage({ url }: { url: string }) {
                         )?.quantity ?? 0
                       }
                       busy={adding || loading || checking || !commerce.cart}
+                      addDisabled={pdpAddPaused}
                       canIncrease={canPurchase && !selectionError}
                       onChange={(next) => void changeCartQuantity(next)}
                     />
                   </div>
-                  {addError && <p role="alert">{addError}</p>}
-                  <p id="pdp-purchase-note" className="pdp-purchase-note">
-                    {available
-                      ? "قیمت نقدی بدون هزینه ارسال؛ روش پرداخت در ادامه مشخص می‌شود."
-                      : "در حال حاضر امکان خرید این انتخاب وجود ندارد."}
-                  </p>
-                </aside>
-              </section>
-            </BusyRegion>
-            <section
-              className="pdp-sellers"
-              aria-labelledby="pdp-sellers-title"
-            >
-              <h2 id="pdp-sellers-title">
-                فروشنده‌های این انتخاب{" "}
-                <small>({data.offers.length.toLocaleString("fa-IR")})</small>
-              </h2>
-              {!data.offers.length ? (
-                <p>برای این تنوع عرضه فعالی ثبت نشده است.</p>
-              ) : (
-                data.offers.map((o) => (
-                  <article
-                    className={o.id === offer?.id ? "selected" : ""}
-                    key={o.id}
-                  >
-                    <div>
-                      <h3>{o.store_name}</h3>
-                      <span>
-                        {o.id === offer?.id
-                          ? "فروشنده انتخاب‌شده"
-                          : o.available
-                            ? "عرضه موجود"
-                            : "ناموجود"}
-                      </span>
-                    </div>
-                    <p>{dispatchTime(o.lead_days)}</p>
-                    <b>
-                      {o.available && o.price != null
-                        ? money(o.price) + " تومان"
-                        : "ناموجود"}
-                    </b>
-                    <button
-                      disabled={loading || o.id === offer?.id || !o.available}
-                      onClick={() => choose(data.selected_variant_id, o.id)}
-                    >
-                      {o.id === offer?.id ? "انتخاب‌شده" : "انتخاب فروشنده"}
-                    </button>
-                  </article>
-                ))
-              )}
-            </section>
-            <nav className="pdp-tabs" aria-label="بخش‌های محصول">
-              <a href="#introduction">معرفی محصول</a>
-              <a href="#specifications">مشخصات فنی</a>
-              <a href="#pros-cons">مزایا و معایب</a>
-              <a href="#reviews">نظرات کاربران</a>
-              <a href="#questions">پرسش و پاسخ</a>
-            </nav>
-            <section className="pdp-section" id="introduction">
-              <h2>معرفی محصول</h2>
-              <ExpandableContent label="معرفی محصول" resetKey={data.id}>
-                {content.full_description ? (
-                  <div
-                    className="pdp-full-description"
-                    dangerouslySetInnerHTML={{
-                      __html: content.full_description,
-                    }}
-                  />
-                ) : (
-                  <p>توضیح تکمیلی هنوز ثبت نشده است.</p>
-                )}
-              </ExpandableContent>
-            </section>
-            <section className="pdp-section" id="specifications">
-              <h2>مشخصات فنی</h2>
-              <ExpandableContent label="مشخصات فنی" resetKey={data.id}>
-                <dl className="pdp-specifications">
-                  {data.brand && (
-                    <div>
-                      <dt>برند</dt>
-                      <dd>{data.brand.name}</dd>
-                    </div>
-                  )}
-                  {data.specifications.map((f) => (
-                    <div key={f.attribute_id}>
-                      <dt>{f.name}</dt>
-                      <dd dir="auto">
-                        {f.value} {f.unit}
-                      </dd>
-                    </div>
-                  ))}
-                  {(["weight", "length", "width", "height"] as const)
-                    .filter((k) => content.shipping[k] != null)
-                    .map((k) => (
-                      <div key={k}>
-                        <dt>
-                          {
-                            {
-                              weight: "وزن حمل",
-                              length: "طول",
-                              width: "عرض",
-                              height: "ارتفاع",
-                            }[k]
-                          }
-                        </dt>
-                        <dd>
-                          {content.shipping[k]?.toLocaleString("fa-IR")}{" "}
-                          {k === "weight"
-                            ? "گرم"
-                            : content.shipping.dimension_unit === "mm"
-                              ? "میلی‌متر"
-                              : "سانتی‌متر"}
-                        </dd>
-                      </div>
-                    ))}
-                </dl>
-              </ExpandableContent>
-            </section>
-            <section className="pdp-section" id="pros-cons" tabIndex={-1}>
-              <h2>مزایا و معایب</h2>
-              <ExpandableContent label="مزایا و معایب" resetKey={data.id}>
-                <div className="pdp-pros-cons">
-                  {content.advantages.length > 0 && (
-                    <div>
-                      <h3>مزایا</h3>
-                      <ul>
-                        {content.advantages.map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {content.disadvantages.length > 0 && (
-                    <div>
-                      <h3>معایب</h3>
-                      <ul>
-                        {content.disadvantages.map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
-                {!content.advantages.length &&
-                  !content.disadvantages.length && (
-                    <p>مزایا و معایب این محصول هنوز ثبت نشده است.</p>
+                <div className="pdp-selection-status" aria-live="polite">
+                  {selectionError ? (
+                    <p role="alert">{selectionError}</p>
+                  ) : null}
+                </div>
+                {addError && <p role="alert">{addError}</p>}
+                <p id="pdp-purchase-note" className="pdp-purchase-note">
+                  {available
+                    ? "قیمت نقدی بدون هزینه ارسال؛ روش پرداخت در ادامه مشخص می‌شود."
+                    : "در حال حاضر امکان خرید این انتخاب وجود ندارد."}
+                </p>
+              </aside>
+              <div className="pdp-details">
+                <section
+                  className="pdp-sellers"
+                  aria-labelledby="pdp-sellers-title"
+                >
+                  <h2 id="pdp-sellers-title">
+                    فروشنده‌های این انتخاب{" "}
+                    <small>({data.offers.length.toLocaleString("fa-IR")})</small>
+                  </h2>
+                  {!data.offers.length ? (
+                    <p>برای این تنوع عرضه فعالی ثبت نشده است.</p>
+                  ) : (
+                    data.offers.map((o) => (
+                      <article
+                        className={o.id === offer?.id ? "selected" : ""}
+                        key={o.id}
+                      >
+                        <div>
+                          <h3>{o.store_name}</h3>
+                          <span>
+                            {o.id === offer?.id
+                              ? "فروشنده انتخاب‌شده"
+                              : o.available
+                                ? "عرضه موجود"
+                                : "ناموجود"}
+                          </span>
+                        </div>
+                        <p>{dispatchTime(o.lead_days)}</p>
+                        <b>
+                          {o.available && o.price != null
+                            ? money(o.price) + " تومان"
+                            : "ناموجود"}
+                        </b>
+                        <button
+                          disabled={loading || o.id === offer?.id || !o.available}
+                          onClick={() => choose(data.selected_variant_id, o.id)}
+                        >
+                          {o.id === offer?.id ? "انتخاب‌شده" : "انتخاب فروشنده"}
+                        </button>
+                      </article>
+                    ))
                   )}
-              </ExpandableContent>
-            </section>
-            <section className="pdp-section" id="reviews">
-              <h2>نظرات کاربران</h2>
-              <p>
-                {content.reviews_enabled
-                  ? "امکان ثبت و نمایش نظر هنوز فعال نشده است."
-                  : "ثبت نظر برای این محصول غیرفعال است."}
-              </p>
-            </section>
-            <section className="pdp-section" id="questions">
-              <h2>پرسش و پاسخ</h2>
-              <p>
-                {content.qa_enabled
-                  ? "امکان ثبت و نمایش پرسش هنوز فعال نشده است."
-                  : "ثبت پرسش برای این محصول غیرفعال است."}
-              </p>
-            </section>
+                </section>
+                <nav className="pdp-tabs" aria-label="بخش‌های محصول">
+                  <a href="#introduction">معرفی محصول</a>
+                  <a href="#specifications">مشخصات فنی</a>
+                  <a href="#pros-cons">مزایا و معایب</a>
+                  <a href="#reviews">نظرات کاربران</a>
+                  <a href="#questions">پرسش و پاسخ</a>
+                </nav>
+                <section className="pdp-section" id="introduction">
+                  <h2>معرفی محصول</h2>
+                  <ExpandableContent label="معرفی محصول" resetKey={data.id}>
+                    {content.full_description ? (
+                      <div
+                        className="pdp-full-description"
+                        dangerouslySetInnerHTML={{
+                          __html: content.full_description,
+                        }}
+                      />
+                    ) : (
+                      <p>توضیح تکمیلی هنوز ثبت نشده است.</p>
+                    )}
+                  </ExpandableContent>
+                </section>
+                <section className="pdp-section" id="specifications">
+                  <h2>مشخصات فنی</h2>
+                  <ExpandableContent label="مشخصات فنی" resetKey={data.id}>
+                    <dl className="pdp-specifications">
+                      {data.brand && (
+                        <div>
+                          <dt>برند</dt>
+                          <dd>{data.brand.name}</dd>
+                        </div>
+                      )}
+                      {data.specifications.map((f) => (
+                        <div key={f.attribute_id}>
+                          <dt>{f.name}</dt>
+                          <dd dir="auto">
+                            {f.value} {f.unit}
+                          </dd>
+                        </div>
+                      ))}
+                      {(["weight", "length", "width", "height"] as const)
+                        .filter((k) => content.shipping[k] != null)
+                        .map((k) => (
+                          <div key={k}>
+                            <dt>
+                              {
+                                {
+                                  weight: "وزن حمل",
+                                  length: "طول",
+                                  width: "عرض",
+                                  height: "ارتفاع",
+                                }[k]
+                              }
+                            </dt>
+                            <dd>
+                              {content.shipping[k]?.toLocaleString("fa-IR")}{" "}
+                              {k === "weight"
+                                ? "گرم"
+                                : content.shipping.dimension_unit === "mm"
+                                  ? "میلی‌متر"
+                                  : "سانتی‌متر"}
+                            </dd>
+                          </div>
+                        ))}
+                    </dl>
+                  </ExpandableContent>
+                </section>
+                <section className="pdp-section" id="pros-cons" tabIndex={-1}>
+                  <h2>مزایا و معایب</h2>
+                  <ExpandableContent label="مزایا و معایب" resetKey={data.id}>
+                    <div className="pdp-pros-cons">
+                      {content.advantages.length > 0 && (
+                        <div>
+                          <h3>مزایا</h3>
+                          <ul>
+                            {content.advantages.map((s, i) => (
+                              <li key={i}>{s}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {content.disadvantages.length > 0 && (
+                        <div>
+                          <h3>معایب</h3>
+                          <ul>
+                            {content.disadvantages.map((s, i) => (
+                              <li key={i}>{s}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                    {!content.advantages.length &&
+                      !content.disadvantages.length && (
+                        <p>مزایا و معایب این محصول هنوز ثبت نشده است.</p>
+                      )}
+                  </ExpandableContent>
+                </section>
+                <section className="pdp-section" id="reviews">
+                  <h2>نظرات کاربران</h2>
+                  <p>
+                    {content.reviews_enabled
+                      ? "امکان ثبت و نمایش نظر هنوز فعال نشده است."
+                      : "ثبت نظر برای این محصول غیرفعال است."}
+                  </p>
+                </section>
+                <section className="pdp-section" id="questions">
+                  <h2>پرسش و پاسخ</h2>
+                  <p>
+                    {content.qa_enabled
+                      ? "امکان ثبت و نمایش پرسش هنوز فعال نشده است."
+                      : "ثبت پرسش برای این محصول غیرفعال است."}
+                  </p>
+                </section>
+              </div>
+            </BusyRegion>
             {zoom && data.gallery[photo] && (
               <Lightbox
                 src={data.gallery[photo]}
