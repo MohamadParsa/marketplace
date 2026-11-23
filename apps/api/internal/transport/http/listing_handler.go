@@ -157,3 +157,16 @@ func (h *ListingHandler) Page(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(status)
 	_, _ = w.Write([]byte(body))
 }
+
+func (h *ListingHandler) Navigation(w http.ResponseWriter, r *http.Request) {
+	if r.URL.RawQuery != "" {
+		listingError(w, backoffice.ErrListingQuery)
+		return
+	}
+	rows, e := h.service.PublicNavigation(r.Context())
+	if e != nil {
+		listingError(w, e)
+		return
+	}
+	writeCatalogJSON(w, r, rows)
+}

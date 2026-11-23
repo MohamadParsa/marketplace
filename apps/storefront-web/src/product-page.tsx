@@ -323,16 +323,7 @@ export function ProductPage({ url }: { url: string }) {
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
-      <SiteHeader
-        categories={(data?.navigation ?? [])
-          .filter((c) => !c.parent_id)
-          .slice(0, 7)
-          .map((c) => ({
-            key: c.id,
-            title: c.name,
-            url: c.url,
-          }))}
-      />
+      <SiteHeader />
       <main className="lh-wrap" id="main">
         {loading && !data ? (
           <section className="pdp-state" role="status">

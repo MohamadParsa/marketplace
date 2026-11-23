@@ -26,7 +26,7 @@ implementation_status: todo
 
 | کد | کار | اولویت پیشنهادی | وضعیت |
 | --- | --- | --- | --- |
-| CV-SF-UX-01 · [#45](https://github.com/MohamadParsa/marketplace/issues/45) | [افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش](tasks/cv-sf-ux-01-best-selling-sort.md) | P2 | review؛ [شواهد](issue-45-verification.md) |
+| CV-SF-UX-01 · [#45](https://github.com/MohamadParsa/marketplace/issues/45) | [افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش](tasks/cv-sf-ux-01-best-selling-sort.md) | P2 | done؛ با کامنت بسته شد؛ [شواهد](issue-45-verification.md) |
 | CV-SF-UX-02 · [#46](https://github.com/MohamadParsa/marketplace/issues/46) | [منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی](tasks/cv-sf-ux-02-hierarchical-category-menu.md) | P2 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-03 · [#47](https://github.com/MohamadParsa/marketplace/issues/47) | [بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند](tasks/cv-sf-ux-03-header-account-cart-icons.md) | P3 | todo؛ منتظر انتخاب مالک |
 | CV-SF-UX-04 · [#48](https://github.com/MohamadParsa/marketplace/issues/48) | [اسلایدر قیمت و نمایش بیشتر فیلترهای دارای بیش از۵گزینه در PLP](tasks/cv-sf-ux-04-plp-price-slider-filter-disclosure.md) | P2 | todo؛ منتظر انتخاب مالک |

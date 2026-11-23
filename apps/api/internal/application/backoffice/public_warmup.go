@@ -35,6 +35,9 @@ func (s *Service) WarmPublicCache(ctx context.Context, limit int) WarmupResult {
 	if _, e = s.PublicBanners(ctx); e != nil {
 		result.Failures++
 	}
+	if _, e := s.PublicNavigation(ctx); e != nil {
+		result.Failures++
+	}
 	ids := []string{}
 	seen := map[string]bool{}
 	add := func(id string) {

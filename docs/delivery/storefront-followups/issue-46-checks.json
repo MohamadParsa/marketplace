@@ -1,0 +1,98 @@
+{
+  "issue": 46,
+  "date": "2026-11-23",
+  "implementation_status": "review",
+  "go_pass": 213,
+  "warmup_target_test": "passed",
+  "vet": "passed",
+  "storefront_build": "passed",
+  "browser": {
+    "checks": [
+      {
+        "id": "full-published-root-navigation",
+        "pass": true
+      },
+      {
+        "id": "empty-remainder-main-nav",
+        "pass": true
+      },
+      {
+        "id": "popover-not-clipped-by-navbar",
+        "pass": true
+      },
+      {
+        "id": "all-roots-present",
+        "pass": true
+      },
+      {
+        "id": "root-own-plp-link",
+        "pass": true
+      },
+      {
+        "id": "direct-children-present",
+        "pass": true
+      },
+      {
+        "id": "third-level-visible",
+        "pass": true
+      },
+      {
+        "id": "escape-closes-and-restores-focus",
+        "pass": true
+      },
+      {
+        "id": "keyboard-opens",
+        "pass": true
+      },
+      {
+        "id": "outside-closes",
+        "pass": true
+      },
+      {
+        "id": "mobile-modal-and-scroll-lock",
+        "pass": true
+      },
+      {
+        "id": "mobile-drill-down",
+        "pass": true
+      },
+      {
+        "id": "mobile-branch-focus",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "mobile-back-to-roots",
+        "pass": true
+      },
+      {
+        "id": "mobile-scroll-restored",
+        "pass": true
+      },
+      {
+        "id": "leaf-canonical-navigation",
+        "pass": true
+      },
+      {
+        "id": "menu-on-cart",
+        "pass": true
+      },
+      {
+        "id": "navigation-error-retry",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "roots": 41,
+    "three_level_real_data": true,
+    "no_catalog_write": true
+  },
+  "ci": "pending"
+}

@@ -1,3 +1,4 @@
+import { CategoryMenu } from "./category-menu";
 import { useEffect, useRef, useState } from "react";
 import { useCommerce } from "./commerce";
 import { SearchBox } from "./search-box";
@@ -511,7 +512,7 @@ export function HomePage() {
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
-      <SiteHeader categories={categories} />
+      <SiteHeader />
       <main id="main" className="lh-wrap">
         {!isHome ? (
           <section className="lh-route-unavailable">
@@ -656,7 +657,7 @@ export function HomePage() {
 }
 
 type HeaderCategory = { key: string; title: string; url: string };
-export function SiteHeader({ categories }: { categories: HeaderCategory[] }) {
+export function SiteHeader() {
   const { token, cart, logout } = useCommerce();
   return (
     <>
@@ -702,14 +703,7 @@ export function SiteHeader({ categories }: { categories: HeaderCategory[] }) {
           </div>
         </div>
         <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">
-          <a href="/#home-categories" className="lh-menu-label">
-            <span>☰</span> دسته‌بندی کالاها
-          </a>
-          {categories.map((c) => (
-            <a key={c.key} href={c.url}>
-              {c.title}
-            </a>
-          ))}
+          <CategoryMenu />
         </nav>
       </header>
     </>
