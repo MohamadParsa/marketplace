@@ -1,0 +1,201 @@
+{
+  "date": "2026-11-23",
+  "issue": 42,
+  "implementation_status": "review",
+  "go_tests": {
+    "pass": 209,
+    "fail": 0,
+    "skip": 1
+  },
+  "vet": "passed",
+  "backoffice_build": "passed",
+  "storefront_build": "passed",
+  "browser": {
+    "checks": [
+      {
+        "id": "home-root-and-rail-slugs",
+        "pass": true
+      },
+      {
+        "id": "home-product-public-codes",
+        "pass": true
+      },
+      {
+        "id": "banner-links-canonical",
+        "pass": true
+      },
+      {
+        "id": "api-public-code-18189",
+        "pass": true
+      },
+      {
+        "id": "internal-id-retained-18189",
+        "pass": true
+      },
+      {
+        "id": "one-permanent-redirect-18189",
+        "pass": true
+      },
+      {
+        "id": "canonical-html-18189",
+        "pass": true
+      },
+      {
+        "id": "api-public-code-37354",
+        "pass": true
+      },
+      {
+        "id": "internal-id-retained-37354",
+        "pass": true
+      },
+      {
+        "id": "one-permanent-redirect-37354",
+        "pass": true
+      },
+      {
+        "id": "canonical-html-37354",
+        "pass": true
+      },
+      {
+        "id": "api-public-code-39782",
+        "pass": true
+      },
+      {
+        "id": "internal-id-retained-39782",
+        "pass": true
+      },
+      {
+        "id": "one-permanent-redirect-39782",
+        "pass": true
+      },
+      {
+        "id": "canonical-html-39782",
+        "pass": true
+      },
+      {
+        "id": "category-redirect-query-1",
+        "pass": true
+      },
+      {
+        "id": "category-internal-id-and-links-1",
+        "pass": true
+      },
+      {
+        "id": "category-redirect-query-755",
+        "pass": true
+      },
+      {
+        "id": "category-internal-id-and-links-755",
+        "pass": true
+      },
+      {
+        "id": "category-redirect-query-163",
+        "pass": true
+      },
+      {
+        "id": "category-internal-id-and-links-163",
+        "pass": true
+      },
+      {
+        "id": "spa-home-to-pdp-canonical",
+        "pass": true
+      },
+      {
+        "id": "old-39782-browser-url",
+        "pass": true
+      },
+      {
+        "id": "old-watch-browser-url",
+        "pass": true
+      },
+      {
+        "id": "watch-breadcrumb",
+        "pass": true
+      },
+      {
+        "id": "plp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "selection-query-preserved",
+        "pass": true
+      },
+      {
+        "id": "variant-axes-present",
+        "pass": true
+      },
+      {
+        "id": "public-code-visible",
+        "pass": true
+      },
+      {
+        "id": "variant-change-keeps-canonical",
+        "pass": true
+      },
+      {
+        "id": "pdp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "cart-canonical-links",
+        "pass": true
+      },
+      {
+        "id": "isolated-cart-cleaned",
+        "pass": true
+      },
+      {
+        "id": "backoffice-slug-field",
+        "pass": true
+      },
+      {
+        "id": "source-english-name-preserved",
+        "pass": true
+      },
+      {
+        "id": "category-tree-with-slug",
+        "pass": true
+      },
+      {
+        "id": "slug-client-validation",
+        "pass": true
+      },
+      {
+        "id": "backoffice-readonly-product-code",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "no_order_or_payment_created": true,
+    "no_catalog_edit_saved": true
+  },
+  "backfill": {
+    "products": 3534,
+    "categories": 248,
+    "conflicts": 0,
+    "last_reserved_number": 39845,
+    "already_applied_on_repeat": true,
+    "repeat_changes_none": true,
+    "preservation": {
+      "roles": true,
+      "users": true,
+      "grants": true,
+      "media_bytes": true,
+      "media_count": true,
+      "memberships": true,
+      "other_payload": true,
+      "products_without_codes": true,
+      "categories_without_slugs": true
+    },
+    "media_count": 10064,
+    "media_bytes": 3350925084
+  },
+  "source_sha256_unchanged": true,
+  "deployment": "not-run",
+  "ci": "pending",
+  "source_commit": "1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b"
+}

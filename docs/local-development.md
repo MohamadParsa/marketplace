@@ -109,3 +109,7 @@ $env:PUBLIC_CACHE_ENABLED = 'true'
 ```
 
 migrationهای۰۰۰۰۰۵و۰۰۰۰۰۶، نمای عمومی و نسخه‌های پایدار را اضافه می‌کنند و حتی بدون Redis نیز پیش‌نیاز همین سورس‌اند؛ راه‌انداز قبل از اجرا آن‌ها را اعمال می‌کند. سبد/مالی/OTP/نشست/پنل خصوصی در Redis نیستند. `public cache warmup` و سپس شمارنده‌های عمومی هر دقیقه در لاگ سرور دیده می‌شوند؛ اتصال یا اطلاعات کاربر در گزارش cache چاپ نمی‌شود. [گزارش، سرعت، تصاویر و محدودیت‌ها](delivery/storefront-followups/issue-41-verification.md).
+
+## آدرس‌های عمومی کاتالوگ (#42)
+
+پیش از ارتقای دیتابیس دارای داده، [dry-run، backup خصوصی و migration۷](delivery/storefront-followups/issue-42-verification.md) را انجام دهید. startup همان backfill تکرارپذیر را دارد؛ URLهای قدیمی301 به `/category/mobile` و `/product/chr-18189` می‌روند. کد عمومی هویت داخلی محصول را عوض نمی‌کند؛ Redis عمومی اکنون قالب `public:v3` دارد.
