@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-28 — سرویس نظرات کاربران؛ ادامه CV-WEB-15
 
-<!-- github-issue -->
+Issue: [#89](https://github.com/MohamadParsa/marketplace/issues/89) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-05 — قرارداد مبلغ سفارش، CreditUsage و DiscountUsage
 
-<!-- github-issue -->
+Issue: [#66](https://github.com/MohamadParsa/marketplace/issues/66) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

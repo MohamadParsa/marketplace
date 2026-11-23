@@ -89,3 +89,7 @@
 - #54: سورس و مدرک اولیه [964824d](https://github.com/MohamadParsa/marketplace/commit/964824df0a40d7c5bdb3abcb7256613ccff0f982)؛ [گزارش/تصاویر](storefront-followups/issue-54-verification.md).
 
 ۳۹کنترل جدید و۲۳رگرسیون موفق و build/lint موفق؛ هر۵ job CI در PR #61 موفق بود و merge acac083ed0f291da7290a50c16332fb48950f289 روی main است. هر دو Issue با کامنت بسته‌اند؛ آخرین کد اجرایی 964824df0a40d7c5bdb3abcb7256613ccff0f982 است.
+
+## برنامه۳۰درخواست جدید — فقط مستندات
+
+[برنامه و Issueهای #62تا#91](next-phase/README.md) با وضعیت todo/open ثبت شد؛ هیچ کامیت سورس اجرایی جدیدی برای این برنامه وجود ندارد. آخرین نسخه محصول همان تحویل #54 است؛ source-document-map.json به‌عمد به کد برنامه‌ریزی‌نشده اشاره نمی‌کند.

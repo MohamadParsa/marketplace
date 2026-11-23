@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-10 — بازبینی دقیق دسترسی و محدوده داده فروشندگان
 
-<!-- github-issue -->
+Issue: [#71](https://github.com/MohamadParsa/marketplace/issues/71) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 
@@ -36,6 +36,8 @@ execution_authorized: false
 
 - [roles](../../../product/roles.md)
 - [قواعد identity](../../../domains/identity/README.md)
+
+هویت/ورود/عضویت پایه در #1/#2/#3 مالک قبلی دارند؛ این کار ممیزی و رفع نقص scoped موجود است، نه ساخت نقش/ورود موازی. یافته بنیانی به همان مالک ارجاع شود.
 
 ## پذیرش قابل بررسی
 

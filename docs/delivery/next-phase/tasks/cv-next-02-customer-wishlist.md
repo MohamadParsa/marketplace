@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-02 — علاقه‌مندی مشتری و آیکن کنار گالری PDP
 
-<!-- github-issue -->
+Issue: [#63](https://github.com/MohamadParsa/marketplace/issues/63) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

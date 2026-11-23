@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-11 — بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول
 
-<!-- github-issue -->
+Issue: [#72](https://github.com/MohamadParsa/marketplace/issues/72) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

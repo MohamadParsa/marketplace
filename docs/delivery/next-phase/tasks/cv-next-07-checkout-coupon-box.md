@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-07 — باکس مستقل کد تخفیف در مرحله پرداخت خرید
 
-<!-- github-issue -->
+Issue: [#68](https://github.com/MohamadParsa/marketplace/issues/68) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

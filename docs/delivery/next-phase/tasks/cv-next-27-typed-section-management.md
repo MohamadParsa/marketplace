@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-27 — تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار
 
-<!-- github-issue -->
+Issue: [#88](https://github.com/MohamadParsa/marketplace/issues/88) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

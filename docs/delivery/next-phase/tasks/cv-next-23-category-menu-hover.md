@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-23 — بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک
 
-<!-- github-issue -->
+Issue: [#84](https://github.com/MohamadParsa/marketplace/issues/84) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

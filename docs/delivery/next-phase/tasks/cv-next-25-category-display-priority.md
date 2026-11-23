@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-25 — اولویت نمایش دسته و ترتیب پایدار گره‌های منو
 
-<!-- github-issue -->
+Issue: [#86](https://github.com/MohamadParsa/marketplace/issues/86) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

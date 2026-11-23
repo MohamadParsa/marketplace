@@ -17,7 +17,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 62,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/62",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 2,
@@ -30,7 +34,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 63,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/63",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 3,
@@ -43,7 +51,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 64,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/64",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 4,
@@ -56,7 +68,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 65,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/65",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 5,
@@ -69,7 +85,11 @@
       "kind": "analysis-first",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 66,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/66",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 6,
@@ -85,7 +105,14 @@
         11
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 67,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/67",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        66,
+        72
+      ]
     },
     {
       "n": 7,
@@ -103,7 +130,16 @@
         12
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 68,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/68",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        66,
+        67,
+        70,
+        73
+      ]
     },
     {
       "n": 8,
@@ -120,7 +156,15 @@
         9
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 69,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/69",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        66,
+        68,
+        70
+      ]
     },
     {
       "n": 9,
@@ -138,7 +182,16 @@
         12
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 70,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/70",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        66,
+        67,
+        72,
+        73
+      ]
     },
     {
       "n": 10,
@@ -151,7 +204,11 @@
       "kind": "audit-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 71,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/71",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 11,
@@ -164,7 +221,11 @@
       "kind": "audit-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 72,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/72",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 12,
@@ -180,7 +241,14 @@
         11
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 73,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/73",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        66,
+        72
+      ]
     },
     {
       "n": 13,
@@ -193,7 +261,11 @@
       "kind": "audit-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 74,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/74",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 14,
@@ -206,7 +278,11 @@
       "kind": "audit-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 75,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/75",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 15,
@@ -219,7 +295,11 @@
       "kind": "analysis-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 76,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/76",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 16,
@@ -232,7 +312,11 @@
       "kind": "audit-then-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 77,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/77",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 17,
@@ -247,7 +331,13 @@
         18
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 78,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/78",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        79
+      ]
     },
     {
       "n": 18,
@@ -260,7 +350,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 79,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/79",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 19,
@@ -275,7 +369,13 @@
         18
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 80,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/80",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        79
+      ]
     },
     {
       "n": 20,
@@ -290,7 +390,13 @@
         10
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 81,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/81",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        71
+      ]
     },
     {
       "n": 21,
@@ -303,7 +409,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 82,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/82",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 22,
@@ -316,7 +426,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 83,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/83",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 23,
@@ -329,7 +443,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 84,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/84",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 24,
@@ -342,7 +460,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 85,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/85",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 25,
@@ -355,7 +477,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 86,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/86",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 26,
@@ -368,7 +494,11 @@
       "kind": "content-and-implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 87,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/87",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 27,
@@ -381,7 +511,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 88,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/88",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 28,
@@ -394,7 +528,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 89,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/89",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 29,
@@ -407,7 +545,11 @@
       "kind": "implementation",
       "deps": [],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 90,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/90",
+      "assignee": "eliassarband",
+      "github_dependencies": []
     },
     {
       "n": 30,
@@ -422,24 +564,33 @@
         12
       ],
       "implementation_status": "todo",
-      "state": "not-created"
+      "state": "open",
+      "number": 91,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/91",
+      "assignee": "eliassarband",
+      "github_dependencies": [
+        73
+      ]
     }
   ],
   "reused_issues": [
     {
       "number": 8,
       "scope": "کروسل اختصاصی با انتخاب/ترتیب دستی",
-      "implementation_status": "deferred"
+      "implementation_status": "deferred",
+      "state": "open"
     },
     {
       "number": 9,
       "scope": "sticky section",
-      "implementation_status": "deferred"
+      "implementation_status": "deferred",
+      "state": "open"
     },
     {
       "number": 15,
       "scope": "تنظیمات عمومی؛ مرجع کلیدهای تنظیم نه CMS",
-      "implementation_status": "open"
+      "implementation_status": "per-original-issue",
+      "state": "open"
     }
   ]
 }

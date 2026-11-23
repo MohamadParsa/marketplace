@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-04 — مقایسه محصولات از یک دسته‌بندی
 
-<!-- github-issue -->
+Issue: [#65](https://github.com/MohamadParsa/marketplace/issues/65) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

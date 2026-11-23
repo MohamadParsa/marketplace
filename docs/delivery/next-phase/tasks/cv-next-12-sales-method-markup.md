@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-12 — روش فروش، اتصال به روش پرداخت و مارکاپ در خرید
 
-<!-- github-issue -->
+Issue: [#73](https://github.com/MohamadParsa/marketplace/issues/73) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

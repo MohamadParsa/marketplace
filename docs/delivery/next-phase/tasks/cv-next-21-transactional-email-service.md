@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-21 — سرویس ایمیل تراکنشی، قالب و پیگیری ارسال
 
-<!-- github-issue -->
+Issue: [#82](https://github.com/MohamadParsa/marketplace/issues/82) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

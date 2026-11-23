@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-14 — ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل
 
-<!-- github-issue -->
+Issue: [#75](https://github.com/MohamadParsa/marketplace/issues/75) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-20 — ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel
 
-<!-- github-issue -->
+Issue: [#81](https://github.com/MohamadParsa/marketplace/issues/81) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

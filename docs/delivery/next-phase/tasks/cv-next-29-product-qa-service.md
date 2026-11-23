@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-29 — سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16
 
-<!-- github-issue -->
+Issue: [#90](https://github.com/MohamadParsa/marketplace/issues/90) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

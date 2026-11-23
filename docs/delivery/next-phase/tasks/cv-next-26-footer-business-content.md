@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-26 — تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما
 
-<!-- github-issue -->
+Issue: [#87](https://github.com/MohamadParsa/marketplace/issues/87) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

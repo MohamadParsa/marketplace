@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-09 — PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست
 
-<!-- github-issue -->
+Issue: [#70](https://github.com/MohamadParsa/marketplace/issues/70) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

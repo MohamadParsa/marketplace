@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-24 — رفع اسکرول عمودی و دسترسی به تمام گره‌های منو
 
-<!-- github-issue -->
+Issue: [#85](https://github.com/MohamadParsa/marketplace/issues/85) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

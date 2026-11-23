@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-16 — لاگ فنی عملیات حساس، خطا و شکست با correlation
 
-<!-- github-issue -->
+Issue: [#77](https://github.com/MohamadParsa/marketplace/issues/77) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

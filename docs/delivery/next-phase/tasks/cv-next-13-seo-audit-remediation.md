@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-13 — SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات
 
-<!-- github-issue -->
+Issue: [#74](https://github.com/MohamadParsa/marketplace/issues/74) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

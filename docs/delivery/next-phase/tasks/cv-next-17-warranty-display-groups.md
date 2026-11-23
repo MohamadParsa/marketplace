@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-17 — گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه
 
-<!-- github-issue -->
+Issue: [#78](https://github.com/MohamadParsa/marketplace/issues/78) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

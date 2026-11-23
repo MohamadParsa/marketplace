@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-19 — بازبینی و اصلاح نمایش فیلترهای PLP
 
-<!-- github-issue -->
+Issue: [#80](https://github.com/MohamadParsa/marketplace/issues/80) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

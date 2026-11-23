@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-08 — باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت
 
-<!-- github-issue -->
+Issue: [#69](https://github.com/MohamadParsa/marketplace/issues/69) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

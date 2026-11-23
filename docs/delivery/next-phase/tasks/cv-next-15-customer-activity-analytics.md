@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-15 — CustomerActivity و Analytics رفتار مشتری
 
-<!-- github-issue -->
+Issue: [#76](https://github.com/MohamadParsa/marketplace/issues/76) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

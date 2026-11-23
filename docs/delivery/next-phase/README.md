@@ -12,7 +12,7 @@ execution_authorized: false
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. همه به الیاس (`eliassarband`) تخصیص می‌یابند. هیچ کد/دیتابیس/زیرساخت/ارسال ایمیل یا استقرار در این مرحله تغییر نمی‌کند. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
+مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت، باز و به الیاس (`eliassarband`) اساین شده‌اند. هیچ‌کدام درحال اجرا نیست. هیچ کد/دیتابیس/زیرساخت/ارسال ایمیل یا استقرار در این مرحله تغییر نمی‌کند. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -20,36 +20,36 @@ execution_authorized: false
 
 | کد | کار | اولویت / موج | وضعیت اجرا |
 | --- | --- | --- | --- |
-| CV-NEXT-01 | [تخفیف ویژه: لیست پنل و اولویت انتخابی با Drag & Drop](tasks/cv-next-01-special-offer-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-02 | [علاقه‌مندی مشتری و آیکن کنار گالری PDP](tasks/cv-next-02-customer-wishlist.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-03 | [ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری](tasks/cv-next-03-customer-recently-viewed.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-04 | [مقایسه محصولات از یک دسته‌بندی](tasks/cv-next-04-same-category-comparison.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-05 | [قرارداد مبلغ سفارش، CreditUsage و DiscountUsage](tasks/cv-next-05-checkout-amounts-usage-contract.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-06 | [کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور](tasks/cv-next-06-coupon-management.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-07 | [باکس مستقل کد تخفیف در مرحله پرداخت خرید](tasks/cv-next-07-checkout-coupon-box.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-08 | [باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت](tasks/cv-next-08-checkout-wallet-credit.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-09 | [PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست](tasks/cv-next-09-atomic-place-order.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-10 | [بازبینی دقیق دسترسی و محدوده داده فروشندگان](tasks/cv-next-10-seller-access-audit.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-11 | [بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول](tasks/cv-next-11-pricing-direct-discounts.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-12 | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-13 | [SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات](tasks/cv-next-13-seo-audit-remediation.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-14 | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-15 | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-16 | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-17 | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-18 | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-19 | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-20 | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-21 | [سرویس ایمیل تراکنشی، قالب و پیگیری ارسال](tasks/cv-next-21-transactional-email-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-22 | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-23 | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-24 | [رفع اسکرول عمودی و دسترسی به تمام گره‌های منو](tasks/cv-next-24-category-menu-scroll.md) | P1 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-25 | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-26 | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-27 | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-28 | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-29 | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-30 | [لندینگ اقساطی متصل به روش فروش و شرایط واقعی](tasks/cv-next-30-installment-landing.md) | P2 / W3 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-01 · [#62](https://github.com/MohamadParsa/marketplace/issues/62) | [تخفیف ویژه: لیست پنل و اولویت انتخابی با Drag & Drop](tasks/cv-next-01-special-offer-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-02 · [#63](https://github.com/MohamadParsa/marketplace/issues/63) | [علاقه‌مندی مشتری و آیکن کنار گالری PDP](tasks/cv-next-02-customer-wishlist.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-03 · [#64](https://github.com/MohamadParsa/marketplace/issues/64) | [ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری](tasks/cv-next-03-customer-recently-viewed.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-04 · [#65](https://github.com/MohamadParsa/marketplace/issues/65) | [مقایسه محصولات از یک دسته‌بندی](tasks/cv-next-04-same-category-comparison.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-05 · [#66](https://github.com/MohamadParsa/marketplace/issues/66) | [قرارداد مبلغ سفارش، CreditUsage و DiscountUsage](tasks/cv-next-05-checkout-amounts-usage-contract.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-06 · [#67](https://github.com/MohamadParsa/marketplace/issues/67) | [کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور](tasks/cv-next-06-coupon-management.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-07 · [#68](https://github.com/MohamadParsa/marketplace/issues/68) | [باکس مستقل کد تخفیف در مرحله پرداخت خرید](tasks/cv-next-07-checkout-coupon-box.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-08 · [#69](https://github.com/MohamadParsa/marketplace/issues/69) | [باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت](tasks/cv-next-08-checkout-wallet-credit.md) | P1 / W3 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-09 · [#70](https://github.com/MohamadParsa/marketplace/issues/70) | [PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست](tasks/cv-next-09-atomic-place-order.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-10 · [#71](https://github.com/MohamadParsa/marketplace/issues/71) | [بازبینی دقیق دسترسی و محدوده داده فروشندگان](tasks/cv-next-10-seller-access-audit.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-11 · [#72](https://github.com/MohamadParsa/marketplace/issues/72) | [بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول](tasks/cv-next-11-pricing-direct-discounts.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-13 · [#74](https://github.com/MohamadParsa/marketplace/issues/74) | [SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات](tasks/cv-next-13-seo-audit-remediation.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-18 · [#79](https://github.com/MohamadParsa/marketplace/issues/79) | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-21 · [#82](https://github.com/MohamadParsa/marketplace/issues/82) | [سرویس ایمیل تراکنشی، قالب و پیگیری ارسال](tasks/cv-next-21-transactional-email-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-22 · [#83](https://github.com/MohamadParsa/marketplace/issues/83) | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-23 · [#84](https://github.com/MohamadParsa/marketplace/issues/84) | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-24 · [#85](https://github.com/MohamadParsa/marketplace/issues/85) | [رفع اسکرول عمودی و دسترسی به تمام گره‌های منو](tasks/cv-next-24-category-menu-scroll.md) | P1 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-25 · [#86](https://github.com/MohamadParsa/marketplace/issues/86) | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-26 · [#87](https://github.com/MohamadParsa/marketplace/issues/87) | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-27 · [#88](https://github.com/MohamadParsa/marketplace/issues/88) | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-30 · [#91](https://github.com/MohamadParsa/marketplace/issues/91) | [لندینگ اقساطی متصل به روش فروش و شرایط واقعی](tasks/cv-next-30-installment-landing.md) | P2 / W3 | todo؛ اجرا انتخاب نشده |
 
 ## موج‌ها؛ ترتیب قابل انتخاب
 
@@ -62,7 +62,7 @@ execution_authorized: false
 
 | موضوع | مالک این مرحله | مرز محفوظ |
 | --- | --- | --- |
-| تخفیف ویژه با اولویت منتخب | CV-NEXT-01 | eligibility تخفیف پویاست؛ ریل دستی عمومی #8 محصول دلخواه دارد و تسک دیگری است |
+| تخفیف ویژه با اولویت منتخب | CV-NEXT-01 · [#62](https://github.com/MohamadParsa/marketplace/issues/62) | eligibility تخفیف پویاست؛ ریل دستی عمومی #8 محصول دلخواه دارد و تسک دیگری است |
 | موتور/قیمت/کوپن | 05 قرارداد مبلغ؛11 قیمت مستقیم؛12 مارکاپ؛06 تعریف کوپن؛07 مصرف در خرید | محاسبه سرور مشترک؛ هیچ resolver کلاینت/دفتر مالی موازی ساخته نشود |
 | اعتبار کیف پول | 08 با قرارداد05 و PlaceOrder09 | اعتبار و تخفیف و روش پرداخت سه مفهوم جدا؛ R02/R11 قدیمی طبق ADR-009 بازنگری می‌خواهند |
 | ActivityLog / Analytics / لاگ خطا | به‌ترتیب14 / 15 / 16 | حسابرسی کسب‌وکار، رفتار مشتری و خطای فنی یکی نیستند؛ correlation می‌تواند مشترک باشد |
@@ -70,6 +70,7 @@ execution_authorized: false
 | منو |23 تعامل hover؛24 scroll؛25 اولویت داده | مالک مشترک جزء منو، تست رگرسیون ترکیبی؛ #46 باز نمی‌شود |
 | مدیریت سکشن |27 هسته نوع‌دار | #7 بنر responsive تحویل شده؛ #8 ریل دستی و #9 sticky مالکان اجرایی موجودند؛ Issue کپی ساخته نشود |
 | نظر و پرسش/پاسخ |28 و29 | ادامه کارهای تاریخی CV-WEB-15/16 و گیت‌های #25؛ تعریف/تنظیم قبلی انجام شده، سرویس اجرا نشده |
+| هویت و نقش پایه | #1/#2/#3 | CV-NEXT-10 ممیزی scoped فروشنده است؛ نقص بنیانی به مالک موجود لینک شود، نه ورود/هویت موازی |
 | تنظیمات عمومی | #15 | کلیدهای مشترک از این مسیر؛ بازنویسی کل تنظیمات شرط کار مستقل نیست |
 
 ثبت۳۰Issue به معنی فعال‌سازی #8/#9 یا بستن #11/#12/#15 نیست. وضعیت آن‌ها همان وضعیت واقعی می‌ماند و فقط رابطه برنامه به آن‌ها اضافه می‌شود. بسته تاریخی design-review تغییر نمی‌کند.

@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-22 — تب مستقل مزایا و معایب کنار مشخصات فنی PDP
 
-<!-- github-issue -->
+Issue: [#83](https://github.com/MohamadParsa/marketplace/issues/83) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

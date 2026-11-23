@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-30 — لندینگ اقساطی متصل به روش فروش و شرایط واقعی
 
-<!-- github-issue -->
+Issue: [#91](https://github.com/MohamadParsa/marketplace/issues/91) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

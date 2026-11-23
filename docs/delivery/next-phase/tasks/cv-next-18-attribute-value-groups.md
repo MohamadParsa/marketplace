@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-18 — گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر
 
-<!-- github-issue -->
+Issue: [#79](https://github.com/MohamadParsa/marketplace/issues/79) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 

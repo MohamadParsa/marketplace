@@ -14,7 +14,7 @@ execution_authorized: false
 
 # CV-NEXT-03 — ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری
 
-<!-- github-issue -->
+Issue: [#64](https://github.com/MohamadParsa/marketplace/issues/64) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب نشده.
 
 ## مسئله و نتیجه بیزینسی
 
