@@ -49,6 +49,10 @@
       "pass": true
     },
     {
+      "id": "progress-visible-after-scrolling-long-checkout",
+      "pass": true
+    },
+    {
       "id": "purchase-pending-prevents-repeat",
       "pass": true
     },

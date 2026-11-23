@@ -175,4 +175,4 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 
 ## اجرای UX-06تا08 — #50تا#52
 
-[چیپ مرتب‌سازی](../delivery/storefront-followups/issue-50-verification.md) ← `sort-chips.cjs` و۸کنترل؛ [بارگذاری مشترک](../delivery/storefront-followups/issue-51-verification.md) ← `stable-progress.cjs` و `public-progress.cjs` با۳۰کنترل؛ [محتوای PDP](../delivery/storefront-followups/issue-52-verification.md) ← `pdp-read-more.cjs` با۱۹کنترل. تست‌های مالی این تغییر فقط fixture مرورگرند؛ شواهد اجرای UI از تأیید پرداخت واقعی جداست. سورس هر کار در نقشه کامیت ثبت شد؛ تأیید سند مستقل می‌ماند.
+[چیپ مرتب‌سازی](../delivery/storefront-followups/issue-50-verification.md) ← `sort-chips.cjs` و۸کنترل؛ [بارگذاری مشترک](../delivery/storefront-followups/issue-51-verification.md) ← `stable-progress.cjs` و `public-progress.cjs` با۳۱کنترل؛ [محتوای PDP](../delivery/storefront-followups/issue-52-verification.md) ← `pdp-read-more.cjs` با۱۹کنترل. تست‌های مالی این تغییر فقط fixture مرورگرند؛ شواهد اجرای UI از تأیید پرداخت واقعی جداست. سورس هر کار در نقشه کامیت ثبت شد؛ تأیید سند مستقل می‌ماند.

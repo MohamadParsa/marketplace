@@ -33,12 +33,14 @@ useAction قفل هم‌زمان و کلید idempotency قبلی را حفظ م
 
 ## بررسی
 
-[۲۲کنترل مرورگر](../../../tests/e2e/stable-progress.cjs) موفق: ثبات مختصات دکمه در تأخیر تنوع، inert، نتیجه آخر، progress بدون درصد، خطای مبهم سبد و کلید یکسان تلاش دوباره، افزایش/کاهش/حذف، دو مرحله wizard، خطای preview و retry، ثبت فقط یک‌بار، حفظ quote/رضایت، cascade آدرس و جلوگیری از بستن modal، خطای واریز و حفظ مبلغ، موبایل۳۹۰ و reduced-motion، بدون runtime pageerror. build/typecheck و lint نیز موفق‌اند.
+[۲۳کنترل مرورگر](../../../tests/e2e/stable-progress.cjs) موفق: ثبات مختصات دکمه در تأخیر تنوع، inert، نتیجه آخر، progress بدون درصد، خطای مبهم سبد و کلید یکسان تلاش دوباره، افزایش/کاهش/حذف، دو مرحله wizard، خطای preview و retry، ثبت فقط یک‌بار، حفظ quote/رضایت، cascade آدرس و جلوگیری از بستن modal، خطای واریز و حفظ مبلغ، موبایل۳۹۰ و reduced-motion، بدون runtime pageerror. build/typecheck و lint نیز موفق‌اند.
 
-[۸کنترل عمومی تکمیلی](../../../tests/e2e/public-progress.cjs) نیز موفق: ثبات گرید PLP حین sort، حذف متن درون‌جریان، خطا/تلاش دوباره با حفظ sort، overlay جست‌وجو و فیلتر موبایل؛ خطای503 عمدی و بدون runtime pageerror. در مجموع۳۰کنترل برای #51.
+[۸کنترل عمومی تکمیلی](../../../tests/e2e/public-progress.cjs) نیز موفق: ثبات گرید PLP حین sort، حذف متن درون‌جریان، خطا/تلاش دوباره با حفظ sort، overlay جست‌وجو و فیلتر موبایل؛ خطای503 عمدی و بدون runtime pageerror. در مجموع۳۱کنترل برای #51.
 
 تمام mutationهای این سناریو در شبکه مرورگر fixture و پاسخ‌های کنترل‌شده‌اند؛ هیچ سفارش، کاربر، واریز، نشانی یا داده مالی در دیتابیس ثبت نشد. یک قطع ارتباط سبد و دو409 عمدی برای پذیرش خطا استفاده شدند؛ موفقیت این تست تأیید درگاه یا پرداخت واقعی نیست. منطق مالی، شماره سفارش و مجوزها تغییر نکردند.
 
 [انتخاب دسکتاپ](../../../output/playwright/issue-51/pdp-loading-desktop.png) · [wizard](../../../output/playwright/issue-51/checkout-loading-desktop.png) · [واریز موبایل](../../../output/playwright/issue-51/deposit-loading-mobile.png) · [شرح/AC](tasks/cv-sf-ux-07-stable-overlay-progress.md).
 
 کد D:\Cherriva؛ انتشار لیارا با پارساست؛ نتیجه ادغام/CI جدا ثبت می‌شود.
+
+در بازبینی تصاویر، sticky نوار در فرم بلند اصلاح شد: overflow:clip اسکرول‌کانتینر تازه ایجاد نمی‌کند؛ نوار در viewport یا dialog می‌ماند. کنترل اضافه `progress-visible-after-scrolling-long-checkout` این رفتار را پس از scroll فرم پرداخت تأیید کرد؛ تصویر wizard بازگرفته شد.

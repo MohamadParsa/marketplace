@@ -9,7 +9,8 @@
   border-radius: inherit;
   background: rgba(255, 250, 252, 0.45);
   cursor: progress;
-  overflow: hidden;
+  /* clip preserves viewport/dialog sticky positioning without a scroll container. */
+  overflow: clip;
   pointer-events: auto;
 }
 .sf-progress-bar {
