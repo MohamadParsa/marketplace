@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "7f57d07a85ec60af267fed1036a321016807f6f9",
+  "current_source_commit": "f236335e7d06b4f74fa1460fdf792b2236ff97c0",
   "rows": [
     {
       "issue": 27,
@@ -136,17 +136,22 @@
       "documentation_commit": "eb2c1669e4bb23b5e19105cce3e0469aae1eb6b7",
       "verification": "docs/delivery/storefront-followups/issue-50-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 60,
+      "merge_commit": "17c9d4890168d4f57e1b94ca8dae0d414bf80d9b"
     },
     {
       "issue": 51,
-      "source_commit": "03a86ac1bd622d72655bb5cda355d133dc995799",
-      "documentation_commit": "03a86ac1bd622d72655bb5cda355d133dc995799",
+      "source_commit": "f236335e7d06b4f74fa1460fdf792b2236ff97c0",
+      "documentation_commit": "f236335e7d06b4f74fa1460fdf792b2236ff97c0",
       "verification": "docs/delivery/storefront-followups/issue-51-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 60,
+      "merge_commit": "17c9d4890168d4f57e1b94ca8dae0d414bf80d9b",
+      "feature_implementation_commit": "03a86ac1bd622d72655bb5cda355d133dc995799"
     },
     {
       "issue": 52,
@@ -154,8 +159,10 @@
       "documentation_commit": "7f57d07a85ec60af267fed1036a321016807f6f9",
       "verification": "docs/delivery/storefront-followups/issue-52-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 60,
+      "merge_commit": "17c9d4890168d4f57e1b94ca8dae0d414bf80d9b"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

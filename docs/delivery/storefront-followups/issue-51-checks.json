@@ -97,7 +97,7 @@
   "all_mutations_browser_fixtures": true,
   "no_database_writes": true,
   "issue": 51,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "build": "passed",
   "lint": "passed",
   "date": "2026-11-23",
@@ -134,5 +134,9 @@
       "id": "no-runtime-errors",
       "pass": true
     }
-  ]
+  ],
+  "pull_request": 60,
+  "merge_commit": "17c9d4890168d4f57e1b94ca8dae0d414bf80d9b",
+  "issue_state": "closed",
+  "ci": "5-jobs-passed"
 }

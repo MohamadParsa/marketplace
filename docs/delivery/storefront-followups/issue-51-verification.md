@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-007, API-PURCHASE-EXPERIENCE-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #51
@@ -44,3 +44,7 @@ useAction قفل هم‌زمان و کلید idempotency قبلی را حفظ م
 کد D:\Cherriva؛ انتشار لیارا با پارساست؛ نتیجه ادغام/CI جدا ثبت می‌شود.
 
 در بازبینی تصاویر، sticky نوار در فرم بلند اصلاح شد: overflow:clip اسکرول‌کانتینر تازه ایجاد نمی‌کند؛ نوار در viewport یا dialog می‌ماند. کنترل اضافه `progress-visible-after-scrolling-long-checkout` این رفتار را پس از scroll فرم پرداخت تأیید کرد؛ تصویر wizard بازگرفته شد.
+
+## تحویل نهایی
+
+[PR #60](https://github.com/MohamadParsa/marketplace/pull/60) پس از موفقیت هر۵ job شامل API/race/vet، سه فرانت و contracts با merge `17c9d4890168d4f57e1b94ca8dae0d414bf80d9b` و `[skip ci]` ادغام شد. Issue #51 با کامنت شواهد بسته است. نسخه D:\Cherriva و main همگام‌اند؛ انتشار لیارا انجام نشده است.

@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "owner": "eliassarband",
-  "execution": "50-52-implemented-in-review",
+  "execution": "45-52-done-awaiting-next-owner-selection",
   "document_status": "in-review",
   "items": [
     {
@@ -72,9 +72,9 @@
       "number": 50,
       "owner": "eliassarband",
       "priority": "P3",
-      "implementation_status": "review",
+      "implementation_status": "done",
       "url": "https://github.com/MohamadParsa/marketplace/issues/50",
-      "state": "open"
+      "state": "closed"
     },
     {
       "code": "CV-SF-UX-07",
@@ -84,9 +84,9 @@
       "number": 51,
       "owner": "eliassarband",
       "priority": "P1",
-      "implementation_status": "review",
+      "implementation_status": "done",
       "url": "https://github.com/MohamadParsa/marketplace/issues/51",
-      "state": "open"
+      "state": "closed"
     },
     {
       "code": "CV-SF-UX-08",
@@ -96,9 +96,9 @@
       "number": 52,
       "owner": "eliassarband",
       "priority": "P2",
-      "implementation_status": "review",
+      "implementation_status": "done",
       "url": "https://github.com/MohamadParsa/marketplace/issues/52",
-      "state": "open"
+      "state": "closed"
     },
     {
       "code": "CV-SF-UX-09",

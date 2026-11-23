@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-001, API-PLP-SEARCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P3
 ---
 
 # CV-SF-UX-06 — چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary
 
-Issue: [#50](https://github.com/MohamadParsa/marketplace/issues/50) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب صریح مالک در۲۳نوامبر؛ اجرا و شواهد آماده، منتظر CI/ادغام.
+Issue: [#50](https://github.com/MohamadParsa/marketplace/issues/50) · اساین: `eliassarband` · وضعیت GitHub: **closed** · شروع اجرا: انتخاب صریح مالک در۲۳نوامبر؛ اجرا و شواهد تکمیل؛ CI موفق، در PR #60 ادغام و با کامنت بسته شد.
 
 ## مسئله و نتیجه
 
@@ -20,7 +20,7 @@ Issue: [#50](https://github.com/MohamadParsa/marketplace/issues/50) · اسای�
 
 ## دامنه و وضعیت
 
-سایت مشتری؛ مهمان و مشتری واردشده. **اجرا با انتخاب صریح مالک انجام شده؛ تحویل در review**. اولویت P3 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
+سایت مشتری؛ مهمان و مشتری واردشده. **اجرا با انتخاب صریح مالک، تست و تحویل روی main انجام شده است**. اولویت P3 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
 
 ## خواسته قطعی مالک
 

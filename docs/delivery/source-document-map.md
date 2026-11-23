@@ -81,4 +81,4 @@
 - #51: سورس و مدرک اولیه در [03a86ac](https://github.com/MohamadParsa/marketplace/commit/03a86ac1bd622d72655bb5cda355d133dc995799)؛ [گزارش و تصاویر](storefront-followups/issue-51-verification.md).
 - #52: سورس و مدرک اولیه در [7f57d07](https://github.com/MohamadParsa/marketplace/commit/7f57d07a85ec60af267fed1036a321016807f6f9)؛ [گزارش و تصاویر](storefront-followups/issue-52-verification.md).
 
-هر سه پیاده و محلی آزموده شده‌اند؛۵۸کنترل مرورگر در مجموع موفق است. وضعیت CI، PR و بسته‌شدن در تحویل نهایی تکمیل می‌شود؛ آخرین کد اجرایی همین کامیت #52 است.
+هر سه پیاده و محلی آزموده شده‌اند؛۵۸کنترل مرورگر در مجموع موفق است. هر۵ job CI در PR #60 موفق، هر سه Issue با کامنت بسته و merge 17c9d4890168d4f57e1b94ca8dae0d414bf80d9b روی main است؛ آخرین کد اجرایی با اصلاح اسکرول #51 در f236335e7d06b4f74fa1460fdf792b2236ff97c0 ثبت شده است.

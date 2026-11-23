@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-008, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #52
@@ -24,3 +24,7 @@ implementation_status: review
 [جمع‌شده دسکتاپ](../../../output/playwright/issue-52/collapsed-desktop.png) · [جمع‌شده موبایل](../../../output/playwright/issue-52/collapsed-mobile.png) · [بازشده موبایل](../../../output/playwright/issue-52/expanded-mobile.png) · [شرح و AC](tasks/cv-sf-ux-08-pdp-content-read-more.md).
 
 کد در D:\Cherriva است؛ انتشار لیارا با پارساست. نتیجه ادغام/CI جدا ثبت می‌شود.
+
+## تحویل نهایی
+
+[PR #60](https://github.com/MohamadParsa/marketplace/pull/60) پس از موفقیت هر۵ job شامل API/race/vet، سه فرانت و contracts با merge `17c9d4890168d4f57e1b94ca8dae0d414bf80d9b` و `[skip ci]` ادغام شد. Issue #52 با کامنت شواهد بسته است. نسخه D:\Cherriva و main همگام‌اند؛ انتشار لیارا انجام نشده است.

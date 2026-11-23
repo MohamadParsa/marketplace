@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-006]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #50
@@ -20,3 +20,7 @@ build/typecheck موفق؛ [اسکریپت مرورگر](../../../tests/e2e/sort
 [دسکتاپ](../../../output/playwright/issue-50/sort-desktop.png) · [موبایل](../../../output/playwright/issue-50/sort-mobile.png) · [شرح و AC](tasks/cv-sf-ux-06-sort-primary-chips.md).
 
 کد در D:\Cherriva است؛ انتشار لیارا با پارساست. وضعیت تحویل پس از CI و ادغام ثبت می‌شود.
+
+## تحویل نهایی
+
+[PR #60](https://github.com/MohamadParsa/marketplace/pull/60) پس از موفقیت هر۵ job شامل API/race/vet، سه فرانت و contracts با merge `17c9d4890168d4f57e1b94ca8dae0d414bf80d9b` و `[skip ci]` ادغام شد. Issue #50 با کامنت شواهد بسته است. نسخه D:\Cherriva و main همگام‌اند؛ انتشار لیارا انجام نشده است.
