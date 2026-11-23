@@ -3,7 +3,7 @@ id: API-PURCHASE-EXPERIENCE-001
 title: اصلاح تجربه خرید، ویزارد و شماره قابل مشاهده سفارش
 status: in-review
 owner: product-owner
-updated: 2026-11-22
+updated: 2026-11-23
 related: [API-PRODUCT-DETAIL-001, CV-LCH-04, CV-R2-11]
 approved_by: []
 ---
@@ -56,3 +56,7 @@ DTO تنظیمات و config عمومی فیلد `geography` دارد؛ config �
 سرور خانه از قبل میان‌برها را فقط از محصول published، دسته/شاخه عمومی، برند معتبر، تصویر معتبر و عرضه فروشنده فعال با موجودی آزاد مثبت می‌سازد. شمارنده، تعداد محصولات قابل خرید همان دسته است. کنترل رگرسیون اکنون نبود دسته در حالت draft، مادر مخفی، موجودی صفر یا کاملاً رزروشده را هم می‌سنجد؛ کلاینت count صفر را نمایش نمی‌دهد. شرط PLP دسته مادر عوض نشده است: محصول باید به همان دسته منتسب باشد.
 
 [گزارش و تصاویر اصلاح](../../delivery/initial-launch/purchase-refinements-verification.md) · [گیت عمومی همچنان مستقل](../../delivery/initial-launch/production-handoff.md).
+
+## بارگذاری مشترک خرید — #51
+
+[پوشش و شواهد](../../delivery/storefront-followups/issue-51-verification.md): overlay ناحیه‌ای و inert، حفظ ابعاد و انتخاب‌ها در خطا؛ فرم‌های modal هنگام عملیات بسته نمی‌شوند. قفل useAction و کلید مالی قبلی حفظ است؛ سبد کلید تلاش دوباره را نیز نگه می‌دارد. این تغییر، تایید مالی یا قواعد دو مرحله wizard را جابه‌جا نمی‌کند.

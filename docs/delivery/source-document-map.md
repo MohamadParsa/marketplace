@@ -74,3 +74,11 @@
 سورس و شواهد اولیه در [b3b918e](https://github.com/MohamadParsa/marketplace/commit/b3b918ec68bf63cca5c22f92361b9d1f6aa91e07) ثبت شدند؛ [گزارش پوشش و تصاویر](storefront-followups/issue-49-verification.md). #48 پیش‌تر در PR #58 ادغام و بسته شد.
 
 تحویل انتخاب‌شده #45تا#49 کامل است: PRهای #55تا#59 با هر۵ job موفق CI و mergeهای `[skip ci]` روی main هستند و هر Issue کامنت پایان دارد و بسته است. مسیر `D:\Cherriva` همگام و نسخه محلی آماده بررسی است؛ انتشار لیارا انجام نشده است.
+
+## انتخاب بعدی — #50تا#52
+
+- #50: سورس و مدرک اولیه در [eb2c166](https://github.com/MohamadParsa/marketplace/commit/eb2c1669e4bb23b5e19105cce3e0469aae1eb6b7)؛ [گزارش و تصاویر](storefront-followups/issue-50-verification.md).
+- #51: سورس و مدرک اولیه در [03a86ac](https://github.com/MohamadParsa/marketplace/commit/03a86ac1bd622d72655bb5cda355d133dc995799)؛ [گزارش و تصاویر](storefront-followups/issue-51-verification.md).
+- #52: سورس و مدرک اولیه در [7f57d07](https://github.com/MohamadParsa/marketplace/commit/7f57d07a85ec60af267fed1036a321016807f6f9)؛ [گزارش و تصاویر](storefront-followups/issue-52-verification.md).
+
+هر سه پیاده و محلی آزموده شده‌اند؛۵۸کنترل مرورگر در مجموع موفق است. وضعیت CI، PR و بسته‌شدن در تحویل نهایی تکمیل می‌شود؛ آخرین کد اجرایی همین کامیت #52 است.

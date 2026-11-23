@@ -1,3 +1,4 @@
+import { BusyOverlay } from "./busy-region";
 import { useEffect, useRef } from "react";
 import "./purchase-control.css";
 
@@ -72,6 +73,7 @@ export function PurchaseControl({
           </button>
         </>
       )}
+      {busy && <BusyOverlay label="به‌روزرسانی سبد خرید" />}
     </div>
   );
 }

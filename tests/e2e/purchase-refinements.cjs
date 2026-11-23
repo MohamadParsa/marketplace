@@ -296,7 +296,8 @@ async (page) => {
   await page
     .getByRole("group", { name: "مرتب‌سازی کالاها", exact: true })
     .getByRole("radio", { name: "ارزان‌ترین", exact: true })
-    .check();
+    .locator("..")
+    .click();
   await page.waitForURL(/sort=price-asc/);
   check(
     "PLP-sort-without-dropdown",

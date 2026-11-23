@@ -50,3 +50,16 @@
   outline: 2px solid #b51f46;
   outline-offset: 3px;
 }
+
+/* Keep native single-selection and arrow-key behavior; hide only the radio paint. */
+.choice-group--chips .choice-group-options label { position: relative; min-height: 44px; }
+.choice-group--chips .choice-group-options input {
+  position: absolute; width: 1px; height: 1px; opacity: 0;
+  clip-path: inset(50%); overflow: hidden; padding: 0; border: 0;
+}
+.choice-group--chips .choice-group-options label:has(:checked) {
+  background: var(--cherry, #b51f46); border-color: var(--cherry, #b51f46); color: #fff;
+}
+.choice-group--chips .choice-group-options label:has(:focus-visible) {
+  outline: 2px solid var(--cherry, #b51f46); outline-offset: 3px;
+}

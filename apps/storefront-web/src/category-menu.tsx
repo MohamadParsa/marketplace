@@ -1,3 +1,4 @@
+import { LoadingPlaceholder } from "./busy-region";
 import { useEffect, useRef, useState } from "react";
 import "./category-menu.css";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
@@ -230,9 +231,7 @@ export function CategoryMenu() {
               </button>
             </div>
             {!nodes && !error && (
-              <p role="status" className="category-menu-message">
-                در حال دریافت دسته‌ها…
-              </p>
+              <LoadingPlaceholder label="دریافت دسته‌ها" />
             )}
             {error && (
               <div className="category-menu-message" role="alert">

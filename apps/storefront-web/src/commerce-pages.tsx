@@ -1,3 +1,4 @@
+import { BusyRegion, LoadingPlaceholder } from "./busy-region";
 import { ToggleSwitch } from "./toggle-switch";
 import { ChoiceGroup } from "./choice-group";
 import { PurchaseControl } from "./purchase-control";
@@ -180,140 +181,145 @@ export function LoginPage() {
     }, "otp:" + identifier);
   return (
     <CommerceShell title="ورود به چریوا">
-      <section className="buy-panel buy-auth">
-        <img src="/brand/cherriva-wordmark.svg" alt="Cherriva" width="174" />
-        <h2>خوش آمدید</h2>
-        <p>شماره موبایل یا ایمیل حساب خود را وارد کنید.</p>
-        <Input
-          name="identifier"
-          label="موبایل یا ایمیل"
-          autoComplete="username"
-          value={identifier}
-          onChange={(e) => {
-            setIdentifier(e.target.value);
-            setRequest(null);
-            setRecover(false);
-          }}
-          dir="ltr"
-          required
-        />
-        {!email && (
-          <div className="buy-tabs">
-            <button
-              className={mode === "password" ? "selected" : ""}
-              onClick={() => {
-                setMode("password");
-                setRequest(null);
-              }}
-            >
-              ورود با رمز
-            </button>
-            <button
-              className={mode === "otp" ? "selected" : ""}
-              onClick={() => setMode("otp")}
-            >
-              ورود با OTP / ثبت‌نام
-            </button>
-          </div>
-        )}
-        {recover ? (
-          <Recovery identifier={identifier} onDone={() => setRecover(false)} />
-        ) : !email && mode === "otp" ? (
-          <>
-            {request ? (
-              <form
-                onSubmit={(e) => {
-                  const v = values(e);
-                  void action.run(
-                    async () => {
-                      const r = await call<{ token: string }>(
-                        "/storefront/auth/verify-otp",
-                        "",
-                        {
-                          request_id: request.request_id,
-                          code: digits(v.code),
-                        },
-                      );
-                      await login(r.token);
-                      navigate(returnTo);
-                    },
-                    "verify:" + request.request_id + v.code,
-                  );
+      <BusyRegion busy={action.busy}>
+        <section className="buy-panel buy-auth">
+          <img src="/brand/cherriva-wordmark.svg" alt="Cherriva" width="174" />
+          <h2>خوش آمدید</h2>
+          <p>شماره موبایل یا ایمیل حساب خود را وارد کنید.</p>
+          <Input
+            name="identifier"
+            label="موبایل یا ایمیل"
+            autoComplete="username"
+            value={identifier}
+            onChange={(e) => {
+              setIdentifier(e.target.value);
+              setRequest(null);
+              setRecover(false);
+            }}
+            dir="ltr"
+            required
+          />
+          {!email && (
+            <div className="buy-tabs">
+              <button
+                className={mode === "password" ? "selected" : ""}
+                onClick={() => {
+                  setMode("password");
+                  setRequest(null);
                 }}
               >
-                <Input
-                  name="code"
-                  label="کد تأیید"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  required
-                />
-                {request.test_code && (
-                  <p className="buy-note">
-                    کد محیط آزمون: <b dir="ltr">{request.test_code}</b>
-                  </p>
-                )}
-                <button className="buy-primary" disabled={action.busy}>
-                  تأیید و ورود
-                </button>
-              </form>
-            ) : (
-              <p>حساب جدید با تأیید شماره موبایل ساخته می‌شود.</p>
-            )}
-            <button
-              className={request ? "buy-secondary" : "buy-primary"}
-              disabled={action.busy || now < resend || !identifier.trim()}
-              onClick={send}
-            >
-              {now < resend
-                ? `ارسال مجدد تا ${Math.ceil((resend - now) / 1000)} ثانیه`
-                : request
-                  ? "ارسال مجدد کد"
-                  : "دریافت کد تأیید"}
-            </button>
-          </>
-        ) : (
-          <form
-            onSubmit={(e) => {
-              const v = values(e);
-              void action.run(
-                async () => {
-                  const r = await call<{ token: string }>(
-                    "/storefront/auth/password-login",
-                    "",
-                    { phone: digits(identifier), password: v.password },
-                  );
-                  await login(r.token);
-                  navigate(returnTo);
-                },
-                "password:" + identifier + v.password,
-              );
-            }}
-          >
-            <Input
-              name="password"
-              label="رمز عبور"
-              type="password"
-              autoComplete="current-password"
-              required
+                ورود با رمز
+              </button>
+              <button
+                className={mode === "otp" ? "selected" : ""}
+                onClick={() => setMode("otp")}
+              >
+                ورود با OTP / ثبت‌نام
+              </button>
+            </div>
+          )}
+          {recover ? (
+            <Recovery
+              identifier={identifier}
+              onDone={() => setRecover(false)}
             />
-            <button
-              className="buy-primary"
-              disabled={action.busy || !identifier.trim()}
+          ) : !email && mode === "otp" ? (
+            <>
+              {request ? (
+                <form
+                  onSubmit={(e) => {
+                    const v = values(e);
+                    void action.run(
+                      async () => {
+                        const r = await call<{ token: string }>(
+                          "/storefront/auth/verify-otp",
+                          "",
+                          {
+                            request_id: request.request_id,
+                            code: digits(v.code),
+                          },
+                        );
+                        await login(r.token);
+                        navigate(returnTo);
+                      },
+                      "verify:" + request.request_id + v.code,
+                    );
+                  }}
+                >
+                  <Input
+                    name="code"
+                    label="کد تأیید"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    required
+                  />
+                  {request.test_code && (
+                    <p className="buy-note">
+                      کد محیط آزمون: <b dir="ltr">{request.test_code}</b>
+                    </p>
+                  )}
+                  <button className="buy-primary" disabled={action.busy}>
+                    تأیید و ورود
+                  </button>
+                </form>
+              ) : (
+                <p>حساب جدید با تأیید شماره موبایل ساخته می‌شود.</p>
+              )}
+              <button
+                className={request ? "buy-secondary" : "buy-primary"}
+                disabled={action.busy || now < resend || !identifier.trim()}
+                onClick={send}
+              >
+                {now < resend
+                  ? `ارسال مجدد تا ${Math.ceil((resend - now) / 1000)} ثانیه`
+                  : request
+                    ? "ارسال مجدد کد"
+                    : "دریافت کد تأیید"}
+              </button>
+            </>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                const v = values(e);
+                void action.run(
+                  async () => {
+                    const r = await call<{ token: string }>(
+                      "/storefront/auth/password-login",
+                      "",
+                      { phone: digits(identifier), password: v.password },
+                    );
+                    await login(r.token);
+                    navigate(returnTo);
+                  },
+                  "password:" + identifier + v.password,
+                );
+              }}
             >
-              ورود با رمز عبور
-            </button>
-            <button
-              type="button"
-              className="buy-link"
-              onClick={() => setRecover(true)}
-            >
-              رمز عبور را فراموش کرده‌ام
-            </button>
-          </form>
-        )}
-        <Feedback action={action} />
-      </section>
+              <Input
+                name="password"
+                label="رمز عبور"
+                type="password"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                className="buy-primary"
+                disabled={action.busy || !identifier.trim()}
+              >
+                ورود با رمز عبور
+              </button>
+              <button
+                type="button"
+                className="buy-link"
+                onClick={() => setRecover(true)}
+              >
+                رمز عبور را فراموش کرده‌ام
+              </button>
+            </form>
+          )}
+          <Feedback action={action} />
+        </section>
+      </BusyRegion>
     </CommerceShell>
   );
 }
@@ -333,68 +339,70 @@ function Recovery({
       test_code?: string;
     } | null>(null);
   return (
-    <section>
-      <p>بازیابی رمز با کد روی موبایل متصل به حساب انجام می‌شود.</p>
-      <Input
-        name="recovery_phone"
-        label="موبایل حساب برای بازیابی"
-        value={recoveryPhone}
-        onChange={(e) => setRecoveryPhone(e.target.value)}
-        inputMode="tel"
-      />
-      {!request ? (
-        <button
-          className="buy-secondary"
-          disabled={action.busy}
-          onClick={() =>
-            void action.run(async () =>
-              setRequest(
-                await call(
-                  "/storefront/auth/password-recovery/request-otp",
-                  "",
-                  { phone: digits(recoveryPhone) },
+    <BusyRegion busy={action.busy}>
+      <section>
+        <p>بازیابی رمز با کد روی موبایل متصل به حساب انجام می‌شود.</p>
+        <Input
+          name="recovery_phone"
+          label="موبایل حساب برای بازیابی"
+          value={recoveryPhone}
+          onChange={(e) => setRecoveryPhone(e.target.value)}
+          inputMode="tel"
+        />
+        {!request ? (
+          <button
+            className="buy-secondary"
+            disabled={action.busy}
+            onClick={() =>
+              void action.run(async () =>
+                setRequest(
+                  await call(
+                    "/storefront/auth/password-recovery/request-otp",
+                    "",
+                    { phone: digits(recoveryPhone) },
+                  ),
                 ),
-              ),
-            )
-          }
-        >
-          ارسال کد بازیابی
-        </button>
-      ) : (
-        <form
-          onSubmit={(e) => {
-            const v = values(e);
-            void action.run(async () => {
-              await call("/storefront/auth/password-recovery/reset", "", {
-                request_id: request.request_id,
-                code: digits(v.code),
-                password: v.password,
-              });
-              action.setNotice("رمز ثبت شد؛ با رمز تازه وارد شوید.");
-              onDone();
-            });
-          }}
-        >
-          <Input name="code" label="کد بازیابی" required />
-          {request.test_code && <p>کد آزمون: {request.test_code}</p>}
-          <Input
-            name="password"
-            label="رمز جدید"
-            type="password"
-            autoComplete="new-password"
-            minLength={10}
-            required
-          />
-          <button className="buy-primary" disabled={action.busy}>
-            ثبت رمز جدید
+              )
+            }
+          >
+            ارسال کد بازیابی
           </button>
-        </form>
-      )}
-      <button className="buy-link" onClick={onDone}>
-        برگشت به ورود
-      </button>
-      <Feedback action={action} />
-    </section>
+        ) : (
+          <form
+            onSubmit={(e) => {
+              const v = values(e);
+              void action.run(async () => {
+                await call("/storefront/auth/password-recovery/reset", "", {
+                  request_id: request.request_id,
+                  code: digits(v.code),
+                  password: v.password,
+                });
+                action.setNotice("رمز ثبت شد؛ با رمز تازه وارد شوید.");
+                onDone();
+              });
+            }}
+          >
+            <Input name="code" label="کد بازیابی" required />
+            {request.test_code && <p>کد آزمون: {request.test_code}</p>}
+            <Input
+              name="password"
+              label="رمز جدید"
+              type="password"
+              autoComplete="new-password"
+              minLength={10}
+              required
+            />
+            <button className="buy-primary" disabled={action.busy}>
+              ثبت رمز جدید
+            </button>
+          </form>
+        )}
+        <button className="buy-link" onClick={onDone}>
+          برگشت به ورود
+        </button>
+        <Feedback action={action} />
+      </section>
+    </BusyRegion>
   );
 }
 function RequireLogin({ children }: { children: ReactNode }) {
@@ -455,181 +463,187 @@ export function CartPage() {
   };
   return (
     <CommerceShell title="سبد خرید">
-      <div className="buy-layout">
-        <section>
-          <Feedback action={action} />
-          <button
-            className="buy-link"
-            disabled={action.busy}
-            onClick={() =>
-              void action.run(async () => {
-                await refreshCart();
-              })
-            }
-          >
-            تازه‌سازی سبد
-          </button>
-          {cartError && (
-            <p role="alert">
-              {cartError}{" "}
-              <button onClick={() => void refreshCart().catch(() => {})}>
-                تلاش دوباره
-              </button>
-            </p>
-          )}
-          {!cart ? (
-            <p role="status">در حال دریافت سبد…</p>
-          ) : cart.items.length ? (
-            cart.items.map((item) => (
-              <article className="buy-panel buy-cart-row" key={item.offer_id}>
-                <a
-                  href={
-                    item.product_url +
-                    "?variant=" +
-                    item.variant_id +
-                    "&offer=" +
-                    item.offer_id
-                  }
-                >
-                  <img src={apiBase + item.image_url} alt={item.name} />
-                </a>
-                <div>
-                  <a href={item.product_url || undefined}>
-                    <h2>{item.name}</h2>
+      <BusyRegion busy={action.busy}>
+        <div className="buy-layout">
+          <section>
+            <Feedback action={action} />
+            <button
+              className="buy-link"
+              disabled={action.busy}
+              onClick={() =>
+                void action.run(async () => {
+                  await refreshCart();
+                })
+              }
+            >
+              تازه‌سازی سبد
+            </button>
+            {cartError && (
+              <p role="alert">
+                {cartError}{" "}
+                <button onClick={() => void refreshCart().catch(() => {})}>
+                  تلاش دوباره
+                </button>
+              </p>
+            )}
+            {!cart ? (
+              <LoadingPlaceholder label="دریافت سبد" />
+            ) : cart.items.length ? (
+              cart.items.map((item) => (
+                <article className="buy-panel buy-cart-row" key={item.offer_id}>
+                  <a
+                    href={
+                      item.product_url +
+                      "?variant=" +
+                      item.variant_id +
+                      "&offer=" +
+                      item.offer_id
+                    }
+                  >
+                    <img src={apiBase + item.image_url} alt={item.name} />
                   </a>
-                  <p>{item.variant_label}</p>
-                  <p>
-                    فروشنده: {item.store_name} · تأمین: {item.lead_days} روز
-                    کاری
-                  </p>
-                  <strong>{money(item.unit_price_toman)}</strong>
-                  {item.price_changed && (
-                    <p className="buy-alert">
-                      قیمت از {money(item.previous_price_toman)} به‌روز شده؛
-                      مبلغ نهایی را در پرداخت تأیید کنید.
+                  <div>
+                    <a href={item.product_url || undefined}>
+                      <h2>{item.name}</h2>
+                    </a>
+                    <p>{item.variant_label}</p>
+                    <p>
+                      فروشنده: {item.store_name} · تأمین: {item.lead_days} روز
+                      کاری
                     </p>
-                  )}
-                  {!item.available && (
-                    <p className="buy-alert">
-                      این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده
-                      را اصلاح کنید.
-                    </p>
-                  )}
-                  <div className="buy-row">
-                    <PurchaseControl
-                      name={item.name}
-                      quantity={item.quantity}
-                      canIncrease={item.available}
-                      busy={action.busy}
-                      onChange={(next) =>
-                        void action.run(async () => {
-                          await mutate({
-                            action: next === 0 ? "remove" : "set",
-                            offer_id: item.offer_id,
-                            quantity: next,
-                            version: cart.version,
-                          });
-                        })
-                      }
-                    />
-                    <button
-                      className="buy-link"
-                      disabled={action.busy}
-                      onClick={() =>
-                        void action.run(async () => {
-                          await loadOffers(item.product_id, item.variant_id);
-                          setEdit(item.offer_id);
-                        })
-                      }
-                    >
-                      تغییر تنوع یا فروشنده
-                    </button>
+                    <strong>{money(item.unit_price_toman)}</strong>
+                    {item.price_changed && (
+                      <p className="buy-alert">
+                        قیمت از {money(item.previous_price_toman)} به‌روز شده؛
+                        مبلغ نهایی را در پرداخت تأیید کنید.
+                      </p>
+                    )}
+                    {!item.available && (
+                      <p className="buy-alert">
+                        این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده
+                        را اصلاح کنید.
+                      </p>
+                    )}
+                    <div className="buy-row">
+                      <PurchaseControl
+                        name={item.name}
+                        quantity={item.quantity}
+                        canIncrease={item.available}
+                        busy={action.busy}
+                        onChange={(next) =>
+                          void action.run(async () => {
+                            await mutate({
+                              action: next === 0 ? "remove" : "set",
+                              offer_id: item.offer_id,
+                              quantity: next,
+                              version: cart.version,
+                            });
+                          })
+                        }
+                      />
+                      <button
+                        className="buy-link"
+                        disabled={action.busy}
+                        onClick={() =>
+                          void action.run(async () => {
+                            await loadOffers(item.product_id, item.variant_id);
+                            setEdit(item.offer_id);
+                          })
+                        }
+                      >
+                        تغییر تنوع یا فروشنده
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <strong>{money(item.total_toman)}</strong>
-              </article>
-            ))
-          ) : (
-            <div className="buy-panel buy-empty">
-              <h2>سبد شما خالی است</h2>
-              <a href="/">دیدن محصولات</a>
+                  <strong>{money(item.total_toman)}</strong>
+                </article>
+              ))
+            ) : (
+              <div className="buy-panel buy-empty">
+                <h2>سبد شما خالی است</h2>
+                <a href="/">دیدن محصولات</a>
+              </div>
+            )}
+          </section>
+          <aside className="buy-panel buy-summary">
+            <h2>خلاصه سبد</h2>
+            <p>{cart?.item_count ?? 0} کالا</p>
+            <div className="buy-total">
+              <span>جمع کالاها</span>
+              <b>{money(cart?.subtotal_toman ?? "0")}</b>
             </div>
-          )}
-        </section>
-        <aside className="buy-panel buy-summary">
-          <h2>خلاصه سبد</h2>
-          <p>{cart?.item_count ?? 0} کالا</p>
-          <div className="buy-total">
-            <span>جمع کالاها</span>
-            <b>{money(cart?.subtotal_toman ?? "0")}</b>
-          </div>
-          <p className="buy-note">
-            هزینه ارسال هر فروشنده در مرحله بعد مشخص می‌شود.
-          </p>
-          {cart?.can_checkout && (
-            <a className="buy-primary" href="/checkout">
-              ادامه و انتخاب آدرس
+            <p className="buy-note">
+              هزینه ارسال هر فروشنده در مرحله بعد مشخص می‌شود.
+            </p>
+            {cart?.can_checkout && (
+              <a className="buy-primary" href="/checkout">
+                ادامه و انتخاب آدرس
+              </a>
+            )}
+            <a className="buy-link" href="/">
+              ادامه خرید
             </a>
-          )}
-          <a className="buy-link" href="/">
-            ادامه خرید
-          </a>
-        </aside>
-      </div>
-      {edit && cart && (
-        <Modal title="انتخاب تنوع و فروشنده" onClose={() => setEdit(null)}>
-          <ChoiceGroup
-            label="تنوع"
-            value={variant}
-            disabled={action.busy}
-            options={variants.map((v) => ({
-              value: v.id,
-              label: v.values.map((x) => x.value).join(" / ") || "پیش‌فرض",
-            }))}
-            onChange={(id) =>
-              void action.run(async () => {
-                await loadOffers(
-                  cart.items.find((i) => i.offer_id === edit)!.product_id,
-                  id,
-                );
-              })
-            }
-          />
-          <ChoiceGroup
-            label="فروشنده"
-            value={newOffer}
-            disabled={action.busy}
-            options={offers.map((o) => ({
-              value: o.id,
-              label: o.store_name,
-              detail: o.available ? money(String(o.price / 10)) : "ناموجود",
-              disabled: !o.available,
-            }))}
-            onChange={setNewOffer}
-          />
-          <p>تغییر تنها با تأیید شما در سبد ثبت می‌شود.</p>
-          <button
-            className="buy-primary"
-            disabled={action.busy || !newOffer}
-            onClick={() =>
-              void action.run(async () => {
-                await mutate({
-                  action: "replace",
-                  offer_id: edit,
-                  new_offer_id: newOffer,
-                  quantity: cart.items.find((i) => i.offer_id === edit)!
-                    .quantity,
-                  version: cart.version,
-                });
-                setEdit(null);
-              })
-            }
+          </aside>
+        </div>
+        {edit && cart && (
+          <Modal
+            busy={action.busy}
+            title="انتخاب تنوع و فروشنده"
+            onClose={() => setEdit(null)}
           >
-            تأیید تغییر سبد
-          </button>
-          <Feedback action={action} />
-        </Modal>
-      )}
+            <ChoiceGroup
+              label="تنوع"
+              value={variant}
+              disabled={action.busy}
+              options={variants.map((v) => ({
+                value: v.id,
+                label: v.values.map((x) => x.value).join(" / ") || "پیش‌فرض",
+              }))}
+              onChange={(id) =>
+                void action.run(async () => {
+                  await loadOffers(
+                    cart.items.find((i) => i.offer_id === edit)!.product_id,
+                    id,
+                  );
+                })
+              }
+            />
+            <ChoiceGroup
+              label="فروشنده"
+              value={newOffer}
+              disabled={action.busy}
+              options={offers.map((o) => ({
+                value: o.id,
+                label: o.store_name,
+                detail: o.available ? money(String(o.price / 10)) : "ناموجود",
+                disabled: !o.available,
+              }))}
+              onChange={setNewOffer}
+            />
+            <p>تغییر تنها با تأیید شما در سبد ثبت می‌شود.</p>
+            <button
+              className="buy-primary"
+              disabled={action.busy || !newOffer}
+              onClick={() =>
+                void action.run(async () => {
+                  await mutate({
+                    action: "replace",
+                    offer_id: edit,
+                    new_offer_id: newOffer,
+                    quantity: cart.items.find((i) => i.offer_id === edit)!
+                      .quantity,
+                    version: cart.version,
+                  });
+                  setEdit(null);
+                })
+              }
+            >
+              تأیید تغییر سبد
+            </button>
+            <Feedback action={action} />
+          </Modal>
+        )}
+      </BusyRegion>
     </CommerceShell>
   );
 }
@@ -679,185 +693,192 @@ export function AddressBook({
   const province = geography.find((p) => p.name === draft?.province);
   const cityValid = !!province?.cities.some((c) => c.name === draft?.city);
   return (
-    <section>
-      <div className="buy-heading">
-        <h2>آدرس‌ها</h2>
-        <button
-          className="buy-secondary"
-          onClick={() => setDraft({ ...emptyAddress })}
-        >
-          افزودن آدرس
-        </button>
-      </div>
-      <Feedback action={action} />
-      {rows === null ? (
-        <p>در حال دریافت آدرس‌ها…</p>
-      ) : !rows.length ? (
-        <p className="buy-note">هنوز آدرسی ثبت نکرده‌اید.</p>
-      ) : (
-        rows.map((a) => (
-          <article
-            key={a.id}
-            className={
-              "buy-panel buy-address " + (selected === a.id ? "selected" : "")
-            }
+    <BusyRegion busy={action.busy}>
+      <section>
+        <div className="buy-heading">
+          <h2>آدرس‌ها</h2>
+          <button
+            className="buy-secondary"
+            onClick={() => setDraft({ ...emptyAddress })}
           >
-            {onSelect && (
-              <label>
-                <input
-                  type="radio"
-                  name="address"
-                  value={a.id}
-                  checked={selected === a.id}
-                  disabled={!destinationAvailable(a, geography)}
-                  onChange={() => onSelect(a.id, a)}
-                />{" "}
-                انتخاب این آدرس
-              </label>
-            )}
-            {!destinationAvailable(a, geography) && (
-              <p className="buy-alert">
-                مقصد این آدرس فعال نیست؛ استان و شهر را ویرایش کنید.
-              </p>
-            )}
-            <h3>
-              {a.recipient} · {a.city}
-            </h3>
-            <p>
-              {a.province}، {a.street}
-            </p>
-            <p>
-              {a.phone} · کد پستی {a.postal_code}
-            </p>
-            <div className="buy-row">
-              <button className="buy-link" onClick={() => setDraft(a)}>
-                ویرایش
-              </button>
-              <button
-                className="buy-link"
-                disabled={action.busy}
-                onClick={() =>
-                  void action.run(async (key) => {
-                    await call(
-                      "/storefront/account/addresses",
-                      token,
-                      { id: a.id, version: a.version, delete: true },
-                      undefined,
-                      key,
-                    );
-                    await load();
-                    if (selected === a.id) onSelect?.("");
-                  }, "delete-address:" + a.id)
-                }
-              >
-                حذف آدرس
-              </button>
-            </div>
-          </article>
-        ))
-      )}
-      {draft && (
-        <Modal
-          title={draft.id ? "ویرایش آدرس" : "آدرس جدید"}
-          onClose={() => {
-            if (!action.busy) setDraft(null);
-          }}
-        >
-          <form
-            onSubmit={(e) => {
-              const fields = values(e),
-                input = {
-                  id: draft.id,
-                  version: draft.version,
-                  recipient: fields.recipient,
-                  phone: fields.phone,
-                  province: fields.province,
-                  city: fields.city,
-                  street: fields.street,
-                  postal_code: fields.postal_code,
-                };
-              void action.run(async (key) => {
-                const a = await call<Address>(
-                  "/storefront/account/addresses",
-                  token,
-                  input,
-                  undefined,
-                  key,
-                );
-                await load();
-                onSelect?.(a.id, a);
-                setDraft(null);
-              }, JSON.stringify(input));
-            }}
-          >
-            <fieldset disabled={action.busy} className="buy-fields">
-              {[
-                ["recipient", "نام گیرنده"],
-                ["phone", "موبایل گیرنده"],
-                ["street", "نشانی کامل"],
-                ["postal_code", "کد پستی"],
-              ].map(([name, caption]) => (
-                <Input
-                  key={name}
-                  name={name}
-                  label={caption}
-                  defaultValue={String(draft[name as keyof Address])}
-                  required
-                  maxLength={name === "street" ? 1000 : 100}
-                />
-              ))}
-              <label className="buy-field">
-                استان
-                <select
-                  name="province"
-                  required
-                  value={province ? draft.province : ""}
-                  onChange={(e) =>
-                    setDraft({ ...draft, province: e.target.value, city: "" })
-                  }
-                >
-                  <option value="">انتخاب استان</option>
-                  {geography.map((p) => (
-                    <option key={p.id} value={p.name}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="buy-field">
-                شهر
-                <select
-                  name="city"
-                  required
-                  disabled={!province}
-                  value={cityValid ? draft.city : ""}
-                  onChange={(e) => setDraft({ ...draft, city: e.target.value })}
-                >
-                  <option value="">ابتدا استان، سپس شهر را انتخاب کنید</option>
-                  {province?.cities.map((c) => (
-                    <option key={c.id} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {!geography.length && (
+            افزودن آدرس
+          </button>
+        </div>
+        <Feedback action={action} />
+        {rows === null ? (
+          <LoadingPlaceholder label="دریافت آدرس‌ها" />
+        ) : !rows.length ? (
+          <p className="buy-note">هنوز آدرسی ثبت نکرده‌اید.</p>
+        ) : (
+          rows.map((a) => (
+            <article
+              key={a.id}
+              className={
+                "buy-panel buy-address " + (selected === a.id ? "selected" : "")
+              }
+            >
+              {onSelect && (
+                <label>
+                  <input
+                    type="radio"
+                    name="address"
+                    value={a.id}
+                    checked={selected === a.id}
+                    disabled={!destinationAvailable(a, geography)}
+                    onChange={() => onSelect(a.id, a)}
+                  />{" "}
+                  انتخاب این آدرس
+                </label>
+              )}
+              {!destinationAvailable(a, geography) && (
                 <p className="buy-alert">
-                  فهرست استان و شهر هنوز در پنل تنظیم نشده است.
+                  مقصد این آدرس فعال نیست؛ استان و شهر را ویرایش کنید.
                 </p>
               )}
-              <Feedback action={action} />
-              <button
-                className="buy-primary"
-                disabled={!province || !cityValid}
-              >
-                ذخیره آدرس
-              </button>
-            </fieldset>
-          </form>
-        </Modal>
-      )}
-    </section>
+              <h3>
+                {a.recipient} · {a.city}
+              </h3>
+              <p>
+                {a.province}، {a.street}
+              </p>
+              <p>
+                {a.phone} · کد پستی {a.postal_code}
+              </p>
+              <div className="buy-row">
+                <button className="buy-link" onClick={() => setDraft(a)}>
+                  ویرایش
+                </button>
+                <button
+                  className="buy-link"
+                  disabled={action.busy}
+                  onClick={() =>
+                    void action.run(async (key) => {
+                      await call(
+                        "/storefront/account/addresses",
+                        token,
+                        { id: a.id, version: a.version, delete: true },
+                        undefined,
+                        key,
+                      );
+                      await load();
+                      if (selected === a.id) onSelect?.("");
+                    }, "delete-address:" + a.id)
+                  }
+                >
+                  حذف آدرس
+                </button>
+              </div>
+            </article>
+          ))
+        )}
+        {draft && (
+          <Modal
+            busy={action.busy}
+            title={draft.id ? "ویرایش آدرس" : "آدرس جدید"}
+            onClose={() => {
+              if (!action.busy) setDraft(null);
+            }}
+          >
+            <form
+              onSubmit={(e) => {
+                const fields = values(e),
+                  input = {
+                    id: draft.id,
+                    version: draft.version,
+                    recipient: fields.recipient,
+                    phone: fields.phone,
+                    province: fields.province,
+                    city: fields.city,
+                    street: fields.street,
+                    postal_code: fields.postal_code,
+                  };
+                void action.run(async (key) => {
+                  const a = await call<Address>(
+                    "/storefront/account/addresses",
+                    token,
+                    input,
+                    undefined,
+                    key,
+                  );
+                  await load();
+                  onSelect?.(a.id, a);
+                  setDraft(null);
+                }, JSON.stringify(input));
+              }}
+            >
+              <fieldset disabled={action.busy} className="buy-fields">
+                {[
+                  ["recipient", "نام گیرنده"],
+                  ["phone", "موبایل گیرنده"],
+                  ["street", "نشانی کامل"],
+                  ["postal_code", "کد پستی"],
+                ].map(([name, caption]) => (
+                  <Input
+                    key={name}
+                    name={name}
+                    label={caption}
+                    defaultValue={String(draft[name as keyof Address])}
+                    required
+                    maxLength={name === "street" ? 1000 : 100}
+                  />
+                ))}
+                <label className="buy-field">
+                  استان
+                  <select
+                    name="province"
+                    required
+                    value={province ? draft.province : ""}
+                    onChange={(e) =>
+                      setDraft({ ...draft, province: e.target.value, city: "" })
+                    }
+                  >
+                    <option value="">انتخاب استان</option>
+                    {geography.map((p) => (
+                      <option key={p.id} value={p.name}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="buy-field">
+                  شهر
+                  <select
+                    name="city"
+                    required
+                    disabled={!province}
+                    value={cityValid ? draft.city : ""}
+                    onChange={(e) =>
+                      setDraft({ ...draft, city: e.target.value })
+                    }
+                  >
+                    <option value="">
+                      ابتدا استان، سپس شهر را انتخاب کنید
+                    </option>
+                    {province?.cities.map((c) => (
+                      <option key={c.id} value={c.name}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {!geography.length && (
+                  <p className="buy-alert">
+                    فهرست استان و شهر هنوز در پنل تنظیم نشده است.
+                  </p>
+                )}
+                <Feedback action={action} />
+                <button
+                  className="buy-primary"
+                  disabled={!province || !cityValid}
+                >
+                  ذخیره آدرس
+                </button>
+              </fieldset>
+            </form>
+          </Modal>
+        )}
+      </section>
+    </BusyRegion>
   );
 }
 export function CheckoutPage() {
@@ -937,305 +958,328 @@ function CheckoutForm() {
       .replace(/\s+/g, " ")
       .toLowerCase();
   return (
-    <>
-      <nav aria-label="مراحل تکمیل خرید">
-        <ol className="buy-steps">
-          <li
-            className={step === 1 ? "active" : "complete"}
-            aria-current={step === 1 ? "step" : undefined}
-          >
-            <button
-              type="button"
-              disabled={action.busy || step === 1}
-              onClick={change}
+    <BusyRegion busy={action.busy}>
+      <>
+        <nav aria-label="مراحل تکمیل خرید">
+          <ol className="buy-steps">
+            <li
+              className={step === 1 ? "active" : "complete"}
+              aria-current={step === 1 ? "step" : undefined}
             >
-              <span className="buy-step-number">{step === 2 ? "✓" : "۱"}</span>
+              <button
+                type="button"
+                disabled={action.busy || step === 1}
+                onClick={change}
+              >
+                <span className="buy-step-number">
+                  {step === 2 ? "✓" : "۱"}
+                </span>
+                <span>
+                  آدرس و ارسال
+                  <small>
+                    {step === 2 ? "تأیید شد" : "انتخاب مقصد و تحویل"}
+                  </small>
+                </span>
+              </button>
+            </li>
+            <li
+              className={step === 2 ? "active" : ""}
+              aria-current={step === 2 ? "step" : undefined}
+            >
+              <span className="buy-step-number">۲</span>
               <span>
-                آدرس و ارسال
-                <small>{step === 2 ? "تأیید شد" : "انتخاب مقصد و تحویل"}</small>
+                پرداخت و ثبت سفارش
+                <small>{step === 2 ? "مرحله جاری" : "پس از تأیید ارسال"}</small>
               </span>
-            </button>
-          </li>
-          <li
-            className={step === 2 ? "active" : ""}
-            aria-current={step === 2 ? "step" : undefined}
-          >
-            <span className="buy-step-number">۲</span>
-            <span>
-              پرداخت و ثبت سفارش
-              <small>{step === 2 ? "مرحله جاری" : "پس از تأیید ارسال"}</small>
-            </span>
-          </li>
-        </ol>
-      </nav>
-      <h2 ref={heading} tabIndex={-1} className="buy-step-title">
-        {step === 1 ? "آدرس و روش ارسال" : "روش پرداخت و تأیید سفارش"}
-      </h2>
-      <Feedback action={action} />
-      {!prepare ? (
-        <p role="status">در حال دریافت شرایط خرید…</p>
-      ) : (
-        <div className="buy-layout">
-          <section className="buy-wizard-stage" key={step}>
-            {step === 1 ? (
-              <>
-                <fieldset disabled={action.busy}>
-                  <AddressBook
-                    selected={address?.id}
-                    onSelect={(_id, a) => {
-                      setAddress(a ?? null);
-                      setShipping({});
-                      change();
-                    }}
-                  />
-                </fieldset>
-                <section className="buy-panel" aria-label="روش‌های ارسال">
-                  <h2>ارسال سفارش شما</h2>
-                  {!address ? (
-                    <p className="buy-note">
-                      ابتدا آدرس تحویل را انتخاب کنید تا روش‌های ارسال همان مقصد
-                      نمایش داده شوند.
-                    </p>
-                  ) : (
-                    stores.map((st) => {
-                      const methods = prepare.shipping.filter(
-                        (m) =>
-                          m.active &&
-                          (!m.store_ids?.length ||
-                            m.store_ids.includes(st.id)) &&
-                          (m.all_cities ||
-                            m.cities.some(
-                              (c) => normalize(c) === normalize(address.city),
-                            )),
-                      );
-                      return (
-                        <fieldset
-                          key={st.id}
-                          className="buy-shipping-group"
-                          disabled={action.busy}
-                        >
-                          <legend>{st.name}</legend>
-                          {methods.length ? (
-                            methods.map((m) => (
-                              <label key={m.id} className="buy-choice">
-                                <input
-                                  type="radio"
-                                  name={"shipping-" + st.id}
-                                  checked={shipping[st.id] === m.id}
-                                  onChange={() => {
-                                    setShipping({ ...shipping, [st.id]: m.id });
-                                    change();
-                                  }}
-                                />
-                                <span>
-                                  <b>{m.name}</b>
-                                  <small>{money(m.fee_toman)}</small>
-                                  <small>
-                                    تحویل {st.lead_days + m.min_days} تا{" "}
-                                    {st.lead_days + m.max_days} روز کاری با
-                                    احتساب تأمین
-                                  </small>
-                                  <small>
-                                    وقفه تأمین فروشنده: {st.lead_days} روز کاری
-                                  </small>
-                                </span>
-                              </label>
-                            ))
-                          ) : (
-                            <p className="buy-alert">
-                              برای این فروشنده در {address.city} روش ارسال فعالی
-                              وجود ندارد؛ آدرس دیگری انتخاب کنید.
-                            </p>
-                          )}
-                        </fieldset>
-                      );
-                    })
-                  )}
-                  <button
-                    className="buy-primary"
-                    disabled={
-                      action.busy ||
-                      !address ||
-                      !destinationAvailable(address, config?.geography ?? []) ||
-                      !stores.length ||
-                      stores.some((s) => !shipping[s.id])
-                    }
-                    onClick={() =>
-                      void action.run(async () => {
-                        const result = await call<Preview>(
-                          "/storefront/checkout/preview",
-                          token,
-                          { ...input, payment_method_id: "" },
-                        );
-                        setPreview(result);
-                        setMethod("");
-                        setQuote(null);
-                        setConsent(false);
-                        setStep(2);
-                      })
-                    }
-                  >
-                    تأیید آدرس و ارسال؛ ادامه به پرداخت
-                  </button>
-                </section>
-              </>
-            ) : (
-              preview && (
+            </li>
+          </ol>
+        </nav>
+        <h2 ref={heading} tabIndex={-1} className="buy-step-title">
+          {step === 1 ? "آدرس و روش ارسال" : "روش پرداخت و تأیید سفارش"}
+        </h2>
+        <Feedback action={action} />
+        {!prepare ? (
+          <LoadingPlaceholder label="دریافت شرایط خرید" />
+        ) : (
+          <div className="buy-layout">
+            <section className="buy-wizard-stage" key={step}>
+              {step === 1 ? (
                 <>
-                  <button
-                    className="buy-link buy-wizard-back"
-                    disabled={action.busy}
-                    onClick={change}
-                  >
-                    ← بازگشت به مرحله آدرس و ارسال
-                  </button>
-                  <section className="buy-panel buy-delivery-confirmed">
-                    <div className="buy-heading">
-                      <h2>آدرس و ارسال تأییدشده</h2>
-                      <button
-                        className="buy-link"
-                        disabled={action.busy}
-                        onClick={change}
-                      >
-                        ویرایش آدرس و ارسال
-                      </button>
-                    </div>
-                    <p>
-                      {preview.quote.address.recipient} ·{" "}
-                      {preview.quote.address.city}،{" "}
-                      {preview.quote.address.street}
-                    </p>
-                    {preview.quote.shipments.map((s) => (
-                      <div className="buy-shipment" key={s.store_id}>
-                        <b>
-                          {s.store_name} · {s.method_name}
-                        </b>
-                        <p>
-                          تحویل{" "}
-                          {new Date(s.delivery_from).toLocaleDateString(
-                            "fa-IR",
-                          )}{" "}
-                          تا{" "}
-                          {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
-                        </p>
-                      </div>
-                    ))}
-                  </section>
-                  <section className="buy-panel" aria-label="انتخاب روش پرداخت">
-                    <h2>روش پرداخت</h2>
-                    <p>
-                      موجودی قابل استفاده کیف پول:{" "}
-                      <b>{money(prepare.wallet_available_toman)}</b>
-                    </p>
-                    {preview.methods.map((m) => (
-                      <label
-                        key={m.id}
-                        className={
-                          "buy-choice " + (!m.eligible ? "disabled" : "")
-                        }
-                      >
-                        <input
-                          type="radio"
-                          name="payment_method"
-                          checked={method === m.id}
-                          disabled={!m.eligible || action.busy}
-                          onChange={() => {
-                            setMethod(m.id);
-                            setQuote(null);
-                            setConsent(false);
-                          }}
-                        />
-                        <span>
-                          <b>{m.name}</b>
-                          <small>
-                            {m.eligible ? m.instructions : m.reason}
-                          </small>
-                          {m.max_toman && (
-                            <small>سقف کل سفارش: {money(m.max_toman)}</small>
-                          )}
-                        </span>
-                      </label>
-                    ))}
-                    <p className="buy-note">
-                      هر واریز ابتدا کیف پول را شارژ می‌کند. تیم پس از بررسی
-                      واریز، اعتبار و رزرو، سفارش را جداگانه تأیید می‌کند.
-                    </p>
+                  <fieldset disabled={action.busy}>
+                    <AddressBook
+                      selected={address?.id}
+                      onSelect={(_id, a) => {
+                        setAddress(a ?? null);
+                        setShipping({});
+                        change();
+                      }}
+                    />
+                  </fieldset>
+                  <section className="buy-panel" aria-label="روش‌های ارسال">
+                    <h2>ارسال سفارش شما</h2>
+                    {!address ? (
+                      <p className="buy-note">
+                        ابتدا آدرس تحویل را انتخاب کنید تا روش‌های ارسال همان
+                        مقصد نمایش داده شوند.
+                      </p>
+                    ) : (
+                      stores.map((st) => {
+                        const methods = prepare.shipping.filter(
+                          (m) =>
+                            m.active &&
+                            (!m.store_ids?.length ||
+                              m.store_ids.includes(st.id)) &&
+                            (m.all_cities ||
+                              m.cities.some(
+                                (c) => normalize(c) === normalize(address.city),
+                              )),
+                        );
+                        return (
+                          <fieldset
+                            key={st.id}
+                            className="buy-shipping-group"
+                            disabled={action.busy}
+                          >
+                            <legend>{st.name}</legend>
+                            {methods.length ? (
+                              methods.map((m) => (
+                                <label key={m.id} className="buy-choice">
+                                  <input
+                                    type="radio"
+                                    name={"shipping-" + st.id}
+                                    checked={shipping[st.id] === m.id}
+                                    onChange={() => {
+                                      setShipping({
+                                        ...shipping,
+                                        [st.id]: m.id,
+                                      });
+                                      change();
+                                    }}
+                                  />
+                                  <span>
+                                    <b>{m.name}</b>
+                                    <small>{money(m.fee_toman)}</small>
+                                    <small>
+                                      تحویل {st.lead_days + m.min_days} تا{" "}
+                                      {st.lead_days + m.max_days} روز کاری با
+                                      احتساب تأمین
+                                    </small>
+                                    <small>
+                                      وقفه تأمین فروشنده: {st.lead_days} روز
+                                      کاری
+                                    </small>
+                                  </span>
+                                </label>
+                              ))
+                            ) : (
+                              <p className="buy-alert">
+                                برای این فروشنده در {address.city} روش ارسال
+                                فعالی وجود ندارد؛ آدرس دیگری انتخاب کنید.
+                              </p>
+                            )}
+                          </fieldset>
+                        );
+                      })
+                    )}
                     <button
                       className="buy-primary"
-                      disabled={action.busy || !method}
+                      disabled={
+                        action.busy ||
+                        !address ||
+                        !destinationAvailable(
+                          address,
+                          config?.geography ?? [],
+                        ) ||
+                        !stores.length ||
+                        stores.some((s) => !shipping[s.id])
+                      }
                       onClick={() =>
-                        void action.run(async (key) => {
-                          setQuote(
-                            await call<Quote>(
-                              "/storefront/checkout/quotes",
-                              token,
-                              input,
-                              undefined,
-                              key,
-                            ),
+                        void action.run(async () => {
+                          const result = await call<Preview>(
+                            "/storefront/checkout/preview",
+                            token,
+                            { ...input, payment_method_id: "" },
                           );
+                          setPreview(result);
+                          setMethod("");
+                          setQuote(null);
                           setConsent(false);
-                        }, JSON.stringify(input))
+                          setStep(2);
+                        })
                       }
                     >
-                      بررسی نهایی سفارش
+                      تأیید آدرس و ارسال؛ ادامه به پرداخت
                     </button>
                   </section>
-                  {quote && (
-                    <section className="buy-panel">
-                      <h2>بازبینی و تأیید مبلغ</h2>
-                      <OrderSummary quote={quote} />
-                      <label className="buy-choice">
-                        <ToggleSwitch checked={consent} onChange={setConsent} />
-                        <span>
-                          مبلغ {money(quote.total_toman)}، آدرس و شرایط ارسال را
-                          تأیید می‌کنم. رزرو ۳۰ دقیقه اعتبار دارد.
-                        </span>
-                      </label>
+                </>
+              ) : (
+                preview && (
+                  <>
+                    <button
+                      className="buy-link buy-wizard-back"
+                      disabled={action.busy}
+                      onClick={change}
+                    >
+                      ← بازگشت به مرحله آدرس و ارسال
+                    </button>
+                    <section className="buy-panel buy-delivery-confirmed">
+                      <div className="buy-heading">
+                        <h2>آدرس و ارسال تأییدشده</h2>
+                        <button
+                          className="buy-link"
+                          disabled={action.busy}
+                          onClick={change}
+                        >
+                          ویرایش آدرس و ارسال
+                        </button>
+                      </div>
+                      <p>
+                        {preview.quote.address.recipient} ·{" "}
+                        {preview.quote.address.city}،{" "}
+                        {preview.quote.address.street}
+                      </p>
+                      {preview.quote.shipments.map((s) => (
+                        <div className="buy-shipment" key={s.store_id}>
+                          <b>
+                            {s.store_name} · {s.method_name}
+                          </b>
+                          <p>
+                            تحویل{" "}
+                            {new Date(s.delivery_from).toLocaleDateString(
+                              "fa-IR",
+                            )}{" "}
+                            تا{" "}
+                            {new Date(s.delivery_to).toLocaleDateString(
+                              "fa-IR",
+                            )}
+                          </p>
+                        </div>
+                      ))}
+                    </section>
+                    <section
+                      className="buy-panel"
+                      aria-label="انتخاب روش پرداخت"
+                    >
+                      <h2>روش پرداخت</h2>
+                      <p>
+                        موجودی قابل استفاده کیف پول:{" "}
+                        <b>{money(prepare.wallet_available_toman)}</b>
+                      </p>
+                      {preview.methods.map((m) => (
+                        <label
+                          key={m.id}
+                          className={
+                            "buy-choice " + (!m.eligible ? "disabled" : "")
+                          }
+                        >
+                          <input
+                            type="radio"
+                            name="payment_method"
+                            checked={method === m.id}
+                            disabled={!m.eligible || action.busy}
+                            onChange={() => {
+                              setMethod(m.id);
+                              setQuote(null);
+                              setConsent(false);
+                            }}
+                          />
+                          <span>
+                            <b>{m.name}</b>
+                            <small>
+                              {m.eligible ? m.instructions : m.reason}
+                            </small>
+                            {m.max_toman && (
+                              <small>سقف کل سفارش: {money(m.max_toman)}</small>
+                            )}
+                          </span>
+                        </label>
+                      ))}
+                      <p className="buy-note">
+                        هر واریز ابتدا کیف پول را شارژ می‌کند. تیم پس از بررسی
+                        واریز، اعتبار و رزرو، سفارش را جداگانه تأیید می‌کند.
+                      </p>
                       <button
                         className="buy-primary"
-                        disabled={action.busy || !consent}
+                        disabled={action.busy || !method}
                         onClick={() =>
                           void action.run(async (key) => {
-                            const result = await call<Purchase>(
-                              "/storefront/checkout/purchases",
-                              token,
-                              {
-                                quote_id: quote.id,
-                                accepted_total_toman: quote.total_toman,
-                              },
-                              undefined,
-                              key,
+                            setQuote(
+                              await call<Quote>(
+                                "/storefront/checkout/quotes",
+                                token,
+                                input,
+                                undefined,
+                                key,
+                              ),
                             );
-                            await refreshCart();
-                            navigate("/account/orders/" + result.number);
-                          }, "accept:" + quote.id)
+                            setConsent(false);
+                          }, JSON.stringify(input))
                         }
                       >
-                        ثبت سفارش و ادامه پرداخت
+                        بررسی نهایی سفارش
                       </button>
                     </section>
-                  )}
+                    {quote && (
+                      <section className="buy-panel">
+                        <h2>بازبینی و تأیید مبلغ</h2>
+                        <OrderSummary quote={quote} />
+                        <label className="buy-choice">
+                          <ToggleSwitch
+                            checked={consent}
+                            onChange={setConsent}
+                          />
+                          <span>
+                            مبلغ {money(quote.total_toman)}، آدرس و شرایط ارسال
+                            را تأیید می‌کنم. رزرو ۳۰ دقیقه اعتبار دارد.
+                          </span>
+                        </label>
+                        <button
+                          className="buy-primary"
+                          disabled={action.busy || !consent}
+                          onClick={() =>
+                            void action.run(async (key) => {
+                              const result = await call<Purchase>(
+                                "/storefront/checkout/purchases",
+                                token,
+                                {
+                                  quote_id: quote.id,
+                                  accepted_total_toman: quote.total_toman,
+                                },
+                                undefined,
+                                key,
+                              );
+                              await refreshCart();
+                              navigate("/account/orders/" + result.number);
+                            }, "accept:" + quote.id)
+                          }
+                        >
+                          ثبت سفارش و ادامه پرداخت
+                        </button>
+                      </section>
+                    )}
+                  </>
+                )
+              )}
+            </section>
+            <aside className="buy-panel buy-summary">
+              <h2>خلاصه خرید</h2>
+              {preview ? (
+                <OrderSummary quote={quote ?? preview.quote} />
+              ) : (
+                <>
+                  <p>{prepare.cart.item_count} کالا</p>
+                  <strong>{money(prepare.cart.subtotal_toman)}</strong>
+                  <p>
+                    هزینه ارسال پس از انتخاب آدرس و روش ارسال محاسبه می‌شود.
+                  </p>
                 </>
-              )
-            )}
-          </section>
-          <aside className="buy-panel buy-summary">
-            <h2>خلاصه خرید</h2>
-            {preview ? (
-              <OrderSummary quote={quote ?? preview.quote} />
-            ) : (
-              <>
-                <p>{prepare.cart.item_count} کالا</p>
-                <strong>{money(prepare.cart.subtotal_toman)}</strong>
-                <p>هزینه ارسال پس از انتخاب آدرس و روش ارسال محاسبه می‌شود.</p>
-              </>
-            )}
-            <a href="/cart">بازگشت به سبد</a>
-          </aside>
-        </div>
-      )}
-    </>
+              )}
+              <a href="/cart">بازگشت به سبد</a>
+            </aside>
+          </div>
+        )}
+      </>
+    </BusyRegion>
   );
 }
 export function OrderSummary({ quote }: { quote: Quote }) {
@@ -1346,192 +1390,195 @@ function OrderContent({ id }: { id?: string }) {
     return () => clearInterval(timer);
   }, [load]);
   return (
-    <>
-      <Feedback action={action} />
-      <button
-        className="buy-secondary"
-        disabled={action.busy}
-        onClick={() =>
-          void action.run(async () => {
-            await load();
-          })
-        }
-      >
-        تازه‌سازی وضعیت
-      </button>
-      {rows === null ? (
-        <p>در حال دریافت سفارش…</p>
-      ) : !rows.length ? (
-        <div className="buy-panel">هنوز سفارشی ثبت نشده است.</div>
-      ) : (
-        rows
-          .slice()
-          .reverse()
-          .map((p) => (
-            <article className="buy-panel" key={p.id}>
-              <h2>
-                {id ? (
-                  "سفارش شما"
+    <BusyRegion busy={action.busy}>
+      <>
+        <Feedback action={action} />
+        <button
+          className="buy-secondary"
+          disabled={action.busy}
+          onClick={() =>
+            void action.run(async () => {
+              await load();
+            })
+          }
+        >
+          تازه‌سازی وضعیت
+        </button>
+        {rows === null ? (
+          <LoadingPlaceholder label="دریافت سفارش" />
+        ) : !rows.length ? (
+          <div className="buy-panel">هنوز سفارشی ثبت نشده است.</div>
+        ) : (
+          rows
+            .slice()
+            .reverse()
+            .map((p) => (
+              <article className="buy-panel" key={p.id}>
+                <h2>
+                  {id ? (
+                    "سفارش شما"
+                  ) : (
+                    <a href={"/account/orders/" + p.number}>مشاهده سفارش</a>
+                  )}
+                </h2>
+                <p className="buy-order-number">
+                  شماره سفارش: <b>{p.number}</b>
+                </p>
+                <PurchaseStatus purchase={p} />
+                {!id ? (
+                  <strong>{money(p.quote.total_toman)}</strong>
                 ) : (
-                  <a href={"/account/orders/" + p.number}>مشاهده سفارش</a>
-                )}
-              </h2>
-              <p className="buy-order-number">
-                شماره سفارش: <b>{p.number}</b>
-              </p>
-              <PurchaseStatus purchase={p} />
-              {!id ? (
-                <strong>{money(p.quote.total_toman)}</strong>
-              ) : (
-                <div className="buy-layout">
-                  <section>
-                    <OrderSummary quote={p.quote} />
-                    <h3>گیرنده و آدرس</h3>
-                    <p>
-                      {p.quote.address.recipient} · {p.quote.address.phone}
-                    </p>
-                    <p>
-                      {p.quote.address.province}، {p.quote.address.city}،{" "}
-                      {p.quote.address.street} · {p.quote.address.postal_code}
-                    </p>
-                    <h3>اعلام واریزها</h3>
-                    <Deposits
-                      rows={p.deposits}
-                      token={token}
-                      onRefresh={load}
-                    />
-                  </section>
-                  <aside>
-                    <h3>{p.quote.payment_method.name}</h3>
-                    {p.status !== "confirmed" && p.status !== "cancelled" && (
-                      <>
-                        <p>
-                          موجودی قابل استفاده:{" "}
-                          <b>{money(p.wallet_available_toman)}</b>
-                        </p>
-                        <p>
-                          کسری اعتبار: <b>{money(p.shortfall_toman)}</b>
-                        </p>
-                        {p.status === "requires-reconfirmation" ||
-                        Date.parse(p.quote.reserved_until) <= clock ? (
-                          <>
-                            <p className="buy-alert">
-                              رزرو پایان یافته یا شرایط نیاز به بررسی دارد؛
-                              واریز دیرهنگام فقط کیف پول را شارژ می‌کند.
-                            </p>
-                            <a
-                              className="buy-primary"
-                              href={"/checkout?purchase=" + p.id}
-                            >
-                              بررسی قیمت و تأیید دوباره
-                            </a>
-                          </>
-                        ) : (
-                          <p className="buy-notice">
-                            رزرو تا{" "}
-                            {new Date(
-                              p.quote.reserved_until,
-                            ).toLocaleTimeString("fa-IR")}{" "}
-                            · حدود{" "}
-                            {Math.max(
-                              0,
-                              Math.ceil(
-                                (Date.parse(p.quote.reserved_until) - clock) /
-                                  60000,
-                              ),
-                            )}{" "}
-                            دقیقه
+                  <div className="buy-layout">
+                    <section>
+                      <OrderSummary quote={p.quote} />
+                      <h3>گیرنده و آدرس</h3>
+                      <p>
+                        {p.quote.address.recipient} · {p.quote.address.phone}
+                      </p>
+                      <p>
+                        {p.quote.address.province}، {p.quote.address.city}،{" "}
+                        {p.quote.address.street} · {p.quote.address.postal_code}
+                      </p>
+                      <h3>اعلام واریزها</h3>
+                      <Deposits
+                        rows={p.deposits}
+                        token={token}
+                        onRefresh={load}
+                      />
+                    </section>
+                    <aside>
+                      <h3>{p.quote.payment_method.name}</h3>
+                      {p.status !== "confirmed" && p.status !== "cancelled" && (
+                        <>
+                          <p>
+                            موجودی قابل استفاده:{" "}
+                            <b>{money(p.wallet_available_toman)}</b>
                           </p>
-                        )}
-                        {p.quote.payment_method.kind !== "wallet" ? (
-                          <button
-                            className="buy-primary"
-                            onClick={() => setDeposit(true)}
-                          >
-                            اعلام پرداخت / واریز
-                          </button>
-                        ) : (
-                          <a className="buy-secondary" href="/wallet">
-                            شارژ مستقل کیف پول
-                          </a>
-                        )}
-                        <p className="buy-note">
-                          پس از تأمین اعتبار، منتظر تأیید مستقل تیم بمانید. ثبت
-                          رسید یا داشتن اعتبار، پرداخت سفارش محسوب نمی‌شود.
-                        </p>
-                      </>
-                    )}
-                    {p.status !== "cancelled" && (
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          void action.run(
-                            async (key) => {
-                              await call(
-                                "/storefront/account/orders/" +
-                                  p.id +
-                                  "/cancel",
-                                token,
-                                { reason },
-                                undefined,
-                                key,
-                              );
-                              await load();
-                            },
-                            "cancel:" + p.id + reason,
-                          );
-                        }}
-                      >
-                        <label className="buy-field">
-                          دلیل لغو
-                          <input
-                            value={reason}
-                            onChange={(e) => setReason(e.target.value)}
-                            required
-                            maxLength={1000}
-                          />
-                        </label>
-                        <button
-                          className="buy-secondary"
-                          disabled={action.busy || p.cancellation_requested}
+                          <p>
+                            کسری اعتبار: <b>{money(p.shortfall_toman)}</b>
+                          </p>
+                          {p.status === "requires-reconfirmation" ||
+                          Date.parse(p.quote.reserved_until) <= clock ? (
+                            <>
+                              <p className="buy-alert">
+                                رزرو پایان یافته یا شرایط نیاز به بررسی دارد؛
+                                واریز دیرهنگام فقط کیف پول را شارژ می‌کند.
+                              </p>
+                              <a
+                                className="buy-primary"
+                                href={"/checkout?purchase=" + p.id}
+                              >
+                                بررسی قیمت و تأیید دوباره
+                              </a>
+                            </>
+                          ) : (
+                            <p className="buy-notice">
+                              رزرو تا{" "}
+                              {new Date(
+                                p.quote.reserved_until,
+                              ).toLocaleTimeString("fa-IR")}{" "}
+                              · حدود{" "}
+                              {Math.max(
+                                0,
+                                Math.ceil(
+                                  (Date.parse(p.quote.reserved_until) - clock) /
+                                    60000,
+                                ),
+                              )}{" "}
+                              دقیقه
+                            </p>
+                          )}
+                          {p.quote.payment_method.kind !== "wallet" ? (
+                            <button
+                              className="buy-primary"
+                              onClick={() => setDeposit(true)}
+                            >
+                              اعلام پرداخت / واریز
+                            </button>
+                          ) : (
+                            <a className="buy-secondary" href="/wallet">
+                              شارژ مستقل کیف پول
+                            </a>
+                          )}
+                          <p className="buy-note">
+                            پس از تأمین اعتبار، منتظر تأیید مستقل تیم بمانید.
+                            ثبت رسید یا داشتن اعتبار، پرداخت سفارش محسوب
+                            نمی‌شود.
+                          </p>
+                        </>
+                      )}
+                      {p.status !== "cancelled" && (
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            void action.run(
+                              async (key) => {
+                                await call(
+                                  "/storefront/account/orders/" +
+                                    p.id +
+                                    "/cancel",
+                                  token,
+                                  { reason },
+                                  undefined,
+                                  key,
+                                );
+                                await load();
+                              },
+                              "cancel:" + p.id + reason,
+                            );
+                          }}
                         >
-                          {p.cancellation_requested
-                            ? "درخواست لغو در حال بررسی"
-                            : p.status === "confirmed"
-                              ? "درخواست لغو سفارش"
-                              : "لغو سفارش"}
-                        </button>
-                      </form>
-                    )}
-                  </aside>
-                </div>
-              )}
-              {id && deposit && config && (
-                <Modal title="اعلام پرداخت" onClose={() => setDeposit(false)}>
-                  <DepositForm
-                    methods={[p.quote.payment_method]}
-                    destination={
-                      p.quote.payment_method.kind === "card-transfer"
-                        ? p.quote.destination
-                        : config.destination
-                    }
-                    purchaseID={p.id}
-                    defaultAmount={
-                      p.shortfall_toman === "0"
-                        ? p.quote.total_toman
-                        : p.shortfall_toman
-                    }
-                    onDone={async () => {
-                      setDeposit(false);
-                      await load();
-                    }}
-                  />
-                </Modal>
-              )}
-            </article>
-          ))
-      )}
-    </>
+                          <label className="buy-field">
+                            دلیل لغو
+                            <input
+                              value={reason}
+                              onChange={(e) => setReason(e.target.value)}
+                              required
+                              maxLength={1000}
+                            />
+                          </label>
+                          <button
+                            className="buy-secondary"
+                            disabled={action.busy || p.cancellation_requested}
+                          >
+                            {p.cancellation_requested
+                              ? "درخواست لغو در حال بررسی"
+                              : p.status === "confirmed"
+                                ? "درخواست لغو سفارش"
+                                : "لغو سفارش"}
+                          </button>
+                        </form>
+                      )}
+                    </aside>
+                  </div>
+                )}
+                {id && deposit && config && (
+                  <Modal title="اعلام پرداخت" onClose={() => setDeposit(false)}>
+                    <DepositForm
+                      methods={[p.quote.payment_method]}
+                      destination={
+                        p.quote.payment_method.kind === "card-transfer"
+                          ? p.quote.destination
+                          : config.destination
+                      }
+                      purchaseID={p.id}
+                      defaultAmount={
+                        p.shortfall_toman === "0"
+                          ? p.quote.total_toman
+                          : p.shortfall_toman
+                      }
+                      onDone={async () => {
+                        setDeposit(false);
+                        await load();
+                      }}
+                    />
+                  </Modal>
+                )}
+              </article>
+            ))
+        )}
+      </>
+    </BusyRegion>
   );
 }
 export function Deposits({
@@ -1545,67 +1592,71 @@ export function Deposits({
 }) {
   const action = useAction();
   return (
-    <>
-      <Feedback action={action} />
-      {!rows.length ? (
-        <p className="buy-note">اعلام واریزی ثبت نشده است.</p>
-      ) : (
-        rows
-          .slice()
-          .reverse()
-          .map((d) => (
-            <div className="buy-deposit" key={d.id}>
-              <b>
-                {d.method_name} · {money(d.amount_toman)}
-              </b>
-              <p>
-                {label(d.status)} · {d.date} · مرجع {d.reference}
-              </p>
-              {d.reason && <p>{d.reason}</p>}
-              {d.status === "pending" && (
-                <label className="buy-field">
-                  {d.receipt_id
-                    ? "جایگزینی تصویر رسید (اختیاری)"
-                    : "تصویر رسید (اختیاری)"}
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    disabled={action.busy}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      void action.run(
-                        async (key) => {
-                          if (file.size > 2 * 1024 * 1024)
-                            throw Error("حجم رسید حداکثر ۲ مگابایت است.");
-                          const f = new FormData();
-                          f.set("file", file);
-                          f.set("version", String(d.version));
-                          await call(
-                            "/storefront/wallet/deposits/" + d.id + "/receipt",
-                            token,
-                            f,
-                            undefined,
-                            key,
-                          );
-                          await onRefresh();
-                          action.setNotice(
-                            "تصویر رسید ثبت شد؛ واریز همچنان در انتظار بررسی است.",
-                          );
-                        },
-                        "receipt:" + d.id + file.name + file.size,
-                      );
-                    }}
-                  />
-                </label>
-              )}
-              {d.receipt_id && (
-                <PrivateReceipt id={d.receipt_id} token={token} />
-              )}
-            </div>
-          ))
-      )}
-    </>
+    <BusyRegion busy={action.busy}>
+      <>
+        <Feedback action={action} />
+        {!rows.length ? (
+          <p className="buy-note">اعلام واریزی ثبت نشده است.</p>
+        ) : (
+          rows
+            .slice()
+            .reverse()
+            .map((d) => (
+              <div className="buy-deposit" key={d.id}>
+                <b>
+                  {d.method_name} · {money(d.amount_toman)}
+                </b>
+                <p>
+                  {label(d.status)} · {d.date} · مرجع {d.reference}
+                </p>
+                {d.reason && <p>{d.reason}</p>}
+                {d.status === "pending" && (
+                  <label className="buy-field">
+                    {d.receipt_id
+                      ? "جایگزینی تصویر رسید (اختیاری)"
+                      : "تصویر رسید (اختیاری)"}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      disabled={action.busy}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        void action.run(
+                          async (key) => {
+                            if (file.size > 2 * 1024 * 1024)
+                              throw Error("حجم رسید حداکثر ۲ مگابایت است.");
+                            const f = new FormData();
+                            f.set("file", file);
+                            f.set("version", String(d.version));
+                            await call(
+                              "/storefront/wallet/deposits/" +
+                                d.id +
+                                "/receipt",
+                              token,
+                              f,
+                              undefined,
+                              key,
+                            );
+                            await onRefresh();
+                            action.setNotice(
+                              "تصویر رسید ثبت شد؛ واریز همچنان در انتظار بررسی است.",
+                            );
+                          },
+                          "receipt:" + d.id + file.name + file.size,
+                        );
+                      }}
+                    />
+                  </label>
+                )}
+                {d.receipt_id && (
+                  <PrivateReceipt id={d.receipt_id} token={token} />
+                )}
+              </div>
+            ))
+        )}
+      </>
+    </BusyRegion>
   );
 }
 export function PrivateReceipt({
@@ -1653,7 +1704,7 @@ export function PrivateReceipt({
       <img className="buy-receipt" src={url} alt="تصویر خصوصی رسید" />
     </a>
   ) : (
-    <p>دریافت رسید…</p>
+    <LoadingPlaceholder label="دریافت رسید" />
   );
 }
 export function DepositForm({
@@ -1679,86 +1730,88 @@ export function DepositForm({
     [method, setMethod] = useState(methods[0]?.id ?? "");
   const chosen = methods.find((m) => m.id === method);
   return (
-    <form
-      onSubmit={(e) => {
-        const v = values(e),
-          input = {
-            method_id: method,
-            purchase_id: purchaseID,
-            destination_id:
-              chosen?.kind === "card-transfer" ? destination.id : "",
-            amount_toman: digits(v.amount),
-            date: v.date,
-            reference: digits(v.reference),
-          };
-        void action.run(async (key) => {
-          await call(
-            "/storefront/wallet/deposits",
-            token,
-            input,
-            undefined,
-            key,
-          );
-          await onDone();
-        }, JSON.stringify(input));
-      }}
-    >
-      <fieldset disabled={action.busy}>
-        <ChoiceGroup
-          label="روش تأمین اعتبار"
-          value={method}
-          onChange={setMethod}
-          options={methods
-            .filter((m) => m.kind !== "wallet")
-            .map((m) => ({ value: m.id, label: m.name }))}
-        />
-        {chosen?.kind === "card-transfer" && (
-          <div className="buy-destination">
-            <p>شماره کارت مقصد</p>
-            <b dir="ltr">{destination.card_number}</b>
-            <p>
-              {destination.holder} · {destination.bank}
-            </p>
-          </div>
-        )}
-        <p>{chosen?.instructions}</p>
-        {chosen?.max_toman && (
-          <p className="buy-note">سقف این واریز: {money(chosen.max_toman)}</p>
-        )}
-        <Input
-          name="amount"
-          label="مبلغ واریز (تومان)"
-          inputMode="decimal"
-          defaultValue={defaultAmount}
-          required
-        />
-        <Input
-          name="date"
-          label="تاریخ واریز (میلادی)"
-          type="date"
-          defaultValue={config?.server_date}
-          required
-        />
-        <Input
-          name="reference"
-          label="شماره پیگیری / مرجع"
-          required
-          minLength={3}
-          maxLength={80}
-        />
-        <p className="buy-note">
-          فقط پرداخت انجام‌شده را اعلام کنید. تصویر رسید را پس از ثبت، در همین
-          صفحه می‌توانید اضافه کنید. شارژ پس از بررسی دستی انجام می‌شود.
-        </p>
-        <Feedback action={action} />
-        <button
-          className="buy-primary"
-          disabled={!method || chosen?.kind === "wallet"}
-        >
-          ثبت اعلام پرداخت
-        </button>
-      </fieldset>
-    </form>
+    <BusyRegion busy={action.busy}>
+      <form
+        onSubmit={(e) => {
+          const v = values(e),
+            input = {
+              method_id: method,
+              purchase_id: purchaseID,
+              destination_id:
+                chosen?.kind === "card-transfer" ? destination.id : "",
+              amount_toman: digits(v.amount),
+              date: v.date,
+              reference: digits(v.reference),
+            };
+          void action.run(async (key) => {
+            await call(
+              "/storefront/wallet/deposits",
+              token,
+              input,
+              undefined,
+              key,
+            );
+            await onDone();
+          }, JSON.stringify(input));
+        }}
+      >
+        <fieldset disabled={action.busy}>
+          <ChoiceGroup
+            label="روش تأمین اعتبار"
+            value={method}
+            onChange={setMethod}
+            options={methods
+              .filter((m) => m.kind !== "wallet")
+              .map((m) => ({ value: m.id, label: m.name }))}
+          />
+          {chosen?.kind === "card-transfer" && (
+            <div className="buy-destination">
+              <p>شماره کارت مقصد</p>
+              <b dir="ltr">{destination.card_number}</b>
+              <p>
+                {destination.holder} · {destination.bank}
+              </p>
+            </div>
+          )}
+          <p>{chosen?.instructions}</p>
+          {chosen?.max_toman && (
+            <p className="buy-note">سقف این واریز: {money(chosen.max_toman)}</p>
+          )}
+          <Input
+            name="amount"
+            label="مبلغ واریز (تومان)"
+            inputMode="decimal"
+            defaultValue={defaultAmount}
+            required
+          />
+          <Input
+            name="date"
+            label="تاریخ واریز (میلادی)"
+            type="date"
+            defaultValue={config?.server_date}
+            required
+          />
+          <Input
+            name="reference"
+            label="شماره پیگیری / مرجع"
+            required
+            minLength={3}
+            maxLength={80}
+          />
+          <p className="buy-note">
+            فقط پرداخت انجام‌شده را اعلام کنید. تصویر رسید را پس از ثبت، در همین
+            صفحه می‌توانید اضافه کنید. شارژ پس از بررسی دستی انجام می‌شود.
+          </p>
+          <Feedback action={action} />
+          <button
+            className="buy-primary"
+            disabled={!method || chosen?.kind === "wallet"}
+          >
+            ثبت اعلام پرداخت
+          </button>
+        </fieldset>
+      </form>
+    </BusyRegion>
   );
 }
 export function WalletPage() {
@@ -1785,142 +1838,147 @@ function WalletContent() {
     });
   }, [load]);
   return (
-    <>
-      <Feedback action={action} />
-      <button
-        className="buy-secondary"
-        disabled={action.busy}
-        onClick={() =>
-          void action.run(async () => {
-            await load();
-          })
-        }
-      >
-        تازه‌سازی کیف پول
-      </button>
-      {!wallet ? (
-        <p>دریافت کیف پول…</p>
-      ) : (
-        <>
-          <div className="buy-wallet-card">
-            <span>اعتبار قابل استفاده</span>
-            <strong>{money(wallet.available_toman)}</strong>
-            <small>
-              کل موجودی: {money(wallet.balance_toman)} · در انتظار بازپرداخت:{" "}
-              {money(wallet.held_toman)}
-            </small>
-            <div className="buy-row">
-              <button
-                onClick={() => setTopup(true)}
-                disabled={!wallet.funding_methods.length}
-              >
-                شارژ کیف پول
-              </button>
-              <button onClick={() => setRefund(true)}>درخواست بازپرداخت</button>
+    <BusyRegion busy={action.busy}>
+      <>
+        <Feedback action={action} />
+        <button
+          className="buy-secondary"
+          disabled={action.busy}
+          onClick={() =>
+            void action.run(async () => {
+              await load();
+            })
+          }
+        >
+          تازه‌سازی کیف پول
+        </button>
+        {!wallet ? (
+          <LoadingPlaceholder label="دریافت کیف پول" />
+        ) : (
+          <>
+            <div className="buy-wallet-card">
+              <span>اعتبار قابل استفاده</span>
+              <strong>{money(wallet.available_toman)}</strong>
+              <small>
+                کل موجودی: {money(wallet.balance_toman)} · در انتظار بازپرداخت:{" "}
+                {money(wallet.held_toman)}
+              </small>
+              <div className="buy-row">
+                <button
+                  onClick={() => setTopup(true)}
+                  disabled={!wallet.funding_methods.length}
+                >
+                  شارژ کیف پول
+                </button>
+                <button onClick={() => setRefund(true)}>
+                  درخواست بازپرداخت
+                </button>
+              </div>
             </div>
-          </div>
-          <section className="buy-panel">
-            <h2>گردش کیف پول</h2>
-            {wallet.entries.length ? (
-              wallet.entries
-                .slice()
-                .reverse()
-                .map((e) => (
-                  <div key={e.id} className="buy-total">
-                    <span>
-                      {label(e.kind)}
-                      <small>{new Date(e.at).toLocaleString("fa-IR")}</small>
-                    </span>
-                    <b>{money(e.amount_toman)}</b>
+            <section className="buy-panel">
+              <h2>گردش کیف پول</h2>
+              {wallet.entries.length ? (
+                wallet.entries
+                  .slice()
+                  .reverse()
+                  .map((e) => (
+                    <div key={e.id} className="buy-total">
+                      <span>
+                        {label(e.kind)}
+                        <small>{new Date(e.at).toLocaleString("fa-IR")}</small>
+                      </span>
+                      <b>{money(e.amount_toman)}</b>
+                    </div>
+                  ))
+              ) : (
+                <p>تراکنشی ثبت نشده است.</p>
+              )}
+            </section>
+            <section className="buy-panel">
+              <h2>اعلام واریزها</h2>
+              <Deposits rows={wallet.deposits} token={token} onRefresh={load} />
+            </section>
+            <section className="buy-panel">
+              <h2>درخواست‌های بازپرداخت</h2>
+              {wallet.refunds.length ? (
+                wallet.refunds.map((r) => (
+                  <div key={r.id}>
+                    <b>
+                      {money(r.amount_toman)} · {label(r.status)}
+                    </b>
+                    <p>{r.instructions}</p>
+                    <p>
+                      {r.reason} {r.reference && " · مرجع " + r.reference}
+                    </p>
                   </div>
                 ))
-            ) : (
-              <p>تراکنشی ثبت نشده است.</p>
-            )}
-          </section>
-          <section className="buy-panel">
-            <h2>اعلام واریزها</h2>
-            <Deposits rows={wallet.deposits} token={token} onRefresh={load} />
-          </section>
-          <section className="buy-panel">
-            <h2>درخواست‌های بازپرداخت</h2>
-            {wallet.refunds.length ? (
-              wallet.refunds.map((r) => (
-                <div key={r.id}>
-                  <b>
-                    {money(r.amount_toman)} · {label(r.status)}
-                  </b>
-                  <p>{r.instructions}</p>
-                  <p>
-                    {r.reason} {r.reference && " · مرجع " + r.reference}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p>درخواستی ثبت نشده است.</p>
-            )}
-          </section>
-          {topup && (
-            <Modal title="شارژ کیف پول" onClose={() => setTopup(false)}>
-              <DepositForm
-                methods={wallet.funding_methods}
-                destination={wallet.destination}
-                onDone={async () => {
-                  setTopup(false);
-                  await load();
-                }}
-              />
-            </Modal>
-          )}
-          {refund && (
-            <Modal
-              title="درخواست بازپرداخت دستی"
-              onClose={() => setRefund(false)}
-            >
-              <form
-                onSubmit={(e) => {
-                  const v = values(e),
-                    input = {
-                      amount_toman: digits(v.amount),
-                      instructions: v.instructions,
-                    };
-                  void action.run(async (key) => {
-                    await call(
-                      "/storefront/wallet/refunds",
-                      token,
-                      input,
-                      undefined,
-                      key,
-                    );
-                    setRefund(false);
+              ) : (
+                <p>درخواستی ثبت نشده است.</p>
+              )}
+            </section>
+            {topup && (
+              <Modal title="شارژ کیف پول" onClose={() => setTopup(false)}>
+                <DepositForm
+                  methods={wallet.funding_methods}
+                  destination={wallet.destination}
+                  onDone={async () => {
+                    setTopup(false);
                     await load();
-                  }, JSON.stringify(input));
-                }}
-              >
-                <Input
-                  name="amount"
-                  label="مبلغ بازپرداخت (تومان)"
-                  inputMode="decimal"
-                  required
+                  }}
                 />
-                <label className="buy-field">
-                  اطلاعات مقصد و توضیح درخواست
-                  <textarea name="instructions" maxLength={2000} required />
-                </label>
-                <p>
-                  مبلغ تا رسیدگی تیم از اعتبار قابل استفاده کنار گذاشته می‌شود.
-                  پرداخت بانکی به‌صورت دستی انجام خواهد شد.
-                </p>
-                <Feedback action={action} />
-                <button className="buy-primary" disabled={action.busy}>
-                  ثبت درخواست رسیدگی
-                </button>
-              </form>
-            </Modal>
-          )}
-        </>
-      )}
-    </>
+              </Modal>
+            )}
+            {refund && (
+              <Modal
+                busy={action.busy}
+                title="درخواست بازپرداخت دستی"
+                onClose={() => setRefund(false)}
+              >
+                <form
+                  onSubmit={(e) => {
+                    const v = values(e),
+                      input = {
+                        amount_toman: digits(v.amount),
+                        instructions: v.instructions,
+                      };
+                    void action.run(async (key) => {
+                      await call(
+                        "/storefront/wallet/refunds",
+                        token,
+                        input,
+                        undefined,
+                        key,
+                      );
+                      setRefund(false);
+                      await load();
+                    }, JSON.stringify(input));
+                  }}
+                >
+                  <Input
+                    name="amount"
+                    label="مبلغ بازپرداخت (تومان)"
+                    inputMode="decimal"
+                    required
+                  />
+                  <label className="buy-field">
+                    اطلاعات مقصد و توضیح درخواست
+                    <textarea name="instructions" maxLength={2000} required />
+                  </label>
+                  <p>
+                    مبلغ تا رسیدگی تیم از اعتبار قابل استفاده کنار گذاشته
+                    می‌شود. پرداخت بانکی به‌صورت دستی انجام خواهد شد.
+                  </p>
+                  <Feedback action={action} />
+                  <button className="buy-primary" disabled={action.busy}>
+                    ثبت درخواست رسیدگی
+                  </button>
+                </form>
+              </Modal>
+            )}
+          </>
+        )}
+      </>
+    </BusyRegion>
   );
 }
 export function AccountPage({ addresses = false }: { addresses?: boolean }) {
@@ -1928,76 +1986,78 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
     action = useAction();
   return (
     <CommerceShell title={addresses ? "آدرس‌های من" : "حساب کاربری"}>
-      <RequireLogin>
-        {addresses ? (
-          <AddressBook />
-        ) : (
-          <>
-            <nav className="buy-account-nav">
-              <a href="/account/orders">سفارش‌ها</a>
-              <a href="/account/addresses">آدرس‌ها</a>
-              <a href="/wallet">کیف پول</a>
-              <button
-                onClick={() => {
-                  void call("/storefront/auth/logout", token, {}).finally(
-                    logout,
-                  );
-                }}
-              >
-                خروج
-              </button>
-            </nav>
-            <section className="buy-panel buy-auth">
-              <h2>اطلاعات حساب</h2>
-              <p>
-                ایمیل اختیاری است و برای ورود با رمز استفاده می‌شود؛ ورود با OTP
-                از طریق موبایل است.
-              </p>
-              <form
-                key={profile?.name + ":" + profile?.email}
-                onSubmit={(e) => {
-                  const v = values(e);
-                  void action.run(async () => {
-                    await call(
-                      "/storefront/account/profile",
-                      token,
-                      { name: v.name, email: v.email, password: v.password },
-                      "PATCH",
+      <BusyRegion busy={action.busy}>
+        <RequireLogin>
+          {addresses ? (
+            <AddressBook />
+          ) : (
+            <>
+              <nav className="buy-account-nav">
+                <a href="/account/orders">سفارش‌ها</a>
+                <a href="/account/addresses">آدرس‌ها</a>
+                <a href="/wallet">کیف پول</a>
+                <button
+                  onClick={() => {
+                    void call("/storefront/auth/logout", token, {}).finally(
+                      logout,
                     );
-                    action.setNotice(
-                      "اطلاعات ثبت شد؛ پس از تغییر رمز ممکن است لازم باشد دوباره وارد شوید.",
-                    );
-                  });
-                }}
-              >
-                <Input
-                  name="name"
-                  label="نام"
-                  defaultValue={profile?.name}
-                  required
-                />
-                <Input
-                  name="email"
-                  label="ایمیل (اختیاری)"
-                  type="email"
-                  defaultValue={profile?.email ?? ""}
-                />
-                <Input
-                  name="password"
-                  label="ثبت یا تغییر رمز (اختیاری)"
-                  type="password"
-                  autoComplete="new-password"
-                  minLength={10}
-                />
-                <Feedback action={action} />
-                <button className="buy-primary" disabled={action.busy}>
-                  ذخیره پروفایل
+                  }}
+                >
+                  خروج
                 </button>
-              </form>
-            </section>
-          </>
-        )}
-      </RequireLogin>
+              </nav>
+              <section className="buy-panel buy-auth">
+                <h2>اطلاعات حساب</h2>
+                <p>
+                  ایمیل اختیاری است و برای ورود با رمز استفاده می‌شود؛ ورود با
+                  OTP از طریق موبایل است.
+                </p>
+                <form
+                  key={profile?.name + ":" + profile?.email}
+                  onSubmit={(e) => {
+                    const v = values(e);
+                    void action.run(async () => {
+                      await call(
+                        "/storefront/account/profile",
+                        token,
+                        { name: v.name, email: v.email, password: v.password },
+                        "PATCH",
+                      );
+                      action.setNotice(
+                        "اطلاعات ثبت شد؛ پس از تغییر رمز ممکن است لازم باشد دوباره وارد شوید.",
+                      );
+                    });
+                  }}
+                >
+                  <Input
+                    name="name"
+                    label="نام"
+                    defaultValue={profile?.name}
+                    required
+                  />
+                  <Input
+                    name="email"
+                    label="ایمیل (اختیاری)"
+                    type="email"
+                    defaultValue={profile?.email ?? ""}
+                  />
+                  <Input
+                    name="password"
+                    label="ثبت یا تغییر رمز (اختیاری)"
+                    type="password"
+                    autoComplete="new-password"
+                    minLength={10}
+                  />
+                  <Feedback action={action} />
+                  <button className="buy-primary" disabled={action.busy}>
+                    ذخیره پروفایل
+                  </button>
+                </form>
+              </section>
+            </>
+          )}
+        </RequireLogin>
+      </BusyRegion>
     </CommerceShell>
   );
 }

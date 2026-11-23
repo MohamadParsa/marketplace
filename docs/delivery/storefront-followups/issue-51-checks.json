@@ -1,0 +1,138 @@
+{
+  "checks": [
+    {
+      "id": "variant-no-layout-shift",
+      "pass": true
+    },
+    {
+      "id": "variant-region-inert",
+      "pass": true
+    },
+    {
+      "id": "indeterminate-no-fake-percent",
+      "pass": true
+    },
+    {
+      "id": "latest-selection-applied",
+      "pass": true
+    },
+    {
+      "id": "cart-double-click-blocked",
+      "pass": true
+    },
+    {
+      "id": "ambiguous-retry-same-idempotency-key",
+      "pass": true
+    },
+    {
+      "id": "quantity-progress",
+      "pass": true
+    },
+    {
+      "id": "increase-decrease-remove-progress",
+      "pass": true
+    },
+    {
+      "id": "checkout-initial-reserved-area",
+      "pass": true
+    },
+    {
+      "id": "step-one-pending",
+      "pass": true
+    },
+    {
+      "id": "error-removes-overlay-keeps-step-and-address",
+      "pass": true
+    },
+    {
+      "id": "retry-enters-step-two",
+      "pass": true
+    },
+    {
+      "id": "progress-visible-after-scrolling-long-checkout",
+      "pass": true
+    },
+    {
+      "id": "purchase-pending-prevents-repeat",
+      "pass": true
+    },
+    {
+      "id": "purchase-error-preserves-quote-and-consent",
+      "pass": true
+    },
+    {
+      "id": "cascade-city-enabled",
+      "pass": true
+    },
+    {
+      "id": "pending-address-dialog-stays-open",
+      "pass": true
+    },
+    {
+      "id": "address-single-submit",
+      "pass": true
+    },
+    {
+      "id": "reduced-motion-stops-animation",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "pending-deposit-close-guard",
+      "pass": true
+    },
+    {
+      "id": "deposit-error-keeps-input",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "all_mutations_browser_fixtures": true,
+  "no_database_writes": true,
+  "issue": 51,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23",
+  "public_checks": [
+    {
+      "id": "plp-grid-stable-during-sort",
+      "pass": true
+    },
+    {
+      "id": "plp-no-inflow-loading-row",
+      "pass": true
+    },
+    {
+      "id": "plp-error-clears-progress",
+      "pass": true
+    },
+    {
+      "id": "plp-retry-same-sort",
+      "pass": true
+    },
+    {
+      "id": "search-overlay-absolute",
+      "pass": true
+    },
+    {
+      "id": "search-completes",
+      "pass": true
+    },
+    {
+      "id": "mobile-filter-overlay-and-busy",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ]
+}

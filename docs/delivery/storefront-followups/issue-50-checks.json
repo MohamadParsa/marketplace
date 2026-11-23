@@ -1,0 +1,42 @@
+{
+  "checks": [
+    {
+      "id": "full-primary-selected",
+      "pass": true
+    },
+    {
+      "id": "radios-visually-hidden",
+      "pass": true
+    },
+    {
+      "id": "exactly-one-selected",
+      "pass": true
+    },
+    {
+      "id": "native-arrow-key-selection",
+      "pass": true
+    },
+    {
+      "id": "refresh-preserves-url",
+      "pass": true
+    },
+    {
+      "id": "history-restores-sort",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "no-page-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "issue": 50,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23"
+}

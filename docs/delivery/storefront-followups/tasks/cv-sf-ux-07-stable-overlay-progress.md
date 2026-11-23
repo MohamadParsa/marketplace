@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-001, API-PLP-SEARCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: todo
+implementation_status: review
 priority: P1
 ---
 
 # CV-SF-UX-07 — Progress overlay یکپارچه و بدون جابه‌جایی محتوا در انتخاب، سبد و تمام مسیر خرید
 
-Issue: [#51](https://github.com/MohamadParsa/marketplace/issues/51) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: منتظر انتخاب مالک.
+Issue: [#51](https://github.com/MohamadParsa/marketplace/issues/51) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب صریح مالک در۲۳نوامبر؛ اجرا و شواهد آماده، منتظر CI/ادغام.
 
 ## مسئله و نتیجه
 
@@ -20,7 +20,7 @@ Issue: [#51](https://github.com/MohamadParsa/marketplace/issues/51) · اسای�
 
 ## دامنه و وضعیت
 
-سایت مشتری؛ مهمان و مشتری واردشده. **فقط برنامه‌ریزی؛ شروع اجرا پس از انتخاب صریح مالک**. اولویت P1 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
+سایت مشتری؛ مهمان و مشتری واردشده. **اجرا با انتخاب صریح مالک انجام شده؛ تحویل در review**. اولویت P1 پیشنهادی است و ترتیب ثبت، صف اجرای اجباری نیست. طرح A، primary فعلی و لوگوی C چریوا مرجع‌اند. قواعد خصوصی/مجوزهای جاری حفظ شوند. [صف و مرز مشترک](../ux-followups.md).
 
 ## خواسته قطعی مالک
 
@@ -65,3 +65,7 @@ Issue: [#51](https://github.com/MohamadParsa/marketplace/issues/51) · اسای�
 
 - [سناریوی رفتاری مستند](../../../bdd/features/experiences/storefront-ux-followups.feature): سند برنامه‌ریزی است و اجرای موفق آزمون محسوب نمی‌شود.
 - پس از اجازه شروع: تغییر محدود، آزمون متناسب و عکس/گزارش طرح A، کامیت و پوش سورس/مدارک، سپس کامنت شواهد و بستن Issue متناظر. انتشار لیارا با پارساست؛ ساخت این سند به معنی انجام یا بسته‌شدن تسک نیست.
+
+## شواهد اجرا
+
+[پوشش و تست‌های #51](../issue-51-verification.md)؛ اجرای منتخب مالک در۲۳نوامبر.

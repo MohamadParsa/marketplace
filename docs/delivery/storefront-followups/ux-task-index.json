@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "owner": "eliassarband",
-  "execution": "45-49-done-awaiting-next-owner-selection",
+  "execution": "50-52-implemented-in-review",
   "document_status": "in-review",
   "items": [
     {
@@ -72,7 +72,7 @@
       "number": 50,
       "owner": "eliassarband",
       "priority": "P3",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "url": "https://github.com/MohamadParsa/marketplace/issues/50",
       "state": "open"
     },
@@ -84,7 +84,7 @@
       "number": 51,
       "owner": "eliassarband",
       "priority": "P1",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "url": "https://github.com/MohamadParsa/marketplace/issues/51",
       "state": "open"
     },
@@ -96,7 +96,7 @@
       "number": 52,
       "owner": "eliassarband",
       "priority": "P2",
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "url": "https://github.com/MohamadParsa/marketplace/issues/52",
       "state": "open"
     },

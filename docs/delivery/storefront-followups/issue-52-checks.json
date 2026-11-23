@@ -1,0 +1,88 @@
+{
+  "checks": [
+    {
+      "id": "two-independent-collapsed-sections",
+      "pass": true
+    },
+    {
+      "id": "desktop-clamp-320",
+      "pass": true
+    },
+    {
+      "id": "all-paragraphs-and-rows-in-dom",
+      "pass": true
+    },
+    {
+      "id": "clipped-link-not-tabbable",
+      "pass": true
+    },
+    {
+      "id": "visible-link-still-tabbable",
+      "pass": true
+    },
+    {
+      "id": "keyboard-expands-introduction",
+      "pass": true
+    },
+    {
+      "id": "specification-remains-collapsed",
+      "pass": true
+    },
+    {
+      "id": "expanded-restores-link-tabindex",
+      "pass": true
+    },
+    {
+      "id": "full-markup-preserved",
+      "pass": true
+    },
+    {
+      "id": "collapsing-introduction-keeps-spec-expanded",
+      "pass": true
+    },
+    {
+      "id": "collapse-retains-focus",
+      "pass": true
+    },
+    {
+      "id": "responsive-clamp-240",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "mobile-keyboard-expands-independent",
+      "pass": true
+    },
+    {
+      "id": "seo-metadata-unchanged",
+      "pass": true
+    },
+    {
+      "id": "short-has-no-toggle",
+      "pass": true
+    },
+    {
+      "id": "empty-has-no-toggle",
+      "pass": true
+    },
+    {
+      "id": "reload-resets-collapsed",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "browser_content_fixtures_only": true,
+  "no_catalog_writes": true,
+  "issue": 52,
+  "implementation_status": "review",
+  "build": "passed",
+  "date": "2026-11-23",
+  "lint": "passed"
+}

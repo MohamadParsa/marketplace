@@ -1,3 +1,4 @@
+import { LoadingPlaceholder } from "./busy-region";
 import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
 import { useEffect, useRef, useState } from "react";
@@ -588,10 +589,7 @@ export function HomePage() {
               )}
             </section>
             {loading ? (
-              <div className="lh-loading" role="status">
-                <span />
-                در حال دریافت محصولات…
-              </div>
+              <LoadingPlaceholder label="دریافت محصولات" />
             ) : error ? (
               <div className="lh-error" role="alert">
                 <h2>دریافت محصولات انجام نشد.</h2>

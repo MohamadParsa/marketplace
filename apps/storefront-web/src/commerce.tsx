@@ -187,18 +187,46 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
     setToken(next);
     setProfile(await call<CustomerInfo>("/storefront/account/me", next));
   };
-  const mutate = async (input: Parameters<Context["mutate"]>[0]) => {
-    const v = await call<Cart>(
-      "/storefront/cart",
-      tokenRef.current,
-      input,
-      undefined,
-      undefined,
-      tokenRef.current ? undefined : await guest(),
-    );
-    setCart(v);
-    return v;
+  const mutation = useRef<{ signature: string; promise: Promise<Cart> } | null>(
+    null,
+  );
+  const mutationKeys = useRef(new Map<string, string>());
+  const mutate = (input: Parameters<Context["mutate"]>[0]): Promise<Cart> => {
+    const currentToken = tokenRef.current;
+    const signature = JSON.stringify([currentToken, input]);
+    if (mutation.current) {
+      if (mutation.current.signature === signature)
+        return mutation.current.promise;
+      return Promise.reject(
+        new Error("عملیات قبلی سبد هنوز پایان نیافته است."),
+      );
+    }
+    let key = mutationKeys.current.get(signature);
+    if (!key) {
+      key = operationKey();
+      mutationKeys.current.set(signature, key);
+    }
+    const promise = (async () => {
+      try {
+        const v = await call<Cart>(
+          "/storefront/cart",
+          currentToken,
+          input,
+          undefined,
+          key,
+          currentToken ? undefined : await guest(),
+        );
+        if (currentToken === tokenRef.current) setCart(v);
+        mutationKeys.current.delete(signature);
+        return v;
+      } finally {
+        mutation.current = null;
+      }
+    })();
+    mutation.current = { signature, promise };
+    return promise;
   };
+
   return (
     <CommerceContext.Provider
       value={{
