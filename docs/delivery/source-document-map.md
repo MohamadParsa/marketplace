@@ -36,3 +36,7 @@
 بسته کاتالوگ با [PR #39](https://github.com/MohamadParsa/marketplace/pull/39) و [ادغام e8d59e0](https://github.com/MohamadParsa/marketplace/commit/e8d59e0b5260c29582334aa62aadd8d4f6e1dee4) به `main` رسید؛ کد/JSON با سورس تأییدشده `8921ca0` یکسان است. CI پنج job موفق بود؛ ورود دیتابیس فعلی و انتشار Liara انجام نشده‌اند.
 
 اصلاح راه‌انداز لوکال: [5e588a7](https://github.com/MohamadParsa/marketplace/commit/5e588a7e047d0aa7d077f959ed6cc3d1c6634e6e)؛ وجود `DATABASE_URL` را پیش از migration رد می‌کند. آزمون guard موفق است؛ کد Go/React و snapshot با `8921ca0` یکسان‌اند.
+
+## ورود کامل کاتالوگ محلی — ۲۰۲۶-۱۱-۲۳
+
+سورس [6342eb9](https://github.com/MohamadParsa/marketplace/commit/6342eb9e38213664c2d8dfde6f865b4cf1cc0571) و مدارک [d35855e](https://github.com/MohamadParsa/marketplace/commit/d35855e7ab4b4474e2d0b49f55def39ea5fc5d16) با tree اجرایی/JSON یکسان کنترل شدند. [گزارش اجرا، محدودیت‌ها و تصاویر](catalog-seed/local-import-2026-11-23.md) شامل ورود کامل، retry بدون تکرار، حفظ اطلاعات، راه‌اندازی مجدد و اصلاح واحد قیمت/گزینه‌های PDP/سازگاری migration است. داده فقط در محیط محلی وارد شده و گیت عمومی #12 همچنان مستقل است.
