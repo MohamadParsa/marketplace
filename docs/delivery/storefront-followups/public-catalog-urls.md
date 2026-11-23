@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [DOM-CATALOG-CONTENT-001, API-PRODUCT-DETAIL-001, API-PLP-SEARCH-001, FEAT-SF-CACHE-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P2
 ---
 
 # آدرس عمومی کاتالوگ — CV-CAT-PUBLIC-URL-01
 
-Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئول: `eliassarband` · وضعیت اجرا: **review؛ آزمون محلی کامل، در انتظار تحویل Git**
+Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئول: `eliassarband` · وضعیت اجرا: **done؛ کامنت و بسته شد**
 
 ## نتیجه و خواسته قطعی مالک
 
@@ -63,7 +63,7 @@ Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئو�
 - [x] URL-03: resolver و builder مشترک API/HTML، redirectهای سروری و کنترل visibility؛ API mutation و روابط داخلی سازگار بمانند.
 - [x] URL-04: فرم دسته در بک‌آفیس، کد فقط‌خواندنی محصول، پیش‌نمایش/اعتبارسنجی/مجوز/version/audit؛ طراحی A.
 - [x] URL-05: لینک‌های storefront و SEO/اشتراک/سبد/سفارش، breadcrumb و query انتخاب تنوع؛ invalidation لینک‌های کش.
-- [ ] URL-06: تست مهاجرت/replay/restart/رقابت/سازگاری و مرور خانه/PLP/PDP/سبد؛ مستندات اجرای local/سرور، کامیت سورس و مدارک و PR؛ انتشار توسط پارسا جداست.
+- [x] URL-06: تست مهاجرت/replay/restart/رقابت/سازگاری و مرور خانه/PLP/PDP/سبد؛ مستندات اجرای local/سرور، کامیت سورس و مدارک و PR؛ انتشار توسط پارسا جداست.
 
 ## پذیرش
 

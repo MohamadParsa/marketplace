@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-CATALOG-PUBLIC-URL-001, API-PRODUCT-DETAIL-001, API-PLP-SEARCH-001, FEAT-SF-CACHE-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # تحویل #42
@@ -78,4 +78,4 @@ cd D:\Cherriva
 
 ## تحویل Git
 
-کامیت سورس: [1f4fdd0](https://github.com/MohamadParsa/marketplace/commit/1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b). مدارک و نتیجه CI پس از ثبت PR در این بخش و [نقشه سورس/سند](../source-document-map.md) ثبت می‌شوند. Issue تا عبور گیت تحویل باز است. این تحویل فقط محلی است؛ مجوز/درگاه واقعی و انتشار لیارا را اعلام نمی‌کند.
+کامیت سورس: [1f4fdd0](https://github.com/MohamadParsa/marketplace/commit/1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b). مدارک اولیه [4a1a6d8](https://github.com/MohamadParsa/marketplace/commit/4a1a6d8720c8f19a8361f1c572ae669efcafed95) همان درخت اجرایی را دارند. [PR #44](https://github.com/MohamadParsa/marketplace/pull/44) با merge `deb949d2782bff9fed982fe9d886870c2321cbcf` ادغام شد؛ هر۵ job در [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45148561398)، از جمله race و vet لینوکس، موفق‌اند. [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/42#issuecomment-7096919896) ثبت و #42 با دلیل completed بسته شد. نگاشت سورس/سند در [فهرست](../source-document-map.md) آمده است. merge با `[skip ci]` استقرار خودکار را اجرا نکرد. این تحویل فقط محلی است؛ مجوز/درگاه واقعی و انتشار لیارا را اعلام نمی‌کند.

@@ -1,7 +1,7 @@
 {
   "date": "2026-11-23",
   "issue": 42,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "go_tests": {
     "pass": 209,
     "fail": 0,
@@ -196,6 +196,23 @@
   },
   "source_sha256_unchanged": true,
   "deployment": "not-run",
-  "ci": "pending",
-  "source_commit": "1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b"
+  "ci": {
+    "jobs_passed": 5,
+    "go_race": "passed",
+    "vet": "passed",
+    "run_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45148561398"
+  },
+  "source_commit": "1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b",
+  "github_delivery": {
+    "pr": 44,
+    "merge_commit": "deb949d2782bff9fed982fe9d886870c2321cbcf",
+    "issue_state": "closed",
+    "comment_url": "https://github.com/MohamadParsa/marketplace/issues/42#issuecomment-7096919896"
+  },
+  "restart_verified": true,
+  "warmup": {
+    "products": 100,
+    "listings": 4,
+    "failures": 0
+  }
 }
