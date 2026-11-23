@@ -708,12 +708,14 @@ export function SiteHeader() {
     document.addEventListener("focusin", outside);
     document.addEventListener("keydown", key);
     addEventListener("cherriva:navigate", route);
+    addEventListener("cherriva:category-menu-open", route);
     addEventListener("popstate", route);
     return () => {
       document.removeEventListener("pointerdown", outside);
       document.removeEventListener("focusin", outside);
       document.removeEventListener("keydown", key);
       removeEventListener("cherriva:navigate", route);
+      removeEventListener("cherriva:category-menu-open", route);
       removeEventListener("popstate", route);
     };
   }, []);

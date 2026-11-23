@@ -1,6 +1,6 @@
 # Cherriva — سورس Go و React
 
-[برنامه۳۰درخواست جدید؛ فقط تسک‌بندی، اجرا بعد از انتخاب مالک](docs/delivery/next-phase/README.md)
+[برنامه۳۰درخواست جدید؛ وضعیت اجرا و شواهد انتخاب‌های مالک](docs/delivery/next-phase/README.md)
 
 سورس اجرایی در `apps/api`، `apps/storefront-web`، `apps/backoffice-web` و `apps/seller-portal-web` و کد مشترک در `packages` است. مسیر کاری این سیستم **`D:\Cherriva`** است. پنل فروشنده از `/seller-login` در همان رابط بک‌آفیس باز می‌شود. مستندات و بسته‌های طراحی، جایگزین سورس نیستند.
 

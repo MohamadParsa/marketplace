@@ -215,3 +215,44 @@
     transition: none;
   }
 }
+
+/* Definite grid row height lets each pane shrink and scroll inside the viewport. */
+.category-menu-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(600px, var(--category-available-height, 65dvh));
+}
+.category-menu-heading {
+  flex: none;
+}
+.category-menu-columns {
+  height: 540px;
+  flex: 0 1 540px;
+  min-height: 0;
+  max-height: none;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+.category-menu-roots,
+.category-menu-children {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+}
+@media (max-width: 600px) {
+  .category-menu-panel {
+    max-height: calc(100dvh - 24px);
+  }
+  .category-menu-columns {
+    height: calc(100dvh - 96px);
+    flex: 0 1 auto;
+    overflow: auto;
+  }
+  .category-menu-roots,
+  .category-menu-children {
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+}

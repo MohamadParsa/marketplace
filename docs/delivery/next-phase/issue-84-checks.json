@@ -1,0 +1,97 @@
+{
+  "checks": [
+    {
+      "id": "account-menu-initially-open",
+      "pass": true
+    },
+    {
+      "id": "hover-category-closes-account-menu",
+      "pass": true
+    },
+    {
+      "id": "hover-trigger-opens-without-focus-theft",
+      "pass": true
+    },
+    {
+      "id": "hover-root-text-opens-submenu",
+      "pass": true
+    },
+    {
+      "id": "hover-child-text-opens-third-level",
+      "pass": true
+    },
+    {
+      "id": "moving-into-submenu-keeps-it-open",
+      "pass": true
+    },
+    {
+      "id": "click-arrow-collapses-without-delayed-reopen",
+      "pass": true
+    },
+    {
+      "id": "hover-arrow-opens-submenu",
+      "pass": true
+    },
+    {
+      "id": "roots-scroll-container",
+      "pass": true
+    },
+    {
+      "id": "root-wheel-does-not-scroll-body",
+      "pass": true
+    },
+    {
+      "id": "last-root-visible-inside-viewport",
+      "pass": true
+    },
+    {
+      "id": "last-grandchild-visible-and-pane-scrolls",
+      "pass": true
+    },
+    {
+      "id": "short-desktop-panel-fits",
+      "pass": true
+    },
+    {
+      "id": "text-click-retains-category-navigation",
+      "pass": true
+    },
+    {
+      "id": "touch-does-not-depend-on-hover",
+      "pass": true
+    },
+    {
+      "id": "mobile-last-child-accessible",
+      "pass": true
+    },
+    {
+      "id": "mobile-body-locked-and-panel-fits",
+      "pass": true
+    },
+    {
+      "id": "mobile-focus-trap-excludes-hidden-roots",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "escape-restores-focus-and-body-scroll",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "navigation_browser_fixture": true,
+  "no_catalog_or_order_writes": true,
+  "issue": 84,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23",
+  "shared_suite": "category-menu-hover-scroll"
+}

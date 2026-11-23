@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "id": "existing-category-default-preserved",
+      "pass": true
+    },
+    {
+      "id": "zero-submitted-as-value",
+      "pass": true
+    },
+    {
+      "id": "other-category-fields-preserved",
+      "pass": true
+    },
+    {
+      "id": "form-reads-priority-from-workspace",
+      "pass": true
+    },
+    {
+      "id": "fraction-invalid",
+      "pass": true
+    },
+    {
+      "id": "negative-invalid",
+      "pass": true
+    },
+    {
+      "id": "overflow-invalid",
+      "pass": true
+    },
+    {
+      "id": "clear-is-explicit-not-legacy-omission",
+      "pass": true
+    },
+    {
+      "id": "mobile-field-visible",
+      "pass": true
+    },
+    {
+      "id": "cancel-does-not-write",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "commands_intercepted": true,
+  "real_category_not_modified": true,
+  "identity_session_only": true,
+  "issue": 86,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23"
+}

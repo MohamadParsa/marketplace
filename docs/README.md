@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[برنامه۳۰درخواست جدید؛ فقط تسک‌بندی، اجرا بعد از انتخاب مالک](delivery/next-phase/README.md)
+[برنامه۳۰درخواست جدید؛ وضعیت اجرا و شواهد انتخاب‌های مالک](delivery/next-phase/README.md)
 
 [صف۱۰تسک تجربه فروشگاه؛ وضعیت و شواهد اجرای انتخاب‌های مالک](delivery/storefront-followups/ux-followups.md)
 

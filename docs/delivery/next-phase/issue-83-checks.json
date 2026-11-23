@@ -1,0 +1,56 @@
+{
+  "checks": [
+    {
+      "id": "nav-adjacent-to-specifications",
+      "pass": true
+    },
+    {
+      "id": "content-only-in-dedicated-section",
+      "pass": true
+    },
+    {
+      "id": "plain-strings-stay-safe",
+      "pass": true
+    },
+    {
+      "id": "keyboard-anchor-navigation",
+      "pass": true
+    },
+    {
+      "id": "long-list-expandable",
+      "pass": true
+    },
+    {
+      "id": "direct-link-scroll-after-async-load",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "single-list-no-fabricated-other-list",
+      "pass": true
+    },
+    {
+      "id": "empty-message-no-useless-expand",
+      "pass": true
+    },
+    {
+      "id": "seo-preserved",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "browser_content_fixture_only": true,
+  "no_catalog_writes": true,
+  "issue": 83,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23"
+}

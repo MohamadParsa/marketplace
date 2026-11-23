@@ -97,3 +97,7 @@ DTO دارای `price_range: {min,max}` به ریال است؛ برای نبود
 ## نمایش sort و بارگذاری — #50/#51
 
 [چیپ primary](../../delivery/storefront-followups/issue-50-verification.md) نمای radio را مخفی و معنای بومی انتخاب تک‌گزینه‌ای را حفظ می‌کند؛ توکن/ترتیب query تغییر ندارد. [بارگذاری](../../delivery/storefront-followups/issue-51-verification.md) روی نتایج و فیلتر موبایل overlay است و ردیف گذرای جابه‌جاکننده حذف شد؛ لغو درخواست/خطا/retry پیشین محفوظ است.
+
+## تکمیل منتخب #80
+
+[checkbox مقادیر و چیپ همان خصوصیت](../../delivery/next-phase/issue-80-verification.md) به دستور تازه مالک جایگزین Switch در attribute-filter شد؛ Switch فقط‌موجودها، slider، OR/AND و query/همان‌تنوع محفوظ‌اند. گروه‌بندی معنایی #79 مستقل است و با بازطراحی این برش یکی نیست.

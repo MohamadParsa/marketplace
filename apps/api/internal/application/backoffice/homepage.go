@@ -19,20 +19,22 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
-	Slug              *string                   `json:"slug,omitempty"`
-	ConfirmSlugChange bool                      `json:"confirm_slug_change,omitempty"`
-	Model             string                    `json:"model,omitempty"`
-	OwnerStoreID      string                    `json:"owner_store_id,omitempty"`
-	Content           *catalog.ProductContent   `json:"content,omitempty"`
-	SEO               *catalog.SEO              `json:"seo,omitempty"`
-	Attributes        *[]catalog.AttributeValue `json:"attributes,omitempty"`
-	Name              string                    `json:"name"`
-	EnglishName       string                    `json:"english_name"`
-	Description       string                    `json:"description"`
-	CategoryID        string                    `json:"category_id"`
-	BrandID           string                    `json:"brand_id"`
-	ParentID          string                    `json:"parent_id"`
-	Published         bool                      `json:"published"`
+	DisplayPriority      *int                      `json:"display_priority,omitempty"`
+	ClearDisplayPriority bool                      `json:"clear_display_priority,omitempty"`
+	Slug                 *string                   `json:"slug,omitempty"`
+	ConfirmSlugChange    bool                      `json:"confirm_slug_change,omitempty"`
+	Model                string                    `json:"model,omitempty"`
+	OwnerStoreID         string                    `json:"owner_store_id,omitempty"`
+	Content              *catalog.ProductContent   `json:"content,omitempty"`
+	SEO                  *catalog.SEO              `json:"seo,omitempty"`
+	Attributes           *[]catalog.AttributeValue `json:"attributes,omitempty"`
+	Name                 string                    `json:"name"`
+	EnglishName          string                    `json:"english_name"`
+	Description          string                    `json:"description"`
+	CategoryID           string                    `json:"category_id"`
+	BrandID              string                    `json:"brand_id"`
+	ParentID             string                    `json:"parent_id"`
+	Published            bool                      `json:"published"`
 }
 
 var homeKeys = []string{"mobile", "earbuds", "power-bank", "smartwatch"}
@@ -153,6 +155,9 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 	in.EnglishName = strings.TrimSpace(in.EnglishName)
 	switch c.Action {
 	case "catalog.category.create", "catalog.category.update":
+		if in.DisplayPriority != nil && (in.ClearDisplayPriority || *in.DisplayPriority < 0 || *in.DisplayPriority > 1000000) {
+			return ErrInvalid
+		}
 		if in.SEO != nil && !validCategorySEO(*in.SEO) {
 			return ErrInvalid
 		}
@@ -189,7 +194,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			if in.SEO != nil {
 				seo = *in.SEO
 			}
-			w.Categories = append(w.Categories, catalog.Category{Slug: slug, SEO: seo, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
+			w.Categories = append(w.Categories, catalog.Category{DisplayPriority: in.DisplayPriority, Slug: slug, SEO: seo, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
 			return nil
 		}
 		for i := range w.Categories {
@@ -216,6 +221,12 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 					}
 				}
 				x.Slug = *in.Slug
+			}
+			if in.ClearDisplayPriority {
+				x.DisplayPriority = nil
+			} else if in.DisplayPriority != nil {
+				priority := *in.DisplayPriority
+				x.DisplayPriority = &priority
 			}
 			x.Name = in.Name
 			x.EnglishName = in.EnglishName

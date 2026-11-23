@@ -121,6 +121,7 @@ export function HomeCatalogPage() {
       id: string;
       name: string;
       version: number;
+      display_priority?: number;
       english_name?: string;
       slug?: string;
       public_code?: string;
@@ -145,6 +146,8 @@ export function HomeCatalogPage() {
       input: row
         ? {
             name: row.name,
+            display_priority:
+              kind === "category" ? row.display_priority : undefined,
             english_name: row.english_name ?? "",
             slug: kind === "category" ? row.slug : undefined,
             description: row.description ?? "",
@@ -413,6 +416,11 @@ export function HomeCatalogPage() {
                     <b>{c.name}</b>
                     <small>{categoryLabel(c.id)}</small>
                     <small>
+                      {c.display_priority == null
+                        ? "بدون اولویت"
+                        : `اولویت نمایش: ${c.display_priority.toLocaleString("fa-IR")}`}
+                    </small>
+                    <small>
                       {c.published ? "منتشرشده" : "پیش‌نویس"} ·{" "}
                       {c.english_name || "نام انگلیسی ثبت نشده"}
                     </small>
@@ -673,6 +681,36 @@ export function HomeCatalogPage() {
                           state.products?.find((p) => p.id === editing.id)
                             ?.public_code
                         }
+                      </small>
+                    </label>
+                  )}
+                  {editing.kind === "category" && (
+                    <label>
+                      اولویت نمایش دسته
+                      <input
+                        type="number"
+                        min={0}
+                        max={1000000}
+                        step={1}
+                        placeholder="بدون اولویت"
+                        value={editing.input.display_priority ?? ""}
+                        onChange={(event) =>
+                          setEditing({
+                            ...editing,
+                            input: {
+                              ...editing.input,
+                              display_priority:
+                                event.target.value === ""
+                                  ? undefined
+                                  : Number(event.target.value),
+                              clear_display_priority: event.target.value === "",
+                            },
+                          })
+                        }
+                      />
+                      <small>
+                        عدد کوچک‌تر مقدم است؛ خالی یعنی پس از دسته‌های
+                        اولویت‌دار در همین سطح.
                       </small>
                     </label>
                   )}

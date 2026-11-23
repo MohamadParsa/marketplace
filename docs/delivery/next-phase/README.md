@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [DEL-SF-UX-001, ADR-009]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: in-progress
+execution_authorized: true
 ---
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت، باز و به الیاس (`eliassarband`) اساین شده‌اند. هیچ‌کدام درحال اجرا نیست. هیچ کد/دیتابیس/زیرساخت/ارسال ایمیل یا استقرار در این مرحله تغییر نمی‌کند. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
+مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت، باز و به الیاس (`eliassarband`) اساین شده‌اند. بعد از ثبت برنامه، مالک #80/#83/#84/#85/#86 را انتخاب کرد؛ فقط همین پنج مورد اجازه اجرا دارند و سایر۲۵کار todo هستند. تغییرات اجرایی پنج انتخاب و شواهدشان جدا ثبت می‌شوند؛ استقرار لیارا یا اجرای بقیه تسک‌ها از این انتخاب نتیجه نمی‌شود. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -38,13 +38,13 @@ execution_authorized: false
 | CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-18 · [#79](https://github.com/MohamadParsa/marketplace/issues/79) | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | review؛ [شواهد](issue-80-verification.md) |
 | CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-21 · [#82](https://github.com/MohamadParsa/marketplace/issues/82) | [سرویس ایمیل تراکنشی، قالب و پیگیری ارسال](tasks/cv-next-21-transactional-email-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-22 · [#83](https://github.com/MohamadParsa/marketplace/issues/83) | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-23 · [#84](https://github.com/MohamadParsa/marketplace/issues/84) | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-24 · [#85](https://github.com/MohamadParsa/marketplace/issues/85) | [رفع اسکرول عمودی و دسترسی به تمام گره‌های منو](tasks/cv-next-24-category-menu-scroll.md) | P1 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-25 · [#86](https://github.com/MohamadParsa/marketplace/issues/86) | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-22 · [#83](https://github.com/MohamadParsa/marketplace/issues/83) | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | review؛ [شواهد](issue-83-verification.md) |
+| CV-NEXT-23 · [#84](https://github.com/MohamadParsa/marketplace/issues/84) | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | review؛ [شواهد](issue-84-verification.md) |
+| CV-NEXT-24 · [#85](https://github.com/MohamadParsa/marketplace/issues/85) | [رفع اسکرول عمودی و دسترسی به تمام گره‌های منو](tasks/cv-next-24-category-menu-scroll.md) | P1 / W1 | review؛ [شواهد](issue-85-verification.md) |
+| CV-NEXT-25 · [#86](https://github.com/MohamadParsa/marketplace/issues/86) | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | review؛ [شواهد](issue-86-verification.md) |
 | CV-NEXT-26 · [#87](https://github.com/MohamadParsa/marketplace/issues/87) | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-27 · [#88](https://github.com/MohamadParsa/marketplace/issues/88) | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
@@ -55,7 +55,7 @@ execution_authorized: false
 
 - **W0 — قرارداد و ممیزی:** مبالغ/usage، PlaceOrder، قیمت و مارکاپ، دسترسی سلر و ردیابی حساس. PlaceOrder طبق خواست مالک نیازمند شفاف‌سازی بعدی است؛ تحلیل، اجازه اجرای کد مالی نیست.
 - **W1 — تجربه و رفع ایراد:** اسکرول منو اولویت بالاتر دارد؛ hover، ترتیب دسته، فیلترها، مزایا/معایب، اولویت تخفیف ویژه و محتوای فوتر. W1های بدون وابستگی می‌توانند مستقل از تصمیم مالی شروع شوند، فقط با انتخاب مالک.
-- **W2 — خدمات و مدیریت:** علاقه‌مندی/سابقه/مقایسه، گروه‌بندی، پنل، ایمیل، SEO، audit و تعاملات محصول. فیلتر19 بعد از تعیین گروه‌بندی18 تکمیل می‌شود؛ بررسی طرح آن مستقل است.
+- **W2 — خدمات و مدیریت:** علاقه‌مندی/سابقه/مقایسه، گروه‌بندی، پنل، ایمیل، SEO، audit و تعاملات محصول. برش انتخابی فیلتر19 طبق دستور checkbox/چیپ مالک وابستگی سخت به گروه‌بندی18 ندارد؛ گروه‌بندی معنایی همچنان کار انتخاب‌نشده مستقل است.
 - **W3 — خرید مالی/اقساطی:** قرارداد05 و قیمت11 → روش فروش12 و کوپن06 → طراحی اتمیک09 → کوپن checkout07 → اعتبار checkout08. لندینگ30 از روش فروش12 مصرف می‌کند؛ provider واقعی شرط فعال‌شدن پرداخت است، نه نوشتن متن پیشنهادی.
 
 ## مالکیت یکتا و جلوگیری از هم‌پوشانی
@@ -78,3 +78,7 @@ execution_authorized: false
 ## آمادگی و شواهد این مرحله
 
 قواعد صریح از پیشنهادها جدا هستند؛ پرسش‌های مالی/گارانتی/ردیابی قبل از مسیر وابسته پاسخ می‌خواهند. [معیار آمادگی](../readiness.md) برای هر قابلیت جداست. در مرحله ثبت فقط پوشش۳۰خواسته، گراف وابستگی، لینک‌ها/شناسه‌ها و همگام‌سازی GitHub بررسی می‌شوند؛ هیچ تست محصول یا AC اجراشده ادعا نمی‌شود. [گزارش ثبت](planning-verification.md) پس از sync تکمیل می‌شود.
+
+## انتخاب اجرایی جاری
+
+#80، #83، #84، #85 و #86 پیاده و محلی آزموده شده‌اند؛۸۴کنترل مرورگر و۲۱۷کنترل Go موفق‌اند. CI/ادغام/بستن هنوز در حال تکمیل است. [گزارش #80](issue-80-verification.md) · [#83](issue-83-verification.md) · [#84](issue-84-verification.md) · [#85](issue-85-verification.md) · [#86](issue-86-verification.md).
