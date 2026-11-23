@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-CACHE-001, API-HOMEPAGE-LAUNCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # تحویل #41 و اصلاحات همراه
@@ -97,4 +97,4 @@ Set-Location D:\Cherriva
 
 [دو بنر دسکتاپ](../../../output/playwright/issue-41-cache/home-promos-desktop.png) · [دو بنر موبایل](../../../output/playwright/issue-41-cache/home-promos-mobile.png). شش کنترل افزوده مرورگر، مقصد واقعی/دارای محصول و تطابق عکس هر دو بنر با دادهٔ همان ریل را بررسی کردند.
 
-کامیت سورس این تحویل: [c2617fc](https://github.com/MohamadParsa/marketplace/commit/c2617fcd72c82fad01a51291360a4189f576f719). درخت اجرایی کامیت مدارک با همین سورس تطبیق داده می‌شود؛ نتیجه CI/ادغام پس از PR ثبت خواهد شد.
+کامیت سورس این تحویل: [c2617fc](https://github.com/MohamadParsa/marketplace/commit/c2617fcd72c82fad01a51291360a4189f576f719). درخت اجرایی کامیت مدارک با همین سورس تطبیق داده می‌شود؛ هر۵ job در [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45143866074)، از جمله race، موفق بودند. [PR #43](https://github.com/MohamadParsa/marketplace/pull/43) با merge `b449da0c76836bb5f33f23b219607019456611d8` ادغام و #41 با کامنت شواهد بسته شد. استقرار خودکار با `[skip ci]` اجرا نشد.

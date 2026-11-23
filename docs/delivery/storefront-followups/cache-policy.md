@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-23
 related: [API-HOMEPAGE-LAUNCH-001, API-PRODUCT-DETAIL-001, API-PLP-SEARCH-001, NFR-INDEX-001]
 approved_by: [eliassarband]
-implementation_status: review
+implementation_status: done
 priority: P1
 ---
 
 # سیاست پیشنهادی کش — CV-PERF-01
 
-Issue: [#41](https://github.com/MohamadParsa/marketplace/issues/41) · مسئول: `eliassarband` · وضعیت اجرا: **review؛ در انتظار تحویل Git**
+Issue: [#41](https://github.com/MohamadParsa/marketplace/issues/41) · مسئول: `eliassarband` · وضعیت اجرا: **done؛ کامنت و بسته شد**
 
 ## مسئله و نتیجه
 
@@ -104,7 +104,7 @@ ETag عمومی بعد از انتخاب نسخه معتبر محاسبه/است
 - [x] CACHE-04: cache محصول و کارت، خانه ۳۰۰s، PLP/search؛ کلید محدود، selection بدون cache، cold fill هم‌ساز و کنترل هجوم.
 - [x] CACHE-05: بهینه‌سازی read path و تصاویر و بررسی انقضا؛ شواهد فرم بک‌آفیس و محدودیت‌های باقی‌مانده جدا ثبت شود.
 - [x] CACHE-06: آزمون correctness چندپردازه، Redis outage/restart، رقابت read/write و rollback؛ مقایسه عملکرد warm/cold.
-- [ ] CACHE-07: راه‌اندازی محلی/سرور، metrics، خاموش‌کردن و rollback، PR/کامیت سورس و مدارک، بررسی بصری طرح A؛ انتشار Liara جداگانه با پارسا.
+- [x] CACHE-07: راه‌اندازی محلی/سرور، metrics، خاموش‌کردن و rollback، PR/کامیت سورس و مدارک، بررسی بصری طرح A؛ انتشار Liara جداگانه با پارسا.
 
 ## پذیرش قابل تحویل
 

@@ -659,5 +659,14 @@
     "actual_catalog_images": true,
     "legacy_promo_assets_removed": 4
   },
-  "source_commit": "c2617fcd72c82fad01a51291360a4189f576f719"
+  "source_commit": "c2617fcd72c82fad01a51291360a4189f576f719",
+  "github_delivery": {
+    "pull_request": 43,
+    "issue": 41,
+    "state": "closed",
+    "merge_commit": "b449da0c76836bb5f33f23b219607019456611d8",
+    "ci_jobs_passed": 5,
+    "ci_race": "passed",
+    "deployment": "not-run"
+  }
 }
