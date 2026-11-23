@@ -166,3 +166,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای UX-04 — #48
 
 [دامنه قیمت و فیلتر جمع‌شونده](../delivery/storefront-followups/issue-48-verification.md) به `listing_price_range_test.go` و `plp-filters.cjs` وصل است. Switchها در #49 هستند و منطق انتخاب چندگانه این کار تغییر نکرده است.
+
+## اجرای UX-05 — #49
+
+[Switch مشترک و فهرست پوشش](../delivery/storefront-followups/issue-49-verification.md) به `storefront-switches.cjs` (۲۰کنترل) و رگرسیون `plp-filters.cjs` (۲۳کنترل) وصل است؛ تأیید خرید فقط fixture مرورگر و بدون write مالی تست شد.

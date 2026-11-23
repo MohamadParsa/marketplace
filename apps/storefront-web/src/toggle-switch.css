@@ -1,0 +1,92 @@
+.launch-home .sf-switch,
+.sf-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  width: 46px;
+  height: 32px;
+  min-width: 46px;
+  flex: none;
+  isolation: isolate;
+}
+.launch-home .sf-switch .sf-switch-input,
+.sf-switch .sf-switch-input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.launch-home .sf-switch .sf-switch-track,
+.sf-switch .sf-switch-track {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #b8aab1;
+  border-radius: 16px;
+  background: #e8e1e5;
+  transition:
+    background-color 0.16s,
+    border-color 0.16s;
+  pointer-events: none;
+}
+.launch-home .sf-switch .sf-switch-thumb,
+.sf-switch .sf-switch-thumb {
+  position: absolute;
+  display: block;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #241a2130;
+  transition: transform 0.16s;
+  pointer-events: none;
+}
+.sf-switch-input:checked + .sf-switch-track {
+  background: var(--cherry, #b51f46) !important;
+  border-color: var(--cherry, #b51f46) !important;
+}
+.sf-switch-input:checked + .sf-switch-track > .sf-switch-thumb {
+  transform: translateX(18px);
+}
+.sf-switch-input:focus-visible + .sf-switch-track {
+  outline: 2px solid var(--cherry, #b51f46);
+  outline-offset: 3px;
+}
+.sf-switch.is-disabled {
+  opacity: 0.48;
+}
+.sf-switch.is-disabled .sf-switch-input {
+  cursor: not-allowed;
+}
+.sf-switch.is-invalid .sf-switch-track {
+  border-color: #b51f46;
+  box-shadow: 0 0 0 1px #b51f46;
+}
+.launch-home .plp-stock,
+.launch-home .plp-attribute-options label {
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-switch .sf-switch-track,
+  .sf-switch .sf-switch-thumb {
+    transition: none;
+  }
+}

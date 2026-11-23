@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-004, API-PLP-SEARCH-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #48
@@ -32,3 +32,5 @@ drag درخواست هر پیکسل نمی‌سازد: debounce۳۵۰ms و ثب�
 - [دامنه فعال دسکتاپ](../../../output/playwright/issue-48/price-range-desktop.png) · [فیلتر منتخب و قیمت واحد](../../../output/playwright/issue-48/filters-desktop.png) · [موبایل](../../../output/playwright/issue-48/filters-mobile.png).
 
 [شرح/ACها](tasks/cv-sf-ux-04-plp-price-slider-filter-disclosure.md). هیچ محصول/تنوع/قیمت/موجودی یا اطلاعات مالی برای این کار تغییر نکرد. اجرای محلی با Start-Cherriva.ps1 از D:\Cherriva؛ نمونه [PLP موبایل](http://localhost:5197/category/mobile). PR/CI و کامنت بستن بعد از گیت تحویل ثبت می‌شوند؛ انتشار لیارا با پارساست.
+
+[PR #58](https://github.com/MohamadParsa/marketplace/pull/58) با merge `78ebfda498e238e6f718cc27848d324c6c945375` و `[skip ci]` ادغام شد؛ هر۵ job CI شامل race/vet موفق و #48 با کامنت شواهد بسته است.

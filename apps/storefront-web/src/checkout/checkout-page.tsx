@@ -1,3 +1,4 @@
+import { ToggleSwitch } from "../toggle-switch";
 import { useEffect, useRef, useState } from "react";
 import { products, stores, money, lineKey, type CartLine } from "../catalog";
 import { Icon, Brand } from "../components";
@@ -312,11 +313,10 @@ export function CheckoutPage({
                   })}
                   <section className="checkout-card">
                     <label className="confirmation">
-                      <input
-                        type="checkbox"
+                      <ToggleSwitch
                         checked={accepted}
                         disabled={!allShipping}
-                        onChange={(event) => setAccepted(event.target.checked)}
+                        onChange={setAccepted}
                       />
                       <span>
                         اقلام، آدرس، هزینه و زمان ارسال نمونه را بررسی کردم و

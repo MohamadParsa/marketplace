@@ -219,7 +219,7 @@ async (page) => {
   await page
     .getByRole("button", { name: "بررسی نهایی سفارش", exact: true })
     .click();
-  await page.getByRole("checkbox", { name: /مبلغ.*آدرس/ }).waitFor();
+  await page.getByRole("switch", { name: /مبلغ.*آدرس/ }).waitFor();
   check(
     "two-confirmed-shipments-on-payment-step",
     (await page.locator(".buy-delivery-confirmed .buy-shipment").count()) === 2,
@@ -277,7 +277,7 @@ async (page) => {
   check(
     "address-change-invalidates-old-payment-consent",
     (await page.locator("input[name=payment_method]:checked").count()) === 0 &&
-      (await page.getByRole("checkbox", { name: /مبلغ.*آدرس/ }).count()) === 0,
+      (await page.getByRole("switch", { name: /مبلغ.*آدرس/ }).count()) === 0,
   );
   await page.goto(site + "/");
   await page.locator(".lh-categories a").first().waitFor();

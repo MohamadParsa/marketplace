@@ -1,0 +1,196 @@
+{
+  "issue": 49,
+  "date": "2026-11-23",
+  "implementation_status": "review",
+  "storefront_build": "passed",
+  "switch_browser": {
+    "checks": [
+      {
+        "id": "stock-default-off",
+        "pass": true
+      },
+      {
+        "id": "keyboard-space-stock-toggle",
+        "pass": true
+      },
+      {
+        "id": "no-visible-checkbox-role",
+        "pass": true
+      },
+      {
+        "id": "native-checkboxes-hidden",
+        "pass": true
+      },
+      {
+        "id": "multiple-switches-allowed",
+        "pass": true
+      },
+      {
+        "id": "switch-refresh-url",
+        "pass": true
+      },
+      {
+        "id": "clear-resets-switches",
+        "pass": true
+      },
+      {
+        "id": "sort-still-radio",
+        "pass": true
+      },
+      {
+        "id": "active-switch-brand-color",
+        "pass": true
+      },
+      {
+        "id": "mobile-switches-visible",
+        "pass": true
+      },
+      {
+        "id": "mobile-switch-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "shipping-still-radio",
+        "pass": true
+      },
+      {
+        "id": "payment-still-radio",
+        "pass": true
+      },
+      {
+        "id": "consent-default-off-and-required",
+        "pass": true
+      },
+      {
+        "id": "explicit-consent-enables-submit",
+        "pass": true
+      },
+      {
+        "id": "consent-off-disables-submit",
+        "pass": true
+      },
+      {
+        "id": "checkout-no-checkbox-role",
+        "pass": true
+      },
+      {
+        "id": "checkout-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "no-purchase-request",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "checkout_browser_fixture_only": true,
+    "no_order_or_payment_created": true
+  },
+  "filter_regression_browser": {
+    "checks": [
+      {
+        "id": "server-wide-price-domain",
+        "pass": true
+      },
+      {
+        "id": "slider-domain-in-rial",
+        "pass": true
+      },
+      {
+        "id": "keyboard-rial-toman-sync",
+        "pass": true
+      },
+      {
+        "id": "numeric-rial-toman-sync",
+        "pass": true
+      },
+      {
+        "id": "price-domain-stays-wide",
+        "pass": true
+      },
+      {
+        "id": "invalid-reversed-range-blocked",
+        "pass": true
+      },
+      {
+        "id": "drag-updates-filter",
+        "pass": true
+      },
+      {
+        "id": "drag-bounded-requests",
+        "pass": true
+      },
+      {
+        "id": "real-many-option-filter",
+        "pass": true
+      },
+      {
+        "id": "first-five-only",
+        "pass": true
+      },
+      {
+        "id": "all-options-expanded",
+        "pass": true
+      },
+      {
+        "id": "selected-sixth-visible-as-chip",
+        "pass": true
+      },
+      {
+        "id": "sixth-persists-after-refresh",
+        "pass": true
+      },
+      {
+        "id": "back-restores-selected-value",
+        "pass": true
+      },
+      {
+        "id": "chip-removes-hidden-selection",
+        "pass": true
+      },
+      {
+        "id": "mobile-slider-present",
+        "pass": true
+      },
+      {
+        "id": "no-nested-mobile-filter-scroller",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "out-of-range-no-results-still-adjustable",
+        "pass": true
+      },
+      {
+        "id": "five-options-no-more-button",
+        "pass": true
+      },
+      {
+        "id": "single-price-slider-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-price-slider-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "drag_requests": 1,
+    "browser_only_edge_fixtures": true,
+    "no_catalog_write": true
+  },
+  "ci": "pending",
+  "backend_changed": false,
+  "persistent_checkout_writes": 0
+}
