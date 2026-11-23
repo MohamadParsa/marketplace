@@ -1,0 +1,127 @@
+{
+  "issue": 47,
+  "date": "2026-11-23",
+  "implementation_status": "review",
+  "storefront_build": "passed",
+  "browser": {
+    "checks": [
+      {
+        "id": "two-header-action-icons",
+        "pass": true
+      },
+      {
+        "id": "brand-color",
+        "pass": true
+      },
+      {
+        "id": "guest-state-description",
+        "pass": true
+      },
+      {
+        "id": "empty-cart-description",
+        "pass": true
+      },
+      {
+        "id": "touch-target-desktop",
+        "pass": true
+      },
+      {
+        "id": "visible-keyboard-focus",
+        "pass": true
+      },
+      {
+        "id": "guest-login-menu",
+        "pass": true
+      },
+      {
+        "id": "profile-escape-focus",
+        "pass": true
+      },
+      {
+        "id": "category-open-dismisses-profile",
+        "pass": true
+      },
+      {
+        "id": "cart-badge-one",
+        "pass": true
+      },
+      {
+        "id": "cart-count-description",
+        "pass": true
+      },
+      {
+        "id": "cart-current-state",
+        "pass": true
+      },
+      {
+        "id": "badge-updates-with-quantity",
+        "pass": true
+      },
+      {
+        "id": "mobile-touch-target",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "badge-inside-viewport",
+        "pass": true
+      },
+      {
+        "id": "verification-guest-cart-cleaned",
+        "pass": true
+      },
+      {
+        "id": "signed-in-state-indicator",
+        "pass": true
+      },
+      {
+        "id": "account-menu-profile",
+        "pass": true
+      },
+      {
+        "id": "account-menu-addresses",
+        "pass": true
+      },
+      {
+        "id": "account-menu-orders",
+        "pass": true
+      },
+      {
+        "id": "account-menu-wallet",
+        "pass": true
+      },
+      {
+        "id": "logout-preserved",
+        "pass": true
+      },
+      {
+        "id": "shared-header-/",
+        "pass": true
+      },
+      {
+        "id": "shared-header-/category/mobile",
+        "pass": true
+      },
+      {
+        "id": "shared-header-/product/chr-39782",
+        "pass": true
+      },
+      {
+        "id": "shared-header-/checkout",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "no_order_or_payment_created": true,
+    "existing_synthetic_account_only": true
+  },
+  "ci": "pending",
+  "application_backend_changes": false
+}

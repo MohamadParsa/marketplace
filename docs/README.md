@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[۱۰تسک جدید تجربه فروشگاه؛ همه باز و منتظر انتخاب مالک](delivery/storefront-followups/ux-followups.md)
+[صف۱۰تسک تجربه فروشگاه؛ وضعیت و شواهد اجرای انتخاب‌های مالک](delivery/storefront-followups/ux-followups.md)
 
 [کش، URL و صف اصلاحات تجربه storefront](delivery/storefront-followups/README.md) · [گزارش و تصاویر #41](delivery/storefront-followups/issue-41-verification.md).
 

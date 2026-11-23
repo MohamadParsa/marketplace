@@ -1,3 +1,4 @@
+import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
 import { useEffect, useRef, useState } from "react";
 import { useCommerce } from "./commerce";
@@ -657,8 +658,71 @@ export function HomePage() {
 }
 
 type HeaderCategory = { key: string; title: string; url: string };
+function HeaderActionIcon({ kind }: { kind: "account" | "cart" }) {
+  return (
+    <svg
+      className="header-action-icon"
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {kind === "account" ? (
+        <>
+          <circle cx="16" cy="10.5" r="4.5" />
+          <path d="M7.5 26c.5-5.1 3.5-8 8.5-8s8 2.9 8.5 8" />
+        </>
+      ) : (
+        <>
+          <path d="M8 11h16l1.4 14.8a2 2 0 0 1-2 2.2H8.6a2 2 0 0 1-2-2.2L8 11Z" />
+          <path d="M11.5 12V8a4.5 4.5 0 0 1 9 0v4" />
+          <path d="M12.5 22h7" opacity=".35" />
+        </>
+      )}
+    </svg>
+  );
+}
 export function SiteHeader() {
   const { token, cart, logout } = useCommerce();
+  const profileRef = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const dismiss = (restore = false) => {
+      if (profileRef.current?.open) {
+        profileRef.current.open = false;
+        if (restore)
+          profileRef.current.querySelector<HTMLElement>("summary")?.focus();
+      }
+    };
+    const outside = (e: PointerEvent | FocusEvent) => {
+      if (!profileRef.current?.contains(e.target as Node)) dismiss();
+    };
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && profileRef.current?.open) {
+        e.preventDefault();
+        dismiss(true);
+      }
+    };
+    const route = () => dismiss();
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("focusin", outside);
+    document.addEventListener("keydown", key);
+    addEventListener("cherriva:navigate", route);
+    addEventListener("popstate", route);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("focusin", outside);
+      document.removeEventListener("keydown", key);
+      removeEventListener("cherriva:navigate", route);
+      removeEventListener("popstate", route);
+    };
+  }, []);
+  const count = cart?.item_count ?? 0;
+  const cartStatus = count
+    ? `${count.toLocaleString("fa-IR")} کالا در سبد خرید`
+    : "سبد خرید خالی است";
   return (
     <>
       {" "}
@@ -675,10 +739,28 @@ export function SiteHeader() {
           </a>
           <SearchBox />
           <div className="lh-header-actions">
-            <details className="lh-profile-menu">
-              <summary aria-label="حساب کاربری">
-                <Icon name="user" />
+            <details
+              ref={profileRef}
+              className="lh-profile-menu"
+              data-authenticated={!!token}
+            >
+              <summary
+                className="header-action"
+                aria-label="حساب کاربری"
+                aria-describedby="header-account-status"
+                title={token ? "حساب کاربری" : "ورود / ثبت‌نام"}
+              >
+                <HeaderActionIcon kind="account" />
+                {token && (
+                  <span className="header-account-dot" aria-hidden="true" />
+                )}
               </summary>
+              <span
+                id="header-account-status"
+                className="header-action-description"
+              >
+                {token ? "وارد حساب شده‌اید" : "ورود یا ثبت‌نام در چریوا"}
+              </span>
               <nav aria-label="منوی حساب">
                 {token ? (
                   <>
@@ -693,13 +775,25 @@ export function SiteHeader() {
                 )}
               </nav>
             </details>
-            <span />
-            <a href="/cart" className="lh-cart-link" aria-label="سبد خرید">
-              <Icon name="bag" />
-              {!!cart?.item_count && (
-                <b className="lh-cart-count">{cart.item_count}</b>
+            <span className="header-action-divider" aria-hidden="true" />
+            <a
+              href="/cart"
+              className="lh-cart-link header-action"
+              aria-label="سبد خرید"
+              aria-describedby="header-cart-status"
+              aria-current={location.pathname === "/cart" ? "page" : undefined}
+              title={cartStatus}
+            >
+              <HeaderActionIcon kind="cart" />
+              {count > 0 && (
+                <b className="lh-cart-count" aria-hidden="true">
+                  {count > 99 ? "۹۹+" : count.toLocaleString("fa-IR")}
+                </b>
               )}
             </a>
+            <span id="header-cart-status" className="header-action-description">
+              {cartStatus}
+            </span>
           </div>
         </div>
         <nav className="lh-nav lh-wrap" aria-label="دسته‌های اصلی">

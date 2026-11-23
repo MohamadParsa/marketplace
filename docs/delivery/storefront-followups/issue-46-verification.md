@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-002, API-PLP-SEARCH-001, FEAT-CATALOG-PUBLIC-URL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #46
@@ -31,3 +31,5 @@ implementation_status: review
 - [دسکتاپ](../../../output/playwright/issue-46/menu-desktop.png) · [ریشه‌ها در موبایل](../../../output/playwright/issue-46/menu-mobile-roots.png) · [شاخه در موبایل](../../../output/playwright/issue-46/menu-mobile-branch.png).
 
 [شرح/ACها](tasks/cv-sf-ux-02-hierarchical-category-menu.md) · [فهرست ماشین‌خوان](issue-46-checks.json). هیچ دسته، محصول، سابقه سفارش/مالی، قیمت یا موجودی برای این UI تغییر نکرد. اجرای محلی با `Start-Cherriva.ps1` از D:\Cherriva است؛ انتشار لیارا با پارساست. PR/CI و کامنت بستن پس از گیت تحویل ثبت می‌شوند.
+
+[PR #56](https://github.com/MohamadParsa/marketplace/pull/56) با merge `a7f199c5bc6496ec3d1576a594cd28fcda575455` و `[skip ci]` ادغام شد؛ هر۵ job CI شامل race/vet موفق و #46 با کامنت شواهد بسته است.
