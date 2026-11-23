@@ -180,6 +180,7 @@ export function CategoryMenu() {
   }, [open, mobile]);
   useEffect(() => {
     if (!open) return;
+    dispatchEvent(new Event("cherriva:category-menu-open"));
     const previous = document.body.style.overflow;
     if (mobile) document.body.style.overflow = "hidden";
     const outside = (e: PointerEvent) => {
