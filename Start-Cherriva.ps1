@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([switch]$NoBuild)
+param([switch]$NoBuild, [switch]$NoCache)
 $ErrorActionPreference = 'Stop'
 if ($env:DATABASE_URL) { throw 'Local startup requires an isolated REVIEW_DATABASE_URL; clear DATABASE_URL first.' }
 $projectRoot = $PSScriptRoot
@@ -19,6 +19,23 @@ if (-not $env:REVIEW_DATABASE_URL) {
     }
     $env:REVIEW_DATABASE_URL = 'postgres://postgres@127.0.0.1:55437/postgres?sslmode=disable'
 }
+# Redis is optional; a failed local cache must not prevent database-backed startup.
+if ($NoCache -or $env:PUBLIC_CACHE_ENABLED -eq 'false') {
+    $env:PUBLIC_CACHE_ENABLED = 'false'
+} else {
+    if (-not $env:REDIS_URL) {
+        try {
+            $wslProject = (& wsl.exe --exec wslpath -u $projectRoot | Out-String).Trim()
+            & wsl.exe --exec bash "$wslProject/scripts/start-review-redis.sh"
+            if ($LASTEXITCODE -ne 0) { throw 'Review Redis did not start.' }
+            $env:REDIS_URL = 'redis://127.0.0.1:56379/0'
+        } catch {
+            Write-Warning 'Review Redis unavailable. Starting with PostgreSQL fallback; see docs/local-development.md.'
+        }
+    }
+    $env:PUBLIC_CACHE_ENABLED = $(if ($env:REDIS_URL) { 'true' } else { 'false' })
+}
+if (-not $env:CACHE_WARMUP_ENABLED) { $env:CACHE_WARMUP_ENABLED = 'true' }
 if (-not $NoBuild) {
     foreach ($app in @('backoffice-web', 'storefront-web')) {
         $appPath = Join-Path $projectRoot "apps/$app"
@@ -55,3 +72,4 @@ foreach ($surface in @(@{Name='backoffice';App='backoffice-web';Port='8098'},@{N
 Write-Host "Source: $projectRoot"
 Write-Host 'Backoffice: http://localhost:8098'
 Write-Host 'Storefront: http://localhost:5197'
+Write-Host "Public cache enabled: $($env:PUBLIC_CACHE_ENABLED); startup warmup runs in the background."

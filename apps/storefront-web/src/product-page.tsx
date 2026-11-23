@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { SiteHeader, SiteFooter, Icon } from "./home-page";
 import { navigate } from "./navigation";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
-type Nav = { id: string; name: string; url: string };
+type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Feature = {
   attribute_id: string;
   name: string;
@@ -317,11 +317,14 @@ export function ProductPage({ url }: { url: string }) {
         رفتن به محتوا
       </a>
       <SiteHeader
-        categories={(data?.navigation ?? []).map((c) => ({
-          key: c.id,
-          title: c.name,
-          url: c.url,
-        }))}
+        categories={(data?.navigation ?? [])
+          .filter((c) => !c.parent_id)
+          .slice(0, 7)
+          .map((c) => ({
+            key: c.id,
+            title: c.name,
+            url: c.url,
+          }))}
       />
       <main className="lh-wrap" id="main">
         {loading && !data ? (
@@ -686,11 +689,14 @@ export function ProductPage({ url }: { url: string }) {
         ) : null}
       </main>
       <SiteFooter
-        categories={(data?.navigation ?? []).map((c) => ({
-          key: c.id,
-          title: c.name,
-          url: c.url,
-        }))}
+        categories={(data?.navigation ?? [])
+          .filter((c) => !c.parent_id)
+          .slice(0, 7)
+          .map((c) => ({
+            key: c.id,
+            title: c.name,
+            url: c.url,
+          }))}
       />
       {added && (
         <Modal

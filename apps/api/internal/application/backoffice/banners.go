@@ -9,6 +9,7 @@ import (
 	"image"
 	"net/url"
 	"strings"
+	"time"
 	"unicode"
 	"unicode/utf8"
 
@@ -98,7 +99,7 @@ func validBannerConfig(config content.BannerConfig) bool {
 	if config.Placement != "" && config.Placement != "hero" && config.Placement != "promo" {
 		return false
 	}
-	return utf8.RuneCountInString(config.Alt) <= 200 && !strings.ContainsAny(config.Alt, "\x00\r\n") && validBannerLink(config.Link)
+	return len(config.CatalogCategoryID) <= 128 && utf8.RuneCountInString(config.Alt) <= 200 && !strings.ContainsAny(config.Alt, "\x00\r\n") && validBannerLink(config.Link)
 }
 
 func bannerOwnsAsset(b content.Banner, id string) bool {
@@ -139,6 +140,9 @@ func applyBanner(state *Workspace, c Command, id string) error {
 		if c.Banner == nil || !validBannerConfig(*c.Banner) {
 			return ErrInvalid
 		}
+		if !validCatalogBanner(*state, *c.Banner) {
+			return ErrInvalid
+		}
 		// Image references are changed exclusively by the upload/remove operations.
 		if c.Banner.DesktopID != b.Draft.DesktopID || c.Banner.MobileID != b.Draft.MobileID {
 			return ErrInvalid
@@ -153,10 +157,14 @@ func applyBanner(state *Workspace, c Command, id string) error {
 			return ErrInvalid
 		}
 	case "banner.publish":
-		if !validBannerConfig(b.Draft) || strings.TrimSpace(b.Draft.Alt) == "" || b.Draft.DesktopID == "" || b.Draft.MobileID == "" {
+		if !validBannerConfig(b.Draft) || !validCatalogBanner(*state, b.Draft) || strings.TrimSpace(b.Draft.Alt) == "" || (b.Draft.CatalogCategoryID == "" && (b.Draft.DesktopID == "" || b.Draft.MobileID == "")) {
 			return ErrInvalid
 		}
-		for _, ref := range []string{b.Draft.DesktopID, b.Draft.MobileID} {
+		refs := []string{}
+		if b.Draft.CatalogCategoryID == "" {
+			refs = []string{b.Draft.DesktopID, b.Draft.MobileID}
+		}
+		for _, ref := range refs {
 			found := false
 			for _, asset := range state.BannerAssets {
 				if asset.ID == ref && validStoredBannerAsset(asset) {
@@ -257,20 +265,29 @@ func validStoredBannerAsset(asset content.BannerAsset) bool {
 }
 
 func (s *Service) PublicBanners(ctx context.Context) ([]content.PublicBanner, error) {
-	state, err := s.repository.Snapshot(ctx)
-	if err != nil {
-		return nil, err
-	}
-	result := []content.PublicBanner{}
-	for _, b := range state.Banners {
-		if b.Published != nil && b.Published.Config.Enabled {
-			result = append(result, content.PublicBanner{ID: b.ID, Name: b.Name, Revision: b.Published.Revision, Config: b.Published.Config})
+	return cachedPublic(ctx, s, "banners", "", nil, 5*time.Minute, func(ctx context.Context) ([]content.PublicBanner, error) {
+		state, err := s.publicSnapshot(ctx, "__shared__")
+		if err != nil {
+			return nil, err
 		}
-	}
-	return result, nil
+		result := []content.PublicBanner{}
+		for _, b := range state.Banners {
+			if b.Published != nil && b.Published.Config.Enabled {
+				result = append(result, content.PublicBanner{ID: b.ID, Name: b.Name, Revision: b.Published.Revision, Config: b.Published.Config})
+			}
+		}
+		return result, nil
+	})
 }
 
 func (s *Service) ReadBannerMedia(ctx context.Context, actor *identity.User, id string) (content.BannerAsset, error) {
+	if actor == nil {
+		if r, ok := s.repository.(interface {
+			ReadPublicBannerMedia(context.Context, string) (content.BannerAsset, error)
+		}); ok {
+			return r.ReadPublicBannerMedia(ctx, id)
+		}
+	}
 	state, err := s.repository.Snapshot(ctx)
 	if err != nil {
 		return content.BannerAsset{}, err
@@ -297,4 +314,20 @@ func (s *Service) ReadBannerMedia(ctx context.Context, actor *identity.User, id 
 		}
 	}
 	return content.BannerAsset{}, ErrNotFound
+}
+
+// Catalog promos deliberately use one of the four configured rails in this MVP.
+func validCatalogBanner(w Workspace, c content.BannerConfig) bool {
+	if c.CatalogCategoryID == "" {
+		return true
+	}
+	if c.Placement != "promo" || publicCategory(w, c.CatalogCategoryID) == nil {
+		return false
+	}
+	for _, r := range w.HomeSettings.Rails {
+		if r.CategoryID == c.CatalogCategoryID {
+			return true
+		}
+	}
+	return false
 }

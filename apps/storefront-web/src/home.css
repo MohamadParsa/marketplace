@@ -1229,3 +1229,16 @@ body {
   }
 }
 .lh-hero-photos{background:#f4e4eb}
+
+.lh-category-block{margin:24px 0 34px;min-width:0}
+.lh-category-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.lh-category-heading h2{font-size:19px;margin:0}.lh-category-heading>span{font-size:11px;color:var(--muted)}
+.lh-category-block .lh-category-strip{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:20px;overflow-x:auto;padding:4px 2px 12px;margin:0;scroll-snap-type:x proximity}
+.lh-category-strip>a{flex:0 0 calc((100% - 140px)/8);min-width:94px;scroll-snap-align:start;text-align:center}
+.lh-category-strip b,.lh-category-remainder b{max-width:125px;line-height:1.7}
+.lh-all-categories>summary{cursor:pointer;list-style:none;text-align:center;width:fit-content;margin:12px auto 0;padding:9px 18px;border:1px solid var(--border);border-radius:12px;color:var(--cherry,#a22250);font-size:12px;background:#fff}
+.lh-category-block .lh-category-remainder{gap:24px;margin:24px 0 0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr))}
+@media(max-width:700px){.lh-category-heading>span{display:none}.lh-category-strip>a{flex-basis:94px}.lh-category-block .lh-category-remainder{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 6px}}
+.lh-promos>.lh-catalog-promo{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:12px;min-height:245px;padding:25px;background:#f5e7ee;color:#332731}
+.lh-catalog-promo.promo-power-bank{background:#f7efdF}.lh-catalog-promo h2{font-size:22px;line-height:1.8;margin:9px 0}.lh-catalog-promo p{font-size:12px;line-height:2.1;color:#756672;margin:0 0 16px}.lh-promo-cta{display:flex;align-items:center;gap:10px;color:#b41e4c;font-size:12px}.lh-promo-cta svg{width:18px;height:18px}.lh-promos .lh-catalog-promo>img{width:100%;height:190px;object-fit:contain;mix-blend-mode:multiply;transition:transform .2s}.lh-catalog-promo:hover>img{transform:translateY(-4px)}
+@media(max-width:600px){.lh-promos>.lh-catalog-promo{min-height:210px;padding:20px;gap:8px}.lh-catalog-promo h2{font-size:19px}.lh-promos .lh-catalog-promo>img{height:155px}}

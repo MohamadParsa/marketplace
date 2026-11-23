@@ -45,8 +45,8 @@ export function BannersPage() {
   return (
     <>
       <PageHeader
-        title="بنرهای دو اندازه"
-        description="تصویر مستقل دسکتاپ و موبایل؛ پیش‌نویس تا انتشار روی نسخه عمومی اثر ندارد."
+        title="بنرهای صفحه اصلی"
+        description="تصویر ثابت یا عکس کالای موجودِ دسته؛ پیش‌نویس تا انتشار روی نسخه عمومی اثر ندارد."
         action={
           <Button
             variant="contained"
@@ -79,9 +79,11 @@ export function BannersPage() {
               render: (b) => (
                 <span>
                   نسخه {b.version} ·{" "}
-                  {b.draft.desktop_id && b.draft.mobile_id
-                    ? "دو تصویر ثبت شده"
-                    : "رسانه ناقص"}
+                  {b.draft.catalog_category_id
+                    ? "تصویر از کاتالوگ"
+                    : b.draft.desktop_id && b.draft.mobile_id
+                      ? "دو تصویر ثبت شده"
+                      : "رسانه ناقص"}
                 </span>
               ),
             },
@@ -181,7 +183,7 @@ function BannerEditor({
   list: BannerList;
   close: () => void;
 }) {
-  const { execute, uploadBanner, loadBanners } = useWorkspace();
+  const { state, execute, uploadBanner, loadBanners } = useWorkspace();
   const cache = useQueryClient();
   const [draft, setDraft] = useState(banner.draft),
     [saved, setSaved] = useState(banner.draft);
@@ -203,7 +205,8 @@ function BannerEditor({
     draft.alt !== saved.alt ||
     draft.link !== saved.link ||
     draft.enabled !== saved.enabled ||
-    draft.placement !== saved.placement;
+    draft.placement !== saved.placement ||
+    draft.catalog_category_id !== saved.catalog_category_id;
   const change = (next: typeof draft) => {
     setDraft(next);
     setSaveKey(crypto.randomUUID());
@@ -307,23 +310,80 @@ function BannerEditor({
         )}
         {notice && <Alert severity="success">{notice}</Alert>}
         <div className="banner-fields">
-          <label className="home-admin-form">
-            جایگاه بنر
-            <select
-              aria-label="جایگاه بنر"
-              disabled={!editable || busy}
-              value={draft.placement ?? "hero"}
-              onChange={(e) =>
-                change({
-                  ...draft,
-                  placement: e.target.value as "hero" | "promo",
-                })
-              }
-            >
-              <option value="hero">بنر اصلی صفحه</option>
-              <option value="promo">بنر مکمل کنار هم</option>
-            </select>
-          </label>
+          <div className="home-admin-form">
+            <b>جایگاه بنر</b>
+            <div className="home-admin-actions">
+              {(["hero", "promo"] as const).map((value) => (
+                <Button
+                  key={value}
+                  disabled={!editable || busy}
+                  variant={
+                    (draft.placement ?? "hero") === value
+                      ? "contained"
+                      : "outlined"
+                  }
+                  onClick={() =>
+                    change({
+                      ...draft,
+                      placement: value,
+                      catalog_category_id:
+                        value === "hero"
+                          ? undefined
+                          : draft.catalog_category_id,
+                    })
+                  }
+                >
+                  {value === "hero" ? "بنر اصلی صفحه" : "بنر مکمل کنار هم"}
+                </Button>
+              ))}
+            </div>
+          </div>
+          {draft.placement === "promo" && (
+            <div className="home-admin-form">
+              <b>منبع تصویر و مقصد</b>
+              <div className="home-admin-actions">
+                <Button
+                  disabled={!editable || busy}
+                  variant={
+                    !draft.catalog_category_id ? "contained" : "outlined"
+                  }
+                  onClick={() =>
+                    change({ ...draft, catalog_category_id: undefined })
+                  }
+                >
+                  تصویر ثابت
+                </Button>
+                {state.home_settings.rails
+                  .filter((r) => r.category_id)
+                  .map((r) => (
+                    <Button
+                      key={r.key}
+                      disabled={!editable || busy}
+                      variant={
+                        draft.catalog_category_id === r.category_id
+                          ? "contained"
+                          : "outlined"
+                      }
+                      onClick={() =>
+                        change({
+                          ...draft,
+                          catalog_category_id: r.category_id,
+                          link: "/category/" + r.category_id,
+                        })
+                      }
+                    >
+                      {state.categories?.find((c) => c.id === r.category_id)
+                        ?.name ?? r.key}
+                    </Button>
+                  ))}
+              </div>
+              <small>
+                در حالت داده‌محور، تصویر از اولین کالای موجود همان کروسل و مقصد
+                از دسته آن گرفته می‌شود؛ بدون کالای موجود بنر نمایش داده
+                نمی‌شود.
+              </small>
+            </div>
+          )}
           <TextField
             label="متن جایگزین تصویر"
             value={draft.alt}
@@ -334,7 +394,7 @@ function BannerEditor({
           <TextField
             label="لینک داخلی (اختیاری)"
             value={draft.link}
-            disabled={!editable || busy}
+            disabled={!editable || busy || !!draft.catalog_category_id}
             inputProps={{ dir: "ltr", maxLength: 2048 }}
             helperText="مانند /categories/mobile؛ بدون لینک هم می‌توان منتشر کرد."
             onChange={(e) => change({ ...draft, link: e.target.value })}
@@ -350,74 +410,84 @@ function BannerEditor({
             />
           }
         />
+        {draft.catalog_category_id && (
+          <Alert severity="info">
+            تصویر و چیدمان این بنر از کاتالوگ موجود ساخته می‌شود؛ نیازی به
+            بارگذاری تصویر مستقل نیست.
+          </Alert>
+        )}
         <div className="banner-preview-grid">
-          {(["desktop", "mobile"] as const).map((slot) => (
-            <BannerMediaField
-              key={slot}
-              slot={slot}
-              id={slot === "desktop" ? draft.desktop_id : draft.mobile_id}
-              alt={draft.alt}
-              policy={list.policy}
-              disabled={!editable || busy}
-              pendingFile={(value) =>
-                setFiles((prev) => ({ ...prev, [slot]: value }))
-              }
-              upload={async (file, key) => {
-                setBusy(true);
-                setError("");
-                setNotice("");
-                try {
-                  const result = await uploadBanner({
-                    id: banner.id,
-                    slot,
-                    version,
-                    key,
-                    file,
-                  });
-                  setVersion(result.version);
-                  setDraft((prev) => ({
-                    ...prev,
-                    [slot === "desktop" ? "desktop_id" : "mobile_id"]:
-                      result.asset_id,
-                  }));
-                  setNotice(
-                    `تصویر ${slot === "desktop" ? "دسکتاپ" : "موبایل"} در پیش‌نویس ثبت شد.`,
-                  );
-                  setPublishKey(crypto.randomUUID());
-                } catch (e) {
-                  setError(message(e));
-                  throw e;
-                } finally {
-                  setBusy(false);
+          {!draft.catalog_category_id &&
+            (["desktop", "mobile"] as const).map((slot) => (
+              <BannerMediaField
+                key={slot}
+                slot={slot}
+                id={slot === "desktop" ? draft.desktop_id : draft.mobile_id}
+                alt={draft.alt}
+                policy={list.policy}
+                disabled={!editable || busy}
+                pendingFile={(value) =>
+                  setFiles((prev) => ({ ...prev, [slot]: value }))
                 }
-              }}
-              remove={async () => {
-                setBusy(true);
-                setError("");
-                try {
-                  await execute({
-                    action: "banner.media.remove",
-                    target: banner.id,
-                    version,
-                    value: slot,
-                    idempotency_key: removeKeys[slot],
-                  });
-                  setVersion(version + 1);
-                  setDraft((prev) => ({
-                    ...prev,
-                    [slot === "desktop" ? "desktop_id" : "mobile_id"]: "",
-                  }));
-                  setRemoveKeys({ ...removeKeys, [slot]: crypto.randomUUID() });
-                  setPublishKey(crypto.randomUUID());
-                  setNotice("تصویر از پیش‌نویس حذف شد؛ نسخه عمومی حفظ شد.");
-                } catch (e) {
-                  setError(message(e));
-                } finally {
-                  setBusy(false);
-                }
-              }}
-            />
-          ))}
+                upload={async (file, key) => {
+                  setBusy(true);
+                  setError("");
+                  setNotice("");
+                  try {
+                    const result = await uploadBanner({
+                      id: banner.id,
+                      slot,
+                      version,
+                      key,
+                      file,
+                    });
+                    setVersion(result.version);
+                    setDraft((prev) => ({
+                      ...prev,
+                      [slot === "desktop" ? "desktop_id" : "mobile_id"]:
+                        result.asset_id,
+                    }));
+                    setNotice(
+                      `تصویر ${slot === "desktop" ? "دسکتاپ" : "موبایل"} در پیش‌نویس ثبت شد.`,
+                    );
+                    setPublishKey(crypto.randomUUID());
+                  } catch (e) {
+                    setError(message(e));
+                    throw e;
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+                remove={async () => {
+                  setBusy(true);
+                  setError("");
+                  try {
+                    await execute({
+                      action: "banner.media.remove",
+                      target: banner.id,
+                      version,
+                      value: slot,
+                      idempotency_key: removeKeys[slot],
+                    });
+                    setVersion(version + 1);
+                    setDraft((prev) => ({
+                      ...prev,
+                      [slot === "desktop" ? "desktop_id" : "mobile_id"]: "",
+                    }));
+                    setRemoveKeys({
+                      ...removeKeys,
+                      [slot]: crypto.randomUUID(),
+                    });
+                    setPublishKey(crypto.randomUUID());
+                    setNotice("تصویر از پیش‌نویس حذف شد؛ نسخه عمومی حفظ شد.");
+                  } catch (e) {
+                    setError(message(e));
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+              />
+            ))}
         </div>
         <p className="muted">
           PNG، JPEG یا WebP؛ حداکثر {list.policy.max_bytes / 1024 / 1024}{" "}
@@ -464,8 +534,8 @@ function BannerEditor({
             dirty ||
             files.desktop ||
             files.mobile ||
-            !draft.desktop_id ||
-            !draft.mobile_id ||
+            (!draft.catalog_category_id &&
+              (!draft.desktop_id || !draft.mobile_id)) ||
             !draft.alt.trim()
           }
           onClick={() => void publish()}

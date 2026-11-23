@@ -369,6 +369,7 @@ export interface Command {
 }
 
 export interface BannerConfig {
+  catalog_category_id?: string;
   placement?: "hero" | "promo";
   desktop_id: string;
   mobile_id: string;

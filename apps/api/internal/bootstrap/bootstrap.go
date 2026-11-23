@@ -23,6 +23,14 @@ func NewHTTPHandler(cfg config.Config) http.Handler {
 }
 
 func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repository) http.Handler {
+	h, _ := newCatalogHandler(cfg, repository, nil)
+	return h
+}
+func NewHTTPHandlerWithPublicCache(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache) http.Handler {
+	h, _ := newCatalogHandler(cfg, repository, c)
+	return h
+}
+func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache) (http.Handler, *backoffice.Service) {
 	store := authmemory.NewStore(nil)
 	users := backofficeidentity.New(repository)
 	notifier := authmemory.NewNotifier()
@@ -34,6 +42,7 @@ func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repos
 	testData := cfg.Environment == "local" || cfg.Environment == "test"
 	handler := httptransport.NewAuthHandler(service, notifier, testData)
 	workspace := backoffice.NewService(repository, authmemory.Clock{}, authmemory.Random{})
+	workspace.UsePublicCache(c)
 	storefrontRoot := ""
 	if cfg.WebSurface == "storefront" {
 		storefrontRoot = cfg.WebRoot
@@ -64,5 +73,5 @@ func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repos
 			expiryMu.Unlock()
 		}
 		next.ServeHTTP(w, r)
-	})
+	}), workspace
 }

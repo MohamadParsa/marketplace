@@ -43,6 +43,7 @@ interface Banner {
     alt: string;
     link: string;
     placement?: string;
+    catalog_category_id?: string;
   };
 }
 const keys = ["mobile", "earbuds", "power-bank", "smartwatch"];
@@ -358,14 +359,58 @@ function Hero({ banners, photos }: { banners: Banner[]; photos: Card[] }) {
     </section>
   );
 }
-function PromoBanners({ banners }: { banners: Banner[] }) {
+function PromoBanners({
+  banners,
+  rails,
+}: {
+  banners: Banner[];
+  rails: Rail[];
+}) {
   const [broken, setBroken] = useState<string[]>([]);
   const promos = banners
-    .filter((b) => b.config.placement === "promo" && !broken.includes(b.id))
+    .filter(
+      (b) =>
+        b.config.placement === "promo" &&
+        !broken.includes(b.id) &&
+        (!b.config.catalog_category_id ||
+          rails.some(
+            (r) =>
+              r.category_id === b.config.catalog_category_id &&
+              r.products.length > 0,
+          )),
+    )
     .slice(0, 2);
   return promos.length ? (
     <section className="lh-promos" aria-label="بنرهای منتخب">
       {promos.map((b) => {
+        const rail = rails.find(
+          (r) => r.category_id === b.config.catalog_category_id,
+        );
+        const product = rail?.products[0];
+        if (b.config.catalog_category_id && rail && product)
+          return (
+            <a
+              key={b.id}
+              className={`lh-catalog-promo promo-${rail.key}`}
+              data-category-id={rail.category_id}
+              href={rail.url}
+            >
+              <div>
+                <span className="lh-eyebrow">منتخب‌های چریوا</span>
+                <h2>{b.config.alt || rail.title}</h2>
+                <p>از میان مدل‌های موجود، همراه دلخواهت را انتخاب کن.</p>
+                <b className="lh-promo-cta">
+                  مدل‌های موجود را ببین <Icon name="arrow" />
+                </b>
+              </div>
+              <img
+                src={api + product.image_url}
+                alt={product.name}
+                loading="lazy"
+                onError={() => setBroken((x) => [...x, b.id])}
+              />
+            </a>
+          );
         const visual = (
           <picture>
             <source
@@ -482,25 +527,63 @@ export function HomePage() {
               photos={rails.slice(0, 2).flatMap((r) => r.products.slice(0, 1))}
             />
             <section
-              className="lh-categories"
+              className="lh-category-block"
               id="home-categories"
               aria-label="دسته‌های دارای کالای موجود"
             >
-              {availableCategories.map((r) => (
-                <a key={r.id} href={r.url}>
-                  <span>
-                    {r.image_url ? (
-                      <img src={api + r.image_url} alt="" />
-                    ) : (
-                      <Icon name="bag" />
+              <div className="lh-category-heading">
+                <h2>دسته‌های اصلی</h2>
+                <span>انتخاب از دسته‌های موجود چریوا</span>
+              </div>
+              <div className="lh-categories lh-category-strip">
+                {availableCategories.slice(0, 8).map((r) => (
+                  <a key={r.id} href={r.url}>
+                    <span>
+                      {r.image_url ? (
+                        <img src={api + r.image_url} alt="" />
+                      ) : (
+                        <Icon name="bag" />
+                      )}
+                    </span>
+                    <b>{r.name}</b>
+                    <small>
+                      {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
+                    </small>
+                  </a>
+                ))}
+              </div>
+              {availableCategories.length > 8 && (
+                <details className="lh-all-categories">
+                  <summary>
+                    مشاهده همه دسته‌ها (
+                    {new Intl.NumberFormat("fa-IR").format(
+                      availableCategories.length,
                     )}
-                  </span>
-                  <b>{r.name}</b>
-                  <small>
-                    {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
-                  </small>
-                </a>
-              ))}
+                    )
+                  </summary>
+                  <div className="lh-categories lh-category-remainder">
+                    {availableCategories.slice(8).map((r) => (
+                      <a key={r.id} href={r.url}>
+                        <span>
+                          {r.image_url ? (
+                            <img
+                              src={api + r.image_url}
+                              alt=""
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Icon name="bag" />
+                          )}
+                        </span>
+                        <b>{r.name}</b>
+                        <small>
+                          {new Intl.NumberFormat("fa-IR").format(r.count)} کالا
+                        </small>
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              )}
             </section>
             {loading ? (
               <div className="lh-loading" role="status">
@@ -534,7 +617,9 @@ export function HomePage() {
                 {rails.map((rail, i) => (
                   <div key={rail.key}>
                     <ProductRail rail={rail} index={i} />
-                    {i === 0 && <PromoBanners banners={banners} />}
+                    {i === 0 && (
+                      <PromoBanners banners={banners} rails={rails} />
+                    )}
                   </div>
                 ))}
               </>

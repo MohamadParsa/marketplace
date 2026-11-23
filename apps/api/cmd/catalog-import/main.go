@@ -33,6 +33,7 @@ func main() {
 func run() error {
 	file := flag.String("file", "", "catalog JSON snapshot")
 	mode := flag.String("mode", "review", "target origin: review or live")
+	anonymousStores := flag.Bool("anonymous-stores", true, "use fictional Cherriva names for imported test sellers")
 	apply := flag.Bool("apply", false, "append to the explicitly selected target database")
 	verifyMedia := flag.Bool("verify-media", false, "download/decode media; do not write a database unless -apply is also set")
 	configureHome := flag.Bool("configure-home", false, "use snapshot's four category mappings; other home settings and banners stay untouched")
@@ -57,12 +58,13 @@ func run() error {
 	if e != nil {
 		return e
 	}
+	seed.AnonymousStoreNames = *anonymousStores
 	seed = backoffice.LimitCatalogSeed(seed, *limit)
 	if e = backoffice.ValidateCatalogSeed(&seed); e != nil {
 		return e
 	}
 	sum := sha256.Sum256(raw)
-	report := map[string]any{"dataset_id": seed.DatasetID, "file_sha256": hex.EncodeToString(sum[:]), "mode": *mode, "applied": false, "products": len(seed.Catalog.Products), "categories": len(seed.Catalog.Categories), "brands": len(seed.Catalog.Brands), "variants": len(seed.Catalog.Variants), "offers": len(seed.Catalog.Offers), "media": len(seed.Media), "configure_home": *configureHome}
+	report := map[string]any{"dataset_id": seed.DatasetID, "file_sha256": hex.EncodeToString(sum[:]), "mode": *mode, "applied": false, "products": len(seed.Catalog.Products), "categories": len(seed.Catalog.Categories), "brands": len(seed.Catalog.Brands), "variants": len(seed.Catalog.Variants), "offers": len(seed.Catalog.Offers), "media": len(seed.Media), "configure_home": *configureHome, "anonymous_stores": *anonymousStores}
 	printJSON := func() { b, _ := json.Marshal(report); fmt.Println(string(b)) }
 	if !*apply && !*verifyMedia {
 		report["validation"] = "passed"
@@ -124,6 +126,18 @@ func run() error {
 		}
 		return errors.New("catalog import failed; transaction rolled back")
 	}
+	if *anonymousStores {
+		ids := make([]string, 0, len(seed.Catalog.Stores))
+		for _, st := range seed.Catalog.Stores {
+			ids = append(ids, st.ID)
+		}
+		changed, e := backoffice.AnonymizeImportedStores(ctx, repo, ids, time.Now().UTC())
+		if e != nil {
+			return errors.New("catalog imported; store-name anonymization needs retry")
+		}
+		report["store_names_changed"] = changed
+	}
+	report["anonymous_stores"] = *anonymousStores
 	report["applied"] = !result.AlreadyApplied
 	report["already_applied"] = result.AlreadyApplied
 	report["validation"] = "passed_with_media"

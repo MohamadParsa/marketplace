@@ -11,6 +11,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import { PaginationControls, usePagedRows } from "./pagination";
 import { labels } from "./format";
 import { ApiError } from "./api";
 export function Status({ value }: { value: string }) {
@@ -43,28 +44,65 @@ export function DataTable<T extends { id: string }>({
   columns: Column<T>[];
   empty?: string;
 }) {
+  const paged = usePagedRows(rows);
   return (
-    <div className="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            {columns.map((c) => (
-              <th key={c.title}>{c.title}</th>
+    <>
+      <div className="table-scroll" tabIndex={0} aria-label="جدول اطلاعات">
+        <table className="data-table">
+          <colgroup>
+            {columns.map((c, i) => (
+              <col
+                key={c.title}
+                style={{
+                  width:
+                    c.title === "عملیات"
+                      ? "290px"
+                      : i === 0
+                        ? "32%"
+                        : undefined,
+                }}
+              />
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
+          </colgroup>
+          <thead>
+            <tr>
               {columns.map((c) => (
-                <td key={c.title}>{c.render(row)}</td>
+                <th
+                  key={c.title}
+                  className={
+                    c.title === "عملیات" ? "table-actions-cell" : undefined
+                  }
+                >
+                  {c.title}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {rows.length === 0 && <div className="empty">{empty}</div>}
-    </div>
+          </thead>
+          <tbody>
+            {paged.rows.map((row) => (
+              <tr key={row.id}>
+                {columns.map((c) => (
+                  <td
+                    key={c.title}
+                    className={
+                      c.title === "عملیات" ? "table-actions-cell" : undefined
+                    }
+                  >
+                    {c.title === "عملیات" ? (
+                      <div className="table-row-actions">{c.render(row)}</div>
+                    ) : (
+                      c.render(row)
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {rows.length === 0 && <div className="empty">{empty}</div>}
+      </div>
+      <PaginationControls {...paged.controls} />
+    </>
   );
 }
 export function PageHeader({
@@ -106,13 +144,22 @@ export function ActionDialog({
   fields: Field[];
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: Record<string, string>, reauthentication?: { request_id: string; code: string }) => Promise<void>;
+  onSubmit: (
+    values: Record<string, string>,
+    reauthentication?: { request_id: string; code: string },
+  ) => Promise<void>;
   requestAdminCode?: () => Promise<{ request_id: string; test_code?: string }>;
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [pendingValues, setPendingValues] = useState<Record<string, string> | null>(null);
-  const [challenge, setChallenge] = useState<{ request_id: string; test_code?: string } | null>(null);
+  const [pendingValues, setPendingValues] = useState<Record<
+    string,
+    string
+  > | null>(null);
+  const [challenge, setChallenge] = useState<{
+    request_id: string;
+    test_code?: string;
+  } | null>(null);
   const [code, setCode] = useState("");
   async function sendAdminCode() {
     if (!requestAdminCode) return;
@@ -146,11 +193,17 @@ export function ActionDialog({
           try {
             await onSubmit(
               pendingValues ?? values,
-              challenge ? { request_id: challenge.request_id, code } : undefined,
+              challenge
+                ? { request_id: challenge.request_id, code }
+                : undefined,
             );
             onClose();
           } catch (error) {
-            if (requestAdminCode && error instanceof ApiError && error.code === "reauthentication_required") {
+            if (
+              requestAdminCode &&
+              error instanceof ApiError &&
+              error.code === "reauthentication_required"
+            ) {
               setPendingValues(values);
               await sendAdminCode();
             } else {
@@ -197,7 +250,11 @@ export function ActionDialog({
                   label="کد تأیید ادمین"
                   value={code}
                   onChange={(event) => setCode(event.target.value)}
-                  helperText={challenge.test_code ? `کد آزمون: ${challenge.test_code}` : undefined}
+                  helperText={
+                    challenge.test_code
+                      ? `کد آزمون: ${challenge.test_code}`
+                      : undefined
+                  }
                   autoComplete="one-time-code"
                   inputProps={{ inputMode: "numeric", maxLength: 6 }}
                   required
@@ -216,7 +273,11 @@ export function ActionDialog({
           <Button onClick={onClose} disabled={busy}>
             انصراف
           </Button>
-          <Button variant="contained" type="submit" disabled={busy || (!!pendingValues && !challenge)}>
+          <Button
+            variant="contained"
+            type="submit"
+            disabled={busy || (!!pendingValues && !challenge)}
+          >
             {busy ? "در حال ثبت…" : "ثبت و تأیید"}
           </Button>
         </DialogActions>

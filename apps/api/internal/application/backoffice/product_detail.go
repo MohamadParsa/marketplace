@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"sort"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -106,6 +107,7 @@ func productPhotoURL(w Workspace, id string) string {
 }
 
 func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDetail, error) {
+	w = indexedCatalog(w)
 	result := ProductDetail{CheckoutEnabled: true, Gallery: []string{}, Features: []catalog.CardFeature{}, Variants: []PublicProductVariant{}, Offers: []PublicProductOffer{}, Breadcrumbs: []CatalogNav{}, Specifications: []catalog.CardFeature{}, Navigation: publicNavigation(w)}
 	p, err := publicProduct(w, id)
 	if err != nil {
@@ -261,11 +263,13 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) 
 	if id == "" || len(id) > 128 || len(variant) > 128 || len(offer) > 128 {
 		return ProductDetail{}, ErrInvalid
 	}
-	w, e := s.repository.Snapshot(ctx)
-	if e != nil {
-		return ProductDetail{}, e
-	}
-	return BuildProductDetail(w, id, variant, offer)
+	return cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
+		w, e := s.publicSnapshot(ctx, id)
+		if e != nil {
+			return ProductDetail{}, e
+		}
+		return BuildProductDetail(w, id, variant, offer)
+	})
 }
 
 type ProductSelectionInput struct {

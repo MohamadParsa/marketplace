@@ -1,6 +1,8 @@
 package content
 
 type BannerConfig struct {
+	CatalogCategoryID string `json:"catalog_category_id,omitempty"`
+
 	Placement string `json:"placement,omitempty"`
 	DesktopID string `json:"desktop_id"`
 	MobileID  string `json:"mobile_id"`

@@ -199,6 +199,9 @@ func categoryBindings(w Workspace, id string) []catalog.AttributeBinding {
 	return nil
 }
 func definitions(w Workspace) map[string]catalog.AttributeDefinition {
+	if w.publicIndex != nil {
+		return w.publicIndex.definitions
+	}
 	m := map[string]catalog.AttributeDefinition{}
 	for _, a := range w.Attributes {
 		m[a.ID] = a
@@ -237,7 +240,11 @@ func matchesAttributes(values map[string]string, attrs map[string][]string) bool
 }
 func productVariants(w Workspace, p catalog.Product) []catalog.Variant {
 	vs := []catalog.Variant{}
-	for _, v := range w.Variants {
+	variants := w.Variants
+	if w.publicIndex != nil {
+		variants = w.publicIndex.variants[p.ID]
+	}
+	for _, v := range variants {
 		if v.ProductID == p.ID {
 			vs = append(vs, v)
 		}
@@ -329,6 +336,7 @@ func listingCard(w Workspace, p catalog.Product, q ListingQuery) (ListingCard, b
 	return card, true
 }
 func BuildListing(w Workspace, q ListingQuery) (ListingResult, error) {
+	w = indexedCatalog(w)
 	if q.Page < 1 || q.Page > 10000 || q.PageSize < 1 || q.PageSize > 40 {
 		return ListingResult{}, ErrListingQuery
 	}
@@ -487,11 +495,22 @@ func BuildListing(w Workspace, q ListingQuery) (ListingResult, error) {
 	return result, nil
 }
 func (s *Service) PublicListing(ctx context.Context, q ListingQuery) (ListingResult, error) {
-	w, e := s.repository.Snapshot(ctx)
-	if e != nil {
-		return ListingResult{}, e
+	attrs := map[string][]string{}
+	for k, v := range q.Attributes {
+		attrs[k] = append([]string{}, v...)
+		sort.Strings(attrs[k])
 	}
-	return BuildListing(w, q)
+	q.Attributes = attrs
+	if q.Sort == "" {
+		q.Sort = "default"
+	}
+	return cachedPublic(ctx, s, "listing", "", q, time.Minute, func(ctx context.Context) (ListingResult, error) {
+		w, e := s.publicSnapshot(ctx, "")
+		if e != nil {
+			return ListingResult{}, e
+		}
+		return BuildListing(w, q)
+	})
 }
 
 type Suggestion struct {
@@ -502,6 +521,13 @@ type Suggestion struct {
 }
 
 func (s *Service) Suggestions(ctx context.Context, query string) ([]Suggestion, error) {
+	if utf8.RuneCountInString(query) > 80 {
+		return nil, ErrListingQuery
+	}
+	query = NormalizeSearch(query)
+	return cachedPublic(ctx, s, "suggestions", "", query, 30*time.Second, func(ctx context.Context) ([]Suggestion, error) { return s.buildSuggestions(ctx, query) })
+}
+func (s *Service) buildSuggestions(ctx context.Context, query string) ([]Suggestion, error) {
 	result := []Suggestion{}
 	if strings.TrimSpace(query) == "" {
 		return result, nil
@@ -509,7 +535,7 @@ func (s *Service) Suggestions(ctx context.Context, query string) ([]Suggestion, 
 	if utf8.RuneCountInString(query) > 80 {
 		return nil, ErrListingQuery
 	}
-	w, e := s.repository.Snapshot(ctx)
+	w, e := s.publicSnapshot(ctx, "")
 	if e != nil {
 		return nil, e
 	}

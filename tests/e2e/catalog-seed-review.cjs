@@ -7,7 +7,10 @@ async (page) => {
  await page.setViewportSize({width:1440,height:1000});await page.goto(site);await page.locator('[data-rail="mobile"] .lh-product').first().waitFor();
  for(const key of ["mobile","earbuds","power-bank","smartwatch"]){check("home-ten-cards-"+key,(await page.locator('[data-rail="'+key+'"] .lh-product').count())===10)}
  check("special-offers-visible",(await page.locator('[data-rail="special"] .lh-product').count())===10);
- check("stocked-category-shortcuts",(await page.locator('.lh-categories a').count())>100);
+ const home=(await (await page.request.get(site+'/storefront/home')).json());
+ const catalog=(await (await page.request.get(site+'/storefront/catalog?category=gsp-cat-1')).json());
+ const roots=new Set(catalog.navigation.filter(c=>!c.parent_id).map(c=>c.id));
+ check("stocked-root-category-shortcuts",home.categories.length>0&&home.categories.every(c=>roots.has(c.id)&&c.count>0)&&(await page.locator('.lh-categories a').count())===home.categories.length);
  await shot("home-desktop");await page.locator('[data-rail="mobile"]').scrollIntoViewIfNeeded();await shot("home-mobile-carousel");
  const examples=[];
  for(const c of cases){
