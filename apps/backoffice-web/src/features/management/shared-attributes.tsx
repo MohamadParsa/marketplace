@@ -577,7 +577,7 @@ function SalesWindowSettings() {
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [key, setKey] = useState(crypto.randomUUID());
-  const allowed = can("settings.sales-window", "management");
+  const allowed = can("settings.sales-window");
   return (
     <section className="panel attribute-settings">
       <h2>مرتب‌سازی پرفروش‌ترین</h2>
