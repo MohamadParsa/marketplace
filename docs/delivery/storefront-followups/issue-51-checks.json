@@ -95,5 +95,40 @@
   "issue": 51,
   "implementation_status": "review",
   "build": "passed",
-  "date": "2026-11-23"
+  "lint": "passed",
+  "date": "2026-11-23",
+  "public_checks": [
+    {
+      "id": "plp-grid-stable-during-sort",
+      "pass": true
+    },
+    {
+      "id": "plp-no-inflow-loading-row",
+      "pass": true
+    },
+    {
+      "id": "plp-error-clears-progress",
+      "pass": true
+    },
+    {
+      "id": "plp-retry-same-sort",
+      "pass": true
+    },
+    {
+      "id": "search-overlay-absolute",
+      "pass": true
+    },
+    {
+      "id": "search-completes",
+      "pass": true
+    },
+    {
+      "id": "mobile-filter-overlay-and-busy",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ]
 }

@@ -172,3 +172,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 [Switch مشترک و فهرست پوشش](../delivery/storefront-followups/issue-49-verification.md) به `storefront-switches.cjs` (۲۰کنترل) و رگرسیون `plp-filters.cjs` (۲۳کنترل) وصل است؛ تأیید خرید فقط fixture مرورگر و بدون write مالی تست شد.
 
 تحویل انتخاب #45تا#49: هر پنج Issue با کامنت پایان و شواهد بسته، سورس/مدارک روی main و هر۵ job CI در PR متناظر موفق است. شاخص JSON صف وضعیت done این پنج و todo کارهای #50تا#54 را جدا نگه می‌دارد؛ تأیید سند همچنان از اجرای قابلیت مستقل است.
+
+## اجرای UX-06تا08 — #50تا#52
+
+[چیپ مرتب‌سازی](../delivery/storefront-followups/issue-50-verification.md) ← `sort-chips.cjs` و۸کنترل؛ [بارگذاری مشترک](../delivery/storefront-followups/issue-51-verification.md) ← `stable-progress.cjs` و `public-progress.cjs` با۳۰کنترل؛ [محتوای PDP](../delivery/storefront-followups/issue-52-verification.md) ← `pdp-read-more.cjs` با۱۹کنترل. تست‌های مالی این تغییر فقط fixture مرورگرند؛ شواهد اجرای UI از تأیید پرداخت واقعی جداست. سورس هر کار در نقشه کامیت ثبت شد؛ تأیید سند مستقل می‌ماند.
