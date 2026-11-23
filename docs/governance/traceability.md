@@ -153,7 +153,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 
 ## صف تجربه storefront — CV-SF-UX-01 تا10
 
-[۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا todo و منتظر انتخاب مالک است؛ Issueهای #45تا#54 هنگام ثبت باز و اساین به eliassarband بودند؛ وضعیت جاری در فهرست ماشین‌خوان است. سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
+[۱۰شرح مستقل و مرز مسئولیت](../delivery/storefront-followups/ux-followups.md) ← [فهرست ماشین‌خوان](../delivery/storefront-followups/ux-task-index.json) ← [۱۰سناریوی مستند](../bdd/features/experiences/storefront-ux-followups.feature). هر تسک۴AC دارد. وضعیت اجرا در زمان ثبت todo و منتظر انتخاب مالک بود؛ Issueهای #45تا#54 هنگام ثبت باز و اساین به eliassarband بودند؛ وضعیت جاری در فهرست ماشین‌خوان است. سناریوها اجرا یا passed اعلام نشده‌اند. جزئیات سنجه به SFUX-Q01 وصل‌اند؛ قواعد R20 کاتالوگ و تحویل‌های #41/#42 تکرار یا باز نمی‌شوند.
 
 ## اجرای UX-01 — #45
 
@@ -182,3 +182,5 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای UX-09/10 — #53/#54
 
 [قالب متن ارسال #53](../delivery/storefront-followups/issue-53-verification.md) ← `dispatch-wording.cjs`،۱۱کنترل؛ [چیپ‌های تنوع #54](../delivery/storefront-followups/issue-54-verification.md) ← `dense-variant-chips.cjs` با۲۳ و `real-gold-variants.cjs` با۵کنترل خواندنی واقعی. رگرسیون۲۳کنترلی مسیر خرید نیز موفق است؛ هیچ تغییر مدل مالی/قیمت طلا/تقویم یا write سفارش در این تحویل نیست.
+
+#53/#54 در PR #61 پس از هر۵ job موفق CI ادغام و با کامنت بسته شدند. هر۱۰تسک UX #45تا#54 done و مدارک/سورس روی main و D:\Cherriva همگام‌اند؛ تأیید سند همچنان از done مستقل است.

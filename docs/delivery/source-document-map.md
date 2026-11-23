@@ -88,4 +88,4 @@
 - #53: سورس و مدرک اولیه [fec61ea](https://github.com/MohamadParsa/marketplace/commit/fec61eac457bdbac0901d43e2464f9b808ededa9)؛ [گزارش/تصاویر](storefront-followups/issue-53-verification.md).
 - #54: سورس و مدرک اولیه [964824d](https://github.com/MohamadParsa/marketplace/commit/964824df0a40d7c5bdb3abcb7256613ccff0f982)؛ [گزارش/تصاویر](storefront-followups/issue-54-verification.md).
 
-۳۹کنترل جدید و۲۳رگرسیون موفق، build/lint موفق؛ وضعیت CI/ادغام و بسته‌شدن جدا تکمیل می‌شود.
+۳۹کنترل جدید و۲۳رگرسیون موفق و build/lint موفق؛ هر۵ job CI در PR #61 موفق بود و merge acac083ed0f291da7290a50c16332fb48950f289 روی main است. هر دو Issue با کامنت بسته‌اند؛ آخرین کد اجرایی 964824df0a40d7c5bdb3abcb7256613ccff0f982 است.

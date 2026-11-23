@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-010, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #54
@@ -38,3 +38,7 @@ API موجود برای محور unit را نیز برمی‌گرداند؛ فق
 ## رگرسیون مسیر خرید
 
 ۲۳کنترل موجود [stable-progress.cjs](../../../tests/e2e/stable-progress.cjs) روی سورس جدید موفق شد؛ انتخاب تنوع، قطع ارتباط/تلاش دوباره سبد، آدرس، wizard، رضایت، واریز fixture، reduced-motion و نوار قابل‌مشاهده هنگام اسکرول پوشش داده شدند. [نتیجه ماشین‌خوان](issue-54-regression-checks.json) و [تصویر تازه رگرسیون](../../../output/playwright/issue-54/regression/pdp-loading-desktop.png) جدا ثبت‌اند؛ تصاویر تاریخی #51 به نسخه قبلی بازگردانده شدند. مجموع کنترل‌های این تحویل:۳۹کنترل جدید و۲۳رگرسیون، همگی موفق.
+
+## تحویل نهایی
+
+[PR #61](https://github.com/MohamadParsa/marketplace/pull/61) با هر۵ job موفق CI شامل race/vet و merge `acac083ed0f291da7290a50c16332fb48950f289` با `[skip ci]` ادغام شد. Issue #54 با کامنت شواهد بسته است؛ سورس D:\Cherriva و main همگام‌اند و نسخه محلی اجراست. انتشار لیارا انجام نشده است.

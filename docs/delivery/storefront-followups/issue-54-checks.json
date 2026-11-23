@@ -120,8 +120,12 @@
     }
   ],
   "issue": 54,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "build": "passed",
   "lint": "passed",
-  "date": "2026-11-23"
+  "date": "2026-11-23",
+  "pull_request": 61,
+  "merge_commit": "acac083ed0f291da7290a50c16332fb48950f289",
+  "issue_state": "closed",
+  "ci": "5-jobs-passed"
 }

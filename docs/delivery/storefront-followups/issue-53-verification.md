@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-UX-009, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 ---
 
 # نتیجه #53
@@ -29,3 +29,7 @@ implementation_status: review
 build/typecheck و lint موفق؛ [۱۱کنترل مرورگر](../../../tests/e2e/dispatch-wording.cjs) برای صفر/یک/۱۲، انتخاب سلر و Refresh، سبد/ارسال/خلاصه quote، حفظ محاسبه حمل و نبود عبارت قدیمی، موبایل۳۹۰ و نبود runtime pageerror موفق است. پاسخ‌های خصوصی و عرضه‌ها fixture شبکه مرورگرند؛ هیچ سفارش/واریز یا تغییر داده کاتالوگ در مقصد ثبت نشد.
 
 [دسکتاپ](../../../output/playwright/issue-53/dispatch-desktop.png) · [موبایل](../../../output/playwright/issue-53/dispatch-mobile.png) · [شرح و AC](tasks/cv-sf-ux-09-storefront-dispatch-wording.md). کد در D:\Cherriva؛ انتشار لیارا با پارساست؛ نتیجه ادغام/CI جدا ثبت می‌شود.
+
+## تحویل نهایی
+
+[PR #61](https://github.com/MohamadParsa/marketplace/pull/61) با هر۵ job موفق CI شامل race/vet و merge `acac083ed0f291da7290a50c16332fb48950f289` با `[skip ci]` ادغام شد. Issue #53 با کامنت شواهد بسته است؛ سورس D:\Cherriva و main همگام‌اند و نسخه محلی اجراست. انتشار لیارا انجام نشده است.

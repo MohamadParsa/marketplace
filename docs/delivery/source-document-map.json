@@ -170,8 +170,10 @@
       "documentation_commit": "fec61eac457bdbac0901d43e2464f9b808ededa9",
       "verification": "docs/delivery/storefront-followups/issue-53-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 61,
+      "merge_commit": "acac083ed0f291da7290a50c16332fb48950f289"
     },
     {
       "issue": 54,
@@ -179,8 +181,10 @@
       "documentation_commit": "964824df0a40d7c5bdb3abcb7256613ccff0f982",
       "verification": "docs/delivery/storefront-followups/issue-54-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 61,
+      "merge_commit": "acac083ed0f291da7290a50c16332fb48950f289"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

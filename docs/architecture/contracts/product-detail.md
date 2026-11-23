@@ -71,9 +71,9 @@ JSON عمومی ETag از بدنه و `public,no-cache` دارد؛ تغییر م
 
 [قرارداد کد chr و slug](../../delivery/storefront-followups/public-catalog-urls.md) و [پیاده‌سازی/شواهد](../../delivery/storefront-followups/issue-42-verification.md): URL جدید canonical است؛ ID داخلی، درخت/انتساب مستقیم و selection API حفظ می‌شوند. alias قدیمی HTML فقط پس از visibility یک301 مستقیم می‌گیرد؛ API و POST redirect نمی‌شوند.
 
-## صف اصلاحات تجربه — هنوز اجرا نشده
+## صف اصلاحات تجربه — تحویل‌شده
 
-[صف CV-SF-UX-01تا10](../../delivery/storefront-followups/ux-followups.md) نیازمندی‌های جدید۲۳نوامبر را جدا ثبت می‌کند؛ افزودن sort پرفروش‌ترین، فیلترها و اصلاحات نمایش فقط پس از انتخاب مالک و اجرای Issue وارد قرارداد اجرایی می‌شوند. رفتار فعلی این قرارداد با ثبت تسک عوض نشده است.
+[صف CV-SF-UX-01تا10](../../delivery/storefront-followups/ux-followups.md) با انتخاب صریح مالک اجرا، آزموده و روی main ادغام شد؛ هر۱۰ Issue با کامنت بسته‌اند. شواهد هر اصلاح و مرز آن در گزارش متناظر ثبت است؛ تکمیل این صف، اعلام تکمیل سرویس‌های تعامل/مجوز یا اتصال مالی واقعی نیست.
 
 ## اجرای اصلاحات #51 و #52 — ۲۰۲۶-۱۱-۲۳
 

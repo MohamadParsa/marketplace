@@ -49,8 +49,12 @@
   "all_private_responses_browser_fixtures": true,
   "no_order_or_payment_writes": true,
   "issue": 53,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "build": "passed",
   "date": "2026-11-23",
-  "lint": "passed"
+  "lint": "passed",
+  "pull_request": 61,
+  "merge_commit": "acac083ed0f291da7290a50c16332fb48950f289",
+  "issue_state": "closed",
+  "ci": "5-jobs-passed"
 }
