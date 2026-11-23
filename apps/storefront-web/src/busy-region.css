@@ -1,0 +1,89 @@
+.sf-busy-region {
+  position: relative;
+  min-width: 0;
+}
+.sf-progress-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  border-radius: inherit;
+  background: rgba(255, 250, 252, 0.45);
+  cursor: progress;
+  overflow: hidden;
+  pointer-events: auto;
+}
+.sf-progress-bar {
+  position: sticky;
+  top: 6px;
+  height: 4px;
+  width: 100%;
+  background: #f6dbe3;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.sf-progress-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 36%;
+  border-radius: inherit;
+  background: var(--cherry, #b51f46);
+  animation: sf-progress 1.2s ease-in-out infinite;
+}
+@keyframes sf-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(310%);
+  }
+}
+.sf-progress-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.sf-loading-placeholder {
+  min-height: 180px;
+}
+.sf-skeleton-lines {
+  padding: 28px 18px;
+  display: grid;
+  gap: 18px;
+}
+.sf-skeleton-lines i {
+  height: 20px;
+  border-radius: 8px;
+  background: #f1e9ed;
+  width: 75%;
+}
+.sf-skeleton-lines i:nth-child(2) {
+  width: 90%;
+}
+.sf-skeleton-lines i:nth-child(3) {
+  width: 55%;
+}
+.purchase-control > .sf-progress-overlay {
+  background: rgba(255, 255, 255, 0.18);
+}
+.search-popup {
+  min-height: 125px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-progress-bar::after {
+    animation: none;
+    transform: translateX(90%);
+  }
+}
+
+/* An enclosing area already owns the progress during a dependent fetch. */
+.sf-busy-region[aria-busy="true"] .purchase-control > .sf-progress-overlay,
+.sf-busy-region[aria-busy="true"]
+  > .sf-busy-content
+  .sf-loading-placeholder
+  > .sf-progress-overlay {
+  display: none;
+}

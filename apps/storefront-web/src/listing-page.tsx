@@ -1,3 +1,4 @@
+import { BusyRegion } from "./busy-region";
 import { ToggleSwitch } from "./toggle-switch";
 import { PriceRangeFilter, type PriceRange } from "./price-range-filter";
 import { AttributeFilter } from "./attribute-filter";
@@ -336,115 +337,115 @@ export function ListingPage({ url }: { url: string }) {
                 ))}
               </nav>
             )}
-            <div className="plp-layout">
-              {desktop && data && (
-                <aside className="plp-filters" aria-label="فیلتر کالاها">
-                  {filters}
-                </aside>
-              )}
-              <section className="plp-results" aria-label="فهرست محصولات">
-                <div className="plp-toolbar">
-                  {!desktop && (
-                    <button
-                      className="plp-filter-toggle"
-                      onClick={() => setFiltersOpen(true)}
-                      disabled={!data}
-                      aria-expanded={filtersOpen}
-                    >
-                      فیلترها
-                    </button>
-                  )}
-                  <ChoiceGroup
-                    label="مرتب‌سازی کالاها"
-                    appearance="chips"
-                    value={params.get("sort") ?? "default"}
-                    options={(
-                      data?.sort_options ?? Object.keys(sortLabels)
-                    ).map((v) => ({ value: v, label: sortLabels[v] }))}
-                    onChange={(v) => change((p) => p.set("sort", v))}
-                  />
-                  {current.pathname === "/search" && data && (
+            <BusyRegion busy={loading} label="دریافت کالاها">
+              <div className="plp-layout">
+                {desktop && data && (
+                  <aside className="plp-filters" aria-label="فیلتر کالاها">
+                    {filters}
+                  </aside>
+                )}
+                <section className="plp-results" aria-label="فهرست محصولات">
+                  <div className="plp-toolbar">
+                    {!desktop && (
+                      <button
+                        className="plp-filter-toggle"
+                        onClick={() => setFiltersOpen(true)}
+                        disabled={!data}
+                        aria-expanded={filtersOpen}
+                      >
+                        فیلترها
+                      </button>
+                    )}
                     <ChoiceGroup
-                      label="دسته نتایج جست‌وجو"
-                      value={params.get("category") ?? ""}
-                      options={[
-                        { value: "", label: "همه دسته‌ها" },
-                        ...data.navigation.map((c) => ({
-                          value: c.id,
-                          label: c.name,
-                        })),
-                      ]}
-                      onChange={(v) =>
-                        change((p) => {
-                          v ? p.set("category", v) : p.delete("category");
-                          for (const k of [...p.keys()])
-                            if (k.startsWith("attr.")) p.delete(k);
-                        })
-                      }
+                      label="مرتب‌سازی کالاها"
+                      appearance="chips"
+                      value={params.get("sort") ?? "default"}
+                      options={(
+                        data?.sort_options ?? Object.keys(sortLabels)
+                      ).map((v) => ({ value: v, label: sortLabels[v] }))}
+                      onChange={(v) => change((p) => p.set("sort", v))}
                     />
+                    {current.pathname === "/search" && data && (
+                      <ChoiceGroup
+                        label="دسته نتایج جست‌وجو"
+                        value={params.get("category") ?? ""}
+                        options={[
+                          { value: "", label: "همه دسته‌ها" },
+                          ...data.navigation.map((c) => ({
+                            value: c.id,
+                            label: c.name,
+                          })),
+                        ]}
+                        onChange={(v) =>
+                          change((p) => {
+                            v ? p.set("category", v) : p.delete("category");
+                            for (const k of [...p.keys()])
+                              if (k.startsWith("attr.")) p.delete(k);
+                          })
+                        }
+                      />
+                    )}
+                  </div>
+                  {!data && loading ? (
+                    <div className="plp-grid" aria-hidden="true">
+                      {Array.from({ length: 8 }, (_, i) => (
+                        <div className="plp-skeleton" key={i} />
+                      ))}
+                    </div>
+                  ) : data?.products.length ? (
+                    <div className="plp-grid" aria-busy={loading}>
+                      {data.products.map((card) => (
+                        <ProductCard card={card} key={card.id} />
+                      ))}
+                    </div>
+                  ) : !loading ? (
+                    <div className="plp-empty">
+                      <Icon name="search" />
+                      <h2>کالایی با این شرایط پیدا نشد.</h2>
+                      <p>
+                        {data?.children.length
+                          ? "می‌توانید زیرشاخه‌های بالا را بررسی کنید."
+                          : "فیلترها یا عبارت جست‌وجو را تغییر دهید."}
+                      </p>
+                      <button onClick={() => navigate(current.pathname)}>
+                        پاک کردن جست‌وجو و فیلترها
+                      </button>
+                    </div>
+                  ) : null}
+                  {data && data.total_pages > 1 && (
+                    <nav className="plp-pagination" aria-label="صفحه‌بندی">
+                      <button
+                        disabled={data.page <= 1}
+                        onClick={() => {
+                          const p = new URLSearchParams(current.search);
+                          p.set("page", String(data.page - 1));
+                          navigate(current.pathname + "?" + p);
+                        }}
+                      >
+                        قبلی
+                      </button>
+                      <span>
+                        صفحه {new Intl.NumberFormat("fa-IR").format(data.page)}{" "}
+                        از{" "}
+                        {new Intl.NumberFormat("fa-IR").format(
+                          data.total_pages,
+                        )}
+                      </span>
+                      <button
+                        disabled={data.page >= data.total_pages}
+                        onClick={() => {
+                          const p = new URLSearchParams(current.search);
+                          p.set("page", String(data.page + 1));
+                          navigate(current.pathname + "?" + p);
+                        }}
+                      >
+                        بعدی
+                      </button>
+                    </nav>
                   )}
-                </div>
-                {loading && (
-                  <p role="status" className="plp-progress">
-                    در حال دریافت کالاها…
-                  </p>
-                )}
-                {!data && loading ? (
-                  <div className="plp-grid" aria-hidden="true">
-                    {Array.from({ length: 8 }, (_, i) => (
-                      <div className="plp-skeleton" key={i} />
-                    ))}
-                  </div>
-                ) : data?.products.length ? (
-                  <div className="plp-grid" aria-busy={loading}>
-                    {data.products.map((card) => (
-                      <ProductCard card={card} key={card.id} />
-                    ))}
-                  </div>
-                ) : !loading ? (
-                  <div className="plp-empty">
-                    <Icon name="search" />
-                    <h2>کالایی با این شرایط پیدا نشد.</h2>
-                    <p>
-                      {data?.children.length
-                        ? "می‌توانید زیرشاخه‌های بالا را بررسی کنید."
-                        : "فیلترها یا عبارت جست‌وجو را تغییر دهید."}
-                    </p>
-                    <button onClick={() => navigate(current.pathname)}>
-                      پاک کردن جست‌وجو و فیلترها
-                    </button>
-                  </div>
-                ) : null}
-                {data && data.total_pages > 1 && (
-                  <nav className="plp-pagination" aria-label="صفحه‌بندی">
-                    <button
-                      disabled={data.page <= 1}
-                      onClick={() => {
-                        const p = new URLSearchParams(current.search);
-                        p.set("page", String(data.page - 1));
-                        navigate(current.pathname + "?" + p);
-                      }}
-                    >
-                      قبلی
-                    </button>
-                    <span>
-                      صفحه {new Intl.NumberFormat("fa-IR").format(data.page)} از{" "}
-                      {new Intl.NumberFormat("fa-IR").format(data.total_pages)}
-                    </span>
-                    <button
-                      disabled={data.page >= data.total_pages}
-                      onClick={() => {
-                        const p = new URLSearchParams(current.search);
-                        p.set("page", String(data.page + 1));
-                        navigate(current.pathname + "?" + p);
-                      }}
-                    >
-                      بعدی
-                    </button>
-                  </nav>
-                )}
-              </section>
-            </div>
+                </section>
+              </div>
+            </BusyRegion>
             {data?.category?.description && (
               <section className="plp-description">
                 <h2>درباره {data.category.name}</h2>
@@ -475,7 +476,9 @@ export function ListingPage({ url }: { url: string }) {
               >
                 بستن فیلترها
               </button>
-              {filters}
+              <BusyRegion busy={loading} label="دریافت فیلترها">
+                {filters}
+              </BusyRegion>
               <button
                 className="lh-primary"
                 onClick={() => setFiltersOpen(false)}

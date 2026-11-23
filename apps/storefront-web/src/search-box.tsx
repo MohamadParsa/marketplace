@@ -1,3 +1,4 @@
+import { BusyOverlay } from "./busy-region";
 import { useEffect, useId, useRef, useState } from "react";
 import { navigate } from "./navigation";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
@@ -138,7 +139,8 @@ export function SearchBox() {
         }}
       />
       {open && query.trim() && (
-        <div className="search-popup">
+        <div className="search-popup" aria-busy={loading}>
+          {loading && <BusyOverlay label="جست‌وجوی کالاها" />}
           <div id={id} role="listbox" aria-label="پیشنهادهای جست‌وجو">
             {items.map((item, i) => (
               <a
@@ -155,13 +157,14 @@ export function SearchBox() {
               </a>
             ))}
           </div>
-          {loading ? (
-            <p role="status">در حال جست‌وجو…</p>
-          ) : error ? (
-            <p role="status">پیشنهادها دریافت نشد؛ همه نتایج را بررسی کنید.</p>
-          ) : !items.length ? (
-            <p role="status">پیشنهادی پیدا نشد.</p>
-          ) : null}
+          {!loading &&
+            (error ? (
+              <p role="status">
+                پیشنهادها دریافت نشد؛ همه نتایج را بررسی کنید.
+              </p>
+            ) : !items.length ? (
+              <p role="status">پیشنهادی پیدا نشد.</p>
+            ) : null)}
           <button type="submit" className="search-all">
             مشاهده همه نتایج برای «{query}»
           </button>

@@ -1,3 +1,4 @@
+import { BusyRegion } from "./busy-region";
 import { useEffect, useId, useRef } from "react";
 export function Icon({
   name,
@@ -51,16 +52,20 @@ export function Modal({
   children,
   onClose,
   wide = false,
+  busy = false,
   className,
 }: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
   wide?: boolean;
+  busy?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const isBusy = () =>
+    busy || !!ref.current?.querySelector('[aria-busy="true"]');
   useEffect(() => {
     const dialog = ref.current!;
     dialog.showModal();
@@ -76,20 +81,29 @@ export function Modal({
       ref={ref}
       className={["modal", wide && "wide", className].filter(Boolean).join(" ")}
       onCancel={(event) => {
-        if (!event.defaultPrevented) onClose();
+        if (isBusy()) event.preventDefault();
+        else if (!event.defaultPrevented) onClose();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (!isBusy() && e.target === e.currentTarget) onClose();
       }}
       aria-labelledby={titleId}
     >
-      <div className="modal-head">
-        <h2 id={titleId}>{title}</h2>
-        <button className="icon-button" aria-label="بستن" onClick={onClose}>
-          <Icon name="close" />
-        </button>
-      </div>
-      {children}
+      <BusyRegion busy={busy}>
+        <div className="modal-head">
+          <h2 id={titleId}>{title}</h2>
+          <button
+            className="icon-button"
+            aria-label="بستن"
+            onClick={() => {
+              if (!isBusy()) onClose();
+            }}
+          >
+            <Icon name="close" />
+          </button>
+        </div>
+        {children}
+      </BusyRegion>
     </dialog>
   );
 }

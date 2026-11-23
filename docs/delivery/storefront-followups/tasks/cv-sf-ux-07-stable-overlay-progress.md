@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [FEAT-SF-001, API-PLP-SEARCH-001, API-PRODUCT-DETAIL-001]
 approved_by: []
-implementation_status: todo
+implementation_status: review
 priority: P1
 ---
 
@@ -65,3 +65,7 @@ Issue: [#51](https://github.com/MohamadParsa/marketplace/issues/51) · اسای�
 
 - [سناریوی رفتاری مستند](../../../bdd/features/experiences/storefront-ux-followups.feature): سند برنامه‌ریزی است و اجرای موفق آزمون محسوب نمی‌شود.
 - پس از اجازه شروع: تغییر محدود، آزمون متناسب و عکس/گزارش طرح A، کامیت و پوش سورس/مدارک، سپس کامنت شواهد و بستن Issue متناظر. انتشار لیارا با پارساست؛ ساخت این سند به معنی انجام یا بسته‌شدن تسک نیست.
+
+## شواهد اجرا
+
+[پوشش و تست‌های #51](../issue-51-verification.md)؛ اجرای منتخب مالک در۲۳نوامبر.
