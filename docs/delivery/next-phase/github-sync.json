@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "owner": "eliassarband",
-  "execution_started": false,
+  "execution_started": true,
   "items": {
     "CV-NEXT-01": {
       "number": 62,
@@ -114,8 +114,9 @@
     "CV-NEXT-19": {
       "number": 80,
       "url": "https://github.com/MohamadParsa/marketplace/issues/80",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done"
     },
     "CV-NEXT-20": {
       "number": 81,
@@ -132,26 +133,30 @@
     "CV-NEXT-22": {
       "number": 83,
       "url": "https://github.com/MohamadParsa/marketplace/issues/83",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done"
     },
     "CV-NEXT-23": {
       "number": 84,
       "url": "https://github.com/MohamadParsa/marketplace/issues/84",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done"
     },
     "CV-NEXT-24": {
       "number": 85,
       "url": "https://github.com/MohamadParsa/marketplace/issues/85",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done"
     },
     "CV-NEXT-25": {
       "number": 86,
       "url": "https://github.com/MohamadParsa/marketplace/issues/86",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done"
     },
     "CV-NEXT-26": {
       "number": 87,
@@ -183,5 +188,14 @@
       "state": "open",
       "assignee": "eliassarband"
     }
-  }
+  },
+  "authorized_issue_numbers": [
+    80,
+    83,
+    84,
+    85,
+    86
+  ],
+  "pull_request": 92,
+  "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
 }

@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [DEL-NEXT-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P1
 wave: W1
 execution_authorized: true
@@ -14,7 +14,7 @@ execution_authorized: true
 
 # CV-NEXT-24 — رفع اسکرول عمودی و دسترسی به تمام گره‌های منو
 
-Issue: [#85](https://github.com/MohamadParsa/marketplace/issues/85) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب صریح مالک؛ پیاده‌سازی و بررسی در حال تحویل.
+Issue: [#85](https://github.com/MohamadParsa/marketplace/issues/85) · اساین: `eliassarband` · وضعیت GitHub: **closed** · اجرا با انتخاب صریح مالک تکمیل و در PR #92 ادغام شد؛ کامنت شواهد ثبت شده است.
 
 ## مسئله و نتیجه بیزینسی
 

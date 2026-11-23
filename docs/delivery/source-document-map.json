@@ -193,8 +193,10 @@
       "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
       "verification": "docs/delivery/next-phase/issue-80-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "issue": 83,
@@ -203,8 +205,10 @@
       "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
       "verification": "docs/delivery/next-phase/issue-83-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "issue": 84,
@@ -213,8 +217,10 @@
       "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
       "verification": "docs/delivery/next-phase/issue-84-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "issue": 85,
@@ -223,8 +229,10 @@
       "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
       "verification": "docs/delivery/next-phase/issue-85-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "issue": 86,
@@ -233,8 +241,10 @@
       "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
       "verification": "docs/delivery/next-phase/issue-86-verification.md",
       "source_tree_matches_documentation_revision": true,
-      "issue_state": "open",
-      "implementation_status": "review"
+      "issue_state": "closed",
+      "implementation_status": "done",
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

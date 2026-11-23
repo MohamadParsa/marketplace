@@ -192,3 +192,5 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## انتخاب‌های #80/#83/#84/#85/#86
 
 [فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. فقط پنج کار مجاز شدند؛ سایر۲۵کار اجرا نشده‌اند.
+
+تحویل این پنج انتخاب در [PR #92](https://github.com/MohamadParsa/marketplace/pull/92) پس از هر۵ job موفق CI ادغام شد؛ پنج Issue با کامنت شواهد closed و implementation_status آن‌ها done است. سایر۲۵کار این برنامه todo/open باقی‌اند؛ اسناد همچنان in-review و انتشار لیارا جداست.

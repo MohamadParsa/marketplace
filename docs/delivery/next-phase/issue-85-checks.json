@@ -111,9 +111,39 @@
     }
   ],
   "issue": 85,
-  "implementation_status": "review",
+  "implementation_status": "done",
   "build": "passed",
   "lint": "passed",
   "date": "2026-11-23",
-  "shared_suite": "category-menu-hover-scroll"
+  "shared_suite": "category-menu-hover-scroll",
+  "issue_state": "closed",
+  "pull_request": 92,
+  "merge_commit": "f17fb49995647431b6dbe519aff347151d710068",
+  "ci": [
+    {
+      "name": "seller-portal-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45243146806/job/137932842727"
+    },
+    {
+      "name": "backoffice-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45243146806/job/137932842678"
+    },
+    {
+      "name": "api",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45243146806/job/137932842608"
+    },
+    {
+      "name": "contracts",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45243146806/job/137932842598"
+    },
+    {
+      "name": "storefront-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45243146806/job/137932842021"
+    }
+  ]
 }

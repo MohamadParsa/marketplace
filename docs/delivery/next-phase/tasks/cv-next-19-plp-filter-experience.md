@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-23
 related: [DEL-NEXT-001]
 approved_by: []
-implementation_status: review
+implementation_status: done
 priority: P2
 wave: W1
 execution_authorized: true
@@ -14,7 +14,7 @@ execution_authorized: true
 
 # CV-NEXT-19 — بازبینی و اصلاح نمایش فیلترهای PLP
 
-Issue: [#80](https://github.com/MohamadParsa/marketplace/issues/80) · اساین: `eliassarband` · وضعیت GitHub: **open** · شروع اجرا: انتخاب صریح مالک؛ پیاده‌سازی و بررسی در حال تحویل.
+Issue: [#80](https://github.com/MohamadParsa/marketplace/issues/80) · اساین: `eliassarband` · وضعیت GitHub: **closed** · اجرا با انتخاب صریح مالک تکمیل و در PR #92 ادغام شد؛ کامنت شواهد ثبت شده است.
 
 ## مسئله و نتیجه بیزینسی
 

@@ -4,7 +4,7 @@
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "selected-80-83-84-85-86-in-review",
+  "execution": "selected-80-83-84-85-86-done-awaiting-next-owner-selection",
   "items": [
     {
       "n": 1,
@@ -384,13 +384,15 @@
       "wave": "W1",
       "kind": "design-then-implementation",
       "deps": [],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 80,
       "url": "https://github.com/MohamadParsa/marketplace/issues/80",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "n": 20,
@@ -442,13 +444,15 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 83,
       "url": "https://github.com/MohamadParsa/marketplace/issues/83",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "n": 23,
@@ -460,13 +464,15 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 84,
       "url": "https://github.com/MohamadParsa/marketplace/issues/84",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "n": 24,
@@ -478,13 +484,15 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 85,
       "url": "https://github.com/MohamadParsa/marketplace/issues/85",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "n": 25,
@@ -496,13 +504,15 @@
       "wave": "W1",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 86,
       "url": "https://github.com/MohamadParsa/marketplace/issues/86",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "pull_request": 92,
+      "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
     },
     {
       "n": 26,
