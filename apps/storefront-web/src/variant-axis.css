@@ -1,0 +1,42 @@
+.pdp-axes .pdp-variant-axis {
+  min-width: 0;
+  scroll-margin-top: 24px;
+}
+.pdp-variant-axis legend {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.pdp-axis-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.pdp-axis-options .pdp-axis-chip {
+  min-width: 0;
+  min-height: 44px;
+  line-height: 1.6;
+  margin: 0;
+  padding: 8px 10px;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.pdp-axis-chip bdi {
+  unicode-bidi: plaintext;
+}
+.pdp-axes .pdp-axis-toggle {
+  display: block;
+  min-height: 44px;
+  margin: 10px 0 0;
+  background: #fff5f8;
+  color: #9d193c;
+  border-color: #e9c5d0;
+  cursor: pointer;
+}
+.pdp-axis-chip:focus-visible,
+.pdp-axis-toggle:focus-visible {
+  outline: 2px solid #b51f46;
+  outline-offset: 3px;
+}

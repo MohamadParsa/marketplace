@@ -1,3 +1,4 @@
+import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
 import { BusyRegion, LoadingPlaceholder } from "./busy-region";
@@ -59,7 +60,7 @@ type Detail = {
   navigation: Nav[];
   content: Content;
   gallery: string[];
-  axes: { id: string; name: string; options: string[] }[];
+  axes: Axis[];
   variants: {
     id: string;
     values: { attribute_id: string; value: string }[];
@@ -416,40 +417,24 @@ export function ProductPage({ url }: { url: string }) {
                   )}
                   <div className="pdp-axes">
                     {data.axes.map((a) => (
-                      <fieldset key={a.id}>
-                        <legend>
-                          {a.name}:{" "}
-                          <b>
-                            {selected?.values.find(
-                              (v) => v.attribute_id === a.id,
-                            )?.value ?? "انتخاب نشده"}
-                          </b>
-                        </legend>
-                        {a.options.map((value) => (
-                          <button
-                            key={value}
-                            disabled={
-                              loading ||
-                              !data.variants.some((v) =>
-                                v.values.some(
-                                  (x) =>
-                                    x.attribute_id === a.id &&
-                                    x.value === value,
-                                ),
-                              )
-                            }
-                            aria-pressed={
-                              selected?.values.some(
-                                (v) =>
-                                  v.attribute_id === a.id && v.value === value,
-                              ) ?? false
-                            }
-                            onClick={() => selectAxis(a.id, value)}
-                          >
-                            {value}
-                          </button>
-                        ))}
-                      </fieldset>
+                      <VariantAxis
+                        key={a.id}
+                        axis={a}
+                        selected={
+                          selected?.values.find((v) => v.attribute_id === a.id)
+                            ?.value
+                        }
+                        disabled={loading}
+                        isDefined={(value) =>
+                          data.variants.some((v) =>
+                            v.values.some(
+                              (x) =>
+                                x.attribute_id === a.id && x.value === value,
+                            ),
+                          )
+                        }
+                        onSelect={(value) => selectAxis(a.id, value)}
+                      />
                     ))}
                   </div>
                   {!!data.features.length && (
@@ -570,9 +555,7 @@ export function ProductPage({ url }: { url: string }) {
                             : "ناموجود"}
                       </span>
                     </div>
-                    <p>
-                      {dispatchTime(o.lead_days)}
-                    </p>
+                    <p>{dispatchTime(o.lead_days)}</p>
                     <b>
                       {o.available && o.price != null
                         ? money(o.price) + " تومان"
