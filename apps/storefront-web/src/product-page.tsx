@@ -1,3 +1,4 @@
+import { ExpandableContent } from "./expandable-content";
 import { BusyRegion, LoadingPlaceholder } from "./busy-region";
 import { setPageCanonical } from "./page-canonical";
 import { PurchaseControl } from "./purchase-control";
@@ -598,79 +599,85 @@ export function ProductPage({ url }: { url: string }) {
             </nav>
             <section className="pdp-section" id="introduction">
               <h2>معرفی محصول</h2>
-              {content.full_description ? (
-                <div
-                  className="pdp-full-description"
-                  dangerouslySetInnerHTML={{ __html: content.full_description }}
-                />
-              ) : (
-                <p>توضیح تکمیلی هنوز ثبت نشده است.</p>
-              )}
-              <div className="pdp-pros-cons">
-                {content.advantages.length > 0 && (
-                  <div>
-                    <h3>مزایا</h3>
-                    <ul>
-                      {content.advantages.map((s, i) => (
-                        <li key={i}>{s}</li>
-                      ))}
-                    </ul>
-                  </div>
+              <ExpandableContent label="معرفی محصول" resetKey={data.id}>
+                {content.full_description ? (
+                  <div
+                    className="pdp-full-description"
+                    dangerouslySetInnerHTML={{
+                      __html: content.full_description,
+                    }}
+                  />
+                ) : (
+                  <p>توضیح تکمیلی هنوز ثبت نشده است.</p>
                 )}
-                {content.disadvantages.length > 0 && (
-                  <div>
-                    <h3>معایب</h3>
-                    <ul>
-                      {content.disadvantages.map((s, i) => (
-                        <li key={i}>{s}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+                <div className="pdp-pros-cons">
+                  {content.advantages.length > 0 && (
+                    <div>
+                      <h3>مزایا</h3>
+                      <ul>
+                        {content.advantages.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {content.disadvantages.length > 0 && (
+                    <div>
+                      <h3>معایب</h3>
+                      <ul>
+                        {content.disadvantages.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </ExpandableContent>
             </section>
             <section className="pdp-section" id="specifications">
               <h2>مشخصات فنی</h2>
-              <dl className="pdp-specifications">
-                {data.brand && (
-                  <div>
-                    <dt>برند</dt>
-                    <dd>{data.brand.name}</dd>
-                  </div>
-                )}
-                {data.specifications.map((f) => (
-                  <div key={f.attribute_id}>
-                    <dt>{f.name}</dt>
-                    <dd dir="auto">
-                      {f.value} {f.unit}
-                    </dd>
-                  </div>
-                ))}
-                {(["weight", "length", "width", "height"] as const)
-                  .filter((k) => content.shipping[k] != null)
-                  .map((k) => (
-                    <div key={k}>
-                      <dt>
-                        {
-                          {
-                            weight: "وزن حمل",
-                            length: "طول",
-                            width: "عرض",
-                            height: "ارتفاع",
-                          }[k]
-                        }
-                      </dt>
-                      <dd>
-                        {content.shipping[k]?.toLocaleString("fa-IR")}{" "}
-                        {k === "weight"
-                          ? "گرم"
-                          : content.shipping.dimension_unit === "mm"
-                            ? "میلی‌متر"
-                            : "سانتی‌متر"}
+              <ExpandableContent label="مشخصات فنی" resetKey={data.id}>
+                <dl className="pdp-specifications">
+                  {data.brand && (
+                    <div>
+                      <dt>برند</dt>
+                      <dd>{data.brand.name}</dd>
+                    </div>
+                  )}
+                  {data.specifications.map((f) => (
+                    <div key={f.attribute_id}>
+                      <dt>{f.name}</dt>
+                      <dd dir="auto">
+                        {f.value} {f.unit}
                       </dd>
                     </div>
                   ))}
-              </dl>
+                  {(["weight", "length", "width", "height"] as const)
+                    .filter((k) => content.shipping[k] != null)
+                    .map((k) => (
+                      <div key={k}>
+                        <dt>
+                          {
+                            {
+                              weight: "وزن حمل",
+                              length: "طول",
+                              width: "عرض",
+                              height: "ارتفاع",
+                            }[k]
+                          }
+                        </dt>
+                        <dd>
+                          {content.shipping[k]?.toLocaleString("fa-IR")}{" "}
+                          {k === "weight"
+                            ? "گرم"
+                            : content.shipping.dimension_unit === "mm"
+                              ? "میلی‌متر"
+                              : "سانتی‌متر"}
+                        </dd>
+                      </div>
+                    ))}
+                </dl>
+              </ExpandableContent>
             </section>
             <section className="pdp-section" id="reviews">
               <h2>نظرات کاربران</h2>
