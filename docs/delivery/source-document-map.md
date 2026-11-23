@@ -46,3 +46,7 @@
 ## کش و اصلاحات کاتالوگ/پنل — #41
 
 سورس [c2617fc](https://github.com/MohamadParsa/marketplace/commit/c2617fcd72c82fad01a51291360a4189f576f719) و مدارک [63c73ac](https://github.com/MohamadParsa/marketplace/commit/63c73ac2486ed9587da2330439f3cb4bb1463e1f) درخت اجرایی یکسان دارند. [گزارش #41، آزمون‌ها، سرعت، تصاویر و پاک‌سازی](storefront-followups/issue-41-verification.md) مرجع این تحویل محلی است؛ تغییر URL در #42 و انتشار Liara جدا هستند.
+
+## کد chr و slug دسته — #42
+
+سورس [1f4fdd0](https://github.com/MohamadParsa/marketplace/commit/1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b) و مدارک [4a1a6d8](https://github.com/MohamadParsa/marketplace/commit/4a1a6d8720c8f19a8361f1c572ae669efcafed95) درخت اجرایی یکسان دارند. [گزارش، نگاشت، migration و تصاویر](storefront-followups/issue-42-verification.md) شامل dry-run/apply محلی، حفظ داده، repeat/restart و آزمون301 است. انتشار لیارا جداست.

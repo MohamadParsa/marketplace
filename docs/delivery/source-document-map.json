@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "c2617fcd72c82fad01a51291360a4189f576f719",
+  "current_source_commit": "1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b",
   "rows": [
     {
       "issue": 27,
@@ -68,6 +68,13 @@
       "source_commit": "c2617fcd72c82fad01a51291360a4189f576f719",
       "documentation_commit": "63c73ac2486ed9587da2330439f3cb4bb1463e1f",
       "verification": "docs/delivery/storefront-followups/issue-41-verification.md",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 42,
+      "source_commit": "1f4fdd01cafae849b0ff564d7c1c55d1c4bf4d2b",
+      "documentation_commit": "4a1a6d8720c8f19a8361f1c572ae669efcafed95",
+      "verification": "docs/delivery/storefront-followups/issue-42-verification.md",
       "source_tree_matches_documentation_revision": true
     }
   ],
