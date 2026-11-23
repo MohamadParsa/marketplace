@@ -162,7 +162,7 @@ func ParseListingQuery(v url.Values) (ListingQuery, error) {
 	return q, nil
 }
 func catalogNav(w Workspace, c catalog.Category) CatalogNav {
-	n := CatalogNav{ID: c.ID, Name: c.Name, URL: "/category/" + url.PathEscape(c.ID), ParentID: c.ParentID}
+	n := CatalogNav{ID: c.ID, Name: c.Name, URL: CategoryURL(c), ParentID: c.ParentID}
 	if imageAttached(w, c.IconID) {
 		n.IconURL = "/catalog/icons/" + url.PathEscape(c.IconID)
 	}
@@ -284,7 +284,7 @@ func listingCard(w Workspace, p catalog.Product, q ListingQuery) (ListingCard, b
 	if c == nil || p.Status != "published" || !validBrand(w, p.BrandID) {
 		return ListingCard{}, false
 	}
-	card := ListingCard{ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: "/product/" + url.PathEscape(p.ID), Features: []catalog.CardFeature{}}
+	card := ListingCard{ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: ProductURL(p), Features: []catalog.CardFeature{}}
 	if imageAttached(w, p.ImageID) {
 		card.ImageURL = "/catalog/icons/" + url.PathEscape(p.ImageID)
 	}
@@ -495,6 +495,14 @@ func BuildListing(w Workspace, q ListingQuery) (ListingResult, error) {
 	return result, nil
 }
 func (s *Service) PublicListing(ctx context.Context, q ListingQuery) (ListingResult, error) {
+	if q.CategoryID != "" {
+		id, e := s.resolveCatalogToken(ctx, "category", q.CategoryID)
+		if e != nil {
+			return ListingResult{}, e
+		}
+		q.CategoryID = id
+	}
+
 	attrs := map[string][]string{}
 	for k, v := range q.Attributes {
 		attrs[k] = append([]string{}, v...)

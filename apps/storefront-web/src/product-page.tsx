@@ -1,3 +1,4 @@
+import { setPageCanonical } from "./page-canonical";
 import { PurchaseControl } from "./purchase-control";
 import { useCommerce, apiBase } from "./commerce";
 import { Modal } from "./components";
@@ -45,8 +46,10 @@ type Offer = {
 };
 type Detail = {
   id: string;
+  url: string;
   name: string;
   english_name: string;
+  public_code: string;
   brand: { id: string; name: string } | null;
   category: Nav;
   breadcrumbs: Nav[];
@@ -203,6 +206,7 @@ export function ProductPage({ url }: { url: string }) {
 
         setPhoto(0);
         document.title = d.content.seo.meta_title;
+        setPageCanonical(d.url);
         for (const [name, content] of Object.entries({
           ...d.content.seo,
           robots: d.robots,
@@ -226,7 +230,10 @@ export function ProductPage({ url }: { url: string }) {
       .finally(() => {
         if (!abort.signal.aborted) setLoading(false);
       });
-    return () => abort.abort();
+    return () => {
+      abort.abort();
+      setPageCanonical("");
+    };
   }, [url, attempt]);
   const choose = (variant: string, offer?: string) => {
     const u = new URL(url, location.origin);
@@ -403,6 +410,11 @@ export function ProductPage({ url }: { url: string }) {
                   {data.brand?.name ?? data.category.name}
                 </span>
                 <h1>{data.name}</h1>
+                {data.public_code && (
+                  <p className="pdp-public-code" dir="ltr">
+                    {data.public_code}
+                  </p>
+                )}
                 {data.english_name && (
                   <p className="pdp-english" dir="auto">
                     {data.english_name}

@@ -62,6 +62,8 @@ func setStoreContentPolicy(w *Workspace, c Command) error {
 	return ErrNotFound
 }
 func approvedContentFingerprint(p catalog.Product) string {
+	// Public addressing metadata is independent of seller content approval.
+	p.PublicCode = ""
 	p.ContentRevision = nil
 	p.Version = 0
 	p.VariantVersion = 0

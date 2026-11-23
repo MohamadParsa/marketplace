@@ -3,7 +3,7 @@ id: API-PRODUCT-DETAIL-001
 title: قرارداد محتوای محصول، گالری و PDP انتشار اولیه
 status: in-review
 owner: product-owner
-updated: 2026-11-22
+updated: 2026-11-23
 related: [CV-LCH-03, CV-R2-17, API-PLP-SEARCH-001, API-HOMEPAGE-LAUNCH-001]
 approved_by: []
 ---
@@ -66,3 +66,7 @@ JSON عمومی ETag از بدنه و `public,no-cache` دارد؛ تغییر م
 ## اصلاح کنترل خرید — ۲۰۲۶-۱۱-۲۲
 
 [PDP و سبد از یک کنترل مطابق طرح استفاده می‌کنند](purchase-experience.md)؛ شمارنده تعداد واقعی همان عرضه در سبد را نشان می‌دهد و CTA دوم حذف شده است. محورهای صریح دسته همچنان منبع چیپ‌ها هستند؛ سه محصول نمونه محلی در گزارش اصلاح معرفی شده‌اند.
+
+## آدرس عمومی — تکمیل #42
+
+[قرارداد کد chr و slug](../../delivery/storefront-followups/public-catalog-urls.md) و [پیاده‌سازی/شواهد](../../delivery/storefront-followups/issue-42-verification.md): URL جدید canonical است؛ ID داخلی، درخت/انتساب مستقیم و selection API حفظ می‌شوند. alias قدیمی HTML فقط پس از visibility یک301 مستقیم می‌گیرد؛ API و POST redirect نمی‌شوند.

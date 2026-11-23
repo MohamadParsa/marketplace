@@ -3,7 +3,7 @@ id: API-PLP-SEARCH-001
 title: قرارداد فهرست دسته، جست‌وجو و متادیتای PLP
 status: in-review
 owner: product-owner
-updated: 2026-11-21
+updated: 2026-11-23
 related: [CV-LCH-02, CV-R2-16, API-HOMEPAGE-LAUNCH-001, FEAT-SF-001]
 approved_by: []
 ---
@@ -77,3 +77,7 @@ DTO عمومی فقط شناسه/نام/لینک، ویژگی‌های نمای�
 `WEB_SURFACE=storefront` همراه `WEB_ROOT=../storefront-web/build`، مسیرهای HTML متادیتا را فعال می‌کند؛ پنل با سطح backoffice و build خودش جدا اجرا می‌شود. دو فرایند محلی یک PostgreSQL بررسی را مصرف می‌کنند. در Vite توسعه، API proxy کار می‌کند؛ بررسی SEO HTML اولیه با وب‌سرور Go و build واقعی انجام می‌شود، نه تگ افزوده‌شده صرفاً با JS. robots عمومی نسخه بررسی هنوز noindex/nofollow است؛ فعال‌سازی محیط عمومی و backup/restore در گیت #30/#12 باقی‌اند. گارد local/test مخزن بررسی برداشته نشده است.
 
 [تسک #28](../../delivery/initial-launch/tasks/cv-lch-02-plp-search.md) · [مرجع نیازمندی دسته #24](../../delivery/review-v1-1/tasks/cv-r2-16-category-content-seo.md) · [مرجع خانه](homepage-launch.md). PDP، breadcrumb برند و انتخاب فروشنده در #29، و سبد/ارسال/پول در #30 اجرا می‌شوند؛ وجود لینک PDP به معنی تکمیل آن صفحه نیست.
+
+## آدرس عمومی — تکمیل #42
+
+[قرارداد کد chr و slug](../../delivery/storefront-followups/public-catalog-urls.md) و [پیاده‌سازی/شواهد](../../delivery/storefront-followups/issue-42-verification.md): URL جدید canonical است؛ ID داخلی، درخت/انتساب مستقیم و selection API حفظ می‌شوند. alias قدیمی HTML فقط پس از visibility یک301 مستقیم می‌گیرد؛ API و POST redirect نمی‌شوند.

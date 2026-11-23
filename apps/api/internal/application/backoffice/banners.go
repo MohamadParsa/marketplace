@@ -273,7 +273,7 @@ func (s *Service) PublicBanners(ctx context.Context) ([]content.PublicBanner, er
 		result := []content.PublicBanner{}
 		for _, b := range state.Banners {
 			if b.Published != nil && b.Published.Config.Enabled {
-				result = append(result, content.PublicBanner{ID: b.ID, Name: b.Name, Revision: b.Published.Revision, Config: b.Published.Config})
+				result = append(result, content.PublicBanner{ID: b.ID, Name: b.Name, Revision: b.Published.Revision, Config: s.canonicalBannerConfig(ctx, state, b.Published.Config)})
 			}
 		}
 		return result, nil
@@ -330,4 +330,48 @@ func validCatalogBanner(w Workspace, c content.BannerConfig) bool {
 		}
 	}
 	return false
+}
+
+// Normalize published links only in the public DTO; editing/history retain original values.
+func (s *Service) canonicalBannerConfig(ctx context.Context, w Workspace, c content.BannerConfig) content.BannerConfig {
+	if c.CatalogCategoryID != "" {
+		for _, cat := range w.Categories {
+			if cat.ID == c.CatalogCategoryID {
+				c.Link = CategoryURL(cat)
+				return c
+			}
+		}
+	}
+	parts := strings.SplitN(c.Link, "?", 2)
+	path := parts[0]
+	query := ""
+	if len(parts) == 2 {
+		query = "?" + parts[1]
+	}
+	if strings.HasPrefix(path, "/category/") {
+		id, e := s.resolveCatalogToken(ctx, "category", strings.TrimPrefix(path, "/category/"))
+		if e == nil {
+			for _, cat := range w.Categories {
+				if cat.ID == id {
+					c.Link = CategoryURL(cat) + query
+					break
+				}
+			}
+		}
+	}
+	if strings.HasPrefix(path, "/product/") {
+		id, e := s.resolveCatalogToken(ctx, "product", strings.TrimPrefix(path, "/product/"))
+		if e == nil {
+			pw, e := s.publicSnapshot(ctx, id)
+			if e == nil {
+				for _, p := range pw.Products {
+					if p.ID == id {
+						c.Link = ProductURL(p) + query
+						break
+					}
+				}
+			}
+		}
+	}
+	return c
 }

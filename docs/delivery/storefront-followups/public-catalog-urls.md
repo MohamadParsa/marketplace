@@ -6,28 +6,30 @@ owner: eliassarband
 updated: 2026-11-23
 related: [DOM-CATALOG-CONTENT-001, API-PRODUCT-DETAIL-001, API-PLP-SEARCH-001, FEAT-SF-CACHE-001]
 approved_by: []
-implementation_status: todo
+implementation_status: review
 priority: P2
 ---
 
 # آدرس عمومی کاتالوگ — CV-CAT-PUBLIC-URL-01
 
-Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئول: `eliassarband` · وضعیت اجرا: **todo**
+Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئول: `eliassarband` · وضعیت اجرا: **review؛ آزمون محلی کامل، در انتظار تحویل Git**
 
 ## نتیجه و خواسته قطعی مالک
 
-پیشوند `gsp` از کد و URL عمومی محصولات چریوا حذف شود و آدرس دسته با نام انگلیسی و dash خوانا شود. این سند و Issue مربوط فقط **برنامه اجرا** هستند؛ هیچ شناسه، URL یا دیتایی در این تحویل عوض نشده است.
+پیشوند `gsp` از کد و URL عمومی محصولات چریوا حذف شود و آدرس دسته با نام انگلیسی و dash خوانا شود. این قابلیت پس از اتمام #41 در محیط محلی اجرا شد؛ [گزارش پیاده‌سازی و آزمون](issue-42-verification.md) و [نگاشت کامل](catalog-url-map.json) مرجع نتیجه‌اند. شناسه داخلی و JSON منبع تغییر نکرده‌اند.
 
 | موجود | مقصد درخواست‌شده / نمونه |
 | --- | --- |
 | `/product/gsp-product-18189` | **`/product/chr-18189`**؛ نمونه صریح مالک، با حفظ شماره محصول واردشده |
 | `/product/gsp-product-37354` | `/product/chr-37354` با همان قاعده؛ نه نگاشت حدسی به chr-2222 |
 | `/category/gsp-cat-1`، گوشی موبایل | `/category/mobile` |
-| `/category/gsp-cat-755`، ساعت هوشمند | پیشنهاد slug: `/category/smart-watch`؛ این دسته نباید به mobile نگاشت شود. |
+| `/category/gsp-cat-755`، ساعت هوشمند | slug اجراشده: `/category/smart-watch`؛ این دسته نباید به mobile نگاشت شود. |
 
-`chr-2222` مثال قالب اولیه بود؛ نمونه بعدی مالک حفظ suffix عددی `18189` را روشن کرد. `smart-watch` و slug سایر دسته‌ها پیشنهاد فنی/محتوایی‌اند و نیاز به فهرست قابل بازبینی دارند؛ نام فارسی/انگلیسی محصول و دسته حذف نمی‌شود.
+`chr-2222` مثال قالب اولیه بود؛ نمونه بعدی مالک حفظ suffix عددی `18189` را روشن کرد. فهرست قابل بازبینی slugها در نگاشت کامل ثبت شد؛ انتخاب مستقل `smart-watch` برای دسته755 اجرا شده و نام انگلیسی منبع محفوظ است؛ نام فارسی/انگلیسی محصول و دسته حذف نمی‌شود.
 
-## مدل و مرز فنی پیشنهادی
+## مدل و مرز فنی
+
+جزئیات طرح زیر در پیاده‌سازی اعمال شدند؛ تصمیم‌های فنی و محدودیت‌های دقیق در گزارش‌اند و وضعیت سند همچنان in-review است.
 
 - `Product.ID` شناسه داخلی پایدار بماند؛ فیلد/نگاشت عمومی یکتای `public_code` مانند `chr-18189` اضافه شود. جایگزینی متن سراسری `gsp` و تغییر کلیدهای موجود مجاز نیست. Variant، Offer، media، membership، cart، quote، سفارش و سابقه مالی روابط فعلی را نگه دارند.
 - برای محصولات واردشده، public code از suffix عددی معتبر `gsp-product-{n}` ساخته و یکتایی بررسی شود. این قاعده برای product است؛ SKU فروشنده، variant و شناسه تصویر خودکار تبدیل نشوند. تعارض با کد موجود، migration را متوقف و conflict report بدهد؛ کد دیگری بی‌صدا انتخاب نشود.
@@ -56,11 +58,11 @@ Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئو�
 
 ## زیرتسک‌ها به ترتیب اجرا
 
-- [ ] URL-01: گزارش نگاشت همه داده‌ها و تأیید slugهای غایب/متعارض؛ نام واقعی دسته755 حفظ شود. مشخص‌کردن sequence محصولات بومی و قاعده حداقل۴رقمی پیشنهادی.
-- [ ] URL-02: مدل و migration افزایشی نگاشت public code، sequence و unique constraint؛ Category.Slug و alias پایدار؛ dry-run/backfill idempotent.
-- [ ] URL-03: resolver و builder مشترک API/HTML، redirectهای سروری و کنترل visibility؛ API mutation و روابط داخلی سازگار بمانند.
-- [ ] URL-04: فرم دسته در بک‌آفیس، کد فقط‌خواندنی محصول، پیش‌نمایش/اعتبارسنجی/مجوز/version/audit؛ طراحی A.
-- [ ] URL-05: لینک‌های storefront و SEO/اشتراک/سبد/سفارش، breadcrumb و query انتخاب تنوع؛ invalidation لینک‌های کش.
+- [x] URL-01: گزارش نگاشت همه داده‌ها و تأیید slugهای غایب/متعارض؛ نام واقعی دسته755 حفظ شود. مشخص‌کردن sequence محصولات بومی و قاعده حداقل۴رقمی پیشنهادی.
+- [x] URL-02: مدل و migration افزایشی نگاشت public code، sequence و unique constraint؛ Category.Slug و alias پایدار؛ dry-run/backfill idempotent.
+- [x] URL-03: resolver و builder مشترک API/HTML، redirectهای سروری و کنترل visibility؛ API mutation و روابط داخلی سازگار بمانند.
+- [x] URL-04: فرم دسته در بک‌آفیس، کد فقط‌خواندنی محصول، پیش‌نمایش/اعتبارسنجی/مجوز/version/audit؛ طراحی A.
+- [x] URL-05: لینک‌های storefront و SEO/اشتراک/سبد/سفارش، breadcrumb و query انتخاب تنوع؛ invalidation لینک‌های کش.
 - [ ] URL-06: تست مهاجرت/replay/restart/رقابت/سازگاری و مرور خانه/PLP/PDP/سبد؛ مستندات اجرای local/سرور، کامیت سورس و مدارک و PR؛ انتشار توسط پارسا جداست.
 
 ## پذیرش
@@ -75,6 +77,6 @@ Issue: [#42](https://github.com/MohamadParsa/marketplace/issues/42) · مسئو�
 
 ## اولویت و وابستگی
 
-P2 پیشنهادی بعد از رفع مشکل دسته‌های خانه و کارایی؛ داده/مالی و قالب URL دقیق، گیت صحت این کارند. این تکمیل جدید #28/#29 است، نه بازاجرای نیازمندی #24/#25. اولین زیرتسک قبل از apply متوقف می‌شود اگر slug دسته یا conflict حل‌نشده باقی باشد؛ بخش مستقل مدل/گزارش قابل انجام است. تأیید جزئیات فنی و slugها هنوز باز است.
+P2 پیشنهادی بعد از رفع مشکل دسته‌های خانه و کارایی؛ داده/مالی و قالب URL دقیق، گیت صحت این کارند. این تکمیل جدید #28/#29 است، نه بازاجرای نیازمندی #24/#25. اولین زیرتسک قبل از apply متوقف می‌شود اگر slug دسته یا conflict حل‌نشده باقی باشد؛ بخش مستقل مدل/گزارش قابل انجام است. نگاشت محلی بدون نام خالی/تعارض انجام شد؛ جزئیات فنی اجراشده و انتخاب‌های محتوایی برای بازبینی در گزارش و نگاشت کامل ثبت‌اند. تغییر بعدی slug از پنل با alias محفوظ ممکن است.
 
 [منطق redirect دائمی در Google Search](https://developers.google.com/search/docs/crawling-indexing/301-redirects) مبنای پیشنهاد301 است. [PDP فعلی](../../architecture/contracts/product-detail.md)، [PLP فعلی](../../architecture/contracts/plp-search.md) و [بسته واردات](../catalog-seed/README.md) مرجع قواعد و حفاظت داده‌اند.

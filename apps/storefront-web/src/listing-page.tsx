@@ -1,3 +1,4 @@
+import { setPageCanonical } from "./page-canonical";
 import { ChoiceGroup } from "./choice-group";
 import { useEffect, useState } from "react";
 import {
@@ -290,11 +291,13 @@ export function ListingPage({ url }: { url: string }) {
   }, [query, attempt]);
   useEffect(() => {
     if (error) {
+      setPageCanonical("");
       document.title = "صفحه در دسترس نیست | Cherriva";
       return;
     }
     if (!data) return;
     document.title = data.seo.meta_title;
+    setPageCanonical(data.category?.url ?? "");
     for (const [name, content] of [
       ["description", data.seo.meta_description],
       ["keywords", data.seo.meta_keywords],
@@ -309,6 +312,7 @@ export function ListingPage({ url }: { url: string }) {
       }
       el.content = content;
     }
+    return () => setPageCanonical("");
   }, [data, error]);
   const change = (edit: (p: URLSearchParams) => void) => {
     const next = new URLSearchParams(current.search);

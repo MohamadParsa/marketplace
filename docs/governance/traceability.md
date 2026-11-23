@@ -146,3 +146,7 @@ AC01/02/03 آیکن دسته/برند به [قرارداد](../architecture/cont
 ## ورود کامل کاتالوگ در لوکال — ۲۰۲۶-۱۱-۲۳
 
 [گزارش و شاهد ماشین‌خوان](../delivery/catalog-seed/local-import-2026-11-23.md) اتصال داده به خانه/PLP/PDP/سبد، مرز تومان فایل و ریال داخلی، گزینه‌های تنوع متعلق به محصول، منع محلی برای شاخه‌های تازه طلا و حفظ داده قبلی را ثبت می‌کند. اجرا فقط در دیتابیس بررسی محلی است و گیت عمومی #12 یا وضعیت تأیید مشخصات را تغییر نمی‌دهد.
+
+## URL عمومی کاتالوگ — #42
+
+[نیازمندی و AC01..07](../delivery/storefront-followups/public-catalog-urls.md) ← [نگاشت و گزارش اجرا](../delivery/storefront-followups/issue-42-verification.md) ← تست‌های `catalog_urls_test.go` و [مرورگر](../../tests/e2e/catalog-public-urls.cjs). وضعیت سند in-review و اجرای محلی review است؛ #41 پیش از شروع این کار بسته شد.
