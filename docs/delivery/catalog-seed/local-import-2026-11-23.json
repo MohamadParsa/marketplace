@@ -1262,5 +1262,12 @@
     "failures": 0,
     "skips": 0,
     "vet": "passed"
+  },
+  "ci": {
+    "run_id": 45125423441,
+    "head_commit": "678240a",
+    "conclusion": "success",
+    "jobs": 5,
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45125423441"
   }
 }
