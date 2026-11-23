@@ -52,6 +52,9 @@ func initialize(ctx context.Context, db *pgxpool.Pool, seed backoffice.Workspace
 		return nil, fmt.Errorf("initialize marketplace repository: %w", err)
 	}
 	repo := &Repository{db: db}
+	if err = repo.ensureCatalogURLs(ctx); err != nil {
+		return nil, err
+	}
 	if err = repo.ensurePublicCatalog(ctx); err != nil {
 		return nil, err
 	}
@@ -152,6 +155,9 @@ func scan[T any](ctx context.Context, tx pgx.Tx, sql string, result *[]T, read f
 }
 
 func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
+	if _, err := syncCatalogURLs(ctx, tx, &state); err != nil {
+		return err
+	}
 	// The review fixture is small and owned by the workspace transaction.
 	// Replacing its access relations also makes revocations and membership removal atomic.
 	batch := &pgx.Batch{}

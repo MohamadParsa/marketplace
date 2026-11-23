@@ -34,6 +34,13 @@ const empty: CatalogInput = {
   seo: { meta_title: "", meta_keywords: "", meta_description: "" },
   attributes: [],
 };
+const slugify = (s: string) =>
+  s
+    .trim()
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 const titles = ["موبایل", "هندزفری", "پاوربانک", "ساعت هوشمند"];
 function ManagedPhoto({ id }: { id?: string }) {
   const { loadCatalogMedia } = useWorkspace();
@@ -115,6 +122,8 @@ export function HomeCatalogPage() {
       name: string;
       version: number;
       english_name?: string;
+      slug?: string;
+      public_code?: string;
       description?: string;
       category_id?: string;
       brand_id?: string;
@@ -137,6 +146,7 @@ export function HomeCatalogPage() {
         ? {
             name: row.name,
             english_name: row.english_name ?? "",
+            slug: kind === "category" ? row.slug : undefined,
             description: row.description ?? "",
             seo: row.seo ?? {
               meta_title: "",
@@ -191,6 +201,16 @@ export function HomeCatalogPage() {
   async function save(e: FormEvent) {
     e.preventDefault();
     if (!editing) return;
+    const original = state.categories?.find((c) => c.id === editing.id);
+    if (
+      editing.kind === "category" &&
+      original?.published &&
+      editing.input.slug !== original.slug &&
+      !window.confirm(
+        "تغییر آدرس دسته منتشرشده؟ آدرس قبلی به آدرس جدید هدایت می‌شود.",
+      )
+    )
+      return;
     try {
       await run(() =>
         execute({
@@ -200,6 +220,10 @@ export function HomeCatalogPage() {
           idempotency_key: editing.key,
           catalog: {
             ...editing.input,
+            confirm_slug_change:
+              editing.kind === "category" &&
+              !!original?.published &&
+              editing.input.slug !== original.slug,
             content:
               editing.kind === "product" && editing.input.content
                 ? {
@@ -566,6 +590,7 @@ export function HomeCatalogPage() {
                       <label>
                         نام انگلیسی
                         <input
+                          required={editing.kind === "category"}
                           dir="ltr"
                           maxLength={160}
                           value={editing.input.english_name}
@@ -600,6 +625,56 @@ export function HomeCatalogPage() {
                         </label>
                       )}
                     </>
+                  )}
+                  {editing.kind === "category" && (
+                    <label>
+                      آدرس انگلیسی دسته (slug)
+                      <input
+                        required
+                        dir="ltr"
+                        maxLength={100}
+                        pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                        value={
+                          editing.input.slug ??
+                          slugify(editing.input.english_name)
+                        }
+                        onChange={(e) =>
+                          setEditing({
+                            ...editing,
+                            input: { ...editing.input, slug: e.target.value },
+                          })
+                        }
+                      />
+                      <small dir="ltr">
+                        /category/
+                        {editing.input.slug ??
+                          slugify(editing.input.english_name)}
+                      </small>
+                      <small>
+                        تغییر نام انگلیسی، آدرس ذخیره‌شده را عوض نمی‌کند.
+                        آدرس‌های قبلی محفوظ می‌مانند.
+                      </small>
+                    </label>
+                  )}
+                  {editing.kind === "product" && editing.id && (
+                    <label>
+                      کد عمومی محصول (فقط‌خواندنی)
+                      <input
+                        readOnly
+                        dir="ltr"
+                        value={
+                          state.products?.find((p) => p.id === editing.id)
+                            ?.public_code ?? "پس از ذخیره تخصیص می‌یابد"
+                        }
+                      />
+                      <small dir="ltr">
+                        /product/
+                        {
+                          state.products?.find((p) => p.id === editing.id)
+                            ?.public_code
+                        }
+                      </small>
+                    </label>
                   )}
                   {editing.kind === "category" && (
                     <fieldset className="home-admin-form">

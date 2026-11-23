@@ -19,18 +19,20 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
-	Model        string                    `json:"model,omitempty"`
-	OwnerStoreID string                    `json:"owner_store_id,omitempty"`
-	Content      *catalog.ProductContent   `json:"content,omitempty"`
-	SEO          *catalog.SEO              `json:"seo,omitempty"`
-	Attributes   *[]catalog.AttributeValue `json:"attributes,omitempty"`
-	Name         string                    `json:"name"`
-	EnglishName  string                    `json:"english_name"`
-	Description  string                    `json:"description"`
-	CategoryID   string                    `json:"category_id"`
-	BrandID      string                    `json:"brand_id"`
-	ParentID     string                    `json:"parent_id"`
-	Published    bool                      `json:"published"`
+	Slug              *string                   `json:"slug,omitempty"`
+	ConfirmSlugChange bool                      `json:"confirm_slug_change,omitempty"`
+	Model             string                    `json:"model,omitempty"`
+	OwnerStoreID      string                    `json:"owner_store_id,omitempty"`
+	Content           *catalog.ProductContent   `json:"content,omitempty"`
+	SEO               *catalog.SEO              `json:"seo,omitempty"`
+	Attributes        *[]catalog.AttributeValue `json:"attributes,omitempty"`
+	Name              string                    `json:"name"`
+	EnglishName       string                    `json:"english_name"`
+	Description       string                    `json:"description"`
+	CategoryID        string                    `json:"category_id"`
+	BrandID           string                    `json:"brand_id"`
+	ParentID          string                    `json:"parent_id"`
+	Published         bool                      `json:"published"`
 }
 
 var homeKeys = []string{"mobile", "earbuds", "power-bank", "smartwatch"}
@@ -165,12 +167,29 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 				return ErrInvalid
 			}
 		}
+		if in.Slug != nil && !ValidCategorySlug(*in.Slug) {
+			return ErrInvalid
+		}
 		if c.Action == "catalog.category.create" {
+			slug := DefaultCategorySlug(in.EnglishName)
+			if in.Slug != nil {
+				slug = *in.Slug
+			}
+			if !ValidCategorySlug(slug) {
+				return ErrInvalid
+			}
+			if slug != "" {
+				for _, other := range w.Categories {
+					if other.Slug == slug {
+						return ErrConflict
+					}
+				}
+			}
 			seo := catalog.SEO{}
 			if in.SEO != nil {
 				seo = *in.SEO
 			}
-			w.Categories = append(w.Categories, catalog.Category{SEO: seo, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
+			w.Categories = append(w.Categories, catalog.Category{Slug: slug, SEO: seo, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, Published: in.Published, ParentID: in.ParentID, Bindings: []catalog.AttributeBinding{}, Version: 1})
 			return nil
 		}
 		for i := range w.Categories {
@@ -186,6 +205,17 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			}
 			if in.ParentID != x.ParentID {
 				return ErrConflict
+			}
+			if in.Slug != nil && *in.Slug != x.Slug {
+				if x.Published && !in.ConfirmSlugChange {
+					return ErrInvalid
+				}
+				for _, other := range w.Categories {
+					if other.ID != x.ID && other.Slug == *in.Slug {
+						return ErrConflict
+					}
+				}
+				x.Slug = *in.Slug
 			}
 			x.Name = in.Name
 			x.EnglishName = in.EnglishName
@@ -445,7 +475,7 @@ func BuildHome(w Workspace) HomePage {
 		if imageAttached(w, cat.IconID) {
 			img = "/catalog/icons/" + cat.IconID
 		}
-		result.Categories = append(result.Categories, HomeCategory{cat.ID, cat.Name, "/category/" + cat.ID, img, counts[cat.ID]})
+		result.Categories = append(result.Categories, HomeCategory{cat.ID, cat.Name, CategoryURL(cat), img, counts[cat.ID]})
 	}
 	rootRank := map[string]int{}
 	for _, r := range h.Rails {
@@ -486,7 +516,7 @@ func BuildHome(w Workspace) HomePage {
 		cat := publicCategory(w, r.CategoryID)
 		if cat != nil {
 			section.Title = cat.Name
-			section.URL = "/category/" + cat.ID
+			section.URL = CategoryURL(*cat)
 			for _, p := range products {
 				if len(section.Products) >= r.Limit {
 					break
@@ -517,7 +547,7 @@ func (s *Service) PublicHome(ctx context.Context) (HomePage, error) {
 }
 
 func makeHomeCard(p catalog.Product, c catalog.Category, o PublicOffer) HomeCard {
-	card := HomeCard{ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: "/product/" + p.ID, ImageURL: "/catalog/icons/" + p.ImageID, Price: o.Price, OfferID: o.ID, VariantID: o.VariantID}
+	card := HomeCard{ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: ProductURL(p), ImageURL: "/catalog/icons/" + p.ImageID, Price: o.Price, OfferID: o.ID, VariantID: o.VariantID}
 	if o.RegularPrice > o.Price {
 		card.RegularPrice = o.RegularPrice
 		card.DiscountPercent = int((o.RegularPrice - o.Price) * 100 / o.RegularPrice)

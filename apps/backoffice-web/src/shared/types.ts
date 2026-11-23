@@ -45,6 +45,7 @@ export interface CategorySEO {
   meta_description: string;
 }
 export interface Category {
+  slug?: string;
   seo?: CategorySEO;
   english_name?: string;
   description?: string;
@@ -105,6 +106,7 @@ export interface ProductContentRevision {
   attributes: { attribute_id: string; value: string }[];
 }
 export interface Product {
+  public_code?: string;
   content_revision?: ProductContentRevision;
   content?: ProductContent;
   gallery_ids?: string[];
@@ -238,6 +240,8 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  slug?: string;
+  confirm_slug_change?: boolean;
   model?: "shared" | "independent";
   owner_store_id?: string;
   content?: ProductContent;

@@ -31,7 +31,7 @@ import (
 
 func seedFixture() (backoffice.CatalogSeed, []catalog.IconMedia) {
 	c := backoffice.SeedCatalog{
-		Categories:   []catalog.Category{{ID: "gsp-cat-1", Name: "موبایل", Published: true, Version: 1, Bindings: []catalog.AttributeBinding{{AttributeID: "gsp-axis-color", Axis: true}}}},
+		Categories:   []catalog.Category{{ID: "gsp-cat-1", Name: "موبایل", EnglishName: "Imported Mobile", Published: true, Version: 1, Bindings: []catalog.AttributeBinding{{AttributeID: "gsp-axis-color", Axis: true}}}},
 		Brands:       []catalog.Brand{{ID: "gsp-brand-1", Name: "برند", Active: true, Version: 1}},
 		Attributes:   []catalog.AttributeDefinition{{ID: "gsp-axis-color", Code: "gsp-color", Name: "رنگ", Kind: "enum", Options: []string{"مشکی", "سفید"}, Version: 1}},
 		Products:     []catalog.Product{{ID: "gsp-product-1", Name: "محصول", CategoryID: "gsp-cat-1", BrandID: "gsp-brand-1", ImageID: "gsp-media-1", Model: "shared", Status: "published", Version: 1, VariantVersion: 1, Content: &catalog.ProductContent{FullDescription: "<p>شرح <strong>کامل</strong></p><script>alert(1)</script>"}}},

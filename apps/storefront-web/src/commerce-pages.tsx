@@ -483,8 +483,7 @@ export function CartPage() {
               <article className="buy-panel buy-cart-row" key={item.offer_id}>
                 <a
                   href={
-                    "/product/" +
-                    item.product_id +
+                    item.product_url +
                     "?variant=" +
                     item.variant_id +
                     "&offer=" +
@@ -494,7 +493,7 @@ export function CartPage() {
                   <img src={apiBase + item.image_url} alt={item.name} />
                 </a>
                 <div>
-                  <a href={"/product/" + item.product_id}>
+                  <a href={item.product_url || undefined}>
                     <h2>{item.name}</h2>
                   </a>
                   <p>{item.variant_label}</p>

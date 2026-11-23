@@ -112,6 +112,16 @@ func (h *ListingHandler) Page(w http.ResponseWriter, r *http.Request) {
 	if e == nil {
 		data, e = h.service.PublicListing(r.Context(), q)
 	}
+	if e == nil && data.Category != nil && r.URL.Path != data.Category.URL {
+		v := r.URL.Query()
+		v.Del("category")
+		target := data.Category.URL
+		if len(v) > 0 {
+			target += "?" + v.Encode()
+		}
+		http.Redirect(w, r, target, http.StatusMovedPermanently)
+		return
+	}
 	if e != nil {
 		status = 503
 		if errors.Is(e, backoffice.ErrListingQuery) {
@@ -134,6 +144,9 @@ func (h *ListingHandler) Page(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	meta := "<title>" + html.EscapeString(data.SEO.MetaTitle) + "</title>\n<meta name=\"description\" content=\"" + html.EscapeString(data.SEO.MetaDescription) + "\">\n<meta name=\"keywords\" content=\"" + html.EscapeString(data.SEO.MetaKeywords) + "\">"
+	if status == 200 && data.Category != nil {
+		meta += "\n<link rel=\"canonical\" href=\"" + html.EscapeString(data.Category.URL) + "\">"
+	}
 	start := strings.Index(string(b), marker)
 	end := strings.Index(string(b), endMarker)
 	if end < start {

@@ -1,4 +1,5 @@
 export interface CartItem {
+  product_url: string;
   product_id: string;
   variant_id: string;
   offer_id: string;

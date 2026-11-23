@@ -9,6 +9,7 @@ type SEO struct {
 }
 
 type Category struct {
+	Slug        string             `json:"slug,omitempty"`
 	SEO         SEO                `json:"seo"`
 	EnglishName string             `json:"english_name,omitempty"`
 	Description string             `json:"description,omitempty"`
@@ -77,6 +78,7 @@ type ProductContentRevision struct {
 }
 
 type Product struct {
+	PublicCode      string                  `json:"public_code,omitempty"`
 	ContentRevision *ProductContentRevision `json:"content_revision,omitempty"`
 	Content         *ProductContent         `json:"content,omitempty"`
 	GalleryIDs      []string                `json:"gallery_ids,omitempty"`

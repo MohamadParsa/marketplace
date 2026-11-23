@@ -107,6 +107,14 @@ func (h *ProductDetailHandler) Page(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-cache")
 	d, e := h.read(r)
+	if e == nil && r.URL.Path != d.URL {
+		target := d.URL
+		if r.URL.RawQuery != "" {
+			target += "?" + r.URL.Query().Encode()
+		}
+		http.Redirect(w, r, target, http.StatusMovedPermanently)
+		return
+	}
 	status := 200
 	if e != nil {
 		status = 503
@@ -134,6 +142,9 @@ func (h *ProductDetailHandler) Page(w http.ResponseWriter, r *http.Request) {
 	}
 	seo := d.Content.SEO
 	meta := "<title>" + html.EscapeString(seo.MetaTitle) + "</title>\n<meta name=\"description\" content=\"" + html.EscapeString(seo.MetaDescription) + "\">\n<meta name=\"keywords\" content=\"" + html.EscapeString(seo.MetaKeywords) + "\">\n<meta name=\"robots\" content=\"" + h.robots(d) + "\">"
+	if status == 200 {
+		meta += "\n<link rel=\"canonical\" href=\"" + html.EscapeString(d.URL) + "\">"
+	}
 	w.WriteHeader(status)
 	io.WriteString(w, body[:start]+meta+body[end+len(z):])
 }

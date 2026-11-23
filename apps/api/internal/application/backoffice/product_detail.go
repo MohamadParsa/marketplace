@@ -33,6 +33,7 @@ type PublicProductOffer struct {
 	Version      int    `json:"version"`
 }
 type ProductDetail struct {
+	PublicCode        string                        `json:"public_code"`
 	ID                string                        `json:"id"`
 	Name              string                        `json:"name"`
 	EnglishName       string                        `json:"english_name"`
@@ -113,7 +114,8 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	if err != nil {
 		return result, err
 	}
-	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, "/product/"+url.PathEscape(p.ID), p.Version
+	result.PublicCode = p.PublicCode
+	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, ProductURL(p), p.Version
 	result.Content = productContent(p)
 	// Full interaction services remain deferred (CV-WEB-15/16); toggles alone do not enable them.
 	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{})
@@ -263,6 +265,11 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) 
 	if id == "" || len(id) > 128 || len(variant) > 128 || len(offer) > 128 {
 		return ProductDetail{}, ErrInvalid
 	}
+	resolved, e := s.resolveCatalogToken(ctx, "product", id)
+	if e != nil {
+		return ProductDetail{}, e
+	}
+	id = resolved
 	return cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
 		w, e := s.publicSnapshot(ctx, id)
 		if e != nil {
@@ -292,6 +299,11 @@ func (s *Service) ValidateSelection(ctx context.Context, id string, in ProductSe
 	if in.Quantity < 1 || in.Quantity > 99 || in.VariantID == "" || in.OfferID == "" || utf8.RuneCountInString(in.VariantID) > 128 || utf8.RuneCountInString(in.OfferID) > 128 {
 		return result, ErrInvalid
 	}
+	resolved, e := s.resolveCatalogToken(ctx, "product", id)
+	if e != nil {
+		return result, e
+	}
+	id = resolved
 	w, e := s.repository.Snapshot(ctx)
 	if e != nil {
 		return result, e
