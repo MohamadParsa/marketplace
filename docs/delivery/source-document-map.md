@@ -60,3 +60,7 @@
 ## منوی درختی — #46
 
 سورس و شواهد اولیه در [3ebdf64](https://github.com/MohamadParsa/marketplace/commit/3ebdf64e7e6cc363c10740163fda63308941ba1b) ثبت شدند؛ [گزارش منو](storefront-followups/issue-46-verification.md). #45 پیش‌تر در PR #55 ادغام و بسته شد.
+
+## آیکن‌های هدر — #47
+
+سورس و شواهد اولیه در [1c890da](https://github.com/MohamadParsa/marketplace/commit/1c890daee14ab2e5320f859e831398ed142757b4) ثبت شدند؛ [گزارش و قبل/بعد](storefront-followups/issue-47-verification.md). #46 پیش‌تر در PR #56 ادغام و بسته شد.
