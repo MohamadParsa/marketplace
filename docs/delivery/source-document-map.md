@@ -68,3 +68,7 @@
 ## فیلترهای PLP — #48
 
 سورس و شواهد اولیه در [f812e36](https://github.com/MohamadParsa/marketplace/commit/f812e36e26e05e6dcbce483f130c66a2dec24908) ثبت شدند؛ [گزارش دامنه قیمت و گزینه‌های جمع‌شونده](storefront-followups/issue-48-verification.md).
+
+## Switchهای storefront — #49
+
+سورس و شواهد اولیه در [b3b918e](https://github.com/MohamadParsa/marketplace/commit/b3b918ec68bf63cca5c22f92361b9d1f6aa91e07) ثبت شدند؛ [گزارش پوشش و تصاویر](storefront-followups/issue-49-verification.md). #48 پیش‌تر در PR #58 ادغام و بسته شد.
