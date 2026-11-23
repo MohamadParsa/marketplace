@@ -184,3 +184,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 [قالب متن ارسال #53](../delivery/storefront-followups/issue-53-verification.md) ← `dispatch-wording.cjs`،۱۱کنترل؛ [چیپ‌های تنوع #54](../delivery/storefront-followups/issue-54-verification.md) ← `dense-variant-chips.cjs` با۲۳ و `real-gold-variants.cjs` با۵کنترل خواندنی واقعی. رگرسیون۲۳کنترلی مسیر خرید نیز موفق است؛ هیچ تغییر مدل مالی/قیمت طلا/تقویم یا write سفارش در این تحویل نیست.
 
 #53/#54 در PR #61 پس از هر۵ job موفق CI ادغام و با کامنت بسته شدند. هر۱۰تسک UX #45تا#54 done و مدارک/سورس روی main و D:\Cherriva همگام‌اند؛ تأیید سند همچنان از done مستقل است.
+
+## برنامه درخواست‌های بعدی — فقط ثبت در ۲۰۲۶-۱۱-۲۳
+
+[برنامه۳۰شرح](../delivery/next-phase/README.md) ← [فهرست ماشین‌خوان](../delivery/next-phase/task-index.json) ← [۳۰سناریوی مستند، اجرا نشده](../bdd/features/experiences/next-phase-planning.feature). هر شرح۴AC، دامنه و وابستگی دارد؛ ADR-009 و NEXT-Q01تا19 مرز تصمیم را ثبت می‌کنند. #8/#9 مالکان اجرایی ریل دستی/sticky حفظ می‌شوند، و نظر/Q&A ادامه CV-WEB-15/16 هستند. هیچ پیاده‌سازی یا تست passed با ایجاد این بسته ادعا نمی‌شود.

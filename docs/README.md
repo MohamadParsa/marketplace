@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[برنامه۳۰درخواست جدید؛ فقط تسک‌بندی، اجرا بعد از انتخاب مالک](delivery/next-phase/README.md)
+
 [صف۱۰تسک تجربه فروشگاه؛ وضعیت و شواهد اجرای انتخاب‌های مالک](delivery/storefront-followups/ux-followups.md)
 
 [کش، URL و صف اصلاحات تجربه storefront](delivery/storefront-followups/README.md) · [گزارش و تصاویر #41](delivery/storefront-followups/issue-41-verification.md).

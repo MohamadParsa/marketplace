@@ -1,0 +1,445 @@
+{
+  "id": "DEL-NEXT-001",
+  "updated": "2026-11-23",
+  "owner": "eliassarband",
+  "document_status": "in-review",
+  "execution_authorized": false,
+  "execution": "planning-only-awaiting-owner-selection",
+  "items": [
+    {
+      "n": 1,
+      "code": "CV-NEXT-01",
+      "id": "FEAT-NEXT-001",
+      "title": "تخفیف ویژه: لیست پنل و اولویت انتخابی با Drag & Drop",
+      "path": "docs/delivery/next-phase/tasks/cv-next-01-special-offer-priority.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 2,
+      "code": "CV-NEXT-02",
+      "id": "FEAT-NEXT-002",
+      "title": "علاقه‌مندی مشتری و آیکن کنار گالری PDP",
+      "path": "docs/delivery/next-phase/tasks/cv-next-02-customer-wishlist.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 3,
+      "code": "CV-NEXT-03",
+      "id": "FEAT-NEXT-003",
+      "title": "ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری",
+      "path": "docs/delivery/next-phase/tasks/cv-next-03-customer-recently-viewed.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 4,
+      "code": "CV-NEXT-04",
+      "id": "FEAT-NEXT-004",
+      "title": "مقایسه محصولات از یک دسته‌بندی",
+      "path": "docs/delivery/next-phase/tasks/cv-next-04-same-category-comparison.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 5,
+      "code": "CV-NEXT-05",
+      "id": "FEAT-NEXT-005",
+      "title": "قرارداد مبلغ سفارش، CreditUsage و DiscountUsage",
+      "path": "docs/delivery/next-phase/tasks/cv-next-05-checkout-amounts-usage-contract.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "analysis-first",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 6,
+      "code": "CV-NEXT-06",
+      "id": "FEAT-NEXT-006",
+      "title": "کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور",
+      "path": "docs/delivery/next-phase/tasks/cv-next-06-coupon-management.md",
+      "priority": "P1",
+      "wave": "W3",
+      "kind": "implementation",
+      "deps": [
+        5,
+        11
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 7,
+      "code": "CV-NEXT-07",
+      "id": "FEAT-NEXT-007",
+      "title": "باکس مستقل کد تخفیف در مرحله پرداخت خرید",
+      "path": "docs/delivery/next-phase/tasks/cv-next-07-checkout-coupon-box.md",
+      "priority": "P1",
+      "wave": "W3",
+      "kind": "implementation",
+      "deps": [
+        5,
+        6,
+        9,
+        12
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 8,
+      "code": "CV-NEXT-08",
+      "id": "FEAT-NEXT-008",
+      "title": "باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت",
+      "path": "docs/delivery/next-phase/tasks/cv-next-08-checkout-wallet-credit.md",
+      "priority": "P1",
+      "wave": "W3",
+      "kind": "implementation",
+      "deps": [
+        5,
+        7,
+        9
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 9,
+      "code": "CV-NEXT-09",
+      "id": "FEAT-NEXT-009",
+      "title": "PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست",
+      "path": "docs/delivery/next-phase/tasks/cv-next-09-atomic-place-order.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "analysis-first",
+      "deps": [
+        5,
+        6,
+        11,
+        12
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 10,
+      "code": "CV-NEXT-10",
+      "id": "FEAT-NEXT-010",
+      "title": "بازبینی دقیق دسترسی و محدوده داده فروشندگان",
+      "path": "docs/delivery/next-phase/tasks/cv-next-10-seller-access-audit.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "audit-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 11,
+      "code": "CV-NEXT-11",
+      "id": "FEAT-NEXT-011",
+      "title": "بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول",
+      "path": "docs/delivery/next-phase/tasks/cv-next-11-pricing-direct-discounts.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "audit-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 12,
+      "code": "CV-NEXT-12",
+      "id": "FEAT-NEXT-012",
+      "title": "روش فروش، اتصال به روش پرداخت و مارکاپ در خرید",
+      "path": "docs/delivery/next-phase/tasks/cv-next-12-sales-method-markup.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "audit-then-implementation",
+      "deps": [
+        5,
+        11
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 13,
+      "code": "CV-NEXT-13",
+      "id": "FEAT-NEXT-013",
+      "title": "SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات",
+      "path": "docs/delivery/next-phase/tasks/cv-next-13-seo-audit-remediation.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "audit-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 14,
+      "code": "CV-NEXT-14",
+      "id": "FEAT-NEXT-014",
+      "title": "ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل",
+      "path": "docs/delivery/next-phase/tasks/cv-next-14-business-activity-log.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "audit-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 15,
+      "code": "CV-NEXT-15",
+      "id": "FEAT-NEXT-015",
+      "title": "CustomerActivity و Analytics رفتار مشتری",
+      "path": "docs/delivery/next-phase/tasks/cv-next-15-customer-activity-analytics.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "analysis-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 16,
+      "code": "CV-NEXT-16",
+      "id": "FEAT-NEXT-016",
+      "title": "لاگ فنی عملیات حساس، خطا و شکست با correlation",
+      "path": "docs/delivery/next-phase/tasks/cv-next-16-sensitive-operation-logs.md",
+      "priority": "P1",
+      "wave": "W0",
+      "kind": "audit-then-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 17,
+      "code": "CV-NEXT-17",
+      "id": "FEAT-NEXT-017",
+      "title": "گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه",
+      "path": "docs/delivery/next-phase/tasks/cv-next-17-warranty-display-groups.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [
+        18
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 18,
+      "code": "CV-NEXT-18",
+      "id": "FEAT-NEXT-018",
+      "title": "گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر",
+      "path": "docs/delivery/next-phase/tasks/cv-next-18-attribute-value-groups.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 19,
+      "code": "CV-NEXT-19",
+      "id": "FEAT-NEXT-019",
+      "title": "بازبینی و اصلاح نمایش فیلترهای PLP",
+      "path": "docs/delivery/next-phase/tasks/cv-next-19-plp-filter-experience.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "design-then-implementation",
+      "deps": [
+        18
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 20,
+      "code": "CV-NEXT-20",
+      "id": "FEAT-NEXT-020",
+      "title": "ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel",
+      "path": "docs/delivery/next-phase/tasks/cv-next-20-backoffice-grid-capabilities.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "audit-then-implementation",
+      "deps": [
+        10
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 21,
+      "code": "CV-NEXT-21",
+      "id": "FEAT-NEXT-021",
+      "title": "سرویس ایمیل تراکنشی، قالب و پیگیری ارسال",
+      "path": "docs/delivery/next-phase/tasks/cv-next-21-transactional-email-service.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 22,
+      "code": "CV-NEXT-22",
+      "id": "FEAT-NEXT-022",
+      "title": "تب مستقل مزایا و معایب کنار مشخصات فنی PDP",
+      "path": "docs/delivery/next-phase/tasks/cv-next-22-pdp-pros-cons-tab.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 23,
+      "code": "CV-NEXT-23",
+      "id": "FEAT-NEXT-023",
+      "title": "بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک",
+      "path": "docs/delivery/next-phase/tasks/cv-next-23-category-menu-hover.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 24,
+      "code": "CV-NEXT-24",
+      "id": "FEAT-NEXT-024",
+      "title": "رفع اسکرول عمودی و دسترسی به تمام گره‌های منو",
+      "path": "docs/delivery/next-phase/tasks/cv-next-24-category-menu-scroll.md",
+      "priority": "P1",
+      "wave": "W1",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 25,
+      "code": "CV-NEXT-25",
+      "id": "FEAT-NEXT-025",
+      "title": "اولویت نمایش دسته و ترتیب پایدار گره‌های منو",
+      "path": "docs/delivery/next-phase/tasks/cv-next-25-category-display-priority.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 26,
+      "code": "CV-NEXT-26",
+      "id": "FEAT-NEXT-026",
+      "title": "تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما",
+      "path": "docs/delivery/next-phase/tasks/cv-next-26-footer-business-content.md",
+      "priority": "P2",
+      "wave": "W1",
+      "kind": "content-and-implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 27,
+      "code": "CV-NEXT-27",
+      "id": "FEAT-NEXT-027",
+      "title": "تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار",
+      "path": "docs/delivery/next-phase/tasks/cv-next-27-typed-section-management.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 28,
+      "code": "CV-NEXT-28",
+      "id": "FEAT-NEXT-028",
+      "title": "سرویس نظرات کاربران؛ ادامه CV-WEB-15",
+      "path": "docs/delivery/next-phase/tasks/cv-next-28-product-reviews-service.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 29,
+      "code": "CV-NEXT-29",
+      "id": "FEAT-NEXT-029",
+      "title": "سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16",
+      "path": "docs/delivery/next-phase/tasks/cv-next-29-product-qa-service.md",
+      "priority": "P2",
+      "wave": "W2",
+      "kind": "implementation",
+      "deps": [],
+      "implementation_status": "todo",
+      "state": "not-created"
+    },
+    {
+      "n": 30,
+      "code": "CV-NEXT-30",
+      "id": "FEAT-NEXT-030",
+      "title": "لندینگ اقساطی متصل به روش فروش و شرایط واقعی",
+      "path": "docs/delivery/next-phase/tasks/cv-next-30-installment-landing.md",
+      "priority": "P2",
+      "wave": "W3",
+      "kind": "design-then-implementation",
+      "deps": [
+        12
+      ],
+      "implementation_status": "todo",
+      "state": "not-created"
+    }
+  ],
+  "reused_issues": [
+    {
+      "number": 8,
+      "scope": "کروسل اختصاصی با انتخاب/ترتیب دستی",
+      "implementation_status": "deferred"
+    },
+    {
+      "number": 9,
+      "scope": "sticky section",
+      "implementation_status": "deferred"
+    },
+    {
+      "number": 15,
+      "scope": "تنظیمات عمومی؛ مرجع کلیدهای تنظیم نه CMS",
+      "implementation_status": "open"
+    }
+  ]
+}
