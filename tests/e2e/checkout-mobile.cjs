@@ -82,7 +82,7 @@ async (page) => {
     await page.getByRole("radio", { name: /پرداخت محلی/ }).isEnabled(),
   );
   await page.getByRole("button", { name: "بررسی نهایی سفارش" }).click();
-  await page.getByRole("checkbox", { name: /مبلغ.*آدرس/ }).check();
+  await page.getByRole("switch", { name: /مبلغ.*آدرس/ }).check();
   await page.getByRole("button", { name: "ثبت سفارش و ادامه پرداخت" }).click();
   await page.getByRole("textbox", { name: "دلیل لغو", exact: true }).waitFor();
   await page

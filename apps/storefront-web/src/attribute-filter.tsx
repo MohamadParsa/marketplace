@@ -1,3 +1,4 @@
+import { ToggleSwitch } from "./toggle-switch";
 import { useId, useState } from "react";
 export type AttributeFilterDefinition = {
   id: string;
@@ -52,10 +53,9 @@ export function AttributeFilter({
         <div id={id} className="plp-attribute-options">
           {choices.map((value) => (
             <label key={value}>
-              <input
-                type="checkbox"
+              <ToggleSwitch
                 checked={selected.includes(value)}
-                onChange={(e) => choose(value, e.target.checked)}
+                onChange={(checked) => choose(value, checked)}
               />
               <span>{value}</span>
             </label>

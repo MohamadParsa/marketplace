@@ -1,3 +1,4 @@
+import { ToggleSwitch } from "./toggle-switch";
 import { PriceRangeFilter, type PriceRange } from "./price-range-filter";
 import { AttributeFilter } from "./attribute-filter";
 import { setPageCanonical } from "./page-canonical";
@@ -87,12 +88,11 @@ function FiltersPanel({
       </div>
       <label className="plp-stock">
         <span>فقط کالاهای موجود</span>
-        <input
-          type="checkbox"
+        <ToggleSwitch
           checked={params.get("in_stock") === "1"}
-          onChange={(e) =>
+          onChange={(checked) =>
             change((p) =>
-              e.target.checked ? p.set("in_stock", "1") : p.delete("in_stock"),
+              checked ? p.set("in_stock", "1") : p.delete("in_stock"),
             )
           }
         />

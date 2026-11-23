@@ -1,3 +1,4 @@
+import { ToggleSwitch } from "./toggle-switch";
 import { ChoiceGroup } from "./choice-group";
 import { PurchaseControl } from "./purchase-control";
 import {
@@ -1185,11 +1186,7 @@ function CheckoutForm() {
                       <h2>بازبینی و تأیید مبلغ</h2>
                       <OrderSummary quote={quote} />
                       <label className="buy-choice">
-                        <input
-                          type="checkbox"
-                          checked={consent}
-                          onChange={(e) => setConsent(e.target.checked)}
-                        />
+                        <ToggleSwitch checked={consent} onChange={setConsent} />
                         <span>
                           مبلغ {money(quote.total_toman)}، آدرس و شرایط ارسال را
                           تأیید می‌کنم. رزرو ۳۰ دقیقه اعتبار دارد.
