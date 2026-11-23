@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
@@ -278,5 +279,39 @@ func TestBannerUploadRetryReturnsOriginalReceipt(t *testing.T) {
 	}
 	if _, err := s.SetBannerMedia(ctx, ops, b.ID, "mobile", 1, "receipt", data); !errors.Is(err, backoffice.ErrConflict) {
 		t.Fatal("key payload conflict", err)
+	}
+}
+
+func TestCatalogPromoUsesConfiguredPublishedRailWithoutStaticImages(t *testing.T) {
+	s, repo := testService()
+	ctx := context.Background()
+	if e := repo.Update(ctx, func(w *backoffice.Workspace) error {
+		w.Categories = append(w.Categories, catalog.Category{ID: "promo-watch", Name: "ساعت", Published: true})
+		w.HomeSettings = backoffice.DefaultHomeSettings()
+		w.HomeSettings.Rails[3].CategoryID = "promo-watch"
+		return nil
+	}); e != nil {
+		t.Fatal(e)
+	}
+	b := newBanner(t, s)
+	config := content.BannerConfig{Placement: "promo", CatalogCategoryID: "promo-watch", Alt: "ساعت‌های موجود", Link: "/category/promo-watch", Enabled: true}
+	if e := s.Execute(ctx, actor(identity.RoleOperations), backoffice.Command{Action: "banner.save", Target: b.ID, Version: b.Version, Banner: &config, IdempotencyKey: "catalog-promo-save"}); e != nil {
+		t.Fatal(e)
+	}
+	if e := s.Execute(ctx, actor(identity.RoleOperations), backoffice.Command{Action: "banner.publish", Target: b.ID, Version: b.Version + 1, IdempotencyKey: "catalog-promo-publish"}); e != nil {
+		t.Fatal(e)
+	}
+	public, e := s.PublicBanners(ctx)
+	if e != nil || len(public) != 1 || public[0].Config.CatalogCategoryID != "promo-watch" {
+		t.Fatal("missing data-driven config", public, e)
+	}
+	config.Placement = "hero"
+	if e := s.Execute(ctx, actor(identity.RoleOperations), backoffice.Command{Action: "banner.save", Target: b.ID, Version: b.Version + 2, Banner: &config, IdempotencyKey: "catalog-promo-wrong-placement"}); !errors.Is(e, backoffice.ErrInvalid) {
+		t.Fatal("catalog promo accepted as hero", e)
+	}
+	config.Placement = "promo"
+	config.CatalogCategoryID = "missing"
+	if e := s.Execute(ctx, actor(identity.RoleOperations), backoffice.Command{Action: "banner.save", Target: b.ID, Version: b.Version + 2, Banner: &config, IdempotencyKey: "catalog-promo-missing-category"}); !errors.Is(e, backoffice.ErrInvalid) {
+		t.Fatal("missing category accepted", e)
 	}
 }

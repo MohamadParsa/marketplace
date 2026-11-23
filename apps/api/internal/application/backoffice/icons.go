@@ -215,6 +215,11 @@ func (s *Service) SetCatalogIcon(ctx context.Context, actor identity.User, kind,
 
 // ReadCatalogIcon exposes only images attached to an active public catalog record.
 func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error) {
+	if r, ok := s.repository.(interface {
+		ReadPublicCatalogMedia(context.Context, string) ([]byte, error)
+	}); ok {
+		return r.ReadPublicCatalogMedia(ctx, id)
+	}
 	state, err := s.repository.Snapshot(ctx)
 	if err != nil {
 		return nil, err
@@ -243,6 +248,20 @@ func (s *Service) ReadCatalogIcon(ctx context.Context, id string) ([]byte, error
 }
 
 func (s *Service) ReadManagedIcon(ctx context.Context, actor identity.User, id string) ([]byte, error) {
+	if r, ok := s.repository.(interface {
+		IdentitySnapshot(context.Context) (Workspace, error)
+		ReadManagedCatalogMedia(context.Context, string) ([]byte, error)
+	}); ok {
+		state, err := r.IdentitySnapshot(ctx)
+		if err != nil {
+			return nil, err
+		}
+		current, err := currentActor(state, actor)
+		if err != nil || !allowsAction(current, "product.icon.set") {
+			return nil, ErrForbidden
+		}
+		return r.ReadManagedCatalogMedia(ctx, id)
+	}
 	state, err := s.repository.Snapshot(ctx)
 	if err != nil {
 		return nil, err

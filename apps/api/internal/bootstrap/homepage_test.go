@@ -369,3 +369,37 @@ func TestHomeSpecialOffersAndAllAvailableCategories(t *testing.T) {
 		t.Fatal("non-winning offer advertised as discount")
 	}
 }
+
+func TestHomeShortcutsOnlyBuyableRoots(t *testing.T) {
+	w := homeFixture(t)
+	w.Categories = append(w.Categories, catalog.Category{ID: "accessories", Name: "Accessories", Published: true}, catalog.Category{ID: "empty", Published: true})
+	w.Categories[1].ParentID = "accessories"
+	w.Categories[2].ParentID = "accessories"
+	data := backoffice.BuildHome(w)
+	counts := map[string]int{}
+	for _, c := range data.Categories {
+		counts[c.ID] = c.Count
+	}
+	if len(counts) != 3 || counts["accessories"] != 2 || counts["mobile"] != 1 || counts["earbuds"] != 0 || counts["empty"] != 0 {
+		t.Fatalf("root shortcuts: %+v", counts)
+	}
+	// The shortcut aggregate must not change direct-category PLP semantics.
+	listing, err := backoffice.BuildListing(w, backoffice.ListingQuery{CategoryID: "accessories", Page: 1, PageSize: 24})
+	if err != nil || listing.Total != 0 {
+		t.Fatalf("parent PLP changed: %+v %v", listing, err)
+	}
+	w.Offers[1].Stock = 0
+	w.Offers[2].Reserved = w.Offers[2].Stock
+	for _, c := range backoffice.BuildHome(w).Categories {
+		if c.ID == "accessories" {
+			t.Fatal("sold-out subtree leaked")
+		}
+	}
+	w.Offers[1].Stock = 2
+	w.Categories[4].Published = false
+	for _, c := range backoffice.BuildHome(w).Categories {
+		if c.ID == "accessories" {
+			t.Fatal("hidden ancestor leaked")
+		}
+	}
+}

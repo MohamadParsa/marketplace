@@ -1,7 +1,9 @@
 package httptransport
 
 import (
+	"crypto/sha256"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"slices"
@@ -28,8 +30,14 @@ func (h *CatalogIconHandler) Read(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Cache-Control", "public, no-cache")
+	tag := fmt.Sprintf("\"%x\"", sha256.Sum256(data))
+	w.Header().Set("ETag", tag)
 	w.Header().Set("X-Content-Type-Options", "nosniff")
+	if r.Header.Get("If-None-Match") == tag {
+		w.WriteHeader(http.StatusNotModified)
+		return
+	}
 	w.Header().Set("Content-Length", strconv.Itoa(len(data)))
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)

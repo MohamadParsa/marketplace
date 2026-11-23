@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync/atomic"
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
@@ -18,7 +19,10 @@ import (
 
 // Repository persists an explicitly selected live or isolated review workspace.
 // Its row serializes commands; identity and financial projections enforce relational constraints.
-type Repository struct{ db *pgxpool.Pool }
+type Repository struct {
+	db                                                                                              *pgxpool.Pool
+	stampQueries, projectionQueries, projectionSQLMicros, decodeMicros, mediaQueries, fullSnapshots atomic.Uint64
+}
 
 func NewReview(ctx context.Context, db *pgxpool.Pool, seed backoffice.Workspace) (*Repository, error) {
 	return initialize(ctx, db, seed, "review")
@@ -47,10 +51,15 @@ func initialize(ctx context.Context, db *pgxpool.Pool, seed backoffice.Workspace
 	if err != nil {
 		return nil, fmt.Errorf("initialize marketplace repository: %w", err)
 	}
-	return &Repository{db: db}, nil
+	repo := &Repository{db: db}
+	if err = repo.ensurePublicCatalog(ctx); err != nil {
+		return nil, err
+	}
+	return repo, nil
 }
 
 func (r *Repository) Snapshot(ctx context.Context) (backoffice.Workspace, error) {
+	r.fullSnapshots.Add(1)
 	var state backoffice.Workspace
 	err := pgx.BeginTxFunc(ctx, r.db, pgx.TxOptions{IsoLevel: pgx.RepeatableRead, AccessMode: pgx.ReadOnly}, func(tx pgx.Tx) error {
 		var err error
@@ -205,7 +214,10 @@ func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
 	if err := tx.SendBatch(ctx, batch).Close(); err != nil {
 		return err
 	}
-	return saveCommerce(ctx, tx, financialState)
+	if err := saveCommerce(ctx, tx, financialState); err != nil {
+		return err
+	}
+	return savePublicCatalog(ctx, tx, state)
 }
 
 // Only application services decide whether this ID is public or visible to the actor.

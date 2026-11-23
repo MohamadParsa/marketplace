@@ -52,6 +52,14 @@ func validCatalogText(c CatalogInput) bool {
 
 // Public visibility requires every ancestor to remain published; stored child flags are untouched.
 func publicCategory(w Workspace, id string) *catalog.Category {
+	if w.publicIndex != nil {
+		c, ok := w.publicIndex.categories[id]
+		if !ok || !w.publicIndex.visible[id] {
+			return nil
+		}
+		return &c
+	}
+
 	byID := map[string]catalog.Category{}
 	for _, c := range w.Categories {
 		byID[c.ID] = c
@@ -79,6 +87,9 @@ func publicCategory(w Workspace, id string) *catalog.Category {
 	return &c
 }
 func validBrand(w Workspace, id string) bool {
+	if w.publicIndex != nil {
+		return id == "" || w.publicIndex.brands[id]
+	}
 	if id == "" {
 		return true
 	}
@@ -90,6 +101,9 @@ func validBrand(w Workspace, id string) bool {
 	return false
 }
 func imageAttached(w Workspace, id string) bool {
+	if w.publicIndex != nil {
+		return id != "" && w.publicIndex.media[id]
+	}
 	if id == "" {
 		return false
 	}
@@ -314,12 +328,23 @@ type PublicOffer struct {
 
 func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 	result := []PublicOffer{}
-	for _, o := range w.Offers {
+	offers, variants, stores := w.Offers, w.Variants, w.Stores
+	if w.publicIndex != nil {
+		offers = w.publicIndex.offers[p.ID]
+		variants = w.publicIndex.variants[p.ID]
+		stores = nil
+		for _, o := range offers {
+			if st, ok := w.publicIndex.stores[o.StoreID]; ok {
+				stores = append(stores, st)
+			}
+		}
+	}
+	for _, o := range offers {
 		if o.ProductID != p.ID || o.Price <= 0 || o.Stock-o.Reserved <= 0 || (p.Model == "independent" && p.OwnerStoreID != o.StoreID) {
 			continue
 		}
 		valid := false
-		for _, v := range w.Variants {
+		for _, v := range variants {
 			if v.ID == o.VariantID && v.ProductID == p.ID {
 				valid = true
 			}
@@ -327,7 +352,7 @@ func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 		if !valid {
 			continue
 		}
-		for _, s := range w.Stores {
+		for _, s := range stores {
 			if s.ID == o.StoreID && s.Active {
 				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDays: s.LeadDays})
 				break
@@ -381,6 +406,7 @@ type HomePage struct {
 }
 
 func BuildHome(w Workspace) HomePage {
+	w = indexedCatalog(w)
 	result := HomePage{Rails: []HomeSection{}, Categories: []HomeCategory{}, SpecialOffers: []HomeCard{}, SpecialOffersURL: "/offers"}
 	h := w.HomeSettings
 	if len(h.Rails) != 4 {
@@ -399,15 +425,20 @@ func BuildHome(w Workspace) HomePage {
 		if len(offers) == 0 {
 			continue
 		}
-		counts[cat.ID]++
-		images[cat.ID] = "/catalog/icons/" + p.ImageID
+		// Visibility above validated the complete chain, including cycles/missing parents.
+		root := cat
+		for root.ParentID != "" {
+			root = publicCategory(w, root.ParentID)
+		}
+		counts[root.ID]++
+		images[root.ID] = "/catalog/icons/" + p.ImageID
 		card := makeHomeCard(p, *cat, offers[0])
 		if card.RegularPrice > card.Price && len(result.SpecialOffers) < 10 {
 			result.SpecialOffers = append(result.SpecialOffers, card)
 		}
 	}
 	for _, cat := range w.Categories {
-		if counts[cat.ID] == 0 {
+		if cat.ParentID != "" || counts[cat.ID] == 0 {
 			continue
 		}
 		img := images[cat.ID]
@@ -416,7 +447,39 @@ func BuildHome(w Workspace) HomePage {
 		}
 		result.Categories = append(result.Categories, HomeCategory{cat.ID, cat.Name, "/category/" + cat.ID, img, counts[cat.ID]})
 	}
-	sort.Slice(result.Categories, func(i, j int) bool { return result.Categories[i].Name < result.Categories[j].Name })
+	rootRank := map[string]int{}
+	for _, r := range h.Rails {
+		root := publicCategory(w, r.CategoryID)
+		if root == nil {
+			continue
+		}
+		for root.ParentID != "" {
+			root = publicCategory(w, root.ParentID)
+		}
+		if _, exists := rootRank[root.ID]; !exists {
+			rootRank[root.ID] = len(rootRank) + 1
+		}
+	}
+	sort.Slice(result.Categories, func(i, j int) bool {
+		a, b := result.Categories[i], result.Categories[j]
+		ar, br := rootRank[a.ID], rootRank[b.ID]
+		if ar == 0 {
+			ar = 100
+		}
+		if br == 0 {
+			br = 100
+		}
+		if ar != br {
+			return ar < br
+		}
+		if a.Count != b.Count {
+			return a.Count > b.Count
+		}
+		if a.Name != b.Name {
+			return a.Name < b.Name
+		}
+		return a.ID < b.ID
+	})
 	for i, key := range homeKeys {
 		r := h.Rails[i]
 		section := HomeSection{Key: key, Title: homeTitles[i], CategoryID: r.CategoryID, Products: []HomeCard{}}
@@ -444,11 +507,13 @@ func BuildHome(w Workspace) HomePage {
 	return result
 }
 func (s *Service) PublicHome(ctx context.Context) (HomePage, error) {
-	w, err := s.repository.Snapshot(ctx)
-	if err != nil {
-		return HomePage{}, err
-	}
-	return BuildHome(w), nil
+	return cachedPublic(ctx, s, "home", "", nil, 5*time.Minute, func(ctx context.Context) (HomePage, error) {
+		w, err := s.publicSnapshot(ctx, "")
+		if err != nil {
+			return HomePage{}, err
+		}
+		return BuildHome(w), nil
+	})
 }
 
 func makeHomeCard(p catalog.Product, c catalog.Category, o PublicOffer) HomeCard {

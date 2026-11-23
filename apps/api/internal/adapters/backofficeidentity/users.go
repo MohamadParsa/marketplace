@@ -11,7 +11,7 @@ type Users struct{ repository backoffice.Repository }
 
 func New(repository backoffice.Repository) *Users { return &Users{repository: repository} }
 func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone string) (identity.User, error) {
-	state, err := u.repository.Snapshot(ctx)
+	state, err := u.snapshot(ctx)
 	if err != nil {
 		return identity.User{}, err
 	}
@@ -49,7 +49,7 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 }
 
 func (u *Users) FindByEmail(ctx context.Context, surface identity.Surface, email string) (identity.User, error) {
-	state, err := u.repository.Snapshot(ctx)
+	state, err := u.snapshot(ctx)
 	if err != nil {
 		return identity.User{}, err
 	}
@@ -106,4 +106,13 @@ func (u *Users) RegisterVerifiedCustomer(ctx context.Context, phone, id string) 
 		return identity.User{}, err
 	}
 	return u.FindByPhone(ctx, identity.SurfaceCustomer, phone)
+}
+
+func (u *Users) snapshot(ctx context.Context) (backoffice.Workspace, error) {
+	if r, ok := u.repository.(interface {
+		IdentitySnapshot(context.Context) (backoffice.Workspace, error)
+	}); ok {
+		return r.IdentitySnapshot(ctx)
+	}
+	return u.repository.Snapshot(ctx)
 }

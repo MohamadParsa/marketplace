@@ -162,6 +162,18 @@ func expireCommerce(w *Workspace, now time.Time) bool {
 	return changed
 }
 func (s *Service) ReleaseExpiredCommerce(ctx context.Context) error {
+	if r, ok := s.repository.(interface {
+		CommerceExpiryDue(context.Context, time.Time) (bool, error)
+	}); ok {
+		due, e := r.CommerceExpiryDue(ctx, s.clock.Now())
+		if e != nil {
+			return e
+		}
+		if !due {
+			return nil
+		}
+	}
+
 	w, e := s.repository.Snapshot(ctx)
 	if e != nil {
 		return e

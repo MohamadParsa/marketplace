@@ -15,6 +15,8 @@ import type {
   Product,
   CategorySEO,
 } from "../../shared/types";
+import { CategoryTree } from "./category-tree";
+import { PaginationControls, usePagedRows } from "../../shared/pagination";
 import { ProductQuickDialog } from "./product-workspace";
 import {
   ProductContentFields,
@@ -63,7 +65,12 @@ export function HomeCatalogPage() {
   const { state, execute, busy, can, uploadIcon } = useWorkspace();
   const [params] = useSearchParams();
   const opened = useRef("");
-  const [tab, setTab] = useState("products");
+  const [tab, setTab] = useState(
+    params.has("category") || params.get("create") === "category"
+      ? "categories"
+      : "products",
+  );
+  const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [editing, setEditing] = useState<{
@@ -159,13 +166,28 @@ export function HomeCatalogPage() {
     });
   }
   useEffect(() => {
+    if (
+      params.get("create") === "category" &&
+      opened.current !== "new-category"
+    ) {
+      opened.current = "new-category";
+      open("category");
+      return;
+    }
+    const categoryId = params.get("category");
+    const category = state.categories?.find((c) => c.id === categoryId);
+    if (category && opened.current !== category.id) {
+      opened.current = category.id;
+      open("category", category);
+      return;
+    }
     const id = params.get("product");
     const row = state.products?.find((p) => p.id === id);
     if (row && id && opened.current !== id) {
       opened.current = id;
       open("product", row);
     }
-  }, [params, state.products]);
+  }, [params, state.products, state.categories]);
   async function save(e: FormEvent) {
     e.preventDefault();
     if (!editing) return;
@@ -210,6 +232,28 @@ export function HomeCatalogPage() {
     return names.reverse().join(" / ");
   };
   const editable = can("catalog.product.update", "management");
+  const query = search.toLocaleLowerCase();
+  const products = usePagedRows(
+    (state.products ?? []).filter((p) =>
+      (p.name + " " + p.english_name + " " + p.id)
+        .toLocaleLowerCase()
+        .includes(query),
+    ),
+  );
+  const categoryRows = usePagedRows(
+    (state.categories ?? []).filter(
+      (c) =>
+        !c.archived &&
+        (categoryLabel(c.id) + " " + c.english_name)
+          .toLocaleLowerCase()
+          .includes(query),
+    ),
+  );
+  const brandRows = usePagedRows(
+    (state.brands ?? []).filter((b) =>
+      b.name.toLocaleLowerCase().includes(query),
+    ),
+  );
   return (
     <>
       <div className="page-header">
@@ -246,6 +290,15 @@ export function HomeCatalogPage() {
         ))}
       </div>
       <section className="panel home-admin-panel">
+        {tab !== "rails" && (
+          <input
+            className="search"
+            aria-label="جست‌وجو در کاتالوگ"
+            placeholder="جست‌وجو در این بخش…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        )}
         {tab === "products" && (
           <>
             <div className="toolbar">
@@ -263,7 +316,7 @@ export function HomeCatalogPage() {
               قیمت عرضه، قیمت نهایی نقدی مشتری بدون ارسال است.
             </p>
             <div className="home-admin-list">
-              {(state.products ?? []).map((p) => (
+              {products.rows.map((p) => (
                 <article key={p.id}>
                   <ManagedPhoto id={p.image_id} />
                   <div>
@@ -314,6 +367,7 @@ export function HomeCatalogPage() {
               ))}
               {!state.products?.length && <p>هنوز محصولی ثبت نشده است.</p>}
             </div>
+            <PaginationControls {...products.controls} />
           </>
         )}
         {tab === "categories" && (
@@ -329,30 +383,29 @@ export function HomeCatalogPage() {
               </Button>
             </div>
             <div className="home-admin-list">
-              {(state.categories ?? [])
-                .filter((c) => !c.archived)
-                .map((c) => (
-                  <article key={c.id}>
-                    <div>
-                      <b>{c.name}</b>
-                      <small>{categoryLabel(c.id)}</small>
-                      <small>
-                        {c.published ? "منتشرشده" : "پیش‌نویس"} ·{" "}
-                        {c.english_name || "نام انگلیسی ثبت نشده"}
-                      </small>
-                    </div>
-                    <Button
-                      disabled={
-                        busy || !can("catalog.category.update", "management")
-                      }
-                      onClick={() => open("category", c)}
-                    >
-                      ویرایش دسته
-                    </Button>
-                    <Link to="/categories">آیکن و خصوصیات</Link>
-                  </article>
-                ))}
+              {categoryRows.rows.map((c) => (
+                <article key={c.id}>
+                  <div>
+                    <b>{c.name}</b>
+                    <small>{categoryLabel(c.id)}</small>
+                    <small>
+                      {c.published ? "منتشرشده" : "پیش‌نویس"} ·{" "}
+                      {c.english_name || "نام انگلیسی ثبت نشده"}
+                    </small>
+                  </div>
+                  <Button
+                    disabled={
+                      busy || !can("catalog.category.update", "management")
+                    }
+                    onClick={() => open("category", c)}
+                  >
+                    ویرایش دسته
+                  </Button>
+                  <Link to="/categories">آیکن و خصوصیات</Link>
+                </article>
+              ))}
             </div>
+            <PaginationControls {...categoryRows.controls} />
           </>
         )}
         {tab === "brands" && (
@@ -368,7 +421,7 @@ export function HomeCatalogPage() {
               </Button>
             </div>
             <div className="home-admin-list">
-              {(state.brands ?? []).map((b) => (
+              {brandRows.rows.map((b) => (
                 <article key={b.id}>
                   <b>{b.name}</b>
                   <span>{b.active ? "فعال" : "غیرفعال"}</span>
@@ -383,6 +436,7 @@ export function HomeCatalogPage() {
                 </article>
               ))}
             </div>
+            <PaginationControls {...brandRows.controls} />
             <Link to="/brands">مدیریت آیکن برندها</Link>
           </>
         )}
@@ -587,32 +641,21 @@ export function HomeCatalogPage() {
                   )}
                   {editing.kind === "product" && (
                     <>
-                      <label>
-                        دسته *
-                        <select
-                          required
-                          disabled={!!editing.id}
+                      <div>
+                        <b>دسته *</b>
+                        <CategoryTree
+                          categories={state.categories ?? []}
                           value={editing.input.category_id}
-                          onChange={(e) =>
+                          disabled={!!editing.id}
+                          allowRoot={false}
+                          onChange={(id) =>
                             setEditing({
                               ...editing,
-                              input: {
-                                ...editing.input,
-                                category_id: e.target.value,
-                              },
+                              input: { ...editing.input, category_id: id },
                             })
                           }
-                        >
-                          <option value="">انتخاب دسته</option>
-                          {(state.categories ?? [])
-                            .filter((c) => !c.archived)
-                            .map((c) => (
-                              <option key={c.id} value={c.id}>
-                                {categoryLabel(c.id)}
-                              </option>
-                            ))}
-                        </select>
-                      </label>
+                        />
+                      </div>
                       {!editing.id && (
                         <>
                           <label>
@@ -770,31 +813,21 @@ export function HomeCatalogPage() {
                     </fieldset>
                   )}
                   {editing.kind === "category" && (
-                    <label>
-                      دسته والد
-                      <select
-                        disabled={!!editing.id}
+                    <div>
+                      <b>دسته والد و ساختار درختی</b>
+                      <CategoryTree
+                        categories={state.categories ?? []}
                         value={editing.input.parent_id}
-                        onChange={(e) =>
+                        currentId={editing.id}
+                        disabled={!!editing.id}
+                        onChange={(id) =>
                           setEditing({
                             ...editing,
-                            input: {
-                              ...editing.input,
-                              parent_id: e.target.value,
-                            },
+                            input: { ...editing.input, parent_id: id },
                           })
                         }
-                      >
-                        <option value="">بدون والد</option>
-                        {(state.categories ?? [])
-                          .filter((c) => !c.archived)
-                          .map((c) => (
-                            <option key={c.id} value={c.id}>
-                              {c.name}
-                            </option>
-                          ))}
-                      </select>
-                    </label>
+                      />
+                    </div>
                   )}
                   {(editing.kind !== "product" || editing.id) && (
                     <label className="home-admin-check">

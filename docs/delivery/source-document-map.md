@@ -42,3 +42,7 @@
 سورس [6342eb9](https://github.com/MohamadParsa/marketplace/commit/6342eb9e38213664c2d8dfde6f865b4cf1cc0571) و مدارک [d35855e](https://github.com/MohamadParsa/marketplace/commit/d35855e7ab4b4474e2d0b49f55def39ea5fc5d16) با tree اجرایی/JSON یکسان کنترل شدند. [گزارش اجرا، محدودیت‌ها و تصاویر](catalog-seed/local-import-2026-11-23.md) شامل ورود کامل، retry بدون تکرار، حفظ اطلاعات، راه‌اندازی مجدد و اصلاح واحد قیمت/گزینه‌های PDP/سازگاری migration است. داده فقط در محیط محلی وارد شده و گیت عمومی #12 همچنان مستقل است.
 
 این تحویل با [PR #40](https://github.com/MohamadParsa/marketplace/pull/40) و ادغام [b1f9a12](https://github.com/MohamadParsa/marketplace/commit/b1f9a12f19441bfd9ef7907c0785be44674a3f57) روی `main` است. نسخه `D:\Cherriva` همگام و اجرای محلی دارای داده کامل است؛ استقرار Liara انجام نشده است.
+
+## کش و اصلاحات کاتالوگ/پنل — #41
+
+سورس [c2617fc](https://github.com/MohamadParsa/marketplace/commit/c2617fcd72c82fad01a51291360a4189f576f719) و مدارک [63c73ac](https://github.com/MohamadParsa/marketplace/commit/63c73ac2486ed9587da2330439f3cb4bb1463e1f) درخت اجرایی یکسان دارند. [گزارش #41، آزمون‌ها، سرعت، تصاویر و پاک‌سازی](storefront-followups/issue-41-verification.md) مرجع این تحویل محلی است؛ تغییر URL در #42 و انتشار Liara جدا هستند.

@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[تحلیل کش Redis و تسک کد/URL عمومی محصول و دسته](delivery/storefront-followups/README.md)؛ شرح کار آینده، بدون تغییر اجرایی در این تحویل.
+[اجرای کش عمومی، اصلاح پنل و پاک‌سازی کاتالوگ؛ کار بعدی URL](delivery/storefront-followups/README.md) · [گزارش و تصاویر #41](delivery/storefront-followups/issue-41-verification.md).
 
 [داده تست واقعی کاتالوگ، JSON و پرامپت ورود](delivery/catalog-seed/README.md) · [نتیجه ورود کامل به لوکال](delivery/catalog-seed/local-import-2026-11-23.md)
 

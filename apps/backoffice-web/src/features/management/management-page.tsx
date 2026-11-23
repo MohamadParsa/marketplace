@@ -13,7 +13,8 @@ import {
 import { labels, money } from "../../shared/format";
 import type { Command, Category } from "../../shared/types";
 import { CategoryBindingsDialog } from "./shared-attributes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { categoryPath } from "./category-tree";
 import { ProductQuickDialog } from "./product-workspace";
 import {
   CatalogIcon,
@@ -39,6 +40,7 @@ export function ManagementPage({
     | "pricing"
     | "shipping";
 }) {
+  const navigate = useNavigate();
   const { state, role, execute, busy, can: allowed } = useWorkspace();
   const [policyError, setError] = useState("");
   const [search, setSearch] = useState("");
@@ -66,20 +68,22 @@ export function ManagementPage({
     shipping: "ارسال و تقویم کاری",
   };
   const create = () =>
-    section === "users"
-      ? open("کاربر جدید", { action: "user.create" }, [
-          { name: "name", label: "نام کاربر" },
-          { name: "phone", label: "شماره حساب آزمون (۱۱ رقم)" },
-          { name: "value", label: "نقش", options: roleOptions },
-        ])
-      : section === "stores"
-        ? open("فروشگاه جدید", { action: "store.create" }, [
-            { name: "name", label: "نام فروشگاه" },
-            { name: "value", label: "شهر" },
+    section === "categories"
+      ? navigate("/home-catalog?create=category")
+      : section === "users"
+        ? open("کاربر جدید", { action: "user.create" }, [
+            { name: "name", label: "نام کاربر" },
+            { name: "phone", label: "شماره حساب آزمون (۱۱ رقم)" },
+            { name: "value", label: "نقش", options: roleOptions },
           ])
-        : open("دسته جدید", { action: "category.create" }, [
-            { name: "name", label: "عنوان دسته" },
-          ]);
+        : section === "stores"
+          ? open("فروشگاه جدید", { action: "store.create" }, [
+              { name: "name", label: "نام فروشگاه" },
+              { name: "value", label: "شهر" },
+            ])
+          : open("دسته جدید", { action: "category.create" }, [
+              { name: "name", label: "عنوان دسته" },
+            ]);
   const filtered = <T,>(rows: T[]) =>
     rows.filter((row) =>
       JSON.stringify(row)
@@ -263,7 +267,12 @@ export function ManagementPage({
                       name={c.name}
                       iconId={c.icon_id}
                     />
-                    <b>{c.name}</b>
+                    <div>
+                      <b>{c.name}</b>
+                      <small>
+                        {categoryPath(state.categories ?? [], c.id)}
+                      </small>
+                    </div>
                   </div>
                 ),
               },
@@ -287,6 +296,13 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (c) => (
                   <>
+                    <Button
+                      component={Link}
+                      to={`/home-catalog?category=${encodeURIComponent(c.id)}`}
+                      disabled={c.archived || !editable}
+                    >
+                      ویرایش
+                    </Button>
                     <Button
                       disabled={c.archived}
                       onClick={() => setBindingTarget(c)}
@@ -384,6 +400,13 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (p) => (
                   <>
+                    <Button
+                      component={Link}
+                      to={`/home-catalog?product=${encodeURIComponent(p.id)}`}
+                      disabled={!editable}
+                    >
+                      ویرایش
+                    </Button>
                     <Button
                       onClick={() => setProductTarget({ id: p.id, tab: 0 })}
                     >

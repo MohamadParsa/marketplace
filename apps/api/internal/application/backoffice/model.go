@@ -82,6 +82,8 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
+	publicIndex *publicCatalogIndex
+
 	Commerce         *commerce.State               `json:"commerce,omitempty"`
 	HomeSettings     HomeSettings                  `json:"home_settings"`
 	StoreMemberships []identity.StoreMembership    `json:"-"`

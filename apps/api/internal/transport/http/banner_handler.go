@@ -140,9 +140,26 @@ func (h *BannerHandler) View(w http.ResponseWriter, r *http.Request) {
 		if row.ID == r.PathValue("id") {
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 			w.Header().Set("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'")
+			if row.Config.CatalogCategoryID != "" {
+				home, e := h.service.PublicHome(r.Context())
+				if e != nil {
+					iconError(w, e)
+					return
+				}
+				for _, rail := range home.Rails {
+					if rail.CategoryID == row.Config.CatalogCategoryID && len(rail.Products) > 0 {
+						_ = catalogBannerTemplate.Execute(w, struct{ Title, Link, Image string }{row.Config.Alt, rail.URL, rail.Products[0].ImageURL})
+						return
+					}
+				}
+				iconError(w, backoffice.ErrNotFound)
+				return
+			}
 			_ = bannerTemplate.Execute(w, row)
 			return
 		}
 	}
 	iconError(w, backoffice.ErrNotFound)
 }
+
+var catalogBannerTemplate = template.Must(template.New("catalog-promo").Parse(`<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>{{.Title}}</title><style>body{margin:0;background:#f7eaf0;font-family:sans-serif;color:#402934}a{display:flex;align-items:center;gap:24px;max-width:900px;margin:auto;padding:32px;color:inherit;text-decoration:none}img{width:40%;max-height:260px;object-fit:contain;mix-blend-mode:multiply}h1{line-height:1.8}span{color:#b51e4f}</style></head><body><a href="{{.Link}}"><div><h1>{{.Title}}</h1><span>مشاهده مدل‌های موجود</span></div><img src="{{.Image}}" alt="{{.Title}}"></a></body></html>`))

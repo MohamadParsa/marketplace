@@ -14,6 +14,7 @@ type Service struct {
 	repository  Repository
 	clock       Clock
 	identifiers Identifier
+	publicCache *PublicCache
 }
 
 func NewService(repository Repository, clock Clock, identifiers Identifier) *Service {

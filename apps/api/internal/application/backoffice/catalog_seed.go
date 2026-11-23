@@ -23,6 +23,8 @@ import (
 // CatalogSeed intentionally has no users, permissions, commerce or bank-account fields.
 // SourceRecords and other extraction metadata are not applied to the target workspace.
 type CatalogSeed struct {
+	AnonymousStoreNames bool `json:"-"`
+
 	SchemaVersion int         `json:"schema_version"`
 	DatasetID     string      `json:"dataset_id"`
 	Currency      string      `json:"currency"`
@@ -470,7 +472,13 @@ func applySeed(ctx context.Context, update func(context.Context, func(*Workspace
 		w.Products = append(w.Products, s.Catalog.Products...)
 		w.Variants = append(w.Variants, s.Catalog.Variants...)
 		w.Offers = append(w.Offers, s.Catalog.Offers...)
-		w.Stores = append(w.Stores, s.Catalog.Stores...)
+		displayStores := append([]store.Store{}, s.Catalog.Stores...)
+		if s.AnonymousStoreNames {
+			for i := range displayStores {
+				displayStores[i].Name = AnonymousCatalogStoreName(displayStores[i].ID)
+			}
+		}
+		w.Stores = append(w.Stores, displayStores...)
 		w.IconMedia = append(w.IconMedia, media...)
 		if configureHome {
 			h := s.Catalog.HomeSettings
