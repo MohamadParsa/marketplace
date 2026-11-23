@@ -1,0 +1,127 @@
+{
+  "checks": [
+    {
+      "id": "fifteen-options-in-response-six-visible",
+      "pass": true
+    },
+    {
+      "id": "two-rows-bounded-desktop",
+      "pass": true
+    },
+    {
+      "id": "explicit-mixed-unit-order",
+      "pass": true
+    },
+    {
+      "id": "no-dropdown",
+      "pass": true
+    },
+    {
+      "id": "keyboard-reveals-all-fifteen",
+      "pass": true
+    },
+    {
+      "id": "all-values-ordered-without-rewriting",
+      "pass": true
+    },
+    {
+      "id": "selected-price-image-offer-binding",
+      "pass": true
+    },
+    {
+      "id": "late-selected-chip-pinned",
+      "pass": true
+    },
+    {
+      "id": "missing-combination-resolves-valid-existing-variant",
+      "pass": true
+    },
+    {
+      "id": "unavailable-variant-cannot-purchase",
+      "pass": true
+    },
+    {
+      "id": "refresh-restores-pinned-selection",
+      "pass": true
+    },
+    {
+      "id": "back-restores-pinned-selection",
+      "pass": true
+    },
+    {
+      "id": "mobile-two-rows-and-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "long-label-complete-accessible-name",
+      "pass": true
+    },
+    {
+      "id": "keyboard-space-selection",
+      "pass": true
+    },
+    {
+      "id": "add-to-cart-selected-offer-and-variant",
+      "pass": true
+    },
+    {
+      "id": "axes-expand-independently",
+      "pass": true
+    },
+    {
+      "id": "axes-collapse-independently",
+      "pass": true
+    },
+    {
+      "id": "one-and-two-options-no-toggle",
+      "pass": true
+    },
+    {
+      "id": "undefined-value-cannot-be-selected",
+      "pass": true
+    },
+    {
+      "id": "explicit-metadata-unit-exact-decimal-order",
+      "pass": true
+    },
+    {
+      "id": "unknown-unit-preserves-defined-order",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "browser_fixture_variants_only": true,
+  "no_catalog_or_order_writes": true,
+  "cart_post_intercepted": true,
+  "real_catalog_checks": [
+    {
+      "id": "actual-twenty-option-product-bounded",
+      "pass": true
+    },
+    {
+      "id": "actual-twenty-options-available",
+      "pass": true
+    },
+    {
+      "id": "actual-mixed-weight-order",
+      "pass": true
+    },
+    {
+      "id": "actual-mobile-selected-pinned",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "issue": 54,
+  "implementation_status": "review",
+  "build": "passed",
+  "lint": "passed",
+  "date": "2026-11-23"
+}

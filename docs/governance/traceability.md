@@ -178,3 +178,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 [چیپ مرتب‌سازی](../delivery/storefront-followups/issue-50-verification.md) ← `sort-chips.cjs` و۸کنترل؛ [بارگذاری مشترک](../delivery/storefront-followups/issue-51-verification.md) ← `stable-progress.cjs` و `public-progress.cjs` با۳۱کنترل؛ [محتوای PDP](../delivery/storefront-followups/issue-52-verification.md) ← `pdp-read-more.cjs` با۱۹کنترل. تست‌های مالی این تغییر فقط fixture مرورگرند؛ شواهد اجرای UI از تأیید پرداخت واقعی جداست. سورس هر کار در نقشه کامیت ثبت شد؛ تأیید سند مستقل می‌ماند.
 
 تحویل #50تا#52 در PR #60 با هر۵ job موفق ادغام شد؛۵۸کنترل مرورگر موفق، هر سه با کامنت بسته و سورس/مدارک روی main و D:\Cherriva همگام‌اند. #53/#54 خارج انتخاب جاری‌اند.
+
+## اجرای UX-09/10 — #53/#54
+
+[قالب متن ارسال #53](../delivery/storefront-followups/issue-53-verification.md) ← `dispatch-wording.cjs`،۱۱کنترل؛ [چیپ‌های تنوع #54](../delivery/storefront-followups/issue-54-verification.md) ← `dense-variant-chips.cjs` با۲۳ و `real-gold-variants.cjs` با۵کنترل خواندنی واقعی. رگرسیون۲۳کنترلی مسیر خرید نیز موفق است؛ هیچ تغییر مدل مالی/قیمت طلا/تقویم یا write سفارش در این تحویل نیست.
