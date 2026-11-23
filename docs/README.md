@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[داده تست واقعی کاتالوگ، JSON و پرامپت ورود](delivery/catalog-seed/README.md)
+[داده تست واقعی کاتالوگ، JSON و پرامپت ورود](delivery/catalog-seed/README.md) · [نتیجه ورود کامل به لوکال](delivery/catalog-seed/local-import-2026-11-23.md)
 
 [راهنمای اجرای لوکال از D:\Cherriva](local-development.md)
 

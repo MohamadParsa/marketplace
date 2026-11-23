@@ -1,0 +1,1273 @@
+{
+  "date": "2026-11-23",
+  "source_commit": "6342eb9e38213664c2d8dfde6f865b4cf1cc0571",
+  "environment": "owned local review only",
+  "source_sql_server_contacted": false,
+  "snapshot_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "import": {
+    "already_applied": false,
+    "applied": true,
+    "brands": 1277,
+    "categories": 248,
+    "configure_home": true,
+    "dataset_id": "gooshishop-public-catalog-2026-11-22",
+    "file_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+    "media": 10058,
+    "mode": "review",
+    "normalized_media_bytes": 3349387289,
+    "offers": 5992,
+    "products": 3534,
+    "validation": "passed_with_media",
+    "variants": 5029
+  },
+  "retry": {
+    "already_applied": true,
+    "applied": false,
+    "brands": 1277,
+    "categories": 248,
+    "configure_home": true,
+    "dataset_id": "gooshishop-public-catalog-2026-11-22",
+    "file_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+    "media": 10058,
+    "mode": "review",
+    "normalized_media_bytes": 3349387289,
+    "offers": 5992,
+    "products": 3534,
+    "validation": "passed_with_media",
+    "variants": 5029
+  },
+  "counts_before": {
+    "commerce_deposits": 7,
+    "commerce_receipts": 7,
+    "commerce_wallet_entries": 11,
+    "review_memberships": 5,
+    "review_purchase_owners": 15,
+    "review_role_grants": 9,
+    "review_roles": 5,
+    "review_schema_migrations": 3,
+    "review_stores": 4,
+    "review_users": 21,
+    "workspace.attributes": 11,
+    "workspace.banners": 3,
+    "workspace.brands": 3,
+    "workspace.categories": 20,
+    "workspace.icon_media": 42,
+    "workspace.offers": 76,
+    "workspace.products": 46,
+    "workspace.stores": 4,
+    "workspace.variants": 59
+  },
+  "counts_after": {
+    "commerce_deposits": 7,
+    "commerce_receipts": 7,
+    "commerce_wallet_entries": 11,
+    "review_memberships": 5,
+    "review_purchase_owners": 15,
+    "review_role_grants": 9,
+    "review_roles": 5,
+    "review_schema_migrations": 4,
+    "review_stores": 48,
+    "review_users": 21,
+    "workspace.attributes": 253,
+    "workspace.banners": 3,
+    "workspace.brands": 1280,
+    "workspace.categories": 268,
+    "workspace.icon_media": 10100,
+    "workspace.offers": 6068,
+    "workspace.products": 3580,
+    "workspace.stores": 48,
+    "workspace.variants": 5088
+  },
+  "preservation": {
+    "exact_immediately_after_import": true,
+    "all_16366_snapshot_catalog_records_match": true,
+    "user_password_role_and_membership_tables_unchanged": true,
+    "wallet_entries_deposits_receipts_unchanged": true,
+    "bank_shipping_geography_business_settings_unchanged": true,
+    "existing_migration_rows_unchanged": true,
+    "existing_cart_records_unchanged": true,
+    "legacy_order_records_unchanged": true,
+    "old_reservation_expired_through_normal_lifecycle": 1,
+    "guest_verification_cart_cleaned": true,
+    "no_new_order_or_funding": true
+  },
+  "restart": {
+    "postgresql": true,
+    "both_api_surfaces": true,
+    "all_records_preserved": true,
+    "site_http_status": 200,
+    "backoffice_http_status": 200
+  },
+  "api": {
+    "step": "public",
+    "checks": [
+      {
+        "id": "four-home-rails",
+        "pass": true
+      },
+      {
+        "id": "special-offers-filled",
+        "pass": true
+      },
+      {
+        "id": "only-stocked-home-categories",
+        "pass": true
+      },
+      {
+        "id": "rail-category-mobile",
+        "pass": true
+      },
+      {
+        "id": "rail-ten-products-mobile",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10082",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10092",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10469",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11071",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11468",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11981",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12034",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12176",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12178",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12388",
+        "pass": true
+      },
+      {
+        "id": "rail-category-earbuds",
+        "pass": true
+      },
+      {
+        "id": "rail-ten-products-earbuds",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10270",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10635",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11005",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11006",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11185",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11336",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11768",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11787",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12238",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12485",
+        "pass": true
+      },
+      {
+        "id": "rail-category-power-bank",
+        "pass": true
+      },
+      {
+        "id": "rail-ten-products-power-bank",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11199",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-14197",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-15137",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-15368",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-15515",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-16764",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-16767",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-18029",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-18347",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-18356",
+        "pass": true
+      },
+      {
+        "id": "rail-category-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "rail-ten-products-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10494",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10888",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10889",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10890",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10952",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-10954",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11278",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-11816",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-12514",
+        "pass": true
+      },
+      {
+        "id": "home-card-price-gsp-product-15134",
+        "pass": true
+      },
+      {
+        "id": "plp-count-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-112817",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-91457",
+        "pass": true
+      },
+      {
+        "id": "pdp-regular-price-gsp-offer-91457",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-130110",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-151172",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-count-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-134287",
+        "pass": true
+      },
+      {
+        "id": "pdp-regular-price-gsp-offer-134287",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-count-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-133659",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-count-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-181688",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-132919",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-count-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-143968",
+        "pass": true
+      },
+      {
+        "id": "pdp-regular-price-gsp-offer-143968",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-coin",
+        "pass": true
+      },
+      {
+        "id": "card-important-features-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-count-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-142211",
+        "pass": true
+      },
+      {
+        "id": "pdp-regular-price-gsp-offer-142211",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-bar",
+        "pass": true
+      },
+      {
+        "id": "card-important-features-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-count-melted",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-name-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-english-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-variants-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-gallery-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-dimensions-units-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-offer-price-gsp-offer-161243",
+        "pass": true
+      },
+      {
+        "id": "pdp-regular-price-gsp-offer-161243",
+        "pass": true
+      },
+      {
+        "id": "pdp-image-200-melted",
+        "pass": true
+      },
+      {
+        "id": "card-important-features-melted",
+        "pass": true
+      },
+      {
+        "id": "gold-parent-tree",
+        "pass": true
+      }
+    ],
+    "examples": [
+      {
+        "key": "mobile",
+        "id": "gsp-product-18189",
+        "name": "گوشی موبایل سامسونگ مدل گلکسی S25 اولترا 5G ظرفیت 256 گیگابایت رم 12 گیگابایت - ویتنام",
+        "url": "http://127.0.0.1:5197/product/gsp-product-18189",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-1",
+        "selected_variant": "gsp-variant-18189-6ae1ebec6aed",
+        "price_toman": 402003000,
+        "variants": 5,
+        "features": 3
+      },
+      {
+        "key": "earbuds",
+        "id": "gsp-product-14687",
+        "name": "هندزفری بی سیم انکر مدل Soundcore R50i NC A3959",
+        "url": "http://127.0.0.1:5197/product/gsp-product-14687",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-273",
+        "selected_variant": "gsp-variant-14687-8d8476f60499",
+        "price_toman": 3959000,
+        "variants": 13,
+        "features": 1
+      },
+      {
+        "key": "power-bank",
+        "id": "gsp-product-28032",
+        "name": "پاور بانک 45W انکر مدل A1638H61 ظرفیت 10000 میلی آمپر ساعت",
+        "url": "http://127.0.0.1:5197/product/gsp-product-28032",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-163",
+        "selected_variant": "gsp-variant-28032-d17ffdb4bbe1",
+        "price_toman": 8319000,
+        "variants": 5,
+        "features": 2
+      },
+      {
+        "key": "smartwatch",
+        "id": "gsp-product-22763",
+        "name": "ساعت هوشمند میبرو Lite 3 Pro",
+        "url": "http://127.0.0.1:5197/product/gsp-product-22763",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-755",
+        "selected_variant": "gsp-variant-22763-a96134de5e9a",
+        "price_toman": 14210000,
+        "variants": 9,
+        "features": 3
+      },
+      {
+        "key": "coin",
+        "id": "gsp-product-37354",
+        "name": "سکه طلا 18 عیار پارسیان طلای ایران زمین طرح کوروش کبیر",
+        "url": "http://127.0.0.1:5197/product/gsp-product-37354",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-828",
+        "selected_variant": "gsp-variant-37354-9668a7f593b0",
+        "price_toman": 934000,
+        "variants": 20,
+        "features": 1
+      },
+      {
+        "key": "bar",
+        "id": "gsp-product-24572",
+        "name": "شمش طلا 24 عیار 0.2 گرم طلای محمد مدل گل رز",
+        "url": "http://127.0.0.1:5197/product/gsp-product-24572",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-831",
+        "selected_variant": "gsp-variant-24572-1c84bfca7a5b",
+        "price_toman": 8999000,
+        "variants": 1,
+        "features": 3
+      },
+      {
+        "key": "melted",
+        "id": "gsp-product-19687",
+        "name": "طلای آب شده 10 گرمی نیک کوین عیار 750",
+        "url": "http://127.0.0.1:5197/product/gsp-product-19687",
+        "category": "http://127.0.0.1:5197/category/gsp-cat-878",
+        "selected_variant": "gsp-variant-19687-1c84bfca7a5b",
+        "price_toman": 268000000,
+        "variants": 1,
+        "features": 2
+      }
+    ],
+    "price_unit": "toman"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "home-ten-cards-mobile",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-earbuds",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-power-bank",
+        "pass": true
+      },
+      {
+        "id": "home-ten-cards-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "special-offers-visible",
+        "pass": true
+      },
+      {
+        "id": "stocked-category-shortcuts",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-mobile-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-mobile-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-mobile",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-mobile",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-mobile",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-earbuds-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-earbuds-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-earbuds",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-earbuds",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-earbuds",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-power-bank-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-power-bank-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-power-bank",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-power-bank",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-power-bank",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-smartwatch-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-smartwatch-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-smartwatch",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-coin-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-coin-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-coin",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-coin",
+        "pass": true
+      },
+      {
+        "id": "variant-selection-updates-coin",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-bar-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-bar-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-bar",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-bar",
+        "pass": true
+      },
+      {
+        "id": "plp-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "plp-cards-and-features-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-brand-breadcrumb-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-two-axes-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-melted-0",
+        "pass": true
+      },
+      {
+        "id": "pdp-relevant-options-melted-1",
+        "pass": true
+      },
+      {
+        "id": "visible-toman-price-melted",
+        "pass": true
+      },
+      {
+        "id": "pdp-real-image-melted",
+        "pass": true
+      },
+      {
+        "id": "add-to-cart-popup",
+        "pass": true
+      },
+      {
+        "id": "cart-unit-price-in-toman",
+        "pass": true
+      },
+      {
+        "id": "cart-quantity-increase",
+        "pass": true
+      },
+      {
+        "id": "cart-quantity-decrease",
+        "pass": true
+      },
+      {
+        "id": "cart-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "verification-cart-cleaned",
+        "pass": true
+      },
+      {
+        "id": "plp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "pdp-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "examples": [
+      {
+        "key": "mobile",
+        "url": "http://127.0.0.1:5197/product/gsp-product-18189"
+      },
+      {
+        "key": "earbuds",
+        "url": "http://127.0.0.1:5197/product/gsp-product-14687"
+      },
+      {
+        "key": "power-bank",
+        "url": "http://127.0.0.1:5197/product/gsp-product-28032"
+      },
+      {
+        "key": "smartwatch",
+        "url": "http://127.0.0.1:5197/product/gsp-product-22763"
+      },
+      {
+        "key": "coin",
+        "url": "http://127.0.0.1:5197/product/gsp-product-37354"
+      },
+      {
+        "key": "bar",
+        "url": "http://127.0.0.1:5197/product/gsp-product-24572"
+      },
+      {
+        "key": "melted",
+        "url": "http://127.0.0.1:5197/product/gsp-product-19687"
+      }
+    ],
+    "guest_cart_only": true,
+    "no_order_placed": true
+  },
+  "payment_rules": {
+    "actual_database_written": false,
+    "checks": [
+      {
+        "card_transfer_eligible": true,
+        "id": "card-under-limit",
+        "local_eligible": true,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "14999999"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "card-exact-limit",
+        "local_eligible": true,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "15000000"
+      },
+      {
+        "card_transfer_eligible": false,
+        "id": "card-over-limit",
+        "local_eligible": true,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "15000001"
+      },
+      {
+        "card_transfer_eligible": false,
+        "id": "local-under-limit",
+        "local_eligible": true,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "29999999"
+      },
+      {
+        "card_transfer_eligible": false,
+        "id": "local-exact-limit",
+        "local_eligible": true,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "30000000"
+      },
+      {
+        "card_transfer_eligible": false,
+        "id": "local-over-limit",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "30000001"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "gold-gsp-cat-828",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "child-gsp-cat-828",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "mixed-gsp-cat-828",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "2000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "gold-gsp-cat-831",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "child-gsp-cat-831",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "mixed-gsp-cat-831",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "2000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "gold-gsp-cat-878",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "child-gsp-cat-878",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "1000000"
+      },
+      {
+        "card_transfer_eligible": true,
+        "id": "mixed-gsp-cat-878",
+        "local_eligible": false,
+        "pass": true,
+        "synthetic_probe_in_memory_only": true,
+        "total_toman": "2000000"
+      }
+    ]
+  },
+  "mapping": {
+    "step": "map",
+    "checks": [
+      {
+        "id": "existing-admin-password-works",
+        "pass": true
+      },
+      {
+        "id": "card-transfer-cap-15m",
+        "pass": true
+      },
+      {
+        "id": "local-cap-30m",
+        "pass": true
+      },
+      {
+        "id": "only-local-category-mapping-changed",
+        "pass": true
+      },
+      {
+        "id": "exclusion-retained-fdba5d2139d279cc61ff2b48b95b1b0871261482cae5e301",
+        "pass": true
+      },
+      {
+        "id": "exclusion-retained-gsp-cat-828",
+        "pass": true
+      },
+      {
+        "id": "exclusion-retained-gsp-cat-831",
+        "pass": true
+      },
+      {
+        "id": "exclusion-retained-gsp-cat-878",
+        "pass": true
+      }
+    ]
+  },
+  "stable_capture": {
+    "category_images": {
+      "total": 146,
+      "loaded": 146
+    },
+    "stable_enabled_purchase_controls": true
+  },
+  "go": {
+    "tests_and_subtests_passed": 188,
+    "failures": 0,
+    "skips": 0,
+    "vet": "passed"
+  },
+  "ci": {
+    "run_id": 45125423441,
+    "head_commit": "678240a",
+    "conclusion": "success",
+    "jobs": 5,
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45125423441"
+  }
+}
