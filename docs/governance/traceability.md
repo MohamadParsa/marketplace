@@ -162,3 +162,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای UX-02/03 — #46 و #47
 
 [منوی درختی و شواهد #46](../delivery/storefront-followups/issue-46-verification.md) به تست API ناوبری و `category-menu.cjs` وصل است؛ [آیکن‌ها و شواهد #47](../delivery/storefront-followups/issue-47-verification.md) به `header-actions.cjs` و تصاویر قبل/بعد وصل است. #45/#46 بسته شده‌اند؛ وضعیت نهایی #47 پس از گیت CI ثبت می‌شود.
+
+## اجرای UX-04 — #48
+
+[دامنه قیمت و فیلتر جمع‌شونده](../delivery/storefront-followups/issue-48-verification.md) به `listing_price_range_test.go` و `plp-filters.cjs` وصل است. Switchها در #49 هستند و منطق انتخاب چندگانه این کار تغییر نکرده است.

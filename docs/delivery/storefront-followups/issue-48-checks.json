@@ -1,0 +1,110 @@
+{
+  "issue": 48,
+  "date": "2026-11-23",
+  "implementation_status": "review",
+  "go_pass": 215,
+  "optional_go_skip": 1,
+  "vet": "passed",
+  "storefront_build": "passed",
+  "browser": {
+    "checks": [
+      {
+        "id": "server-wide-price-domain",
+        "pass": true
+      },
+      {
+        "id": "slider-domain-in-rial",
+        "pass": true
+      },
+      {
+        "id": "keyboard-rial-toman-sync",
+        "pass": true
+      },
+      {
+        "id": "numeric-rial-toman-sync",
+        "pass": true
+      },
+      {
+        "id": "price-domain-stays-wide",
+        "pass": true
+      },
+      {
+        "id": "invalid-reversed-range-blocked",
+        "pass": true
+      },
+      {
+        "id": "drag-updates-filter",
+        "pass": true
+      },
+      {
+        "id": "drag-bounded-requests",
+        "pass": true
+      },
+      {
+        "id": "real-many-option-filter",
+        "pass": true
+      },
+      {
+        "id": "first-five-only",
+        "pass": true
+      },
+      {
+        "id": "all-options-expanded",
+        "pass": true
+      },
+      {
+        "id": "selected-sixth-visible-as-chip",
+        "pass": true
+      },
+      {
+        "id": "sixth-persists-after-refresh",
+        "pass": true
+      },
+      {
+        "id": "back-restores-selected-value",
+        "pass": true
+      },
+      {
+        "id": "chip-removes-hidden-selection",
+        "pass": true
+      },
+      {
+        "id": "mobile-slider-present",
+        "pass": true
+      },
+      {
+        "id": "no-nested-mobile-filter-scroller",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "out-of-range-no-results-still-adjustable",
+        "pass": true
+      },
+      {
+        "id": "five-options-no-more-button",
+        "pass": true
+      },
+      {
+        "id": "single-price-slider-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-price-slider-disabled",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "drag_requests": 1,
+    "browser_only_edge_fixtures": true,
+    "no_catalog_write": true
+  },
+  "ci": "pending"
+}

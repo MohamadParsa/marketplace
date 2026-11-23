@@ -1,3 +1,5 @@
+import { PriceRangeFilter, type PriceRange } from "./price-range-filter";
+import { AttributeFilter } from "./attribute-filter";
 import { setPageCanonical } from "./page-canonical";
 import { ChoiceGroup } from "./choice-group";
 import { useEffect, useState } from "react";
@@ -19,6 +21,7 @@ type Filter = {
   options: string[];
 };
 type Listing = {
+  price_range?: PriceRange;
   category: (Nav & { description: string }) | null;
   breadcrumbs: Nav[];
   children: Nav[];
@@ -63,26 +66,6 @@ function FiltersPanel({
   params: URLSearchParams;
   change: (edit: (p: URLSearchParams) => void) => void;
 }) {
-  const [min, setMin] = useState(
-    params.has("min_price") ? String(Number(params.get("min_price")) / 10) : "",
-  );
-  const [max, setMax] = useState(
-    params.has("max_price") ? String(Number(params.get("max_price")) / 10) : "",
-  );
-  const [priceError, setPriceError] = useState("");
-  useEffect(() => {
-    setMin(
-      params.has("min_price")
-        ? String(Number(params.get("min_price")) / 10)
-        : "",
-    );
-    setMax(
-      params.has("max_price")
-        ? String(Number(params.get("max_price")) / 10)
-        : "",
-    );
-    setPriceError("");
-  }, [params.toString()]);
   return (
     <>
       <div className="plp-filter-heading">
@@ -114,90 +97,24 @@ function FiltersPanel({
           }
         />
       </label>
-      <form
-        className="plp-price-filter"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (
-            (min !== "" && (!Number.isFinite(+min) || +min < 0)) ||
-            (max !== "" && (!Number.isFinite(+max) || +max < 0)) ||
-            (min !== "" && max !== "" && +min > +max)
-          ) {
-            setPriceError("بازه قیمت معتبر وارد کنید.");
-            return;
-          }
-          setPriceError("");
-          change((p) => {
-            for (const [k, v] of [
-              ["min_price", min],
-              ["max_price", max],
-            ])
-              v === ""
-                ? p.delete(k)
-                : p.set(k, String(Math.round(Number(v) * 10)));
-          });
-        }}
-      >
-        <h3>
-          محدوده قیمت <small>تومان</small>
-        </h3>
-        <label>
-          از
-          <input
-            type="number"
-            min="0"
-            step="0.1"
-            aria-label="حداقل قیمت (تومان)"
-            value={min}
-            onChange={(e) => setMin(e.target.value)}
-          />
-        </label>
-        <label>
-          تا
-          <input
-            type="number"
-            min="0"
-            step="0.1"
-            aria-label="حداکثر قیمت (تومان)"
-            value={max}
-            onChange={(e) => setMax(e.target.value)}
-          />
-        </label>
-        {priceError && <p role="alert">{priceError}</p>}
-        <button type="submit">اعمال محدوده قیمت</button>
-      </form>
+      <PriceRangeFilter
+        range={data.price_range}
+        params={params}
+        change={change}
+      />
       {data.filters.map((f) => (
-        <fieldset className="plp-attribute" key={f.id}>
-          <legend>
-            {f.name}
-            {f.unit ? " (" + f.unit + ")" : ""}
-          </legend>
-          {!f.options.length ? (
-            <p>گزینه‌ای ثبت نشده است.</p>
-          ) : (
-            f.options.map((value) => (
-              <label key={value}>
-                <input
-                  type="checkbox"
-                  checked={params.getAll("attr." + f.id).includes(value)}
-                  onChange={(e) =>
-                    change((p) => {
-                      const key = "attr." + f.id,
-                        values = p.getAll(key).filter((v) => v !== value);
-                      p.delete(key);
-                      for (const v of [
-                        ...values,
-                        ...(e.target.checked ? [value] : []),
-                      ])
-                        p.append(key, v);
-                    })
-                  }
-                />
-                <span>{value}</span>
-              </label>
-            ))
-          )}
-        </fieldset>
+        <AttributeFilter
+          key={(data.category?.id ?? data.query) + ":" + f.id}
+          filter={f}
+          selected={params.getAll("attr." + f.id)}
+          change={(values) =>
+            change((p) => {
+              const key = "attr." + f.id;
+              p.delete(key);
+              values.forEach((v) => p.append(key, v));
+            })
+          }
+        />
       ))}
     </>
   );

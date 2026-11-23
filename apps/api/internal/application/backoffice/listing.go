@@ -60,22 +60,27 @@ type ListingCard struct {
 	VariantID       string                `json:"variant_id,omitempty"`
 	Features        []catalog.CardFeature `json:"features"`
 }
+type ListingPriceRange struct {
+	Min *int64 `json:"min"`
+	Max *int64 `json:"max"`
+}
 type ListingResult struct {
-	Category    *CatalogCategory `json:"category"`
-	Breadcrumbs []CatalogNav     `json:"breadcrumbs"`
-	Children    []CatalogNav     `json:"children"`
-	Navigation  []CatalogNav     `json:"navigation"`
-	Products    []ListingCard    `json:"products"`
-	Filters     []ListingFilter  `json:"filters"`
-	SEO         catalog.SEO      `json:"seo"`
-	Title       string           `json:"title"`
-	Query       string           `json:"query"`
-	Total       int              `json:"total"`
-	Page        int              `json:"page"`
-	PageSize    int              `json:"page_size"`
-	TotalPages  int              `json:"total_pages"`
-	Sort        string           `json:"sort"`
-	SortOptions []string         `json:"sort_options"`
+	PriceRange  ListingPriceRange `json:"price_range"`
+	Category    *CatalogCategory  `json:"category"`
+	Breadcrumbs []CatalogNav      `json:"breadcrumbs"`
+	Children    []CatalogNav      `json:"children"`
+	Navigation  []CatalogNav      `json:"navigation"`
+	Products    []ListingCard     `json:"products"`
+	Filters     []ListingFilter   `json:"filters"`
+	SEO         catalog.SEO       `json:"seo"`
+	Title       string            `json:"title"`
+	Query       string            `json:"query"`
+	Total       int               `json:"total"`
+	Page        int               `json:"page"`
+	PageSize    int               `json:"page_size"`
+	TotalPages  int               `json:"total_pages"`
+	Sort        string            `json:"sort"`
+	SortOptions []string          `json:"sort_options"`
 }
 
 func ParseListingQuery(v url.Values) (ListingQuery, error) {
@@ -445,6 +450,7 @@ func BuildListingWithSales(w Workspace, q ListingQuery, sales map[string]int64) 
 	cards := []ListingCard{}
 	dates := map[string]time.Time{}
 	for _, p := range candidates {
+		extendListingPriceRange(&result.PriceRange, w, p, q)
 		if card, ok := listingCard(w, p, q); ok {
 			cards = append(cards, card)
 			dates[p.ID] = productCreatedAt(w, p)
@@ -622,4 +628,33 @@ func (s *Service) PublicNavigation(ctx context.Context) ([]CatalogNav, error) {
 		}
 		return publicNavigation(indexedCatalog(w)), nil
 	})
+}
+
+// Price domain is computed from all buyable matching offers, before the price filter and pagination.
+// For special offers, the deterministic representative of each price must itself be discounted,
+// matching listingCard's behavior for a range narrowed to that exact price.
+func extendListingPriceRange(r *ListingPriceRange, w Workspace, p catalog.Product, q ListingQuery) {
+	matching := map[string]bool{}
+	for _, v := range productVariants(w, p) {
+		if matchesAttributes(variantValues(w, p, v), q.Attributes) {
+			matching[v.ID] = true
+		}
+	}
+	seenPrice := map[int64]bool{}
+	for _, o := range publicOffers(w, p) {
+		if !matching[o.VariantID] || seenPrice[o.Price] {
+			continue
+		}
+		seenPrice[o.Price] = true
+		if q.Special && o.RegularPrice <= o.Price {
+			continue
+		}
+		value := o.Price
+		if r.Min == nil || value < *r.Min {
+			r.Min = &value
+		}
+		if r.Max == nil || value > *r.Max {
+			r.Max = &value
+		}
+	}
 }
