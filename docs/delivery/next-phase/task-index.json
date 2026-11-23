@@ -578,13 +578,13 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "state": "open",
       "number": 90,
       "url": "https://github.com/MohamadParsa/marketplace/issues/90",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 30,

@@ -1,3 +1,4 @@
+import { ProductQA } from "./product-qa";
 import { ProductContentReview } from "./product-content-review";
 import { ProductMediaDialog } from "./product-media-dialog";
 import { useState } from "react";
@@ -86,7 +87,8 @@ export function ProductDetailsPage() {
 }
 
 function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
-  const { loadProduct, surface, can } = useWorkspace();
+  const { loadProduct, surface, can, role } = useWorkspace();
+  const canManageQA = surface === "backoffice" && role === "super-admin";
   const [mediaOpen, setMediaOpen] = useState(false);
   const [tab, setTab] = useState(initialTab);
   const [editor, setEditor] = useState<
@@ -155,6 +157,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
         <Tab label="تنوع‌ها" />
         <Tab label="قیمت و موجودی" />
         <Tab label="پیش‌نمایش انتخاب" />
+        {canManageQA && <Tab label="پرسش و پاسخ" />}
       </Tabs>
       {tab === 0 && (
         <section className="product-workspace-section">
@@ -272,6 +275,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
         </section>
       )}
       {tab === 2 && <VariantSelection key={id} workspace={w} />}
+      {tab === 3 && canManageQA && <ProductQA key={id} productId={id} />}
       {editor === "variant" && (
         <VariantEditor workspace={w} close={() => setEditor(undefined)} />
       )}

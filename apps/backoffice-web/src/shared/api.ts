@@ -5,6 +5,8 @@ import type {
   ProductWorkspace,
   VariantResolution,
   BannerList,
+  ProductQAPage,
+  ProductQAMutation,
 } from "./types";
 const base = import.meta.env.VITE_API_BASE_URL ?? "";
 const messages: Record<number, string> = {
@@ -102,6 +104,16 @@ export const api = {
       { method: "POST", body, headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  productQA: (token: string, id: string, after: number) =>
+    request<ProductQAPage>(
+      `/backoffice/products/${encodeURIComponent(id)}/questions${after ? `?after=${after}` : ""}`,
+      { cache: "no-store", headers: { Authorization: `Bearer ${token}` } },
+    ),
+  changeProductQA: (token: string, id: string, question: string, mutation: ProductQAMutation, key: string) =>
+    request<void>(
+      `/backoffice/products/${encodeURIComponent(id)}/questions/${encodeURIComponent(question)}`,
+      { method: "POST", body: JSON.stringify(mutation), headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key } },
+    ),
   productWorkspace: (token: string, id: string, surface = "backoffice") =>
     request<ProductWorkspace>(
       `/${surface}/products/${encodeURIComponent(id)}/workspace`,

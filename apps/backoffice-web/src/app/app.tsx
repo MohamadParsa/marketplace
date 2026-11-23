@@ -372,6 +372,9 @@ function Workspace({
                   await cache.invalidateQueries({ queryKey: ["banners"] });
                   return result;
                 },
+                loadProductQA: (id, after) => api.productQA(session.token, id, after),
+                changeProductQA: (id, question, mutation, key) =>
+                  api.changeProductQA(session.token, id, question, mutation, key),
                 loadProduct: (id) =>
                   api.productWorkspace(session.token, id, session.user.Surface),
                 resolveVariant: (id, values) =>

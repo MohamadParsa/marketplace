@@ -10,6 +10,7 @@ import (
 
 type RouterConfig struct {
 	Commerce          *CommerceHandler
+	ProductQA         *ProductQAHandler
 	ProductDetail     *ProductDetailHandler
 	Listing           *ListingHandler
 	StaticRoot        string
@@ -42,6 +43,12 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /backoffice/commerce/receipts/{id}", h.Receipt)
 		mux.HandleFunc("GET /seller/checkout/orders", h.Seller)
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
+	}
+	if h := cfg.ProductQA; h != nil {
+		mux.HandleFunc("GET /storefront/products/{id}/questions", h.Public)
+		mux.HandleFunc("POST /storefront/products/{id}/questions", h.Ask)
+		mux.HandleFunc("GET /backoffice/products/{id}/questions", h.Admin)
+		mux.HandleFunc("POST /backoffice/products/{id}/questions/{question}", h.Admin)
 	}
 	if cfg.ProductDetail != nil {
 		mux.HandleFunc("GET /storefront/products/{id}", cfg.ProductDetail.Read)

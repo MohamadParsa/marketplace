@@ -117,10 +117,6 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	result.PublicCode = p.PublicCode
 	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, ProductURL(p), p.Version
 	result.Content = productContent(p)
-	// Full interaction services remain deferred (CV-WEB-15/16); toggles alone do not enable them.
-	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{})
-	result.Interactions.Reviews = policy.Reviews.NewSubmissions
-	result.Interactions.QA = policy.QA.NewSubmissions
 	category := publicCategory(w, p.CategoryID)
 	result.Category = catalogNav(w, *category)
 	chain := []CatalogNav{}
@@ -270,13 +266,17 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) 
 		return ProductDetail{}, e
 	}
 	id = resolved
-	return cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
+	result, err := cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
 		w, e := s.publicSnapshot(ctx, id)
 		if e != nil {
 			return ProductDetail{}, e
 		}
 		return BuildProductDetail(w, id, variant, offer)
 	})
+	if err == nil {
+		result.Interactions.QA = catalog.ProductInteractions(&result.Content, true, catalog.InteractionCapabilities{QA: s.qaRepository() != nil}).QA.NewSubmissions
+	}
+	return result, err
 }
 
 type ProductSelectionInput struct {

@@ -3,7 +3,7 @@ id: DEL-NEXT-001
 title: صف توسعه بعدی چریوا پس از اصلاحات تجربه فروشگاه
 status: in-review
 owner: eliassarband
-updated: 2026-11-23
+updated: 2026-11-24
 related: [DEL-SF-UX-001, ADR-009]
 approved_by: []
 implementation_status: in-progress
@@ -12,7 +12,7 @@ execution_authorized: true
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند؛ پنج انتخاب جاری done/closed و سایر۲۵مورد todo/open هستند. بعد از ثبت برنامه، مالک #80/#83/#84/#85/#86 را انتخاب کرد؛ فقط همین پنج مورد اجازه اجرا دارند و سایر۲۵کار todo هستند. تغییرات اجرایی پنج انتخاب و شواهدشان جدا ثبت می‌شوند؛ استقرار لیارا یا اجرای بقیه تسک‌ها از این انتخاب نتیجه نمی‌شود. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
+مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر ۳۰ ایشو ثبت و به الیاس (`eliassarband`) اساین شده‌اند. پنج انتخاب نخست مالک (#80/#83/#84/#85/#86) done/closed هستند. مالک در ۲۰۲۶-۱۱-۲۴ اجرای #90 را هم انتخاب کرد و این مورد در حال بازبینی تحویل است. ۲۴ مورد دیگر todo/open هستند. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -48,7 +48,7 @@ execution_authorized: true
 | CV-NEXT-26 · [#87](https://github.com/MohamadParsa/marketplace/issues/87) | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-27 · [#88](https://github.com/MohamadParsa/marketplace/issues/88) | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | in-progress · [شواهد](issue-90-verification.md) |
 | CV-NEXT-30 · [#91](https://github.com/MohamadParsa/marketplace/issues/91) | [لندینگ اقساطی متصل به روش فروش و شرایط واقعی](tasks/cv-next-30-installment-landing.md) | P2 / W3 | todo؛ اجرا انتخاب نشده |
 
 ## موج‌ها؛ ترتیب قابل انتخاب
