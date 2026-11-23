@@ -1,3 +1,4 @@
+import { HeartIcon, useWishlist } from "./wishlist";
 import { LoadingPlaceholder } from "./busy-region";
 import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
@@ -685,6 +686,7 @@ function HeaderActionIcon({ kind }: { kind: "account" | "cart" }) {
 }
 export function SiteHeader() {
   const { token, cart, logout } = useCommerce();
+  const wishlist = useWishlist();
   const profileRef = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     const dismiss = (restore = false) => {
@@ -768,6 +770,8 @@ export function SiteHeader() {
                     <a href="/account/addresses">آدرس‌ها</a>
                     <a href="/account/orders">سفارش‌ها</a>
                     <a href="/wallet">کیف پول</a>
+                    <a href="/account/wishlist">علاقه‌مندی‌ها</a>
+                    <a href="/account/recently-viewed">بازدیدهای اخیر</a>
                     <button onClick={logout}>خروج</button>
                   </>
                 ) : (
@@ -776,6 +780,26 @@ export function SiteHeader() {
               </nav>
             </details>
             <span className="header-action-divider" aria-hidden="true" />
+            {token && (
+              <a
+                href="/account/wishlist"
+                className="header-action header-wishlist"
+                aria-label="علاقه‌مندی‌ها"
+                title="علاقه‌مندی‌های من"
+                aria-current={
+                  location.pathname === "/account/wishlist" ? "page" : undefined
+                }
+              >
+                <HeartIcon />
+                {token && wishlist.total !== null && wishlist.total > 0 && (
+                  <b className="lh-cart-count" aria-hidden="true">
+                    {wishlist.total > 99
+                      ? "۹۹+"
+                      : wishlist.total.toLocaleString("fa-IR")}
+                  </b>
+                )}
+              </a>
+            )}
             <a
               href="/cart"
               className="lh-cart-link header-action"

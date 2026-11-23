@@ -102,7 +102,7 @@ export function CommerceShell({
       <main className="lh-wrap buy-page">
         <nav className="buy-breadcrumb" aria-label="مسیر صفحه">
           <a href="/">خانه</a>
-          <span> / </span>
+          <span className="breadcrumb-separator" dir="ltr" aria-hidden="true"> &gt; </span>
           <span>{title}</span>
         </nav>
         <h1>{title}</h1>
@@ -1992,6 +1992,8 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
           ) : (
             <>
               <nav className="buy-account-nav">
+                <a href="/account/wishlist">علاقه‌مندی‌ها</a>
+                <a href="/account/recently-viewed">بازدیدهای اخیر</a>
                 <a href="/account/orders">سفارش‌ها</a>
                 <a href="/account/addresses">آدرس‌ها</a>
                 <a href="/wallet">کیف پول</a>

@@ -1,3 +1,5 @@
+import { useRecordRecentlyViewed } from "./recently-viewed";
+import { WishlistButton } from "./wishlist";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
@@ -170,6 +172,7 @@ export function ProductPage({ url }: { url: string }) {
     [photo, setPhoto] = useState(0),
     [zoom, setZoom] = useState(false);
   const quantity = 1;
+  useRecordRecentlyViewed(!loading && !status && data ? data.id : "");
   const initialPosition = useRef(true);
   useEffect(() => {
     const abort = new AbortController();
@@ -395,6 +398,7 @@ export function ProductPage({ url }: { url: string }) {
             >
               <section className="pdp-overview">
                 <div className="pdp-gallery">
+                  <WishlistButton productID={data.id} />
                   <button
                     className="pdp-large-photo"
                     disabled={!data.gallery.length}

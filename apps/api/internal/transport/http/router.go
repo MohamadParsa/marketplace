@@ -27,6 +27,12 @@ type RouterConfig struct {
 func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
 	if h := cfg.Commerce; h != nil {
+		for _, route := range []string{"GET /storefront/account/recently-viewed", "POST /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed"} {
+			mux.HandleFunc(route, h.RecentlyViewed)
+		}
+		for _, route := range []string{"GET /storefront/account/wishlist", "GET /storefront/account/wishlist/{id}", "PUT /storefront/account/wishlist/{id}", "DELETE /storefront/account/wishlist/{id}"} {
+			mux.HandleFunc(route, h.Wishlist)
+		}
 		mux.HandleFunc("GET /storefront/commerce/config", h.Config)
 		mux.HandleFunc("POST /storefront/cart/guest", h.CreateGuest)
 		mux.HandleFunc("GET /storefront/cart", h.Cart)

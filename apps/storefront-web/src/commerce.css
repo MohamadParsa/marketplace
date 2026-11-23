@@ -727,3 +727,10 @@
     gap: 8px;
   }
 }
+
+.buy-breadcrumb .breadcrumb-separator {
+  display: inline-block;
+  direction: ltr;
+  unicode-bidi: isolate;
+  margin-inline: 8px;
+}

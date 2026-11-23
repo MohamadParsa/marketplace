@@ -51,6 +51,8 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if err != nil {
 		return Workspace{}, err
 	}
+	state.Wishlist = nil
+	state.RecentlyViewed = nil
 	if state.Commerce != nil {
 		commerceState(&state)
 	}
