@@ -272,6 +272,11 @@ export function ManagementPage({
                       <small>
                         {categoryPath(state.categories ?? [], c.id)}
                       </small>
+                      <small>
+                        {c.display_priority == null
+                          ? "بدون اولویت"
+                          : `اولویت نمایش: ${c.display_priority.toLocaleString("fa-IR")}`}
+                      </small>
                     </div>
                   </div>
                 ),

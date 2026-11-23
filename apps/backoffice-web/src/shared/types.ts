@@ -45,6 +45,7 @@ export interface CategorySEO {
   meta_description: string;
 }
 export interface Category {
+  display_priority?: number;
   slug?: string;
   seo?: CategorySEO;
   english_name?: string;
@@ -240,6 +241,8 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  display_priority?: number;
+  clear_display_priority?: boolean;
   slug?: string;
   confirm_slug_change?: boolean;
   model?: "shared" | "independent";

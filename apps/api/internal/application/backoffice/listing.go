@@ -174,20 +174,44 @@ func catalogNav(w Workspace, c catalog.Category) CatalogNav {
 	return n
 }
 func publicNavigation(w Workspace) []CatalogNav {
-	result := []CatalogNav{}
+	// Sort each sibling list independently and emit the existing flat parent-linked DTO.
+	children := map[string][]catalog.Category{}
 	for _, c := range w.Categories {
 		if publicCategory(w, c.ID) != nil {
-			result = append(result, catalogNav(w, c))
+			children[c.ParentID] = append(children[c.ParentID], c)
 		}
 	}
-	sort.Slice(result, func(i, j int) bool {
-		if result[i].Name == result[j].Name {
-			return result[i].ID < result[j].ID
+	for parent, rows := range children {
+		sort.Slice(rows, func(i, j int) bool {
+			a, b := rows[i], rows[j]
+			if a.DisplayPriority != nil && b.DisplayPriority == nil {
+				return true
+			}
+			if a.DisplayPriority == nil && b.DisplayPriority != nil {
+				return false
+			}
+			if a.DisplayPriority != nil && b.DisplayPriority != nil && *a.DisplayPriority != *b.DisplayPriority {
+				return *a.DisplayPriority < *b.DisplayPriority
+			}
+			if a.Name != b.Name {
+				return a.Name < b.Name
+			}
+			return a.ID < b.ID
+		})
+		children[parent] = rows
+	}
+	result := []CatalogNav{}
+	var appendBranch func(string)
+	appendBranch = func(parent string) {
+		for _, c := range children[parent] {
+			result = append(result, catalogNav(w, c))
+			appendBranch(c.ID)
 		}
-		return result[i].Name < result[j].Name
-	})
+	}
+	appendBranch("")
 	return result
 }
+
 func categoryBindings(w Workspace, id string) []catalog.AttributeBinding {
 	for _, c := range w.Categories {
 		if c.ID == id {

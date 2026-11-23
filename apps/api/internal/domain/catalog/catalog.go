@@ -9,18 +9,19 @@ type SEO struct {
 }
 
 type Category struct {
-	Slug        string             `json:"slug,omitempty"`
-	SEO         SEO                `json:"seo"`
-	EnglishName string             `json:"english_name,omitempty"`
-	Description string             `json:"description,omitempty"`
-	Published   bool               `json:"published"`
-	ID          string             `json:"id"`
-	Name        string             `json:"name"`
-	ParentID    string             `json:"parent_id,omitempty"`
-	Bindings    []AttributeBinding `json:"bindings"`
-	Archived    bool               `json:"archived"`
-	IconID      string             `json:"icon_id,omitempty"`
-	Version     int                `json:"version"`
+	DisplayPriority *int               `json:"display_priority,omitempty"`
+	Slug            string             `json:"slug,omitempty"`
+	SEO             SEO                `json:"seo"`
+	EnglishName     string             `json:"english_name,omitempty"`
+	Description     string             `json:"description,omitempty"`
+	Published       bool               `json:"published"`
+	ID              string             `json:"id"`
+	Name            string             `json:"name"`
+	ParentID        string             `json:"parent_id,omitempty"`
+	Bindings        []AttributeBinding `json:"bindings"`
+	Archived        bool               `json:"archived"`
+	IconID          string             `json:"icon_id,omitempty"`
+	Version         int                `json:"version"`
 }
 
 type Brand struct {
