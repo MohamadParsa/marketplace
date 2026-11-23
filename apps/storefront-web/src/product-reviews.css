@@ -1,0 +1,117 @@
+.pdp-review-track {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-block: 0.25rem 0.75rem;
+}
+
+.pdp-review-group {
+  display: grid;
+  flex: 0 0 100%;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+  gap: 0.75rem;
+  scroll-snap-align: start;
+}
+
+.pdp-review-more {
+  display: grid;
+  flex: 0 0 100%;
+  place-content: center;
+  scroll-snap-align: start;
+}
+
+.pdp-review-card {
+  padding: 1rem;
+  background: #faf9fb;
+  border: 1px solid #ebe8ef;
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.pdp-review-card header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.pdp-review-card time {
+  display: block;
+  margin-block-start: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.pdp-review-card p {
+  white-space: pre-wrap;
+}
+
+.pdp-review-reply {
+  border-inline-start: 2px solid #b51f46;
+  padding-inline-start: 0.75rem;
+}
+
+.pdp-review-scroll {
+  margin-block-start: 0.5rem;
+}
+
+.pdp-review-form {
+  margin-block-start: 1.25rem;
+  max-inline-size: 34rem;
+}
+
+.pdp-review-form fieldset {
+  display: grid;
+  gap: 0.75rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+
+.pdp-review-form label:not(.pdp-review-checkbox, .pdp-review-rating label) {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pdp-review-form input:not([type="checkbox"], [type="radio"]),
+.pdp-review-form textarea {
+  inline-size: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  border: 1px solid #aaa4ad;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.pdp-review-rating,
+.pdp-review-rating label,
+.pdp-review-checkbox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pdp-review-form button {
+  justify-self: start;
+}
+
+@media (max-width: 900px) {
+  .pdp-review-group {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .pdp-review-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 350px) {
+  .pdp-review-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

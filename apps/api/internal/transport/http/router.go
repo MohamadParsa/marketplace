@@ -11,6 +11,7 @@ import (
 type RouterConfig struct {
 	Commerce          *CommerceHandler
 	ProductDetail     *ProductDetailHandler
+	ProductReviews    *ProductReviewsHandler
 	Listing           *ListingHandler
 	StaticRoot        string
 	StorefrontSurface bool
@@ -42,6 +43,12 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /backoffice/commerce/receipts/{id}", h.Receipt)
 		mux.HandleFunc("GET /seller/checkout/orders", h.Seller)
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
+	}
+	if h := cfg.ProductReviews; h != nil {
+		mux.HandleFunc("GET /storefront/products/{id}/reviews", h.Public)
+		mux.HandleFunc("POST /storefront/products/{id}/reviews", h.Public)
+		mux.HandleFunc("GET /backoffice/product-reviews", h.Admin)
+		mux.HandleFunc("POST /backoffice/product-reviews/{id}/decisions", h.Admin)
 	}
 	if cfg.ProductDetail != nil {
 		mux.HandleFunc("GET /storefront/products/{id}", cfg.ProductDetail.Read)

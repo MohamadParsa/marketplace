@@ -41,12 +41,14 @@ import {
   AssessmentOutlined,
   LogoutOutlined,
   MenuOutlined,
+  RateReviewOutlined,
 } from "@mui/icons-material";
 import { CommercePage, SellerCheckoutPage } from "../features/commerce/commerce-page";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
 import { HomeCatalogPage } from "../features/management/home-catalog-page";
+import { ProductReviewsPage } from "../features/management/product-reviews-page";
 import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
@@ -112,6 +114,12 @@ const menu = [
         path: "/products",
         label: "محصولات و محتوا",
         icon: <Inventory2Outlined />,
+      },
+      {
+        path: "/product-reviews",
+        label: "نظرات محصولات",
+        icon: <RateReviewOutlined />,
+        roles: ["super-admin"],
       },
       {
         path: "/pricing",
@@ -451,6 +459,16 @@ function Workspace({
                       <Navigate to="/products" replace />
                     ) : (
                       <BannersPage />
+                    )
+                  }
+                />
+                <Route
+                  path="/product-reviews"
+                  element={
+                    session.user.Surface === "backoffice" && role === "super-admin" ? (
+                      <ProductReviewsPage token={session.token} />
+                    ) : (
+                      <Navigate to="/" replace />
                     )
                   }
                 />

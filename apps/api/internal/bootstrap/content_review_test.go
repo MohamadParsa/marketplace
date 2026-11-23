@@ -68,8 +68,8 @@ func TestProductInteractionSettingsDefaultOffAndRemainIndependent(t *testing.T) 
 		if view.Content.ReviewsEnabled != flags.reviews || view.Content.QAEnabled != flags.qa {
 			t.Fatal("settings coupled or not persisted")
 		}
-		if view.Interactions.Reviews || view.Interactions.QA {
-			t.Fatal("deferred services became ready just by changing flags")
+		if view.Interactions.Reviews != flags.reviews || view.Interactions.QA {
+			t.Fatal("review availability should follow its flag and Q&A should stay unavailable")
 		}
 	}
 }

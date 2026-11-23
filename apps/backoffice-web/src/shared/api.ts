@@ -5,6 +5,9 @@ import type {
   ProductWorkspace,
   VariantResolution,
   BannerList,
+  AdminProductReview,
+  ProductReviewStatus,
+  ReviewAction,
 } from "./types";
 const base = import.meta.env.VITE_API_BASE_URL ?? "";
 const messages: Record<number, string> = {
@@ -46,6 +49,21 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return response.json();
 }
 export const api = {
+  productReviews: (token: string, status: ProductReviewStatus, cursor: string) =>
+    request<{ reviews: AdminProductReview[]; next_cursor?: string }>(
+      "/backoffice/product-reviews?" + new URLSearchParams({ status, cursor }),
+      { headers: { Authorization: `Bearer ${token}` } },
+    ),
+  decideProductReview: (
+    token: string,
+    id: string,
+    decision: { action: ReviewAction; text: string; version: number; idempotency_key: string },
+  ) =>
+    request<void>(`/backoffice/product-reviews/${encodeURIComponent(id)}/decisions`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(decision),
+    }),
   profile: (token: string, surface="backoffice") =>
     request<{ name: string; email?: string; password_available: boolean }>(
       `/${surface}/account/profile`,

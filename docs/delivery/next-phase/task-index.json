@@ -1,10 +1,10 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "selected-80-83-84-85-86-done-awaiting-next-owner-selection",
+  "execution": "selected-80-83-84-85-86-done-89-in-progress",
   "items": [
     {
       "n": 1,
@@ -560,13 +560,13 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "state": "open",
       "number": 89,
       "url": "https://github.com/MohamadParsa/marketplace/issues/89",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 29,

@@ -405,3 +405,20 @@ export interface BannerList {
     content_types: string[];
   };
 }
+
+export type ProductReviewStatus = "pending" | "approved" | "rejected";
+export type ReviewAction = "approve" | "reject" | "publish_reply";
+export type AdminProductReview = {
+  id: string;
+  product_id: string;
+  product_name: string;
+  status: ProductReviewStatus;
+  name?: string;
+  anonymous: boolean;
+  text: string;
+  rating: number;
+  created_at: string;
+  version: number;
+  rejection_reason?: string;
+  reply?: string;
+};

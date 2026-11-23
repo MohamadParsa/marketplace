@@ -117,8 +117,8 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	result.PublicCode = p.PublicCode
 	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, ProductURL(p), p.Version
 	result.Content = productContent(p)
-	// Full interaction services remain deferred (CV-WEB-15/16); toggles alone do not enable them.
-	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{})
+	// Reviews are wired to a live service. Q&A still has no submission service.
+	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{Reviews: true})
 	result.Interactions.Reviews = policy.Reviews.NewSubmissions
 	result.Interactions.QA = policy.QA.NewSubmissions
 	category := publicCategory(w, p.CategoryID)
@@ -270,7 +270,7 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) 
 		return ProductDetail{}, e
 	}
 	id = resolved
-	return cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
+	return cachedPublic(ctx, s, "product", id, []string{variant, offer, "reviews"}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
 		w, e := s.publicSnapshot(ctx, id)
 		if e != nil {
 			return ProductDetail{}, e
