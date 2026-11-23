@@ -137,6 +137,26 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	}
 	result.Axes = productAxes(w, p)
 	vs := productVariants(w, p)
+	// Shared definitions can contain hundreds of values. Public choices belong
+	// to this product's variants, including declared but unavailable variants.
+	for i := range result.Axes {
+		a := &result.Axes[i]
+		used := map[string]bool{}
+		for _, v := range vs {
+			for _, value := range v.Values {
+				if value.AttributeID == a.ID {
+					used[value.Value] = true
+				}
+			}
+		}
+		options := make([]string, 0, len(a.Options))
+		for _, value := range a.Options {
+			if used[value] {
+				options = append(options, value)
+			}
+		}
+		a.Options = options
+	}
 	if variantID == "" {
 		offers := publicOffers(w, p)
 		if len(offers) > 0 {

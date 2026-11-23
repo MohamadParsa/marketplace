@@ -242,3 +242,28 @@ func TestCatalogSeedPostgresRestartAndRetry(t *testing.T) {
 		t.Fatal("restart lost import or changed identity/finance")
 	}
 }
+
+func TestCatalogSeedDecodeConvertsTomanExactlyOnce(t *testing.T) {
+	seed, _ := seedFixture()
+	seed.Catalog.Offers[0].Price = 2995000
+	seed.Catalog.Offers[0].RegularPrice = 3195000
+	raw, _ := json.Marshal(seed)
+	decoded, e := backoffice.DecodeCatalogSeed(raw)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if decoded.Catalog.Offers[0].Price != 29950000 || decoded.Catalog.Offers[0].RegularPrice != 31950000 {
+		t.Fatal("toman was not converted to internal rial")
+	}
+	if e = backoffice.ValidateCatalogSeed(&decoded); e != nil {
+		t.Fatal(e)
+	}
+	if decoded.Catalog.Offers[0].Price != 29950000 {
+		t.Fatal("validation converted amount twice")
+	}
+	seed.Catalog.Offers[0].Price = backoffice.MaxOfferPrice/10 + 1
+	raw, _ = json.Marshal(seed)
+	if _, e = backoffice.DecodeCatalogSeed(raw); e == nil {
+		t.Fatal("overflowing conversion accepted")
+	}
+}

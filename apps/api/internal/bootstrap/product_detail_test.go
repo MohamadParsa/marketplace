@@ -269,3 +269,37 @@ func TestProductGalleryBoundsAndForeignMedia(t *testing.T) {
 		t.Fatal("invalid upload mutated product")
 	}
 }
+
+func TestProductDetailAxesOnlyContainDeclaredProductValues(t *testing.T) {
+	w := listingFixture(t)
+	for i := range w.Attributes {
+		if w.Attributes[i].ID == "color" {
+			w.Attributes[i].Options = append(w.Attributes[i].Options, "سفید", "سبز")
+		}
+	}
+	w.Variants = append(w.Variants, catalog.Variant{ID: "mobile-green-no-stock", ProductID: "mobile", Values: []catalog.AttributeValue{{AttributeID: "color", Value: "سبز"}}}, catalog.Variant{ID: "other-white", ProductID: "unavailable", Values: []catalog.AttributeValue{{AttributeID: "color", Value: "سفید"}}})
+	d, e := backoffice.BuildProductDetail(w, "mobile", "", "")
+	if e != nil {
+		t.Fatal(e)
+	}
+	if len(d.Axes) != 1 || strings.Join(d.Axes[0].Options, ",") != "قرمز,آبی,سبز" {
+		t.Fatal("public choices leaked unrelated values", d.Axes)
+	}
+	found := false
+	for _, v := range d.Variants {
+		if v.ID == "mobile-green-no-stock" {
+			found = true
+			if v.Available {
+				t.Fatal("unavailable variant became buyable")
+			}
+		}
+	}
+	if !found {
+		t.Fatal("unavailable declared choice lost")
+	}
+	for _, a := range w.Attributes {
+		if a.ID == "color" && len(a.Options) != 4 {
+			t.Fatal("shared definition mutated")
+		}
+	}
+}

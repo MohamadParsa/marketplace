@@ -1,6 +1,7 @@
 package postgresrepo
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"fmt"
@@ -40,11 +41,11 @@ func Migrate(ctx context.Context, db interface {
 		if err != nil {
 			return err
 		}
-		checksum := fmt.Sprintf("%x", sha256.Sum256(sql))
+		checksum := migrationChecksum(bytes.ReplaceAll(sql, []byte("\r\n"), []byte("\n")))
 		var applied string
 		switch err := tx.QueryRow(ctx, "SELECT checksum FROM review_schema_migrations WHERE name = $1", name).Scan(&applied); err {
 		case nil:
-			if applied != checksum {
+			if !matchesMigrationChecksum(applied, sql) {
 				return fmt.Errorf("migration %s was modified after application", name)
 			}
 			continue
@@ -60,4 +61,15 @@ func Migrate(ctx context.Context, db interface {
 		}
 	}
 	return tx.Commit(ctx)
+}
+
+// New records use LF hashes. Existing LF/CRLF hashes remain immutable and valid.
+// No SQL tokens, whitespace or comments other than line endings are ignored.
+func migrationChecksum(sql []byte) string { return fmt.Sprintf("%x", sha256.Sum256(sql)) }
+func matchesMigrationChecksum(applied string, sql []byte) bool {
+	if applied == migrationChecksum(sql) {
+		return true
+	}
+	lf := bytes.ReplaceAll(sql, []byte("\r\n"), []byte("\n"))
+	return applied == migrationChecksum(lf) || applied == migrationChecksum(bytes.ReplaceAll(lf, []byte("\n"), []byte("\r\n")))
 }

@@ -65,6 +65,18 @@ func DecodeCatalogSeed(data []byte) (CatalogSeed, error) {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return s, fmt.Errorf("invalid catalog seed JSON")
 	}
+	// The portable file declares IRT (toman); catalog.Price uses rial internally.
+	// Convert only at the decode boundary, never on retries or workspace writes.
+	if s.Currency == "IRT" {
+		for i := range s.Catalog.Offers {
+			o := &s.Catalog.Offers[i]
+			if o.Price < 0 || o.RegularPrice < 0 || o.Price > MaxOfferPrice/10 || o.RegularPrice > MaxOfferPrice/10 {
+				return s, fmt.Errorf("seed toman amount exceeds internal price bound")
+			}
+			o.Price *= 10
+			o.RegularPrice *= 10
+		}
+	}
 	return s, nil
 }
 func seedURL(raw string) bool {
