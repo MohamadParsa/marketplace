@@ -55,3 +55,146 @@ body .add-cart:disabled{opacity:.4;cursor:not-allowed}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 .special .section-head h2{color:#fff}body[data-direction=editorial] .special .section-head h2,body[data-direction=editorial] .special .text-link{color:var(--cherry)}body[data-direction=editorial] .special .section-sub,body[data-direction=editorial] .special .expiry{color:var(--muted)}body[data-direction=editorial] .special .section-head h2:before{background:var(--cherry)}
+
+/* PDP purchase behavior: keep the desktop buybox available while reading the page. */
+.buy-column {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.buy-column.is-floating {
+  position: fixed;
+  top: 24px;
+  left: var(--buy-left);
+  width: var(--buy-width);
+  z-index: 25;
+}
+
+@media (min-width: 701px) {
+  .pdp-top ~ .pdp-benefits,
+  .pdp-top ~ .seller-section,
+  .pdp-top ~ .product-tabs,
+  .pdp-top ~ .detail-section,
+  .pdp-top ~ .section,
+  .pdp-top ~ .about,
+  .pdp-top ~ .benefits {
+    margin-left: calc(var(--buy-width, 300px) + 32px);
+  }
+}
+
+@media (min-width: 701px) {
+  .buy-column {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+}
+
+/* On mobile the purchase surface belongs to the persistent bottom bar. */
+@media (max-width: 700px) {
+  .buy-column {
+    position: static;
+  }
+
+  .buy-column.is-floating {
+    position: static;
+    left: auto;
+    width: auto;
+  }
+
+  .pdp-top ~ .pdp-benefits,
+  .pdp-top ~ .seller-section,
+  .pdp-top ~ .product-tabs,
+  .pdp-top ~ .detail-section,
+  .pdp-top ~ .section,
+  .pdp-top ~ .about,
+  .pdp-top ~ .benefits {
+    margin-left: 0;
+  }
+
+  .buybox-pricing,
+  .buybox .quantity-cart {
+    display: none;
+  }
+
+  .pdp-mobile-cart {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  body[data-page="pdp"] {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Home categories: reveal the full catalog without adding another text link. */
+.categories-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.categories-area .categories {
+  max-height: 150px;
+  transition: max-height .4s ease, opacity .25s ease;
+  will-change: max-height;
+}
+
+.categories-area .categories.is-expanded {
+  max-height: 1200px;
+  overflow: hidden;
+}
+
+.categories-area .category-extra {
+  display: none;
+}
+
+.categories-area .categories.is-expanded {
+  flex-wrap: wrap;
+  overflow: hidden;
+  row-gap: 24px;
+}
+
+.categories-area .categories.is-expanded .category-extra {
+  display: block;
+}
+
+.category-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-top: -18px;
+  padding: 0;
+  color: var(--cherry);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.category-toggle .i {
+  width: 22px;
+  height: 22px;
+  transition: transform .2s ease;
+}
+
+.purchase-initial:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  filter: grayscale(.2);
+}
+
+@media (max-width: 700px) {
+  .categories-area .categories.is-expanded {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px 8px;
+    width: 100%;
+  }
+
+  .category-toggle {
+    margin-top: -16px;
+    width: 44px;
+    height: 44px;
+  }
+}
