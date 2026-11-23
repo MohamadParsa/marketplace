@@ -1,3 +1,4 @@
+import { dispatchTime } from "./dispatch-time";
 import { BusyRegion, LoadingPlaceholder } from "./busy-region";
 import { ToggleSwitch } from "./toggle-switch";
 import { ChoiceGroup } from "./choice-group";
@@ -508,8 +509,7 @@ export function CartPage() {
                     </a>
                     <p>{item.variant_label}</p>
                     <p>
-                      فروشنده: {item.store_name} · تأمین: {item.lead_days} روز
-                      کاری
+                      فروشنده: {item.store_name} · {dispatchTime(item.lead_days)}
                     </p>
                     <strong>{money(item.unit_price_toman)}</strong>
                     {item.price_changed && (
@@ -1062,11 +1062,10 @@ function CheckoutForm() {
                                     <small>
                                       تحویل {st.lead_days + m.min_days} تا{" "}
                                       {st.lead_days + m.max_days} روز کاری با
-                                      احتساب تأمین
+                                      احتساب زمان آماده‌سازی فروشنده
                                     </small>
                                     <small>
-                                      وقفه تأمین فروشنده: {st.lead_days} روز
-                                      کاری
+                                      {dispatchTime(st.lead_days)}
                                     </small>
                                   </span>
                                 </label>
@@ -1303,7 +1302,7 @@ export function OrderSummary({ quote }: { quote: Quote }) {
           </b>
           <p>هزینه ارسال: {money(s.fee_toman)}</p>
           <p>
-            تأمین {s.lead_days} روز کاری؛ تحویل از{" "}
+            {dispatchTime(s.lead_days)}؛ تحویل از{" "}
             {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
             {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
           </p>

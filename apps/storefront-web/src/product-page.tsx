@@ -1,3 +1,4 @@
+import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
 import { BusyRegion, LoadingPlaceholder } from "./busy-region";
 import { setPageCanonical } from "./page-canonical";
@@ -481,11 +482,7 @@ export function ProductPage({ url }: { url: string }) {
                   {offer && (
                     <p>
                       <Icon name="bag" />
-                      وقفه تأمین فروشنده:{" "}
-                      {new Intl.NumberFormat("fa-IR").format(
-                        offer.lead_days,
-                      )}{" "}
-                      روز کاری
+                      {dispatchTime(offer.lead_days)}
                     </p>
                   )}
                   <small>
@@ -574,7 +571,7 @@ export function ProductPage({ url }: { url: string }) {
                       </span>
                     </div>
                     <p>
-                      تأمین در {o.lead_days.toLocaleString("fa-IR")} روز کاری
+                      {dispatchTime(o.lead_days)}
                     </p>
                     <b>
                       {o.available && o.price != null

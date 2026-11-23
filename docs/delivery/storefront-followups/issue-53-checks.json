@@ -1,0 +1,55 @@
+{
+  "checks": [
+    {
+      "id": "zero-without-instant-delivery-promise",
+      "pass": true
+    },
+    {
+      "id": "seller-list-zero-one-many",
+      "pass": true
+    },
+    {
+      "id": "selected-seller-lead-one",
+      "pass": true
+    },
+    {
+      "id": "selected-seller-many-refresh",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "cart-same-template",
+      "pass": true
+    },
+    {
+      "id": "shipping-card-same-lead",
+      "pass": true
+    },
+    {
+      "id": "transit-calculation-preserved",
+      "pass": true
+    },
+    {
+      "id": "quote-snapshot-template",
+      "pass": true
+    },
+    {
+      "id": "no-old-lead-time-labels",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "all_private_responses_browser_fixtures": true,
+  "no_order_or_payment_writes": true,
+  "issue": 53,
+  "implementation_status": "review",
+  "build": "passed",
+  "date": "2026-11-23"
+}
