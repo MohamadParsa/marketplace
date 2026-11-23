@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-23",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "964824df0a40d7c5bdb3abcb7256613ccff0f982",
+  "current_source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
   "rows": [
     {
       "issue": 27,
@@ -185,6 +185,56 @@
       "implementation_status": "done",
       "pull_request": 61,
       "merge_commit": "acac083ed0f291da7290a50c16332fb48950f289"
+    },
+    {
+      "issue": 80,
+      "source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+      "feature_implementation_commit": "324cdca3d5cef9b2add2a3b8d4f5b506e218845f",
+      "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
+      "verification": "docs/delivery/next-phase/issue-80-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "issue_state": "open",
+      "implementation_status": "review"
+    },
+    {
+      "issue": 83,
+      "source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+      "feature_implementation_commit": "324cdca3d5cef9b2add2a3b8d4f5b506e218845f",
+      "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
+      "verification": "docs/delivery/next-phase/issue-83-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "issue_state": "open",
+      "implementation_status": "review"
+    },
+    {
+      "issue": 84,
+      "source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+      "feature_implementation_commit": "324cdca3d5cef9b2add2a3b8d4f5b506e218845f",
+      "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
+      "verification": "docs/delivery/next-phase/issue-84-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "issue_state": "open",
+      "implementation_status": "review"
+    },
+    {
+      "issue": 85,
+      "source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+      "feature_implementation_commit": "324cdca3d5cef9b2add2a3b8d4f5b506e218845f",
+      "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
+      "verification": "docs/delivery/next-phase/issue-85-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "issue_state": "open",
+      "implementation_status": "review"
+    },
+    {
+      "issue": 86,
+      "source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+      "feature_implementation_commit": "852859603571065c8d776bab2c776d86224d2856",
+      "documentation_commit": "a20304d0f334cdfebde883752c6da4bc904c0c16",
+      "verification": "docs/delivery/next-phase/issue-86-verification.md",
+      "source_tree_matches_documentation_revision": true,
+      "issue_state": "open",
+      "implementation_status": "review"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

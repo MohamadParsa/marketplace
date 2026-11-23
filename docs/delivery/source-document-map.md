@@ -93,3 +93,13 @@
 ## برنامه۳۰درخواست جدید — فقط مستندات
 
 [برنامه و Issueهای #62تا#91](next-phase/README.md) با وضعیت todo/open ثبت شد؛ هیچ کامیت سورس اجرایی جدیدی برای این برنامه وجود ندارد. آخرین نسخه محصول همان تحویل #54 است؛ source-document-map.json به‌عمد به کد برنامه‌ریزی‌نشده اشاره نمی‌کند.
+
+## انتخاب‌های #80/#83/#84/#85/#86
+
+- #80: [گزارش و تصاویر](next-phase/issue-80-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
+- #83: [گزارش و تصاویر](next-phase/issue-83-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
+- #84: [گزارش و تصاویر](next-phase/issue-84-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
+- #85: [گزارش و تصاویر](next-phase/issue-85-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
+- #86: [گزارش و تصاویر](next-phase/issue-86-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
+
+اثر پنج اصلاح محلی بررسی شد؛ CI/ادغام و وضعیت نهایی Issue در حال تکمیل است. #80 فقط ظاهر attribute را به checkbox برمی‌گرداند و وابستگی سخت #79 برای این برش ندارد؛ کارهای دیگر بدون مجوز اجرا نشده‌اند.
