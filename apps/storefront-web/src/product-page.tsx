@@ -5,7 +5,9 @@ import { ProductReviews } from "./product-reviews";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
-import { BusyRegion, LoadingPlaceholder } from "./busy-region";
+import { BusyRegion } from "./busy-region";
+import { CatalogImage } from "./catalog-image";
+import { ProductSkeleton } from "./catalog-loading";
 import { setPageCanonical } from "./page-canonical";
 import { PurchaseControl } from "./purchase-control";
 import { useCommerce, apiBase } from "./commerce";
@@ -94,17 +96,12 @@ function Photo({
   name: string;
   className?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [src]);
-  return src && !failed ? (
-    <img
+  return (
+    <CatalogImage
       className={className}
-      src={api + src}
+      src={src ? api + src : undefined}
       alt={name}
-      onError={() => setFailed(true)}
     />
-  ) : (
-    <span className="pdp-photo-fallback">تصویر در دسترس نیست</span>
   );
 }
 function Lightbox({
@@ -211,6 +208,23 @@ export function ProductPage({ url }: { url: string }) {
         const d = (await r.json()) as Detail;
         if (abort.signal.aborted) return;
         setData(d);
+        const canonicalSelection = new URL(d.url, location.origin);
+        if (current.searchParams.has("variant"))
+          canonicalSelection.searchParams.set("variant", d.selected_variant_id);
+        if (current.searchParams.has("offer"))
+          canonicalSelection.searchParams.set("offer", d.selected_offer_id);
+        if (current.searchParams.has("group"))
+          canonicalSelection.searchParams.set("group", "1");
+        canonicalSelection.hash = location.hash;
+        const canonicalAddress =
+          canonicalSelection.pathname +
+          canonicalSelection.search +
+          canonicalSelection.hash;
+        if (
+          location.pathname + location.search + location.hash !==
+          canonicalAddress
+        )
+          history.replaceState(history.state, "", canonicalAddress);
         if (initialPosition.current) {
           initialPosition.current = false;
           const top = history.state?.cherrivaScroll ?? 0;
@@ -268,7 +282,7 @@ export function ProductPage({ url }: { url: string }) {
     };
   }, [url, attempt]);
   const choose = (variant: string, offer?: string, group = false) => {
-    const u = new URL(url, location.origin);
+    const u = new URL(data?.url ?? url, location.origin);
     u.search = "";
     if (variant) u.searchParams.set("variant", variant);
     if (offer) u.searchParams.set("offer", offer);
@@ -373,7 +387,7 @@ export function ProductPage({ url }: { url: string }) {
       <SiteHeader />
       <main className="lh-wrap" id="main">
         {loading && !data ? (
-          <LoadingPlaceholder label="دریافت محصول" />
+          <ProductSkeleton />
         ) : status ? (
           <section className="pdp-state" role="alert">
             <h1>

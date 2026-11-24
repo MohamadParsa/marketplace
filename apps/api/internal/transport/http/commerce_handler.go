@@ -1,6 +1,7 @@
 package httptransport
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -72,7 +73,33 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		limit = 1024 * 1024
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, limit)
-	d := json.NewDecoder(r.Body)
+	var body io.Reader = r.Body
+	if strings.HasPrefix(r.URL.Path, "/storefront/") {
+		b, err := io.ReadAll(r.Body)
+		if err != nil {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		dec := json.NewDecoder(bytes.NewReader(b))
+		dec.UseNumber()
+		var value any
+		if dec.Decode(&value) != nil || dec.Decode(new(any)) != io.EOF {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		value, err = normalizeReferenceValue(value, "")
+		if err != nil {
+			writeError(w, 400, "invalid_catalog_reference")
+			return false
+		}
+		b, err = json.Marshal(value)
+		if err != nil {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		body = bytes.NewReader(b)
+	}
+	d := json.NewDecoder(body)
 	d.DisallowUnknownFields()
 	if d.Decode(out) != nil || d.Decode(new(any)) != io.EOF {
 		writeError(w, 400, "invalid_request")
@@ -100,9 +127,20 @@ func (h *CommerceHandler) owner(w http.ResponseWriter, r *http.Request) (backoff
 	}
 	return backoffice.CartOwner{GuestToken: token}, true
 }
-func commerceResult(w http.ResponseWriter, data any, e error) {
+func commerceResult(w http.ResponseWriter, r *http.Request, data any, e error) {
 	if e != nil {
 		commerceError(w, e)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/storefront/") {
+		b, err := publicCatalogJSON(data)
+		if err != nil {
+			commerceError(w, err)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
+		_, _ = w.Write(b)
 		return
 	}
 	writeJSON(w, 200, data)
@@ -142,7 +180,7 @@ func (h *CommerceHandler) CreateGuest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d, e := h.service.CreateGuestCart(r.Context())
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
 }
 func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -152,7 +190,7 @@ func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "GET" {
 		v, e := h.service.ReadCart(r.Context(), o)
-		commerceResult(w, v, e)
+		commerceResult(w, r, v, e)
 		return
 	}
 	var in backoffice.CartMutation
@@ -160,7 +198,7 @@ func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d, e := h.service.MutateCart(r.Context(), o, in, r.Header.Get("Idempotency-Key"))
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
 }
 func (h *CommerceHandler) Customer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -247,7 +285,7 @@ func (h *CommerceHandler) Customer(w http.ResponseWriter, r *http.Request) {
 			e = backoffice.ErrNotFound
 		}
 	}
-	commerceResult(w, result, e)
+	commerceResult(w, r, result, e)
 }
 func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -320,7 +358,7 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	default:
 		e = backoffice.ErrNotFound
 	}
-	commerceResult(w, result, e)
+	commerceResult(w, r, result, e)
 }
 func (h *CommerceHandler) Seller(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -329,7 +367,7 @@ func (h *CommerceHandler) Seller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	out, e := h.service.ReadSellerCheckoutOrders(r.Context(), a, r.PathValue("id"))
-	commerceResult(w, out, e)
+	commerceResult(w, r, out, e)
 }
 func (h *CommerceHandler) Receipt(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -390,5 +428,5 @@ func (h *CommerceHandler) UploadReceipt(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	d, e := h.service.AttachReceipt(r.Context(), a, r.PathValue("id"), version, r.Header.Get("Idempotency-Key"), data)
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
 }

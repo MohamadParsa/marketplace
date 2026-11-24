@@ -30,10 +30,10 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux := http.NewServeMux()
 	if h := cfg.Commerce; h != nil {
 		for _, route := range []string{"GET /storefront/account/recently-viewed", "POST /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed"} {
-			mux.HandleFunc(route, h.RecentlyViewed)
+			mux.HandleFunc(route, publicCatalogHandler("p", h.RecentlyViewed))
 		}
 		for _, route := range []string{"GET /storefront/account/wishlist", "GET /storefront/account/wishlist/{id}", "PUT /storefront/account/wishlist/{id}", "DELETE /storefront/account/wishlist/{id}"} {
-			mux.HandleFunc(route, h.Wishlist)
+			mux.HandleFunc(route, publicCatalogHandler("p", h.Wishlist))
 		}
 		mux.HandleFunc("GET /storefront/commerce/config", h.Config)
 		mux.HandleFunc("POST /storefront/cart/guest", h.CreateGuest)
@@ -52,22 +52,22 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
 	}
 	if h := cfg.ProductQA; h != nil {
-		mux.HandleFunc("GET /storefront/products/{id}/questions", h.Public)
-		mux.HandleFunc("POST /storefront/products/{id}/questions", h.Ask)
+		mux.HandleFunc("GET /storefront/products/{id}/questions", publicCatalogHandler("p", h.Public))
+		mux.HandleFunc("POST /storefront/products/{id}/questions", publicCatalogHandler("p", h.Ask))
 		mux.HandleFunc("GET /backoffice/products/{id}/questions", h.Admin)
 		mux.HandleFunc("POST /backoffice/products/{id}/questions/{question}", h.Admin)
 	}
 	if h := cfg.ProductReviews; h != nil {
-		mux.HandleFunc("GET /storefront/products/{id}/reviews", h.Public)
-		mux.HandleFunc("POST /storefront/products/{id}/reviews", h.Public)
+		mux.HandleFunc("GET /storefront/products/{id}/reviews", publicCatalogHandler("p", h.Public))
+		mux.HandleFunc("POST /storefront/products/{id}/reviews", publicCatalogHandler("p", h.Public))
 		mux.HandleFunc("GET /backoffice/product-reviews", h.Admin)
 		mux.HandleFunc("POST /backoffice/product-reviews/{id}/decisions", h.Admin)
 	}
 	if cfg.ProductDetail != nil {
-		mux.HandleFunc("GET /storefront/products/{id}", cfg.ProductDetail.Read)
-		mux.HandleFunc("POST /storefront/products/{id}/selection", cfg.ProductDetail.Selection)
+		mux.HandleFunc("GET /storefront/products/{id}", publicCatalogHandler("p", cfg.ProductDetail.Read))
+		mux.HandleFunc("POST /storefront/products/{id}/selection", publicCatalogHandler("p", cfg.ProductDetail.Selection))
 		if cfg.StorefrontSurface {
-			mux.HandleFunc("GET /product/{id}", cfg.ProductDetail.Page)
+			mux.HandleFunc("GET /product/{id}", publicCatalogHandler("p", cfg.ProductDetail.Page))
 		}
 	}
 
@@ -76,9 +76,9 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /storefront/catalog", cfg.Listing.Read)
 		mux.HandleFunc("GET /storefront/suggestions", cfg.Listing.Suggest)
 		if cfg.StorefrontSurface {
-			mux.HandleFunc("GET /category/{id}", cfg.Listing.Page)
-			mux.HandleFunc("GET /search", cfg.Listing.Page)
-			mux.HandleFunc("GET /offers", cfg.Listing.Page)
+			mux.HandleFunc("GET /category/{id}", publicCatalogHandler("c", cfg.Listing.Page))
+			mux.HandleFunc("GET /search", publicCatalogHandler("c", cfg.Listing.Page))
+			mux.HandleFunc("GET /offers", publicCatalogHandler("c", cfg.Listing.Page))
 		}
 	}
 	if cfg.Home != nil {
@@ -95,7 +95,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		})
 		mux.HandleFunc("GET /content/banners", cfg.Banners.PublicList)
 		mux.HandleFunc("GET /content/banners/{id}/view", cfg.Banners.View)
-		mux.HandleFunc("GET /content/banner-media/{id}", cfg.Banners.Media)
+		mux.HandleFunc("GET /content/banner-media/{id}", publicCatalogHandler("m", cfg.Banners.Media))
 	}
 	if cfg.Backoffice != nil {
 		mux.Handle("GET /backoffice/workspace", cfg.Backoffice)
@@ -110,7 +110,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		}
 	}
 	if cfg.CatalogIcons != nil {
-		mux.HandleFunc("GET /catalog/icons/{id}", cfg.CatalogIcons.Read)
+		mux.HandleFunc("GET /catalog/icons/{id}", publicCatalogHandler("m", cfg.CatalogIcons.Read))
 		mux.HandleFunc("GET /backoffice/catalog/media/{id}", cfg.CatalogIcons.Preview)
 		mux.HandleFunc("POST /backoffice/catalog/{kind}/{target}/icon", cfg.CatalogIcons.Upload)
 	}

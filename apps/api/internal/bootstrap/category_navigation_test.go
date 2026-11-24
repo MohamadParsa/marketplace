@@ -28,10 +28,10 @@ func TestPublicCategoryNavigationAncestorsAndCanonical(t *testing.T) {
 	for _, n := range rows {
 		seen[n.ID] = n
 	}
-	if seen["grandchild"].ParentID != "mobile" || seen["grandchild"].URL != "/category/phone-tools" || seen["digital"].ParentID != "" {
+	if seen[backoffice.PublicReference("c", "grandchild")].ParentID != backoffice.PublicReference("c", "mobile") || seen[backoffice.PublicReference("c", "grandchild")].URL != "/category/phone-tools" || seen[backoffice.PublicReference("c", "digital")].ParentID != "" {
 		t.Fatal(seen)
 	}
-	if _, ok := seen["hidden-child"]; ok {
+	if _, ok := seen[backoffice.PublicReference("c", "hidden-child")]; ok {
 		t.Fatal("hidden ancestor leaked")
 	}
 	if e := repo.Update(context.Background(), func(w *backoffice.Workspace) error {
@@ -50,7 +50,7 @@ func TestPublicCategoryNavigationAncestorsAndCanonical(t *testing.T) {
 	}
 	json.Unmarshal(r.Body.Bytes(), &rows)
 	for _, n := range rows {
-		if n.ID == "digital" || n.ID == "mobile" || n.ID == "grandchild" {
+		if n.ID == backoffice.PublicReference("c", "digital") || n.ID == backoffice.PublicReference("c", "mobile") || n.ID == backoffice.PublicReference("c", "grandchild") {
 			t.Fatal("unpublished branch visible")
 		}
 	}

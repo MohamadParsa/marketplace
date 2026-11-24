@@ -3,7 +3,6 @@ package httptransport
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"net/http"
 )
@@ -17,7 +16,7 @@ func (h *HomeHandler) Read(w http.ResponseWriter, r *http.Request) {
 		writeError(w, 503, "catalog_unavailable")
 		return
 	}
-	encoded, err := json.Marshal(data)
+	encoded, err := publicCatalogJSON(data)
 	if err != nil {
 		writeError(w, 500, "internal_error")
 		return

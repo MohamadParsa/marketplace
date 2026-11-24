@@ -1,5 +1,6 @@
 import { HeartIcon, useWishlist } from "./wishlist";
-import { LoadingPlaceholder } from "./busy-region";
+import { CatalogImage } from "./catalog-image";
+import { HomeCatalogSkeleton } from "./catalog-loading";
 import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
 import { useEffect, useId, useRef, useState } from "react";
@@ -126,8 +127,6 @@ function Price({ value }: { value: number }) {
   );
 }
 export function ProductCard({ card }: { card: Card }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [card.image_url]);
   return (
     <a
       className={`lh-product ${card.available === false ? "is-unavailable" : ""}`}
@@ -135,20 +134,11 @@ export function ProductCard({ card }: { card: Card }) {
       data-product-id={card.id}
     >
       <div className="lh-product-image">
-        {failed ? (
-          <div className="lh-image-fallback">
-            <Icon name="bag" />
-            <span>تصویر در دسترس نیست</span>
-          </div>
-        ) : (
-          <img
-            src={api + card.image_url}
-            alt={card.name}
-            loading="lazy"
-            decoding="async"
-            onError={() => setFailed(true)}
-          />
-        )}
+        <CatalogImage
+          src={card.image_url ? api + card.image_url : undefined}
+          alt={card.name}
+          loading="lazy"
+        />
       </div>
       <span className="lh-category-name">{card.category_name}</span>
       <h3>{card.name}</h3>
@@ -274,24 +264,17 @@ function Hero({ banners, photos }: { banners: Banner[]; photos: Card[] }) {
   );
   const b = valid[index % Math.max(1, valid.length)];
   const visual = b ? (
-    <picture>
-      <source
-        media="(max-width: 600px)"
-        srcSet={
-          api +
-          `/content/banner-media/${encodeURIComponent(b.config.mobile_id)}`
-        }
-      />
-      <img
-        src={
-          api +
-          `/content/banner-media/${encodeURIComponent(b.config.desktop_id)}`
-        }
-        alt={b.config.alt}
-        fetchPriority="high"
-        onError={() => setBroken((x) => [...x, b.id])}
-      />
-    </picture>
+    <CatalogImage
+      src={
+        api + `/content/banner-media/${encodeURIComponent(b.config.desktop_id)}`
+      }
+      mobileSrc={
+        api + `/content/banner-media/${encodeURIComponent(b.config.mobile_id)}`
+      }
+      alt={b.config.alt}
+      fetchPriority="high"
+      onError={() => setBroken((x) => [...x, b.id])}
+    />
   ) : null;
   return (
     <section
@@ -408,7 +391,8 @@ function PromoBanners({
                   مدل‌های موجود را ببین <Icon name="arrow" />
                 </b>
               </div>
-              <img
+              <CatalogImage
+                className="lh-promo-product-image"
                 src={api + product.image_url}
                 alt={product.name}
                 loading="lazy"
@@ -417,18 +401,14 @@ function PromoBanners({
             </a>
           );
         const visual = (
-          <picture>
-            <source
-              media="(max-width:600px)"
-              srcSet={api + `/content/banner-media/${b.config.mobile_id}`}
-            />
-            <img
-              src={api + `/content/banner-media/${b.config.desktop_id}`}
-              alt={b.config.alt}
-              loading="lazy"
-              onError={() => setBroken((x) => [...x, b.id])}
-            />
-          </picture>
+          <CatalogImage
+            className="lh-promo-static-image"
+            src={api + `/content/banner-media/${b.config.desktop_id}`}
+            mobileSrc={api + `/content/banner-media/${b.config.mobile_id}`}
+            alt={b.config.alt}
+            loading="lazy"
+            onError={() => setBroken((x) => [...x, b.id])}
+          />
         );
         return b.config.link ? (
           <a href={b.config.link} key={b.id}>
@@ -453,10 +433,10 @@ function HomeCategories({ categories }: { categories: HomeCategory[] }) {
     >
       <span>
         {category.image_url ? (
-          <img
+          <CatalogImage
             src={api + category.image_url}
             alt=""
-            loading={lazy ? "lazy" : undefined}
+            loading={lazy ? "lazy" : "eager"}
           />
         ) : (
           <Icon name="bag" />
@@ -601,9 +581,11 @@ export function HomePage() {
               banners={banners}
               photos={rails.slice(0, 2).flatMap((r) => r.products.slice(0, 1))}
             />
-            <HomeCategories categories={availableCategories} />
+            {!loading && !error && (
+              <HomeCategories categories={availableCategories} />
+            )}
             {loading ? (
-              <LoadingPlaceholder label="دریافت محصولات" />
+              <HomeCatalogSkeleton />
             ) : error ? (
               <div className="lh-error" role="alert">
                 <h2>دریافت محصولات انجام نشد.</h2>

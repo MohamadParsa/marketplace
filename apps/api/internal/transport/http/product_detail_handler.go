@@ -35,11 +35,19 @@ func productQuery(r *http.Request) (string, string, error) {
 		if k == "group" && (len(v) != 1 || v[0] != "1") {
 			return "", "", backoffice.ErrInvalid
 		}
-		if (k != "variant" && k != "offer" && k != "group") || len(v) != 1 || v[0] == "" || len(v[0]) > 128 {
+		if (k != "variant" && k != "offer" && k != "group") || len(v) != 1 || v[0] == "" || len(v[0]) > 256 {
 			return "", "", backoffice.ErrInvalid
 		}
 	}
-	return q.Get("variant"), q.Get("offer"), nil
+	v, err := backoffice.ResolvePublicReference("v", q.Get("variant"))
+	if err != nil {
+		return "", "", err
+	}
+	o, err := backoffice.ResolvePublicReference("o", q.Get("offer"))
+	if err != nil {
+		return "", "", err
+	}
+	return v, o, nil
 }
 func productError(w http.ResponseWriter, e error) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -85,13 +93,29 @@ func (h *ProductDetailHandler) Selection(w http.ResponseWriter, r *http.Request)
 		productError(w, backoffice.ErrInvalid)
 		return
 	}
+	var refErr error
+	in.VariantID, refErr = backoffice.ResolvePublicReference("v", in.VariantID)
+	if refErr != nil {
+		productError(w, refErr)
+		return
+	}
+	in.OfferID, refErr = backoffice.ResolvePublicReference("o", in.OfferID)
+	if refErr != nil {
+		productError(w, refErr)
+		return
+	}
 	out, e := h.service.ValidateSelection(r.Context(), r.PathValue("id"), in)
 	if e != nil {
 		productError(w, e)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(out)
+	b, err := publicCatalogJSON(out)
+	if err != nil {
+		productError(w, err)
+		return
+	}
+	_, _ = w.Write(b)
 }
 func (h *ProductDetailHandler) robots(d backoffice.ProductDetail) string {
 	index, follow := "index", "follow"
@@ -110,13 +134,26 @@ func (h *ProductDetailHandler) Page(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-cache")
 	d, e := h.read(r)
-	if e == nil && r.URL.Path != d.URL {
-		target := d.URL
-		if r.URL.RawQuery != "" {
-			target += "?" + r.URL.Query().Encode()
+	if e == nil {
+		q := r.URL.Query()
+		if q.Has("variant") {
+			q.Set("variant", backoffice.PublicReference("v", d.SelectedVariantID))
 		}
-		http.Redirect(w, r, target, http.StatusMovedPermanently)
-		return
+		if q.Has("offer") {
+			q.Set("offer", backoffice.PublicReference("o", d.SelectedOfferID))
+		}
+		target := d.URL
+		if len(q) > 0 {
+			target += "?" + q.Encode()
+		}
+		current := r.URL.Path
+		if r.URL.RawQuery != "" {
+			current += "?" + r.URL.Query().Encode()
+		}
+		if current != target {
+			http.Redirect(w, r, target, http.StatusMovedPermanently)
+			return
+		}
 	}
 	status := 200
 	if e != nil {

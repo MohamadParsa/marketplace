@@ -41,7 +41,7 @@ func TestProductDetailSelectionsVisibilityAndPrivacy(t *testing.T) {
 	repo := backofficememory.New(w)
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
 	d, r := pdpRequest(t, h, "/storefront/products/mobile", 200)
-	if len(d.Breadcrumbs) != 2 || d.Brand == nil || d.Brand.Name != "برند آزمون" || d.SelectedOfferID != "mobile" || d.Content.ShortDescription != "شرح کوتاه" || !d.Interactions.Reviews || !d.CheckoutEnabled {
+	if len(d.Breadcrumbs) != 2 || d.Brand == nil || d.Brand.Name != "برند آزمون" || d.SelectedOfferID != backoffice.PublicReference("o", "mobile") || d.Content.ShortDescription != "شرح کوتاه" || !d.Interactions.Reviews || !d.CheckoutEnabled {
 		t.Fatal("public DTO", r.Body.String())
 	}
 	for _, private := range []string{`"stock"`, `"reserved"`, `"owner"`, `"users"`, `"icon_media"`, `"password"`, `"sku"`} {
@@ -50,7 +50,7 @@ func TestProductDetailSelectionsVisibilityAndPrivacy(t *testing.T) {
 		}
 	}
 	blue, _ := pdpRequest(t, h, "/storefront/products/mobile?variant=mobile-blue&offer=blue-offer", 200)
-	if blue.SelectedVariantID != "mobile-blue" || blue.SelectedOfferID != "blue-offer" || *blue.Offers[0].Price != 1500 {
+	if blue.SelectedVariantID != backoffice.PublicReference("v", "mobile-blue") || blue.SelectedOfferID != backoffice.PublicReference("o", "blue-offer") || *blue.Offers[0].Price != 1500 {
 		t.Fatal("selection mismatch")
 	}
 	for _, q := range []string{"?variant=charger", "?offer=blue-offer", "?variant=mobile-blue&offer=fast", "?q=x", "?variant=mobile-blue&variant=mobile-blue", "?variant=%ZZ"} {
@@ -74,7 +74,7 @@ func TestProductSelectionIsReadOnlyAndServerAuthoritative(t *testing.T) {
 	res := productCall(t, h, "POST", "/storefront/products/mobile/selection", "", input, 200)
 	var s backoffice.ProductSelection
 	json.Unmarshal(res.Body.Bytes(), &s)
-	if s.ProductID != "mobile" || s.OfferID != "mobile" || s.UnitPrice != 1000 {
+	if s.ProductID != backoffice.PublicReference("p", "mobile") || s.OfferID != backoffice.PublicReference("o", "mobile") || s.UnitPrice != 1000 {
 		t.Fatal(res.Body.String())
 	}
 	for i := 0; i < 2; i++ {
@@ -175,7 +175,7 @@ func TestProductGalleryOrderingVariantImageAndIsolation(t *testing.T) {
 	productCall(t, h, "POST", "/backoffice/commands", viewer, cmd, 403)
 	productCall(t, h, "POST", "/backoffice/commands", admin, cmd, 204)
 	d, _ := pdpRequest(t, h, "/storefront/products/mobile?variant=mobile-blue", 200)
-	if !strings.HasSuffix(d.Gallery[0], ids[1]) {
+	if !strings.HasSuffix(d.Gallery[0], backoffice.PublicReference("m", ids[1])) {
 		t.Fatal("variant image not first")
 	}
 	state, _ = repo.Snapshot(context.Background())

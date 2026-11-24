@@ -123,7 +123,13 @@ func (h *BannerHandler) PublicList(w http.ResponseWriter, r *http.Request) {
 		iconError(w, err)
 		return
 	}
-	writeJSON(w, 200, rows)
+	b, err := publicCatalogJSON(rows)
+	if err != nil {
+		iconError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	_, _ = w.Write(b)
 }
 
 var bannerTemplate = template.Must(template.New("banner").Parse(`<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>{{.Name}}</title><style>body{margin:0;background:#f5f7f8}main{max-width:1440px;margin:auto}img{display:block;width:100%;height:auto}a{display:block}</style></head><body><main data-revision="{{.Revision}}">{{if .Config.Link}}<a href="{{.Config.Link}}">{{end}}<picture><source media="(max-width: 767px)" srcset="/content/banner-media/{{.Config.MobileID}}"><img src="/content/banner-media/{{.Config.DesktopID}}" alt="{{.Config.Alt}}"></picture>{{if .Config.Link}}</a>{{end}}</main></body></html>`))
@@ -148,13 +154,15 @@ func (h *BannerHandler) View(w http.ResponseWriter, r *http.Request) {
 				}
 				for _, rail := range home.Rails {
 					if rail.CategoryID == row.Config.CatalogCategoryID && len(rail.Products) > 0 {
-						_ = catalogBannerTemplate.Execute(w, struct{ Title, Link, Image string }{row.Config.Alt, rail.URL, rail.Products[0].ImageURL})
+						_ = catalogBannerTemplate.Execute(w, struct{ Title, Link, Image string }{row.Config.Alt, rail.URL, projectCatalogURL(rail.Products[0].ImageURL)})
 						return
 					}
 				}
 				iconError(w, backoffice.ErrNotFound)
 				return
 			}
+			row.Config.DesktopID = backoffice.PublicReference("m", row.Config.DesktopID)
+			row.Config.MobileID = backoffice.PublicReference("m", row.Config.MobileID)
 			_ = bannerTemplate.Execute(w, row)
 			return
 		}

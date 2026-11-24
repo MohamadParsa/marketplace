@@ -31,7 +31,7 @@ func TestCategoryPriorityIsSiblingScopedAndStable(t *testing.T) {
 	}
 	var siblings, roots []string
 	for _, c := range rows {
-		if c.ParentID == "digital" {
+		if c.ParentID == backoffice.PublicReference("c", "digital") {
 			siblings = append(siblings, c.ID)
 		}
 		if c.ParentID == "" {
@@ -39,10 +39,13 @@ func TestCategoryPriorityIsSiblingScopedAndStable(t *testing.T) {
 		}
 	}
 	want := []string{"priority-zero", "priority-one-a", "priority-one-b", "priority-one-z", "charger", "mobile"}
+	for i := range want {
+		want[i] = backoffice.PublicReference("c", want[i])
+	}
 	if !reflect.DeepEqual(siblings, want) {
 		t.Fatal(siblings)
 	}
-	if roots[0] != "earbuds" {
+	if roots[0] != backoffice.PublicReference("c", "earbuds") {
 		t.Fatal("child priority reordered roots", roots)
 	}
 }
@@ -63,7 +66,7 @@ func TestCategoryPriorityPostgresPermissionsLegacyClearCacheRestart(t *testing.T
 	after := cacheRequest(h, "/storefront/navigation", before.Header().Get("ETag"))
 	var rows []backoffice.CatalogNav
 	json.Unmarshal(after.Body.Bytes(), &rows)
-	if after.Code != 200 || len(rows) == 0 || rows[0].ID != "smartwatch" || after.Header().Get("ETag") == before.Header().Get("ETag") {
+	if after.Code != 200 || len(rows) == 0 || rows[0].ID != backoffice.PublicReference("c", "smartwatch") || after.Header().Get("ETag") == before.Header().Get("ETag") {
 		t.Fatal("stale navigation", after.Code, after.Body.String())
 	}
 	// Old clients omit the optional field; updating other category content must retain it.

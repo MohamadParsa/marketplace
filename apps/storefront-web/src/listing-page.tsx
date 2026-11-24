@@ -1,10 +1,11 @@
+import { CardSkeleton } from "./catalog-loading";
 import { BusyRegion } from "./busy-region";
 import { ToggleSwitch } from "./toggle-switch";
 import { PriceRangeFilter, type PriceRange } from "./price-range-filter";
 import { AttributeFilter } from "./attribute-filter";
 import { setPageCanonical } from "./page-canonical";
 import { ChoiceGroup } from "./choice-group";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Icon,
   ProductCard,
@@ -144,9 +145,11 @@ export function ListingPage({ url }: { url: string }) {
   const [attempt, setAttempt] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const desktop = useDesktop();
+  const filterTrigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!filtersOpen || desktop) return;
-    const previous = document.activeElement as HTMLElement | null;
+    const previous =
+      filterTrigger.current ?? (document.activeElement as HTMLElement | null);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const trap = (e: KeyboardEvent) => {
@@ -174,7 +177,7 @@ export function ListingPage({ url }: { url: string }) {
     return () => {
       document.body.style.overflow = overflow;
       document.removeEventListener("keydown", trap);
-      previous?.focus();
+      if (previous?.isConnected) previous.focus({ preventScroll: true });
     };
   }, [filtersOpen, desktop]);
   useEffect(() => {
@@ -315,11 +318,7 @@ export function ListingPage({ url }: { url: string }) {
           <>
             <div className="plp-title">
               <div>
-                <span className="lh-eyebrow">CHERRIVA / همراه انتخاب تو</span>
                 <h1>{heading}</h1>
-                {data?.category && (
-                  <small>انتخاب‌ها در دسته {data.category.name}</small>
-                )}
               </div>
               <span>
                 {data
@@ -339,9 +338,17 @@ export function ListingPage({ url }: { url: string }) {
             )}
             <BusyRegion busy={loading} label="دریافت کالاها">
               <div className="plp-layout">
-                {desktop && data && (
+                {desktop && (
                   <aside className="plp-filters" aria-label="فیلتر کالاها">
-                    {filters}
+                    {data ? (
+                      filters
+                    ) : (
+                      <div className="plp-filter-skeleton" aria-hidden="true">
+                        {Array.from({ length: 6 }, (_, i) => (
+                          <i className="sf-skeleton" key={i} />
+                        ))}
+                      </div>
+                    )}
                   </aside>
                 )}
                 <section className="plp-results" aria-label="فهرست محصولات">
@@ -349,6 +356,7 @@ export function ListingPage({ url }: { url: string }) {
                     {!desktop && (
                       <button
                         className="plp-filter-toggle"
+                        ref={filterTrigger}
                         onClick={() => setFiltersOpen(true)}
                         disabled={!data}
                         aria-expanded={filtersOpen}
@@ -389,7 +397,7 @@ export function ListingPage({ url }: { url: string }) {
                   {!data && loading ? (
                     <div className="plp-grid" aria-hidden="true">
                       {Array.from({ length: 8 }, (_, i) => (
-                        <div className="plp-skeleton" key={i} />
+                        <CardSkeleton key={i} />
                       ))}
                     </div>
                   ) : data?.products.length ? (
