@@ -40,6 +40,8 @@ func commerceError(w http.ResponseWriter, e error) {
 		status, code = 404, "not_found"
 	case errors.Is(e, backoffice.ErrAddressUnavailable):
 		status, code = 400, "address_unavailable"
+	case errors.Is(e, backoffice.ErrCoupon):
+		status, code = 400, "coupon_not_eligible"
 	case errors.Is(e, backoffice.ErrInvalid):
 		status, code = 400, "invalid_request"
 	case errors.Is(e, backoffice.ErrConflict):
@@ -257,6 +259,28 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	var result any
 	var e error
 	switch r.URL.Path {
+	case "/backoffice/commerce/coupons/activate":
+		var in backoffice.CouponActivationInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		result, e = h.service.ActivateCoupon(r.Context(), a, in, key)
+	case "/backoffice/commerce/coupons/preview":
+		var in backoffice.CouponPreviewInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		result, e = h.service.PreviewCoupon(r.Context(), a, in)
+	case "/backoffice/commerce/coupons":
+		if r.Method == "GET" {
+			result, e = h.service.ReadCoupons(r.Context(), a)
+		} else {
+			var in backoffice.CouponInput
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.SaveCoupon(r.Context(), a, in, key)
+		}
 	case "/backoffice/commerce":
 		result, e = h.service.ReadCommerceAdmin(r.Context(), a)
 	case "/backoffice/commerce/settings":

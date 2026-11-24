@@ -127,6 +127,12 @@ export interface Shipment {
   delivery_to: string;
 }
 export interface Quote {
+  contract_version?: number;
+  terms_digest?: string;
+  coupon_code?: string;
+  discount_toman?: string;
+  wallet_selected_toman?: string;
+  funding_toman?: string;
   destination: Destination;
   id: string;
   status: string;
@@ -166,6 +172,17 @@ export interface Deposit {
   created_at: string;
 }
 export interface Purchase {
+  discount_funding?: {
+    platform_toman: string;
+    seller_toman: string;
+    rule_version: number;
+  };
+  credit_sources?: {
+    source: string;
+    amount_toman: string;
+    kind: string;
+    status: string;
+  }[];
   number: string;
   id: string;
   status: string;
@@ -227,6 +244,9 @@ export interface Preview {
   methods: (Method & { eligible: boolean; reason?: string })[];
 }
 export interface QuoteInput {
+  contract_version?: number;
+  coupon_code?: string;
+  wallet_toman?: string;
   cart_version: number;
   address_id: string;
   shipping: Record<string, string>;

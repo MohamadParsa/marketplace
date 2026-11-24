@@ -1,14 +1,15 @@
 package orders
 
 type Item struct {
-	OfferID   string `json:"offer_id,omitempty"`
-	VariantID string `json:"variant_id,omitempty"`
-	Name      string `json:"name,omitempty"`
-	ID        string `json:"id"`
-	ProductID string `json:"product_id"`
-	Quantity  int    `json:"quantity"`
-	UnitPrice int64  `json:"unit_price"`
-	Status    string `json:"status"`
+	VariantLabel string `json:"variant_label,omitempty"`
+	OfferID      string `json:"offer_id,omitempty"`
+	VariantID    string `json:"variant_id,omitempty"`
+	Name         string `json:"name,omitempty"`
+	ID           string `json:"id"`
+	ProductID    string `json:"product_id"`
+	Quantity     int    `json:"quantity"`
+	UnitPrice    int64  `json:"unit_price"`
+	Status       string `json:"status"`
 }
 type Order struct {
 	PurchaseNumber string   `json:"purchase_number,omitempty"`

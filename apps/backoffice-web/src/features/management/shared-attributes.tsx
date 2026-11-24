@@ -239,6 +239,9 @@ function AttributeEditor({
     attribute.id ? "attribute.update" : "attribute.create",
     "management",
   );
+  const groupEditable = attribute.id
+    ? may("attribute.groups.set", "management")
+    : editable;
   const change = (field: keyof AttributeDefinition, value: string) => {
     setDraft({ ...draft, [field]: value });
     setKey(crypto.randomUUID());
@@ -364,11 +367,151 @@ function AttributeEditor({
               disabled={!editable || pending || used}
             />
           )}
+          {draft.kind === "enum" && (
+            <section aria-label="گروه‌های نمایشی مقادیر">
+              <h3>گروه نمایشی گارانتی</h3>
+              <p>
+                عنوان گروه فقط نمایش را ساده می‌کند. نام واقعی، قیمت و موجودی هر
+                عرضه حفظ می‌شود؛ ذخیره روی همه محصولات مرتبط اثر دارد.
+              </p>
+              {(draft.groups ?? []).map((group, index) => (
+                <fieldset key={group.id} disabled={!groupEditable || pending}>
+                  <legend>{group.name || "گروه جدید"}</legend>
+                  <TextField
+                    label="عنوان گروه"
+                    value={group.name}
+                    inputProps={{ maxLength: 80 }}
+                    onChange={(e) => {
+                      setDraft({
+                        ...draft,
+                        groups: draft.groups!.map((g, i) =>
+                          i === index ? { ...g, name: e.target.value } : g,
+                        ),
+                      });
+                      setKey(crypto.randomUUID());
+                    }}
+                  />
+                  <label>
+                    <Checkbox
+                      checked={group.active}
+                      onChange={(e) => {
+                        setDraft({
+                          ...draft,
+                          groups: draft.groups!.map((g, i) =>
+                            i === index
+                              ? { ...g, active: e.target.checked }
+                              : g,
+                          ),
+                        });
+                        setKey(crypto.randomUUID());
+                      }}
+                    />
+                    فعال در نمایش
+                  </label>
+                  <div className="warranty-group-values">
+                    {options
+                      .split("\n")
+                      .filter(Boolean)
+                      .map((value) => (
+                        <label key={value}>
+                          <Checkbox
+                            checked={group.values.includes(value)}
+                            onChange={(e) => {
+                              setDraft({
+                                ...draft,
+                                groups: draft.groups!.map((g, i) =>
+                                  i === index
+                                    ? {
+                                        ...g,
+                                        values: e.target.checked
+                                          ? [...g.values, value]
+                                          : g.values.filter((v) => v !== value),
+                                      }
+                                    : g,
+                                ),
+                              });
+                              setKey(crypto.randomUUID());
+                            }}
+                          />
+                          {value}
+                        </label>
+                      ))}
+                  </div>
+                  <Button
+                    color="error"
+                    onClick={() => {
+                      setDraft({
+                        ...draft,
+                        groups: draft.groups!.filter((_, i) => i !== index),
+                      });
+                      setKey(crypto.randomUUID());
+                    }}
+                  >
+                    حذف گروه نمایشی
+                  </Button>
+                </fieldset>
+              ))}
+              <Button
+                disabled={
+                  !groupEditable ||
+                  pending ||
+                  (draft.groups?.length ?? 0) >= 100
+                }
+                onClick={() => {
+                  setDraft({
+                    ...draft,
+                    groups: [
+                      ...(draft.groups ?? []),
+                      {
+                        id: "group-" + crypto.randomUUID(),
+                        name: "",
+                        values: [],
+                        active: true,
+                      },
+                    ],
+                  });
+                  setKey(crypto.randomUUID());
+                }}
+              >
+                افزودن گروه نمایشی
+              </Button>
+            </section>
+          )}
         </DialogContent>
         <DialogActions>
           <Button disabled={pending} onClick={close}>
             انصراف
           </Button>
+          {attribute.id && (
+            <Button
+              disabled={!groupEditable || pending}
+              onClick={async () => {
+                if (pending) return;
+                setPending(true);
+                setError("");
+                try {
+                  await execute({
+                    action: "attribute.groups.set",
+                    target: attribute.id,
+                    version: attribute.version,
+                    attribute: {
+                      ...attribute,
+                      options: [],
+                      groups: draft.groups ?? [],
+                    },
+                    idempotency_key: key,
+                  });
+                  close();
+                } catch (e) {
+                  setError(message(e));
+                } finally {
+                  setPending(false);
+                }
+              }}
+            >
+              ثبت فقط گروه‌های نمایشی
+            </Button>
+          )}
           {attribute.id && (
             <Button
               color="error"

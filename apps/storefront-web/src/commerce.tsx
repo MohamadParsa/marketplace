@@ -25,6 +25,7 @@ const errors: Record<string, string> = {
   payment_method_not_eligible: "این روش برای مبلغ یا دسته‌های سفارش مجاز نیست.",
   address_unavailable:
     "استان و شهر این آدرس فعال یا معتبر نیست؛ آدرس را ویرایش کنید.",
+  coupon_not_eligible: "این کد تخفیف برای مبلغ، کالاها، تاریخ یا سهمیه این خرید معتبر نیست.",
   invalid_request: "اطلاعات واردشده معتبر نیست.",
   invalid_receipt: "تصویر رسید معتبر نیست؛ PNG، JPEG یا WebP انتخاب کنید.",
   receipt_too_large: "حجم رسید باید حداکثر ۲ مگابایت باشد.",

@@ -191,7 +191,13 @@ export function CommercePage({
     });
   }, [load]);
   const mutation = async (path: string, input: unknown, key: string) => {
-    await request("/backoffice/commerce/" + path, token, input, key, path === "settings" ? "PATCH" : undefined);
+    await request(
+      "/backoffice/commerce/" + path,
+      token,
+      input,
+      key,
+      path === "settings" ? "PATCH" : undefined,
+    );
     await load();
     setSelected(null);
     setNotice("عملیات ثبت شد؛ وضعیت جدید را بررسی کنید.");
@@ -636,7 +642,7 @@ function PurchaseReview({
           <dl>
             <div>
               <dt>روش انتخاب‌شده</dt>
-              <dd>{p.quote.payment_method.name}</dd>
+              <dd>{p.quote.payment_method.name || "بدون نیاز به تأمین وجه"}</dd>
             </div>
             <div>
               <dt>جمع کالاها</dt>
@@ -646,6 +652,25 @@ function PurchaseReview({
               <dt>هزینه ارسال</dt>
               <dd>{money(p.quote.shipping_toman)}</dd>
             </div>
+            {p.quote.contract_version === 2 && (
+              <>
+                <div>
+                  <dt>کد / مبلغ تخفیف</dt>
+                  <dd>
+                    {p.quote.coupon_code || "بدون کد"} ·{" "}
+                    {money(p.quote.discount_toman ?? "0")}
+                  </dd>
+                </div>
+                <div>
+                  <dt>اعتبار انتخابی کیف پول</dt>
+                  <dd>{money(p.quote.wallet_selected_toman ?? "0")}</dd>
+                </div>
+                <div>
+                  <dt>نیاز به تأمین وجه</dt>
+                  <dd>{money(p.quote.funding_toman ?? "0")}</dd>
+                </div>
+              </>
+            )}
             <div className="commerce-order-grand">
               <dt>مبلغ نهایی</dt>
               <dd>{money(p.quote.total_toman)}</dd>
@@ -664,6 +689,44 @@ function PurchaseReview({
             </div>
           </dl>
         </section>
+        {p.discount_funding && (
+          <section className="commerce-order-box" aria-label="سهم هزینه تخفیف">
+            <h3>سهم هزینه تخفیف</h3>
+            <p>نسخه قانون: {p.discount_funding.rule_version}</p>
+            <p>
+              چریوا: <b>{money(p.discount_funding.platform_toman)}</b>
+            </p>
+            <p>
+              فروشنده: <b>{money(p.discount_funding.seller_toman)}</b>
+            </p>
+          </section>
+        )}
+        {!!p.credit_sources?.length && (
+          <section
+            className="commerce-order-box"
+            aria-label="منابع اعتبار خرید"
+          >
+            <h3>منابع اعتبار خرید</h3>
+            {p.credit_sources.map((a, i) => (
+              <article key={i}>
+                <b>
+                  {a.kind === "selected-balance"
+                    ? "اعتبار قبلی انتخابی"
+                    : "وجه جدید تخصیص‌یافته"}
+                </b>
+                <p>
+                  {money(a.amount_toman)} ·{" "}
+                  {a.status === "held"
+                    ? "رزرو"
+                    : a.status === "posted"
+                      ? "مصرف‌شده"
+                      : "آزادشده"}
+                </p>
+                <small dir="ltr">{a.source}</small>
+              </article>
+            ))}
+          </section>
+        )}
         <section className="commerce-order-box" aria-label="گیرنده و آدرس">
           <h3>گیرنده و آدرس</h3>
           <b>{p.quote.address.recipient}</b>

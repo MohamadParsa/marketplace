@@ -32,7 +32,10 @@ func productQuery(r *http.Request) (string, string, error) {
 		return "", "", backoffice.ErrInvalid
 	}
 	for k, v := range q {
-		if (k != "variant" && k != "offer") || len(v) != 1 || v[0] == "" || len(v[0]) > 128 {
+		if k == "group" && (len(v) != 1 || v[0] != "1") {
+			return "", "", backoffice.ErrInvalid
+		}
+		if (k != "variant" && k != "offer" && k != "group") || len(v) != 1 || v[0] == "" || len(v[0]) > 128 {
 			return "", "", backoffice.ErrInvalid
 		}
 	}
@@ -55,7 +58,7 @@ func (h *ProductDetailHandler) read(r *http.Request) (backoffice.ProductDetail, 
 	if e != nil {
 		return backoffice.ProductDetail{}, e
 	}
-	return h.service.PublicProduct(r.Context(), r.PathValue("id"), v, o)
+	return h.service.PublicProduct(r.Context(), r.PathValue("id"), v, o, r.URL.Query().Get("group") == "1")
 }
 func (h *ProductDetailHandler) Read(w http.ResponseWriter, r *http.Request) {
 	d, e := h.read(r)

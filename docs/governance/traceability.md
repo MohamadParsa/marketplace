@@ -211,3 +211,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## انتشار دسته مشتری در۲۰۲۶-۱۱-۲۴
 
 تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند. #63/#64 قابلیت اجرایی و #66 خروجی تحلیل هستند؛ هیچ کار انتخاب‌نشده‌ای done نشده است.
+
+## اجرای محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
+
+FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/contracts/checkout-adjustments.md)، [گزارش AC و تست‌ها](../delivery/next-phase/issues-67-68-69-78-verification.md) و [صف ماشین‌خوان](../delivery/next-phase/task-index.json) مرتبط‌اند. وضعیت پیاده‌سازی review و انتشار local-only است؛ اسناد in-review باقی‌اند و Issueها در این نوبت تغییر نمی‌کنند.

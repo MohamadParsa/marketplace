@@ -63,3 +63,5 @@
 [سناریوهای علاقه‌مندی مشتری #63](features/experiences/customer-wishlist.feature) به گزارش HTTP/PG/مرورگر همان برش لینک دارند؛ اجرای BDD runner با اجرای تست‌های Go/مرورگر یکی نیست.
 
 [سناریوهای بازدیدهای اخیر #64](features/experiences/customer-recently-viewed.feature) به گزارش Go/HTTP/PG/lifecycle/مرورگر لینک دارند؛ runner جدا برای خود BDD ادعا نمی‌شود.
+
+[کوپن، اعتبار دلخواه و گروه گارانتی؛ سناریوهای چهار قابلیت محلی](features/experiences/checkout-adjustments.feature) · [شواهد اجرای مرتبط](../delivery/next-phase/issues-67-68-69-78-verification.md).

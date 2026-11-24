@@ -13,6 +13,9 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
+	Coupons            []Coupon        `json:"coupons,omitempty"`
+	CreditLots         []CreditLot     `json:"credit_lots,omitempty"`
+	CreditAccounts     []CreditAccount `json:"credit_accounts,omitempty"`
 	NextPurchaseNumber int64           `json:"next_purchase_number"`
 	Settings           Settings        `json:"settings"`
 	Carts              []Cart          `json:"carts"`
@@ -133,6 +136,10 @@ type ShipmentSnapshot struct {
 	DeliveryTo   string         `json:"delivery_to"`
 }
 type Quote struct {
+	ContractVersion    int                `json:"contract_version,omitempty"`
+	CouponCode         string             `json:"coupon_code,omitempty"`
+	Discount           *DiscountUsage     `json:"discount,omitempty"`
+	Credit             *CreditUsage       `json:"credit,omitempty"`
 	Destination        Destination        `json:"destination"`
 	AcceptedAt         *time.Time         `json:"accepted_at,omitempty"`
 	ID                 string             `json:"id"`

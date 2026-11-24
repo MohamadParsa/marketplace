@@ -42,6 +42,7 @@ type Content = {
   nofollow: boolean;
 };
 type Offer = {
+  variant_label: string;
   id: string;
   variant_id: string;
   store_id: string;
@@ -264,11 +265,12 @@ export function ProductPage({ url }: { url: string }) {
       setPageCanonical("");
     };
   }, [url, attempt]);
-  const choose = (variant: string, offer?: string) => {
+  const choose = (variant: string, offer?: string, group = false) => {
     const u = new URL(url, location.origin);
     u.search = "";
     if (variant) u.searchParams.set("variant", variant);
     if (offer) u.searchParams.set("offer", offer);
+    if (group) u.searchParams.set("group", "1");
     navigate(u.pathname + u.search);
   };
   const selected = data?.variants.find(
@@ -327,28 +329,42 @@ export function ProductPage({ url }: { url: string }) {
     attempt,
   ]);
   const content = data?.content;
+  const groupFor = (axis: Axis, value?: string) =>
+    axis.groups?.find((g) => g.active && g.values.includes(value ?? ""));
+  const matchesChoice = (axis: Axis, real: string, choice: string) =>
+    choice.startsWith("@group:")
+      ? !!axis.groups?.some(
+          (g) =>
+            g.active && "@group:" + g.id === choice && g.values.includes(real),
+        )
+      : real === choice;
   const selectAxis = (axis: string, value: string) => {
     if (!data || !selected) return;
-    const next = {
-      ...Object.fromEntries(
-        selected.values.map((v) => [v.attribute_id, v.value]),
-      ),
-      [axis]: value,
-    };
-    const exact = data.variants.find((v) =>
-      data.axes.every((a) =>
-        v.values.some((x) => x.attribute_id === a.id && x.value === next[a.id]),
-      ),
+    const next = Object.fromEntries(
+      data.axes.map((a) => {
+        const real =
+          selected.values.find((v) => v.attribute_id === a.id)?.value ?? "";
+        const g = groupFor(a, real);
+        return [a.id, g ? "@group:" + g.id : real];
+      }),
     );
+    next[axis] = value;
     const candidates = data.variants.filter((v) =>
-      v.values.some((x) => x.attribute_id === axis && x.value === value),
+      data.axes.every((a) =>
+        v.values.some(
+          (x) =>
+            x.attribute_id === a.id && matchesChoice(a, x.value, next[a.id]),
+        ),
+      ),
     );
-    const target =
-      exact ?? candidates.find((v) => v.available) ?? candidates[0];
-    if (target) choose(target.id);
+    const target = candidates.find((v) => v.available) ?? candidates[0];
+    if (target) choose(target.id, undefined, true);
   };
   return (
-    <div className={`launch-home product-page${data && !status ? " has-purchase-bar" : ""}`} dir="rtl">
+    <div
+      className={`launch-home product-page${data && !status ? " has-purchase-bar" : ""}`}
+      dir="rtl"
+    >
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
@@ -443,27 +459,68 @@ export function ProductPage({ url }: { url: string }) {
                     <p className="pdp-short">{content.short_description}</p>
                   )}
                   <div className="pdp-axes">
-                    {data.axes.map((a) => (
-                      <VariantAxis
-                        key={a.id}
-                        axis={a}
-                        selected={
-                          selected?.values.find((v) => v.attribute_id === a.id)
-                            ?.value
-                        }
-                        disabled={loading}
-                        isDefined={(value) =>
-                          data.variants.some((v) =>
-                            v.values.some(
-                              (x) =>
-                                x.attribute_id === a.id && x.value === value,
-                            ),
-                          )
-                        }
-                        onSelect={(value) => selectAxis(a.id, value)}
-                      />
-                    ))}
+                    {data.axes.map((a) => {
+                      const groups = (a.groups ?? []).filter((g) => g.active),
+                        labels = Object.fromEntries(
+                          groups.map((g) => ["@group:" + g.id, g.name]),
+                        );
+                      const real = selected?.values.find(
+                          (v) => v.attribute_id === a.id,
+                        )?.value,
+                        group = groupFor(a, real);
+                      const values = a.options.map((v) => {
+                        const g = groupFor(a, v);
+                        return g ? "@group:" + g.id : v;
+                      });
+                      return (
+                        <VariantAxis
+                          key={a.id}
+                          axis={{ ...a, options: [...new Set(values)], labels }}
+                          selected={group ? "@group:" + group.id : real}
+                          disabled={loading}
+                          isDefined={(choice) =>
+                            data.variants.some((v) =>
+                              data.axes.every((other) =>
+                                v.values.some((x) => {
+                                  if (x.attribute_id !== other.id) return false;
+                                  const selectedValue =
+                                    selected?.values.find(
+                                      (s) => s.attribute_id === other.id,
+                                    )?.value ?? "";
+                                  const g = groupFor(other, selectedValue);
+                                  return matchesChoice(
+                                    other,
+                                    x.value,
+                                    other.id === a.id
+                                      ? choice
+                                      : g
+                                        ? "@group:" + g.id
+                                        : selectedValue,
+                                  );
+                                }),
+                              ),
+                            )
+                          }
+                          onSelect={(value) => selectAxis(a.id, value)}
+                        />
+                      );
+                    })}
                   </div>
+                  {data.axes.some((a) => a.groups?.some((g) => g.active)) &&
+                    selected && (
+                      <p
+                        className="pdp-real-warranty"
+                        data-testid="real-variant-label"
+                      >
+                        گزینه واقعی خرید:{" "}
+                        {selected.values
+                          .map(
+                            (v) =>
+                              `${data.axes.find((a) => a.id === v.attribute_id)?.name ?? ""}: ${v.value}`,
+                          )
+                          .join(" · ")}
+                      </p>
+                    )}
                   {!!data.features.length && (
                     <div className="pdp-key-features">
                       <h2>ویژگی‌های کلیدی</h2>
@@ -482,14 +539,9 @@ export function ProductPage({ url }: { url: string }) {
                   )}
                 </div>
               </section>
-              <aside
-                className="pdp-buybox"
-                aria-label="انتخاب فروشنده و خرید"
-              >
+              <aside className="pdp-buybox" aria-label="انتخاب فروشنده و خرید">
                 <span className="pdp-buybox-tag">
-                  {available
-                    ? "قیمت نقدی این انتخاب"
-                    : "این انتخاب موجود نیست"}
+                  {available ? "قیمت نقدی این انتخاب" : "این انتخاب موجود نیست"}
                 </span>
                 <h2>{offer?.store_name ?? "فروشنده فعالی ندارد"}</h2>
                 {offer && (
@@ -499,8 +551,7 @@ export function ProductPage({ url }: { url: string }) {
                   </p>
                 )}
                 <small>
-                  هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص
-                  می‌شود.
+                  هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص می‌شود.
                 </small>
                 <div className="pdp-buy-actions">
                   {available && offer?.price != null ? (
@@ -547,9 +598,7 @@ export function ProductPage({ url }: { url: string }) {
                   </div>
                 </div>
                 <div className="pdp-selection-status" aria-live="polite">
-                  {selectionError ? (
-                    <p role="alert">{selectionError}</p>
-                  ) : null}
+                  {selectionError ? <p role="alert">{selectionError}</p> : null}
                 </div>
                 {addError && <p role="alert">{addError}</p>}
                 <p id="pdp-purchase-note" className="pdp-purchase-note">
@@ -565,7 +614,9 @@ export function ProductPage({ url }: { url: string }) {
                 >
                   <h2 id="pdp-sellers-title">
                     فروشنده‌های این انتخاب{" "}
-                    <small>({data.offers.length.toLocaleString("fa-IR")})</small>
+                    <small>
+                      ({data.offers.length.toLocaleString("fa-IR")})
+                    </small>
                   </h2>
                   {!data.offers.length ? (
                     <p>برای این تنوع عرضه فعالی ثبت نشده است.</p>
@@ -577,6 +628,7 @@ export function ProductPage({ url }: { url: string }) {
                       >
                         <div>
                           <h3>{o.store_name}</h3>
+                          <small>{o.variant_label}</small>
                           <span>
                             {o.id === offer?.id
                               ? "فروشنده انتخاب‌شده"
@@ -592,8 +644,10 @@ export function ProductPage({ url }: { url: string }) {
                             : "ناموجود"}
                         </b>
                         <button
-                          disabled={loading || o.id === offer?.id || !o.available}
-                          onClick={() => choose(data.selected_variant_id, o.id)}
+                          disabled={
+                            loading || o.id === offer?.id || !o.available
+                          }
+                          onClick={() => choose(o.variant_id, o.id)}
                         >
                           {o.id === offer?.id ? "انتخاب‌شده" : "انتخاب فروشنده"}
                         </button>

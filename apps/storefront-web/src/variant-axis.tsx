@@ -4,6 +4,8 @@ export type Axis = {
   id: string;
   name: string;
   options: string[];
+  groups?: { id: string; name: string; values: string[]; active: boolean }[];
+  labels?: Record<string, string>;
   unit?: string;
 };
 
@@ -97,7 +99,10 @@ export function VariantAxis({
   return (
     <fieldset ref={root} className="pdp-variant-axis" data-axis-id={axis.id}>
       <legend>
-        {axis.name}: <b dir="auto">{selected ?? "انتخاب نشده"}</b>
+        {axis.name}:{" "}
+        <b dir="auto">
+          {selected ? (axis.labels?.[selected] ?? selected) : "انتخاب نشده"}
+        </b>
       </legend>
       <div className="pdp-axis-options" id={id}>
         {visible.map((value) => (
@@ -105,12 +110,12 @@ export function VariantAxis({
             type="button"
             key={value}
             className="pdp-axis-chip"
-            title={value}
+            title={axis.labels?.[value] ?? value}
             aria-pressed={value === selected}
             disabled={disabled || !isDefined(value)}
             onClick={() => onSelect(value)}
           >
-            <bdi>{value}</bdi>
+            <bdi>{axis.labels?.[value] ?? value}</bdi>
           </button>
         ))}
       </div>
