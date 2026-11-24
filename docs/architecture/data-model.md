@@ -50,3 +50,16 @@
 ## مرز داده انتشار اولیه
 
 طبق [تصمیم تازه](../decisions/adr-007-initial-launch-sequence.md)، اعلام کارت‌به‌کارت با شارژ کیف پول و پرداخت سفارش سه رخداد مستقل‌اند؛ مدل پیشنهادی یک درخواست واریز نسخه‌دار، مدرک خصوصی، تصمیم دستی و مرجع credit ledger دارد. پرداخت سفارش به debit و خرید/گروه فروشگاهی وصل است. مصرف و ثبت سفارش باید اتمیک باشد و تأیید دوباره وجه نباید credit دوم بسازد. schema نهایی و زمان‌ها پس از LCH-Q02 تا04 تعیین می‌شوند؛ این پاراگراف migration یا قرارداد عملیاتی مصوب نیست.
+
+
+## پیشنهاد مدل مبلغ و usage — تحلیل #66
+
+[قرارداد طراحی v2](contracts/checkout-amounts-usage.md) مرجع پیشنهاد AmountSnapshot، CreditUsage/Allocation و DiscountUsage است؛ به Purchase کل و تخصیص اقلام/ارسال وصل می‌شود. usage دفتر موازی نیست؛ هر سفارش همان یک debit و منشأهای قابل ردیابی را دارد. خواندن legacy حفظ و نوشتن v2 تدریجی پیشنهاد شده است؛ schema و migration در این تحلیل اجرا نشده‌اند.
+
+## علاقه‌مندی خصوصی مشتری — #63
+
+رابطه یکتای User/Product با created_at در Workspace.Wishlist پایدار است؛ به تنوع/فروشنده یا رزرو/قیمت خرید وصل نیست. داده در projection عمومی یا workspace پنل نمی‌آید. [قرارداد](contracts/customer-wishlist.md) و [شواهد ماندگاری/حریم خصوصی](../delivery/next-phase/issue-63-verification.md) منبع رفتارند؛ migration جدید لازم نبود.
+
+## سابقه آخرین مشاهده مشتری — #64
+
+Workspace.RecentlyViewed رابطه user/product/viewed_at مستقل از wishlist است؛ upsert و ترتیب آخرین مشاهده، سقف۵۰ و بازه۳۰روز دارد. داده از projection عمومی و workspace پنل حذف است؛ [قرارداد](contracts/customer-recently-viewed.md) مرجع ماندگاری، پاک‌سازی فیزیکی و privacy است. این مدل رویداد خام Analytics نیست.

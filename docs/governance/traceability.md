@@ -194,3 +194,16 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 [فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. فقط پنج کار مجاز شدند؛ سایر۲۵کار اجرا نشده‌اند.
 
 تحویل این پنج انتخاب در [PR #92](https://github.com/MohamadParsa/marketplace/pull/92) پس از هر۵ job موفق CI ادغام شد؛ پنج Issue با کامنت شواهد closed و implementation_status آن‌ها done است. سایر۲۵کار این برنامه todo/open باقی‌اند؛ اسناد همچنان in-review و انتشار لیارا جداست.
+
+
+## تحلیل محلی #66
+
+[شرح](../delivery/next-phase/tasks/cv-next-05-checkout-amounts-usage-contract.md) ← [قرارداد مبلغ/usage](../architecture/contracts/checkout-amounts-usage.md) ← [گزارش و ACها](../delivery/next-phase/issue-66-analysis.md) ← [مثال‌ها و بررسی محاسبات](../delivery/next-phase/issue-66-checks.json) و [سناریوی پذیرش مستند](../bdd/features/experiences/checkout-amounts-usage.feature). پاسخ‌های مالک از مدل پیشنهادی جدا هستند؛ تحلیل با دستور ادامه مالک done محلی است؛ سند in-review و Issue گیت open مانده‌اند و کد مالی/دیتابیس/گیت تغییر نکرده‌اند. شش انتخاب دیگر در این نوبت شروع نشدند.
+
+## اجرای محلی #63
+
+[شرح](../delivery/next-phase/tasks/cv-next-02-customer-wishlist.md) ← [قرارداد](../architecture/contracts/customer-wishlist.md) ← [سناریوهای مشخص](../bdd/features/experiences/customer-wishlist.feature) ← [گزارش و تصاویر](../delivery/next-phase/issue-63-verification.md) ← [نتیجه۲۶کنترل مرورگر و۲۲۰تست/زیرتست Go](../delivery/next-phase/issue-63-checks.json). علاقه‌مندی خصوصی کاربر، آیکن کنار سبد و قلب PDP done محلی‌اند؛ هیچ push/کامنت/بستن GitHub انجام نشده و #64 شروع نشده است.
+
+## اجرای محلی #64 و اصلاحات صریح UI
+
+[شرح](../delivery/next-phase/tasks/cv-next-03-customer-recently-viewed.md) ← [قرارداد](../architecture/contracts/customer-recently-viewed.md) ← [BDD مستند](../bdd/features/experiences/customer-recently-viewed.feature) ← [گزارش/تصاویر](../delivery/next-phase/issue-64-verification.md) ← [نتیجه۶۵کنترل مرورگر و۲۲۷تست/زیرتست Go](../delivery/next-phase/issue-64-checks.json). تغییر قلب PDP/هدر و breadcrumb هم دستور صریح مالک همین نوبت‌اند؛ گزارش #63 پیوند به شواهد جدید دارد. قابلیت done محلی، سند in-review و Issue گیت open است؛ هیچ commit/push/کامنت/بستن انجام نشد.

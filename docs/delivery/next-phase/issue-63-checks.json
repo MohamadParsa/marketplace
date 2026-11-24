@@ -1,0 +1,287 @@
+{
+  "checks": [
+    {
+      "id": "guest-list-requires-login",
+      "pass": true
+    },
+    {
+      "id": "header-heart-next-to-cart",
+      "pass": true
+    },
+    {
+      "id": "guest-heart-returns-to-product",
+      "pass": true
+    },
+    {
+      "id": "initial-pdp-state-not-saved",
+      "pass": true
+    },
+    {
+      "id": "keyboard-adds-favorite",
+      "pass": true
+    },
+    {
+      "id": "duplicate-put-no-second-row",
+      "pass": true
+    },
+    {
+      "id": "header-count-updates",
+      "pass": true
+    },
+    {
+      "id": "saved-product-in-list",
+      "pass": true
+    },
+    {
+      "id": "list-persists-refresh",
+      "pass": true
+    },
+    {
+      "id": "pdp-loaded-saved-state-after-refresh",
+      "pass": true
+    },
+    {
+      "id": "failed-add-preserves-state",
+      "pass": true
+    },
+    {
+      "id": "retry-add-succeeds",
+      "pass": true
+    },
+    {
+      "id": "failed-remove-preserves-row",
+      "pass": true
+    },
+    {
+      "id": "remove-keeps-other-bookmark",
+      "pass": true
+    },
+    {
+      "id": "mobile-header-heart-visible",
+      "pass": true
+    },
+    {
+      "id": "mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "hidden-product-generic-removable-row",
+      "pass": true
+    },
+    {
+      "id": "out-of-stock-remains-visible",
+      "pass": true
+    },
+    {
+      "id": "pagination-second-page",
+      "pass": true
+    },
+    {
+      "id": "delete-last-page-returns-to-valid-page",
+      "pass": true
+    },
+    {
+      "id": "logout-clears-private-list-and-badge",
+      "pass": true
+    },
+    {
+      "id": "second-user-does-not-see-first-user-list",
+      "pass": true
+    },
+    {
+      "id": "second-user-cannot-delete-first-user-bookmark",
+      "pass": true
+    },
+    {
+      "id": "returning-account-restores-own-heart",
+      "pass": true
+    },
+    {
+      "id": "narrow-mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-page-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "sample_product_url": "/product/chr-10082",
+  "actual_catalog": true,
+  "mock_edges": [
+    "hidden",
+    "out-of-stock",
+    "pagination",
+    "503"
+  ],
+  "only_own_synthetic_wishlist_mutated": true,
+  "restored_previous_bookmarks": true,
+  "issue": 63,
+  "date": "2026-11-23",
+  "implementation_status": "done",
+  "local_only": true,
+  "github_issue_state": "open",
+  "pushed": false,
+  "github_mutated": false,
+  "ci": "not-run-no-push",
+  "go_tests": {
+    "passed_tests_and_subtests": 220,
+    "skipped": 1,
+    "failures": 0,
+    "postgres_temporary_schema": true,
+    "race": "not-run-locally"
+  },
+  "go_vet": "passed",
+  "storefront_build": "passed",
+  "storefront_lint": "passed",
+  "document_validation": {
+    "pass": true,
+    "relative_file_links_checked": 471,
+    "new_ids_unique": true,
+    "json_valid": true,
+    "status_counts": {
+      "todo": 23,
+      "done": 7
+    },
+    "local_done_issues": [
+      66,
+      63
+    ],
+    "historical_package_unchanged": true,
+    "db_migration_deploy_workflows_unchanged": true,
+    "no_new_commits_or_push": true
+  },
+  "latest_local_refinement": {
+    "during_issue": 64,
+    "checks": [
+      {
+        "id": "guest-list-requires-login",
+        "pass": true
+      },
+      {
+        "id": "guest-header-heart-hidden",
+        "pass": true
+      },
+      {
+        "id": "guest-heart-returns-to-product",
+        "pass": true
+      },
+      {
+        "id": "initial-pdp-state-not-saved",
+        "pass": true
+      },
+      {
+        "id": "keyboard-adds-favorite",
+        "pass": true
+      },
+      {
+        "id": "header-heart-next-to-cart-after-login",
+        "pass": true
+      },
+      {
+        "id": "pdp-heart-icon-only-unframed",
+        "pass": true
+      },
+      {
+        "id": "pdp-heart-filled-when-saved",
+        "pass": true
+      },
+      {
+        "id": "duplicate-put-no-second-row",
+        "pass": true
+      },
+      {
+        "id": "header-count-updates",
+        "pass": true
+      },
+      {
+        "id": "saved-product-in-list",
+        "pass": true
+      },
+      {
+        "id": "list-persists-refresh",
+        "pass": true
+      },
+      {
+        "id": "pdp-loaded-saved-state-after-refresh",
+        "pass": true
+      },
+      {
+        "id": "failed-add-preserves-state",
+        "pass": true
+      },
+      {
+        "id": "retry-add-succeeds",
+        "pass": true
+      },
+      {
+        "id": "failed-remove-preserves-row",
+        "pass": true
+      },
+      {
+        "id": "remove-keeps-other-bookmark",
+        "pass": true
+      },
+      {
+        "id": "mobile-header-heart-visible",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "hidden-product-generic-removable-row",
+        "pass": true
+      },
+      {
+        "id": "out-of-stock-remains-visible",
+        "pass": true
+      },
+      {
+        "id": "pagination-second-page",
+        "pass": true
+      },
+      {
+        "id": "delete-last-page-returns-to-valid-page",
+        "pass": true
+      },
+      {
+        "id": "logout-clears-private-list-and-badge",
+        "pass": true
+      },
+      {
+        "id": "second-user-does-not-see-first-user-list",
+        "pass": true
+      },
+      {
+        "id": "second-user-cannot-delete-first-user-bookmark",
+        "pass": true
+      },
+      {
+        "id": "returning-account-restores-own-heart",
+        "pass": true
+      },
+      {
+        "id": "narrow-mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "browser_checks": 29,
+    "icon_only_no_frame": true,
+    "guest_header_hidden": true,
+    "pushed": false
+  },
+  "publication": {
+    "authorized_on": "2026-11-24",
+    "scope": "current-batch-only",
+    "state": "preparing-pr",
+    "source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+    "branch": "codex/customer-lists-and-amounts",
+    "liara_deployed": false
+  }
+}
