@@ -1,10 +1,10 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "selected-80-83-84-85-86-done-awaiting-next-owner-selection",
+  "execution": "issues-66-63-64-publication-in-progress",
   "items": [
     {
       "n": 1,
@@ -34,13 +34,17 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "state": "open",
       "number": 63,
       "url": "https://github.com/MohamadParsa/marketplace/issues/63",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "local_only": true,
+      "local_delivery_status": "completed-awaiting-publication",
+      "publication_pending": true,
+      "verification": "docs/delivery/next-phase/issue-63-verification.md"
     },
     {
       "n": 3,
@@ -52,13 +56,17 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "state": "open",
       "number": 64,
       "url": "https://github.com/MohamadParsa/marketplace/issues/64",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "local_only": true,
+      "local_delivery_status": "completed-awaiting-publication",
+      "publication_pending": true,
+      "verification": "docs/delivery/next-phase/issue-64-verification.md"
     },
     {
       "n": 4,
@@ -88,13 +96,17 @@
       "wave": "W0",
       "kind": "analysis-first",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "state": "open",
       "number": 66,
       "url": "https://github.com/MohamadParsa/marketplace/issues/66",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "verification": "docs/delivery/next-phase/issue-66-analysis.md",
+      "local_only": true,
+      "local_delivery_status": "completed-awaiting-publication",
+      "publication_pending": true
     },
     {
       "n": 6,
@@ -630,10 +642,35 @@
     }
   ],
   "authorized_issue_numbers": [
+    63,
+    64,
+    66,
     80,
     83,
     84,
     85,
     86
-  ]
+  ],
+  "current_local_issue": null,
+  "requested_issue_numbers": [
+    66,
+    63,
+    64,
+    67,
+    68,
+    69,
+    78
+  ],
+  "proposed_execution_order": [
+    66,
+    63,
+    64,
+    67,
+    68,
+    69,
+    78
+  ],
+  "publication_policy": "current-batch-authorized-future-changes-local-only",
+  "last_completed_local_issue": 64,
+  "next_proposed_issue": 67
 }

@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "1d05e39f858cf87d1f13be5aefd7b973a78f05ad",
+  "current_source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
   "rows": [
     {
       "issue": 27,
@@ -245,11 +245,80 @@
       "implementation_status": "done",
       "pull_request": 92,
       "merge_commit": "f17fb49995647431b6dbe519aff347151d710068"
+    },
+    {
+      "issue": 63,
+      "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+      "change_kind": "application-and-documentation",
+      "verification": "docs/delivery/next-phase/issue-63-verification.md",
+      "issue_state": "open",
+      "implementation_status": "done",
+      "publication_status": "preparing-pr",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
+    },
+    {
+      "issue": 64,
+      "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+      "change_kind": "application-and-documentation",
+      "verification": "docs/delivery/next-phase/issue-64-verification.md",
+      "issue_state": "open",
+      "implementation_status": "done",
+      "publication_status": "preparing-pr",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
+    },
+    {
+      "issue": 66,
+      "source_commit": null,
+      "change_kind": "analysis-only",
+      "verification": "docs/delivery/next-phase/issue-66-analysis.md",
+      "issue_state": "open",
+      "implementation_status": "done",
+      "publication_status": "preparing-pr"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
   "published_main_commit": "b1f9a12f19441bfd9ef7907c0785be44674a3f57",
   "publication_pull_request": 40,
   "previous_source_publication_commit": "e8d59e0b5260c29582334aa62aadd8d4f6e1dee4",
-  "local_launcher_guard_commit": "5e588a7e047d0aa7d077f959ed6cc3d1c6634e6e"
+  "local_launcher_guard_commit": "5e588a7e047d0aa7d077f959ed6cc3d1c6634e6e",
+  "customer_lists_publication": {
+    "base_commit": "92f5e6d15b299bbaf1acccd9cc3adefca7837dbe",
+    "published": false,
+    "committed": true,
+    "workspace": "D:\\Cherriva",
+    "deliveries": [
+      {
+        "issue": 66,
+        "kind": "analysis-only",
+        "verification": "docs/delivery/next-phase/issue-66-analysis.md",
+        "implementation_status": "done",
+        "issue_state": "open"
+      },
+      {
+        "issue": 63,
+        "kind": "application-and-documentation",
+        "verification": "docs/delivery/next-phase/issue-63-verification.md",
+        "implementation_status": "done",
+        "issue_state": "open"
+      },
+      {
+        "issue": 64,
+        "kind": "application-and-documentation",
+        "verification": "docs/delivery/next-phase/issue-64-verification.md",
+        "implementation_status": "done",
+        "issue_state": "open"
+      }
+    ],
+    "additional_owner_changes": [
+      "icon-only-pdp-heart",
+      "authenticated-only-header-heart",
+      "greater-than-breadcrumb-rtl"
+    ],
+    "state": "ready-for-pr",
+    "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+    "branch": "codex/customer-lists-and-amounts",
+    "publication_authorized_on": "2026-11-24",
+    "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+    "integrated_main_commit": "12bac82a4710404d350d3803c94b89ecc84ca48c"
+  }
 }

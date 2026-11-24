@@ -6,6 +6,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/customer"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/finance"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
@@ -82,7 +83,9 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
-	publicIndex *publicCatalogIndex
+	RecentlyViewed []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
+	Wishlist       []customer.WishlistEntry       `json:"wishlist,omitempty"`
+	publicIndex    *publicCatalogIndex
 
 	Commerce         *commerce.State               `json:"commerce,omitempty"`
 	HomeSettings     HomeSettings                  `json:"home_settings"`

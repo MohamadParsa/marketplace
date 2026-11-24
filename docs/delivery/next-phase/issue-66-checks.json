@@ -1,0 +1,132 @@
+{
+  "issue": 66,
+  "date": "2026-11-23",
+  "implementation_status": "done",
+  "scope": "analysis-and-contract-only",
+  "checks": [
+    {
+      "id": "owner-markup-before-coupon",
+      "pass": true
+    },
+    {
+      "id": "two-units-and-partial-credit",
+      "pass": true
+    },
+    {
+      "id": "direct-discount-already-in-cash",
+      "pass": true
+    },
+    {
+      "id": "full-credit-no-funding-method",
+      "pass": true
+    },
+    {
+      "id": "shipping-coupon-clamped",
+      "pass": true
+    },
+    {
+      "id": "different-category-markups",
+      "pass": true
+    },
+    {
+      "id": "half-rial-rounds-up",
+      "pass": true
+    },
+    {
+      "id": "order-coupon-proposed-scope",
+      "pass": true
+    },
+    {
+      "id": "one-rial-stable-tie",
+      "pass": true
+    },
+    {
+      "id": "percentage-coupon-on-cash-proposal",
+      "pass": true
+    },
+    {
+      "id": "legacy-price-and-shipping",
+      "pass": true
+    },
+    {
+      "id": "card-at-cap",
+      "pass": true
+    },
+    {
+      "id": "card-over-cap-despite-credit",
+      "pass": true
+    },
+    {
+      "id": "card-one-rial-over",
+      "pass": true
+    },
+    {
+      "id": "local-at-cap",
+      "pass": true
+    },
+    {
+      "id": "local-gold-root",
+      "pass": true
+    },
+    {
+      "id": "local-gold-descendant",
+      "pass": true
+    },
+    {
+      "id": "zero-old-credit-preserved-with-one-debit",
+      "pass": true
+    },
+    {
+      "id": "legacy-opening-allocation-does-not-credit-again",
+      "pass": true,
+      "kind": "design-arithmetic-not-product-test"
+    },
+    {
+      "id": "late-deposit-expired-order-stays-unpaid",
+      "pass": true,
+      "kind": "design-arithmetic-not-product-test"
+    },
+    {
+      "id": "consume-own-hold-preserves-other-holds",
+      "pass": true,
+      "kind": "design-arithmetic-not-product-test"
+    }
+  ],
+  "passed_arithmetic_examples": 21,
+  "business_policy_responses_recorded": true,
+  "model_migration_owner_approval": "owner-instructed-continue-after-presented-design",
+  "product_tests_run": false,
+  "application_changed": false,
+  "migration_applied": false,
+  "database_connected": false,
+  "github_mutated": false,
+  "pushed": false,
+  "document_validation": {
+    "pass": true,
+    "relative_file_links_checked": 390,
+    "new_ids_unique": true,
+    "json_valid": true,
+    "status_counts": {
+      "todo": 24,
+      "done": 6
+    },
+    "local_done_not_published_issue": 66,
+    "only_documentation_modified": true,
+    "historical_package_unchanged": true,
+    "local_head_equals_last_published_main": true
+  },
+  "delivery_status": "completed-locally-not-published",
+  "physical_schema_approved": false,
+  "approval_scope": "analysis-and-model-direction-only",
+  "github_issue_state": "open",
+  "product_implementation_complete": false,
+  "publication": {
+    "authorized_on": "2026-11-24",
+    "scope": "current-batch-only",
+    "state": "ready-for-pr",
+    "source_commit": null,
+    "branch": "codex/customer-lists-and-amounts",
+    "liara_deployed": false,
+    "integrated_main": "12bac82a4710404d350d3803c94b89ecc84ca48c"
+  }
+}

@@ -76,6 +76,7 @@ func NewHTTPServer(cfg config.Config, lifecycle fx.Lifecycle) (*http.Server, err
 	}
 	var workspace *backoffice.Service
 	server.Handler, workspace = newCatalogHandler(cfg, repo, cache)
+	registerRecentHistoryCleanup(lifecycle, workspace)
 	if cache != nil && cfg.WebSurface == "storefront" {
 		warmCtx, warmCancel := context.WithCancel(context.Background())
 		done := make(chan struct{})

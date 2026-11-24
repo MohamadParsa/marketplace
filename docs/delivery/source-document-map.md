@@ -103,3 +103,15 @@
 - #86: [گزارش و تصاویر](next-phase/issue-86-verification.md)؛ سورس مشترک [1d05e39](https://github.com/MohamadParsa/marketplace/commit/1d05e39f858cf87d1f13be5aefd7b973a78f05ad)، مدرک [a20304d](https://github.com/MohamadParsa/marketplace/commit/a20304d0f334cdfebde883752c6da4bc904c0c16).
 
 اثر پنج اصلاح محلی بررسی شد؛ هر۵ job CI موفق، PR #92 ادغام و پنج Issue با کامنت شواهد بسته شدند. کامیت ادغام `f17fb49995647431b6dbe519aff347151d710068` است. #80 فقط ظاهر attribute را به checkbox برمی‌گرداند و وابستگی سخت #79 برای این برش ندارد؛ کارهای دیگر بدون مجوز اجرا نشده‌اند.
+
+## خروجی‌های محلی پس از دستور توقف پوش
+
+روی پایه کامیت92f5e6d، تحلیل #66 و سپس سورس/مدارک [علاقه‌مندی #63](next-phase/issue-63-verification.md) در D:\Cherriva آماده‌اند؛ کامیت اجرایی یا مدرک تازه منتشر نشده و Issueها در گیت باز مانده‌اند. بخش local_working_tree در JSON این تفاوت را ثبت می‌کند؛ current_source_commit قبلی، آخرین سورس **کامیت‌شده** است و به معنی پاک‌بودن working tree کنونی نیست.
+
+در ادامه همین working tree، [#64 و اصلاحات قلب/breadcrumb](next-phase/issue-64-verification.md) نیز done محلی است؛ base/HEAD همان92f5e6d و همه تغییرات #66/#63/#64 هنوز بدون commit/push هستند.
+
+## شروع انتشار دسته مشتری — ۲۰۲۶-۱۱-۲۴
+
+با مجوز مالک برای پوش تغییرات تا اینجا، سورس #63/#64 و اصلاحات UI در [e5babff](https://github.com/MohamadParsa/marketplace/commit/e5babff0f35242ffe94e7510e9833733dba1ded1) کامیت شد؛ تحلیل #66 کد اجرایی تازه ندارد. source-document-map.json بخش customer_lists_publication و ردیف‌های این سه Issue را ثبت می‌کند. انتشار سورس و مدارک در حال انجام است؛ محدودیت فقط‌لوکال قبلی تاریخچه این دسته است و برای کار بعدی پابرجاست.
+
+نسخه ترکیبی منتشرشونده پس از حفظ main تا12bac82، [9e72faf](https://github.com/MohamadParsa/marketplace/commit/9e72faf5a1c9b5ce73e3628e539c8cd082f29b02) است؛ نسخه API آن همان کد بررسی‌شده است و frontend ترکیبی build/lint و۶۵کنترل مرورگر موفق دارد.

@@ -69,7 +69,10 @@
   margin: 0 0 28px;
 }
 .plp-breadcrumb li + li:before {
-  content: "‹";
+  content: ">";
+  display: inline-block;
+  direction: ltr;
+  unicode-bidi: isolate;
   margin-left: 8px;
   color: #b5a5ae;
 }

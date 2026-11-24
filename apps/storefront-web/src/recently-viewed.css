@@ -1,0 +1,27 @@
+.recent-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.recent-toolbar p {
+  flex: 1 1 250px;
+}
+.recent-viewed-date {
+  margin: 0;
+  padding: 12px;
+  font-size: 11px;
+  color: #786b76;
+  background: #fcf8fa;
+  border-top: 1px solid #f0e6eb;
+}
+.recent-clear-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 20px;
+}

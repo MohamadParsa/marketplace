@@ -1,0 +1,336 @@
+{
+  "issue": 66,
+  "status": "analysis-fixtures-not-product-tests",
+  "internal_unit": "rial",
+  "api_unit": "toman-string",
+  "markup_basis": "cash-after-direct-before-coupon",
+  "rounding": "half-up-to-rial",
+  "cases": [
+    {
+      "id": "owner-markup-before-coupon",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "1000",
+          "quantity": 1,
+          "markup_bps": 400
+        }
+      ],
+      "shipping_toman": "0",
+      "selected_credit_toman": "0",
+      "coupon": {
+        "target": "items",
+        "type": "fixed",
+        "value_toman": "100"
+      },
+      "expected_total_toman": "940",
+      "expected_new_funding_toman": "940"
+    },
+    {
+      "id": "two-units-and-partial-credit",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "500000",
+          "quantity": 2,
+          "markup_bps": 400,
+          "reference_unit_toman": "600000"
+        }
+      ],
+      "shipping_toman": "50000",
+      "selected_credit_toman": "300000",
+      "coupon": {
+        "target": "items",
+        "type": "fixed",
+        "value_toman": "100000"
+      },
+      "expected_total_toman": "990000",
+      "expected_new_funding_toman": "690000",
+      "expected_unit_refund_toman": "470000",
+      "expected_after_one_unit_cancel_toman": "520000"
+    },
+    {
+      "id": "direct-discount-already-in-cash",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "900",
+          "quantity": 1,
+          "markup_bps": 400,
+          "reference_unit_toman": "1000"
+        }
+      ],
+      "shipping_toman": "50",
+      "selected_credit_toman": "200",
+      "coupon": null,
+      "expected_total_toman": "986",
+      "expected_new_funding_toman": "786"
+    },
+    {
+      "id": "full-credit-no-funding-method",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "1200000",
+          "quantity": 1,
+          "markup_bps": 0
+        }
+      ],
+      "shipping_toman": "0",
+      "selected_credit_toman": "1200000",
+      "coupon": null,
+      "expected_total_toman": "1200000",
+      "expected_new_funding_toman": "0"
+    },
+    {
+      "id": "shipping-coupon-clamped",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "1000000",
+          "quantity": 1,
+          "markup_bps": 0
+        }
+      ],
+      "shipping_toman": "80000",
+      "selected_credit_toman": "100000",
+      "coupon": {
+        "target": "shipping",
+        "type": "fixed",
+        "value_toman": "100000"
+      },
+      "expected_total_toman": "1000000",
+      "expected_new_funding_toman": "900000"
+    },
+    {
+      "id": "different-category-markups",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "600000",
+          "quantity": 1,
+          "markup_bps": 300
+        },
+        {
+          "id": "b",
+          "cash_unit_toman": "400000",
+          "quantity": 1,
+          "markup_bps": 600
+        }
+      ],
+      "shipping_toman": "30000",
+      "selected_credit_toman": "0",
+      "coupon": {
+        "target": "items",
+        "type": "fixed",
+        "value_toman": "100000"
+      },
+      "expected_total_toman": "972000",
+      "expected_new_funding_toman": "972000",
+      "expected_coupon_shares_minor": {
+        "a": 600000,
+        "b": 400000
+      }
+    },
+    {
+      "id": "half-rial-rounds-up",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "10.5",
+          "quantity": 1,
+          "markup_bps": 1000
+        }
+      ],
+      "shipping_toman": "0",
+      "selected_credit_toman": "0",
+      "coupon": null,
+      "expected_total_toman": "11.6",
+      "expected_new_funding_toman": "11.6"
+    },
+    {
+      "id": "order-coupon-proposed-scope",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "1000000",
+          "quantity": 1,
+          "markup_bps": 0
+        }
+      ],
+      "shipping_toman": "100000",
+      "selected_credit_toman": "100000",
+      "coupon": {
+        "target": "order",
+        "type": "fixed",
+        "value_toman": "200000"
+      },
+      "expected_total_toman": "900000",
+      "expected_new_funding_toman": "800000",
+      "scope_status": "proposed-target-scope-for-67",
+      "expected_coupon_shares_minor": {
+        "a": 1818182,
+        "~shipment": 181818
+      }
+    },
+    {
+      "id": "one-rial-stable-tie",
+      "lines": [
+        {
+          "id": "b",
+          "cash_unit_toman": "1",
+          "quantity": 1,
+          "markup_bps": 0
+        },
+        {
+          "id": "a",
+          "cash_unit_toman": "1",
+          "quantity": 1,
+          "markup_bps": 0
+        }
+      ],
+      "shipping_toman": "0",
+      "selected_credit_toman": "0",
+      "coupon": {
+        "target": "items",
+        "type": "fixed",
+        "value_toman": "0.1"
+      },
+      "expected_total_toman": "1.9",
+      "expected_new_funding_toman": "1.9",
+      "expected_coupon_shares_minor": {
+        "b": 0,
+        "a": 1
+      }
+    },
+    {
+      "id": "percentage-coupon-on-cash-proposal",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "1000",
+          "quantity": 1,
+          "markup_bps": 400
+        }
+      ],
+      "shipping_toman": "50",
+      "selected_credit_toman": "0",
+      "coupon": {
+        "target": "items",
+        "type": "percent",
+        "value_bps": 1000
+      },
+      "expected_total_toman": "990",
+      "expected_new_funding_toman": "990",
+      "scope_status": "proposed-coupon-basis-for-67"
+    },
+    {
+      "id": "legacy-price-and-shipping",
+      "lines": [
+        {
+          "id": "a",
+          "cash_unit_toman": "250000",
+          "quantity": 2,
+          "markup_bps": 0
+        }
+      ],
+      "shipping_toman": "30000",
+      "selected_credit_toman": "0",
+      "coupon": null,
+      "expected_total_toman": "530000",
+      "expected_new_funding_toman": "530000",
+      "compatibility": "legacy-example-no-new-usage-created"
+    }
+  ],
+  "eligibility_cases": [
+    {
+      "id": "card-at-cap",
+      "method": "card-transfer",
+      "total_toman": "15000000",
+      "credit_toman": "0",
+      "excluded_category": false,
+      "expected_eligible": true
+    },
+    {
+      "id": "card-over-cap-despite-credit",
+      "method": "card-transfer",
+      "total_toman": "16000000",
+      "credit_toman": "2000000",
+      "excluded_category": false,
+      "expected_eligible": false
+    },
+    {
+      "id": "card-one-rial-over",
+      "method": "card-transfer",
+      "total_toman": "15000000.1",
+      "credit_toman": "15000000",
+      "excluded_category": false,
+      "expected_eligible": false
+    },
+    {
+      "id": "local-at-cap",
+      "method": "local",
+      "total_toman": "30000000",
+      "credit_toman": "0",
+      "excluded_category": false,
+      "expected_eligible": true
+    },
+    {
+      "id": "local-gold-root",
+      "method": "local",
+      "total_toman": "20000000",
+      "credit_toman": "15000000",
+      "excluded_category": true,
+      "expected_eligible": false
+    },
+    {
+      "id": "local-gold-descendant",
+      "method": "local",
+      "total_toman": "100000",
+      "credit_toman": "90000",
+      "excluded_category": true,
+      "expected_eligible": false
+    }
+  ],
+  "funding_example": {
+    "opening_balance_toman": "500000",
+    "selected_old_credit_toman": "0",
+    "order_total_toman": "1000000",
+    "confirmed_new_credit_toman": "1000000",
+    "one_order_debit_toman": "1000000",
+    "expected_closing_balance_toman": "500000",
+    "expected_old_source_consumed_toman": "0",
+    "expected_new_source_consumed_toman": "1000000",
+    "status": "allocation-design-example-not-ledger-execution"
+  },
+  "migration_examples": [
+    {
+      "id": "legacy-opening-allocation-does-not-credit-again",
+      "ledger_balance_minor": 10000,
+      "existing_refund_hold_minor": 1000,
+      "expected_free_legacy_allocation_minor": 9000,
+      "expected_added_ledger_entries": 0,
+      "source": "legacy-unattributed"
+    },
+    {
+      "id": "late-deposit-expired-order-stays-unpaid",
+      "opening_balance_minor": 5000,
+      "approved_deposit_minor": 13000,
+      "checkout_expired": true,
+      "expected_balance_minor": 18000,
+      "expected_order_debit_minor": 0,
+      "expected_purchase_hold_minor": 0
+    },
+    {
+      "id": "consume-own-hold-preserves-other-holds",
+      "balance_minor": 10000,
+      "refund_hold_minor": 1000,
+      "other_purchase_hold_minor": 2000,
+      "own_purchase_hold_minor": 1500,
+      "expected_free_before_minor": 5500,
+      "expected_balance_after_minor": 8500,
+      "expected_other_holds_after_minor": 3000,
+      "expected_free_after_minor": 5500
+    }
+  ]
+}

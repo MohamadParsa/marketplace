@@ -1,3 +1,6 @@
+import { RecentlyViewedPage } from "./recently-viewed-page";
+import { WishlistProvider } from "./wishlist";
+import { WishlistPage } from "./wishlist-page";
 import { CommerceProvider } from "./commerce";
 import {
   LoginPage,
@@ -35,6 +38,8 @@ function App() {
   if (path === "/login") return <LoginPage />;
   if (path === "/cart") return <CartPage />;
   if (path === "/checkout") return <CheckoutPage />;
+  if (path === "/account/recently-viewed") return <RecentlyViewedPage />;
+  if (path === "/account/wishlist") return <WishlistPage />;
   if (path === "/wallet") return <WalletPage />;
   if (path === "/account/orders" || path.startsWith("/account/orders/"))
     return <OrderPage key={path} id={path.split("/")[3]} />;
@@ -54,7 +59,9 @@ function App() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CommerceProvider>
-      <App />
+      <WishlistProvider>
+        <App />
+      </WishlistProvider>
     </CommerceProvider>
   </StrictMode>,
 );
