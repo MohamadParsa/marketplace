@@ -406,3 +406,26 @@ export interface BannerList {
     content_types: string[];
   };
 }
+
+export type ProductQAStatus = "pending" | "approved" | "rejected";
+
+interface ProductQAContent {
+  id: string;
+  text: string;
+  status: ProductQAStatus;
+}
+
+export interface ProductQAQuestion extends ProductQAContent {
+  answers: ProductQAContent[];
+  version: number;
+}
+
+export interface ProductQAPage {
+  questions: ProductQAQuestion[];
+  next_cursor?: number;
+  can_reply: boolean;
+}
+
+export type ProductQAMutation =
+  | { action: "reply"; text: string; version: number }
+  | { action: "moderate"; answer_id?: string; status: "approved" | "rejected"; version: number };

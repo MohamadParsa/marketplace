@@ -6,6 +6,8 @@ import type {
   ProductWorkspace,
   VariantResolution,
   BannerList,
+  ProductQAPage,
+  ProductQAMutation,
 } from "./types";
 export interface WorkspaceContext {
   loadProfile: () => Promise<{
@@ -31,6 +33,8 @@ export interface WorkspaceContext {
   state: Workspace;
   role: Role;
   surface: "backoffice" | "seller";
+  loadProductQA: (id: string, after: number) => Promise<ProductQAPage>;
+  changeProductQA: (id: string, question: string, mutation: ProductQAMutation, key: string) => Promise<void>;
   loadProduct: (id: string) => Promise<ProductWorkspace>;
   resolveVariant: (
     id: string,

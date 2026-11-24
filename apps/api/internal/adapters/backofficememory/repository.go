@@ -4,17 +4,23 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"slices"
 	"sync"
 )
 
 // Repository contains synthetic staging data only. A restart restores the fixture.
 type Repository struct {
-	mu    sync.Mutex
-	state backoffice.Workspace
+	mu          sync.Mutex
+	state       backoffice.Workspace
+	qaQuestions map[string][]catalog.ProductQuestion
+	qaReceipts  map[qaReceiptKey]string
+	qaCursor    int64
 }
 
-func New(state backoffice.Workspace) *Repository { return &Repository{state: state} }
+func New(state backoffice.Workspace) *Repository {
+	return &Repository{state: state, qaQuestions: map[string][]catalog.ProductQuestion{}, qaReceipts: map[qaReceiptKey]string{}}
+}
 func clone(state backoffice.Workspace) (backoffice.Workspace, error) {
 	encoded, err := json.Marshal(state)
 	if err != nil {

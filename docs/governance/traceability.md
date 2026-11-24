@@ -215,3 +215,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
 
 FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/contracts/checkout-adjustments.md)، [گزارش AC و تست‌ها](../delivery/next-phase/issues-67-68-69-78-verification.md) و [صف ماشین‌خوان](../delivery/next-phase/task-index.json) مرتبط‌اند. وضعیت پیاده‌سازی review و انتشار local-only است؛ اسناد in-review باقی‌اند و Issueها در این نوبت تغییر نمی‌کنند.
+
+## پرسش و پاسخ محصول
+
+[FEAT-NEXT-029 / CV-NEXT-29](../delivery/next-phase/tasks/cv-next-29-product-qa-service.md) ادامهٔ CV-WEB-16 است. [تصمیم‌های CHQ-10](../product/open-questions.md) به دسترسی ثبت و ادارهٔ انتشار، [سناریوهای پذیرش](../bdd/features/experiences/next-phase-planning.feature) به رفتار و [شواهد تسک ۹۰](../delivery/next-phase/issue-90-verification.md) به آزمون‌های API، داده پایدار و مرورگر پیوند دارند.

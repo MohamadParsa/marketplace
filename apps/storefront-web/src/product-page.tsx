@@ -1,5 +1,6 @@
 import { useRecordRecentlyViewed } from "./recently-viewed";
 import { WishlistButton } from "./wishlist";
+import { ProductQA } from "./product-qa";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
@@ -761,14 +762,7 @@ export function ProductPage({ url }: { url: string }) {
                       : "ثبت نظر برای این محصول غیرفعال است."}
                   </p>
                 </section>
-                <section className="pdp-section" id="questions">
-                  <h2>پرسش و پاسخ</h2>
-                  <p>
-                    {content.qa_enabled
-                      ? "امکان ثبت و نمایش پرسش هنوز فعال نشده است."
-                      : "ثبت پرسش برای این محصول غیرفعال است."}
-                  </p>
-                </section>
+                <ProductQA key={data.id} productId={data.id} />
               </div>
             </BusyRegion>
             {zoom && data.gallery[photo] && (

@@ -52,6 +52,7 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 		router.SellerOffers = httptransport.NewSellerOffersHandler(seller.NewOffers(repository), service)
 	}
 	router.CustomerAccount = httptransport.NewCustomerAccountHandler(customer.NewAccounts(repository), service)
+	router.ProductQA = httptransport.NewProductQAHandler(workspace, service)
 	router.Commerce = httptransport.NewCommerceHandler(workspace, service)
 	next := httptransport.NewRouter(router)
 	var expiryMu sync.Mutex
