@@ -15,10 +15,30 @@
 }
 .pdp-overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(240px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 36px;
   margin: 32px 0 44px;
   align-items: start;
+}
+.pdp-details {
+  min-width: 0;
+}
+@media (min-width: 801px) {
+  .pdp-layout > .sf-busy-content {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(240px, 0.8fr);
+    column-gap: 36px;
+    align-items: start;
+  }
+  .pdp-layout .pdp-buybox {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: 24px;
+    margin-top: 32px;
+    max-height: calc(100dvh - 48px);
+    overflow: auto;
+  }
 }
 .pdp-gallery,
 .pdp-information {
@@ -437,9 +457,12 @@
   outline-offset: 4px;
 }
 @media (max-width: 1100px) {
+  .pdp-layout > .sf-busy-content {
+    column-gap: 20px;
+  }
   .pdp-overview {
     gap: 20px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 240px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .pdp-information h1 {
     font-size: 20px;
@@ -456,18 +479,46 @@
   .pdp-sellers article {
     gap: 16px;
     padding: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (max-width: 800px) {
   .pdp-overview {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
   }
-  .pdp-buybox {
-    grid-column: 1/-1;
+  .product-page.has-purchase-bar {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
   }
-  .pdp-sellers article {
-    grid-template-columns: 1fr 1fr;
+  .pdp-buy-actions {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 25;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: #fff9fb;
+    border-top: 1px solid #e8c3d1;
+  }
+  .pdp-buy-actions .pdp-price,
+  .pdp-buy-actions .pdp-unavailable {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .pdp-buy-actions .pdp-price > div,
+  .pdp-buy-actions .pdp-price > span {
+    display: none;
+  }
+  .pdp-buy-actions .pdp-price strong {
+    margin: 0;
+    font-size: clamp(16px, 4vw, 23px);
+    overflow-wrap: anywhere;
+  }
+  .pdp-buy-actions .purchase-control {
+    margin-inline-start: auto;
   }
   .pdp-sellers article b {
     font-size: 14px;
@@ -487,10 +538,6 @@
   }
   .pdp-information {
     order: 1;
-  }
-  .pdp-buybox {
-    order: 2;
-    grid-column: auto;
   }
   .pdp-large-photo {
     height: 280px;
@@ -512,8 +559,8 @@
   .pdp-buybox {
     padding: 22px;
   }
-  .pdp-price strong {
-    font-size: 28px;
+  .pdp-buy-actions .purchase-control-add {
+    font-size: 12px;
   }
   .pdp-sellers article {
     gap: 12px;

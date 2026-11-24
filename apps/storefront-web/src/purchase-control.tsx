@@ -8,12 +8,14 @@ export function PurchaseControl({
   quantity,
   busy = false,
   canIncrease = true,
+  addDisabled = false,
   onChange,
 }: {
   name: string;
   quantity: number;
   busy?: boolean;
   canIncrease?: boolean;
+  addDisabled?: boolean;
   onChange: (quantity: number) => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
@@ -42,7 +44,7 @@ export function PurchaseControl({
         <button
           type="button"
           className="purchase-control-add"
-          disabled={busy || !canIncrease}
+          disabled={busy || !canIncrease || addDisabled}
           onClick={() => change(1)}
         >
           {canIncrease ? "افزودن به سبد خرید" : "ناموجود"}

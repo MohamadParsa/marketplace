@@ -1236,7 +1236,50 @@ body {
 .lh-category-block .lh-category-strip{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:20px;overflow-x:auto;padding:4px 2px 12px;margin:0;scroll-snap-type:x proximity}
 .lh-category-strip>a{flex:0 0 calc((100% - 140px)/8);min-width:94px;scroll-snap-align:start;text-align:center}
 .lh-category-strip b,.lh-category-remainder b{max-width:125px;line-height:1.7}
-.lh-all-categories>summary{cursor:pointer;list-style:none;text-align:center;width:fit-content;margin:12px auto 0;padding:9px 18px;border:1px solid var(--border);border-radius:12px;color:var(--cherry,#a22250);font-size:12px;background:#fff}
+.lh-all-categories {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms ease-in-out;
+}
+.lh-all-categories[data-expanded="true"] {
+  grid-template-rows: 1fr;
+}
+.lh-category-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+.lh-all-categories[data-expanded="false"] .lh-category-clip {
+  pointer-events: none;
+}
+.lh-category-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 12px auto 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cherry);
+}
+.lh-category-toggle:hover {
+  background: #fff4f7;
+}
+.lh-category-toggle svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 280ms ease-in-out;
+}
+.lh-category-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lh-all-categories,
+  .lh-category-toggle svg {
+    transition: none;
+  }
+}
 .lh-category-block .lh-category-remainder{gap:24px;margin:24px 0 0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr))}
 @media(max-width:700px){.lh-category-heading>span{display:none}.lh-category-strip>a{flex-basis:94px}.lh-category-block .lh-category-remainder{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 6px}}
 .lh-promos>.lh-catalog-promo{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:12px;min-height:245px;padding:25px;background:#f5e7ee;color:#332731}
