@@ -1,0 +1,333 @@
+{
+  "date": "2026-11-24",
+  "issues": [
+    103,
+    104,
+    102
+  ],
+  "source_path": "D:\\Cherriva",
+  "branch": "codex/local-parsa-integration-20261124",
+  "local_source_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+  "pushed": false,
+  "deployed": false,
+  "go": {
+    "passed_tests_and_subtests": 276,
+    "vet": "passed",
+    "race": "not-run-CGO-disabled",
+    "skipped": [
+      "TestCatalogSnapshotPostgresRoundTrip",
+      "TestAdjustmentsBrowserHarness"
+    ]
+  },
+  "storefront": {
+    "lint": "passed",
+    "build": "passed"
+  },
+  "browser_checks": [
+    {
+      "id": "banner-and-rail-category-references-match",
+      "pass": true
+    },
+    {
+      "id": "public-home-ids-and-media-have-no-source-prefix",
+      "pass": true
+    },
+    {
+      "id": "public-product-ids-and-media-have-no-source-prefix",
+      "pass": true
+    },
+    {
+      "id": "variant-offer-and-media-use-chr-tokens",
+      "pass": true
+    },
+    {
+      "id": "legacy-selection-same-offer-price-and-image",
+      "pass": true
+    },
+    {
+      "id": "old-link-canonicalized-with-same-selection",
+      "pass": true
+    },
+    {
+      "id": "canonical-excludes-selection-query",
+      "pass": true
+    },
+    {
+      "id": "malformed-token-is-rejected",
+      "pass": true
+    },
+    {
+      "id": "home-slow-data-shaped-skeleton",
+      "pass": true
+    },
+    {
+      "id": "home-skeleton-clears-after-data",
+      "pass": true
+    },
+    {
+      "id": "plp-slow-data-shaped-skeleton",
+      "pass": true
+    },
+    {
+      "id": "plp-skeleton-clears-after-data",
+      "pass": true
+    },
+    {
+      "id": "pdp-slow-data-shaped-skeleton",
+      "pass": true
+    },
+    {
+      "id": "pdp-skeleton-clears-after-data",
+      "pass": true
+    },
+    {
+      "id": "slow-image-shows-skeleton",
+      "pass": true
+    },
+    {
+      "id": "image-frame-height-and-width-stable",
+      "pass": true
+    },
+    {
+      "id": "broken-image-fallback-without-permanent-skeleton",
+      "pass": true
+    },
+    {
+      "id": "api-failure-replaces-skeleton-with-retry",
+      "pass": true
+    },
+    {
+      "id": "retry-restores-product",
+      "pass": true
+    },
+    {
+      "id": "empty-listing-is-not-a-skeleton",
+      "pass": true
+    },
+    {
+      "id": "reduced-motion-disables-shimmer",
+      "pass": true
+    },
+    {
+      "id": "late-navigation-response-does-not-replace-new-page",
+      "pass": true
+    },
+    {
+      "id": "mobile-product-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "one-mobile-design-purchase-control",
+      "pass": true
+    },
+    {
+      "id": "breadcrumb-and-brand-remain",
+      "pass": true
+    },
+    {
+      "id": "keyboard-focus-visible",
+      "pass": true
+    },
+    {
+      "id": "compact-mobile-filter-dialog-opens",
+      "pass": true
+    },
+    {
+      "id": "filter-escape-restores-focus",
+      "pass": true
+    },
+    {
+      "id": "horizontal-sort-keyboard-works",
+      "pass": true
+    },
+    {
+      "id": "compact-mobile-toolbar-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    },
+    {
+      "id": "long-title-and-missing-image-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "missing-image-fallback-visible",
+      "pass": true
+    },
+    {
+      "id": "many-weight-choices-initially-bounded",
+      "pass": true
+    },
+    {
+      "id": "all-weight-choices-can-expand",
+      "pass": true
+    },
+    {
+      "id": "expanded-weight-choices-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "weight-collapse-restores-bounded-layout",
+      "pass": true
+    },
+    {
+      "id": "long-title-desktop-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "desktop-one-active-design-control",
+      "pass": true
+    },
+    {
+      "id": "add-shows-progress-overlay",
+      "pass": true
+    },
+    {
+      "id": "desktop-double-click-one-add",
+      "pass": true
+    },
+    {
+      "id": "popup-links-to-real-cart",
+      "pass": true
+    },
+    {
+      "id": "same-control-becomes-counter",
+      "pass": true
+    },
+    {
+      "id": "desktop-delete-restores-add",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-enabled",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-saved-in-server-cart",
+      "pass": true
+    },
+    {
+      "id": "cart-page-shows-selected-product",
+      "pass": true
+    },
+    {
+      "id": "guest-cart-cleaned-up",
+      "pass": true
+    },
+    {
+      "id": "unavailable-product-still-blocked",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "density_before": [
+    {
+      "name": "home",
+      "url": "/",
+      "width": 1440,
+      "content_top": 1075.828125,
+      "document_height": 4505,
+      "overflow": false
+    },
+    {
+      "name": "plp",
+      "url": "/category/mobile",
+      "width": 1440,
+      "content_top": 553.953125,
+      "document_height": 3309,
+      "overflow": false
+    },
+    {
+      "name": "pdp",
+      "url": "/product/chr-10082",
+      "width": 1440,
+      "content_top": 638.6875,
+      "document_height": 4151,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "url": "/",
+      "width": 390,
+      "content_top": 1147.359375,
+      "document_height": 4561,
+      "overflow": false
+    },
+    {
+      "name": "plp",
+      "url": "/category/mobile",
+      "width": 390,
+      "content_top": 637.25,
+      "document_height": 5292,
+      "overflow": false
+    },
+    {
+      "name": "pdp",
+      "url": "/product/chr-10082",
+      "width": 390,
+      "content_top": 786,
+      "document_height": 4728,
+      "overflow": false
+    }
+  ],
+  "density_after": [
+    {
+      "name": "home",
+      "url": "/",
+      "width": 1440,
+      "content_top": 966.15625,
+      "document_height": 4332,
+      "overflow": false
+    },
+    {
+      "name": "plp",
+      "url": "/category/mobile",
+      "width": 1440,
+      "content_top": 348.171875,
+      "document_height": 3103,
+      "overflow": false
+    },
+    {
+      "name": "pdp",
+      "url": "/product/chr-10082",
+      "width": 1440,
+      "content_top": 572.6875,
+      "document_height": 3831,
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "url": "/",
+      "width": 390,
+      "content_top": 1099.359375,
+      "document_height": 4471,
+      "overflow": false
+    },
+    {
+      "name": "plp",
+      "url": "/category/mobile",
+      "width": 390,
+      "content_top": 372.484375,
+      "document_height": 5027,
+      "overflow": false
+    },
+    {
+      "name": "pdp",
+      "url": "/product/chr-10082",
+      "width": 390,
+      "content_top": 786,
+      "document_height": 4443,
+      "overflow": false
+    }
+  ],
+  "no_source_database_connection": true,
+  "no_catalog_migration_or_id_rewrite": true,
+  "live_review_order_or_payment_created": false,
+  "local_pdp_enablement_remains_separate_uncommitted_override": true,
+  "design_review": "A / C mark preserved; screenshots reviewed locally; no owner sign-off claimed"
+}

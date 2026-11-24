@@ -52,3 +52,9 @@
 [گزارش خرید و کیف پول #30](delivery/initial-launch/issue-30-verification.md) · [تحویل انتشار به پارسا](delivery/initial-launch/production-handoff.md)
 
 [اجرای محلی کوپن، اعتبار انتخابی کیف پول و گروه گارانتی #67/#68/#69/#78](delivery/next-phase/issues-67-68-69-78-verification.md)
+
+[فعال‌سازی محلی افزودن به سبد PDP پس از پوش PR #94](delivery/storefront-followups/pdp-add-enabled-verification.md).
+
+[ممیزی کل تسک‌ها، درخواست‌های تازه و دریافت کار پارسا](delivery/backlog-review-2026-11-24/README.md) · [صف یکتای GitHub #95](https://github.com/MohamadParsa/marketplace/issues/95).
+
+[تحویل محلی #103/#104/#102؛ فاصله‌ها، Skeleton و شناسه عمومی chr](delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md).

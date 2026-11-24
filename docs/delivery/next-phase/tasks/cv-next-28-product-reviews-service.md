@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-24
 related: [DEL-NEXT-001]
 approved_by: []
-implementation_status: in-progress
+implementation_status: done
 priority: P2
 wave: W2
 execution_authorized: true
@@ -69,3 +69,7 @@ ACهای همین قابلیت به تست مناسب API/دامنه/مرورگ�
 
 - تست‌های `TestProductReviewsHTTP`، `TestProductReviewsPostgresHTTP` و `TestProductReviewsConcurrentSubmissionsAndToggle` مسیر مستقیم API، مجوز ادمین، استقلال تنظیم‌ها، صفحه‌بندی و ثبت هم‌زمان را پوشش دادند. مجموعهٔ `go test -race ./...` با PostgreSQL و Redis محلی و `go vet ./...` موفق بودند.
 - [آزمون Playwright](../../../../tests/e2e/product-reviews.py) روی build سایت و بک‌آفیس با داده ساختگی اجرا شد. فرم مهمان، حفظ متن هنگام خطای سرور و ارسال دوباره، انتشار ادمین، نام خصوصی، پاسخ، گروه‌های ۵ و ۱ کارت روی موبایل و حفظ سابقه بعد از خاموشی بررسی شدند. lint و build هر دو رابط موفق بودند.
+
+## وضعیت تطبیق ادغام محلی۲۰۲۶-۱۱-۲۴
+
+کار پارسا از شاخه اجرایی دریافت و با نسخه فعلی ادغام و آزمون شد؛ بسته‌بودن Issue حفظ است. این به معنی انتشار main نیست. [شواهد ترکیبی و۲۶۷تست Go/۱۹بررسی مرورگر](../../backlog-review-2026-11-24/parsa-integration.md) و [پیگیری انتشار #105](https://github.com/MohamadParsa/marketplace/issues/105).

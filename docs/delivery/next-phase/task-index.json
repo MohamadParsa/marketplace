@@ -127,8 +127,8 @@
         5,
         11
       ],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 67,
       "url": "https://github.com/MohamadParsa/marketplace/issues/67",
       "assignee": "eliassarband",
@@ -140,7 +140,10 @@
       "publication_status": "pushed-feature-branch-awaiting-review",
       "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
       "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
-      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/67#issuecomment-7129872494"
     },
     {
       "n": 7,
@@ -157,8 +160,8 @@
         9,
         12
       ],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 68,
       "url": "https://github.com/MohamadParsa/marketplace/issues/68",
       "assignee": "eliassarband",
@@ -172,7 +175,10 @@
       "publication_status": "pushed-feature-branch-awaiting-review",
       "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
       "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
-      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/68#issuecomment-7129874491"
     },
     {
       "n": 8,
@@ -188,8 +194,8 @@
         7,
         9
       ],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 69,
       "url": "https://github.com/MohamadParsa/marketplace/issues/69",
       "assignee": "eliassarband",
@@ -202,7 +208,10 @@
       "publication_status": "pushed-feature-branch-awaiting-review",
       "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
       "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
-      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/69#issuecomment-7129876556"
     },
     {
       "n": 9,
@@ -230,7 +239,8 @@
         72,
         73
       ],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "remaining_scope": "فقط ممیزی و مرز failure بیرونی؛ نقدی اتمیک حاضر است"
     },
     {
       "n": 10,
@@ -376,8 +386,8 @@
       "deps": [
         18
       ],
-      "implementation_status": "review",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 78,
       "url": "https://github.com/MohamadParsa/marketplace/issues/78",
       "assignee": "eliassarband",
@@ -388,7 +398,10 @@
       "publication_status": "pushed-feature-branch-awaiting-review",
       "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
       "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
-      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/78#issuecomment-7129878573"
     },
     {
       "n": 18,
@@ -406,7 +419,8 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/79",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "remaining_scope": "PLP و scope/ترتیب؛ نه ساخت دوباره mapping"
     },
     {
       "n": 19,
@@ -594,14 +608,15 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
+      "implementation_status": "done",
       "state": "closed",
       "number": 89,
       "url": "https://github.com/MohamadParsa/marketplace/issues/89",
       "assignee": "eliassarband",
       "github_dependencies": [],
       "execution_authorized": true,
-      "publication_status": "parsa-branch-integrated-locally"
+      "publication_status": "parsa-source-branch-and-local-integration",
+      "main_integrated": false
     },
     {
       "n": 29,
@@ -613,14 +628,15 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "review",
+      "implementation_status": "done",
       "state": "closed",
       "number": 90,
       "url": "https://github.com/MohamadParsa/marketplace/issues/90",
       "assignee": "eliassarband",
       "github_dependencies": [],
       "execution_authorized": true,
-      "publication_status": "parsa-branch-integrated-locally"
+      "publication_status": "parsa-source-branch-and-local-integration",
+      "main_integrated": false
     },
     {
       "n": 30,
@@ -702,5 +718,6 @@
     68,
     69,
     78
-  ]
+  ],
+  "audit_reference": "../backlog-review-2026-11-24/README.md"
 }

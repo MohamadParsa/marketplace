@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "id": "desktop-one-active-design-control",
+      "pass": true
+    },
+    {
+      "id": "add-shows-progress-overlay",
+      "pass": true
+    },
+    {
+      "id": "desktop-double-click-one-add",
+      "pass": true
+    },
+    {
+      "id": "popup-links-to-real-cart",
+      "pass": true
+    },
+    {
+      "id": "same-control-becomes-counter",
+      "pass": true
+    },
+    {
+      "id": "desktop-delete-restores-add",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-enabled",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-saved-in-server-cart",
+      "pass": true
+    },
+    {
+      "id": "cart-page-shows-selected-product",
+      "pass": true
+    },
+    {
+      "id": "guest-cart-cleaned-up",
+      "pass": true
+    },
+    {
+      "id": "unavailable-product-still-blocked",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "product_url": "/product/chr-10082",
+  "guest_cart_empty": true,
+  "no_order_or_payment_created": true,
+  "publication": "local-only-after-pr-94",
+  "published_before_change": "7f5d25920a3fca0428769a1d8b3bd6c2d09f50e7",
+  "build": "index-CB97PjFY.js",
+  "published_bundle_ci": {
+    "pull_request": 94,
+    "head": "7f5d25920a3fca0428769a1d8b3bd6c2d09f50e7",
+    "all_five_checks": "success",
+    "api_race_and_vet": "success-after-retry-existing-redis-timeout",
+    "local_button_change_included": false
+  }
+}

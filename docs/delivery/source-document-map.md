@@ -129,3 +129,9 @@
 ### انتشار بسته چهار قابلیت
 
 به دستور تازه مالک، سورس و اسناد در [کامیت 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) روی شاخه `codex/checkout-coupons-credit-warranty` و [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) پوش شدند؛ اصلاح اسناد انتشار همین بخش با `Source-Commit: 1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d` به آن متصل است. main/لیارا هنوز ادغام/منتشر نشده‌اند. تغییر بعدی فعال‌کردن PDP از این پوش جدا و لوکال است.
+
+## ادغام محلی پارسا و تفکیک از سورس منتشرشده
+
+سه شاخهٔ نظر/پرسش/طرح با دستور مالک دریافت و تا `cffbf4f4125d73338d2af12972b08c41769901e3` محلی ادغام شدند؛ اصلاح دکمه و اسناد برنامه بعدی هنوز لوکال‌اند. [شواهد](backlog-review-2026-11-24/parsa-integration.md) · [تسک انتشار #105](https://github.com/MohamadParsa/marketplace/issues/105). این commit هنوز به origin پوش نشده و جای source منتشرشده `1dd7ccd` در PR #94 را نمی‌گیرد.
+
+تحویل محلی #102/#103/#104 در سورس `ce417c5e42a1d3639332a5829e0572e14d1afb4a`؛ [گزارش و تصاویر و نتیجه ماشین‌خوان](backlog-review-2026-11-24/issues-102-103-104-verification.md). این commit پوش نشده و فعال‌سازی قبلی PDP همچنان تغییر جدا و کامیت‌نشده در لوکال است؛ مرجع نسخه پوش‌شده/main تغییر نکرد.

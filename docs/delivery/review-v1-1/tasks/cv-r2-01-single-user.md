@@ -75,3 +75,7 @@ Issue: [#1](https://github.com/MohamadParsa/marketplace/issues/1) · پاسخ‌
 اصلاح تسک‌های پایه: CV-IAM-04، CV-IAM-05، CV-IAM-07.
 
 [فهرست فعال](../README.md) · [پرسش‌های جاری](../../../product/open-questions.md) · [بسته تاریخی](../../../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/task-index-fa.md). شناسه CV، شماره Issue و شناسه Q سه فضای متفاوت‌اند؛ مثلاً CV-R2-14، خود Issue فرایندی #14 نیست.
+
+## تطبیق صف در۲۰۲۶-۱۱-۲۴
+
+تکمیل و بستن completed با شواهد هویت/نقش؛ [شرح فعال Issue #1](https://github.com/MohamadParsa/marketplace/issues/1) و [ماتریس ممیزی](../../backlog-review-2026-11-24/README.md) مرجع‌اند. بخش انجام‌شده دوباره اجرا نشود.

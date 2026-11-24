@@ -17,7 +17,7 @@ wave: W1
 
 Issue: [#15](https://github.com/MohamadParsa/marketplace/issues/15) · پاسخ‌های مالک: [R2-Q03](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری)، [R2-Q05](https://github.com/MohamadParsa/marketplace/blob/main/docs/product/open-questions.md#پرسشهای-اصلاحات-جاری) · [ADR-005](../../../decisions/adr-005-review-v1-1-product-responses.md)
 
-این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. اجرای کار todo است.
+این مشخصات بازنویسی پس از #13 است و هنوز in-review است. اولویت و موج ترتیب پیشنهادی وابستگی‌اند؛ مسئول/موعد تخصیص نیافته‌اند. وضعیت واقعی در ممیزی جدید پایین مشخص شده است.
 
 ## هدف بیزینسی و نتیجه
 
@@ -66,3 +66,7 @@ API و مرور فرم گروه‌ها، عدم مجوز/invalid/conflict؛ شا
 کار تفکیکی جدید از پاسخ #13؛ اجرای آن هنوز شروع نشده است.
 
 [فهرست فعال](../README.md) · [پرسش‌های جاری](../../../product/open-questions.md) · [بسته تاریخی](../../../review-packages/cherriva-2026-11-17-v1-1/04-current-spec/task-index-fa.md). شناسه CV، شماره Issue و شناسه Q سه فضای متفاوت‌اند؛ مثلاً CV-R2-14، خود Issue فرایندی #14 نیست.
+
+## تطبیق صف در۲۰۲۶-۱۱-۲۴
+
+تجمیع تنظیمات موجود و شکاف کلیدها؛ [شرح فعال Issue #15](https://github.com/MohamadParsa/marketplace/issues/15) و [ماتریس ممیزی](../../backlog-review-2026-11-24/README.md) مرجع‌اند. بخش انجام‌شده دوباره اجرا نشود.

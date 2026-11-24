@@ -214,10 +214,18 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 
 ## اجرای محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
 
-FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/contracts/checkout-adjustments.md)، [گزارش AC و تست‌ها](../delivery/next-phase/issues-67-68-69-78-verification.md) و [صف ماشین‌خوان](../delivery/next-phase/task-index.json) مرتبط‌اند. وضعیت پیاده‌سازی review و انتشار local-only است؛ اسناد in-review باقی‌اند و Issueها در این نوبت تغییر نمی‌کنند.
+FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/contracts/checkout-adjustments.md)، [گزارش AC و تست‌ها](../delivery/next-phase/issues-67-68-69-78-verification.md) و [صف ماشین‌خوان](../delivery/next-phase/task-index.json) مرتبط‌اند. وضعیت پیاده‌سازی done و Issueهای #67/#68/#69/#78 به دستور تازه مالک completed/closed هستند؛ سورس در PR #94 پوش شده، ادغام/استقرار انجام نشده و اسناد in-review باقی‌اند. [کامنت‌های تحویل](../delivery/backlog-review-2026-11-24/completed-closures.json).
 
 ## پرسش و پاسخ محصول
 
 [FEAT-NEXT-029 / CV-NEXT-29](../delivery/next-phase/tasks/cv-next-29-product-qa-service.md) ادامهٔ CV-WEB-16 است. [تصمیم‌های CHQ-10](../product/open-questions.md) به دسترسی ثبت و ادارهٔ انتشار، [سناریوهای پذیرش](../bdd/features/experiences/next-phase-planning.feature) به رفتار و [شواهد تسک ۹۰](../delivery/next-phase/issue-90-verification.md) به آزمون‌های API، داده پایدار و مرورگر پیوند دارند.
 
 [FEAT-NEXT-028 — نظرات محصول](../delivery/next-phase/tasks/cv-next-28-product-reviews-service.md) ← [گیت مشترک کاتالوگ](../architecture/contracts/catalog-content-review.md#اجرای-کنترل-مشترک) ← [تصمیم CHQ-10](../product/open-questions.md) ← [پذیرش BDD](../bdd/features/experiences/next-phase-planning.feature) و [گردش مرورگر](../../tests/e2e/product-reviews.py).
+
+## تطبیق کامل صف و درخواست‌های تازه۲۰۲۶-۱۱-۲۴
+
+[PLAN-BACKLOG-RECONCILIATION-001](../delivery/backlog-review-2026-11-24/README.md) و [ماتریس کامل](../delivery/backlog-review-2026-11-24/audit-matrix.json)، مالک هر نیاز قدیمی/جدید و۱۱PR superseded را ثبت می‌کنند. FEAT-REV-001تا010 در #96تا#105 و شبکه اجتماعی در #87 پیگیری می‌شوند؛ این مرحله برنامه‌ریزی است، نه مجوز کدنویسی. دریافت/ادغام مجاز سه شاخه پارسا و مرز لوکال/انتشار در گزارش جدا ثبت است.
+
+## تحویل منتخب #103/#104/#102
+
+FEAT-REV-008/009/007 ← [گزارش AC، تصاویر و نتایج](../delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md) ← [قرارداد توکن عمومی](../architecture/contracts/public-catalog-references.md). اجرای این سه قابلیت به دستور مالک محلی تکمیل شد؛ سایر تسک‌های تازه شروع نشده و انتشار این commit مجاز نشده است. وضعیت سند in-review باقی است.

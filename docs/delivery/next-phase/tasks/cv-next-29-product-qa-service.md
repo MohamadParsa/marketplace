@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-24
 related: [DEL-NEXT-001]
 approved_by: []
-implementation_status: in-progress
+implementation_status: done
 priority: P2
 wave: W2
 execution_authorized: true
@@ -61,3 +61,7 @@ Issue: [#90](https://github.com/MohamadParsa/marketplace/issues/90) · اسای�
 ## شواهد پایان در مرحله اجرا
 
 ACهای همین قابلیت به تست مناسب API/دامنه/مرورگر وصل شوند؛ fixture، اتصال محلی و provider واقعی جدا گزارش شوند. تکمیل سند، build یا اسکرین‌شات به‌تنهایی اثبات عملیات مالی/مجوز نیست. شواهد آزمون به [گزارش تسک ۹۰](../issue-90-verification.md) پیوند می‌خورند. انتشار لیارا با پارساست.
+
+## وضعیت تطبیق ادغام محلی۲۰۲۶-۱۱-۲۴
+
+کار پارسا از شاخه اجرایی دریافت و با نسخه فعلی ادغام و آزمون شد؛ بسته‌بودن Issue حفظ است. این به معنی انتشار main نیست. [شواهد ترکیبی و۲۶۷تست Go/۱۹بررسی مرورگر](../../backlog-review-2026-11-24/parsa-integration.md) و [پیگیری انتشار #105](https://github.com/MohamadParsa/marketplace/issues/105).

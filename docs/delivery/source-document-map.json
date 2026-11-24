@@ -376,5 +376,15 @@
         "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644576"
       }
     ]
-  }
+  },
+  "current_local_integration_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+  "local_integration_publication_pending": true,
+  "local_integration_verification": "docs/delivery/backlog-review-2026-11-24/parsa-integration.md",
+  "local_publication_issue": 105,
+  "local_catalog_ux_reference_issues": [
+    102,
+    103,
+    104
+  ],
+  "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md"
 }

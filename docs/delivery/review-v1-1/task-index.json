@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-22",
+  "date": "2026-11-24",
   "document_status": "in-review",
   "source_issue": 13,
   "planning_issue": 14,
@@ -18,7 +18,7 @@
       "title": "هویت واحد، نقش admin و عضویت چندبه‌چند",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -51,7 +51,9 @@
         "CV-IAM-04",
         "CV-IAM-05",
         "CV-IAM-07"
-      ]
+      ],
+      "github_state": "closed",
+      "audit_disposition": "تکمیل و بستن completed با شواهد هویت/نقش"
     },
     {
       "id": "CV-R2-02",
@@ -60,7 +62,7 @@
       "title": "ورود موبایل، OTP و لینک رمز پس از شماره",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -92,7 +94,9 @@
       "amends": [
         "CV-IAM-01",
         "CV-IAM-02"
-      ]
+      ],
+      "github_state": "closed",
+      "audit_disposition": "تکمیل و بستن completed مطابق ADR-008"
     },
     {
       "id": "CV-R2-03",
@@ -101,7 +105,7 @@
       "title": "پروفایل، رمز و بازیابی OTP با شروع ورود از موبایل",
       "priority": "P0",
       "wave": "W0",
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -132,7 +136,10 @@
         "CV-IAM-02",
         "CV-IAM-07",
         "CV-WEB-07"
-      ]
+      ],
+      "github_state": "open",
+      "audit_disposition": "فقط تأیید و بازیابی ایمیلی",
+      "remaining_scope": "فقط تأیید و بازیابی ایمیلی"
     },
     {
       "id": "CV-R2-04",
@@ -174,7 +181,9 @@
         "CV-CAT-03",
         "CV-CAT-07"
       ],
-      "verification": "issue-4-verification.md"
+      "verification": "issue-4-verification.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-05",
@@ -216,7 +225,9 @@
         "CV-CAT-05",
         "CV-CAT-08"
       ],
-      "verification": "issue-5-verification.md"
+      "verification": "issue-5-verification.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-06",
@@ -260,7 +271,9 @@
         "CV-CAT-05",
         "CV-CAT-06"
       ],
-      "verification": "issue-6-verification.md"
+      "verification": "issue-6-verification.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-07",
@@ -299,7 +312,9 @@
         "CV-CMS-01",
         "CV-CMS-02"
       ],
-      "verification": "issue-7-verification.md"
+      "verification": "issue-7-verification.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-08",
@@ -340,7 +355,9 @@
         "CV-CMS-01",
         "CV-CMS-02",
         "CV-WEB-03"
-      ]
+      ],
+      "github_state": "open",
+      "audit_disposition": "ریل دستی child #88؛ با #62 یکی نیست"
     },
     {
       "id": "CV-R2-09",
@@ -378,7 +395,9 @@
         "CV-CMS-01",
         "CV-CMS-02",
         "CV-WEB-03"
-      ]
+      ],
+      "github_state": "open",
+      "audit_disposition": "sticky child #88"
     },
     {
       "id": "CV-R2-10",
@@ -387,7 +406,7 @@
       "title": "وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش",
       "priority": "P0",
       "wave": "W2",
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -424,7 +443,10 @@
         "CV-CAT-06",
         "CV-OPS-05",
         "CV-OPS-06"
-      ]
+      ],
+      "github_state": "open",
+      "audit_disposition": "فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است",
+      "remaining_scope": "فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است"
     },
     {
       "id": "CV-R2-11",
@@ -530,7 +552,9 @@
         ],
         "tracking_issue": 12,
         "checked_on": "2026-11-22"
-      }
+      },
+      "github_state": "open",
+      "audit_disposition": "بدون اجرای مستقل؛ گیت #12"
     },
     {
       "id": "CV-R2-12",
@@ -610,7 +634,9 @@
       "requirements_tracking_not_closure_dependencies": [
         24,
         25
-      ]
+      ],
+      "github_state": "open",
+      "audit_disposition": "شاهد محیط واقعی لازم است؛ با تست محلی بسته نمی‌شود"
     },
     {
       "id": "CV-R2-13",
@@ -619,7 +645,7 @@
       "title": "تنظیمات عمومی دسته‌بندی‌شده سایت",
       "priority": "P0",
       "wave": "W1",
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "document_status": "in-review",
       "owner": "unassigned",
       "dependencies": [
@@ -650,7 +676,10 @@
       "blocked": "عدد اولیه سقف کارت و سیاست نسخه/اثر تقویم قبل از پذیرش تولید تعیین شوند. CMS و زیرسایت از این کار نتیجه گرفته نشوند؛ فهرست کلیدها در قرارداد محدود و مستند شود.",
       "technical": "schema تنظیم شناخته‌شده با نوع، گروه، version و مجوز؛ invalidation فقط consumer عمومی مجاز؛ ثبت audit بدون secret؛ تنظیم مالی باز از طریق key دلخواه وارد نشود.",
       "evidence": "API و مرور فرم گروه‌ها، عدم مجوز/invalid/conflict؛ شاهد اثر سقف در کارت و تغییر تقویم فقط در برآورد جدید با داده آزمون.",
-      "amends": []
+      "amends": [],
+      "github_state": "open",
+      "audit_disposition": "تجمیع تنظیمات موجود و شکاف کلیدها",
+      "remaining_scope": "تجمیع تنظیمات موجود و شکاف کلیدها"
     },
     {
       "id": "CV-R2-14",
@@ -691,7 +720,9 @@
       "blocked": "R2-Q05: scope مخزن (فروشنده/روش/منطقه/بازه)، زمان hold/commit، TTL، لغو و نسبت با جلسه خرید باید انتخاب شوند. تا آن زمان فقط مدل/فرم/contract draft قابل شروع؛ ظرفیت عملیاتی و AC هم‌زمانی blocked‌اند.",
       "technical": "پیشنهاد مدل: SlotDefinition و CapacityReservation با مرجع سفارش/جلسه و idempotency؛ جزئیات DB/قفل انتخاب نهایی نیست. خطای slot_full/stale و امکان انتخاب مجدد روشن باشد.",
       "evidence": "پس از پاسخ سیاست: integration هم‌زمانی با ظرفیت۱ و دو جلسه، retry، expiry و cancellation، و مرور انتخاب اسلات؛ fixture نمایشی ظرفیت شاهد قبولی نیست.",
-      "amends": []
+      "amends": [],
+      "github_state": "open",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-15",
@@ -730,7 +761,9 @@
       "blocked": "Q-027: تعریف دقیق available offer، تأیید مقصد، یک‌بار/چندبار بودن، لغو، کانال/provider و retention باید انتخاب شوند؛ تا آن زمان schema/آداپتر آزمون مستقل ممکن و public write/ارسال واقعی blocked است.",
       "technical": "پیشنهاد موجودیت StockAlertSubscription و event قابل ردیابی؛ حداقل اطلاعات تماس و عدم افشای آن در API عمومی/log. پروفایل/خبرنامه/پیامک سفارش سیاست مشترک خودکار ندارند.",
       "evidence": "integration رویداد/تکرار و مقصد با آداپتر آزمون و snapshot تلاش‌ها؛ مرور CTA→درخواست؛ پذیرش provider واقعی جدا و پس از سیاست/اتصال.",
-      "amends": []
+      "amends": [],
+      "github_state": "open",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-16",
@@ -780,7 +813,9 @@
       "execution_issue": 28,
       "execution_dependencies": [],
       "dependencies_kind": "capability-references-not-issue-closure-gates",
-      "verification": "../initial-launch/issue-28-verification.md"
+      "verification": "../initial-launch/issue-28-verification.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     },
     {
       "id": "CV-R2-17",
@@ -842,8 +877,11 @@
         "R2-Q08",
         "R2-Q09"
       ],
-      "conditional_followup_document": "../product-interactions-followup.md"
+      "conditional_followup_document": "../product-interactions-followup.md",
+      "github_state": "closed",
+      "audit_disposition": ""
     }
   ],
-  "launch_plan": "../initial-launch/task-index.json"
+  "launch_plan": "../initial-launch/task-index.json",
+  "audit_reference": "../backlog-review-2026-11-24/README.md"
 }

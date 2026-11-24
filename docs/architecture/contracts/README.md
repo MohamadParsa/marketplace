@@ -52,3 +52,5 @@
 [بازدیدهای اخیر خصوصی مشتری](customer-recently-viewed.md) — API-CUSTOMER-RECENTLY-VIEWED-001؛ اجرای محلی #64، سقف/انقضا و cleanup مستقل از کش عمومی.
 
 [اجرای محلی کوپن، اعتبار انتخابی و گروه گارانتی #67/#68/#69/#78](checkout-adjustments.md)
+
+[API-PUBLIC-CATALOG-REFERENCES-001](public-catalog-references.md): توکن chr، سازگاری لینک/سبد قدیمی، ETag و مرز داخلی/عمومی #102.

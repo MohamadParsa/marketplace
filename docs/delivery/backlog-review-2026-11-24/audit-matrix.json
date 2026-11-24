@@ -1,0 +1,996 @@
+{
+  "original_issue_count": 65,
+  "final_issue_count": 76,
+  "open_issues": 33,
+  "closed_issues": 43,
+  "open_pull_requests": [
+    94
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "title": "CV-R2-01 — هویت واحد و نقش/عضویت scoped؛ تکمیل‌شده در main",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-main",
+      "disposition": "تکمیل و بستن completed با شواهد هویت/نقش",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/1",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "CV-R2-02 — ورود مشترک موبایل/ایمیل؛ تکمیل‌شده طبق ADR-008",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-main",
+      "disposition": "تکمیل و بستن completed مطابق ADR-008",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/2",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "CV-R2-03 — باقیمانده تأیید ایمیل و بازیابی رمز با ایمیل معتبر",
+      "state": "open",
+      "state_reason": null,
+      "classification": "partial-remaining",
+      "disposition": "فقط تأیید و بازیابی ایمیلی",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/3",
+      "labels": [
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "CV-R2-04 — آیکن دسته و برند با پیش‌فرض",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/4",
+      "labels": []
+    },
+    {
+      "number": 5,
+      "title": "CV-R2-05 — کتابخانه خصوصیت، انتساب صریح و سقف کارت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/5",
+      "labels": []
+    },
+    {
+      "number": 6,
+      "title": "CV-R2-06 — اکشن سریع تنوع، قیمت و موجودی در محصول",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/6",
+      "labels": []
+    },
+    {
+      "number": 7,
+      "title": "CV-R2-07 — سکشن بنر با تصویر دسکتاپ و موبایل",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/7",
+      "labels": []
+    },
+    {
+      "number": 8,
+      "title": "CV-R2-08 — کروسل اختصاصی با انتخاب و ترتیب دستی کالا [معوق]",
+      "state": "open",
+      "state_reason": null,
+      "classification": "deferred-child",
+      "disposition": "ریل دستی child #88؛ با #62 یکی نیست",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/8",
+      "labels": [
+        "priority:P3",
+        "status:deferred"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "CV-R2-09 — سکشن استیکی با کنترل نمایش و بستن [معوق]",
+      "state": "open",
+      "state_reason": null,
+      "classification": "deferred-child",
+      "disposition": "sticky child #88",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/9",
+      "labels": [
+        "priority:P3",
+        "status:deferred"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "CV-R2-10 — باقیمانده پایش مهلت تأمین و صف پیگیری ادمین",
+      "state": "open",
+      "state_reason": null,
+      "classification": "partial-remaining",
+      "disposition": "فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/10",
+      "labels": [
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "CV-R2-11 — والد پیگیری انتشار اولیه؛ بدون پیاده‌سازی مستقل",
+      "state": "open",
+      "state_reason": null,
+      "classification": "tracking-parent",
+      "disposition": "بدون اجرای مستقل؛ گیت #12",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/11",
+      "labels": [
+        "priority:P2",
+        "tracking"
+      ]
+    },
+    {
+      "number": 12,
+      "title": "CV-R2-12 — پذیرش اصلاحات و ردیابی با دامنه فعال",
+      "state": "open",
+      "state_reason": null,
+      "classification": "public-release-gate",
+      "disposition": "شاهد محیط واقعی لازم است؛ با تست محلی بسته نمی‌شود",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/12",
+      "labels": [
+        "priority:P0"
+      ]
+    },
+    {
+      "number": 13,
+      "title": "مرحله ۱ | پاسخ به پرسش‌های باز نسخه ۱.۱",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/13",
+      "labels": []
+    },
+    {
+      "number": 14,
+      "title": "مرحله ۲ | به‌روزرسانی تسک‌ها بر اساس پاسخ‌ها",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/14",
+      "labels": []
+    },
+    {
+      "number": 15,
+      "title": "CV-R2-13 — تجمیع نمای تنظیمات موجود و تکمیل پوشش کلیدها",
+      "state": "open",
+      "state_reason": null,
+      "classification": "partial-remaining",
+      "disposition": "تجمیع تنظیمات موجود و شکاف کلیدها",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/15",
+      "labels": [
+        "priority:P2",
+        "status:partial"
+      ]
+    },
+    {
+      "number": 16,
+      "title": "CV-R2-14 — اسلات ارسال ظرفیت‌دار و کنترل رزرو",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/16",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 17,
+      "title": "CV-R2-15 — درخواست اطلاع موجودشدن همان تنوع",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/17",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 24,
+      "title": "CV-R2-16 — مرجع نیازمندی دسته و SEO؛ اجرا در #28",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/24",
+      "labels": []
+    },
+    {
+      "number": 25,
+      "title": "CV-R2-17 — مرجع نیازمندی محصول و SEO؛ اجرا در #29",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/25",
+      "labels": []
+    },
+    {
+      "number": 27,
+      "title": "CV-LCH-01 — صفحه اصلی واقعی با چهار کروسل؛ بک‌آفیس و سایت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/27",
+      "labels": []
+    },
+    {
+      "number": 28,
+      "title": "CV-LCH-02 — PLP و جست‌وجوی واقعی؛ بک‌آفیس و سایت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/28",
+      "labels": []
+    },
+    {
+      "number": 29,
+      "title": "CV-LCH-03 — PDP مستقل و انتخاب تنوع/فروشنده؛ بک‌آفیس و سایت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/29",
+      "labels": []
+    },
+    {
+      "number": 30,
+      "title": "CV-LCH-04 — سبد تا پرداخت کارت‌به‌کارت و کیف پول؛ بک‌آفیس و سایت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/30",
+      "labels": []
+    },
+    {
+      "number": 41,
+      "title": "CV-PERF-01 — کش عمومی Redis؛ محصول، کارت، خانه و PLP با ابطال نسخه‌دار",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/41",
+      "labels": []
+    },
+    {
+      "number": 42,
+      "title": "CV-CAT-PUBLIC-URL-01 — کد chr محصول و slug انگلیسی دسته با حفظ لینک‌های قبلی",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/42",
+      "labels": []
+    },
+    {
+      "number": 45,
+      "title": "CV-SF-UX-01 — افزودن مرتب‌سازی پرفروش‌ترین با سنجه واقعی فروش",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/45",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 46,
+      "title": "CV-SF-UX-02 — منوی بازشونده درختی دسته‌ها و خالی‌ماندن ادامه نوار اصلی",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/46",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 47,
+      "title": "CV-SF-UX-03 — بازطراحی مینیمال آیکن پروفایل و سبد با رنگ برند",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/47",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 48,
+      "title": "CV-SF-UX-04 — اسلایدر قیمت و نمایش بیشتر فیلترهای دارای بیش از۵گزینه در PLP",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/48",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 49,
+      "title": "CV-SF-UX-05 — جایگزینی نمایش checkboxهای storefront با Switch مشترک",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/49",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 50,
+      "title": "CV-SF-UX-06 — چیپ مرتب‌سازی بدون radio نمایان و با رنگ کامل primary",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/50",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 51,
+      "title": "CV-SF-UX-07 — Progress overlay یکپارچه و بدون جابه‌جایی محتوا در انتخاب، سبد و تمام مسیر خرید",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/51",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 52,
+      "title": "CV-SF-UX-08 — ارتفاع محدود معرفی و مشخصات فنی PDP با مشاهده بیشتر/کمتر",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/52",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 53,
+      "title": "CV-SF-UX-09 — یکسان‌سازی متن مشتری به «ارسال از … روز کاری»",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/53",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 54,
+      "title": "CV-SF-UX-10 — چیدمان جمع‌وجور چیپ‌های محور تنوع، مخصوص وزن‌های متعدد طلا",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/54",
+      "labels": [
+        "enhancement"
+      ]
+    },
+    {
+      "number": 62,
+      "title": "CV-NEXT-01 — تخفیف ویژه: لیست پنل و اولویت انتخابی با Drag & Drop",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/62",
+      "labels": [
+        "priority:P2"
+      ]
+    },
+    {
+      "number": 63,
+      "title": "CV-NEXT-02 — علاقه‌مندی مشتری و آیکن کنار گالری PDP",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/63",
+      "labels": []
+    },
+    {
+      "number": 64,
+      "title": "CV-NEXT-03 — ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/64",
+      "labels": []
+    },
+    {
+      "number": 65,
+      "title": "CV-NEXT-04 — مقایسه محصولات از یک دسته‌بندی",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/65",
+      "labels": [
+        "priority:P2"
+      ]
+    },
+    {
+      "number": 66,
+      "title": "CV-NEXT-05 — قرارداد مبلغ سفارش، CreditUsage و DiscountUsage",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/66",
+      "labels": []
+    },
+    {
+      "number": 67,
+      "title": "CV-NEXT-06 — کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-pushed-pr94-unmerged",
+      "disposition": "تکمیل و بستن به دستور مالک؛ سورس در PR #94، ادغام/انتشار جدا",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/67",
+      "labels": [
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/67#issuecomment-7129872494"
+    },
+    {
+      "number": 68,
+      "title": "CV-NEXT-07 — باکس مستقل کد تخفیف در مرحله پرداخت خرید",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-pushed-pr94-unmerged",
+      "disposition": "تکمیل و بستن به دستور مالک؛ سورس در PR #94، ادغام/انتشار جدا",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/68",
+      "labels": [
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/68#issuecomment-7129874491"
+    },
+    {
+      "number": 69,
+      "title": "CV-NEXT-08 — باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-pushed-pr94-unmerged",
+      "disposition": "تکمیل و بستن به دستور مالک؛ سورس در PR #94، ادغام/انتشار جدا",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/69",
+      "labels": [
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/69#issuecomment-7129876556"
+    },
+    {
+      "number": 70,
+      "title": "CV-NEXT-09 — ممیزی اتمیک و سناریوهای شکست باقی‌مانده PlaceOrder",
+      "state": "open",
+      "state_reason": null,
+      "classification": "partial-remaining",
+      "disposition": "فقط ممیزی و مرز failure بیرونی؛ نقدی اتمیک حاضر است",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/70",
+      "labels": [
+        "priority:P1",
+        "status:partial"
+      ]
+    },
+    {
+      "number": 71,
+      "title": "CV-NEXT-10 — بازبینی دقیق دسترسی و محدوده داده فروشندگان",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/71",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 72,
+      "title": "CV-NEXT-11 — بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/72",
+      "labels": [
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 73,
+      "title": "CV-NEXT-12 — روش فروش، اتصال به روش پرداخت و مارکاپ در خرید",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/73",
+      "labels": [
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 74,
+      "title": "CV-NEXT-13 — SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/74",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 75,
+      "title": "CV-NEXT-14 — ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/75",
+      "labels": [
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 76,
+      "title": "CV-NEXT-15 — CustomerActivity و Analytics رفتار مشتری",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/76",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 77,
+      "title": "CV-NEXT-16 — لاگ فنی عملیات حساس، خطا و شکست با correlation",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/77",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 78,
+      "title": "CV-NEXT-17 — گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-pushed-pr94-unmerged",
+      "disposition": "تکمیل و بستن به دستور مالک؛ سورس در PR #94، ادغام/انتشار جدا",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/78",
+      "labels": [
+        "priority:P2"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/78#issuecomment-7129878573"
+    },
+    {
+      "number": 79,
+      "title": "CV-NEXT-18 — باقیمانده گروه‌بندی خصوصیات در PLP و scope/ترتیب نمایش",
+      "state": "open",
+      "state_reason": null,
+      "classification": "partial-remaining",
+      "disposition": "PLP و scope/ترتیب؛ نه ساخت دوباره mapping",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/79",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 80,
+      "title": "CV-NEXT-19 — بازبینی و اصلاح نمایش فیلترهای PLP",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/80",
+      "labels": []
+    },
+    {
+      "number": 81,
+      "title": "CV-NEXT-20 — ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/81",
+      "labels": [
+        "priority:P2"
+      ]
+    },
+    {
+      "number": 82,
+      "title": "CV-NEXT-21 — سرویس ایمیل تراکنشی، قالب و پیگیری ارسال",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/82",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 83,
+      "title": "CV-NEXT-22 — تب مستقل مزایا و معایب کنار مشخصات فنی PDP",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/83",
+      "labels": []
+    },
+    {
+      "number": 84,
+      "title": "CV-NEXT-23 — بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/84",
+      "labels": []
+    },
+    {
+      "number": 85,
+      "title": "CV-NEXT-24 — رفع اسکرول عمودی و دسترسی به تمام گره‌های منو",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/85",
+      "labels": []
+    },
+    {
+      "number": 86,
+      "title": "CV-NEXT-25 — اولویت نمایش دسته و ترتیب پایدار گره‌های منو",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "closed-existing",
+      "disposition": "بسته قبلی حفظ؛ در این نوبت دوباره تست نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/86",
+      "labels": []
+    },
+    {
+      "number": 87,
+      "title": "CV-NEXT-26 — فوتر و محتوای راهنما + مدیریت شبکه‌های اجتماعی",
+      "state": "open",
+      "state_reason": null,
+      "classification": "canonical-expanded",
+      "disposition": "فوتر/محتوا و CRUD شبکه‌های اجتماعی در یک Issue",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/87",
+      "labels": [
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 88,
+      "title": "CV-NEXT-27 — تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار",
+      "state": "open",
+      "state_reason": null,
+      "classification": "canonical-parent-implementation",
+      "disposition": "هسته CMS؛ childها #8/#9",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/88",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 89,
+      "title": "CV-NEXT-28 — سرویس نظرات کاربران؛ ادامه CV-WEB-15",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "implemented-parsa-local",
+      "disposition": "closed توسط پارسا؛ branch پیاده‌سازی و ادغام محلی",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/89",
+      "labels": []
+    },
+    {
+      "number": 90,
+      "title": "CV-NEXT-29 — سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "implemented-parsa-local",
+      "disposition": "closed توسط پارسا؛ branch پیاده‌سازی و ادغام محلی",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/90",
+      "labels": []
+    },
+    {
+      "number": 91,
+      "title": "CV-NEXT-30 — لندینگ اقساطی متصل به روش فروش و شرایط واقعی",
+      "state": "open",
+      "state_reason": null,
+      "classification": "independent-remaining",
+      "disposition": "دامنه مستقل باقی‌مانده؛ باز حفظ شد",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/91",
+      "labels": [
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 95,
+      "title": "بازبینی و صف یکتای تسک‌های چریوا — درخواست‌های جدید ۲۰۲۶-۱۱-۲۴",
+      "state": "open",
+      "state_reason": null,
+      "classification": "tracking-parent",
+      "disposition": "ممیزی تمام؛ نمای صف برای انتخاب بعدی باز",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/95",
+      "labels": [
+        "documentation",
+        "tracking"
+      ]
+    },
+    {
+      "number": 96,
+      "title": "CV-REV-01 — باکس‌های کوپن و کیف پول: جمع‌شدن، حالت اعمال‌شده، پیام و هم‌راستایی",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/96",
+      "labels": [
+        "enhancement",
+        "priority:P1"
+      ]
+    },
+    {
+      "number": 97,
+      "title": "CV-REV-02 — مدل اعتبار قابل‌برداشت و فقط‌خرید؛ مصرف، استرداد و حفظ منشأ",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/97",
+      "labels": [
+        "enhancement",
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 98,
+      "title": "CV-REV-03 — اکشن شارژ دستی کیف پول روی ردیف مشتری در بک‌آفیس",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/98",
+      "labels": [
+        "enhancement",
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 99,
+      "title": "CV-REV-04 — خلاصه سفارش تصویری، سود خرید و حذف سطرهای مبلغ صفر",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/99",
+      "labels": [
+        "enhancement",
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 100,
+      "title": "CV-REV-05 — تکمیل فرم آدرس و گیرنده متفاوت با snapshot سفارش",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/100",
+      "labels": [
+        "enhancement",
+        "priority:P1",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 101,
+      "title": "CV-REV-06 — نقشه در مودال آدرس و تبدیل موقعیت به نشانی قابل ویرایش",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/101",
+      "labels": [
+        "enhancement",
+        "priority:P2",
+        "status:needs-decision"
+      ]
+    },
+    {
+      "number": 102,
+      "title": "CV-REV-07 — حذف پیشوند gsp از شناسه‌های عمومی URL؛ تنوع، عرضه و رسانه",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-local-unpushed",
+      "disposition": "اجرای منتخب محلی تکمیل؛ سورس ce417c5، انتشار #105",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/102",
+      "labels": [
+        "enhancement",
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/102#issuecomment-7131275150"
+    },
+    {
+      "number": 103,
+      "title": "CV-REV-08 — کاهش whitespace و اسکرول اضافی خانه، PLP و PDP مطابق طرح A",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-local-unpushed",
+      "disposition": "اجرای منتخب محلی تکمیل؛ سورس ce417c5، انتشار #105",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/103",
+      "labels": [
+        "enhancement",
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/103#issuecomment-7131269837"
+    },
+    {
+      "number": 104,
+      "title": "CV-REV-09 — Skeleton هدفمند سکشن و کارت در خانه، PLP و PDP",
+      "state": "closed",
+      "state_reason": "completed",
+      "classification": "completed-local-unpushed",
+      "disposition": "اجرای منتخب محلی تکمیل؛ سورس ce417c5، انتشار #105",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/104",
+      "labels": [
+        "enhancement",
+        "priority:P1"
+      ],
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/104#issuecomment-7131272054"
+    },
+    {
+      "number": 105,
+      "title": "CV-REV-10 — بررسی و انتشار نسخه محلی یکپارچه پارسا و فعال‌سازی خرید",
+      "state": "open",
+      "state_reason": null,
+      "classification": "new-planned",
+      "disposition": "تسک تازه؛ اجرا انتخاب نشده",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/105",
+      "labels": [
+        "enhancement",
+        "priority:P1",
+        "status:review"
+      ]
+    }
+  ],
+  "superseded_pull_requests": [
+    {
+      "number": 19,
+      "head_in_main": "1826b96fe356be80ea83853460b8406d2279e35a",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 22,
+      "head_in_main": "6866b6840c60750c537a5951f3ca08a5b3f445dd",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 23,
+      "head_in_main": "08731f7e9d7e8f0a865ed40e867c9e206a1c8172",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 26,
+      "head_in_main": "9deee6bc5c38cc410f69360ebb43098b058b63f9",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 31,
+      "head_in_main": "ad756a10cff8666c3b57e070b6af508916d5d8f8",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 32,
+      "head_in_main": "31be4ce4d3ff08d8fcc672d62b65195429c0972f",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 33,
+      "head_in_main": "260e51452f5f44cd5de3b672e411e7465fbe9537",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 34,
+      "head_in_main": "3aa1a0090d5eb79a8421adfcab0022eca71f136b",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 35,
+      "head_in_main": "d6e666235efd70123c0f9279751620f902ab42f3",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 36,
+      "head_in_main": "5da8c48cdad5a0bef8ab76181886b653859df33b",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    },
+    {
+      "number": 37,
+      "head_in_main": "9a33776494537c4bc23d8f75a1565f13f1b910ec",
+      "state": "closed",
+      "reason": "superseded-ancestor-in-main",
+      "branch_deleted": false
+    }
+  ],
+  "completion_closure_date": "2026-11-24"
+}
