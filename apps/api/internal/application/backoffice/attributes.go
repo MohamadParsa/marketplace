@@ -32,6 +32,35 @@ func validateAttribute(a catalog.AttributeDefinition) bool {
 		}
 		seen[key] = true
 	}
+	return validateAttributeGroups(a)
+}
+
+func validateAttributeGroups(a catalog.AttributeDefinition) bool {
+	options := map[string]bool{}
+	for _, v := range a.Options {
+		options[v] = true
+	}
+	if len(a.Groups) > 100 || (len(a.Groups) > 0 && a.Kind != "enum") {
+		return false
+	}
+	ids, names, members := map[string]bool{}, map[string]bool{}, map[string]bool{}
+	for _, group := range a.Groups {
+		name := strings.ToLower(strings.TrimSpace(group.Name))
+		if !attributeCode.MatchString(group.ID) || ids[group.ID] || name == "" || names[name] || utf8.RuneCountInString(group.Name) > 80 || group.Name != strings.TrimSpace(group.Name) || len(group.Values) == 0 || len(group.Values) > 2000 {
+			return false
+		}
+		ids[group.ID], names[name] = true, true
+		local := map[string]bool{}
+		for _, value := range group.Values {
+			if !options[value] || local[value] || (group.Active && members[value]) {
+				return false
+			}
+			local[value] = true
+			if group.Active {
+				members[value] = true
+			}
+		}
+	}
 	return true
 }
 
@@ -55,6 +84,29 @@ func attributeUsed(state *Workspace, id string) bool {
 
 func applyAttributes(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "attribute.groups.set":
+		if c.Attribute == nil {
+			return ErrInvalid
+		}
+		for i := range state.Attributes {
+			a := &state.Attributes[i]
+			if a.ID != c.Target {
+				continue
+			}
+			if a.Version != c.Version {
+				return ErrConflict
+			}
+			copy := *a
+			copy.Groups = c.Attribute.Groups
+			if !validateAttributeGroups(copy) {
+				return ErrInvalid
+			}
+			a.Groups = copy.Groups
+			a.Version++
+			return nil
+		}
+		return ErrNotFound
+
 	case "settings.sales-window":
 		if c.Target != "display" || c.Amount < 1 || c.Amount > MaxSalesWindowDays {
 			return ErrInvalid

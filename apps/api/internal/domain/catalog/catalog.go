@@ -110,13 +110,22 @@ type Variant struct {
 
 // Definitions are shared; usage and ordering belong to an explicit category binding.
 type AttributeDefinition struct {
-	ID      string   `json:"id"`
-	Code    string   `json:"code"`
-	Name    string   `json:"name"`
-	Kind    string   `json:"kind"`
-	Unit    string   `json:"unit,omitempty"`
-	Options []string `json:"options"`
-	Version int      `json:"version"`
+	Groups  []AttributeValueGroup `json:"groups,omitempty"`
+	ID      string                `json:"id"`
+	Code    string                `json:"code"`
+	Name    string                `json:"name"`
+	Kind    string                `json:"kind"`
+	Unit    string                `json:"unit,omitempty"`
+	Options []string              `json:"options"`
+	Version int                   `json:"version"`
+}
+
+// Display aliases never replace a real variant value or merge its inventory.
+type AttributeValueGroup struct {
+	ID     string   `json:"id"`
+	Name   string   `json:"name"`
+	Values []string `json:"values"`
+	Active bool     `json:"active"`
 }
 type AttributeBinding struct {
 	AttributeID string `json:"attribute_id"`

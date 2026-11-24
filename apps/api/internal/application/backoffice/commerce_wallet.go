@@ -99,6 +99,9 @@ func walletView(c *commerce.State, user string) WalletView {
 	return v
 }
 func (s *Service) ReadWallet(ctx context.Context, a identity.User) (WalletView, error) {
+	if e := s.ReleaseExpiredCommerce(ctx); e != nil {
+		return WalletView{}, e
+	}
 	w, e := s.repository.Snapshot(ctx)
 	if e != nil {
 		return WalletView{}, e

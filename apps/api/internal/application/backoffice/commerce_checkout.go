@@ -14,6 +14,9 @@ import (
 )
 
 type QuoteInput struct {
+	ContractVersion int               `json:"contract_version,omitempty"`
+	CouponCode      string            `json:"coupon_code,omitempty"`
+	WalletToman     string            `json:"wallet_toman,omitempty"`
 	CartVersion     int               `json:"cart_version"`
 	AddressID       string            `json:"address_id"`
 	Shipping        map[string]string `json:"shipping"`
@@ -21,6 +24,7 @@ type QuoteInput struct {
 	PurchaseID      string            `json:"purchase_id,omitempty"`
 }
 type AcceptQuoteInput struct {
+	TermsDigest        string `json:"terms_digest,omitempty"`
 	QuoteID            string `json:"quote_id"`
 	AcceptedTotalToman string `json:"accepted_total_toman"`
 }
@@ -49,19 +53,25 @@ type ShipmentView struct {
 	DeliveryTo   string `json:"delivery_to"`
 }
 type QuoteView struct {
-	Destination   commerce.Destination `json:"destination"`
-	ID            string               `json:"id"`
-	Status        string               `json:"status"`
-	Address       commerce.Address     `json:"address"`
-	Lines         []QuoteLineView      `json:"lines"`
-	Shipments     []ShipmentView       `json:"shipments"`
-	PaymentMethod PaymentMethodInput   `json:"payment_method"`
-	SubtotalToman string               `json:"subtotal_toman"`
-	ShippingToman string               `json:"shipping_toman"`
-	TotalToman    string               `json:"total_toman"`
-	ExpiresAt     time.Time            `json:"expires_at"`
-	ReservedUntil time.Time            `json:"reserved_until"`
-	Currency      string               `json:"currency"`
+	TermsDigest         string               `json:"terms_digest,omitempty"`
+	ContractVersion     int                  `json:"contract_version,omitempty"`
+	CouponCode          string               `json:"coupon_code,omitempty"`
+	DiscountToman       string               `json:"discount_toman"`
+	WalletSelectedToman string               `json:"wallet_selected_toman"`
+	FundingToman        string               `json:"funding_toman"`
+	Destination         commerce.Destination `json:"destination"`
+	ID                  string               `json:"id"`
+	Status              string               `json:"status"`
+	Address             commerce.Address     `json:"address"`
+	Lines               []QuoteLineView      `json:"lines"`
+	Shipments           []ShipmentView       `json:"shipments"`
+	PaymentMethod       PaymentMethodInput   `json:"payment_method"`
+	SubtotalToman       string               `json:"subtotal_toman"`
+	ShippingToman       string               `json:"shipping_toman"`
+	TotalToman          string               `json:"total_toman"`
+	ExpiresAt           time.Time            `json:"expires_at"`
+	ReservedUntil       time.Time            `json:"reserved_until"`
+	Currency            string               `json:"currency"`
 }
 type PurchaseView struct {
 	Number                string           `json:"number"`
@@ -100,6 +110,21 @@ type PrepareView struct {
 
 func quoteView(q commerce.Quote) QuoteView {
 	v := QuoteView{Destination: q.Destination, ID: q.ID, Status: q.Status, Address: q.Address, Lines: []QuoteLineView{}, Shipments: []ShipmentView{}, PaymentMethod: methodInput(q.PaymentMethod), SubtotalToman: commerce.Toman(q.Subtotal), ShippingToman: commerce.Toman(q.ShippingTotal), TotalToman: commerce.Toman(q.Total), ExpiresAt: q.ExpiresAt, ReservedUntil: q.ReservedUntil, Currency: "toman"}
+	if q.ContractVersion == 2 {
+		v.TermsDigest = hashToken(qComparable(q))
+	}
+	v.ContractVersion = q.ContractVersion
+	v.CouponCode = q.CouponCode
+	v.DiscountToman = "0"
+	v.WalletSelectedToman = "0"
+	v.FundingToman = commerce.Toman(q.Total)
+	if q.Discount != nil {
+		v.DiscountToman = commerce.Toman(q.Discount.Amount)
+	}
+	if q.Credit != nil {
+		v.WalletSelectedToman = commerce.Toman(q.Credit.Requested)
+		v.FundingToman = commerce.Toman(q.Total - q.Credit.Requested)
+	}
 	for _, l := range q.Lines {
 		total, _ := commerce.Multiply(l.UnitPrice, l.Quantity)
 		v.Lines = append(v.Lines, QuoteLineView{OfferID: l.OfferID, Quantity: l.Quantity, ProductID: l.ProductID, VariantID: l.VariantID, StoreID: l.StoreID, Name: l.Name, VariantLabel: l.VariantLabel, ImageURL: l.ImageURL, UnitPriceToman: commerce.Toman(l.UnitPrice), TotalToman: commerce.Toman(total)})
@@ -122,6 +147,12 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	if q != nil {
 		v.Quote = quoteView(*q)
 		short := q.Total - (balance - held)
+		if q.ContractVersion == 2 && q.Credit != nil {
+			short = q.Total - q.Credit.Requested - creditSum(q.Credit.Funding)
+			if p.ConfirmedAt != nil {
+				short = 0
+			}
+		}
 		if short < 0 {
 			short = 0
 		}
@@ -256,11 +287,62 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 		return q, ErrInvalid
 	}
 	q.Destination = c.Settings.Destination
+	if in.ContractVersion == 0 && (in.CouponCode != "" || (in.WalletToman != "" && in.WalletToman != "0")) {
+		return q, ErrInvalid
+	}
+	if in.ContractVersion != 0 && in.ContractVersion != 2 {
+		return q, ErrInvalid
+	}
+	if in.ContractVersion == 2 {
+		q.ContractVersion = 2
+		except := ""
+		var ownCredit commerce.Amount
+		if in.PurchaseID != "" {
+			if p := findPurchase(c, in.PurchaseID); p != nil {
+				if old := findQuote(c, p.QuoteID); old != nil {
+					except = old.ID
+					if old.Status == "reserved" && old.Credit != nil && old.Credit.Status == "held" {
+						ownCredit = creditSum(old.Credit.Existing) + creditSum(old.Credit.Funding)
+					}
+				}
+			}
+		}
+		q.Discount, e = evaluateCoupon(w, q, in.CouponCode, except, now)
+		if e != nil {
+			return q, e
+		}
+		if q.Discount != nil {
+			q.CouponCode = q.Discount.Coupon.Code
+			q.Total -= q.Discount.Amount
+		}
+		wallet := in.WalletToman
+		if wallet == "" {
+			wallet = "0"
+		}
+		selected, err := commerce.ParseToman(normalizeDigits(wallet))
+		if err != nil || selected > q.Total {
+			return q, ErrInvalid
+		}
+		balance, held := walletAmounts(c, a.ID)
+		if selected > balance-held+ownCredit {
+			return q, ErrInsufficientWallet
+		}
+		if selected > 0 && !walletEligible(w, q.Lines, q.Total) {
+			return q, ErrInvalidMethod
+		}
+		q.Credit = &commerce.CreditUsage{Requested: selected, Existing: []commerce.CreditAllocation{}, Funding: []commerce.CreditAllocation{}}
+		if q.Total == selected {
+			if in.PaymentMethodID != "" {
+				return q, ErrInvalidMethod
+			}
+			return q, nil
+		}
+	}
 	if in.PaymentMethodID == "" {
 		return q, nil
 	}
 	for _, m := range c.Settings.Methods {
-		if m.ID == in.PaymentMethodID && methodEligible(w, m, q.Lines, q.Total) {
+		if m.ID == in.PaymentMethodID && (in.ContractVersion != 2 || m.Kind != "wallet") && methodEligible(w, m, q.Lines, q.Total) {
 			q.PaymentMethod = m
 			return q, nil
 		}
@@ -304,12 +386,12 @@ func (s *Service) PrepareCheckout(ctx context.Context, a identity.User) (Prepare
 }
 func (s *Service) CreateQuote(ctx context.Context, a identity.User, in QuoteInput, key string) (json.RawMessage, error) {
 	return s.mutateCommerce(ctx, "quote:"+a.ID, key, in, func(w Workspace) error { return customerActor(w, a) }, func(w *Workspace, id string, now time.Time) (any, error) {
-		if in.PaymentMethodID == "" {
-			return nil, ErrInvalidMethod
-		}
 		q, e := buildQuote(*w, a, in, id, now)
 		if e != nil {
 			return nil, e
+		}
+		if q.PaymentMethod.ID == "" && (q.ContractVersion != 2 || q.Credit == nil || q.Total != q.Credit.Requested) {
+			return nil, ErrInvalidMethod
 		}
 		c := commerceState(w)
 		c.Quotes = append(c.Quotes, q)
@@ -330,7 +412,10 @@ func qComparable(q commerce.Quote) string {
 	return string(b)
 }
 func quoteAsInput(q commerce.Quote) QuoteInput {
-	in := QuoteInput{CartVersion: q.CartVersion, AddressID: q.Address.ID, Shipping: map[string]string{}, PaymentMethodID: q.PaymentMethod.ID, PurchaseID: q.ReplacesPurchaseID}
+	in := QuoteInput{ContractVersion: q.ContractVersion, CouponCode: q.CouponCode, CartVersion: q.CartVersion, AddressID: q.Address.ID, Shipping: map[string]string{}, PaymentMethodID: q.PaymentMethod.ID, PurchaseID: q.ReplacesPurchaseID}
+	if q.Credit != nil {
+		in.WalletToman = commerce.Toman(q.Credit.Requested)
+	}
 	for _, v := range q.Shipments {
 		in.Shipping[v.StoreID] = v.Method.ID
 	}
@@ -343,7 +428,7 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 		order := orders.Order{PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
-				order.Items = append(order.Items, orders.Item{ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})
+				order.Items = append(order.Items, orders.Item{VariantLabel: l.VariantLabel, ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})
 			}
 		}
 		found := false
@@ -367,6 +452,9 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 		q := findQuote(c, in.QuoteID)
 		if q == nil || q.UserID != a.ID {
 			return nil, ErrNotFound
+		}
+		if q.ContractVersion == 2 && in.TermsDigest != hashToken(qComparable(*q)) && q.PurchaseID == "" {
+			return nil, ErrCheckoutChanged
 		}
 		accepted, e := commerce.ParseToman(in.AcceptedTotalToman)
 		if e != nil || accepted != q.Total {
@@ -435,6 +523,9 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 			if !found {
 				return nil, ErrStock
 			}
+		}
+		if e := reserveCredit(c, q, now); e != nil {
+			return nil, e
 		}
 		q.Status = "reserved"
 		q.AcceptedAt = &now
@@ -551,7 +642,13 @@ func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in Quote
 		if !m.Active {
 			continue
 		}
+		if in.ContractVersion == 2 && m.Kind == "wallet" {
+			continue
+		}
 		eligible := methodEligible(w, m, q.Lines, q.Total)
+		if q.Credit != nil && q.Credit.Requested == q.Total {
+			eligible = false
+		}
 		reason := ""
 		if !eligible {
 			reason = "این روش برای همه اقلام سفارش مجاز نیست."

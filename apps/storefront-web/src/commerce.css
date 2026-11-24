@@ -734,3 +734,9 @@
   unicode-bidi: isolate;
   margin-inline: 8px;
 }
+
+.buy-coupon-box fieldset,.buy-wallet-box fieldset{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;align-items:end;gap:12px;min-width:0}
+.buy-coupon-box .buy-field,.buy-wallet-box .buy-field{flex:1 1 220px;min-width:0}
+.buy-coupon-box{border-inline-start:3px solid var(--primary,#9d214b)}
+.buy-wallet-box{background:linear-gradient(135deg,#fff,#fff5f8);border-inline-start:3px solid var(--primary,#9d214b)}
+.pdp-real-warranty{font-size:.86rem;line-height:1.9;color:#594852;background:#fff6f9;border-radius:12px;padding:10px 14px}

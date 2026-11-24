@@ -50,7 +50,7 @@ func stampKey(st CatalogStamp, kind, id string, args any) string {
 	if id != "" {
 		rev = st.Product
 	}
-	return fmt.Sprintf("cherriva:public:v5:%s:%s:%s:%d:%d:%s", st.Namespace, kind, checksum([]byte(id))[:20], rev, st.Dependencies, checksum(b))
+	return fmt.Sprintf("cherriva:public:v6:%s:%s:%s:%d:%d:%s", st.Namespace, kind, checksum([]byte(id))[:20], rev, st.Dependencies, checksum(b))
 }
 func sameStamp(a, b CatalogStamp, id string) bool {
 	if a.Namespace != b.Namespace || a.Dependencies != b.Dependencies {
@@ -92,7 +92,7 @@ func cachedPublic[T any](ctx context.Context, s *Service, kind, id string, args 
 		if data, e := c.store.Get(ctx, key); e == nil && len(data) > 0 && len(data) <= 2<<20 {
 			var env cachedEnvelope
 			var value T
-			if json.Unmarshal(data, &env) == nil && env.Schema == 5 && env.Sum == checksum(env.Data) && json.Unmarshal(env.Data, &value) == nil {
+			if json.Unmarshal(data, &env) == nil && env.Schema == 6 && env.Sum == checksum(env.Data) && json.Unmarshal(env.Data, &value) == nil {
 				c.hits.Add(1)
 				return value, nil
 			}
@@ -106,7 +106,7 @@ func cachedPublic[T any](ctx context.Context, s *Service, kind, id string, args 
 			if data, e := c.store.Get(ctx, key); e == nil && len(data) > 0 && len(data) <= 2<<20 {
 				var env cachedEnvelope
 				var value T
-				if json.Unmarshal(data, &env) == nil && env.Schema == 5 && env.Sum == checksum(env.Data) && json.Unmarshal(env.Data, &value) == nil {
+				if json.Unmarshal(data, &env) == nil && env.Schema == 6 && env.Sum == checksum(env.Data) && json.Unmarshal(env.Data, &value) == nil {
 					c.hits.Add(1)
 					return value, nil
 				}
@@ -135,7 +135,7 @@ func cachedPublic[T any](ctx context.Context, s *Service, kind, id string, args 
 			if e != nil {
 				return nil, e
 			}
-			encoded, e := json.Marshal(cachedEnvelope{Schema: 5, Sum: checksum(data), Data: data})
+			encoded, e := json.Marshal(cachedEnvelope{Schema: 6, Sum: checksum(data), Data: data})
 			if e != nil {
 				return nil, e
 			}

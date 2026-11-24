@@ -14,7 +14,13 @@ import {
 import { SiteHeader, SiteFooter } from "./home-page";
 import { Modal } from "./components";
 import { navigate } from "./navigation";
-import { apiBase, call, operationKey, useCommerce } from "./commerce";
+import {
+  apiBase,
+  call,
+  CommerceError,
+  operationKey,
+  useCommerce,
+} from "./commerce";
 import {
   label,
   money,
@@ -102,7 +108,10 @@ export function CommerceShell({
       <main className="lh-wrap buy-page">
         <nav className="buy-breadcrumb" aria-label="مسیر صفحه">
           <a href="/">خانه</a>
-          <span className="breadcrumb-separator" dir="ltr" aria-hidden="true"> &gt; </span>
+          <span className="breadcrumb-separator" dir="ltr" aria-hidden="true">
+            {" "}
+            &gt;{" "}
+          </span>
           <span>{title}</span>
         </nav>
         <h1>{title}</h1>
@@ -509,7 +518,8 @@ export function CartPage() {
                     </a>
                     <p>{item.variant_label}</p>
                     <p>
-                      فروشنده: {item.store_name} · {dispatchTime(item.lead_days)}
+                      فروشنده: {item.store_name} ·{" "}
+                      {dispatchTime(item.lead_days)}
                     </p>
                     <strong>{money(item.unit_price_toman)}</strong>
                     {item.price_changed && (
@@ -899,7 +909,11 @@ function CheckoutForm() {
     [method, setMethod] = useState(""),
     [quote, setQuote] = useState<Quote | null>(null),
     [consent, setConsent] = useState(false),
-    [step, setStep] = useState<1 | 2>(1);
+    [step, setStep] = useState<1 | 2>(1),
+    [couponDraft, setCouponDraft] = useState(""),
+    [couponCode, setCouponCode] = useState(""),
+    [walletDraft, setWalletDraft] = useState("0"),
+    [walletToman, setWalletToman] = useState("0");
   const heading = useRef<HTMLHeadingElement>(null);
   const purchaseID = new URLSearchParams(location.search).get("purchase") ?? "";
   const [oldPurchase, setOldPurchase] = useState<Purchase | null>(null);
@@ -928,14 +942,48 @@ function CheckoutForm() {
     setQuote(null);
     setConsent(false);
     setStep(1);
+    setCouponDraft("");
+    setCouponCode("");
+    setWalletDraft("0");
+    setWalletToman("0");
   };
   const input: QuoteInput = {
+    contract_version: 2,
+    coupon_code: couponCode,
+    wallet_toman: walletToman,
     cart_version: prepare?.cart.version ?? 0,
     address_id: address?.id ?? "",
     shipping,
     payment_method_id: method,
     ...(purchaseID ? { purchase_id: oldPurchase?.id ?? purchaseID } : {}),
   };
+  const dirty =
+    couponDraft.trim().toUpperCase() !== couponCode ||
+    walletDraft !== walletToman;
+  const resetConsent = () => {
+    setQuote(null);
+    setConsent(false);
+  };
+  const adjust = (code: string, wallet: string) =>
+    void action.run(async () => {
+      resetConsent();
+      const result = await call<Preview>(
+        "/storefront/checkout/preview",
+        token,
+        {
+          ...input,
+          coupon_code: code,
+          wallet_toman: wallet,
+          payment_method_id: "",
+        },
+      );
+      setPreview(result);
+      setCouponCode(result.quote.coupon_code ?? "");
+      setCouponDraft(result.quote.coupon_code ?? "");
+      setWalletToman(result.quote.wallet_selected_toman ?? "0");
+      setWalletDraft(result.quote.wallet_selected_toman ?? "0");
+      setMethod("");
+    });
   const stores = oldPurchase
     ? oldPurchase.quote.shipments.map((s) => ({
         id: s.store_id,
@@ -1064,9 +1112,7 @@ function CheckoutForm() {
                                       {st.lead_days + m.max_days} روز کاری با
                                       احتساب زمان آماده‌سازی فروشنده
                                     </small>
-                                    <small>
-                                      {dispatchTime(st.lead_days)}
-                                    </small>
+                                    <small>{dispatchTime(st.lead_days)}</small>
                                   </span>
                                 </label>
                               ))
@@ -1156,50 +1202,184 @@ function CheckoutForm() {
                       ))}
                     </section>
                     <section
+                      className="buy-panel buy-coupon-box"
+                      aria-label="کد تخفیف"
+                    >
+                      <h2>کد تخفیف</h2>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          adjust(couponDraft.trim(), walletToman);
+                        }}
+                      >
+                        <fieldset disabled={action.busy}>
+                          <label className="buy-field">
+                            کد تخفیف
+                            <input
+                              aria-label="کد تخفیف"
+                              dir="ltr"
+                              value={couponDraft}
+                              maxLength={64}
+                              onChange={(e) => {
+                                setCouponDraft(e.target.value);
+                                resetConsent();
+                              }}
+                            />
+                          </label>
+                          <button className="buy-secondary" type="submit">
+                            اعمال کد تخفیف
+                          </button>
+                          {couponCode && (
+                            <button
+                              className="buy-link"
+                              type="button"
+                              onClick={() => adjust("", walletToman)}
+                            >
+                              حذف کد تخفیف
+                            </button>
+                          )}
+                        </fieldset>
+                      </form>
+                      {preview.quote.coupon_code && (
+                        <p role="status">
+                          کد <bdi>{preview.quote.coupon_code}</bdi> · تخفیف{" "}
+                          {money(preview.quote.discount_toman ?? "0")}
+                        </p>
+                      )}
+                    </section>
+                    <section
+                      className="buy-panel buy-wallet-box"
+                      aria-label="اعتبار کیف پول"
+                    >
+                      <h2>اعتبار کیف پول</h2>
+                      <p>
+                        موجودی قابل استفاده:{" "}
+                        <b>{money(prepare.wallet_available_toman)}</b>
+                      </p>
+                      <p className="buy-note">
+                        مبلغ دلخواه از موجودی قبلی را انتخاب کنید؛ باقی موجودی
+                        مصرف نمی‌شود. محدودیت دسته و مبلغ کیف پول برقرار است.
+                      </p>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          adjust(couponCode, walletDraft);
+                        }}
+                      >
+                        <fieldset disabled={action.busy}>
+                          <label className="buy-field">
+                            مبلغ مصرف از کیف پول (تومان)
+                            <input
+                              aria-label="مبلغ مصرف از کیف پول"
+                              inputMode="decimal"
+                              value={walletDraft}
+                              maxLength={18}
+                              onChange={(e) => {
+                                setWalletDraft(e.target.value);
+                                resetConsent();
+                              }}
+                            />
+                          </label>
+                          <button className="buy-secondary" type="submit">
+                            اعمال اعتبار
+                          </button>
+                          <button
+                            className="buy-link"
+                            type="button"
+                            onClick={() => adjust(couponCode, "0")}
+                          >
+                            بدون مصرف اعتبار قبلی
+                          </button>
+                          <button
+                            className="buy-link"
+                            type="button"
+                            onClick={() => {
+                              const minor = (x: string) =>
+                                BigInt(x.split(".")[0] || "0") * 10n +
+                                BigInt((x.split(".")[1] ?? "0")[0]);
+                              const available = minor(
+                                  prepare.wallet_available_toman,
+                                ),
+                                total = minor(preview.quote.total_toman),
+                                n = available < total ? available : total;
+                              adjust(
+                                couponCode,
+                                `${n / 10n}${n % 10n ? "." + (n % 10n) : ""}`,
+                              );
+                            }}
+                          >
+                            بیشترین اعتبار مجاز
+                          </button>
+                        </fieldset>
+                      </form>
+                      <p>
+                        اعتبار انتخابی:{" "}
+                        <b>
+                          {money(preview.quote.wallet_selected_toman ?? "0")}
+                        </b>{" "}
+                        · باقی‌مانده برای تأمین وجه:{" "}
+                        <b>
+                          {money(
+                            preview.quote.funding_toman ??
+                              preview.quote.total_toman,
+                          )}
+                        </b>
+                      </p>
+                    </section>
+                    <section
                       className="buy-panel"
                       aria-label="انتخاب روش پرداخت"
                     >
                       <h2>روش پرداخت</h2>
-                      <p>
-                        موجودی قابل استفاده کیف پول:{" "}
-                        <b>{money(prepare.wallet_available_toman)}</b>
-                      </p>
-                      {preview.methods.map((m) => (
-                        <label
-                          key={m.id}
-                          className={
-                            "buy-choice " + (!m.eligible ? "disabled" : "")
-                          }
-                        >
-                          <input
-                            type="radio"
-                            name="payment_method"
-                            checked={method === m.id}
-                            disabled={!m.eligible || action.busy}
-                            onChange={() => {
-                              setMethod(m.id);
-                              setQuote(null);
-                              setConsent(false);
-                            }}
-                          />
-                          <span>
-                            <b>{m.name}</b>
-                            <small>
-                              {m.eligible ? m.instructions : m.reason}
-                            </small>
-                            {m.max_toman && (
-                              <small>سقف کل سفارش: {money(m.max_toman)}</small>
-                            )}
-                          </span>
-                        </label>
-                      ))}
+                      {preview.quote.funding_toman === "0" && (
+                        <p className="buy-notice">
+                          مبلغی برای تأمین وجه باقی نمانده؛ انتخاب روش پرداخت
+                          لازم نیست. سفارش پس از ثبت، منتظر تأیید تیم می‌ماند.
+                        </p>
+                      )}
+                      {preview.quote.funding_toman !== "0" &&
+                        preview.methods.map((m) => (
+                          <label
+                            key={m.id}
+                            className={
+                              "buy-choice " + (!m.eligible ? "disabled" : "")
+                            }
+                          >
+                            <input
+                              type="radio"
+                              name="payment_method"
+                              checked={method === m.id}
+                              disabled={!m.eligible || action.busy}
+                              onChange={() => {
+                                setMethod(m.id);
+                                setQuote(null);
+                                setConsent(false);
+                              }}
+                            />
+                            <span>
+                              <b>{m.name}</b>
+                              <small>
+                                {m.eligible ? m.instructions : m.reason}
+                              </small>
+                              {m.max_toman && (
+                                <small>
+                                  سقف کل سفارش: {money(m.max_toman)}
+                                </small>
+                              )}
+                            </span>
+                          </label>
+                        ))}
                       <p className="buy-note">
                         هر واریز ابتدا کیف پول را شارژ می‌کند. تیم پس از بررسی
                         واریز، اعتبار و رزرو، سفارش را جداگانه تأیید می‌کند.
                       </p>
                       <button
                         className="buy-primary"
-                        disabled={action.busy || !method}
+                        disabled={
+                          action.busy ||
+                          dirty ||
+                          (!method && preview.quote.funding_toman !== "0")
+                        }
                         onClick={() =>
                           void action.run(async (key) => {
                             setQuote(
@@ -1234,7 +1414,7 @@ function CheckoutForm() {
                         </label>
                         <button
                           className="buy-primary"
-                          disabled={action.busy || !consent}
+                          disabled={action.busy || dirty || !consent}
                           onClick={() =>
                             void action.run(async (key) => {
                               const result = await call<Purchase>(
@@ -1243,10 +1423,19 @@ function CheckoutForm() {
                                 {
                                   quote_id: quote.id,
                                   accepted_total_toman: quote.total_toman,
+                                  terms_digest: quote.terms_digest,
                                 },
                                 undefined,
                                 key,
-                              );
+                              ).catch((error: unknown) => {
+                                setConsent(false);
+                                if (
+                                  error instanceof CommerceError &&
+                                  [400, 409].includes(error.status)
+                                )
+                                  setQuote(null);
+                                throw error;
+                              });
                               await refreshCart();
                               navigate("/account/orders/" + result.number);
                             }, "accept:" + quote.id)
@@ -1316,10 +1505,32 @@ export function OrderSummary({ quote }: { quote: Quote }) {
         <span>جمع ارسال</span>
         <b>{money(quote.shipping_toman)}</b>
       </div>
+      {quote.contract_version === 2 && (
+        <>
+          <div className="buy-total">
+            <span>
+              کد تخفیف {quote.coupon_code && <bdi>{quote.coupon_code}</bdi>}
+            </span>
+            <b>− {money(quote.discount_toman ?? "0")}</b>
+          </div>
+        </>
+      )}
       <div className="buy-total buy-grand">
         <span>مبلغ نهایی</span>
         <b>{money(quote.total_toman)}</b>
       </div>
+      {quote.contract_version === 2 && (
+        <>
+          <div className="buy-total">
+            <span>اعتبار انتخابی کیف پول</span>
+            <b>{money(quote.wallet_selected_toman ?? "0")}</b>
+          </div>
+          <div className="buy-total">
+            <span>نیاز به تأمین وجه</span>
+            <b>{money(quote.funding_toman ?? "0")}</b>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -1446,7 +1657,10 @@ function OrderContent({ id }: { id?: string }) {
                       />
                     </section>
                     <aside>
-                      <h3>{p.quote.payment_method.name}</h3>
+                      <h3>
+                        {p.quote.payment_method.name ||
+                          "بدون نیاز به تأمین وجه"}
+                      </h3>
                       {p.status !== "confirmed" && p.status !== "cancelled" && (
                         <>
                           <p>
@@ -1487,7 +1701,10 @@ function OrderContent({ id }: { id?: string }) {
                               دقیقه
                             </p>
                           )}
-                          {p.quote.payment_method.kind !== "wallet" ? (
+                          {p.quote.payment_method.id &&
+                          p.quote.payment_method.kind !== "wallet" &&
+                          (p.quote.contract_version !== 2 ||
+                            p.shortfall_toman !== "0") ? (
                             <button
                               className="buy-primary"
                               onClick={() => setDeposit(true)}

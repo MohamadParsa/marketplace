@@ -126,6 +126,7 @@ export interface Product {
   variant_version: number;
 }
 export interface AttributeDefinition {
+ groups?: { id: string; name: string; values: string[]; active: boolean }[];
   id: string;
   code: string;
   name: string;

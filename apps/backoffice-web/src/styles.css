@@ -1046,3 +1046,10 @@ dd {
 .category-tree small {margin-inline-start:8px;color:#8b7480}
 .category-tree-selection {font-size:12px;color:#9c214b;overflow-wrap:anywhere}
 @media(max-width:600px){.data-pagination{justify-content:center}.home-admin-list article{flex-wrap:wrap}.home-admin-actions{flex-wrap:wrap}}
+
+.coupon-form fieldset { border:1px solid var(--border, #e5dbe0); border-radius:16px; padding:18px; display:flex; flex-wrap:wrap; gap:14px; margin-block:16px; min-width:0 }
+.coupon-form fieldset p { width:100%; color:var(--muted, #665b60); line-height:1.9 }
+.coupon-choices { display:flex;flex-wrap:wrap;gap:8px;width:100% }
+.coupon-category-list,.warranty-group-values {max-height:260px;overflow:auto;display:flex;flex-wrap:wrap;gap:8px;width:100%}
+.coupon-category-list label,.warranty-group-values label {display:flex;align-items:center}
+.attribute-form fieldset {min-width:0;max-width:100%;border:1px solid #eadde2;border-radius:12px;padding:12px}

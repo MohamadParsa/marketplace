@@ -50,3 +50,5 @@
 مرجع اصلاح مهم قیمت‌گذاری، [ADR-001](decisions/adr-001-pricing-and-payment-boundaries.md) است؛ از تصمیم قدیمی حفظ اجباری قانون روی قیمت پایه جدید استفاده نکنید.
 
 [گزارش خرید و کیف پول #30](delivery/initial-launch/issue-30-verification.md) · [تحویل انتشار به پارسا](delivery/initial-launch/production-handoff.md)
+
+[اجرای محلی کوپن، اعتبار انتخابی کیف پول و گروه گارانتی #67/#68/#69/#78](delivery/next-phase/issues-67-68-69-78-verification.md)

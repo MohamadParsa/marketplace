@@ -39,7 +39,20 @@ type AdminDepositView struct {
 	CustomerName  string `json:"customer_name"`
 	CustomerPhone string `json:"customer_phone"`
 }
+type DiscountFundingView struct {
+	PlatformToman string `json:"platform_toman"`
+	SellerToman   string `json:"seller_toman"`
+	RuleVersion   int    `json:"rule_version"`
+}
+type CreditSourceView struct {
+	Source      string `json:"source"`
+	AmountToman string `json:"amount_toman"`
+	Kind        string `json:"kind"`
+	Status      string `json:"status"`
+}
 type AdminPurchaseView struct {
+	DiscountFunding *DiscountFundingView `json:"discount_funding,omitempty"`
+	CreditSources   []CreditSourceView   `json:"credit_sources,omitempty"`
 	PurchaseView
 	UserID        string `json:"user_id"`
 	CustomerName  string `json:"customer_name"`
@@ -103,7 +116,32 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 				view.WalletAvailableToman = ""
 				view.ShortfallToman = ""
 			}
-			v.Purchases = append(v.Purchases, AdminPurchaseView{view, p.UserID, n, phone})
+			entry := AdminPurchaseView{PurchaseView: view, UserID: p.UserID, CustomerName: n, CustomerPhone: phone}
+			if q := findQuote(c, p.QuoteID); q != nil {
+				if q.Discount != nil && allowsAction(a, CouponsRead) {
+					var platform, seller commerce.Amount
+					for _, v := range q.Discount.Allocations {
+						platform += v.Platform
+						seller += v.Seller
+					}
+					entry.DiscountFunding = &DiscountFundingView{commerce.Toman(platform), commerce.Toman(seller), q.Discount.Coupon.Version}
+				}
+				if q.Credit != nil && v.Permissions[CommerceOrdersConfirm] {
+					for _, part := range []struct {
+						kind        string
+						allocations []commerce.CreditAllocation
+					}{{"selected-balance", q.Credit.Existing}, {"checkout-funding", q.Credit.Funding}} {
+						for _, allocation := range part.allocations {
+							for _, lot := range c.CreditLots {
+								if lot.ID == allocation.LotID && lot.UserID == p.UserID {
+									entry.CreditSources = append(entry.CreditSources, CreditSourceView{lot.Source, commerce.Toman(allocation.Amount), part.kind, q.Credit.Status})
+								}
+							}
+						}
+					}
+				}
+			}
+			v.Purchases = append(v.Purchases, entry)
 		}
 	}
 	if v.Permissions[CommerceDepositsRead] {
@@ -163,6 +201,7 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 				if e = appendWallet(c, op+":credit", d.UserID, "deposit:"+d.ID, "deposit-credit", d.Amount, now); e != nil {
 					return nil, e
 				}
+				earmarkDeposit(c, *d, op+":credit")
 				d.Status = "approved"
 				d.VerifiedReference = ref
 				d.VerifiedDate = in.VerifiedDate
@@ -212,11 +251,14 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
 			return purchaseView(c, *p), nil
 		}
-		eligible := false
+		eligible := q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
 		for _, m := range c.Settings.Methods {
 			if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) {
 				eligible = true
 			}
+		}
+		if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
+			eligible = false
 		}
 		if !eligible {
 			releaseQuote(w, q)
@@ -247,7 +289,21 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				return purchaseView(c, *p), nil
 			}
 		}
-		if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now); e != nil {
+		if q.ContractVersion == 2 {
+			if q.Credit == nil || q.Credit.Status != "held" {
+				return nil, ErrConflict
+			}
+			allocations := combinedCredit(q)
+			if creditSum(allocations) != q.Total {
+				return nil, ErrInsufficientWallet
+			}
+			q.Credit.Status = "posted"
+			if q.Total > 0 {
+				if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); e != nil {
+					return nil, e
+				}
+			}
+		} else if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now); e != nil {
 			return nil, e
 		}
 		for _, l := range q.Lines {
@@ -301,8 +357,10 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 					return nil, ErrConflict
 				}
 			}
-			if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
-				return nil, e
+			if q.Total > 0 {
+				if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
+					return nil, e
+				}
 			}
 			for _, l := range q.Lines {
 				for i := range w.Offers {

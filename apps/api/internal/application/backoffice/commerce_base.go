@@ -129,6 +129,9 @@ func releaseQuote(w *Workspace, q *commerce.Quote) {
 	if q.Status != "reserved" {
 		return
 	}
+	if q.Credit != nil && q.Credit.Status == "held" {
+		q.Credit.Status = "released"
+	}
 	for _, line := range q.Lines {
 		for i := range w.Offers {
 			if w.Offers[i].ID == line.OfferID {
@@ -194,9 +197,14 @@ func walletAmounts(c *commerce.State, user string) (balance, held commerce.Amoun
 			held += r.Amount
 		}
 	}
+	for _, q := range c.Quotes {
+		if q.UserID == user && q.Status == "reserved" && q.Credit != nil && q.Credit.Status == "held" {
+			held += creditSum(q.Credit.Existing) + creditSum(q.Credit.Funding)
+		}
+	}
 	return
 }
-func appendWallet(c *commerce.State, id, user, source, kind string, amount commerce.Amount, now time.Time) error {
+func appendWallet(c *commerce.State, id, user, source, kind string, amount commerce.Amount, now time.Time, exact ...[]commerce.CreditAllocation) error {
 	if amount == 0 || amount > commerce.MaxAmount || amount < -commerce.MaxAmount {
 		return ErrInvalid
 	}
@@ -212,7 +220,19 @@ func appendWallet(c *commerce.State, id, user, source, kind string, amount comme
 	if amount < 0 && balance-held < -amount {
 		return ErrInsufficientWallet
 	}
+	if amount < 0 {
+		var allocations []commerce.CreditAllocation
+		if len(exact) > 0 {
+			allocations = exact[0]
+		}
+		if e := spendCredit(c, user, -amount, allocations); e != nil {
+			return e
+		}
+	}
 	c.Entries = append(c.Entries, commerce.WalletEntry{ID: id, UserID: user, Source: source, Kind: kind, Amount: amount, At: now})
+	if amount > 0 && hasCreditAccount(c, user) {
+		c.CreditLots = append(c.CreditLots, commerce.CreditLot{ID: id, UserID: user, Source: source, Amount: amount, At: now})
+	}
 	return nil
 }
 func commerceAudit(w *Workspace, id string, a identity.User, action, target, reason string, now time.Time) {

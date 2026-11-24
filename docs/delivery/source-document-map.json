@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-24",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+  "current_source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
   "rows": [
     {
       "issue": 27,
@@ -285,6 +285,21 @@
       "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
       "pull_request": 93,
       "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc"
+    },
+    {
+      "issues": [
+        67,
+        68,
+        69,
+        78
+      ],
+      "delivery": "checkout-coupons-selected-wallet-warranty",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "documentation_commit": "8df64e46c02a3d603aa49fd94ea8d8f3b300b9ab",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "source_tree_matches_documentation_revision": true,
+      "status": "pushed-awaiting-review"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

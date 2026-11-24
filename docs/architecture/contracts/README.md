@@ -50,3 +50,5 @@
 [علاقه‌مندی خصوصی مشتری](customer-wishlist.md) — API-CUSTOMER-WISHLIST-001؛ قرارداد اجرای محلی #63، حفظ visibility، صفحه‌بندی و خروج از کش عمومی.
 
 [بازدیدهای اخیر خصوصی مشتری](customer-recently-viewed.md) — API-CUSTOMER-RECENTLY-VIEWED-001؛ اجرای محلی #64، سقف/انقضا و cleanup مستقل از کش عمومی.
+
+[اجرای محلی کوپن، اعتبار انتخابی و گروه گارانتی #67/#68/#69/#78](checkout-adjustments.md)

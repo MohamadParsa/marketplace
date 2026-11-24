@@ -1,3 +1,4 @@
+import { CouponsPage } from "../features/commerce/coupons-page";
 import { useCallback, useEffect, useState } from "react";
 import {
   BrowserRouter,
@@ -42,7 +43,10 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@mui/icons-material";
-import { CommercePage, SellerCheckoutPage } from "../features/commerce/commerce-page";
+import {
+  CommercePage,
+  SellerCheckoutPage,
+} from "../features/commerce/commerce-page";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
@@ -135,6 +139,11 @@ const menu = [
         icon: <ReceiptLongOutlined />,
       },
       {
+        path: "/coupons",
+        label: "کدهای تخفیف",
+        icon: <PercentOutlined />,
+      },
+      {
         path: "/commerce-settings",
         label: "تنظیمات خرید و حمل",
         icon: <LocalShippingOutlined />,
@@ -190,7 +199,7 @@ function Workspace({
     [session.token],
   );
   const loadProfile = useCallback(
-    () => api.profile(session.token,session.user.Surface),
+    () => api.profile(session.token, session.user.Surface),
     [session.token],
   );
   const query = useQuery({
@@ -259,7 +268,7 @@ function Workspace({
               {group.items
                 .filter((i) =>
                   session.user.Surface === "seller"
-                    ? ["/products","/commerce"].includes(i.path)
+                    ? ["/products", "/commerce"].includes(i.path)
                     : visible("roles" in i ? i.roles : undefined),
                 )
                 .map((item) => (
@@ -363,7 +372,7 @@ function Workspace({
                 surface: session.user.Surface,
                 loadProfile,
                 updateProfile: (input) =>
-                  api.updateProfile(session.token, input,session.user.Surface),
+                  api.updateProfile(session.token, input, session.user.Surface),
                 loadCatalogMedia,
                 loadBanners: () => api.banners(session.token),
                 loadBannerAsset: (id) => api.bannerAsset(session.token, id),
@@ -402,6 +411,10 @@ function Workspace({
               }}
             >
               <Routes>
+                <Route
+                  path="/coupons"
+                  element={<CouponsPage token={session.token} />}
+                />
                 <Route
                   path="/commerce"
                   element={
@@ -538,8 +551,10 @@ function Workspace({
   );
 }
 function SessionApp() {
-  const location=useLocation(),navigate=useNavigate();
-  const loginSurface=location.pathname==="/seller-login"?"seller":"backoffice";
+  const location = useLocation(),
+    navigate = useNavigate();
+  const loginSurface =
+    location.pathname === "/seller-login" ? "seller" : "backoffice";
   const [session, setSession] = useState<Session | null>(null);
   const logout = () => {
     if (session)
@@ -552,7 +567,15 @@ function SessionApp() {
   return session ? (
     <Workspace session={session} logout={logout} />
   ) : (
-    <LoginPage key={loginSurface} surface={loginSurface} onLogin={s=>{setSession(s);if(s.user.Surface==="seller")navigate("/products",{replace:true})}} />
+    <LoginPage
+      key={loginSurface}
+      surface={loginSurface}
+      onLogin={(s) => {
+        setSession(s);
+        if (s.user.Surface === "seller")
+          navigate("/products", { replace: true });
+      }}
+    />
   );
 }
 export function App() {

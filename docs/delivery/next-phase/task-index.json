@@ -4,7 +4,7 @@
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "issues-66-63-64-published-awaiting-next-owner-selection",
+  "execution": "issues-67-68-69-78-pushed-awaiting-review",
   "items": [
     {
       "n": 1,
@@ -127,7 +127,7 @@
         5,
         11
       ],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 67,
       "url": "https://github.com/MohamadParsa/marketplace/issues/67",
@@ -136,7 +136,11 @@
         66,
         72
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 7,
@@ -153,7 +157,7 @@
         9,
         12
       ],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 68,
       "url": "https://github.com/MohamadParsa/marketplace/issues/68",
@@ -164,7 +168,11 @@
         70,
         73
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 8,
@@ -180,7 +188,7 @@
         7,
         9
       ],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 69,
       "url": "https://github.com/MohamadParsa/marketplace/issues/69",
@@ -190,7 +198,11 @@
         68,
         70
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 9,
@@ -364,7 +376,7 @@
       "deps": [
         18
       ],
-      "implementation_status": "todo",
+      "implementation_status": "review",
       "state": "open",
       "number": 78,
       "url": "https://github.com/MohamadParsa/marketplace/issues/78",
@@ -372,7 +384,11 @@
       "github_dependencies": [
         79
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 18,
@@ -677,6 +693,12 @@
     78
   ],
   "publication_policy": "future-changes-local-until-explicit-owner-request",
-  "last_completed_local_issue": 64,
-  "next_proposed_issue": 67
+  "last_completed_local_issue": 78,
+  "next_proposed_issue": null,
+  "last_completed_local_issues": [
+    67,
+    68,
+    69,
+    78
+  ]
 }
