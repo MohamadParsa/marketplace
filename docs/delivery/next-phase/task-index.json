@@ -594,13 +594,14 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "review",
+      "state": "closed",
       "number": 89,
       "url": "https://github.com/MohamadParsa/marketplace/issues/89",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "parsa-branch-integrated-locally"
     },
     {
       "n": 29,
@@ -612,13 +613,14 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "in-progress",
-      "state": "open",
+      "implementation_status": "review",
+      "state": "closed",
       "number": 90,
       "url": "https://github.com/MohamadParsa/marketplace/issues/90",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": true
+      "execution_authorized": true,
+      "publication_status": "parsa-branch-integrated-locally"
     },
     {
       "n": 30,

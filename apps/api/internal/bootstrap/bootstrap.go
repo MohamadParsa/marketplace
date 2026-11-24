@@ -51,6 +51,7 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 	if testData {
 		router.SellerOffers = httptransport.NewSellerOffersHandler(seller.NewOffers(repository), service)
 	}
+	router.ProductReviews = httptransport.NewProductReviewsHandler(workspace, service)
 	router.CustomerAccount = httptransport.NewCustomerAccountHandler(customer.NewAccounts(repository), service)
 	router.ProductQA = httptransport.NewProductQAHandler(workspace, service)
 	router.Commerce = httptransport.NewCommerceHandler(workspace, service)

@@ -429,3 +429,20 @@ export interface ProductQAPage {
 export type ProductQAMutation =
   | { action: "reply"; text: string; version: number }
   | { action: "moderate"; answer_id?: string; status: "approved" | "rejected"; version: number };
+
+export type ProductReviewStatus = "pending" | "approved" | "rejected";
+export type ReviewAction = "approve" | "reject" | "publish_reply";
+export type AdminProductReview = {
+  id: string;
+  product_id: string;
+  product_name: string;
+  status: ProductReviewStatus;
+  name?: string;
+  anonymous: boolean;
+  text: string;
+  rating: number;
+  created_at: string;
+  version: number;
+  rejection_reason?: string;
+  reply?: string;
+};

@@ -191,7 +191,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 
 ## انتخاب‌های #80/#83/#84/#85/#86
 
-[فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. فقط پنج کار مجاز شدند؛ سایر۲۵کار اجرا نشده‌اند.
+[فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. پنج کار در این انتخاب پیشین اجرا شدند.
 
 تحویل این پنج انتخاب در [PR #92](https://github.com/MohamadParsa/marketplace/pull/92) پس از هر۵ job موفق CI ادغام شد؛ پنج Issue با کامنت شواهد closed و implementation_status آن‌ها done است. سایر۲۵کار این برنامه todo/open باقی‌اند؛ اسناد همچنان in-review و انتشار لیارا جداست.
 
@@ -219,3 +219,5 @@ FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/con
 ## پرسش و پاسخ محصول
 
 [FEAT-NEXT-029 / CV-NEXT-29](../delivery/next-phase/tasks/cv-next-29-product-qa-service.md) ادامهٔ CV-WEB-16 است. [تصمیم‌های CHQ-10](../product/open-questions.md) به دسترسی ثبت و ادارهٔ انتشار، [سناریوهای پذیرش](../bdd/features/experiences/next-phase-planning.feature) به رفتار و [شواهد تسک ۹۰](../delivery/next-phase/issue-90-verification.md) به آزمون‌های API، داده پایدار و مرورگر پیوند دارند.
+
+[FEAT-NEXT-028 — نظرات محصول](../delivery/next-phase/tasks/cv-next-28-product-reviews-service.md) ← [گیت مشترک کاتالوگ](../architecture/contracts/catalog-content-review.md#اجرای-کنترل-مشترک) ← [تصمیم CHQ-10](../product/open-questions.md) ← [پذیرش BDD](../bdd/features/experiences/next-phase-planning.feature) و [گردش مرورگر](../../tests/e2e/product-reviews.py).

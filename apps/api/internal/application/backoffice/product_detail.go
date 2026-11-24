@@ -119,6 +119,10 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string, resolveGroup
 	result.PublicCode = p.PublicCode
 	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, ProductURL(p), p.Version
 	result.Content = productContent(p)
+	// Review submission follows its flag; the Q&A repository capability is applied below.
+	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{Reviews: true})
+	result.Interactions.Reviews = policy.Reviews.NewSubmissions
+	result.Interactions.QA = policy.QA.NewSubmissions
 	category := publicCategory(w, p.CategoryID)
 	result.Category = catalogNav(w, *category)
 	chain := []CatalogNav{}
@@ -305,7 +309,7 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string, 
 		return ProductDetail{}, e
 	}
 	id = resolved
-	result, err := cachedPublic(ctx, s, "product", id, []string{variant, offer, strconv.FormatBool(len(resolveGroup) > 0 && resolveGroup[0])}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
+	result, err := cachedPublic(ctx, s, "product", id, []string{variant, offer, strconv.FormatBool(len(resolveGroup) > 0 && resolveGroup[0]), "reviews", "qa"}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
 		w, e := s.publicSnapshot(ctx, id)
 		if e != nil {
 			return ProductDetail{}, e

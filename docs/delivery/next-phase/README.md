@@ -14,7 +14,7 @@ execution_authorized: true
 
 ۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند. وضعیت جاری: هشت تحویل قبلی منتشر و بسته شده، چهار انتخاب **#67/#68/#69/#78 در بررسی محلی** و۱۸کار دیگر شروع‌نشده‌اند. #66 تحویل تحلیل قرارداد است؛ اجرای کد از پایان تحلیل نتیجه نمی‌شد و مجوز این چهار قابلیت با دستور تازه «چهار مورد را انجام بده» صادر شد. خروجی ابتدا لوکال نگه داشته شد؛ با دستور تازه مالک در [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) پوش شده و منتظر بررسی/ادغام است. تغییرات بعدی همچنان تا دستور صریح، لوکال می‌مانند. [گزارش و تصاویر چهار قابلیت](issues-67-68-69-78-verification.md). استقرار لیارا و انتخاب بقیه تسک‌ها جداست؛ موج‌ها تاریخ تحویل قطعی نیستند. صف قبلی #45تا#54 done/closed باقی است.
 
-تحویل پرسش‌وپاسخ #90 نیز در شاخه پارسا موجود و اکنون در حال ادغام محلی است؛ این وضعیت با انتشار main یکی نیست.
+هر دو سرویس نظر #89 و پرسش‌وپاسخ #90 پارسا در ادغام محلی حاضرند؛ Issueها توسط پارسا بسته‌اند و انتشار main از این وضعیت نتیجه نمی‌شود.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -49,8 +49,8 @@ execution_authorized: true
 | CV-NEXT-25 · [#86](https://github.com/MohamadParsa/marketplace/issues/86) | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | done؛ [شواهد](issue-86-verification.md) |
 | CV-NEXT-26 · [#87](https://github.com/MohamadParsa/marketplace/issues/87) | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-27 · [#88](https://github.com/MohamadParsa/marketplace/issues/88) | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | in-progress · [شواهد](issue-90-verification.md) |
+| CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | review؛ ادغام محلی کار پارسا |
+| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | review؛ ادغام محلی · [شواهد](issue-90-verification.md) |
 | CV-NEXT-30 · [#91](https://github.com/MohamadParsa/marketplace/issues/91) | [لندینگ اقساطی متصل به روش فروش و شرایط واقعی](tasks/cv-next-30-installment-landing.md) | P2 / W3 | todo؛ اجرا انتخاب نشده |
 
 ## موج‌ها؛ ترتیب قابل انتخاب
@@ -71,7 +71,7 @@ execution_authorized: true
 | گروه‌بندی و گارانتی | 18 زیرساخت گروه مقادیر؛17 رفتار دامنه گارانتی | مقدار/گارانتی واقعی تنوع و سفارش حفظ شود؛ ادغام مخرب یا دسته محصول تازه فرض نشود |
 | منو |23 تعامل hover؛24 scroll؛25 اولویت داده | مالک مشترک جزء منو، تست رگرسیون ترکیبی؛ #46 باز نمی‌شود |
 | مدیریت سکشن |27 هسته نوع‌دار | #7 بنر responsive تحویل شده؛ #8 ریل دستی و #9 sticky مالکان اجرایی موجودند؛ Issue کپی ساخته نشود |
-| نظر و پرسش/پاسخ |28 و29 | ادامه کارهای تاریخی CV-WEB-15/16 و گیت‌های #25؛ تعریف/تنظیم قبلی انجام شده، سرویس اجرا نشده |
+| نظر و پرسش/پاسخ |28 و29 | ادامه کارهای تاریخی CV-WEB-15/16 و گیت‌های #25؛ گیت مشترک از #25 است. نظر در #89 و پرسش‌وپاسخ در #90 پیگیری می‌شوند |
 | هویت و نقش پایه | #1/#2/#3 | CV-NEXT-10 ممیزی scoped فروشنده است؛ نقص بنیانی به مالک موجود لینک شود، نه ورود/هویت موازی |
 | تنظیمات عمومی | #15 | کلیدهای مشترک از این مسیر؛ بازنویسی کل تنظیمات شرط کار مستقل نیست |
 

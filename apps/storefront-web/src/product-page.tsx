@@ -1,6 +1,7 @@
 import { useRecordRecentlyViewed } from "./recently-viewed";
 import { WishlistButton } from "./wishlist";
 import { ProductQA } from "./product-qa";
+import { ProductReviews } from "./product-reviews";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
@@ -754,14 +755,7 @@ export function ProductPage({ url }: { url: string }) {
                       )}
                   </ExpandableContent>
                 </section>
-                <section className="pdp-section" id="reviews">
-                  <h2>نظرات کاربران</h2>
-                  <p>
-                    {content.reviews_enabled
-                      ? "امکان ثبت و نمایش نظر هنوز فعال نشده است."
-                      : "ثبت نظر برای این محصول غیرفعال است."}
-                  </p>
-                </section>
+                <ProductReviews key={data.id} productId={data.id} />
                 <ProductQA key={data.id} productId={data.id} />
               </div>
             </BusyRegion>

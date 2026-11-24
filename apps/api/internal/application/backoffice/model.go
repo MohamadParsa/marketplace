@@ -104,6 +104,7 @@ type Workspace struct {
 	IconMedia        []catalog.IconMedia           `json:"icon_media,omitempty"`
 	IconPolicy       *IconPolicy                   `json:"icon_policy,omitempty"`
 	Products         []catalog.Product             `json:"products,omitempty"`
+	ProductReviews   []ProductReview               `json:"product_reviews,omitempty"`
 	Offers           []catalog.Offer               `json:"offers,omitempty"`
 	Variants         []catalog.Variant             `json:"variants,omitempty"`
 	Memberships      []StoreMembership             `json:"memberships,omitempty"`
