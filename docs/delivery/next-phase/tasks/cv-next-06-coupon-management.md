@@ -62,3 +62,7 @@ ACهای همین قابلیت به تست مناسب API/دامنه/مرورگ�
 ## نتیجه اجرای محلی۲۰۲۶-۱۱-۲۴
 
 سورس در `D:\Cherriva`، بدون commit/push/تغییر Issue؛ [شواهد API/دامنه/PostgreSQL/مرورگر](../issues-67-68-69-78-verification.md). وضعیت GitHub در این نوبت تغییر نکرده است. بند تاریخی پوش/بستن بالا فقط پس از دستور صریح انتشار دوباره اعمال می‌شود.
+
+### انتشار همین بسته با دستور تازه مالک
+
+[سورس 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) و [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) پوش شدند؛ وضعیت اجرای review و Issue باز تا ادغام باقی است. فعال‌کردن دکمه PDP تغییر بعدی و خارج این بسته است؛ انتشار خودکار از شاخه main اجرا نشده است.

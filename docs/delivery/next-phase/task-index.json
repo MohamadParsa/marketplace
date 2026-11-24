@@ -4,7 +4,7 @@
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "issues-67-68-69-78-local-implementation-verification",
+  "execution": "issues-67-68-69-78-pushed-awaiting-review",
   "items": [
     {
       "n": 1,
@@ -137,8 +137,10 @@
         72
       ],
       "execution_authorized": true,
-      "publication_status": "local-only",
-      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md"
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 7,
@@ -167,8 +169,10 @@
         73
       ],
       "execution_authorized": true,
-      "publication_status": "local-only",
-      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md"
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 8,
@@ -195,8 +199,10 @@
         70
       ],
       "execution_authorized": true,
-      "publication_status": "local-only",
-      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md"
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 9,
@@ -379,8 +385,10 @@
         79
       ],
       "execution_authorized": true,
-      "publication_status": "local-only",
-      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md"
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
     },
     {
       "n": 18,

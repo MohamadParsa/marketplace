@@ -125,3 +125,7 @@
 ## چهار قابلیت محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
 
 [گزارش و فایل‌های سورس/تست](next-phase/issues-67-68-69-78-verification.md) روی پایه `52a8a09155fbcedae981eaf18a27ecea76120375` در working tree مسیر `D:\Cherriva` است؛ کامیت سورس یا سند تازه‌ای ساخته/پوش نشده و شماره کامیت برای این تحویل ادعا نمی‌شود. انتشار آینده باید کامیت واقعی را به این مدرک وصل کند.
+
+### انتشار بسته چهار قابلیت
+
+به دستور تازه مالک، سورس و اسناد در [کامیت 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) روی شاخه `codex/checkout-coupons-credit-warranty` و [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) پوش شدند؛ اصلاح اسناد انتشار همین بخش با `Source-Commit: 1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d` به آن متصل است. main/لیارا هنوز ادغام/منتشر نشده‌اند. تغییر بعدی فعال‌کردن PDP از این پوش جدا و لوکال است.

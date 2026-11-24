@@ -1,7 +1,7 @@
 {
   "base_commit": "52a8a09155fbcedae981eaf18a27ecea76120375",
   "source_path": "D:\\Cherriva",
-  "publication": "local-only-uncommitted",
+  "publication": "pushed-feature-branch-awaiting-review",
   "issues": [
     67,
     68,
@@ -151,5 +151,7 @@
   ],
   "browser_page_errors": [],
   "financial_browser_fixture": "isolated-memory-only",
-  "postgres_integration": "isolated-schemas-passed"
+  "postgres_integration": "isolated-schemas-passed",
+  "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+  "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
 }
