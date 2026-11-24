@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-24",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+  "current_source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
   "rows": [
     {
       "issue": 27,
@@ -248,21 +248,23 @@
     },
     {
       "issue": 63,
-      "source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+      "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
       "change_kind": "application-and-documentation",
       "verification": "docs/delivery/next-phase/issue-63-verification.md",
       "issue_state": "open",
       "implementation_status": "done",
-      "publication_status": "preparing-pr"
+      "publication_status": "preparing-pr",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
     },
     {
       "issue": 64,
-      "source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+      "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
       "change_kind": "application-and-documentation",
       "verification": "docs/delivery/next-phase/issue-64-verification.md",
       "issue_state": "open",
       "implementation_status": "done",
-      "publication_status": "preparing-pr"
+      "publication_status": "preparing-pr",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
     },
     {
       "issue": 66,
@@ -312,9 +314,11 @@
       "authenticated-only-header-heart",
       "greater-than-breadcrumb-rtl"
     ],
-    "state": "preparing-pr",
-    "source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+    "state": "ready-for-pr",
+    "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
     "branch": "codex/customer-lists-and-amounts",
-    "publication_authorized_on": "2026-11-24"
+    "publication_authorized_on": "2026-11-24",
+    "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+    "integrated_main_commit": "12bac82a4710404d350d3803c94b89ecc84ca48c"
   }
 }

@@ -113,3 +113,5 @@
 ## شروع انتشار دسته مشتری — ۲۰۲۶-۱۱-۲۴
 
 با مجوز مالک برای پوش تغییرات تا اینجا، سورس #63/#64 و اصلاحات UI در [e5babff](https://github.com/MohamadParsa/marketplace/commit/e5babff0f35242ffe94e7510e9833733dba1ded1) کامیت شد؛ تحلیل #66 کد اجرایی تازه ندارد. source-document-map.json بخش customer_lists_publication و ردیف‌های این سه Issue را ثبت می‌کند. انتشار سورس و مدارک در حال انجام است؛ محدودیت فقط‌لوکال قبلی تاریخچه این دسته است و برای کار بعدی پابرجاست.
+
+نسخه ترکیبی منتشرشونده پس از حفظ main تا12bac82، [9e72faf](https://github.com/MohamadParsa/marketplace/commit/9e72faf5a1c9b5ce73e3628e539c8cd082f29b02) است؛ نسخه API آن همان کد بررسی‌شده است و frontend ترکیبی build/lint و۶۵کنترل مرورگر موفق دارد.

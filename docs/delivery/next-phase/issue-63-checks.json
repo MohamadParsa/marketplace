@@ -279,9 +279,136 @@
   "publication": {
     "authorized_on": "2026-11-24",
     "scope": "current-batch-only",
-    "state": "preparing-pr",
-    "source_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+    "state": "ready-for-pr",
+    "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
     "branch": "codex/customer-lists-and-amounts",
-    "liara_deployed": false
+    "liara_deployed": false,
+    "integrated_main": "12bac82a4710404d350d3803c94b89ecc84ca48c"
+  },
+  "combined_revision_verification": {
+    "date": "2026-11-24",
+    "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+    "browser_checks": [
+      {
+        "id": "guest-list-requires-login",
+        "pass": true
+      },
+      {
+        "id": "guest-header-heart-hidden",
+        "pass": true
+      },
+      {
+        "id": "guest-heart-returns-to-product",
+        "pass": true
+      },
+      {
+        "id": "initial-pdp-state-not-saved",
+        "pass": true
+      },
+      {
+        "id": "keyboard-adds-favorite",
+        "pass": true
+      },
+      {
+        "id": "header-heart-next-to-cart-after-login",
+        "pass": true
+      },
+      {
+        "id": "pdp-heart-icon-only-unframed",
+        "pass": true
+      },
+      {
+        "id": "pdp-heart-filled-when-saved",
+        "pass": true
+      },
+      {
+        "id": "duplicate-put-no-second-row",
+        "pass": true
+      },
+      {
+        "id": "header-count-updates",
+        "pass": true
+      },
+      {
+        "id": "saved-product-in-list",
+        "pass": true
+      },
+      {
+        "id": "list-persists-refresh",
+        "pass": true
+      },
+      {
+        "id": "pdp-loaded-saved-state-after-refresh",
+        "pass": true
+      },
+      {
+        "id": "failed-add-preserves-state",
+        "pass": true
+      },
+      {
+        "id": "retry-add-succeeds",
+        "pass": true
+      },
+      {
+        "id": "failed-remove-preserves-row",
+        "pass": true
+      },
+      {
+        "id": "remove-keeps-other-bookmark",
+        "pass": true
+      },
+      {
+        "id": "mobile-header-heart-visible",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "hidden-product-generic-removable-row",
+        "pass": true
+      },
+      {
+        "id": "out-of-stock-remains-visible",
+        "pass": true
+      },
+      {
+        "id": "pagination-second-page",
+        "pass": true
+      },
+      {
+        "id": "delete-last-page-returns-to-valid-page",
+        "pass": true
+      },
+      {
+        "id": "logout-clears-private-list-and-badge",
+        "pass": true
+      },
+      {
+        "id": "second-user-does-not-see-first-user-list",
+        "pass": true
+      },
+      {
+        "id": "second-user-cannot-delete-first-user-bookmark",
+        "pass": true
+      },
+      {
+        "id": "returning-account-restores-own-heart",
+        "pass": true
+      },
+      {
+        "id": "narrow-mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "runtime_page_errors": [],
+    "storefront_build": "passed",
+    "storefront_lint": "passed",
+    "api_source_unchanged_from_local_go_verification": true
   }
 }

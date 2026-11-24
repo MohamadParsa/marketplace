@@ -123,9 +123,10 @@
   "publication": {
     "authorized_on": "2026-11-24",
     "scope": "current-batch-only",
-    "state": "preparing-pr",
+    "state": "ready-for-pr",
     "source_commit": null,
     "branch": "codex/customer-lists-and-amounts",
-    "liara_deployed": false
+    "liara_deployed": false,
+    "integrated_main": "12bac82a4710404d350d3803c94b89ecc84ca48c"
   }
 }
