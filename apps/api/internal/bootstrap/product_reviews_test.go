@@ -151,8 +151,8 @@ func testProductReviewsHTTP(t *testing.T, repo backoffice.Repository) {
 	changeReviewFlag(t, h, repo, admin, false)
 	ensureReviewStatus(t, reviewRequest(h, "", "POST", storefrontReviews, guestReview), 403)
 	pdp, _ := pdpRequest(t, h, "/storefront/products/product", 200)
-	if !pdp.Content.QAEnabled || pdp.Interactions.QA || pdp.Interactions.Reviews {
-		t.Fatal("review toggle changed Q&A or exposed unavailable capabilities")
+	if !pdp.Content.QAEnabled || !pdp.Interactions.QA || pdp.Interactions.Reviews {
+		t.Fatal("disabling reviews must preserve the enabled Q&A service and block new reviews")
 	}
 	reply := backoffice.ProductReviewDecision{Action: "publish_reply", Text: "پاسخ آزمون چریوا", Version: 2, IdempotencyKey: "publication-reply-test"}
 	path := backofficeReviews + "/" + second.Reviews[0].ID + "/decisions"
