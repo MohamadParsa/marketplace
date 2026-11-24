@@ -119,11 +119,37 @@
   "issue": 63,
   "date": "2026-11-23",
   "implementation_status": "done",
-  "local_only": true,
-  "github_issue_state": "open",
-  "pushed": false,
-  "github_mutated": false,
-  "ci": "not-run-no-push",
+  "local_only": false,
+  "github_issue_state": "closed",
+  "pushed": true,
+  "github_mutated": true,
+  "ci": [
+    {
+      "name": "backoffice-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644970"
+    },
+    {
+      "name": "seller-portal-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644922"
+    },
+    {
+      "name": "api",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644901"
+    },
+    {
+      "name": "contracts",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644787"
+    },
+    {
+      "name": "storefront-web",
+      "conclusion": "success",
+      "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644576"
+    }
+  ],
   "go_tests": {
     "passed_tests_and_subtests": 220,
     "skipped": 1,
@@ -279,11 +305,15 @@
   "publication": {
     "authorized_on": "2026-11-24",
     "scope": "current-batch-only",
-    "state": "ready-for-pr",
+    "state": "merged-main",
     "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
     "branch": "codex/customer-lists-and-amounts",
     "liara_deployed": false,
-    "integrated_main": "12bac82a4710404d350d3803c94b89ecc84ca48c"
+    "integrated_main": "12bac82a4710404d350d3803c94b89ecc84ca48c",
+    "pull_request": 93,
+    "pull_request_url": "https://github.com/MohamadParsa/marketplace/pull/93",
+    "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc",
+    "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8"
   },
   "combined_revision_verification": {
     "date": "2026-11-24",
@@ -410,5 +440,6 @@
     "storefront_build": "passed",
     "storefront_lint": "passed",
     "api_source_unchanged_from_local_go_verification": true
-  }
+  },
+  "committed": true
 }

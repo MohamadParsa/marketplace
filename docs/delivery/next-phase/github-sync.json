@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "owner": "eliassarband",
   "execution_started": true,
   "items": {
@@ -12,14 +12,18 @@
     "CV-NEXT-02": {
       "number": 63,
       "url": "https://github.com/MohamadParsa/marketplace/issues/63",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done",
+      "pull_request": 93
     },
     "CV-NEXT-03": {
       "number": 64,
       "url": "https://github.com/MohamadParsa/marketplace/issues/64",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done",
+      "pull_request": 93
     },
     "CV-NEXT-04": {
       "number": 65,
@@ -30,8 +34,10 @@
     "CV-NEXT-05": {
       "number": 66,
       "url": "https://github.com/MohamadParsa/marketplace/issues/66",
-      "state": "open",
-      "assignee": "eliassarband"
+      "state": "closed",
+      "assignee": "eliassarband",
+      "implementation_status": "done",
+      "pull_request": 93
     },
     "CV-NEXT-06": {
       "number": 67,

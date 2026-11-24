@@ -12,7 +12,7 @@ execution_authorized: true
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند؛ پنج تحویل قبلی done/closed، تحلیل #66 و قابلیت‌های #63/#64 done محلی و۲۲مورد دیگر todo/open هستند. پس از ثبت، #80/#83/#84/#85/#86 تحویل شدند. در درخواست تازه، #78/#69/#68/#67/#66/#63/#64 برای اجرای تک‌به‌تک انتخاب شدند؛ #66 و سپس #63 در نوبت‌های قبل تحویل محلی شدند؛ این نوبت #64 به همراه اصلاحات UI صریح مالک تکمیل شد. تغییرات اجرایی پنج انتخاب و شواهدشان جدا ثبت می‌شوند؛ استقرار لیارا یا اجرای بقیه تسک‌ها از این انتخاب نتیجه نمی‌شود. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
+مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند؛ هشت تحویل done/closed و۲۲مورد دیگر todo/open هستند؛ #66 تحلیل قرارداد است و اجرای موتور مالی از آن نتیجه نمی‌شود. پس از ثبت، #80/#83/#84/#85/#86 تحویل شدند. در درخواست تازه، #78/#69/#68/#67/#66/#63/#64 برای اجرای تک‌به‌تک انتخاب شدند؛ #66 و سپس #63 در نوبت‌های قبل تحویل محلی شدند؛ این نوبت #64 به همراه اصلاحات UI صریح مالک تکمیل شد. تغییرات اجرایی پنج انتخاب و شواهدشان جدا ثبت می‌شوند؛ استقرار لیارا یا اجرای بقیه تسک‌ها از این انتخاب نتیجه نمی‌شود. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -21,10 +21,10 @@ execution_authorized: true
 | کد | کار | اولویت / موج | وضعیت اجرا |
 | --- | --- | --- | --- |
 | CV-NEXT-01 · [#62](https://github.com/MohamadParsa/marketplace/issues/62) | [تخفیف ویژه: لیست پنل و اولویت انتخابی با Drag & Drop](tasks/cv-next-01-special-offer-priority.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-02 · [#63](https://github.com/MohamadParsa/marketplace/issues/63) | [علاقه‌مندی مشتری و آیکن کنار گالری PDP](tasks/cv-next-02-customer-wishlist.md) | P2 / W2 | done محلی؛ [شواهد](issue-63-verification.md)؛ بدون push |
-| CV-NEXT-03 · [#64](https://github.com/MohamadParsa/marketplace/issues/64) | [ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری](tasks/cv-next-03-customer-recently-viewed.md) | P2 / W2 | done محلی؛ [شواهد](issue-64-verification.md)؛ بدون push |
+| CV-NEXT-02 · [#63](https://github.com/MohamadParsa/marketplace/issues/63) | [علاقه‌مندی مشتری و آیکن کنار گالری PDP](tasks/cv-next-02-customer-wishlist.md) | P2 / W2 | done؛ [شواهد](issue-63-verification.md) |
+| CV-NEXT-03 · [#64](https://github.com/MohamadParsa/marketplace/issues/64) | [ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری](tasks/cv-next-03-customer-recently-viewed.md) | P2 / W2 | done؛ [شواهد](issue-64-verification.md) |
 | CV-NEXT-04 · [#65](https://github.com/MohamadParsa/marketplace/issues/65) | [مقایسه محصولات از یک دسته‌بندی](tasks/cv-next-04-same-category-comparison.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-05 · [#66](https://github.com/MohamadParsa/marketplace/issues/66) | [قرارداد مبلغ سفارش، CreditUsage و DiscountUsage](tasks/cv-next-05-checkout-amounts-usage-contract.md) | P1 / W0 | done محلی؛ [تحلیل](issue-66-analysis.md)؛ بدون push |
+| CV-NEXT-05 · [#66](https://github.com/MohamadParsa/marketplace/issues/66) | [قرارداد مبلغ سفارش، CreditUsage و DiscountUsage](tasks/cv-next-05-checkout-amounts-usage-contract.md) | P1 / W0 | done؛ [تحلیل](issue-66-analysis.md) |
 | CV-NEXT-06 · [#67](https://github.com/MohamadParsa/marketplace/issues/67) | [کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور](tasks/cv-next-06-coupon-management.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
 | CV-NEXT-07 · [#68](https://github.com/MohamadParsa/marketplace/issues/68) | [باکس مستقل کد تخفیف در مرحله پرداخت خرید](tasks/cv-next-07-checkout-coupon-box.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
 | CV-NEXT-08 · [#69](https://github.com/MohamadParsa/marketplace/issues/69) | [باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت](tasks/cv-next-08-checkout-wallet-credit.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
@@ -83,20 +83,12 @@ execution_authorized: true
 
 #80، #83، #84، #85 و #86 پیاده و محلی آزموده شده‌اند؛۸۴کنترل مرورگر و۲۱۷کنترل Go موفق‌اند. هر۵ job CI موفق و PR #92 ادغام شد؛ هر پنج ایشو با کامنت شواهد بسته شدند. سورس و مدارک روی main و نسخه محلی D:\Cherriva موجودند؛ لیارا منتشر نشده و انتخاب‌های بعدی و تحلیل محلی #66 در بخش بعد آمده‌اند. [گزارش #80](issue-80-verification.md) · [#83](issue-83-verification.md) · [#84](issue-84-verification.md) · [#85](issue-85-verification.md) · [#86](issue-86-verification.md).
 
-## تحویل تحلیل محلی قبلی — #66
+## تحویل‌های جاری #66/#63/#64
 
-ترتیب پیشنهادی هفت انتخاب تازه: **66 → 63 → 64 → 67 → 68 → 69 → 78**. در هر نوبت فقط یک تسک؛ اکنون [تحلیل #66](issue-66-analysis.md) و [قرارداد مبلغ/usage](../../architecture/contracts/checkout-amounts-usage.md) با دستور ادامه مالک نهایی شد. قواعد مالی و جهت مدل/مهاجرت ثبت شده‌اند؛ schema اجرایی هنوز در این برش تصویب/اعمال نشده است. فایل‌ها فقط در D:\Cherriva و بدون push/تغییر گیت هستند.
+- [تحلیل #66](issue-66-analysis.md): قرارداد مبلغ/مصرف اعتبار و تخفیف، مثال‌ها و طرح مهاجرت؛ موتور مالی و migration تازه اجرا نشده‌اند.
+- [علاقه‌مندی #63](issue-63-verification.md): قلب PDP، آیکن کنار سبد برای واردشده و فهرست شخصی؛ نمایش خالی/پُر بدون متن/کادر طبق اصلاح مالک.
+- [بازدیدهای اخیر #64](issue-64-verification.md):۵۰کالا/۳۰روز، حذف/clear، privacy و cleanup startup/ساعتی؛ breadcrumb با `>` در RTL اصلاح شد.
 
-اجرای مالی #67/#68/#69 همچنان به #72/#73/#70 و #78 به #79 وابسته است؛ این پیش‌نیازها با انتخاب جاری خودکار اجرا نمی‌شوند. برنامه مالی یا پاسخ باز را با فرض محصول پر نکنیم. پس از تحویل محلی #63، سایر۲۲کار todo باقی‌اند؛ done/closed پنج تحویل قبلی تغییر نکرده است.
+تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند.
 
-## تحویل محلی قبلی — #63
-
-[علاقه‌مندی مشتری](issue-63-verification.md) شامل قلب PDP، آیکن/شمارنده کنار سبد، صفحه خصوصی و لینک پروفایل محلی تکمیل شد؛۲۶کنترل مرورگر و۲۲۰تست/زیرتست Go موفق‌اند. [قرارداد](../../architecture/contracts/customer-wishlist.md) و پاسخ بخش wishlist از NEXT-Q02 ثبت شد. کد/مدارک/تصاویر در D:\Cherriva هستند و بدون commit/push یا تغییر GitHub مانده‌اند. #64 در نوبت بعدی طبق بخش زیر تکمیل شده است.
-
-## نوبت جاری محلی — #64 و اصلاحات UI مالک
-
-[سابقه بازدید](issue-64-verification.md) با۵۰کالا/۳۰روز، حذف/clear، privacy و purge startup/ساعتی done محلی شد. متن/کادر قلب PDP حذف، قلب هدر برای مهمان مخفی و breadcrumb با `>` در RTL اصلاح شد.۶۵کنترل مرورگر و۲۲۷تست/زیرتست Go موفق‌اند؛ [قرارداد](../../architecture/contracts/customer-recently-viewed.md). فایل‌ها فقط در D:\Cherriva و بدون commit/push/تغییر گیت هستند. نوبت پیشنهادی بعد #67 است؛ پیش‌نیازهای مالی آن جدا بررسی می‌شوند.
-
-## انتشار دسته فعلی با دستور مالک — ۲۰۲۶-۱۱-۲۴
-
-دستور «تغییرات را تا اینجا پوش کن» شامل تحلیل #66، سورس/مدارک #63/#64 و اصلاحات قلب/breadcrumb است. روال PR/CI برای انتشار سورس در حال انجام است؛ توضیح‌های فقط‌لوکال بالاتر تاریخچه مراحل قبلی‌اند. استقرار لیارا انجام نمی‌شود؛ دستور نگه‌داشت محلی برای تغییرهای پس از این دسته پابرجاست.
+نسخه ترکیبی، کنترل خرید و نمایش دسته‌های جدید main را حفظ می‌کند؛ build/lint و۶۵کنترل مرورگر روی آن موفق‌اند. نتایج Go محلی۲۲۷تست/زیرتست و یک skip اختیاری بود؛ CI همین PR نیز race و هر۵ job را موفق بررسی کرد. وضعیت سند همچنان in-review و وضعیت اجرای این هشت کار done است. سایر۲۲کار todo باقی‌اند و نوبت پیشنهادی بعد #67 است؛ پیش‌نیازهای مالی آن جدا بررسی می‌شوند.

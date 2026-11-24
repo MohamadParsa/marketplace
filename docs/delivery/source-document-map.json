@@ -251,29 +251,40 @@
       "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
       "change_kind": "application-and-documentation",
       "verification": "docs/delivery/next-phase/issue-63-verification.md",
-      "issue_state": "open",
+      "issue_state": "closed",
       "implementation_status": "done",
-      "publication_status": "preparing-pr",
-      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
+      "publication_status": "merged-main",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+      "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
+      "pull_request": 93,
+      "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc",
+      "source_tree_matches_documentation_revision": true
     },
     {
       "issue": 64,
       "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
       "change_kind": "application-and-documentation",
       "verification": "docs/delivery/next-phase/issue-64-verification.md",
-      "issue_state": "open",
+      "issue_state": "closed",
       "implementation_status": "done",
-      "publication_status": "preparing-pr",
-      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1"
+      "publication_status": "merged-main",
+      "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
+      "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
+      "pull_request": 93,
+      "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc",
+      "source_tree_matches_documentation_revision": true
     },
     {
       "issue": 66,
       "source_commit": null,
       "change_kind": "analysis-only",
       "verification": "docs/delivery/next-phase/issue-66-analysis.md",
-      "issue_state": "open",
+      "issue_state": "closed",
       "implementation_status": "done",
-      "publication_status": "preparing-pr"
+      "publication_status": "merged-main",
+      "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
+      "pull_request": 93,
+      "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -283,7 +294,7 @@
   "local_launcher_guard_commit": "5e588a7e047d0aa7d077f959ed6cc3d1c6634e6e",
   "customer_lists_publication": {
     "base_commit": "92f5e6d15b299bbaf1acccd9cc3adefca7837dbe",
-    "published": false,
+    "published": true,
     "committed": true,
     "workspace": "D:\\Cherriva",
     "deliveries": [
@@ -314,11 +325,41 @@
       "authenticated-only-header-heart",
       "greater-than-breadcrumb-rtl"
     ],
-    "state": "ready-for-pr",
+    "state": "merged-main",
     "source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
     "branch": "codex/customer-lists-and-amounts",
     "publication_authorized_on": "2026-11-24",
     "feature_implementation_commit": "e5babff0f35242ffe94e7510e9833733dba1ded1",
-    "integrated_main_commit": "12bac82a4710404d350d3803c94b89ecc84ca48c"
+    "integrated_main_commit": "12bac82a4710404d350d3803c94b89ecc84ca48c",
+    "pull_request": 93,
+    "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc",
+    "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
+    "ci": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644970"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644922"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644901"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644787"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644576"
+      }
+    ]
   }
 }

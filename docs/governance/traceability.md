@@ -207,3 +207,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## اجرای محلی #64 و اصلاحات صریح UI
 
 [شرح](../delivery/next-phase/tasks/cv-next-03-customer-recently-viewed.md) ← [قرارداد](../architecture/contracts/customer-recently-viewed.md) ← [BDD مستند](../bdd/features/experiences/customer-recently-viewed.feature) ← [گزارش/تصاویر](../delivery/next-phase/issue-64-verification.md) ← [نتیجه۶۵کنترل مرورگر و۲۲۷تست/زیرتست Go](../delivery/next-phase/issue-64-checks.json). تغییر قلب PDP/هدر و breadcrumb هم دستور صریح مالک همین نوبت‌اند؛ گزارش #63 پیوند به شواهد جدید دارد. قابلیت done محلی، سند in-review و Issue گیت open است؛ هیچ commit/push/کامنت/بستن انجام نشد.
+
+## انتشار دسته مشتری در۲۰۲۶-۱۱-۲۴
+
+تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند. #63/#64 قابلیت اجرایی و #66 خروجی تحلیل هستند؛ هیچ کار انتخاب‌نشده‌ای done نشده است.
