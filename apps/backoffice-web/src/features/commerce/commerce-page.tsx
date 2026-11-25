@@ -20,6 +20,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
+import { DataTable } from "../../shared/components";
 import type {
   AdminView,
   Deposit,
@@ -244,19 +245,22 @@ export function CommercePage({
         </section>
       ) : settingsOnly ? (
         settings ? (
-          <SettingsForm
-            key={settings.version}
-            settings={settings}
-            permissions={data.permissions}
-            categories={state.categories ?? []}
-            stores={state.stores ?? []}
-            busy={busy}
-            save={(body) =>
-              run(async (key) => {
-                await mutation("settings", body, key);
-              }, JSON.stringify(body))
-            }
-          />
+          <>
+            <a href="/sales-methods">تنظیم روش‌های فروش و مارکاپ</a>
+            <SettingsForm
+              key={settings.version}
+              settings={settings}
+              permissions={data.permissions}
+              categories={state.categories ?? []}
+              stores={state.stores ?? []}
+              busy={busy}
+              save={(body) =>
+                run(async (key) => {
+                  await mutation("settings", body, key);
+                }, JSON.stringify(body))
+              }
+            />
+          </>
         ) : (
           <Alert severity="warning">دسترسی مشاهده تنظیمات ندارید.</Alert>
         )
@@ -273,33 +277,33 @@ export function CommercePage({
           </Tabs>
           <section className="panel commerce-list">
             {tab === 0 ? (
-              data.purchases.length ? (
-                data.purchases
-                  .slice()
-                  .reverse()
-                  .map((p) => (
-                    <article key={p.id}>
-                      <div>
-                        <b>
-                          {p.customer_name || "مشتری"} · {p.customer_phone}
-                        </b>
-                        <small>
-                          شماره سفارش: <b>#{p.number}</b>
-                        </small>
-                        <p>
-                          سفارش: {label(p.order_status)} · پرداخت:{" "}
-                          {label(p.payment_status)}
-                        </p>
-                        {p.cancellation_requested && (
-                          <Alert severity="warning">
-                            درخواست لغو: {p.cancellation_reason}
-                          </Alert>
-                        )}
-                      </div>
-                      <div>
-                        <strong>{money(p.quote.total_toman)}</strong>
-                        <p>{label(p.status)}</p>
-                      </div>
+              <DataTable
+                key="purchases"
+                rows={data.purchases.slice().reverse()}
+                columns={[
+                  { title: "شماره سفارش", render: (p) => `#${p.number}` },
+                  {
+                    title: "مشتری",
+                    render: (p) =>
+                      `${p.customer_name || "مشتری"} · ${p.customer_phone || ""}`,
+                  },
+                  { title: "مبلغ", render: (p) => money(p.quote.total_toman) },
+                  {
+                    title: "وضعیت سفارش",
+                    render: (p) => label(p.order_status),
+                  },
+                  {
+                    title: "وضعیت پرداخت",
+                    render: (p) => label(p.payment_status),
+                  },
+                  {
+                    title: "درخواست لغو",
+                    render: (p) =>
+                      p.cancellation_requested ? "در انتظار رسیدگی" : "ندارد",
+                  },
+                  {
+                    title: "عملیات",
+                    render: (p) => (
                       <Button
                         onClick={() =>
                           setSelected({ kind: "purchase", id: p.id })
@@ -307,35 +311,33 @@ export function CommercePage({
                       >
                         جزئیات سفارش
                       </Button>
-                    </article>
-                  ))
-              ) : (
-                <Empty />
-              )
+                    ),
+                  },
+                ]}
+              />
             ) : tab === 1 ? (
-              data.deposits.length ? (
-                data.deposits
-                  .slice()
-                  .reverse()
-                  .map((d) => (
-                    <article key={d.id}>
-                      <div>
-                        <b>
-                          {d.customer_name || "مشتری"} · {d.customer_phone}
-                        </b>
-                        <p>
-                          {d.method_name} · {d.date} · مرجع {d.reference}
-                        </p>
-                        <small>
-                          {d.purchase_id
-                            ? "مرتبط با سفارش"
-                            : "شارژ مستقل کیف پول"}
-                        </small>
-                      </div>
-                      <div>
-                        <strong>{money(d.amount_toman)}</strong>
-                        <p>{label(d.status)}</p>
-                      </div>
+              <DataTable
+                key="deposits"
+                rows={data.deposits.slice().reverse()}
+                columns={[
+                  {
+                    title: "مشتری",
+                    render: (d) =>
+                      `${d.customer_name || "مشتری"} · ${d.customer_phone || ""}`,
+                  },
+                  { title: "روش", render: (d) => d.method_name },
+                  { title: "تاریخ", render: (d) => d.date },
+                  { title: "مرجع", render: (d) => d.reference },
+                  { title: "مبلغ", render: (d) => money(d.amount_toman) },
+                  {
+                    title: "نوع شارژ",
+                    render: (d) =>
+                      d.purchase_id ? "مرتبط با سفارش" : "شارژ مستقل کیف پول",
+                  },
+                  { title: "وضعیت", render: (d) => label(d.status) },
+                  {
+                    title: "عملیات",
+                    render: (d) => (
                       <Button
                         onClick={() =>
                           setSelected({ kind: "deposit", id: d.id })
@@ -343,34 +345,32 @@ export function CommercePage({
                       >
                         مشاهده و بررسی واریز
                       </Button>
-                    </article>
-                  ))
-              ) : (
-                <Empty />
-              )
-            ) : data.refunds.length ? (
-              data.refunds
-                .slice()
-                .reverse()
-                .map((r) => (
-                  <article key={r.id}>
-                    <div>
-                      <b>{r.customer_name || "مشتری"}</b>
-                      <p>{r.instructions}</p>
-                    </div>
-                    <div>
-                      <strong>{money(r.amount_toman)}</strong>
-                      <p>{label(r.status)}</p>
-                    </div>
-                    <Button
-                      onClick={() => setSelected({ kind: "refund", id: r.id })}
-                    >
-                      رسیدگی بازپرداخت
-                    </Button>
-                  </article>
-                ))
+                    ),
+                  },
+                ]}
+              />
             ) : (
-              <Empty />
+              <DataTable
+                key="refunds"
+                rows={data.refunds.slice().reverse()}
+                columns={[
+                  { title: "مشتری", render: (r) => r.customer_name || "مشتری" },
+                  { title: "مبلغ", render: (r) => money(r.amount_toman) },
+                  { title: "وضعیت", render: (r) => label(r.status) },
+                  {
+                    title: "عملیات",
+                    render: (r) => (
+                      <Button
+                        onClick={() =>
+                          setSelected({ kind: "refund", id: r.id })
+                        }
+                      >
+                        رسیدگی بازپرداخت
+                      </Button>
+                    ),
+                  },
+                ]}
+              />
             )}
           </section>
           <section className="panel commerce-audit">
@@ -467,9 +467,6 @@ export function CommercePage({
       </Dialog>
     </>
   );
-}
-function Empty() {
-  return <p className="empty-state">هنوز رکوردی ثبت نشده است.</p>;
 }
 function Field({
   label: caption,
@@ -646,8 +643,16 @@ function PurchaseReview({
             </div>
             <div>
               <dt>جمع کالاها</dt>
-              <dd>{money(p.quote.subtotal_toman)}</dd>
+              <dd>
+                {money(p.quote.cash_subtotal_toman ?? p.quote.subtotal_toman)}
+              </dd>
             </div>
+            {Number(p.quote.markup_toman ?? "0") > 0 && (
+              <div>
+                <dt>مارکاپ {p.quote.sales_method?.name}</dt>
+                <dd>{money(p.quote.markup_toman!)}</dd>
+              </div>
+            )}
             <div>
               <dt>هزینه ارسال</dt>
               <dd>{money(p.quote.shipping_toman)}</dd>

@@ -13,6 +13,7 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
+	Sales              *SalesSettings  `json:"sales,omitempty"`
 	Coupons            []Coupon        `json:"coupons,omitempty"`
 	CreditLots         []CreditLot     `json:"credit_lots,omitempty"`
 	CreditAccounts     []CreditAccount `json:"credit_accounts,omitempty"`
@@ -126,18 +127,20 @@ type Address struct {
 	PostalCode string `json:"postal_code"`
 }
 type LineSnapshot struct {
-	ReferenceUnitPrice *Amount `json:"reference_unit_price,omitempty"`
-	DirectDiscount     *Amount `json:"direct_discount,omitempty"`
-	OfferID            string  `json:"offer_id"`
-	ProductID          string  `json:"product_id"`
-	VariantID          string  `json:"variant_id"`
-	StoreID            string  `json:"store_id"`
-	Name               string  `json:"name"`
-	VariantLabel       string  `json:"variant_label"`
-	ImageURL           string  `json:"image_url"`
-	UnitPrice          Amount  `json:"unit_price"`
-	Quantity           int     `json:"quantity"`
-	OfferVersion       int     `json:"offer_version"`
+	CashUnitPrice      *Amount         `json:"cash_unit_price,omitempty"`
+	Markup             *MarkupSnapshot `json:"markup,omitempty"`
+	ReferenceUnitPrice *Amount         `json:"reference_unit_price,omitempty"`
+	DirectDiscount     *Amount         `json:"direct_discount,omitempty"`
+	OfferID            string          `json:"offer_id"`
+	ProductID          string          `json:"product_id"`
+	VariantID          string          `json:"variant_id"`
+	StoreID            string          `json:"store_id"`
+	Name               string          `json:"name"`
+	VariantLabel       string          `json:"variant_label"`
+	ImageURL           string          `json:"image_url"`
+	UnitPrice          Amount          `json:"unit_price"`
+	Quantity           int             `json:"quantity"`
+	OfferVersion       int             `json:"offer_version"`
 }
 type ShipmentSnapshot struct {
 	StoreID      string         `json:"store_id"`
@@ -148,6 +151,9 @@ type ShipmentSnapshot struct {
 	DeliveryTo   string         `json:"delivery_to"`
 }
 type Quote struct {
+	SalesMethod        *SalesMethod       `json:"sales_method,omitempty"`
+	MarkupTotal        Amount             `json:"markup_total,omitempty"`
+	CashSubtotal       Amount             `json:"cash_subtotal,omitempty"`
 	ContractVersion    int                `json:"contract_version,omitempty"`
 	CouponCode         string             `json:"coupon_code,omitempty"`
 	Discount           *DiscountUsage     `json:"discount,omitempty"`

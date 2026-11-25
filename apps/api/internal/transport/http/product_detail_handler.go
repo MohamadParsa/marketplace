@@ -188,3 +188,18 @@ func (h *ProductDetailHandler) Page(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(status)
 	io.WriteString(w, body[:start]+meta+body[end+len(z):])
 }
+
+func (h *ProductDetailHandler) SalesPrices(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	v, o, err := productQuery(r)
+	if err != nil {
+		productError(w, err)
+		return
+	}
+	out, e := h.service.SalesPrices(r.Context(), r.PathValue("id"), v, o)
+	if e != nil {
+		commerceError(w, e)
+		return
+	}
+	writeCatalogJSON(w, r, out)
+}

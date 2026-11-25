@@ -949,7 +949,7 @@ function CheckoutForm() {
             ...input,
             coupon_code: code,
             wallet_toman: wallet,
-            payment_method_id: "",
+            payment_method_id: method,
           },
         );
         setPreview(result);
@@ -957,7 +957,6 @@ function CheckoutForm() {
         setCouponDraft(result.quote.coupon_code ?? "");
         setWalletToman(result.quote.wallet_selected_toman ?? "0");
         setWalletDraft(result.quote.wallet_selected_toman ?? "0");
-        setMethod("");
         feedback(
           "success",
           removing
@@ -1312,13 +1311,27 @@ function CheckoutForm() {
                               checked={method === m.id}
                               disabled={!m.eligible || action.busy}
                               onChange={() => {
-                                setMethod(m.id);
-                                setQuote(null);
-                                setConsent(false);
+                                void action.run(async () => {
+                                  const updated = await call<Preview>(
+                                    "/storefront/checkout/preview",
+                                    token,
+                                    { ...input, payment_method_id: m.id },
+                                  );
+                                  setPreview(updated);
+                                  setMethod(m.id);
+                                  setQuote(null);
+                                  setConsent(false);
+                                });
                               }}
                             />
                             <span>
                               <b>{m.name}</b>
+                              {m.sales_method && (
+                                <small>
+                                  {m.sales_method.name} · مبلغ این روش:{" "}
+                                  {money(m.total_toman ?? "0")}
+                                </small>
+                              )}
                               <small>
                                 {m.eligible ? m.instructions : m.reason}
                               </small>
@@ -1476,8 +1489,14 @@ export function OrderSummary({ quote }: { quote: Quote }) {
       ))}
       <div className="buy-total">
         <span>جمع کالاها</span>
-        <b>{money(quote.subtotal_toman)}</b>
+        <b>{money(quote.cash_subtotal_toman ?? quote.subtotal_toman)}</b>
       </div>
+      {Number(quote.markup_toman ?? "0") > 0 && (
+        <p className="buy-row">
+          <span>مارکاپ {quote.sales_method?.name}</span>
+          <b>{money(quote.markup_toman!)}</b>
+        </p>
+      )}
       {Number(quote.direct_discount_toman ?? "0") > 0 && (
         <div className="buy-total buy-direct-saving">
           <span title="این تخفیف قبلاً در قیمت کالاها منظور شده است">

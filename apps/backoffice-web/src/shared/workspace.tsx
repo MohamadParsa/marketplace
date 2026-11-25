@@ -15,6 +15,7 @@ import type {
   ProductQAMutation,
 } from "./types";
 export interface WorkspaceContext {
+  authToken: string;
   actorID: string;
   readCustomerWallet: (
     user: string,

@@ -1,3 +1,4 @@
+import { SalesPrices } from "./sales-prices";
 import { useRecordRecentlyViewed } from "./recently-viewed";
 import { WishlistButton } from "./wishlist";
 import { ProductQA } from "./product-qa";
@@ -589,6 +590,11 @@ export function ProductPage({ url }: { url: string }) {
                         {money(offer.price)} <small>تومان</small>
                       </strong>
                       <span>قیمت نهایی نقدی، بدون هزینه ارسال</span>
+                      <SalesPrices
+                        product={data.id}
+                        offer={data.selected_offer_id}
+                        variant={data.selected_variant_id}
+                      />
                     </div>
                   ) : (
                     <p className="pdp-unavailable">ناموجود</p>

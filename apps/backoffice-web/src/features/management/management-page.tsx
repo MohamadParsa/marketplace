@@ -1,6 +1,7 @@
 import { WalletCreditDialog } from "./wallet-credit-dialog";
 import type { User } from "../../shared/types";
 import type { WalletCreditResult } from "../../../../../packages/commerce-client/types";
+import { CategorySalesDialog } from "../commerce/sales-methods-page";
 import { useState } from "react";
 import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
@@ -50,6 +51,7 @@ export function ManagementPage({
     Record<string, WalletCreditResult>
   >({});
   const [policyError, setError] = useState("");
+  const [salesCategory, setSalesCategory] = useState<string>();
   const [search, setSearch] = useState("");
   const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [bindingTarget, setBindingTarget] = useState<Category>();
@@ -336,6 +338,9 @@ export function ManagementPage({
                     >
                       تنظیم خصوصیات
                     </Button>
+                    <Button onClick={() => setSalesCategory(c.id)}>
+                      مارکاپ روش فروش
+                    </Button>
                     <Button
                       disabled={!editable || c.archived}
                       onClick={() => setIconTarget({ ...c, kind: "category" })}
@@ -597,6 +602,12 @@ export function ManagementPage({
           key={bindingTarget.id}
           category={bindingTarget}
           close={() => setBindingTarget(undefined)}
+        />
+      )}
+      {salesCategory && (
+        <CategorySalesDialog
+          id={salesCategory}
+          close={() => setSalesCategory(undefined)}
         />
       )}
       {dialog && (

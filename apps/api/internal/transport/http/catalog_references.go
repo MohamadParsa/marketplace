@@ -13,7 +13,7 @@ import (
 // Only catalog reference fields and catalog URLs are projected. Amounts, user
 // fields, identifiers in the ledger and backoffice payloads are never rewritten.
 var catalogFieldKinds = map[string]string{
-	"desktop_id": "m", "mobile_id": "m",
+	"source_category_id": "c", "desktop_id": "m", "mobile_id": "m",
 	"store_ids": "s", "allowed_categories": "c", "excluded_categories": "c", "category_ids": "c",
 	"variant_id": "v", "selected_variant_id": "v", "offer_id": "o", "new_offer_id": "o", "selected_offer_id": "o",
 	"product_id": "p", "category_id": "c", "parent_id": "c", "catalog_category_id": "c", "brand_id": "b", "store_id": "s", "attribute_id": "a",

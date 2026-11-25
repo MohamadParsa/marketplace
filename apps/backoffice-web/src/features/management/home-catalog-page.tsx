@@ -1,3 +1,4 @@
+import { CategorySalesDialog } from "../commerce/sales-methods-page";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   Alert,
@@ -87,6 +88,7 @@ export function HomeCatalogPage() {
     key: string;
     input: CatalogInput;
   }>();
+  const [salesCategory, setSalesCategory] = useState<string>();
   const [media, setMedia] = useState<string>();
   const [quick, setQuick] = useState<string>();
   const [image, setImage] = useState<Product>();
@@ -634,6 +636,14 @@ export function HomeCatalogPage() {
                       )}
                     </>
                   )}
+                  {editing.kind === "category" && editing.id && (
+                    <Button
+                      type="button"
+                      onClick={() => setSalesCategory(editing.id)}
+                    >
+                      روش‌های فروش و مارکاپ دسته
+                    </Button>
+                  )}
                   {editing.kind === "category" && (
                     <label>
                       آدرس انگلیسی دسته (slug)
@@ -1053,6 +1063,12 @@ export function HomeCatalogPage() {
           id={quick}
           initialTab={1}
           close={() => setQuick(undefined)}
+        />
+      )}
+      {salesCategory && (
+        <CategorySalesDialog
+          id={salesCategory}
+          close={() => setSalesCategory(undefined)}
         />
       )}
     </>

@@ -45,17 +45,6 @@ export function OperationsPage({
   const product = (productId: string) =>
     state.products?.find((p) => p.id === productId)?.name ?? productId;
   const selected = state.orders?.find((o) => o.id === id);
-  const exportAudit = () => {
-    const blob = new Blob([JSON.stringify(state.audit ?? [], null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "audit-test.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
   return (
     <>
       <PageHeader
@@ -65,13 +54,6 @@ export function OperationsPage({
             : titles[section]
         }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
-        action={
-          section === "reports" ? (
-            <Button variant="outlined" onClick={exportAudit}>
-              دریافت گزارش مجاز
-            </Button>
-          ) : undefined
-        }
       />
       {selected ? (
         <>
@@ -388,7 +370,7 @@ export function OperationsPage({
               empty="هنوز عملیاتی ثبت نشده است."
               columns={[
                 {
-                  title: "عملیات",
+                  title: "نوع عملیات",
                   render: (a) => <span className="code">{a.action}</span>,
                 },
                 { title: "عامل", render: (a) => a.actor },

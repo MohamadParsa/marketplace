@@ -51,6 +51,7 @@ import {
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
+import { SalesMethodsPage } from "../features/commerce/sales-methods-page";
 import { HomeCatalogPage } from "../features/management/home-catalog-page";
 import { ProductReviewsPage } from "../features/management/product-reviews-page";
 import { BannersPage } from "../features/management/banners-page";
@@ -86,6 +87,11 @@ const menu = [
   {
     heading: "مدیریت بازارگاه",
     items: [
+      {
+        path: "/sales-methods",
+        label: "روش‌های فروش",
+        icon: <Inventory2Outlined />,
+      },
       {
         path: "/home-catalog",
         label: "کاتالوگ و صفحه اصلی",
@@ -381,6 +387,7 @@ function Workspace({
           ) : (
             <WorkspaceContext.Provider
               value={{
+                authToken: session.token,
                 actorID: session.user.ID,
                 readCustomerWallet: (user, key) =>
                   api.readCustomerWallet(session.token, user, key),
@@ -451,6 +458,7 @@ function Workspace({
               }}
             >
               <Routes>
+                <Route path="/sales-methods" element={<SalesMethodsPage />} />
                 <Route
                   path="/coupons"
                   element={<CouponsPage token={session.token} />}

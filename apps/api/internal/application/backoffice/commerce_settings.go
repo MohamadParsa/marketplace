@@ -281,7 +281,14 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 				d.ID = id
 			}
 			c.Settings.Destination = d
+			oldMethods := c.Settings.Methods
 			c.Settings.Methods = methods
+			if c.Sales != nil {
+				if err := validateSales(*w, *c.Sales); err != nil {
+					c.Settings.Methods = oldMethods
+					return nil, err
+				}
+			}
 		}
 		if in.Shipping != nil {
 			v := in.Shipping

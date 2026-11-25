@@ -45,6 +45,8 @@ export interface Address {
   postal_code: string;
 }
 export interface Method {
+  total_toman?: string;
+  sales_method?: { id: string; name: string; markup_bps: number };
   id: string;
   name: string;
   kind: string;
@@ -138,6 +140,9 @@ export interface Shipment {
   delivery_to: string;
 }
 export interface Quote {
+  cash_subtotal_toman?: string;
+  markup_toman?: string;
+  sales_method?: { id: string; name: string; markup_bps: number };
   direct_discount_toman?: string;
   contract_version?: number;
   terms_digest?: string;

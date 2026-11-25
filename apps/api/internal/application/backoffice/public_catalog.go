@@ -24,7 +24,15 @@ type PublicCatalogRepository interface {
 // CatalogReadWorkspace contains catalog inputs only, never accounts or financial state.
 // It is an internal PostgreSQL projection; only white-listed response DTOs enter Redis.
 func CatalogReadWorkspace(w Workspace) Workspace {
-	r := Workspace{Categories: w.Categories, Brands: w.Brands, Attributes: w.Attributes, DisplaySettings: w.DisplaySettings, HomeSettings: w.HomeSettings}
+	r := Workspace{Sales: publicSalesSettings(w), Categories: w.Categories, Brands: w.Brands, Attributes: w.Attributes, DisplaySettings: w.DisplaySettings, HomeSettings: w.HomeSettings}
+	if w.Commerce != nil {
+		for _, m := range w.Commerce.Settings.Methods {
+			m.Instructions = ""
+			if m.Kind != "wallet" {
+				r.SalesPayments = append(r.SalesPayments, m)
+			}
+		}
+	}
 	for _, st := range w.Stores {
 		r.Stores = append(r.Stores, store.Store{ID: st.ID, Name: st.Name, Active: st.Active, LeadDays: st.LeadDays})
 	}

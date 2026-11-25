@@ -29,18 +29,20 @@ type AcceptQuoteInput struct {
 	AcceptedTotalToman string `json:"accepted_total_toman"`
 }
 type QuoteLineView struct {
-	ReferenceUnitPriceToman string `json:"reference_unit_price_toman,omitempty"`
-	DirectDiscountToman     string `json:"direct_discount_toman,omitempty"`
-	OfferID                 string `json:"offer_id"`
-	Quantity                int    `json:"quantity"`
-	ProductID               string `json:"product_id"`
-	VariantID               string `json:"variant_id"`
-	StoreID                 string `json:"store_id"`
-	Name                    string `json:"name"`
-	VariantLabel            string `json:"variant_label"`
-	ImageURL                string `json:"image_url"`
-	UnitPriceToman          string `json:"unit_price_toman"`
-	TotalToman              string `json:"total_toman"`
+	CashUnitPriceToman      string                   `json:"cash_unit_price_toman,omitempty"`
+	Markup                  *commerce.MarkupSnapshot `json:"markup,omitempty"`
+	ReferenceUnitPriceToman string                   `json:"reference_unit_price_toman,omitempty"`
+	DirectDiscountToman     string                   `json:"direct_discount_toman,omitempty"`
+	OfferID                 string                   `json:"offer_id"`
+	Quantity                int                      `json:"quantity"`
+	ProductID               string                   `json:"product_id"`
+	VariantID               string                   `json:"variant_id"`
+	StoreID                 string                   `json:"store_id"`
+	Name                    string                   `json:"name"`
+	VariantLabel            string                   `json:"variant_label"`
+	ImageURL                string                   `json:"image_url"`
+	UnitPriceToman          string                   `json:"unit_price_toman"`
+	TotalToman              string                   `json:"total_toman"`
 }
 type ShipmentView struct {
 	StoreID      string `json:"store_id"`
@@ -55,26 +57,29 @@ type ShipmentView struct {
 	DeliveryTo   string `json:"delivery_to"`
 }
 type QuoteView struct {
-	DirectDiscountToman string               `json:"direct_discount_toman,omitempty"`
-	TermsDigest         string               `json:"terms_digest,omitempty"`
-	ContractVersion     int                  `json:"contract_version,omitempty"`
-	CouponCode          string               `json:"coupon_code,omitempty"`
-	DiscountToman       string               `json:"discount_toman"`
-	WalletSelectedToman string               `json:"wallet_selected_toman"`
-	FundingToman        string               `json:"funding_toman"`
-	Destination         commerce.Destination `json:"destination"`
-	ID                  string               `json:"id"`
-	Status              string               `json:"status"`
-	Address             commerce.Address     `json:"address"`
-	Lines               []QuoteLineView      `json:"lines"`
-	Shipments           []ShipmentView       `json:"shipments"`
-	PaymentMethod       PaymentMethodInput   `json:"payment_method"`
-	SubtotalToman       string               `json:"subtotal_toman"`
-	ShippingToman       string               `json:"shipping_toman"`
-	TotalToman          string               `json:"total_toman"`
-	ExpiresAt           time.Time            `json:"expires_at"`
-	ReservedUntil       time.Time            `json:"reserved_until"`
-	Currency            string               `json:"currency"`
+	SalesMethod         *commerce.SalesMethod `json:"sales_method,omitempty"`
+	MarkupToman         string                `json:"markup_toman"`
+	CashSubtotalToman   string                `json:"cash_subtotal_toman"`
+	DirectDiscountToman string                `json:"direct_discount_toman,omitempty"`
+	TermsDigest         string                `json:"terms_digest,omitempty"`
+	ContractVersion     int                   `json:"contract_version,omitempty"`
+	CouponCode          string                `json:"coupon_code,omitempty"`
+	DiscountToman       string                `json:"discount_toman"`
+	WalletSelectedToman string                `json:"wallet_selected_toman"`
+	FundingToman        string                `json:"funding_toman"`
+	Destination         commerce.Destination  `json:"destination"`
+	ID                  string                `json:"id"`
+	Status              string                `json:"status"`
+	Address             commerce.Address      `json:"address"`
+	Lines               []QuoteLineView       `json:"lines"`
+	Shipments           []ShipmentView        `json:"shipments"`
+	PaymentMethod       PaymentMethodInput    `json:"payment_method"`
+	SubtotalToman       string                `json:"subtotal_toman"`
+	ShippingToman       string                `json:"shipping_toman"`
+	TotalToman          string                `json:"total_toman"`
+	ExpiresAt           time.Time             `json:"expires_at"`
+	ReservedUntil       time.Time             `json:"reserved_until"`
+	Currency            string                `json:"currency"`
 }
 type PurchaseView struct {
 	CreditSources         []CreditSourceView `json:"credit_sources,omitempty"`
@@ -98,6 +103,8 @@ type PurchaseView struct {
 	Reason                string             `json:"reason,omitempty"`
 }
 type MethodEligibility struct {
+	TotalToman  string                `json:"total_toman"`
+	SalesMethod *commerce.SalesMethod `json:"sales_method,omitempty"`
 	PaymentMethodInput
 	Eligible bool   `json:"eligible"`
 	Reason   string `json:"reason,omitempty"`
@@ -113,9 +120,12 @@ type PrepareView struct {
 }
 
 func quoteView(q commerce.Quote) QuoteView {
-	v := QuoteView{Destination: q.Destination, ID: q.ID, Status: q.Status, Address: q.Address, Lines: []QuoteLineView{}, Shipments: []ShipmentView{}, PaymentMethod: methodInput(q.PaymentMethod), SubtotalToman: commerce.Toman(q.Subtotal), ShippingToman: commerce.Toman(q.ShippingTotal), TotalToman: commerce.Toman(q.Total), ExpiresAt: q.ExpiresAt, ReservedUntil: q.ReservedUntil, Currency: "toman"}
+	v := QuoteView{SalesMethod: q.SalesMethod, MarkupToman: commerce.Toman(q.MarkupTotal), CashSubtotalToman: commerce.Toman(q.CashSubtotal), Destination: q.Destination, ID: q.ID, Status: q.Status, Address: q.Address, Lines: []QuoteLineView{}, Shipments: []ShipmentView{}, PaymentMethod: methodInput(q.PaymentMethod), SubtotalToman: commerce.Toman(q.Subtotal), ShippingToman: commerce.Toman(q.ShippingTotal), TotalToman: commerce.Toman(q.Total), ExpiresAt: q.ExpiresAt, ReservedUntil: q.ReservedUntil, Currency: "toman"}
 	if q.ContractVersion == 2 {
 		v.TermsDigest = hashToken(qComparable(q))
+	}
+	if q.CashSubtotal == 0 && q.MarkupTotal == 0 {
+		v.CashSubtotalToman = commerce.Toman(q.Subtotal)
 	}
 	v.ContractVersion = q.ContractVersion
 	v.CouponCode = q.CouponCode
@@ -147,6 +157,10 @@ func quoteView(q commerce.Quote) QuoteView {
 	for _, l := range q.Lines {
 		total, _ := commerce.Multiply(l.UnitPrice, l.Quantity)
 		lineView := QuoteLineView{OfferID: l.OfferID, Quantity: l.Quantity, ProductID: l.ProductID, VariantID: l.VariantID, StoreID: l.StoreID, Name: l.Name, VariantLabel: l.VariantLabel, ImageURL: l.ImageURL, UnitPriceToman: commerce.Toman(l.UnitPrice), TotalToman: commerce.Toman(total)}
+		if l.CashUnitPrice != nil {
+			lineView.CashUnitPriceToman = commerce.Toman(*l.CashUnitPrice)
+		}
+		lineView.Markup = l.Markup
 		if l.ReferenceUnitPrice != nil {
 			lineView.ReferenceUnitPriceToman = commerce.Toman(*l.ReferenceUnitPrice)
 		}
@@ -297,6 +311,9 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 		}
 		q.Lines = append(q.Lines, commerce.LineSnapshot{ReferenceUnitPrice: reference, DirectDiscount: direct, OfferID: o.ID, ProductID: o.ProductID, VariantID: o.VariantID, StoreID: o.StoreID, Name: item.Name, VariantLabel: item.VariantLabel, ImageURL: item.ImageURL, UnitPrice: price, Quantity: l.Quantity, OfferVersion: o.Version})
 	}
+	if e := applySales(w, &q, in.PaymentMethodID); e != nil {
+		return q, e
+	}
 	stores := sortedStoreIDs(q.Lines)
 	if len(in.Shipping) != len(stores) {
 		return q, ErrInvalid
@@ -379,7 +396,17 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 		q.Credit = &commerce.CreditUsage{Requested: selected, Existing: []commerce.CreditAllocation{}, Funding: []commerce.CreditAllocation{}}
 		if q.Total == selected {
 			if in.PaymentMethodID != "" {
-				return q, ErrInvalidMethod
+				valid := false
+				for _, m := range c.Settings.Methods {
+					if m.ID == in.PaymentMethodID && m.Kind != "wallet" && methodEligible(w, m, q.Lines, q.Total) {
+						q.PaymentMethod = m
+						valid = true
+						break
+					}
+				}
+				if !valid {
+					return q, ErrInvalidMethod
+				}
 			}
 			return q, nil
 		}
@@ -678,7 +705,6 @@ func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in Quote
 	if e = customerActor(w, a); e != nil {
 		return CheckoutPreview{}, e
 	}
-	in.PaymentMethodID = ""
 	q, e := buildQuote(w, a, in, "", s.clock.Now())
 	if e != nil {
 		return CheckoutPreview{}, e
@@ -691,7 +717,11 @@ func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in Quote
 		if in.ContractVersion == 2 && m.Kind == "wallet" {
 			continue
 		}
-		eligible := methodEligible(w, m, q.Lines, q.Total)
+		candidate := in
+		candidate.PaymentMethodID = m.ID
+		candidate.WalletToman = "0"
+		priced, err := buildQuote(w, a, candidate, "", s.clock.Now())
+		eligible := err == nil && methodEligible(w, m, priced.Lines, priced.Total)
 		if q.Credit != nil && q.Credit.Requested == q.Total {
 			eligible = false
 		}
@@ -705,7 +735,7 @@ func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in Quote
 				reason = "مبلغ کل سفارش از سقف این روش بیشتر است."
 			}
 		}
-		v.Methods = append(v.Methods, MethodEligibility{methodInput(m), eligible, reason})
+		v.Methods = append(v.Methods, MethodEligibility{PaymentMethodInput: methodInput(m), Eligible: eligible, Reason: reason, TotalToman: commerce.Toman(priced.Total), SalesMethod: priced.SalesMethod})
 	}
 	return v, nil
 }

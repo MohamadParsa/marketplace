@@ -15,6 +15,7 @@ import (
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
 
@@ -89,6 +90,9 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
+	if r.URL.Path == "/backoffice/commerce/sales" {
+		limit = 2 * 1024 * 1024
+	}
 	if r.URL.Path == "/backoffice/commerce/settings" {
 		limit = 1024 * 1024
 	}
@@ -317,6 +321,16 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	var result any
 	var e error
 	switch r.URL.Path {
+	case "/backoffice/commerce/sales":
+		if r.Method == "GET" {
+			result, e = h.service.ReadSales(r.Context(), a)
+		} else {
+			var in commerce.SalesSettings
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.SaveSales(r.Context(), a, in, key)
+		}
 	case "/backoffice/commerce/wallet/credits":
 		if r.Method == "GET" {
 			result, e = h.service.ReadCustomerCreditWallet(r.Context(), a, r.URL.Query().Get("user_id"), r.Header.Get("Idempotency-Key"))
@@ -460,4 +474,21 @@ func (h *CommerceHandler) UploadReceipt(w http.ResponseWriter, r *http.Request) 
 	}
 	d, e := h.service.AttachReceipt(r.Context(), a, r.PathValue("id"), version, r.Header.Get("Idempotency-Key"), data)
 	commerceResult(w, r, d, e)
+}
+
+func (h *CommerceHandler) AuthorizeExport(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	surface := identity.SurfaceBackoffice
+	if strings.HasPrefix(r.URL.Path, "/seller/") {
+		surface = identity.SurfaceSeller
+	}
+	a, ok := h.actor(w, r, surface)
+	if !ok {
+		return
+	}
+	if err := h.service.AuthorizeGridExport(r.Context(), a); err != nil {
+		commerceError(w, err)
+		return
+	}
+	w.WriteHeader(204)
 }

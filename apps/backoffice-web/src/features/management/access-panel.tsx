@@ -4,6 +4,7 @@ import type { Command, CustomRole, RoleScope } from "../../shared/types";
 import { useWorkspace } from "../../shared/workspace";
 
 const permissionNames: Record<string, string> = {
+  "grid.export": "خروجی Excel گرید", "commerce.sales.read": "مشاهده روش‌های فروش", "commerce.sales.write": "تنظیم روش‌های فروش و مارکاپ",
   "workspace.read": "مشاهده بک‌آفیس", "finance.read": "مشاهده داده مالی",
   "store.create": "ایجاد فروشگاه", "store.toggle": "تغییر وضعیت فروشگاه",
   "category.create": "ایجاد دسته", "category.archive": "بایگانی دسته",

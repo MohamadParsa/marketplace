@@ -245,9 +245,9 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
 			return purchaseView(c, *p), nil
 		}
-		eligible := q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
+		eligible := q.PaymentMethod.ID == "" && q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
 		for _, m := range c.Settings.Methods {
-			if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) {
+			if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) && salesPaymentStillAllowed(*w, *q) {
 				eligible = true
 			}
 		}

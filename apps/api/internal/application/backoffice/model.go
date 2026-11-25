@@ -84,6 +84,8 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
+	SalesPayments  []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
+	Sales          *commerce.SalesSettings        `json:"sales,omitempty"`
 	RecentlyViewed []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
 	Wishlist       []customer.WishlistEntry       `json:"wishlist,omitempty"`
 	publicIndex    *publicCatalogIndex
