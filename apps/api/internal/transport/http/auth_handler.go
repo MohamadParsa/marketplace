@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -208,7 +209,7 @@ func (h *AuthHandler) RequestAdminOTP(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case errors.Is(err, identity.ErrNotAdmin):
 		writeError(w, http.StatusForbidden, "forbidden")
-	case errors.Is(err, identity.ErrInactive) || errors.Is(err, identity.ErrInvalidOTP):
+	case errors.Is(err, identity.ErrPasswordChangeRequired), errors.Is(err, identity.ErrInactive), errors.Is(err, identity.ErrInvalidOTP):
 		writeError(w, http.StatusUnauthorized, "unauthorized")
 	case errors.Is(err, identity.ErrResendSoon) || errors.Is(err, identity.ErrRateLimit):
 		writeError(w, http.StatusTooManyRequests, "otp_rate_limit")
@@ -288,4 +289,29 @@ func writeJSON(w http.ResponseWriter, status int, body any) {
 }
 func writeError(w http.ResponseWriter, status int, code string) {
 	writeJSON(w, status, map[string]string{"code": code})
+}
+
+func (h *AuthHandler) CompleteTemporaryPassword(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		var in struct {
+			Password string `json:"password"`
+		}
+		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096))
+		d.DisallowUnknownFields()
+		if d.Decode(&in) != nil || d.Decode(new(any)) != io.EOF {
+			writeError(w, 400, "invalid_request")
+			return
+		}
+		session, e := h.service.CompleteTemporaryPassword(r.Context(), bearer(r.Header.Get("Authorization")), surface, in.Password)
+		if e != nil {
+			if errors.Is(e, identity.ErrInvalidProfile) {
+				writeError(w, 400, "new_password_required")
+			} else {
+				writeError(w, 401, "unauthorized")
+			}
+			return
+		}
+		writeJSON(w, 200, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
 }

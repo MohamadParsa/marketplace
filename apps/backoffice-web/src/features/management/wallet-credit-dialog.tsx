@@ -26,7 +26,7 @@ export function WalletCreditDialog({
   close,
   onCredited,
 }: {
-  user: User;
+  user: Pick<User,"id"|"name">;
   close: () => void;
   onCredited: (result: WalletCreditResult) => void;
 }) {

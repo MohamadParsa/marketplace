@@ -1,3 +1,4 @@
+import {TemporaryPassword} from "../../../packages/identity-client/temporary-password";
 import { AddressEditor } from "./address-editor";
 import { CatalogImage } from "./catalog-image";
 import {
@@ -165,6 +166,7 @@ function safeReturn() {
     : "/account";
 }
 export function LoginPage() {
+  const [restricted,setRestricted]=useState<{token:string;user?:{PasswordChangeRequired?:boolean}}|null>(null);
   const returnTo = useRef(safeReturn()).current;
   const { token, login } = useCommerce(),
     action = useAction();
@@ -195,6 +197,7 @@ export function LoginPage() {
       setRequest(d);
       setResend(Date.now() + 60000);
     }, "otp:" + identifier);
+  if(restricted)return <CommerceShell title="تعیین رمز شخصی"><TemporaryPassword<{token:string}> token={restricted.token} surface="storefront" base={apiBase} onCancel={()=>setRestricted(null)} onComplete={r=>login(r.token).then(()=>navigate(returnTo))}/></CommerceShell>;
   return (
     <CommerceShell title="ورود به چریوا">
       <BusyRegion busy={action.busy}>
@@ -247,7 +250,7 @@ export function LoginPage() {
                     const v = values(e);
                     void action.run(
                       async () => {
-                        const r = await call<{ token: string }>(
+                        const r = await call<{ token: string;user?:{PasswordChangeRequired?:boolean} }>(
                           "/storefront/auth/verify-otp",
                           "",
                           {
@@ -255,7 +258,8 @@ export function LoginPage() {
                             code: digits(v.code),
                           },
                         );
-                        await login(r.token);
+                        if(r.user?.PasswordChangeRequired){setRestricted(r);return}
+ await login(r.token);
                         navigate(returnTo);
                       },
                       "verify:" + request.request_id + v.code,
@@ -299,12 +303,13 @@ export function LoginPage() {
                 const v = values(e);
                 void action.run(
                   async () => {
-                    const r = await call<{ token: string }>(
+                    const r = await call<{ token: string;user?:{PasswordChangeRequired?:boolean} }>(
                       "/storefront/auth/password-login",
                       "",
                       { phone: digits(identifier), password: v.password },
                     );
-                    await login(r.token);
+                    if(r.user?.PasswordChangeRequired){setRestricted(r);return}
+ await login(r.token);
                     navigate(returnTo);
                   },
                   "password:" + identifier + v.password,

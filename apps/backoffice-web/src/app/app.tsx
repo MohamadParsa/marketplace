@@ -1,3 +1,6 @@
+import { UsersPage } from "../features/management/users-page";
+import { RolesPage } from "../features/management/access-panel";
+import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
 import { CouponsPage } from "../features/commerce/coupons-page";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -99,8 +102,14 @@ const menu = [
       },
       {
         path: "/users",
-        label: "کاربران و نقش‌ها",
+        label: "کاربران",
         icon: <PeopleOutline />,
+        roles: ["super-admin"],
+      },
+      {
+        path: "/roles",
+        label: "نقش‌ها و مجوزها",
+        icon: <DashboardOutlined />,
         roles: ["super-admin"],
       },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
@@ -288,7 +297,7 @@ function Workspace({
                   session.user.Surface === "seller"
                     ? ["/products", "/commerce"].includes(i.path)
                     : i.path === "/users"
-                      ? canCreditWallet
+                      ? canCreditWallet || permissions.includes("users.read")
                       : visible("roles" in i ? i.roles : undefined),
                 )
                 .map((item) => (
@@ -527,9 +536,30 @@ function Workspace({
                   }
                 />
                 <Route path="/attributes" element={<SharedAttributesPage />} />
+                <Route
+                  path="/users"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    (canCreditWallet || permissions.includes("users.read")) ? (
+                      <UsersPage />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/roles"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    role === "super-admin" ? (
+                      <RolesPage />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
                 {(
                   [
-                    "users",
                     "stores",
                     "categories",
                     "brands",
@@ -544,7 +574,6 @@ function Workspace({
                     element={
                       (session.user.Surface === "seller" &&
                         section !== "products") ||
-                      (section === "users" && !canCreditWallet) ||
                       (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (
@@ -623,7 +652,15 @@ function SessionApp() {
     setSession(null);
     queryClient.clear();
   };
-  return session ? (
+  return session?.user.PasswordChangeRequired ? (
+    <TemporaryPassword<Session>
+      token={session.token}
+      surface={session.user.Surface}
+      base={import.meta.env.VITE_API_BASE_URL ?? ""}
+      onComplete={setSession}
+      onCancel={logout}
+    />
+  ) : session ? (
     <Workspace session={session} logout={logout} />
   ) : (
     <LoginPage

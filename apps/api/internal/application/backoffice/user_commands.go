@@ -33,7 +33,10 @@ func applyUser(state *Workspace, c Command, id string, confirmed bool, event *Au
 		if u.ID != c.Target {
 			continue
 		}
-		if c.Action == "user.role" && !validRole(role) {
+		if c.UserVersion != nil && u.Version != *c.UserVersion {
+			return ErrConflict
+		}
+		if c.Action == "user.role" && !validRole(role) && role != "" {
 			return ErrInvalid
 		}
 		toggle := c.Action == "user.toggle"
@@ -55,11 +58,13 @@ func applyUser(state *Workspace, c Command, id string, confirmed bool, event *Au
 		}
 		event.PreviousRole, event.Role = u.Role, u.Role
 		if toggle {
+			u.Version++
 			u.Active = !u.Active
 			u.AccessVersion++
 			return nil
 		}
 		if u.Role != role {
+			u.Version++
 			u.Role = role
 			u.AccessVersion++
 		}

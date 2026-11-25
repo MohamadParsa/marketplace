@@ -5,7 +5,7 @@ import { CategorySalesDialog } from "../commerce/sales-methods-page";
 import { useState } from "react";
 import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { AccessPanel } from "./access-panel";
+
 import { useWorkspace, can } from "../../shared/workspace";
 import {
   ActionDialog,
@@ -82,7 +82,7 @@ export function ManagementPage({
       : section === "users"
         ? open("کاربر جدید", { action: "user.create" }, [
             { name: "name", label: "نام کاربر" },
-            { name: "phone", label: "شماره حساب آزمون (۱۱ رقم)" },
+            { name: "phone", label: "شماره موبایل (۱۱ رقم)" },
             { name: "value", label: "نقش", options: roleOptions },
           ])
         : section === "stores"
@@ -573,7 +573,7 @@ export function ManagementPage({
           </>
         )}
       </section>
-      {section === "users" && role === "super-admin" && <AccessPanel />}
+
       {creditTarget && (
         <WalletCreditDialog
           key={creditTarget.id}

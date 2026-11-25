@@ -25,16 +25,21 @@ var (
 )
 
 type User struct {
-	ID            string        `json:"id"`
-	Name          string        `json:"name"`
-	Phone         string        `json:"phone"`
-	Role          identity.Role `json:"role"`
-	Active        bool          `json:"active"`
-	Email         string        `json:"email,omitempty"`
-	NationalID    string        `json:"national_id,omitempty"`
-	AccessVersion int           `json:"-"`
-	PasswordHash  string        `json:"-"`
-	SellerOnly    bool          `json:"seller_only,omitempty"`
+	FirstName              string        `json:"first_name"`
+	LastName               string        `json:"last_name"`
+	Gender                 string        `json:"gender"`
+	Version                int           `json:"version"`
+	PasswordChangeRequired bool          `json:"password_change_required"`
+	ID                     string        `json:"id"`
+	Name                   string        `json:"name"`
+	Phone                  string        `json:"phone"`
+	Role                   identity.Role `json:"role"`
+	Active                 bool          `json:"active"`
+	Email                  string        `json:"email,omitempty"`
+	NationalID             string        `json:"national_id,omitempty"`
+	AccessVersion          int           `json:"-"`
+	PasswordHash           string        `json:"-"`
+	SellerOnly             bool          `json:"seller_only,omitempty"`
 }
 
 // Minimal test-scope membership permissions; custom role management remains Issue #1.
@@ -84,6 +89,7 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
+	UserMutations  []UserMutation                 `json:"user_mutations,omitempty"`
 	SalesPayments  []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
 	Sales          *commerce.SalesSettings        `json:"sales,omitempty"`
 	RecentlyViewed []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
@@ -132,6 +138,8 @@ type PurchaseOwner struct {
 	UserID     string
 }
 type Command struct {
+	RoleVersion    *int                         `json:"role_version,omitempty"`
+	UserVersion    *int                         `json:"user_version,omitempty"`
 	ProductMedia   *ProductMediaInput           `json:"product_media,omitempty"`
 	Catalog        *CatalogInput                `json:"catalog,omitempty"`
 	Home           *HomeSettings                `json:"home,omitempty"`

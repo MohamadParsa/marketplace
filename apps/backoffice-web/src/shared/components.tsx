@@ -70,10 +70,16 @@ export function DataTable<T extends { id: string }>({
   rows,
   columns,
   empty = "موردی برای نمایش وجود ندارد.",
+  remote,
 }: {
   rows: T[];
   columns: Column<T>[];
   empty?: string;
+  remote?: {
+    controls: Parameters<typeof PaginationControls>[0];
+    filterKey: string;
+    exportRows: (ids?: string[], signal?: AbortSignal) => Promise<T[]>;
+  };
 }) {
   const { authToken, surface } = useWorkspace();
   const exportAbort = useRef<AbortController>();
@@ -85,6 +91,9 @@ export function DataTable<T extends { id: string }>({
     [selected, setSelected] = useState<string[]>([]),
     [exporting, setExporting] = useState(false),
     [error, setError] = useState("");
+  useEffect(() => {
+    if (remote) setSelected([]);
+  }, [remote?.filterKey]);
   const deferred = useDeferredValue(search);
   const cells = useMemo(
     () =>
@@ -130,7 +139,17 @@ export function DataTable<T extends { id: string }>({
             !actionColumn(c.title) &&
             !forbiddenExport.test(c.title),
         );
-      const target = onlySelected ? selectedVisible : filtered;
+      let target = onlySelected ? selectedVisible : filtered;
+      if (remote) {
+        const records = await remote.exportRows(
+          onlySelected ? selected : undefined,
+          controller.signal,
+        );
+        target = records.map((row) => ({
+          row,
+          text: columns.map((c) => cellText(c.render(row))),
+        }));
+      }
       if (!target.length) throw Error("ردیفی برای خروجی انتخاب نشده است.");
       if (target.length > 10000)
         throw Error(
@@ -178,40 +197,50 @@ export function DataTable<T extends { id: string }>({
   return (
     <>
       <div className="grid-tools">
-        <TextField
-          size="small"
-          label="جست‌وجو در جدول"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Button
-          aria-expanded={showFilters}
-          onClick={() => setShowFilters((v) => !v)}
-        >
-          فیلتر ستون‌ها
-        </Button>
-        <Button
-          onClick={() => {
-            setSearch("");
-            setFilters({});
-            setSort(undefined);
-            setSelected([]);
-          }}
-        >
-          پاک‌کردن فیلترها
-        </Button>
+        {!remote && (
+          <>
+            <TextField
+              size="small"
+              label="جست‌وجو در جدول"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button
+              aria-expanded={showFilters}
+              onClick={() => setShowFilters((v) => !v)}
+            >
+              فیلتر ستون‌ها
+            </Button>
+            <Button
+              onClick={() => {
+                setSearch("");
+                setFilters({});
+                setSort(undefined);
+                setSelected([]);
+              }}
+            >
+              پاک‌کردن فیلترها
+            </Button>
+          </>
+        )}
         <span aria-live="polite">
-          {filtered.length.toLocaleString("fa-IR")} نتیجه ·{" "}
-          {selectedVisible.length.toLocaleString("fa-IR")} انتخاب
+          {(remote?.controls.total ?? filtered.length).toLocaleString("fa-IR")}{" "}
+          نتیجه ·{" "}
+          {(remote ? selected.length : selectedVisible.length).toLocaleString(
+            "fa-IR",
+          )}{" "}
+          انتخاب
         </span>
         <Button
-          disabled={exporting || !filtered.length}
+          disabled={exporting || !(remote?.controls.total ?? filtered.length)}
           onClick={() => void exportRows(false)}
         >
           Excel نتایج
         </Button>
         <Button
-          disabled={exporting || !selectedVisible.length}
+          disabled={
+            exporting || !(remote ? selected.length : selectedVisible.length)
+          }
           onClick={() => void exportRows(true)}
         >
           Excel انتخاب‌شده‌ها
@@ -253,8 +282,10 @@ export function DataTable<T extends { id: string }>({
                   type="checkbox"
                   aria-label="انتخاب ردیف‌های این صفحه"
                   checked={
-                    paged.rows.length > 0 &&
-                    paged.rows.every((r) => selected.includes(r.id))
+                    (remote ? rows : paged.rows).length > 0 &&
+                    (remote ? rows : paged.rows).every((r) =>
+                      selected.includes(r.id),
+                    )
                   }
                   onChange={(e) =>
                     setSelected(
@@ -262,11 +293,14 @@ export function DataTable<T extends { id: string }>({
                         ? [
                             ...new Set([
                               ...selected,
-                              ...paged.rows.map((r) => r.id),
+                              ...(remote ? rows : paged.rows).map((r) => r.id),
                             ]),
                           ]
                         : selected.filter(
-                            (id) => !paged.rows.some((r) => r.id === id),
+                            (id) =>
+                              !(remote ? rows : paged.rows).some(
+                                (r) => r.id === id,
+                              ),
                           ),
                     )
                   }
@@ -286,7 +320,7 @@ export function DataTable<T extends { id: string }>({
                       : undefined
                   }
                 >
-                  {actionColumn(c.title) ? (
+                  {actionColumn(c.title) || remote ? (
                     c.title
                   ) : (
                     <button
@@ -307,7 +341,7 @@ export function DataTable<T extends { id: string }>({
             </tr>
           </thead>
           <tbody>
-            {paged.rows.map((row) => (
+            {(remote ? rows : paged.rows).map((row) => (
               <tr key={row.id}>
                 <td>
                   <input
@@ -343,7 +377,7 @@ export function DataTable<T extends { id: string }>({
         </table>
         {!filtered.length && <div className="empty">{empty}</div>}
       </div>
-      <PaginationControls {...paged.controls} />
+      <PaginationControls {...(remote?.controls ?? paged.controls)} />
     </>
   );
 }

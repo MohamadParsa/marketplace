@@ -21,6 +21,7 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 		t.Skip("isolated sales/grid browser fixture")
 	}
 	w := commerceSeed()
+	w.Users = append(w.Users, backoffice.User{ID: "inactive-admin-fixture", Name: "ادمین غیرفعال آزمون", Phone: "09120000888", Role: identity.RoleSuperAdmin})
 	w.IconMedia[0].Data = iconPNG(t, 12)
 	w.Categories = append(w.Categories, catalog.Category{ID: "child", Name: "فرزند دیجیتال", ParentID: "regular", Published: true, Version: 1})
 	w.Products[0].CategoryID = "child"

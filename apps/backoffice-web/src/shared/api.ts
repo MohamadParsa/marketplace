@@ -32,9 +32,14 @@ export class ApiError extends Error {
     public code?: string,
   ) {
     super(
-      code === "invalid_reauthentication"
-        ? "کد تأیید معتبر نیست یا منقضی شده است."
-        : (messages[status] ?? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید."),
+      code === "duplicate_user_contact"
+        ? "شماره موبایل یا ایمیل قبلاً برای حساب دیگری ثبت شده است."
+        : code === "last_administrator"
+          ? "آخرین ادمین فعال را نمی‌توان غیرفعال کرد."
+          : code === "invalid_reauthentication"
+            ? "کد تأیید معتبر نیست یا منقضی شده است."
+            : (messages[status] ??
+              "ارتباط با سرور برقرار نشد. دوباره تلاش کنید."),
     );
   }
 }
@@ -252,9 +257,12 @@ export const api = {
       { method: "POST", headers: { Authorization: `Bearer ${token}` } },
     ),
   workspace: (token: string, surface = "backoffice") =>
-    request<Workspace>(`/${surface}/workspace`, {
-      headers: { Authorization: `Bearer ${token}` },
-    }),
+    request<Workspace>(
+      `/${surface}/workspace${surface === "backoffice" ? "?user_directory=separate" : ""}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    ),
   execute: (token: string, command: Command, surface = "backoffice") =>
     request<void>(`/${surface}/commands`, {
       method: "POST",

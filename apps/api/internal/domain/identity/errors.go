@@ -3,6 +3,7 @@ package identity
 import "errors"
 
 var (
+	ErrPasswordChangeRequired   = errors.New("password_change_required")
 	ErrInvalidOTP               = errors.New("invalid or expired otp")
 	ErrInvalidCredentials       = errors.New("invalid credentials")
 	ErrInactive                 = errors.New("account is inactive")

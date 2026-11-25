@@ -41,6 +41,9 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			writeError(w, 500, "internal_error")
 			return
 		}
+		if r.URL.Query().Get("user_directory") == "separate" {
+			state.Users = nil
+		}
 		writeJSON(w, 200, state)
 		return
 	}

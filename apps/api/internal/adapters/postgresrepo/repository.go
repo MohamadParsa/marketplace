@@ -110,8 +110,8 @@ func load(ctx context.Context, tx pgx.Tx, write bool) (backoffice.Workspace, err
 func loadIdentity(ctx context.Context, tx pgx.Tx, state *backoffice.Workspace) error {
 	jobs := []func() error{
 		func() error {
-			return scan(ctx, tx, "SELECT id,name,phone,base_role,active,access_version,email,password_hash,national_id FROM review_users ORDER BY id", &state.Users, func(row pgx.CollectableRow, u *backoffice.User) error {
-				return row.Scan(&u.ID, &u.Name, &u.Phone, &u.Role, &u.Active, &u.AccessVersion, &u.Email, &u.PasswordHash, &u.NationalID)
+			return scan(ctx, tx, "SELECT id,name,phone,base_role,active,access_version,email,password_hash,national_id,first_name,last_name,gender,version,password_change_required FROM review_users ORDER BY id", &state.Users, func(row pgx.CollectableRow, u *backoffice.User) error {
+				return row.Scan(&u.ID, &u.Name, &u.Phone, &u.Role, &u.Active, &u.AccessVersion, &u.Email, &u.PasswordHash, &u.NationalID, &u.FirstName, &u.LastName, &u.Gender, &u.Version, &u.PasswordChangeRequired)
 			})
 		},
 		func() error {
@@ -165,10 +165,10 @@ func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
 	// Replacing its access relations also makes revocations and membership removal atomic.
 	batch := &pgx.Batch{}
 	for _, user := range state.Users {
-		batch.Queue(`INSERT INTO review_users (id,phone,name,base_role,active,access_version,email,password_hash,national_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+		batch.Queue(`INSERT INTO review_users (id,phone,name,base_role,active,access_version,email,password_hash,national_id,first_name,last_name,gender,version,password_change_required) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
 			ON CONFLICT(id) DO UPDATE SET phone=excluded.phone, name=excluded.name, base_role=excluded.base_role,
-			active=excluded.active, access_version=excluded.access_version,email=excluded.email,password_hash=excluded.password_hash,national_id=excluded.national_id`,
-			user.ID, user.Phone, user.Name, user.Role, user.Active, user.AccessVersion, user.Email, user.PasswordHash, user.NationalID)
+			active=excluded.active, access_version=excluded.access_version,email=excluded.email,password_hash=excluded.password_hash,national_id=excluded.national_id,first_name=excluded.first_name,last_name=excluded.last_name,gender=excluded.gender,version=excluded.version,password_change_required=excluded.password_change_required`,
+			user.ID, user.Phone, user.Name, user.Role, user.Active, user.AccessVersion, user.Email, user.PasswordHash, user.NationalID, user.FirstName, user.LastName, user.Gender, user.Version, user.PasswordChangeRequired)
 	}
 	for _, store := range state.Stores {
 		batch.Queue("INSERT INTO review_stores VALUES ($1) ON CONFLICT DO NOTHING", store.ID)

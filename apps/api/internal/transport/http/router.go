@@ -34,6 +34,9 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("POST /storefront/account/address-map/reverse", h.Handle)
 	}
 	if h := cfg.Commerce; h != nil {
+		for _, path := range []string{"query", "save", "export"} {
+			mux.HandleFunc("POST /backoffice/users/"+path, h.Users)
+		}
 		mux.HandleFunc("POST /backoffice/grids/export-authorize", h.AuthorizeExport)
 		mux.HandleFunc("POST /seller/grids/export-authorize", h.AuthorizeExport)
 		for _, route := range []string{"GET /storefront/account/recently-viewed", "POST /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed/{id}", "DELETE /storefront/account/recently-viewed"} {
@@ -133,6 +136,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("POST /storefront/auth/request-otp", cfg.Auth.RequestOTP(identity.SurfaceCustomer))
 		mux.HandleFunc("POST /storefront/auth/verify-otp", cfg.Auth.VerifyOTP(identity.SurfaceCustomer))
 		mux.HandleFunc("POST /storefront/auth/password-login", cfg.Auth.PasswordLogin(identity.SurfaceCustomer))
+		mux.HandleFunc("POST /storefront/auth/complete-password", cfg.Auth.CompleteTemporaryPassword(identity.SurfaceCustomer))
 		mux.HandleFunc("GET /storefront/account/me", cfg.Auth.Profile(identity.SurfaceCustomer))
 		mux.HandleFunc("POST /storefront/auth/password-recovery/request-otp", cfg.Auth.RequestRecoveryOTP(identity.SurfaceCustomer))
 		mux.HandleFunc("POST /storefront/auth/password-recovery/reset", cfg.Auth.RecoverPassword(identity.SurfaceCustomer))
@@ -151,6 +155,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	}
 	mux.HandleFunc("POST /backoffice/auth/request-otp", cfg.Auth.RequestOTP(identity.SurfaceBackoffice))
 	mux.HandleFunc("POST /backoffice/auth/verify-otp", cfg.Auth.VerifyOTP(identity.SurfaceBackoffice))
+	mux.HandleFunc("POST /backoffice/auth/complete-password", cfg.Auth.CompleteTemporaryPassword(identity.SurfaceBackoffice))
 	mux.HandleFunc("POST /backoffice/auth/password-login", cfg.Auth.PasswordLogin(identity.SurfaceBackoffice))
 	mux.HandleFunc("GET /backoffice/account/profile", cfg.Auth.Profile(identity.SurfaceBackoffice))
 	mux.HandleFunc("PATCH /backoffice/account/profile", cfg.Auth.UpdateProfile(identity.SurfaceBackoffice))
@@ -161,6 +166,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("POST /backoffice/auth/logout", cfg.Auth.Logout)
 	mux.HandleFunc("POST /seller/auth/request-otp", cfg.Auth.RequestOTP(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/verify-otp", cfg.Auth.VerifyOTP(identity.SurfaceSeller))
+	mux.HandleFunc("POST /seller/auth/complete-password", cfg.Auth.CompleteTemporaryPassword(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/password-login", cfg.Auth.PasswordLogin(identity.SurfaceSeller))
 	mux.HandleFunc("GET /seller/account/profile", cfg.Auth.Profile(identity.SurfaceSeller))
 	mux.HandleFunc("PATCH /seller/account/profile", cfg.Auth.UpdateProfile(identity.SurfaceSeller))

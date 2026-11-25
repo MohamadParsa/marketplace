@@ -126,7 +126,7 @@ export interface Product {
   variant_version: number;
 }
 export interface AttributeDefinition {
- groups?: { id: string; name: string; values: string[]; active: boolean }[];
+  groups?: { id: string; name: string; values: string[]; active: boolean }[];
   id: string;
   code: string;
   name: string;
@@ -337,12 +337,15 @@ export interface Session {
   expires_at: string;
   user: {
     ID: string;
+    PasswordChangeRequired?: boolean;
     Role: Role;
     Surface: "backoffice" | "seller";
     Permissions?: string[];
   };
 }
 export interface Command {
+  user_version?: number;
+  role_version?: number;
   product_media?: {
     gallery_ids: string[];
     variant_images: Record<string, string>;
@@ -428,7 +431,12 @@ export interface ProductQAPage {
 
 export type ProductQAMutation =
   | { action: "reply"; text: string; version: number }
-  | { action: "moderate"; answer_id?: string; status: "approved" | "rejected"; version: number };
+  | {
+      action: "moderate";
+      answer_id?: string;
+      status: "approved" | "rejected";
+      version: number;
+    };
 
 export type ProductReviewStatus = "pending" | "approved" | "rejected";
 export type ReviewAction = "approve" | "reject" | "publish_reply";

@@ -36,6 +36,12 @@ func NewCommerceHandler(s *backoffice.Service, a *auth.Service) *CommerceHandler
 func commerceError(w http.ResponseWriter, e error) {
 	status, code := 503, "commerce_unavailable"
 	switch {
+	case errors.Is(e, backoffice.ErrReauthenticationRequired):
+		status, code = 403, "reauthentication_required"
+	case errors.Is(e, backoffice.ErrUserContactConflict):
+		status, code = 409, "duplicate_user_contact"
+	case errors.Is(e, backoffice.ErrLastAdministrator):
+		status, code = 409, "last_administrator"
 	case errors.Is(e, backoffice.ErrForbidden):
 		status, code = 403, "forbidden"
 	case errors.Is(e, backoffice.ErrNotFound):
@@ -90,7 +96,7 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
-	if r.URL.Path == "/backoffice/commerce/sales" {
+	if r.URL.Path == "/backoffice/commerce/sales" || r.URL.Path == "/backoffice/users/export" {
 		limit = 2 * 1024 * 1024
 	}
 	if r.URL.Path == "/backoffice/commerce/settings" {
@@ -491,4 +497,30 @@ func (h *CommerceHandler) AuthorizeExport(w http.ResponseWriter, r *http.Request
 		return
 	}
 	w.WriteHeader(204)
+}
+
+func (h *CommerceHandler) Users(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	actor, ok := h.actor(w, r, identity.SurfaceBackoffice)
+	if !ok {
+		return
+	}
+	if strings.HasSuffix(r.URL.Path, "/save") {
+		var in backoffice.UserInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		out, e := h.service.SaveUser(r.Context(), actor, in, r.Header.Get("Idempotency-Key"))
+		commerceResult(w, r, out, e)
+		return
+	}
+	var in struct {
+		Filter backoffice.UserFilter `json:"filter"`
+		IDs    []string              `json:"ids"`
+	}
+	if !commerceBody(w, r, &in) {
+		return
+	}
+	out, e := h.service.ListUsers(r.Context(), actor, in.Filter, strings.HasSuffix(r.URL.Path, "/export"), in.IDs)
+	commerceResult(w, r, out, e)
 }

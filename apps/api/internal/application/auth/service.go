@@ -235,10 +235,18 @@ func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, t
 		}
 		hash = string(encoded)
 	}
-	if err := s.users.UpdateProfile(ctx, surface, session.User.ID, name, email, hash, nid); err != nil {
+	if err := s.updateProfileVersion(ctx, surface, session.User, name, email, hash, nid); err != nil {
 		return identity.User{}, err
 	}
-	return s.users.FindByPhone(ctx, surface, session.User.Phone)
+	updated, e := s.users.FindByPhone(ctx, surface, session.User.Phone)
+	if e != nil {
+		return identity.User{}, e
+	}
+	session.User = updated
+	if e = s.sessions.Put(ctx, session); e != nil {
+		return identity.User{}, e
+	}
+	return updated, nil
 }
 
 func (s *Service) RequestRecoveryOTP(ctx context.Context, surface identity.Surface, phone, destination string) (string, string, error) {
@@ -258,7 +266,7 @@ func (s *Service) RequestRecoveryOTP(ctx context.Context, surface identity.Surfa
 func (s *Service) RecoverPassword(ctx context.Context, surface identity.Surface, requestID, code, password string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if len(password) < 8 {
+	if len(password) < 8 || len(password) > 72 {
 		return identity.ErrInvalidProfile
 	}
 	challenge, err := s.consumeOTP(ctx, surface, "", requestID, code)
@@ -273,7 +281,7 @@ func (s *Service) RecoverPassword(ctx context.Context, surface identity.Surface,
 	if err != nil {
 		return err
 	}
-	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash), nil)
+	return s.updateProfileVersion(ctx, surface, user, user.Name, user.Email, string(hash), nil)
 }
 
 // AdminResetPassword lets an authenticated super-admin reset a user's password.
@@ -284,7 +292,7 @@ func (s *Service) AdminResetPassword(ctx context.Context, token string, surface 
 	if err != nil || admin.User.Role != identity.RoleSuperAdmin {
 		return identity.ErrNotAdmin
 	}
-	if len(password) < 8 {
+	if len(password) < 8 || len(password) > 72 {
 		return identity.ErrInvalidProfile
 	}
 	user, err := s.users.FindByPhone(ctx, surface, identity.NormalizePhone(targetPhone))
@@ -295,7 +303,17 @@ func (s *Service) AdminResetPassword(ctx context.Context, token string, surface 
 	if err != nil {
 		return err
 	}
-	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash), nil)
+	setter, ok := s.users.(interface {
+		SetTemporaryPassword(context.Context, identity.Surface, string, string, identity.User, string, time.Time) error
+	})
+	if !ok {
+		return identity.ErrInvalidProfile
+	}
+	auditID, e := s.random.Token()
+	if e != nil {
+		return e
+	}
+	return setter.SetTemporaryPassword(ctx, surface, user.ID, string(hash), admin.User, auditID, s.clock.Now())
 }
 
 func (s *Service) createSession(ctx context.Context, user identity.User) (identity.Session, error) {
@@ -345,6 +363,9 @@ func (s *Service) Logout(ctx context.Context, token string) error {
 	return s.sessions.Delete(ctx, token)
 }
 func (s *Service) Authenticate(ctx context.Context, token string, surface identity.Surface) (identity.Session, error) {
+	return s.authenticate(ctx, token, surface, false)
+}
+func (s *Service) authenticate(ctx context.Context, token string, surface identity.Surface, restricted bool) (identity.Session, error) {
 	session, err := s.sessions.Get(ctx, token)
 	if err != nil || session.User.Surface != surface || !s.clock.Now().Before(session.Expires) {
 		return identity.Session{}, identity.ErrInvalidOTP
@@ -353,9 +374,57 @@ func (s *Service) Authenticate(ctx context.Context, token string, surface identi
 	if err != nil || !user.Active || user.ID != session.User.ID || user.AccessVersion != session.User.AccessVersion {
 		return identity.Session{}, identity.ErrInactive
 	}
+	if user.PasswordChangeRequired && !restricted {
+		return identity.Session{}, identity.ErrPasswordChangeRequired
+	}
 	session.User = user
 	return session, nil
 }
 func challengeKey(surface identity.Surface, phone string) string {
 	return string(surface) + ":" + phone
+}
+
+// Restricted tokens can only finish this operation or log out; they cannot read profiles/workspaces/carts.
+func (s *Service) CompleteTemporaryPassword(ctx context.Context, token string, surface identity.Surface, password string) (identity.Session, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	session, e := s.authenticate(ctx, token, surface, true)
+	if e != nil {
+		return identity.Session{}, e
+	}
+	if !session.User.PasswordChangeRequired || len(password) < 8 || len(password) > 72 || bcrypt.CompareHashAndPassword([]byte(session.User.PasswordHash), []byte(password)) == nil {
+		return identity.Session{}, identity.ErrInvalidProfile
+	}
+	setter, ok := s.users.(interface {
+		ChangeTemporaryPassword(context.Context, identity.Surface, string, int, string, string, time.Time) error
+	})
+	if !ok {
+		return identity.Session{}, identity.ErrInvalidProfile
+	}
+	hash, e := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if e != nil {
+		return identity.Session{}, e
+	}
+	auditID, e := s.random.Token()
+	if e != nil {
+		return identity.Session{}, e
+	}
+	if e = setter.ChangeTemporaryPassword(ctx, surface, session.User.ID, session.User.AccessVersion, string(hash), auditID, s.clock.Now()); e != nil {
+		return identity.Session{}, e
+	}
+	user, e := s.users.FindByPhone(ctx, surface, session.User.Phone)
+	if e != nil {
+		return identity.Session{}, e
+	}
+	_ = s.sessions.Delete(ctx, token)
+	return s.createSession(ctx, user)
+}
+
+func (s *Service) updateProfileVersion(ctx context.Context, surface identity.Surface, user identity.User, name, email, hash string, nid *string) error {
+	if r, ok := s.users.(interface {
+		UpdateProfileVersion(context.Context, identity.Surface, string, string, string, string, *string, *int) error
+	}); ok {
+		return r.UpdateProfileVersion(ctx, surface, user.ID, name, email, hash, nid, &user.AccessVersion)
+	}
+	return s.users.UpdateProfile(ctx, surface, user.ID, name, email, hash, nid)
 }

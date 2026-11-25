@@ -16,7 +16,7 @@ const (
 func permissionRegistry() map[identity.RoleScope][]string {
 	return map[identity.RoleScope][]string{
 		identity.ScopeGlobal: {
-			GridExport, SalesRead, SalesWrite, WorkspaceRead, FinanceRead, CommerceWalletCredit, CouponsRead, CouponsCreate, CouponsEdit, CouponsActivate, "store.content-policy.set", "product.content.review", CommerceSettingsRead, CommercePaymentWrite, CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite, CommerceOrdersRead, CommerceOrdersConfirm, CommerceDepositsRead, CommerceDepositsReview, CommerceRefundsResolve, "category.publish", "banner.read", "banner.create", "banner.save", "banner.publish", "banner.media.set", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.media.update", "product.icon.set", "product.icon.remove", "store.create", "store.toggle", "category.create",
+			UsersRead, UsersWrite, UsersPasswordReset, GridExport, SalesRead, SalesWrite, WorkspaceRead, FinanceRead, CommerceWalletCredit, CouponsRead, CouponsCreate, CouponsEdit, CouponsActivate, "store.content-policy.set", "product.content.review", CommerceSettingsRead, CommercePaymentWrite, CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite, CommerceOrdersRead, CommerceOrdersConfirm, CommerceDepositsRead, CommerceDepositsReview, CommerceRefundsResolve, "category.publish", "banner.read", "banner.create", "banner.save", "banner.publish", "banner.media.set", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.media.update", "product.icon.set", "product.icon.remove", "store.create", "store.toggle", "category.create",
 			"category.archive", "product.publish", "product.reject", "shipping.update",
 			"case.start", "case.close", "case.refund", "case.assign", "order.deliver", "transfer.resolve",
 			"rule.toggle", "notification.retry",
@@ -26,7 +26,7 @@ func permissionRegistry() map[identity.RoleScope][]string {
 }
 
 func IsAccessCommand(action string) bool {
-	return strings.HasPrefix(action, "user.") || strings.HasPrefix(action, "role.") || strings.HasPrefix(action, "membership.")
+	return strings.HasPrefix(action, "users.") || strings.HasPrefix(action, "user.") || strings.HasPrefix(action, "role.") || strings.HasPrefix(action, "membership.")
 }
 
 func (w Workspace) BackofficeIdentity(account User) (identity.User, bool) {
@@ -35,6 +35,7 @@ func (w Workspace) BackofficeIdentity(account User) (identity.User, bool) {
 		permissions = identity.GrantedPermissions(w.Access.Roles, w.Access.Grants, account.ID, "")
 	}
 	return identity.User{
+		FirstName: account.FirstName, LastName: account.LastName, Gender: account.Gender, PasswordChangeRequired: account.PasswordChangeRequired,
 		ID: account.ID, Name: account.Name, Phone: account.Phone, Email: account.Email, NationalID: account.NationalID, Active: account.Active, Role: account.Role, PasswordHash: account.PasswordHash,
 		Surface: identity.SurfaceBackoffice, AccessVersion: account.AccessVersion, Permissions: permissions,
 	}, account.Role != "" || len(permissions) > 0
@@ -121,6 +122,9 @@ func applyAssignment(state *Workspace, c Command, event *Audit) error {
 	if userIndex < 0 {
 		return ErrNotFound
 	}
+	if c.UserVersion != nil && state.Users[userIndex].Version != *c.UserVersion {
+		return ErrConflict
+	}
 	membership := identity.StoreMembership{UserID: c.Target, StoreID: c.StoreID}
 	isMember := slices.Contains(state.StoreMemberships, membership)
 	event.StoreID = c.StoreID
@@ -131,6 +135,7 @@ func applyAssignment(state *Workspace, c Command, event *Audit) error {
 		}
 		if !isMember {
 			state.StoreMemberships = append(state.StoreMemberships, membership)
+			state.Users[userIndex].Version++
 		}
 		return nil
 	case "membership.remove":
@@ -138,6 +143,7 @@ func applyAssignment(state *Workspace, c Command, event *Audit) error {
 			return ErrNotFound
 		}
 		state.StoreMemberships = slices.DeleteFunc(state.StoreMemberships, func(current identity.StoreMembership) bool { return current == membership })
+		state.Users[userIndex].Version++
 		state.Access.Grants = slices.DeleteFunc(state.Access.Grants, func(grant identity.RoleGrant) bool {
 			return grant.UserID == c.Target && grant.StoreID == c.StoreID
 		})
@@ -148,6 +154,9 @@ func applyAssignment(state *Workspace, c Command, event *Audit) error {
 		return ErrNotFound
 	}
 	role := state.Access.Roles[roleIndex]
+	if c.Action == "user.role-grant" && c.RoleVersion != nil && role.Version != *c.RoleVersion {
+		return ErrConflict
+	}
 	if (role.Scope == identity.ScopeGlobal && c.StoreID != "") || (role.Scope == identity.ScopeStore && !isMember) {
 		return ErrInvalid
 	}
@@ -162,6 +171,7 @@ func applyAssignment(state *Workspace, c Command, event *Audit) error {
 	default:
 		return nil
 	}
+	state.Users[userIndex].Version++
 	if role.Scope == identity.ScopeGlobal {
 		state.Users[userIndex].AccessVersion++
 	}

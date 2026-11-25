@@ -45,7 +45,7 @@ func roleAllows(role identity.Role, action string) bool {
 	return false
 }
 func allowsAction(actor identity.User, action string) bool {
-	return roleAllows(actor.Role, action) || (!IsAccessCommand(action) && slices.Contains(actor.Permissions, action))
+	return roleAllows(actor.Role, action) || ((!IsAccessCommand(action) || action == UsersRead || action == UsersWrite || action == UsersPasswordReset) && slices.Contains(actor.Permissions, action))
 }
 
 func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, error) {
@@ -53,6 +53,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if err != nil {
 		return Workspace{}, err
 	}
+	state.UserMutations = nil
 	state.Wishlist = nil
 	state.RecentlyViewed = nil
 	if state.Commerce != nil {
@@ -69,7 +70,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		return Workspace{}, ErrForbidden
 	}
 	if actor.Role != identity.RoleSuperAdmin {
-		if !allowsAction(actor, CommerceWalletCredit) {
+		if !allowsAction(actor, CommerceWalletCredit) && !allowsAction(actor, UsersRead) {
 			state.Users = nil
 		}
 		state.Access = nil
