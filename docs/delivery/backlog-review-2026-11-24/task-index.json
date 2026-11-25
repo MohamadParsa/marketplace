@@ -50,7 +50,7 @@
       "number": 96,
       "url": "https://github.com/MohamadParsa/marketplace/issues/96",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         67,
         68,
@@ -60,7 +60,10 @@
       "verification": "issues-96-99-verification.md",
       "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
       "historical_questions": [],
-      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/96#issuecomment-7154315283",
+      "pull_request": 106
     },
     {
       "code": "CV-REV-02",
@@ -96,7 +99,7 @@
       "number": 97,
       "url": "https://github.com/MohamadParsa/marketplace/issues/97",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         66,
         69
@@ -109,7 +112,10 @@
         "سیاست مانده‌های قدیمی و legacy-unattributed و وضعیت پیش‌فرض پرچم شارژ جدید چیست؟",
         "آیا اعتبار قابل‌برداشت مدیریتی سقف/فرایند متفاوتی از اعتبار فقط‌خرید دارد؟ تا تصمیم، قاعده حدسی پیاده نشود."
       ],
-      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/97#issuecomment-7154316095",
+      "pull_request": 106
     },
     {
       "code": "CV-REV-03",
@@ -150,7 +156,7 @@
       "number": 98,
       "url": "https://github.com/MohamadParsa/marketplace/issues/98",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         97,
         69
@@ -161,7 +167,10 @@
       "historical_questions": [
         "پیش‌فرض تیک و اجباری‌بودن عنوان/توضیح پیش از اجرا در قرارداد اعتبار نهایی شوند."
       ],
-      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/98#issuecomment-7154316866",
+      "pull_request": 106
     },
     {
       "code": "CV-REV-04",
@@ -200,7 +209,7 @@
       "number": 99,
       "url": "https://github.com/MohamadParsa/marketplace/issues/99",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         66,
         67,
@@ -213,7 +222,10 @@
       "historical_questions": [
         "مبنای «قیمت مرجع معتبر» و سهم تخفیف مستقیم در قرارداد #72 نهایی شود؛ تا آن زمان UI می‌تواند مستقل طراحی شود، عدد سود حدس زده نشود."
       ],
-      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/99#issuecomment-7154317730",
+      "pull_request": 106
     },
     {
       "code": "CV-REV-05",
@@ -475,7 +487,7 @@
         94
       ],
       "questions": [],
-      "implementation_status": "review-local-unpublished",
+      "implementation_status": "pushed-review-pending-environment",
       "execution_authorized": false,
       "integration_sources": {
         "reviews": "4e7373cc47880aa18b7a9a57ea44360b77afcd07",
@@ -493,15 +505,35 @@
         90,
         94
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/publish-local-pdp-add-enablement.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/publish-local-pdp-add-enablement.md",
+      "publication_authorized": true,
+      "deployment_authorized": false,
+      "pull_request": 106
     }
   ],
   "existing_social_owner": 87,
   "authorized_issue_numbers": [
     103,
     104,
-    102
+    102,
+    96,
+    97,
+    98,
+    99
   ],
   "authorization_scope": "only authorized_issue_numbers; every other item retains its own authorization=false",
-  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36"
+  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+  "integrated_review_pr": 106,
+  "publication": {
+    "branch": "codex/local-parsa-integration-20261124",
+    "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+    "evidence_commit": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "status": "pushed-review-open",
+    "merged": false,
+    "deployed": false,
+    "delivery_receipt": "issues-96-99-delivery.json",
+    "verified_ci_head": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "ci_conclusion": "success",
+    "ci_run": "https://github.com/MohamadParsa/marketplace/actions/runs/45556932708"
+  }
 }

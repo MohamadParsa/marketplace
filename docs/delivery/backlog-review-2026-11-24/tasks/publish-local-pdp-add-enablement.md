@@ -3,15 +3,21 @@ id: FEAT-REV-010
 title: بررسی و انتشار نسخه محلی یکپارچه پارسا و فعال‌سازی خرید
 status: in-review
 owner: eliassarband
-updated: 2026-11-24
+updated: 2026-11-25
 related: [PLAN-BACKLOG-RECONCILIATION-001]
 approved_by: []
-implementation_status: review-local-unpublished
+implementation_status: pushed-review-pending-environment
 execution_authorized: false
+publication_authorized: true
+deployment_authorized: false
 priority: P1
 ---
 
 # CV-REV-10 — بررسی و انتشار نسخه محلی یکپارچه پارسا و فعال‌سازی خرید
+
+## وضعیت جاری — ۲۰۲۶-۱۱-۲۵
+
+به دستور مالک، شاخه یکپارچه در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) پوش شد. اصلاح پیش‌فرض افزودن به سبد در سورس `35f9c59e9e3b11a7398d7f537451f60014859b36` ثبت است؛ [گزارش و شواهد](../issues-96-99-verification.md). مجوز پوش و تحویل کد از پذیرش محیط مقصد جداست: merge، اجرای migration روی پایگاه اصلی و استقرار انجام نشده‌اند؛ این Issue تا پذیرش محیط مقصد باز می‌ماند. متن «فقط لوکال/پوش‌نشده» پایین، سابقه مرحله پیش از این دستور است.
 
 Issue: [#105](https://github.com/MohamadParsa/marketplace/issues/105) · والد [#95](https://github.com/MohamadParsa/marketplace/issues/95). اولویت پیشنهادی است و اجرای قابلیت جدید انتخاب نشده است.
 

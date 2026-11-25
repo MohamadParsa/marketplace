@@ -157,5 +157,18 @@
       "quota-message",
       "network-failure"
     ]
+  },
+  "ci": {
+    "head": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45556932708",
+    "conclusion": "success",
+    "jobs": [
+      "api (including go test -race)",
+      "backoffice-web",
+      "seller-portal-web",
+      "storefront-web",
+      "contracts"
+    ],
+    "race_passed": true
   }
 }
