@@ -263,14 +263,17 @@
       "number": 100,
       "url": "https://github.com/MohamadParsa/marketplace/issues/100",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         30
       ],
       "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-fields-recipient-snapshot.md",
       "publication_status": "local-only",
       "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
-      "decisions_reference": "docs/architecture/contracts/customer-address-map.md"
+      "decisions_reference": "docs/architecture/contracts/customer-address-map.md",
+      "state_reason": "completed",
+      "source_commit": "e23e2fef05335aaa483a070186166f4c3f03ef15",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/100#issuecomment-7155618382"
     },
     {
       "code": "CV-REV-06",
@@ -306,7 +309,7 @@
       "number": 101,
       "url": "https://github.com/MohamadParsa/marketplace/issues/101",
       "assignee": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "github_dependencies": [
         100
       ],
@@ -314,7 +317,10 @@
       "publication_status": "local-only",
       "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
       "decisions_reference": "docs/architecture/contracts/customer-address-map.md",
-      "external_activation": "pending-owner-private-keys-and-domain-verification"
+      "external_activation": "pending-owner-private-keys-and-domain-verification",
+      "state_reason": "completed",
+      "source_commit": "e23e2fef05335aaa483a070186166f4c3f03ef15",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/101#issuecomment-7155620631"
     },
     {
       "code": "CV-REV-07",
