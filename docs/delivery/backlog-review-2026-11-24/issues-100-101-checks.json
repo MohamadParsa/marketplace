@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-25",
+  "issues": [
+    100,
+    101
+  ],
+  "source_directory": "D:/Cherriva",
+  "go": {
+    "passed_tests_and_subtests": 309,
+    "failed": [],
+    "skipped": [
+      "TestCatalogSnapshotPostgresRoundTrip",
+      "TestAddressBrowserHarness",
+      "TestAdjustmentsBrowserHarness"
+    ]
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "legacy-edit-preserves-recipient",
+        "pass": true
+      },
+      {
+        "id": "modal-escape",
+        "pass": true
+      },
+      {
+        "id": "new-self-default-and-profile-required",
+        "pass": true
+      },
+      {
+        "id": "invalid-national-id-keeps-draft",
+        "pass": true
+      },
+      {
+        "id": "self-profile-snapshot-persisted",
+        "pass": true
+      },
+      {
+        "id": "other-mobile-required",
+        "pass": true
+      },
+      {
+        "id": "province-change-clears-city",
+        "pass": true
+      },
+      {
+        "id": "recipient-toggle-preserves-other-draft",
+        "pass": true
+      },
+      {
+        "id": "mobile-no-horizontal-overflow",
+        "pass": true
+      },
+      {
+        "id": "other-recipient-persisted",
+        "pass": true
+      },
+      {
+        "id": "real-pinned-sdk-map-initialized",
+        "pass": true
+      },
+      {
+        "id": "real-sdk-click-selects-pin",
+        "pass": true
+      },
+      {
+        "id": "real-sdk-drag-moves-pin",
+        "pass": true
+      },
+      {
+        "id": "late-reverse-does-not-overwrite-manual",
+        "pass": true
+      },
+      {
+        "id": "explicit-suggestion-applies-active-geography",
+        "pass": true
+      },
+      {
+        "id": "unknown-geography-keeps-valid-city",
+        "pass": true
+      },
+      {
+        "id": "geolocation-denied-manual-form-usable",
+        "pass": true
+      },
+      {
+        "id": "provider-failure-manual-fallback",
+        "pass": true
+      },
+      {
+        "id": "coordinates-and-final-text-persist",
+        "pass": true
+      },
+      {
+        "id": "edit-restores-saved-position-and-text",
+        "pass": true
+      },
+      {
+        "id": "edit-persists-same-address-and-updated-position",
+        "pass": true
+      },
+      {
+        "id": "sdk-load-error-preserves-manual-fields",
+        "pass": true
+      },
+      {
+        "id": "unconfigured-provider-manual-fallback",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "passed": 24,
+    "real_pinned_sdk": true,
+    "fake_tiles_and_geocoder": true,
+    "live_provider_not_activated": true
+  },
+  "local_review": {
+    "started": true,
+    "preserved": {
+      "commerce_deposits": true,
+      "commerce_wallet_entries": true,
+      "ledger": true,
+      "orders": true,
+      "purchases": true,
+      "review_memberships": true,
+      "review_role_grants": true,
+      "review_roles": true,
+      "review_users": true,
+      "stores": true,
+      "transfers": true
+    },
+    "credit_lots_previous_absent": true,
+    "credit_lots_after_count": 0,
+    "new_migrations": [
+      10,
+      11
+    ]
+  },
+  "live_provider": {
+    "activated": false,
+    "owner_selected_prepare_connection_only": true
+  },
+  "publication": "local-only",
+  "verification": {
+    "go_vet": true,
+    "storefront_lint": true,
+    "storefront_build": true,
+    "backoffice_lint": true,
+    "backoffice_build": true,
+    "relative_links": true,
+    "new_document_ids_unique": true,
+    "diff_check": true
+  }
+}

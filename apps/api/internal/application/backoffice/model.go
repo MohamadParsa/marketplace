@@ -31,6 +31,7 @@ type User struct {
 	Role          identity.Role `json:"role"`
 	Active        bool          `json:"active"`
 	Email         string        `json:"email,omitempty"`
+	NationalID    string        `json:"national_id,omitempty"`
 	AccessVersion int           `json:"-"`
 	PasswordHash  string        `json:"-"`
 	SellerOnly    bool          `json:"seller_only,omitempty"`

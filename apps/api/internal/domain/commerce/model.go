@@ -105,6 +105,16 @@ type CartLine struct {
 	SeenPrice Amount `json:"seen_price"`
 }
 type Address struct {
+	DetailVersion       int      `json:"detail_version,omitempty"`
+	Title               string   `json:"title,omitempty"`
+	FullAddress         string   `json:"full_address,omitempty"`
+	HouseNumber         string   `json:"house_number,omitempty"`
+	Unit                string   `json:"unit,omitempty"`
+	RecipientSelf       *bool    `json:"recipient_self,omitempty"`
+	RecipientNationalID string   `json:"recipient_national_id,omitempty"`
+	Latitude            *float64 `json:"latitude,omitempty"`
+	Longitude           *float64 `json:"longitude,omitempty"`
+
 	ID         string `json:"id"`
 	UserID     string `json:"user_id"`
 	Version    int    `json:"version"`

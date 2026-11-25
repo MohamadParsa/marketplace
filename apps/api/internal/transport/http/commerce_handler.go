@@ -39,6 +39,10 @@ func commerceError(w http.ResponseWriter, e error) {
 		status, code = 403, "forbidden"
 	case errors.Is(e, backoffice.ErrNotFound):
 		status, code = 404, "not_found"
+	case errors.Is(e, backoffice.ErrProfileIncomplete):
+		status, code = 400, "recipient_profile_incomplete"
+	case errors.Is(e, backoffice.ErrAddressIncomplete):
+		status, code = 400, "address_incomplete"
 	case errors.Is(e, backoffice.ErrAddressUnavailable):
 		status, code = 400, "address_unavailable"
 	case errors.Is(e, backoffice.ErrWithdrawalUnavailable):

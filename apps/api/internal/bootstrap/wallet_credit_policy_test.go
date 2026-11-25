@@ -147,7 +147,7 @@ func TestWalletCreditPostgresLegacyRestartAndImmutableSources(t *testing.T) {
 	json.Unmarshal(commerceHTTP(t, h, buyer, "", "GET", "/storefront/cart", nil, "", 200), &cart)
 	json.Unmarshal(commerceHTTP(t, h, buyer, "", "POST", "/storefront/cart", backoffice.CartMutation{Action: "add", OfferID: "offer", Quantity: 1, Version: cart.Version}, "policy-cart", 200), &cart)
 	var address commerce.Address
-	json.Unmarshal(commerceHTTP(t, h, buyer, "", "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده آزمون", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی مستقل آزمون SQL", PostalCode: "1234567890"}, "policy-address", 200), &address)
+	json.Unmarshal(commerceHTTP(t, h, buyer, "", "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده آزمون", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی مستقل آزمون SQL", PostalCode: "1234567890"}, "policy-address", 200), &address)
 	var quote backoffice.QuoteView
 	json.Unmarshal(commerceHTTP(t, h, buyer, "", "POST", "/storefront/checkout/quotes", backoffice.QuoteInput{ContractVersion: 2, WalletToman: "110000", CartVersion: cart.Version, AddressID: address.ID, Shipping: map[string]string{"s1": "post"}}, "policy-quote", 200), &quote)
 	var purchase backoffice.PurchaseView

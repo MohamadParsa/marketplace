@@ -48,7 +48,7 @@ func TestCouponCreditHTTPAccessIdempotencyAndPostgresRestart(t *testing.T) {
 	json.Unmarshal(call(buyer, "GET", "/storefront/cart", nil, "", 200), &cart)
 	json.Unmarshal(call(buyer, "POST", "/storefront/cart", backoffice.CartMutation{Action: "add", OfferID: "offer", Quantity: 1, Version: cart.Version}, "cart", 200), &cart)
 	var address commerce.Address
-	json.Unmarshal(call(buyer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده آزمایشی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمایشی مستقل", PostalCode: "1234567890"}, "address", 200), &address)
+	json.Unmarshal(call(buyer, "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده آزمایشی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمایشی مستقل", PostalCode: "1234567890"}, "address", 200), &address)
 	var q backoffice.QuoteView
 	json.Unmarshal(call(buyer, "POST", "/storefront/checkout/quotes", backoffice.QuoteInput{ContractVersion: 2, CouponCode: coupon.Code, WalletToman: "99000", CartVersion: cart.Version, AddressID: address.ID, Shipping: map[string]string{"s1": "post"}}, "quote", 200), &q)
 	if q.TotalToman != "99000" || q.DiscountToman != "11000" || q.FundingToman != "0" {

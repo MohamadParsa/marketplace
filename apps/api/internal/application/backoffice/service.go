@@ -91,6 +91,9 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 			return event.Action == "transfer.resolve" || event.Action == "rule.toggle"
 		})
 	}
+	for i := range state.Users {
+		state.Users[i].NationalID = ""
+	}
 	state.Commerce = nil
 	state.ProductReviews = nil
 	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") })

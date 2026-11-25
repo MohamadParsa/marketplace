@@ -17,7 +17,15 @@ if (-not $env:REVIEW_DATABASE_URL) {
         & $pgCtl -D $pgData -l (Join-Path $runtimeRoot 'postgres.log') -o '-h 127.0.0.1 -p 55437' -w start
         if ($LASTEXITCODE -ne 0) { throw 'Local review PostgreSQL failed to start.' }
     }
-    $env:REVIEW_DATABASE_URL = 'postgres://postgres@127.0.0.1:55437/postgres?sslmode=disable'
+    # A previously started owned cluster may use another local port.
+    # Read its actual port instead of connecting to an unrelated/default instance.
+    $pidFile = Join-Path $pgData 'postmaster.pid'
+    $pidLines = @(Get-Content -LiteralPath $pidFile -ErrorAction Stop)
+    $reviewPort = 0
+    if ($pidLines.Count -lt 4 -or -not [int]::TryParse($pidLines[3], [ref]$reviewPort) -or $reviewPort -lt 1 -or $reviewPort -gt 65535) {
+        throw 'Cannot determine the owned review PostgreSQL port; set REVIEW_DATABASE_URL explicitly.'
+    }
+    $env:REVIEW_DATABASE_URL = "postgres://postgres@127.0.0.1:$reviewPort/postgres?sslmode=disable"
 }
 # Redis is optional; a failed local cache must not prevent database-backed startup.
 if ($NoCache -or $env:PUBLIC_CACHE_ENABLED -eq 'false') {

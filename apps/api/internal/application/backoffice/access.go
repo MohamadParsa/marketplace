@@ -35,7 +35,7 @@ func (w Workspace) BackofficeIdentity(account User) (identity.User, bool) {
 		permissions = identity.GrantedPermissions(w.Access.Roles, w.Access.Grants, account.ID, "")
 	}
 	return identity.User{
-		ID: account.ID, Name: account.Name, Phone: account.Phone, Email: account.Email, Active: account.Active, Role: account.Role, PasswordHash: account.PasswordHash,
+		ID: account.ID, Name: account.Name, Phone: account.Phone, Email: account.Email, NationalID: account.NationalID, Active: account.Active, Role: account.Role, PasswordHash: account.PasswordHash,
 		Surface: identity.SurfaceBackoffice, AccessVersion: account.AccessVersion, Permissions: permissions,
 	}, account.Role != "" || len(permissions) > 0
 }

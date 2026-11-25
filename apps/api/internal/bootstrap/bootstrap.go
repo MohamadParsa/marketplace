@@ -6,6 +6,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficeidentity"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficememory"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/kavenegar"
+	"github.com/cherriva/marketplace/apps/api/internal/adapters/neshan"
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/application/customer"
@@ -55,6 +56,11 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 	router.CustomerAccount = httptransport.NewCustomerAccountHandler(customer.NewAccounts(repository), service)
 	router.ProductQA = httptransport.NewProductQAHandler(workspace, service)
 	router.Commerce = httptransport.NewCommerceHandler(workspace, service)
+	var reverse httptransport.ReverseGeocoder
+	if cfg.NeshanServiceKey != "" {
+		reverse = neshan.New(cfg.NeshanServiceKey)
+	}
+	router.AddressMap = httptransport.NewAddressMapHandler(workspace, service, cfg.NeshanWebKey, reverse, cfg.AddressMapDailyLimit)
 	next := httptransport.NewRouter(router)
 	var expiryMu sync.Mutex
 	var lastExpiry time.Time

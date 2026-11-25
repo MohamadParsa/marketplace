@@ -77,7 +77,7 @@ func (s *Store) FindByEmail(_ context.Context, surface identity.Surface, email s
 	}
 	return identity.User{}, identity.ErrUnknown
 }
-func (s *Store) UpdateProfile(_ context.Context, surface identity.Surface, userID, name, email, passwordHash string) error {
+func (s *Store) UpdateProfile(_ context.Context, surface identity.Surface, userID, name, email, passwordHash string, nationalID *string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	var key string
@@ -100,6 +100,9 @@ func (s *Store) UpdateProfile(_ context.Context, surface identity.Surface, userI
 		u.Name = name
 	}
 	u.Email = identity.NormalizeEmail(email)
+	if nationalID != nil {
+		u.NationalID = *nationalID
+	}
 	if passwordHash != "" {
 		u.PasswordHash = passwordHash
 	}

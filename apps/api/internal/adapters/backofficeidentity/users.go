@@ -19,7 +19,7 @@ func (u *Users) FindByPhone(ctx context.Context, surface identity.Surface, phone
 		if account.Phone != phone {
 			continue
 		}
-		user := identity.User{ID: account.ID, Name: account.Name, Phone: phone, Email: account.Email, PasswordHash: account.PasswordHash, Surface: surface, Active: account.Active, AccessVersion: account.AccessVersion}
+		user := identity.User{ID: account.ID, Name: account.Name, Phone: phone, Email: account.Email, NationalID: account.NationalID, PasswordHash: account.PasswordHash, Surface: surface, Active: account.Active, AccessVersion: account.AccessVersion}
 		switch surface {
 		case identity.SurfaceBackoffice:
 			if authenticated, ok := state.BackofficeIdentity(account); ok && (!account.SellerOnly || len(authenticated.Permissions) > 0) {
@@ -61,7 +61,7 @@ func (u *Users) FindByEmail(ctx context.Context, surface identity.Surface, email
 	return identity.User{}, identity.ErrUnknown
 }
 
-func (u *Users) UpdateProfile(ctx context.Context, surface identity.Surface, userID, name, email, passwordHash string) error {
+func (u *Users) UpdateProfile(ctx context.Context, surface identity.Surface, userID, name, email, passwordHash string, nationalID *string) error {
 	return u.repository.Update(ctx, func(state *backoffice.Workspace) error {
 		i := -1
 		for n := range state.Users {
@@ -82,6 +82,9 @@ func (u *Users) UpdateProfile(ctx context.Context, surface identity.Surface, use
 			state.Users[i].Name = strings.TrimSpace(name)
 		}
 		state.Users[i].Email = identity.NormalizeEmail(email)
+		if nationalID != nil {
+			state.Users[i].NationalID = *nationalID
+		}
 		if passwordHash != "" {
 			state.Users[i].PasswordHash = passwordHash
 		}

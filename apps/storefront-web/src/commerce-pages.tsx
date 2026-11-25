@@ -1,3 +1,4 @@
+import { AddressEditor } from "./address-editor";
 import { CatalogImage } from "./catalog-image";
 import {
   CheckoutAdjustmentBox,
@@ -671,6 +672,7 @@ const emptyAddress: Address = {
   city: "",
   street: "",
   postal_code: "",
+  recipient_self: true,
 };
 function destinationAvailable(address: Address, geography: Province[]) {
   const norm = (v: string) =>
@@ -705,8 +707,6 @@ export function AddressBook({
       });
   }, [token, load]);
   const geography = config?.geography ?? [];
-  const province = geography.find((p) => p.name === draft?.province);
-  const cityValid = !!province?.cities.some((c) => c.name === draft?.city);
   return (
     <BusyRegion busy={action.busy}>
       <section>
@@ -739,11 +739,20 @@ export function AddressBook({
                     name="address"
                     value={a.id}
                     checked={selected === a.id}
-                    disabled={!destinationAvailable(a, geography)}
+                    disabled={
+                      !destinationAvailable(a, geography) ||
+                      a.detail_version !== 2
+                    }
                     onChange={() => onSelect(a.id, a)}
                   />{" "}
                   انتخاب این آدرس
                 </label>
+              )}
+              {a.detail_version !== 2 && (
+                <p className="buy-alert">
+                  این آدرس قدیمی است؛ پلاک و اطلاعات گیرنده را با ویرایش تکمیل
+                  کنید.
+                </p>
               )}
               {!destinationAvailable(a, geography) && (
                 <p className="buy-alert">
@@ -751,10 +760,12 @@ export function AddressBook({
                 </p>
               )}
               <h3>
-                {a.recipient} · {a.city}
+                {a.title || a.recipient} · {a.city}
               </h3>
               <p>
-                {a.province}، {a.street}
+                {a.full_address || `${a.province}، ${a.street}`}{" "}
+                {a.house_number && ` · پلاک ${a.house_number}`}{" "}
+                {a.unit && ` · واحد ${a.unit}`}
               </p>
               <p>
                 {a.phone} · کد پستی {a.postal_code}
@@ -789,26 +800,21 @@ export function AddressBook({
         {draft && (
           <Modal
             busy={action.busy}
+            className="address-modal"
             title={draft.id ? "ویرایش آدرس" : "آدرس جدید"}
             onClose={() => {
               if (!action.busy) setDraft(null);
             }}
           >
-            <form
-              onSubmit={(e) => {
-                const fields = values(e),
-                  input = {
-                    id: draft.id,
-                    version: draft.version,
-                    recipient: fields.recipient,
-                    phone: fields.phone,
-                    province: fields.province,
-                    city: fields.city,
-                    street: fields.street,
-                    postal_code: fields.postal_code,
-                  };
+            <AddressEditor
+              key={draft.id || "new"}
+              initial={draft}
+              geography={geography}
+              busy={action.busy}
+              error={action.error}
+              onSave={(input) => {
                 void action.run(async (key) => {
-                  const a = await call<Address>(
+                  const saved = await call<Address>(
                     "/storefront/account/addresses",
                     token,
                     input,
@@ -816,80 +822,11 @@ export function AddressBook({
                     key,
                   );
                   await load();
-                  onSelect?.(a.id, a);
+                  onSelect?.(saved.id, saved);
                   setDraft(null);
                 }, JSON.stringify(input));
               }}
-            >
-              <fieldset disabled={action.busy} className="buy-fields">
-                {[
-                  ["recipient", "نام گیرنده"],
-                  ["phone", "موبایل گیرنده"],
-                  ["street", "نشانی کامل"],
-                  ["postal_code", "کد پستی"],
-                ].map(([name, caption]) => (
-                  <Input
-                    key={name}
-                    name={name}
-                    label={caption}
-                    defaultValue={String(draft[name as keyof Address])}
-                    required
-                    maxLength={name === "street" ? 1000 : 100}
-                  />
-                ))}
-                <label className="buy-field">
-                  استان
-                  <select
-                    name="province"
-                    required
-                    value={province ? draft.province : ""}
-                    onChange={(e) =>
-                      setDraft({ ...draft, province: e.target.value, city: "" })
-                    }
-                  >
-                    <option value="">انتخاب استان</option>
-                    {geography.map((p) => (
-                      <option key={p.id} value={p.name}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="buy-field">
-                  شهر
-                  <select
-                    name="city"
-                    required
-                    disabled={!province}
-                    value={cityValid ? draft.city : ""}
-                    onChange={(e) =>
-                      setDraft({ ...draft, city: e.target.value })
-                    }
-                  >
-                    <option value="">
-                      ابتدا استان، سپس شهر را انتخاب کنید
-                    </option>
-                    {province?.cities.map((c) => (
-                      <option key={c.id} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {!geography.length && (
-                  <p className="buy-alert">
-                    فهرست استان و شهر هنوز در پنل تنظیم نشده است.
-                  </p>
-                )}
-                <Feedback action={action} />
-                <button
-                  className="buy-primary"
-                  disabled={!province || !cityValid}
-                >
-                  ذخیره آدرس
-                </button>
-              </fieldset>
-            </form>
+            />
           </Modal>
         )}
       </section>
@@ -1726,7 +1663,9 @@ function OrderContent({ id }: { id?: string }) {
                       </p>
                       <p>
                         {p.quote.address.province}، {p.quote.address.city}،{" "}
-                        {p.quote.address.street} · {p.quote.address.postal_code}
+                        {p.quote.address.full_address || p.quote.address.street}{" "}
+                        · پلاک {p.quote.address.house_number || "—"} ·{" "}
+                        {p.quote.address.postal_code}
                       </p>
                       <h3>اعلام واریزها</h3>
                       <Deposits
@@ -2310,7 +2249,7 @@ function WalletContent() {
   );
 }
 export function AccountPage({ addresses = false }: { addresses?: boolean }) {
-  const { token, profile, logout } = useCommerce(),
+  const { token, profile, logout, refreshProfile } = useCommerce(),
     action = useAction();
   return (
     <CommerceShell title={addresses ? "آدرس‌های من" : "حساب کاربری"}>
@@ -2350,9 +2289,17 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
                       await call(
                         "/storefront/account/profile",
                         token,
-                        { name: v.name, email: v.email, password: v.password },
+                        {
+                          name: v.name,
+                          email: v.email,
+                          password: v.password,
+                          ...(v.national_id
+                            ? { national_id: v.national_id }
+                            : {}),
+                        },
                         "PATCH",
                       );
+                      await refreshProfile();
                       action.setNotice(
                         "اطلاعات ثبت شد؛ پس از تغییر رمز ممکن است لازم باشد دوباره وارد شوید.",
                       );
@@ -2364,6 +2311,14 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
                     label="نام"
                     defaultValue={profile?.name}
                     required
+                  />
+                  <Input
+                    name="national_id"
+                    label="کد ملی (برای تحویل سفارش به خودتان الزامی)"
+                    defaultValue={profile?.national_id ?? ""}
+                    maxLength={10}
+                    inputMode="numeric"
+                    dir="ltr"
                   />
                   <Input
                     name="email"

@@ -102,11 +102,11 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	var cart backoffice.CartView
 	json.Unmarshal(get(customer, "GET", "/storefront/cart", nil, "", 200), &cart)
 	var address commerce.Address
-	mismatch := get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "قم", Street: "نشانی آزمون", PostalCode: "1234567890"}, "wrong-province-city", 400)
+	mismatch := get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "قم", Street: "نشانی آزمون", PostalCode: "1234567890"}, "wrong-province-city", 400)
 	if !strings.Contains(string(mismatch), "address_unavailable") {
 		t.Fatal("missing actionable geography error")
 	}
-	json.Unmarshal(get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمون", PostalCode: "1234567890"}, "address", 200), &address)
+	json.Unmarshal(get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمون", PostalCode: "1234567890"}, "address", 200), &address)
 	get(other, "POST", "/storefront/account/addresses", backoffice.AddressInput{ID: address.ID, Version: 1, Delete: true}, "foreign", 404)
 	in := backoffice.QuoteInput{CartVersion: cart.Version, AddressID: address.ID, Shipping: map[string]string{"s1": "post"}, PaymentMethodID: "card-transfer"}
 	get(customer, "POST", "/storefront/checkout/preview", in, "", 200)

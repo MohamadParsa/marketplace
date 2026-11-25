@@ -205,6 +205,13 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 	if !found {
 		return q, ErrNotFound
 	}
+	if err := validateCheckoutAddress(w, a, q.Address); err != nil {
+		return q, err
+	}
+	if q.Address.RecipientSelf != nil && *q.Address.RecipientSelf {
+		current := addressIdentity(w, a)
+		q.Address.Recipient, q.Address.Phone, q.Address.RecipientNationalID = current.Name, current.Phone, current.NationalID
+	}
 	province, city, valid := canonicalDestination(c.Settings.Geography, q.Address.Province, q.Address.City)
 	if !valid {
 		return q, ErrAddressUnavailable

@@ -66,7 +66,7 @@ async (cliPage) => {
     await site.addInitScript(t=>sessionStorage.setItem("cherriva:customer-token",t),token);
     const wallet=await request(origin,token,"/storefront/wallet");
     check("two-credit-types-visible-in-server-wallet",wallet.balance_toman==="250000" && wallet.withdrawable_toman==="200000" && wallet.purchase_only_toman==="50000");
-    await request(origin,token,"/storefront/account/addresses",{recipient:"گیرنده ساختگی",phone:"09000000003",province:"تهران",city:"تهران",street:"نشانی مستقل آزمون مرورگر",postal_code:"1234567890"});
+    await request(origin,token,"/storefront/account/addresses",{recipient_self:false,recipient_national_id:"0013547895",house_number:"12",recipient:"گیرنده ساختگی",phone:"09000000003",province:"تهران",city:"تهران",street:"نشانی مستقل آزمون مرورگر",postal_code:"1234567890"});
     let cart=await request(origin,token,"/storefront/cart");
     for(const [id,quantity] of [["offer",2],["offer-second-seller",1]])cart=await request(origin,token,"/storefront/cart",{action:"add",offer_id:id,quantity,version:cart.version});
     const coupon={code:"BROWSER96",name:"کوپن بررسی تجربه خرید",active:true,kind:"percent",value:"10",target:"items",all_categories:true,min_toman:"0",max_toman:"0",cap_toman:"0",global_unlimited:true,user_unlimited:true,platform_bps:10000};

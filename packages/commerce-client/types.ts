@@ -26,6 +26,15 @@ export interface Cart {
   currency: string;
 }
 export interface Address {
+  detail_version?: number;
+  title?: string;
+  full_address?: string;
+  house_number?: string;
+  unit?: string;
+  recipient_self?: boolean;
+  recipient_national_id?: string;
+  latitude?: number;
+  longitude?: number;
   id: string;
   version: number;
   recipient: string;
@@ -276,6 +285,7 @@ export interface QuoteInput {
   purchase_id?: string;
 }
 export interface CustomerInfo {
+  national_id?: string;
   name: string;
   email?: string;
   password_available: boolean;

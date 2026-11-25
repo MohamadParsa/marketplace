@@ -198,7 +198,7 @@ func (s *Service) PasswordLogin(ctx context.Context, surface identity.Surface, p
 	return s.createSession(ctx, user)
 }
 
-func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, token, name, email, password string) (identity.User, error) {
+func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, token, name, email, password string, nationalID ...string) (identity.User, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	session, err := s.Authenticate(ctx, token, surface)
@@ -216,6 +216,14 @@ func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, t
 			return identity.User{}, identity.ErrInvalidProfile
 		}
 	}
+	var nid *string
+	if len(nationalID) > 0 {
+		v := identity.NormalizeNationalID(nationalID[0])
+		if !identity.ValidNationalID(v) {
+			return identity.User{}, identity.ErrInvalidProfile
+		}
+		nid = &v
+	}
 	hash := ""
 	if password != "" {
 		if len(password) < 8 || len(password) > 72 {
@@ -227,7 +235,7 @@ func (s *Service) UpdateProfile(ctx context.Context, surface identity.Surface, t
 		}
 		hash = string(encoded)
 	}
-	if err := s.users.UpdateProfile(ctx, surface, session.User.ID, name, email, hash); err != nil {
+	if err := s.users.UpdateProfile(ctx, surface, session.User.ID, name, email, hash, nid); err != nil {
 		return identity.User{}, err
 	}
 	return s.users.FindByPhone(ctx, surface, session.User.Phone)
@@ -265,7 +273,7 @@ func (s *Service) RecoverPassword(ctx context.Context, surface identity.Surface,
 	if err != nil {
 		return err
 	}
-	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash))
+	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash), nil)
 }
 
 // AdminResetPassword lets an authenticated super-admin reset a user's password.
@@ -287,7 +295,7 @@ func (s *Service) AdminResetPassword(ctx context.Context, token string, surface 
 	if err != nil {
 		return err
 	}
-	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash))
+	return s.users.UpdateProfile(ctx, surface, user.ID, user.Name, user.Email, string(hash), nil)
 }
 
 func (s *Service) createSession(ctx context.Context, user identity.User) (identity.Session, error) {

@@ -86,6 +86,7 @@ func (h *AuthHandler) PasswordLogin(surface identity.Surface) http.HandlerFunc {
 }
 func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
 		session, err := h.service.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), surface)
 		if err != nil {
 			writeError(w, http.StatusUnauthorized, "unauthorized")
@@ -96,10 +97,12 @@ func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
 }
 func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
 		var in struct {
-			Name     string `json:"name"`
-			Email    string `json:"email"`
-			Password string `json:"password"`
+			NationalID *string `json:"national_id"`
+			Name       string  `json:"name"`
+			Email      string  `json:"email"`
+			Password   string  `json:"password"`
 		}
 		if json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&in) != nil {
 			writeError(w, http.StatusBadRequest, "invalid_request")
@@ -117,7 +120,11 @@ func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
 		if in.Email == "" {
 			in.Email = current.User.Email
 		}
-		user, err := h.service.UpdateProfile(r.Context(), surface, token, in.Name, in.Email, in.Password)
+		var nationalID []string
+		if in.NationalID != nil {
+			nationalID = []string{*in.NationalID}
+		}
+		user, err := h.service.UpdateProfile(r.Context(), surface, token, in.Name, in.Email, in.Password, nationalID...)
 		if err != nil {
 			writeProfileError(w, err)
 			return
@@ -250,7 +257,7 @@ func writeAuthError(w http.ResponseWriter, err error) {
 	writeError(w, status, code)
 }
 func profileJSON(user identity.User) map[string]any {
-	return map[string]any{"user_id": user.ID, "name": user.Name, "phone": user.Phone, "email": user.Email, "password_available": user.PasswordHash != ""}
+	return map[string]any{"user_id": user.ID, "name": user.Name, "phone": user.Phone, "email": user.Email, "national_id": user.NationalID, "password_available": user.PasswordHash != ""}
 }
 func writeProfileError(w http.ResponseWriter, err error) {
 	switch {

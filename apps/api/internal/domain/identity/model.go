@@ -34,6 +34,7 @@ type User struct {
 	Active           bool
 	AccessVersion    int    `json:"-"`
 	PasswordHash     string `json:"-"`
+	NationalID       string `json:"-"`
 }
 
 type StoreMembership struct {

@@ -56,3 +56,5 @@
 [API-PUBLIC-CATALOG-REFERENCES-001](public-catalog-references.md): توکن chr، سازگاری لینک/سبد قدیمی، ETag و مرز داخلی/عمومی #102.
 
 [اعتبار فقط‌خرید، شارژ مدیریتی و خلاصه خرید #96–#99](wallet-credit-policy.md) — API-WALLET-CREDIT-POLICY-001؛ حفظ منشأ و ledger، مصرف/استرداد و قواعد سود مستقیم.
+
+[پروفایل، گیرنده و نقشه آدرس](customer-address-map.md) — API-CUSTOMER-ADDRESS-MAP-001؛ اجرای محلی #100/#101 و مرز فعال‌سازی واقعی نشان.

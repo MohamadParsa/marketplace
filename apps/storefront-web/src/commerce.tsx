@@ -23,6 +23,10 @@ const errors: Record<string, string> = {
     "قیمت یا شرایط سفارش تغییر کرده؛ مبلغ تازه را دوباره بررسی کنید.",
   insufficient_wallet: "موجودی قابل استفاده کیف پول کافی نیست.",
   payment_method_not_eligible: "این روش برای مبلغ یا دسته‌های سفارش مجاز نیست.",
+  recipient_profile_incomplete:
+    "نام و نام خانوادگی و کد ملی معتبر را در پروفایل تکمیل کنید.",
+  address_incomplete: "آدرس را ویرایش و پلاک و اطلاعات گیرنده را تکمیل کنید.",
+  invalid_profile: "نام، ایمیل یا کد ملی واردشده معتبر نیست.",
   address_unavailable:
     "استان و شهر این آدرس فعال یا معتبر نیست؛ آدرس را ویرایش کنید.",
   withdrawal_credit_unavailable:
@@ -109,6 +113,7 @@ interface Context {
   }) => Promise<Cart>;
   login: (token: string) => Promise<void>;
   logout: () => void;
+  refreshProfile: () => Promise<CustomerInfo>;
 }
 const CommerceContext = createContext<Context | null>(null);
 export function useCommerce() {
@@ -188,6 +193,14 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
       .then(setConfig)
       .catch(() => {});
   }, [token, refreshCart]);
+  const refreshProfile = async () => {
+    const next = await call<CustomerInfo>(
+      "/storefront/account/me",
+      tokenRef.current,
+    );
+    setProfile(next);
+    return next;
+  };
   const login = async (next: string) => {
     sessionStorage.setItem(tokenKey, next);
     tokenRef.current = next;
@@ -249,6 +262,7 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
         profile,
         cartError,
         refreshCart,
+        refreshProfile,
         mutate,
         login,
         logout,

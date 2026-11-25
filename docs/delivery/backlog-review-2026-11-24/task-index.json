@@ -238,8 +238,9 @@
       "requirements": [
         "نشانی کامل (پیشنهاد نقشه، قابل ویرایش)، استان*، شهر*، آدرس*، پلاک*، واحد، کدپستی* و عنوان آدرس در ایجاد/ویرایش موجود باشند.",
         "استان/شهر وابسته و از جغرافیای فعال پنل باشند؛ این همان استثنای dropdown مورد تأیید قبلی است.",
-        "سویچ «تحویل‌گیرنده خودم هستم» پیش‌فرض روشن باشد؛ خاموش‌شدن باکس نام و نام خانوادگی گیرنده*، کد ملی گیرنده* و شماره موبایل گیرنده را باز کند.",
-        "ستاره‌دارها در فرانت و سرور اجباری باشند؛ داده گیرنده، مالک حساب و سفارش را عوض نکند."
+        "سویچ «تحویل‌گیرنده خودم هستم» پیش‌فرض روشن باشد؛ خاموش‌شدن باکس نام و نام خانوادگی گیرنده*، کد ملی گیرنده* و شماره موبایل گیرنده* را باز کند.",
+        "ستاره‌دارها در فرانت و سرور اجباری باشند؛ داده گیرنده، مالک حساب و سفارش را عوض نکند.",
+        "نام و کد ملی معتبر پروفایل برای گیرنده خودم الزامی و موبایل از حساب جاری است؛ نشانی کامل بالاترین ردیف تمام‌عرض است."
       ],
       "technical": [
         "مدل Address و DTO و فرم مودال و Quote/Shipment snapshot تکمیل شوند؛ مدل قدیمی و سفارش قبلی با فیلدهای جدید اختیاری قابل خواندن بمانند.",
@@ -256,12 +257,9 @@
       "dependencies": [
         30
       ],
-      "questions": [
-        "شماره موبایل گیرنده ثانویه در متن مالک ستاره ندارد؛ پیش‌فرض این شرح اختیاری است. اگر روش ارسال الزام دارد، پیش از اجرا تصمیم صریح ثبت شود.",
-        "نشانی کامل پیشنهادی و آدرس اجباری چگونه به یک متن نهایی بدون دو منبع متعارض تبدیل شوند؟ سیاست تکمیل پروفایل گیرنده خودم نیز مشخص شود."
-      ],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
       "number": 100,
       "url": "https://github.com/MohamadParsa/marketplace/issues/100",
       "assignee": "eliassarband",
@@ -269,7 +267,10 @@
       "github_dependencies": [
         30
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-fields-recipient-snapshot.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-fields-recipient-snapshot.md",
+      "publication_status": "local-only",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
+      "decisions_reference": "docs/architecture/contracts/customer-address-map.md"
     },
     {
       "code": "CV-REV-06",
@@ -285,7 +286,7 @@
         "نتیجه جغرافیایی به استان/شهر معتبر خود چریوا نگاشت شود و شهر ناشناخته بی‌صدا ثبت نشود."
       ],
       "technical": [
-        "provider، شرایط استفاده و هزینه/محدودیت درخواست تصمیم باز است؛ بدون انتخاب، فقط interface و fake adapter قابل طراحی‌اند. سرویس واقعی از این Issue فعال فرض نشود.",
+        "اتصال نشان آماده است؛ مالک تنظیم کلیدها و آزمون حساب واقعی را به آینده واگذار کرد. SDK رسمی با تایل/lookup ساختگی و آداپتر با HTTP محلی آزمون شدند.",
         "مختصات و متن پیشنهادی کنار Address ذخیره شوند؛ پاسخ دیررس reverse-geocoding نباید موقعیت جدید یا متن ویرایش‌شده مشتری را بازنویسی کند.",
         "کلید خصوصی در سرور/secret store باشد؛ کلید مرورگر در صورت لزوم محدود به دامنه و سیاست provider شود؛ مختصات خصوصی cache عمومی نشود.",
         "مکان‌یابی اختیاری است و pin دستی/ورود دستی و دسترسی کیبورد مسیر جایگزین دارند."
@@ -299,11 +300,9 @@
       "dependencies": [
         "CV-REV-05"
       ],
-      "questions": [
-        "انتخاب provider نقشه و reverse-geocoding، دامنه مجاز، بودجه و الزامات privacy پیش از اتصال واقعی لازم است."
-      ],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
       "number": 101,
       "url": "https://github.com/MohamadParsa/marketplace/issues/101",
       "assignee": "eliassarband",
@@ -311,7 +310,11 @@
       "github_dependencies": [
         100
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-map-reverse-geocoding.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-map-reverse-geocoding.md",
+      "publication_status": "local-only",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
+      "decisions_reference": "docs/architecture/contracts/customer-address-map.md",
+      "external_activation": "pending-owner-private-keys-and-domain-verification"
     },
     {
       "code": "CV-REV-07",

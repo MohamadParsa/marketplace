@@ -233,3 +233,8 @@ FEAT-REV-008/009/007 ← [گزارش AC، تصاویر و نتایج](../deliver
 ## تکمیل #96 تا #99 — ۲۰۲۶-۱۱-۲۵
 
 [چهار شرح کار](../delivery/backlog-review-2026-11-24/README.md) ← [قرارداد](../architecture/contracts/wallet-credit-policy.md) ← [۱۶ سناریوی BDD](../bdd/features/experiences/checkout-wallet-policy.feature) ← [گزارش و تصاویر](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). وضعیت اجرای این چهار برش done است؛ ادغام و انتشار از بستن Issue نتیجه نمی‌شود.
+
+
+## اجرای محلی آدرس و نقشه #100/#101
+
+FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/customer-address-map.md) ← [شواهد/تصاویر](../delivery/backlog-review-2026-11-24/issues-100-101-verification.md). پاسخ مالک در ۲۰۲۶-۱۱-۲۵ نام/کد ملی پروفایل برای self و نام/کد ملی/موبایل گیرنده دیگر را الزامی کرد. نشانی کامل بالاترین ردیف تمام‌عرض شد؛ اطلاعات تاریخی ثابت می‌مانند. نقشه طبق انتخاب مالک اتصال آماده دارد؛ کلید/دامنه/آزمون واقعی و انتشار Git/لیارا جدا هستند.

@@ -741,8 +741,18 @@ function PurchaseReview({
           </p>
           <p>
             {p.quote.address.province}، {p.quote.address.city}،{" "}
-            {p.quote.address.street}
+            {p.quote.address.full_address || p.quote.address.street}
           </p>
+          {p.quote.address.house_number && (
+            <p>
+              پلاک {p.quote.address.house_number} · واحد{" "}
+              {p.quote.address.unit || "—"}
+            </p>
+          )}
+          {p.quote.address.title && <p>عنوان آدرس: {p.quote.address.title}</p>}
+          {p.quote.address.recipient_national_id && (
+            <p>کد ملی گیرنده: {p.quote.address.recipient_national_id}</p>
+          )}
           <small>کد پستی: {p.quote.address.postal_code}</small>
         </section>
         <section

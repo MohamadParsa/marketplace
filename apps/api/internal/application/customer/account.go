@@ -19,6 +19,7 @@ type Profile struct {
 	Name              string `json:"name"`
 	Phone             string `json:"phone"`
 	Email             string `json:"email,omitempty"`
+	NationalID        string `json:"national_id,omitempty"`
 	PasswordAvailable bool   `json:"password_available"`
 }
 type Purchase struct {
@@ -31,7 +32,7 @@ func (s *Accounts) Profile(ctx context.Context, userID string) (Profile, error) 
 	if err != nil {
 		return Profile{}, err
 	}
-	return Profile{UserID: user.ID, Name: user.Name, Phone: user.Phone, Email: user.Email, PasswordAvailable: user.PasswordHash != ""}, nil
+	return Profile{UserID: user.ID, Name: user.Name, Phone: user.Phone, Email: user.Email, NationalID: user.NationalID, PasswordAvailable: user.PasswordHash != ""}, nil
 }
 
 func (s *Accounts) Purchases(ctx context.Context, userID string) ([]Purchase, error) {

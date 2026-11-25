@@ -21,7 +21,7 @@ func TestGeographyPermissionsCascadeAndHistory(t *testing.T) {
 	if _, err = h.s.SaveCommerceSettings(ctx, h.finance, backoffice.CommerceSettingsInput{Version: settings.Version, Geography: &directory}, h.key()); err != backoffice.ErrForbidden {
 		t.Fatal("geography permission", err)
 	}
-	bad := backoffice.AddressInput{Recipient: "گیرنده", Phone: "09000000111", Province: "تهران", City: "قم", Street: "نشانی ساختگی", PostalCode: "1234567890"}
+	bad := backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده", Phone: "09000000111", Province: "تهران", City: "قم", Street: "نشانی ساختگی", PostalCode: "1234567890"}
 	if _, err = h.s.SaveAddress(ctx, h.buyer, bad, h.key()); err != backoffice.ErrAddressUnavailable {
 		t.Fatal("foreign-province city accepted", err)
 	}

@@ -121,7 +121,7 @@ func (h *commerceHarness) add(t *testing.T, a identity.User, offer string, qty i
 }
 func (h *commerceHarness) address(t *testing.T, a identity.User) commerce.Address {
 	t.Helper()
-	b, e := h.s.SaveAddress(context.Background(), a, backoffice.AddressInput{Recipient: "گیرنده نمونه", Phone: "09000000111", Province: "تهران", City: "تهران", Street: "نشانی ساختگی برای آزمون", PostalCode: "1234567890"}, h.key())
+	b, e := h.s.SaveAddress(context.Background(), a, backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده نمونه", Phone: "09000000111", Province: "تهران", City: "تهران", Street: "نشانی ساختگی برای آزمون", PostalCode: "1234567890"}, h.key())
 	return decodeCommerce[commerce.Address](t, b, e)
 }
 func (h *commerceHarness) quote(t *testing.T, a identity.User, method string) backoffice.QuoteView {

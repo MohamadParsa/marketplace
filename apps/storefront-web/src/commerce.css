@@ -938,3 +938,97 @@
     text-align: start;
   }
 }
+
+/* فرم آدرس و گیرنده، طرح A */
+.address-recipient {
+  grid-column: 1/-1;
+  border: 1px solid var(--line, #e8e0e4);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.address-other-recipient,
+.address-profile-completion {
+  display: grid;
+  gap: 12px;
+}
+.address-recipient .buy-row {
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.address-map-section {
+  grid-column: 1/-1;
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+}
+.address-map-canvas {
+  height: 280px;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #e7dce2;
+  direction: ltr;
+}
+.address-map-pin {
+  color: #a9224c;
+  font-size: 30px;
+  text-shadow: 0 2px 4px white;
+}
+.address-map-coordinates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  min-width: 0;
+}
+.address-map-coordinates input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.address-map-coordinates button {
+  grid-column: 1/-1;
+}
+.address-map-suggestion {
+  padding: 12px;
+  border: 1px solid #e5b9c9;
+  border-radius: 12px;
+  background: #fff8fb;
+}
+.address-map-progress {
+  border-top: 3px solid #b02653;
+  padding: 6px;
+  color: #72213d;
+}
+@media (max-width: 480px) {
+  .address-map-canvas {
+    height: 230px;
+  }
+}
+
+.modal.address-modal {
+  width: min(680px, calc(100vw - 24px));
+}
+.address-editor .buy-fields {
+  gap: 12px 16px;
+  align-items: start;
+}
+.address-editor .buy-field {
+  margin: 0;
+}
+.address-editor .address-field-wide {
+  grid-column: 1 / -1;
+}
+.address-editor .address-recipient {
+  gap: 10px;
+  padding: 12px;
+}
+.address-editor .address-recipient p {
+  margin: 0;
+}
+.address-editor .buy-primary {
+  margin-top: 4px;
+}
