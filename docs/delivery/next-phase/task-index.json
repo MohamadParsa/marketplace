@@ -1,6 +1,6 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-24",
+  "updated": "2026-11-25",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
@@ -288,8 +288,7 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [
-        5,
-        11
+        5
       ],
       "implementation_status": "todo",
       "state": "open",
@@ -297,10 +296,21 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/73",
       "assignee": "eliassarband",
       "github_dependencies": [
-        66,
-        72
+        66
       ],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "related_issues": [
+        72,
+        15,
+        108,
+        114
+      ],
+      "phased_dependencies": {
+        "formula_pricing_branch": [
+          72
+        ]
+      },
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md"
     },
     {
       "n": 13,
@@ -462,7 +472,15 @@
       "github_dependencies": [
         71
       ],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "related_issues": [
+        108,
+        111,
+        113,
+        115,
+        116
+      ],
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md"
     },
     {
       "n": 21,

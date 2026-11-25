@@ -1,0 +1,55 @@
+---
+id: PLAN-BO-REFINEMENT-001
+title: برنامه اصلاح فرم‌های بک‌آفیس و کاتالوگ
+status: in-review
+owner: eliassarband
+updated: 2026-11-25
+related: [PLAN-BACKLOG-RECONCILIATION-001, FEAT-NEXT-012, FEAT-NEXT-020]
+approved_by: []
+implementation_status: todo
+execution_authorized: false
+---
+
+# برنامه درخواست تازه پنل
+
+درخواست مالک فقط استخراج/ثبت تسک است. **هیچ کد محصول، migration یا داده‌ای در این نوبت تغییر/اجرا نشد و هیچ تسک اجرایی با تهیه سند done نشد.** یازده Issue تازه به `eliassarband` اساین و در [والد برنامه #95](https://github.com/MohamadParsa/marketplace/issues/95) ثبت شدند. روش فروش در #73 و ممیزی گریدها در #81 به‌روز شدند؛ Issue تکراری برای آن‌ها ساخته نشد. اسناد تازه در `D:\Cherriva` محلی‌اند و پوش نشده‌اند؛ شرح کامل داخل Issueها روی GitHub موجود است.
+
+[فهرست ماشین‌خوان](task-index.json) · [یافته‌های سورس](current-state-findings.md) · [پوشش تمام درخواست‌ها](request-coverage.md) · [تصمیم‌ها و سؤال‌های باقی‌مانده](decisions-and-questions.md)
+
+## یازده کار مستقل تازه
+
+| Issue | شرح کامل | اولویت پیشنهادی | پیش‌نیاز اجرایی |
+| --- | --- | --- | --- |
+| [#107](https://github.com/MohamadParsa/marketplace/issues/107) | [منوی والد کاتالوگ و حذف مسیرهای موازی فرم تجمیعی](tasks/catalog-navigation-and-dedicated-pages.md) | P1 | #108، #115، #116، #112 |
+| [#108](https://github.com/MohamadParsa/marketplace/issues/108) | [بهبود فرم دسته و UX خصوصیات، علت قفل‌ها و فیلترهای گرید](tasks/category-attributes-editor-and-filters.md) | P1 | #5، #28 |
+| [#109](https://github.com/MohamadParsa/marketplace/issues/109) | [تبدیل کنترل‌شده محور تنوع با پیش‌نمایش اثر و حفاظت داده](tasks/controlled-category-axis-conversion.md) | P1 | #5، #108 |
+| [#110](https://github.com/MohamadParsa/marketplace/issues/110) | [حذف کدهای gsp از نمایش و قرارداد مصرفی خصوصیات پنل با نام‌گذاری chr](tasks/cherriva-attribute-codes-and-labels.md) | P1 | #102، #108 |
+| [#111](https://github.com/MohamadParsa/marketplace/issues/111) | [ایجاد و ویرایش کاربر واحد، اطلاعات فردی، رمز اولیه موقت و فیلترها](tasks/unified-user-editing-and-filters.md) | P1 | #1، #2، #100 |
+| [#112](https://github.com/MohamadParsa/marketplace/issues/112) | [صفحه مستقل نقش‌ها و انتساب نقش‌ها در فرم کاربر](tasks/dedicated-role-management-and-user-grants.md) | P1 | #1، #111 |
+| [#113](https://github.com/MohamadParsa/marketplace/issues/113) | [ایجاد و ویرایش پروفایل فروشگاه، تماس، تصویر، آدرس و فیلترها](tasks/store-profile-editing-and-filters.md) | P1 | #1، #111 |
+| [#114](https://github.com/MohamadParsa/marketplace/issues/114) | [مجوز دسته و روش فروش فروشگاه و نام نمایشی مستقل هر روش](tasks/store-category-sales-eligibility-and-names.md) | P1 | #73، #113 |
+| [#115](https://github.com/MohamadParsa/marketplace/issues/115) | [فرم مستقل برند با ایجاد/ویرایش، نام فارسی/انگلیسی و فیلترها](tasks/brand-profile-crud-and-filters.md) | P1 | #4، #27 |
+| [#116](https://github.com/MohamadParsa/marketplace/issues/116) | [فرم مستقل محصول، فیلترهای گرید، کد خودکار chr و فعال‌بودن مستقل](tasks/product-form-active-state-and-filters.md) | P1 | #29، #42، #102، #108، #115 |
+| [#117](https://github.com/MohamadParsa/marketplace/issues/117) | [واحد وزن و ابعاد از تنظیم عمومی با override دسته، بدون انتخاب در محصول](tasks/measurement-units-global-category-override.md) | P2 | #29، #108، #116 |
+
+## استفاده از Issueهای قبلی و رفع هم‌پوشانی
+
+- [#73](https://github.com/MohamadParsa/marketplace/issues/73) تنها مالک مدل/فرم روش فروش، نگاشت پرداخت و مارکاپ پیش‌فرض/override دسته است. تسک دسته فقط محل نمایش این بخش و تسک فروشگاه فقط مجوز/نام نمایشی را دارد. این کار نه کمیسیون #72 را دوباره می‌سازد و نه درگاه واقعی فعال می‌کند. روش نقدی ثبت‌شده منتظر تمام موتور فرمول طلا نمی‌ماند.
+- [#81](https://github.com/MohamadParsa/marketplace/issues/81) مالک ممیزی مشترک، اجزای لازم گریدها و Excel است؛ فیلترهای مشخص پنج فرم در تسک همان فرم‌اند. #81 گزارش تکمیل آن‌ها را مصرف می‌کند، نه اینکه دوباره پیاده‌سازی کند. ارجاع به #81 برای فرم‌ها وابستگی دوری ایجاد نمی‌کند.
+- #15 فقط گروه‌بندی تنظیمات و فهرست کلید/فرم/مجوز؛ [هماهنگی](coordination-15.md). #71 فقط ممیزی scope و یافته‌های دسترسی فروشنده؛ [هماهنگی](coordination-71.md).
+- #1/#5/#24/#25/#27/#28/#29/#42/#102 بسته می‌مانند: پایه قبلی دوباره ساخته نمی‌شود؛ تغییرهای تازه، شکاف UX/مدل/فیلدهای خواسته‌شده را تکمیل می‌کنند. #79 گروه‌بندی storefront و #88 مدیریت CMS نیز در این بسته دوباره ساخته نمی‌شوند.
+
+## ترتیب پیشنهادی انتخاب کار
+
+#108 → #110 → #109 → #115 → #116 → #111 → #112 → #113 → #107 → #73 → #114 → #117 → #81
+
+این ترتیب پیشنهاد است، نه اجازه شروع یا موعد تحویل. کارهای مستقل می‌توانند توسط تیم جدا انتخاب شوند؛ وابستگی فنی جدول رعایت شود. حذف فرم تجمیعی #107 پس از آماده‌شدن فرم‌های اختصاصی انجام می‌شود تا ایجاد/ویرایش یا مدیریت چهار ریل خانه از بین نرود. #109 تبدیل داده را فقط با برنامه preview و نگاشت روشن اعمال می‌کند. پرسش واحدهای جدید و رفتار OTP/رمز موقت فقط همان بخش‌های مربوط را متوقف می‌کنند.
+
+## پاسخ‌های صریح مالک در این نوبت
+
+1. تبدیل محور مصرف‌شده با پیش‌نمایش اثر و تبدیل کنترل‌شده پشتیبانی شود.
+2. مجوز دسته فروشگاه: همه/فقط انتخابی + استثنای غیرمجاز؛ زیرشاخه‌ها شامل و deny مقدم؛ فروشگاه قدیمی تا تنظیم سیاست مجوز قبلی را حفظ کند.
+3. فعال‌بودن محصول مستقل از انتشار؛ خرید تازه محصول غیرفعال ممنوع و سفارش قبلی محفوظ.
+4. رمز اولیه ادمین موقت و تغییر اجباری؛ نام‌های قدیمی با حدس نام خانوادگی شکسته نشوند.
+
+وضعیت اسناد in-review، اجرا todo و execution_authorized=false است؛ پاسخ‌های محدود بالا تأیید کل طرح یا مجوز کد/پوش نیستند. طرح A و نشان C، مجوزها، حفاظت داده و سیاست کش قبلی مرجع‌اند. تصاویر تازه/تست برنامه در این نوبت لازم نبود؛ کنترل تحویل، پوشش درخواست، لینک/شناسه/وابستگی و تطبیق وضعیت GitHub است.
