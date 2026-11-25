@@ -3,7 +3,7 @@ id: DEL-NEXT-001
 title: صف توسعه بعدی چریوا پس از اصلاحات تجربه فروشگاه
 status: in-review
 owner: eliassarband
-updated: 2026-11-24
+updated: 2026-11-25
 related: [DEL-SF-UX-001, ADR-009]
 approved_by: []
 implementation_status: in-progress
@@ -12,7 +12,7 @@ execution_authorized: true
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند. وضعیت جاری: هشت تحویل قبلی در main، دو تحویل پارسا #89/#90 روی شاخه‌های او و چهار تحویل #67/#68/#69/#78 در [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) انجام و Issueهایشان بسته شده‌اند؛۱۶کار دیگر همچنان باز است. چهار Issue اخیر طبق دستور صریح مالک با کامنت شواهد بسته شدند؛ PR #94 هنوز ادغام نشده است. [گزارش چهار قابلیت](issues-67-68-69-78-verification.md). نسخه یکپارچه پارسا و اصلاح دکمه تا دستور انتشار تازه لوکال می‌مانند؛ پیگیری #105. انتشار لیارا و انتخاب بقیه کارها جداست. صف #45تا#54 done/closed باقی است.
+۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند. وضعیت جاری: هشت تحویل قبلی در main، دو تحویل پارسا #89/#90 روی شاخه‌های او و چهار تحویل #67/#68/#69/#78 در [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) انجام و Issueهایشان بسته شده‌اند؛۱۴کار دیگر باز است؛ #73 و #81 محلی تکمیل شدند. چهار Issue اخیر طبق دستور صریح مالک با کامنت شواهد بسته شدند؛ PR #94 هنوز ادغام نشده است. [گزارش چهار قابلیت](issues-67-68-69-78-verification.md). نسخه یکپارچه پارسا و اصلاح دکمه تا دستور انتشار تازه لوکال می‌مانند؛ پیگیری #105. انتشار لیارا و انتخاب بقیه کارها جداست. صف #45تا#54 done/closed باقی است.
 
 هر دو سرویس نظر #89 و پرسش‌وپاسخ #90 پارسا در ادغام محلی حاضرند؛ Issueها توسط پارسا بسته‌اند و انتشار main از این وضعیت نتیجه نمی‌شود.
 
@@ -33,7 +33,7 @@ execution_authorized: true
 | CV-NEXT-09 · [#70](https://github.com/MohamadParsa/marketplace/issues/70) | [PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست](tasks/cv-next-09-atomic-place-order.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-10 · [#71](https://github.com/MohamadParsa/marketplace/issues/71) | [بازبینی دقیق دسترسی و محدوده داده فروشندگان](tasks/cv-next-10-seller-access-audit.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-11 · [#72](https://github.com/MohamadParsa/marketplace/issues/72) | [بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول](tasks/cv-next-11-pricing-direct-discounts.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | done محلی؛ [شواهد](issues-73-81-verification.md) |
 | CV-NEXT-13 · [#74](https://github.com/MohamadParsa/marketplace/issues/74) | [SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات](tasks/cv-next-13-seo-audit-remediation.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
@@ -41,7 +41,7 @@ execution_authorized: true
 | CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
 | CV-NEXT-18 · [#79](https://github.com/MohamadParsa/marketplace/issues/79) | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | done؛ [شواهد](issue-80-verification.md) |
-| CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | done محلی؛ [شواهد](issues-73-81-verification.md) |
 | CV-NEXT-21 · [#82](https://github.com/MohamadParsa/marketplace/issues/82) | [سرویس ایمیل تراکنشی، قالب و پیگیری ارسال](tasks/cv-next-21-transactional-email-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-22 · [#83](https://github.com/MohamadParsa/marketplace/issues/83) | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | done؛ [شواهد](issue-83-verification.md) |
 | CV-NEXT-23 · [#84](https://github.com/MohamadParsa/marketplace/issues/84) | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | done؛ [شواهد](issue-84-verification.md) |
@@ -102,3 +102,7 @@ execution_authorized: true
 انتشار مجاز این چهار انتخاب: [سورس 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) · [PR #94](https://github.com/MohamadParsa/marketplace/pull/94). وضعیت‌های «تحویل لوکال» در شرح آزمون بالا سابقه تحویل اول‌اند؛ هم‌اکنون همان بسته روی شاخه قابل بررسی است.
 
 [صف یکتا و ممیزی۲۰۲۶-۱۱-۲۴؛ وضعیت واقعی، تسک‌های تازه و جلوگیری از اجرای تکراری](../backlog-review-2026-11-24/README.md) · [والد گیت #95](https://github.com/MohamadParsa/marketplace/issues/95).
+
+## تحویل محلی #73 و #81 —۲۰۲۶-۱۱-۲۵
+
+مالک این دو را انتخاب کرد؛ فرم/نرخ/نگاشت فروش و override دسته، resolver خرید و گرید/Excel مشترک محلی تکمیل شدند. [شواهد](issues-73-81-verification.md) · [ممیزی تمام گریدها و مرز کارهای باز](backoffice-grid-audit.md). سایر تسک‌های فرم و provider بازند؛ پوش و لیارا انجام نشده‌اند.

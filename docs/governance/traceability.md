@@ -243,3 +243,7 @@ FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/cust
 ## اصلاحات پنل و کاتالوگ — ۲۰۲۶-۱۱-۲۵
 
 درخواست مالک و چهار پاسخ تکمیلی ← [پوشش بندبه‌بند](../delivery/backoffice-refinement-2026-11-25/request-coverage.md) ← FEAT-BO-REFINEMENT-001 تا011 در #107 تا#117؛ [برنامه/وابستگی و سؤال‌ها](../delivery/backoffice-refinement-2026-11-25/README.md). #73 مالک روش فروش/مارکاپ و #81 مالک الگوی مشترک گرید/Excel باقی‌اند؛ شرح/مرز آن‌ها اصلاح شد و #15/#71 هماهنگی می‌کنند. اجرا todo و مجوز کد/پوش صادر نشده است.
+
+## اجرای محلی #73 و #81 —۲۰۲۶-۱۱-۲۵
+
+[مشخصات #73](../delivery/next-phase/tasks/cv-next-12-sales-method-markup.md) و [#81](../delivery/next-phase/tasks/cv-next-20-backoffice-grid-capabilities.md) ← [قرارداد روش فروش](../architecture/contracts/sales-methods.md) و [گرید](../architecture/contracts/backoffice-grids.md) ← [BDD](../bdd/features/experiences/sales-methods-and-grid-export.feature) ← [گزارش و شواهد](../delivery/next-phase/issues-73-81-verification.md). [ممیزی۲۷گرید و مالکان شکاف‌ها](../delivery/next-phase/backoffice-grid-audit.md). تحویل محلی با پوش/استقرار و تکمیل فرم‌های #108تا#117 یکسان نیست.

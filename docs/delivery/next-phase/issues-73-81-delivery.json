@@ -1,0 +1,25 @@
+{
+  "id": "DELIVERY-73-81-20261125",
+  "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+  "source_pushed": false,
+  "branch": "codex/local-parsa-integration-20261124",
+  "issues": [
+    {
+      "number": 73,
+      "state": "closed",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/73#issuecomment-7157893400",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
+    },
+    {
+      "number": 81,
+      "state": "closed",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/81#issuecomment-7157897389",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
+    }
+  ],
+  "parent": 95,
+  "parent_state": "open",
+  "report": "issues-73-81-verification.md"
+}

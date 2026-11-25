@@ -58,3 +58,7 @@
 [اعتبار فقط‌خرید، شارژ مدیریتی و خلاصه خرید #96–#99](wallet-credit-policy.md) — API-WALLET-CREDIT-POLICY-001؛ حفظ منشأ و ledger، مصرف/استرداد و قواعد سود مستقیم.
 
 [پروفایل، گیرنده و نقشه آدرس](customer-address-map.md) — API-CUSTOMER-ADDRESS-MAP-001؛ اجرای محلی #100/#101 و مرز فعال‌سازی واقعی نشان.
+
+## روش فروش و گرید نسخه بررسی
+
+[API-SALES-METHODS-001](sales-methods.md): نرخ/نگاشت/ارث‌بری/quote و مرز provider. [API-BACKOFFICE-GRIDS-001](backoffice-grids.md): فیلتر مشترک، مجوز و XLSX، با محدودیت صریح workspace کامل.

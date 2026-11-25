@@ -1,0 +1,170 @@
+{
+  "id": "CHECKS-73-81-20261125",
+  "issues": [
+    73,
+    81
+  ],
+  "environment": "local-review-and-isolated-tests",
+  "go": {
+    "passed_tests_and_subtests": 320,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "frontends": {
+    "backoffice": "build-and-typescript-passed",
+    "storefront": "build-and-typescript-passed",
+    "warning": "existing-backoffice-chunk-over-500-KiB"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "dedicated-sales-page",
+        "pass": true
+      },
+      {
+        "id": "invalid-rate-preserves-draft",
+        "pass": true
+      },
+      {
+        "id": "payment-mapping-one-owner",
+        "pass": true
+      },
+      {
+        "id": "category-shows-nearest-source",
+        "pass": true
+      },
+      {
+        "id": "explicit-zero-overrides-parent",
+        "pass": true
+      },
+      {
+        "id": "clearing-override-restores-parent",
+        "pass": true
+      },
+      {
+        "id": "pdp-sales-price-preview",
+        "pass": true
+      },
+      {
+        "id": "selected-payment-refreshes-markup",
+        "pass": true
+      },
+      {
+        "id": "coupon-after-markup-keeps-selected-method",
+        "pass": true
+      },
+      {
+        "id": "wallet-and-markup-compose-without-repricing-cash",
+        "pass": true
+      },
+      {
+        "id": "commerce-purchase-list-uses-shared-grid",
+        "pass": true
+      },
+      {
+        "id": "order-detail-shows-frozen-markup",
+        "pass": true
+      },
+      {
+        "id": "commerce-deposit-list-uses-shared-grid",
+        "pass": true
+      },
+      {
+        "id": "commerce-refund-list-uses-shared-grid",
+        "pass": true
+      },
+      {
+        "id": "grid-paginates-filtered-results",
+        "pass": true
+      },
+      {
+        "id": "selected-export-across-pages",
+        "pass": true
+      },
+      {
+        "id": "filtered-export-all-pages",
+        "pass": true
+      },
+      {
+        "id": "formula-like-label-exported-as-text",
+        "pass": true
+      },
+      {
+        "id": "export-denied-preserves-filter",
+        "pass": true
+      },
+      {
+        "id": "export-cancel-preserves-filter",
+        "pass": true
+      },
+      {
+        "id": "mobile-layout-bounded",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 22,
+    "runtime_pageerrors": 0,
+    "memory_only_fixture": true,
+    "expected_export_denial_and_cancellation": true
+  },
+  "xlsx_generator": {
+    "passed": 9,
+    "limits_and_cancellation": true,
+    "ten_thousand_rows": true
+  },
+  "xlsx_artifacts": [
+    {
+      "file": "selected.xlsx",
+      "rows": 2,
+      "zip_crc_xml_valid": true,
+      "formulas": 0
+    },
+    {
+      "file": "filtered.xlsx",
+      "rows": 149,
+      "zip_crc_xml_valid": true,
+      "formulas": 0
+    },
+    {
+      "file": "formula-as-text.xlsx",
+      "rows": 1,
+      "zip_crc_xml_valid": true,
+      "formulas": 0
+    }
+  ],
+  "local_restart": {
+    "preserved_sections": 17,
+    "all_equal": true,
+    "connection_information_in_report": false
+  },
+  "source_pushed": false,
+  "deployed": false,
+  "limitations": [
+    "client-side-grid-filtering-on-existing-scoped-workspace",
+    "domain-filters-and-server-paging-remain-with-form-issues",
+    "xlsx-numbers-are-formatted-text",
+    "bnpl-provider-not-enabled",
+    "store-specific-sales-eligibility-owned-by-114"
+  ],
+  "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+  "final_order_markup_row": {
+    "passed": true,
+    "dt_dd_count": 2
+  },
+  "main_smoke": {
+    "home": 200,
+    "public_sales": 200,
+    "review_methods": 1,
+    "all_review_rates_zero": true,
+    "private_sales_without_session": 401,
+    "product": "/product/chr-10270"
+  }
+}

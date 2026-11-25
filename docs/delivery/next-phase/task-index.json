@@ -4,7 +4,7 @@
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "issues-67-68-69-78-pushed-awaiting-review",
+  "execution": "issues-73-81-local-complete-not-pushed",
   "items": [
     {
       "n": 1,
@@ -290,15 +290,15 @@
       "deps": [
         5
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 73,
       "url": "https://github.com/MohamadParsa/marketplace/issues/73",
       "assignee": "eliassarband",
       "github_dependencies": [
         66
       ],
-      "execution_authorized": false,
+      "execution_authorized": true,
       "related_issues": [
         72,
         15,
@@ -310,7 +310,11 @@
           72
         ]
       },
-      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md"
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md",
+      "delivery": "local-only",
+      "verification": "docs/delivery/next-phase/issues-73-81-verification.md",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
     },
     {
       "n": 13,
@@ -464,15 +468,15 @@
       "deps": [
         10
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 81,
       "url": "https://github.com/MohamadParsa/marketplace/issues/81",
       "assignee": "eliassarband",
       "github_dependencies": [
         71
       ],
-      "execution_authorized": false,
+      "execution_authorized": true,
       "related_issues": [
         108,
         111,
@@ -480,7 +484,11 @@
         115,
         116
       ],
-      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md"
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md",
+      "delivery": "local-only",
+      "verification": "docs/delivery/next-phase/issues-73-81-verification.md",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
     },
     {
       "n": 21,
@@ -703,7 +711,9 @@
     63,
     64,
     66,
+    73,
     80,
+    81,
     83,
     84,
     85,
@@ -711,13 +721,15 @@
   ],
   "current_local_issue": null,
   "requested_issue_numbers": [
-    66,
     63,
     64,
+    66,
     67,
     68,
     69,
-    78
+    73,
+    78,
+    81
   ],
   "proposed_execution_order": [
     66,
@@ -729,13 +741,11 @@
     78
   ],
   "publication_policy": "future-changes-local-until-explicit-owner-request",
-  "last_completed_local_issue": 78,
+  "last_completed_local_issue": 81,
   "next_proposed_issue": null,
   "last_completed_local_issues": [
-    67,
-    68,
-    69,
-    78
+    73,
+    81
   ],
   "audit_reference": "../backlog-review-2026-11-24/README.md"
 }
