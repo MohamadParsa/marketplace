@@ -1,15 +1,15 @@
 {
   "id": "PLAN-BACKLOG-RECONCILIATION-001",
-  "updated": "2026-11-24",
+  "updated": "2026-11-25",
   "owner": "eliassarband",
   "document_status": "in-review",
   "parent_issue": 95,
   "source_main": "52a8a09155fbcedae981eaf18a27ecea76120375",
   "published_review_pr": 94,
-  "local_integration_head": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+  "local_integration_head": "35f9c59e9e3b11a7398d7f537451f60014859b36",
   "new_feature_execution_authorized": true,
   "local_integration_authorized": true,
-  "local_code_publication_authorized": false,
+  "local_code_publication_authorized": true,
   "new_tasks": [
     {
       "code": "CV-REV-01",
@@ -45,8 +45,8 @@
         69
       ],
       "questions": [],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "number": 96,
       "url": "https://github.com/MohamadParsa/marketplace/issues/96",
       "assignee": "eliassarband",
@@ -56,7 +56,11 @@
         68,
         69
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-adjustment-box-states.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-adjustment-box-states.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
     },
     {
       "code": "CV-REV-02",
@@ -86,13 +90,9 @@
         66,
         69
       ],
-      "questions": [
-        "اولویت مصرف اعتبار قابل‌برداشت و فقط‌خرید: FIFO قبلی یا اولویت اعتبار محدود؟",
-        "سیاست مانده‌های قدیمی و legacy-unattributed و وضعیت پیش‌فرض پرچم شارژ جدید چیست؟",
-        "آیا اعتبار قابل‌برداشت مدیریتی سقف/فرایند متفاوتی از اعتبار فقط‌خرید دارد؟ تا تصمیم، قاعده حدسی پیاده نشود."
-      ],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
       "number": 97,
       "url": "https://github.com/MohamadParsa/marketplace/issues/97",
       "assignee": "eliassarband",
@@ -101,7 +101,15 @@
         66,
         69
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/wallet-credit-withdrawal-policy.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/wallet-credit-withdrawal-policy.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "اولویت مصرف اعتبار قابل‌برداشت و فقط‌خرید: FIFO قبلی یا اولویت اعتبار محدود؟",
+        "سیاست مانده‌های قدیمی و legacy-unattributed و وضعیت پیش‌فرض پرچم شارژ جدید چیست؟",
+        "آیا اعتبار قابل‌برداشت مدیریتی سقف/فرایند متفاوتی از اعتبار فقط‌خرید دارد؟ تا تصمیم، قاعده حدسی پیاده نشود."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
     },
     {
       "code": "CV-REV-03",
@@ -132,11 +140,9 @@
         "CV-REV-02",
         69
       ],
-      "questions": [
-        "پیش‌فرض تیک و اجباری‌بودن عنوان/توضیح پیش از اجرا در قرارداد اعتبار نهایی شوند."
-      ],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
       "related_issues": [
         71,
         75
@@ -149,7 +155,13 @@
         97,
         69
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/admin-customer-wallet-credit.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/admin-customer-wallet-credit.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "پیش‌فرض تیک و اجباری‌بودن عنوان/توضیح پیش از اجرا در قرارداد اعتبار نهایی شوند."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
     },
     {
       "code": "CV-REV-04",
@@ -182,11 +194,9 @@
         69,
         72
       ],
-      "questions": [
-        "مبنای «قیمت مرجع معتبر» و سهم تخفیف مستقیم در قرارداد #72 نهایی شود؛ تا آن زمان UI می‌تواند مستقل طراحی شود، عدد سود حدس زده نشود."
-      ],
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
       "number": 99,
       "url": "https://github.com/MohamadParsa/marketplace/issues/99",
       "assignee": "eliassarband",
@@ -197,7 +207,13 @@
         69,
         72
       ],
-      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-order-summary-savings.md"
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-order-summary-savings.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "مبنای «قیمت مرجع معتبر» و سهم تخفیف مستقیم در قرارداد #72 نهایی شود؛ تا آن زمان UI می‌تواند مستقل طراحی شود، عدد سود حدس زده نشود."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md"
     },
     {
       "code": "CV-REV-05",
@@ -486,5 +502,6 @@
     104,
     102
   ],
-  "authorization_scope": "only authorized_issue_numbers; every other item retains its own authorization=false"
+  "authorization_scope": "only authorized_issue_numbers; every other item retains its own authorization=false",
+  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36"
 }

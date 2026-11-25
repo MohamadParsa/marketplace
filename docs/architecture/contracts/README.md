@@ -54,3 +54,5 @@
 [اجرای محلی کوپن، اعتبار انتخابی و گروه گارانتی #67/#68/#69/#78](checkout-adjustments.md)
 
 [API-PUBLIC-CATALOG-REFERENCES-001](public-catalog-references.md): توکن chr، سازگاری لینک/سبد قدیمی، ETag و مرز داخلی/عمومی #102.
+
+[اعتبار فقط‌خرید، شارژ مدیریتی و خلاصه خرید #96–#99](wallet-credit-policy.md) — API-WALLET-CREDIT-POLICY-001؛ حفظ منشأ و ledger، مصرف/استرداد و قواعد سود مستقیم.

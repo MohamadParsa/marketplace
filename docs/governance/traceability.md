@@ -229,3 +229,7 @@ FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/con
 ## تحویل منتخب #103/#104/#102
 
 FEAT-REV-008/009/007 ← [گزارش AC، تصاویر و نتایج](../delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md) ← [قرارداد توکن عمومی](../architecture/contracts/public-catalog-references.md). اجرای این سه قابلیت به دستور مالک محلی تکمیل شد؛ سایر تسک‌های تازه شروع نشده و انتشار این commit مجاز نشده است. وضعیت سند in-review باقی است.
+
+## تکمیل #96 تا #99 — ۲۰۲۶-۱۱-۲۵
+
+[چهار شرح کار](../delivery/backlog-review-2026-11-24/README.md) ← [قرارداد](../architecture/contracts/wallet-credit-policy.md) ← [۱۶ سناریوی BDD](../bdd/features/experiences/checkout-wallet-policy.feature) ← [گزارش و تصاویر](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). وضعیت اجرای این چهار برش done است؛ ادغام و انتشار از بستن Issue نتیجه نمی‌شود.

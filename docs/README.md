@@ -58,3 +58,5 @@
 [ممیزی کل تسک‌ها، درخواست‌های تازه و دریافت کار پارسا](delivery/backlog-review-2026-11-24/README.md) · [صف یکتای GitHub #95](https://github.com/MohamadParsa/marketplace/issues/95).
 
 [تحویل محلی #103/#104/#102؛ فاصله‌ها، Skeleton و شناسه عمومی chr](delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md).
+
+[تکمیل چهار کار #96–#99، گزارش تست و تصاویر](delivery/backlog-review-2026-11-24/issues-96-99-verification.md) · [قرارداد اعتبار و شارژ ادمین](architecture/contracts/wallet-credit-policy.md).

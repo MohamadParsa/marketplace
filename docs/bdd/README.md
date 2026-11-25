@@ -65,3 +65,7 @@
 [سناریوهای بازدیدهای اخیر #64](features/experiences/customer-recently-viewed.feature) به گزارش Go/HTTP/PG/lifecycle/مرورگر لینک دارند؛ runner جدا برای خود BDD ادعا نمی‌شود.
 
 [کوپن، اعتبار دلخواه و گروه گارانتی؛ سناریوهای چهار قابلیت محلی](features/experiences/checkout-adjustments.feature) · [شواهد اجرای مرتبط](../delivery/next-phase/issues-67-68-69-78-verification.md).
+
+## تکمیل کیف پول و پرداخت
+
+۱۶ سناریوی پذیرش FEAT-REV-001 تا004 در [checkout-wallet-policy.feature](features/experiences/checkout-wallet-policy.feature) ثبت شد؛ [اجرای مستقل API/سرویس/مرورگر و محدودیت‌ها](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). runner مستقلی برای Gherkin اجرا نشده است.
