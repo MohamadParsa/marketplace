@@ -281,13 +281,22 @@ func evaluateCoupon(w Workspace, q commerce.Quote, code, except string, now time
 			break
 		}
 	}
-	if rule == nil || !rule.Active || (rule.StartsAt != nil && now.Before(*rule.StartsAt)) || (rule.EndsAt != nil && !now.Before(*rule.EndsAt)) {
-		return nil, ErrCoupon
+	if rule == nil || !rule.Active {
+		return nil, fmt.Errorf("%w: %w", ErrCoupon, ErrCouponUnknown)
+	}
+	if rule.StartsAt != nil && now.Before(*rule.StartsAt) {
+		return nil, fmt.Errorf("%w: %w", ErrCoupon, ErrCouponNotStarted)
+	}
+	if rule.EndsAt != nil && !now.Before(*rule.EndsAt) {
+		return nil, fmt.Errorf("%w: %w", ErrCoupon, ErrCouponExpired)
 	}
 	h, u := couponCounts(c, rule.ID, "", except)
 	uh, uu := couponCounts(c, rule.ID, q.UserID, except)
-	if (rule.GlobalLimit > 0 && h+u >= rule.GlobalLimit) || (rule.UserLimit > 0 && uh+uu >= rule.UserLimit) {
-		return nil, ErrCoupon
+	if rule.UserLimit > 0 && uh+uu >= rule.UserLimit {
+		return nil, fmt.Errorf("%w: %w", ErrCoupon, ErrCouponUserQuota)
+	}
+	if rule.GlobalLimit > 0 && h+u >= rule.GlobalLimit {
+		return nil, fmt.Errorf("%w: %w", ErrCoupon, ErrCouponQuota)
 	}
 	weights, owners, e := couponWeights(w, q, *rule)
 	if e != nil {

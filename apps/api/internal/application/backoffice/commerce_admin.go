@@ -45,10 +45,14 @@ type DiscountFundingView struct {
 	RuleVersion   int    `json:"rule_version"`
 }
 type CreditSourceView struct {
-	Source      string `json:"source"`
-	AmountToman string `json:"amount_toman"`
-	Kind        string `json:"kind"`
-	Status      string `json:"status"`
+	LotID        string `json:"lot_id"`
+	Title        string `json:"title,omitempty"`
+	Withdrawable bool   `json:"withdrawable"`
+	OriginLotID  string `json:"origin_lot_id,omitempty"`
+	Source       string `json:"source"`
+	AmountToman  string `json:"amount_toman"`
+	Kind         string `json:"kind"`
+	Status       string `json:"status"`
 }
 type AdminPurchaseView struct {
 	DiscountFunding *DiscountFundingView `json:"discount_funding,omitempty"`
@@ -127,20 +131,10 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 					entry.DiscountFunding = &DiscountFundingView{commerce.Toman(platform), commerce.Toman(seller), q.Discount.Coupon.Version}
 				}
 				if q.Credit != nil && v.Permissions[CommerceOrdersConfirm] {
-					for _, part := range []struct {
-						kind        string
-						allocations []commerce.CreditAllocation
-					}{{"selected-balance", q.Credit.Existing}, {"checkout-funding", q.Credit.Funding}} {
-						for _, allocation := range part.allocations {
-							for _, lot := range c.CreditLots {
-								if lot.ID == allocation.LotID && lot.UserID == p.UserID {
-									entry.CreditSources = append(entry.CreditSources, CreditSourceView{lot.Source, commerce.Toman(allocation.Amount), part.kind, q.Credit.Status})
-								}
-							}
-						}
-					}
+					entry.CreditSources = creditSourceViews(c, q)
 				}
 			}
+
 			v.Purchases = append(v.Purchases, entry)
 		}
 	}
@@ -303,8 +297,18 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 					return nil, e
 				}
 			}
-		} else if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now); e != nil {
-			return nil, e
+		} else if q.Total > 0 {
+			if err := ensureCreditState(c, p.UserID, now); err != nil {
+				return nil, err
+			}
+			allocations, err := allocateCredit(c, p.UserID, q.Total, "")
+			if err != nil {
+				return nil, err
+			}
+			q.Credit = &commerce.CreditUsage{Requested: q.Total, Existing: allocations, Funding: []commerce.CreditAllocation{}, Status: "posted"}
+			if err = appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); err != nil {
+				return nil, err
+			}
 		}
 		for _, l := range q.Lines {
 			for i := range w.Offers {
@@ -361,6 +365,9 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 				if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
 					return nil, e
 				}
+				if err := returnPurchaseCredit(c, q, op+":credit", a, now); err != nil {
+					return nil, err
+				}
 			}
 			for _, l := range q.Lines {
 				for i := range w.Offers {
@@ -403,6 +410,9 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			if r.ID != in.ID {
 				continue
 			}
+			if err := ensureCreditState(c, r.UserID, now); err != nil {
+				return nil, err
+			}
 			if r.Status == "completed" && in.Complete {
 				ref, e := normalizeReference(in.Reference)
 				if e == nil && r.Reference == ref && r.Date == in.Date {
@@ -427,7 +437,7 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 					}
 				}
 				r.Status = "completed"
-				if e = appendWallet(c, op+":debit", r.UserID, "refund:"+r.ID, "manual-refund", -r.Amount, now); e != nil {
+				if e = appendWallet(c, op+":debit", r.UserID, "refund:"+r.ID, "manual-refund", -r.Amount, now, r.Allocations); e != nil {
 					return nil, e
 				}
 				r.Reference = ref

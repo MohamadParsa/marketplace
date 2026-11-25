@@ -722,7 +722,13 @@ function PurchaseReview({
                       ? "مصرف‌شده"
                       : "آزادشده"}
                 </p>
-                <small dir="ltr">{a.source}</small>
+                <p>
+                  {a.title || "اعتبار کیف پول"} ·{" "}
+                  {a.withdrawable ? "قابل برداشت" : "فقط قابل خرید"}
+                </p>
+                <small dir="ltr">
+                  {a.lot_id} · {a.source}
+                </small>
               </article>
             ))}
           </section>

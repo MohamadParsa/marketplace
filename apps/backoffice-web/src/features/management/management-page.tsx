@@ -1,3 +1,6 @@
+import { WalletCreditDialog } from "./wallet-credit-dialog";
+import type { User } from "../../shared/types";
+import type { WalletCreditResult } from "../../../../../packages/commerce-client/types";
 import { useState } from "react";
 import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
@@ -42,6 +45,10 @@ export function ManagementPage({
 }) {
   const navigate = useNavigate();
   const { state, role, execute, busy, can: allowed } = useWorkspace();
+  const [creditTarget, setCreditTarget] = useState<User>();
+  const [walletUpdates, setWalletUpdates] = useState<
+    Record<string, WalletCreditResult>
+  >({});
   const [policyError, setError] = useState("");
   const [search, setSearch] = useState("");
   const [iconTarget, setIconTarget] = useState<IconTarget>();
@@ -146,6 +153,21 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (u) => (
                   <>
+                    <Button
+                      disabled={
+                        !u.active ||
+                        !allowed("commerce.wallet.credit", "finance")
+                      }
+                      onClick={() => setCreditTarget(u)}
+                    >
+                      شارژ کیف پول
+                    </Button>
+                    {walletUpdates[u.id] && (
+                      <small>
+                        موجودی پس از شارژ: {walletUpdates[u.id].balance_toman}{" "}
+                        تومان
+                      </small>
+                    )}
                     <Button
                       disabled={role !== "super-admin"}
                       onClick={() =>
@@ -546,7 +568,17 @@ export function ManagementPage({
           </>
         )}
       </section>
-      {section === "users" && <AccessPanel />}
+      {section === "users" && role === "super-admin" && <AccessPanel />}
+      {creditTarget && (
+        <WalletCreditDialog
+          key={creditTarget.id}
+          user={creditTarget}
+          close={() => setCreditTarget(undefined)}
+          onCredited={(result) =>
+            setWalletUpdates((old) => ({ ...old, [result.user_id]: result }))
+          }
+        />
+      )}
       {iconTarget && (
         <CatalogIconDialog
           target={iconTarget}

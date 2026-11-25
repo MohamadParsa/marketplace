@@ -108,12 +108,19 @@ type DiscountUsage struct {
 }
 
 type CreditLot struct {
-	ID     string    `json:"id"`
-	UserID string    `json:"user_id"`
-	Source string    `json:"source"`
-	Amount Amount    `json:"amount"`
-	Spent  Amount    `json:"spent"`
-	At     time.Time `json:"at"`
+	PriorityAt   *time.Time `json:"priority_at,omitempty"`
+	Withdrawable *bool      `json:"withdrawable,omitempty"` // nil means pre-policy cash, explicitly preserved
+	EntryID      string     `json:"entry_id,omitempty"`
+	OriginLotID  string     `json:"origin_lot_id,omitempty"`
+	Title        string     `json:"title,omitempty"`
+	Description  string     `json:"description,omitempty"`
+	ActorID      string     `json:"actor_id,omitempty"`
+	ID           string     `json:"id"`
+	UserID       string     `json:"user_id"`
+	Source       string     `json:"source"`
+	Amount       Amount     `json:"amount"`
+	Spent        Amount     `json:"spent"`
+	At           time.Time  `json:"at"`
 }
 type CreditAccount struct {
 	UserID string    `json:"user_id"`
@@ -129,4 +136,23 @@ type CreditUsage struct {
 	Existing  []CreditAllocation `json:"existing"`
 	Funding   []CreditAllocation `json:"funding"`
 	Status    string             `json:"status"` // held / posted / released; no second financial debit
+}
+
+// Nil is the explicit compatibility policy for balances created before typed credits.
+func (l CreditLot) CanWithdraw() bool { return l.Withdrawable == nil || *l.Withdrawable }
+func (l CreditLot) LedgerEntryID() string {
+	if l.EntryID != "" {
+		return l.EntryID
+	}
+	if l.Source == "legacy-unattributed" {
+		return ""
+	}
+	return l.ID
+}
+
+func (l CreditLot) AvailableSince() time.Time {
+	if l.PriorityAt != nil {
+		return *l.PriorityAt
+	}
+	return l.At
 }

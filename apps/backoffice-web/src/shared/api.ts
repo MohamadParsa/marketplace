@@ -1,4 +1,9 @@
 import type {
+  CustomerCreditWallet,
+  WalletCreditInput,
+  WalletCreditResult,
+} from "../../../../packages/commerce-client/types";
+import type {
   Command,
   Session,
   Workspace,
@@ -7,7 +12,6 @@ import type {
   BannerList,
   ProductQAPage,
   ProductQAMutation,
-
   AdminProductReview,
   ProductReviewStatus,
   ReviewAction,
@@ -52,7 +56,31 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return response.json();
 }
 export const api = {
-  productReviews: (token: string, status: ProductReviewStatus, cursor: string) =>
+  readCustomerWallet: (token: string, user: string, key: string) =>
+    request<CustomerCreditWallet>(
+      "/backoffice/commerce/wallet/credits?" +
+        new URLSearchParams({ user_id: user }),
+      {
+        cache: "no-store",
+        headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key },
+      },
+    ),
+  creditCustomerWallet: (
+    token: string,
+    input: WalletCreditInput,
+    key: string,
+  ) =>
+    request<WalletCreditResult>("/backoffice/commerce/wallet/credits", {
+      method: "POST",
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key },
+      body: JSON.stringify(input),
+    }),
+  productReviews: (
+    token: string,
+    status: ProductReviewStatus,
+    cursor: string,
+  ) =>
     request<{ reviews: AdminProductReview[]; next_cursor?: string }>(
       "/backoffice/product-reviews?" + new URLSearchParams({ status, cursor }),
       { headers: { Authorization: `Bearer ${token}` } },
@@ -60,14 +88,22 @@ export const api = {
   decideProductReview: (
     token: string,
     id: string,
-    decision: { action: ReviewAction; text: string; version: number; idempotency_key: string },
+    decision: {
+      action: ReviewAction;
+      text: string;
+      version: number;
+      idempotency_key: string;
+    },
   ) =>
-    request<void>(`/backoffice/product-reviews/${encodeURIComponent(id)}/decisions`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: JSON.stringify(decision),
-    }),
-  profile: (token: string, surface="backoffice") =>
+    request<void>(
+      `/backoffice/product-reviews/${encodeURIComponent(id)}/decisions`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify(decision),
+      },
+    ),
+  profile: (token: string, surface = "backoffice") =>
     request<{ name: string; email?: string; password_available: boolean }>(
       `/${surface}/account/profile`,
       { headers: { Authorization: `Bearer ${token}` } },
@@ -75,7 +111,7 @@ export const api = {
   updateProfile: (
     token: string,
     input: { name: string; email: string; password: string },
-    surface="backoffice",
+    surface = "backoffice",
   ) =>
     request<void>(`/${surface}/account/profile`, {
       method: "PATCH",
@@ -128,10 +164,20 @@ export const api = {
       `/backoffice/products/${encodeURIComponent(id)}/questions${after ? `?after=${after}` : ""}`,
       { cache: "no-store", headers: { Authorization: `Bearer ${token}` } },
     ),
-  changeProductQA: (token: string, id: string, question: string, mutation: ProductQAMutation, key: string) =>
+  changeProductQA: (
+    token: string,
+    id: string,
+    question: string,
+    mutation: ProductQAMutation,
+    key: string,
+  ) =>
     request<void>(
       `/backoffice/products/${encodeURIComponent(id)}/questions/${encodeURIComponent(question)}`,
-      { method: "POST", body: JSON.stringify(mutation), headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key } },
+      {
+        method: "POST",
+        body: JSON.stringify(mutation),
+        headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key },
+      },
     ),
   productWorkspace: (token: string, id: string, surface = "backoffice") =>
     request<ProductWorkspace>(
@@ -190,7 +236,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ phone }),
     }),
-  passwordLogin: (phone: string, password: string, surface="backoffice") =>
+  passwordLogin: (phone: string, password: string, surface = "backoffice") =>
     request<Session>(`/${surface}/auth/password-login`, {
       method: "POST",
       body: JSON.stringify({ phone, password }),

@@ -103,6 +103,8 @@ export interface Settings {
   reservation_minutes: number;
 }
 export interface QuoteLine {
+  reference_unit_price_toman?: string;
+  direct_discount_toman?: string;
   offer_id: string;
   quantity: number;
   product_id: string;
@@ -127,6 +129,7 @@ export interface Shipment {
   delivery_to: string;
 }
 export interface Quote {
+  direct_discount_toman?: string;
   contract_version?: number;
   terms_digest?: string;
   coupon_code?: string;
@@ -178,6 +181,10 @@ export interface Purchase {
     rule_version: number;
   };
   credit_sources?: {
+    lot_id: string;
+    title?: string;
+    origin_lot_id?: string;
+    withdrawable: boolean;
     source: string;
     amount_toman: string;
     kind: string;
@@ -221,6 +228,21 @@ export interface Entry {
   at: string;
 }
 export interface Wallet {
+  withdrawable_toman: string;
+  purchase_only_toman: string;
+  credits: {
+    id: string;
+    title: string;
+    description?: string;
+    source: string;
+    origin_lot_id?: string;
+    amount_toman: string;
+    spent_toman: string;
+    held_toman: string;
+    free_toman: string;
+    withdrawable: boolean;
+    at: string;
+  }[];
   balance_toman: string;
   held_toman: string;
   available_toman: string;
@@ -285,6 +307,7 @@ export const statuses: Record<string, string> = {
   approved: "تأیید و شارژ شد",
   rejected: "رد شده",
   completed: "تکمیل شده",
+  "admin-credit": "شارژ مدیریتی",
   "deposit-credit": "شارژ کیف پول",
   "order-payment": "پرداخت سفارش",
   "order-cancel-credit": "برگشت لغو سفارش",
@@ -305,4 +328,29 @@ export function money(value: string) {
   const negative = value.startsWith("-");
   const [whole, fraction] = value.replace(/^-/, "").split(".");
   return `${negative ? "−" : ""}${whole.replace(/\B(?=(\d{3})+(?!\d))/g, "٬")}${fraction ? "٫" + fraction : ""} تومان`;
+}
+
+export interface WalletCreditInput {
+  user_id: string;
+  amount_toman: string;
+  title: string;
+  description: string;
+  withdrawable: boolean;
+}
+export interface WalletCreditResult extends WalletCreditInput {
+  id: string;
+  customer_name: string;
+  balance_toman: string;
+  available_toman: string;
+  withdrawable_toman: string;
+  at: string;
+}
+export interface CustomerCreditWallet {
+  user_id: string;
+  customer_name: string;
+  balance_toman: string;
+  available_toman: string;
+  withdrawable_toman: string;
+  credits: Wallet["credits"];
+  previous_operation?: WalletCreditResult;
 }

@@ -29,16 +29,18 @@ type AcceptQuoteInput struct {
 	AcceptedTotalToman string `json:"accepted_total_toman"`
 }
 type QuoteLineView struct {
-	OfferID        string `json:"offer_id"`
-	Quantity       int    `json:"quantity"`
-	ProductID      string `json:"product_id"`
-	VariantID      string `json:"variant_id"`
-	StoreID        string `json:"store_id"`
-	Name           string `json:"name"`
-	VariantLabel   string `json:"variant_label"`
-	ImageURL       string `json:"image_url"`
-	UnitPriceToman string `json:"unit_price_toman"`
-	TotalToman     string `json:"total_toman"`
+	ReferenceUnitPriceToman string `json:"reference_unit_price_toman,omitempty"`
+	DirectDiscountToman     string `json:"direct_discount_toman,omitempty"`
+	OfferID                 string `json:"offer_id"`
+	Quantity                int    `json:"quantity"`
+	ProductID               string `json:"product_id"`
+	VariantID               string `json:"variant_id"`
+	StoreID                 string `json:"store_id"`
+	Name                    string `json:"name"`
+	VariantLabel            string `json:"variant_label"`
+	ImageURL                string `json:"image_url"`
+	UnitPriceToman          string `json:"unit_price_toman"`
+	TotalToman              string `json:"total_toman"`
 }
 type ShipmentView struct {
 	StoreID      string `json:"store_id"`
@@ -53,6 +55,7 @@ type ShipmentView struct {
 	DeliveryTo   string `json:"delivery_to"`
 }
 type QuoteView struct {
+	DirectDiscountToman string               `json:"direct_discount_toman,omitempty"`
 	TermsDigest         string               `json:"terms_digest,omitempty"`
 	ContractVersion     int                  `json:"contract_version,omitempty"`
 	CouponCode          string               `json:"coupon_code,omitempty"`
@@ -74,24 +77,25 @@ type QuoteView struct {
 	Currency            string               `json:"currency"`
 }
 type PurchaseView struct {
-	Number                string           `json:"number"`
-	OrderStatus           string           `json:"order_status"`
-	PaymentStatus         string           `json:"payment_status"`
-	Events                []OrderEventView `json:"events"`
-	CancellationRequested bool             `json:"cancellation_requested"`
-	CancellationReason    string           `json:"cancellation_reason,omitempty"`
-	ID                    string           `json:"id"`
-	Status                string           `json:"status"`
-	Version               int              `json:"version"`
-	Quote                 QuoteView        `json:"quote"`
-	OrderIDs              []string         `json:"order_ids"`
-	CreatedAt             time.Time        `json:"created_at"`
-	ConfirmedAt           *time.Time       `json:"confirmed_at,omitempty"`
-	WalletBalanceToman    string           `json:"wallet_balance_toman"`
-	WalletAvailableToman  string           `json:"wallet_available_toman"`
-	ShortfallToman        string           `json:"shortfall_toman"`
-	Deposits              []DepositView    `json:"deposits"`
-	Reason                string           `json:"reason,omitempty"`
+	CreditSources         []CreditSourceView `json:"credit_sources,omitempty"`
+	Number                string             `json:"number"`
+	OrderStatus           string             `json:"order_status"`
+	PaymentStatus         string             `json:"payment_status"`
+	Events                []OrderEventView   `json:"events"`
+	CancellationRequested bool               `json:"cancellation_requested"`
+	CancellationReason    string             `json:"cancellation_reason,omitempty"`
+	ID                    string             `json:"id"`
+	Status                string             `json:"status"`
+	Version               int                `json:"version"`
+	Quote                 QuoteView          `json:"quote"`
+	OrderIDs              []string           `json:"order_ids"`
+	CreatedAt             time.Time          `json:"created_at"`
+	ConfirmedAt           *time.Time         `json:"confirmed_at,omitempty"`
+	WalletBalanceToman    string             `json:"wallet_balance_toman"`
+	WalletAvailableToman  string             `json:"wallet_available_toman"`
+	ShortfallToman        string             `json:"shortfall_toman"`
+	Deposits              []DepositView      `json:"deposits"`
+	Reason                string             `json:"reason,omitempty"`
 }
 type MethodEligibility struct {
 	PaymentMethodInput
@@ -125,9 +129,31 @@ func quoteView(q commerce.Quote) QuoteView {
 		v.WalletSelectedToman = commerce.Toman(q.Credit.Requested)
 		v.FundingToman = commerce.Toman(q.Total - q.Credit.Requested)
 	}
+	var directTotal commerce.Amount
+	directValid := true
+	for _, l := range q.Lines {
+		if l.DirectDiscount != nil {
+			n, e := commerce.Add(directTotal, *l.DirectDiscount)
+			if e != nil {
+				directValid = false
+			} else {
+				directTotal = n
+			}
+		}
+	}
+	if directValid && directTotal > 0 {
+		v.DirectDiscountToman = commerce.Toman(directTotal)
+	}
 	for _, l := range q.Lines {
 		total, _ := commerce.Multiply(l.UnitPrice, l.Quantity)
-		v.Lines = append(v.Lines, QuoteLineView{OfferID: l.OfferID, Quantity: l.Quantity, ProductID: l.ProductID, VariantID: l.VariantID, StoreID: l.StoreID, Name: l.Name, VariantLabel: l.VariantLabel, ImageURL: l.ImageURL, UnitPriceToman: commerce.Toman(l.UnitPrice), TotalToman: commerce.Toman(total)})
+		lineView := QuoteLineView{OfferID: l.OfferID, Quantity: l.Quantity, ProductID: l.ProductID, VariantID: l.VariantID, StoreID: l.StoreID, Name: l.Name, VariantLabel: l.VariantLabel, ImageURL: l.ImageURL, UnitPriceToman: commerce.Toman(l.UnitPrice), TotalToman: commerce.Toman(total)}
+		if l.ReferenceUnitPrice != nil {
+			lineView.ReferenceUnitPriceToman = commerce.Toman(*l.ReferenceUnitPrice)
+		}
+		if l.DirectDiscount != nil {
+			lineView.DirectDiscountToman = commerce.Toman(*l.DirectDiscount)
+		}
+		v.Lines = append(v.Lines, lineView)
 	}
 	for _, s := range q.Shipments {
 		v.Shipments = append(v.Shipments, ShipmentView{StoreID: s.StoreID, StoreName: s.StoreName, MethodID: s.Method.ID, MethodName: s.Method.Name, FeeToman: commerce.Toman(s.Method.Fee), LeadDays: s.LeadDays, MinDays: s.Method.MinDays, MaxDays: s.Method.MaxDays, DeliveryFrom: s.DeliveryFrom, DeliveryTo: s.DeliveryTo})
@@ -146,6 +172,7 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	v.WalletAvailableToman = commerce.Toman(balance - held)
 	if q != nil {
 		v.Quote = quoteView(*q)
+		v.CreditSources = creditSourceViews(c, q)
 		short := q.Total - (balance - held)
 		if q.ContractVersion == 2 && q.Credit != nil {
 			short = q.Total - q.Credit.Requested - creditSum(q.Credit.Funding)
@@ -252,7 +279,16 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 		if e != nil {
 			return q, ErrInvalid
 		}
-		q.Lines = append(q.Lines, commerce.LineSnapshot{OfferID: o.ID, ProductID: o.ProductID, VariantID: o.VariantID, StoreID: o.StoreID, Name: item.Name, VariantLabel: item.VariantLabel, ImageURL: item.ImageURL, UnitPrice: price, Quantity: l.Quantity, OfferVersion: o.Version})
+		var reference, direct *commerce.Amount
+		if o.RegularPrice > o.Price && o.RegularPrice <= int64(commerce.MaxAmount) {
+			discount, err := commerce.Multiply(commerce.Amount(o.RegularPrice-o.Price), l.Quantity)
+			if err == nil {
+				r := commerce.Amount(o.RegularPrice)
+				reference = &r
+				direct = &discount
+			}
+		}
+		q.Lines = append(q.Lines, commerce.LineSnapshot{ReferenceUnitPrice: reference, DirectDiscount: direct, OfferID: o.ID, ProductID: o.ProductID, VariantID: o.VariantID, StoreID: o.StoreID, Name: item.Name, VariantLabel: item.VariantLabel, ImageURL: item.ImageURL, UnitPrice: price, Quantity: l.Quantity, OfferVersion: o.Version})
 	}
 	stores := sortedStoreIDs(q.Lines)
 	if len(in.Shipping) != len(stores) {
@@ -320,8 +356,11 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 			wallet = "0"
 		}
 		selected, err := commerce.ParseToman(normalizeDigits(wallet))
-		if err != nil || selected > q.Total {
+		if err != nil {
 			return q, ErrInvalid
+		}
+		if selected > q.Total {
+			return q, ErrWalletExceedsTotal
 		}
 		balance, held := walletAmounts(c, a.ID)
 		if selected > balance-held+ownCredit {

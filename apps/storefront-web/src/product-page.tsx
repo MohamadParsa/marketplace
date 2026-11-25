@@ -18,7 +18,7 @@ import { SiteHeader, SiteFooter, Icon } from "./home-page";
 import { navigate } from "./navigation";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 // Keep the PDP add button visible while new additions are paused.
-const pdpAddPaused = import.meta.env.VITE_PDP_ADD_TO_CART !== "true";
+const pdpAddPaused = import.meta.env.VITE_PDP_ADD_TO_CART === "false";
 type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Feature = {
   attribute_id: string;

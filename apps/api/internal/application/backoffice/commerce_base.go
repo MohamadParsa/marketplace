@@ -16,6 +16,8 @@ import (
 )
 
 var ErrCheckoutChanged = errors.New("checkout_changed")
+var ErrWithdrawalUnavailable = errors.New("withdrawal_credit_unavailable")
+var ErrWalletExceedsTotal = errors.New("wallet_exceeds_total")
 var ErrInsufficientWallet = errors.New("insufficient_wallet")
 var ErrInvalidMethod = errors.New("payment_method_not_eligible")
 var ErrStock = errors.New("insufficient_stock")
@@ -213,6 +215,9 @@ func appendWallet(c *commerce.State, id, user, source, kind string, amount comme
 			return ErrConflict
 		}
 	}
+	if err := ensureCreditState(c, user, now); err != nil {
+		return err
+	}
 	balance, held := walletAmounts(c, user)
 	if amount > 0 && balance > commerce.MaxAmount-amount {
 		return ErrInvalid
@@ -225,13 +230,35 @@ func appendWallet(c *commerce.State, id, user, source, kind string, amount comme
 		if len(exact) > 0 {
 			allocations = exact[0]
 		}
+		if kind == "manual-refund" {
+			if allocations == nil {
+				var err error
+				allocations, err = allocateCreditMode(c, user, -amount, "", true)
+				if err != nil {
+					return err
+				}
+			}
+			for _, allocation := range allocations {
+				found := false
+				for _, lot := range c.CreditLots {
+					if lot.ID == allocation.LotID && lot.UserID == user && lot.CanWithdraw() {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return ErrWithdrawalUnavailable
+				}
+			}
+		}
 		if e := spendCredit(c, user, -amount, allocations); e != nil {
 			return e
 		}
 	}
 	c.Entries = append(c.Entries, commerce.WalletEntry{ID: id, UserID: user, Source: source, Kind: kind, Amount: amount, At: now})
 	if amount > 0 && hasCreditAccount(c, user) {
-		c.CreditLots = append(c.CreditLots, commerce.CreditLot{ID: id, UserID: user, Source: source, Amount: amount, At: now})
+		withdrawable := true
+		c.CreditLots = append(c.CreditLots, commerce.CreditLot{ID: id, EntryID: id, UserID: user, Source: source, Amount: amount, At: now, Withdrawable: &withdrawable})
 	}
 	return nil
 }

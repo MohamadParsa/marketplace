@@ -64,6 +64,9 @@ func saveCommerce(ctx context.Context, tx pgx.Tx, c *commerce.State) error {
 	if savedEntries != len(c.Entries) {
 		return fmt.Errorf("wallet ledger entries cannot be replaced")
 	}
+	if err := saveCreditLots(ctx, tx, c); err != nil {
+		return err
+	}
 	for _, d := range c.Deposits {
 		raw, _ := json.Marshal(d)
 		var verified any

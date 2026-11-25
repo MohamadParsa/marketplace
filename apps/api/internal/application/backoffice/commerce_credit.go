@@ -2,6 +2,7 @@ package backoffice
 
 import (
 	"encoding/json"
+	"sort"
 	"time"
 
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
@@ -52,19 +53,33 @@ func creditHeld(c *commerce.State, user, except string) map[string]commerce.Amou
 			held[a.LotID] += a.Amount
 		}
 	}
+	for _, r := range c.Refunds {
+		if r.UserID == user && r.ID != except && r.Status == "pending" {
+			for _, a := range r.Allocations {
+				held[a.LotID] += a.Amount
+			}
+		}
+	}
 	return held
 }
 func allocateCredit(c *commerce.State, user string, amount commerce.Amount, except string) ([]commerce.CreditAllocation, error) {
+	return allocateCreditMode(c, user, amount, except, false)
+}
+func allocateCreditMode(c *commerce.State, user string, amount commerce.Amount, except string, withdrawing bool) ([]commerce.CreditAllocation, error) {
 	allocations := []commerce.CreditAllocation{}
 	held := creditHeld(c, user, except)
-	for _, lot := range c.CreditLots {
-		if lot.UserID != user {
+	lots := append([]commerce.CreditLot{}, c.CreditLots...)
+	sort.SliceStable(lots, func(i, j int) bool {
+		if lots[i].CanWithdraw() != lots[j].CanWithdraw() {
+			return !lots[i].CanWithdraw()
+		}
+		return lots[i].AvailableSince().Before(lots[j].AvailableSince())
+	})
+	for _, lot := range lots {
+		if lot.UserID != user || (withdrawing && !lot.CanWithdraw()) {
 			continue
 		}
 		free := lot.Amount - lot.Spent - held[lot.ID]
-		if free <= 0 {
-			continue
-		}
 		take := min(free, amount)
 		if take > 0 {
 			allocations = append(allocations, commerce.CreditAllocation{LotID: lot.ID, Amount: take})
@@ -75,9 +90,48 @@ func allocateCredit(c *commerce.State, user string, amount commerce.Amount, exce
 		}
 	}
 	if amount != 0 {
+		if withdrawing {
+			return nil, ErrWithdrawalUnavailable
+		}
 		return nil, ErrInsufficientWallet
 	}
 	return allocations, nil
+}
+
+// Materialize legacy pending withdrawal holds before any new restricted credit.
+// This only adds source metadata; the existing ledger and balances are untouched.
+func ensureCreditState(c *commerce.State, user string, now time.Time) error {
+	ensureCreditAccount(c, user, now)
+	indices := []int{}
+	for i, r := range c.Refunds {
+		if r.UserID == user && r.Status == "pending" && r.Allocations == nil {
+			indices = append(indices, i)
+		}
+	}
+	sort.SliceStable(indices, func(i, j int) bool { return c.Refunds[indices[i]].CreatedAt.Before(c.Refunds[indices[j]].CreatedAt) })
+	for _, i := range indices {
+		r := &c.Refunds[i]
+		a, e := allocateCreditMode(c, user, r.Amount, r.ID, true)
+		if e != nil {
+			return ErrConflict
+		}
+		r.Allocations = a
+	}
+	return nil
+}
+func withdrawableCredit(c *commerce.State, user string) commerce.Amount {
+	balance, heldAmount := walletAmounts(c, user)
+	if !hasCreditAccount(c, user) {
+		return max(0, balance-heldAmount)
+	}
+	held := creditHeld(c, user, "")
+	var total commerce.Amount
+	for _, lot := range c.CreditLots {
+		if lot.UserID == user && lot.CanWithdraw() {
+			total += max(0, lot.Amount-lot.Spent-held[lot.ID])
+		}
+	}
+	return min(max(0, balance-heldAmount), total)
 }
 func spendCredit(c *commerce.State, user string, amount commerce.Amount, allocations []commerce.CreditAllocation) error {
 	if !hasCreditAccount(c, user) {
@@ -122,7 +176,9 @@ func reserveCredit(c *commerce.State, q *commerce.Quote, now time.Time) error {
 	if q.ContractVersion != 2 || q.Credit == nil {
 		return nil
 	}
-	ensureCreditAccount(c, q.UserID, now)
+	if e := ensureCreditState(c, q.UserID, now); e != nil {
+		return e
+	}
 	balance, held := walletAmounts(c, q.UserID)
 	if q.Credit.Requested > balance-held {
 		return ErrInsufficientWallet

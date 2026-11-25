@@ -41,6 +41,22 @@ func commerceError(w http.ResponseWriter, e error) {
 		status, code = 404, "not_found"
 	case errors.Is(e, backoffice.ErrAddressUnavailable):
 		status, code = 400, "address_unavailable"
+	case errors.Is(e, backoffice.ErrWithdrawalUnavailable):
+		status, code = 409, "withdrawal_credit_unavailable"
+	case errors.Is(e, backoffice.ErrWalletExceedsTotal):
+		status, code = 400, "wallet_exceeds_total"
+	case errors.Is(e, backoffice.ErrCouponUnknown):
+		status, code = 400, "coupon_invalid"
+	case errors.Is(e, backoffice.ErrCouponExpired):
+		status, code = 400, "coupon_expired"
+	case errors.Is(e, backoffice.ErrCouponNotStarted):
+		status, code = 400, "coupon_not_started"
+	case errors.Is(e, backoffice.ErrCouponUserQuota):
+		status, code = 400, "coupon_user_limit_reached"
+	case errors.Is(e, backoffice.ErrCouponQuota):
+		status, code = 400, "coupon_quota_reached"
+	case errors.Is(e, backoffice.ErrCouponNoDiscount):
+		status, code = 400, "coupon_no_discount"
 	case errors.Is(e, backoffice.ErrCoupon):
 		status, code = 400, "coupon_not_eligible"
 	case errors.Is(e, backoffice.ErrInvalid):
@@ -297,6 +313,17 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	var result any
 	var e error
 	switch r.URL.Path {
+	case "/backoffice/commerce/wallet/credits":
+		if r.Method == "GET" {
+			result, e = h.service.ReadCustomerCreditWallet(r.Context(), a, r.URL.Query().Get("user_id"), r.Header.Get("Idempotency-Key"))
+		} else {
+			var in backoffice.AdminCreditInput
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.CreditCustomerWallet(r.Context(), a, in, key)
+		}
+
 	case "/backoffice/commerce/coupons/activate":
 		var in backoffice.CouponActivationInput
 		if !commerceBody(w, r, &in) {

@@ -221,6 +221,15 @@ func TestSelectedWalletEarmarkNoDoubleDebitAndLegacyIsolation(t *testing.T) {
 	h := newCommerceHarness(t)
 	ctx := context.Background()
 	h.approve(t, h.deposit(t, h.buyer, "", "card-transfer", "200000", "22345001"))
+	// Recreate the pre-policy fixture: a cash ledger balance without source metadata.
+	// Only this isolated memory fixture is changed; no ledger entries are removed.
+	if e := h.repo.Update(ctx, func(w *backoffice.Workspace) error {
+		w.Commerce.CreditAccounts = nil
+		w.Commerce.CreditLots = nil
+		return nil
+	}); e != nil {
+		t.Fatal(e)
+	}
 	h.add(t, h.buyer, "offer1", 1)
 	in := h.v2Input(t, h.buyer)
 	in.WalletToman = "20000"

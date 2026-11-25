@@ -116,16 +116,18 @@ type Address struct {
 	PostalCode string `json:"postal_code"`
 }
 type LineSnapshot struct {
-	OfferID      string `json:"offer_id"`
-	ProductID    string `json:"product_id"`
-	VariantID    string `json:"variant_id"`
-	StoreID      string `json:"store_id"`
-	Name         string `json:"name"`
-	VariantLabel string `json:"variant_label"`
-	ImageURL     string `json:"image_url"`
-	UnitPrice    Amount `json:"unit_price"`
-	Quantity     int    `json:"quantity"`
-	OfferVersion int    `json:"offer_version"`
+	ReferenceUnitPrice *Amount `json:"reference_unit_price,omitempty"`
+	DirectDiscount     *Amount `json:"direct_discount,omitempty"`
+	OfferID            string  `json:"offer_id"`
+	ProductID          string  `json:"product_id"`
+	VariantID          string  `json:"variant_id"`
+	StoreID            string  `json:"store_id"`
+	Name               string  `json:"name"`
+	VariantLabel       string  `json:"variant_label"`
+	ImageURL           string  `json:"image_url"`
+	UnitPrice          Amount  `json:"unit_price"`
+	Quantity           int     `json:"quantity"`
+	OfferVersion       int     `json:"offer_version"`
 }
 type ShipmentSnapshot struct {
 	StoreID      string         `json:"store_id"`
@@ -213,18 +215,19 @@ type WalletEntry struct {
 	At     time.Time `json:"at"`
 }
 type RefundRequest struct {
-	ID           string     `json:"id"`
-	UserID       string     `json:"user_id"`
-	Amount       Amount     `json:"amount"`
-	Instructions string     `json:"instructions"`
-	Status       string     `json:"status"`
-	Version      int        `json:"version"`
-	CreatedAt    time.Time  `json:"created_at"`
-	ResolvedAt   *time.Time `json:"resolved_at,omitempty"`
-	ResolvedBy   string     `json:"resolved_by,omitempty"`
-	Reference    string     `json:"reference,omitempty"`
-	Date         string     `json:"date,omitempty"`
-	Reason       string     `json:"reason,omitempty"`
+	Allocations  []CreditAllocation `json:"credit_allocations,omitempty"`
+	ID           string             `json:"id"`
+	UserID       string             `json:"user_id"`
+	Amount       Amount             `json:"amount"`
+	Instructions string             `json:"instructions"`
+	Status       string             `json:"status"`
+	Version      int                `json:"version"`
+	CreatedAt    time.Time          `json:"created_at"`
+	ResolvedAt   *time.Time         `json:"resolved_at,omitempty"`
+	ResolvedBy   string             `json:"resolved_by,omitempty"`
+	Reference    string             `json:"reference,omitempty"`
+	Date         string             `json:"date,omitempty"`
+	Reason       string             `json:"reason,omitempty"`
 }
 type Operation struct {
 	Scope       string          `json:"scope"`

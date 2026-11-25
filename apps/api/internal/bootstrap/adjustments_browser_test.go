@@ -29,6 +29,10 @@ func TestAdjustmentsBrowserHarness(t *testing.T) {
 	w.Variants[0].Values = []catalog.AttributeValue{{AttributeID: "color", Value: "مشکی"}, {AttributeID: "warranty", Value: "شرکت الف ۶ماه"}}
 	w.Variants = append(w.Variants, catalog.Variant{ID: "variant-b", ProductID: "product", Version: 1, Values: []catalog.AttributeValue{{AttributeID: "color", Value: "مشکی"}, {AttributeID: "warranty", Value: "شرکت ب ۶ماه"}}}, catalog.Variant{ID: "variant-white", ProductID: "product", Version: 1, Values: []catalog.AttributeValue{{AttributeID: "color", Value: "سفید"}, {AttributeID: "warranty", Value: "شرکت الف ۶ماه"}}})
 	w.Offers = append(w.Offers, catalog.Offer{ID: "offer-b", ProductID: "product", VariantID: "variant-b", StoreID: "s1", Price: 900000, Stock: 10, Version: 1}, catalog.Offer{ID: "offer-white", ProductID: "product", VariantID: "variant-white", StoreID: "s1", Price: 1100000, Stock: 10, Version: 1})
+	if os.Getenv("CHERRIVA_WALLET_POLICY_BROWSER") == "1" {
+		w.Offers[0].RegularPrice = 1200000
+		w.Offers = append(w.Offers, catalog.Offer{ID: "offer-second-seller", ProductID: "product", VariantID: "variant", StoreID: "s2", Price: 1000000, RegularPrice: 1300000, Stock: 10, Version: 1})
+	}
 	repo := backofficememory.New(w)
 	for _, surface := range []struct{ port, name, root string }{{"8096", "backoffice", "backoffice-web"}, {"5196", "storefront", "storefront-web"}} {
 		listener, e := net.Listen("tcp", "127.0.0.1:"+surface.port)

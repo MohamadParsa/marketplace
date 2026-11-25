@@ -52,15 +52,18 @@ type RefundView struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 type WalletView struct {
-	BalanceToman   string               `json:"balance_toman"`
-	HeldToman      string               `json:"held_toman"`
-	AvailableToman string               `json:"available_toman"`
-	Entries        []WalletEntryView    `json:"entries"`
-	Deposits       []DepositView        `json:"deposits"`
-	Refunds        []RefundView         `json:"refunds"`
-	Methods        []PaymentMethodInput `json:"funding_methods"`
-	Destination    commerce.Destination `json:"destination"`
-	Currency       string               `json:"currency"`
+	WithdrawableToman string               `json:"withdrawable_toman"`
+	PurchaseOnlyToman string               `json:"purchase_only_toman"`
+	Credits           []CreditLotView      `json:"credits"`
+	BalanceToman      string               `json:"balance_toman"`
+	HeldToman         string               `json:"held_toman"`
+	AvailableToman    string               `json:"available_toman"`
+	Entries           []WalletEntryView    `json:"entries"`
+	Deposits          []DepositView        `json:"deposits"`
+	Refunds           []RefundView         `json:"refunds"`
+	Methods           []PaymentMethodInput `json:"funding_methods"`
+	Destination       commerce.Destination `json:"destination"`
+	Currency          string               `json:"currency"`
 }
 type RefundInput struct {
 	AmountToman  string `json:"amount_toman"`
@@ -96,6 +99,9 @@ func walletView(c *commerce.State, user string) WalletView {
 			v.Methods = append(v.Methods, methodInput(m))
 		}
 	}
+	v.WithdrawableToman = commerce.Toman(withdrawableCredit(c, user))
+	v.PurchaseOnlyToman = commerce.Toman(max(0, balance-held-withdrawableCredit(c, user)))
+	v.Credits = creditLotViews(c, user)
 	return v
 }
 func (s *Service) ReadWallet(ctx context.Context, a identity.User) (WalletView, error) {
@@ -109,7 +115,11 @@ func (s *Service) ReadWallet(ctx context.Context, a identity.User) (WalletView, 
 	if e = customerActor(w, a); e != nil {
 		return WalletView{}, e
 	}
-	return walletView(commerceState(&w), a.ID), nil
+	c := commerceState(&w)
+	if e = ensureCreditState(c, a.ID, s.clock.Now()); e != nil {
+		return WalletView{}, e
+	}
+	return walletView(c, a.ID), nil
 }
 func normalizeReference(s string) (string, error) {
 	s = strings.ToUpper(normalizeDigits(s))
@@ -301,11 +311,14 @@ func (s *Service) RequestRefund(ctx context.Context, a identity.User, in RefundI
 		if e != nil || amount <= 0 || strings.TrimSpace(in.Instructions) == "" || !textBound(in.Instructions, 1000) {
 			return nil, ErrInvalid
 		}
-		balance, held := walletAmounts(c, a.ID)
-		if balance-held < amount {
-			return nil, ErrInsufficientWallet
+		if e = ensureCreditState(c, a.ID, now); e != nil {
+			return nil, e
 		}
-		r := commerce.RefundRequest{ID: id, UserID: a.ID, Amount: amount, Instructions: strings.TrimSpace(in.Instructions), Status: "pending", Version: 1, CreatedAt: now}
+		allocations, e := allocateCreditMode(c, a.ID, amount, "", true)
+		if e != nil {
+			return nil, e
+		}
+		r := commerce.RefundRequest{Allocations: allocations, ID: id, UserID: a.ID, Amount: amount, Instructions: strings.TrimSpace(in.Instructions), Status: "pending", Version: 1, CreatedAt: now}
 		c.Refunds = append(c.Refunds, r)
 		commerceAudit(w, id+":audit", a, "refund.request", id, "", now)
 		return refundView(r), nil

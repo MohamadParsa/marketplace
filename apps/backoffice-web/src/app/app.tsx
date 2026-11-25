@@ -238,6 +238,10 @@ function Workspace({
     .find((i) => i.path === location.pathname);
   const role = session.user.Role;
   const permissions = session.user.Permissions ?? [];
+  const canCreditWallet =
+    role === "super-admin" ||
+    role === "finance" ||
+    permissions.includes("commerce.wallet.credit");
   const financeVisible =
     role === "super-admin" ||
     role === "finance" ||
@@ -277,7 +281,9 @@ function Workspace({
                 .filter((i) =>
                   session.user.Surface === "seller"
                     ? ["/products", "/commerce"].includes(i.path)
-                    : visible("roles" in i ? i.roles : undefined),
+                    : i.path === "/users"
+                      ? canCreditWallet
+                      : visible("roles" in i ? i.roles : undefined),
                 )
                 .map((item) => (
                   <NavLink
@@ -375,6 +381,22 @@ function Workspace({
           ) : (
             <WorkspaceContext.Provider
               value={{
+                actorID: session.user.ID,
+                readCustomerWallet: (user, key) =>
+                  api.readCustomerWallet(session.token, user, key),
+                creditCustomerWallet: async (input, key) => {
+                  try {
+                    return await api.creditCustomerWallet(
+                      session.token,
+                      input,
+                      key,
+                    );
+                  } catch (error) {
+                    if (error instanceof ApiError && error.status === 401)
+                      logout();
+                    throw error;
+                  }
+                },
                 state: query.data,
                 role,
                 surface: session.user.Surface,
@@ -389,9 +411,16 @@ function Workspace({
                   await cache.invalidateQueries({ queryKey: ["banners"] });
                   return result;
                 },
-                loadProductQA: (id, after) => api.productQA(session.token, id, after),
+                loadProductQA: (id, after) =>
+                  api.productQA(session.token, id, after),
                 changeProductQA: (id, question, mutation, key) =>
-                  api.changeProductQA(session.token, id, question, mutation, key),
+                  api.changeProductQA(
+                    session.token,
+                    id,
+                    question,
+                    mutation,
+                    key,
+                  ),
                 loadProduct: (id) =>
                   api.productWorkspace(session.token, id, session.user.Surface),
                 resolveVariant: (id, values) =>
@@ -481,7 +510,8 @@ function Workspace({
                 <Route
                   path="/product-reviews"
                   element={
-                    session.user.Surface === "backoffice" && role === "super-admin" ? (
+                    session.user.Surface === "backoffice" &&
+                    role === "super-admin" ? (
                       <ProductReviewsPage token={session.token} />
                     ) : (
                       <Navigate to="/" replace />
@@ -506,7 +536,7 @@ function Workspace({
                     element={
                       (session.user.Surface === "seller" &&
                         section !== "products") ||
-                      (section === "users" && role !== "super-admin") ||
+                      (section === "users" && !canCreditWallet) ||
                       (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (

@@ -42,7 +42,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		for _, route := range []string{"POST /storefront/cart/merge", "GET /storefront/account/addresses", "POST /storefront/account/addresses", "GET /storefront/checkout", "POST /storefront/checkout/preview", "POST /storefront/checkout/quotes", "POST /storefront/checkout/purchases", "GET /storefront/account/orders", "GET /storefront/account/orders/{id}", "POST /storefront/account/orders/{id}/cancel", "GET /storefront/wallet", "POST /storefront/wallet/deposits", "POST /storefront/wallet/refunds"} {
 			mux.HandleFunc(route, h.Customer)
 		}
-		for _, route := range []string{"POST /backoffice/commerce/coupons/activate", "POST /backoffice/commerce/coupons/preview", "GET /backoffice/commerce/coupons", "POST /backoffice/commerce/coupons", "GET /backoffice/commerce", "GET /backoffice/commerce/settings", "PATCH /backoffice/commerce/settings", "POST /backoffice/commerce/deposits/review", "POST /backoffice/commerce/orders/confirm", "POST /backoffice/commerce/orders/cancel", "POST /backoffice/commerce/refunds/resolve"} {
+		for _, route := range []string{"GET /backoffice/commerce/wallet/credits", "POST /backoffice/commerce/wallet/credits", "POST /backoffice/commerce/coupons/activate", "POST /backoffice/commerce/coupons/preview", "GET /backoffice/commerce/coupons", "POST /backoffice/commerce/coupons", "GET /backoffice/commerce", "GET /backoffice/commerce/settings", "PATCH /backoffice/commerce/settings", "POST /backoffice/commerce/deposits/review", "POST /backoffice/commerce/orders/confirm", "POST /backoffice/commerce/orders/cancel", "POST /backoffice/commerce/refunds/resolve"} {
 			mux.HandleFunc(route, h.Admin)
 		}
 		mux.HandleFunc("POST /storefront/wallet/deposits/{id}/receipt", h.UploadReceipt)

@@ -1,3 +1,8 @@
+import type {
+  CustomerCreditWallet,
+  WalletCreditInput,
+  WalletCreditResult,
+} from "../../../../packages/commerce-client/types";
 import { createContext, useContext } from "react";
 import type {
   Command,
@@ -10,6 +15,15 @@ import type {
   ProductQAMutation,
 } from "./types";
 export interface WorkspaceContext {
+  actorID: string;
+  readCustomerWallet: (
+    user: string,
+    key: string,
+  ) => Promise<CustomerCreditWallet>;
+  creditCustomerWallet: (
+    input: WalletCreditInput,
+    key: string,
+  ) => Promise<WalletCreditResult>;
   loadProfile: () => Promise<{
     name: string;
     email?: string;
@@ -34,7 +48,12 @@ export interface WorkspaceContext {
   role: Role;
   surface: "backoffice" | "seller";
   loadProductQA: (id: string, after: number) => Promise<ProductQAPage>;
-  changeProductQA: (id: string, question: string, mutation: ProductQAMutation, key: string) => Promise<void>;
+  changeProductQA: (
+    id: string,
+    question: string,
+    mutation: ProductQAMutation,
+    key: string,
+  ) => Promise<void>;
   loadProduct: (id: string) => Promise<ProductWorkspace>;
   resolveVariant: (
     id: string,
