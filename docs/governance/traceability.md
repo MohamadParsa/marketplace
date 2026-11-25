@@ -247,3 +247,7 @@ FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/cust
 ## اجرای محلی #73 و #81 —۲۰۲۶-۱۱-۲۵
 
 [مشخصات #73](../delivery/next-phase/tasks/cv-next-12-sales-method-markup.md) و [#81](../delivery/next-phase/tasks/cv-next-20-backoffice-grid-capabilities.md) ← [قرارداد روش فروش](../architecture/contracts/sales-methods.md) و [گرید](../architecture/contracts/backoffice-grids.md) ← [BDD](../bdd/features/experiences/sales-methods-and-grid-export.feature) ← [گزارش و شواهد](../delivery/next-phase/issues-73-81-verification.md). [ممیزی۲۷گرید و مالکان شکاف‌ها](../delivery/next-phase/backoffice-grid-audit.md). تحویل محلی با پوش/استقرار و تکمیل فرم‌های #108تا#117 یکسان نیست.
+
+## اجرای محلی #111 و #112
+
+[شرح کاربر](../delivery/backoffice-refinement-2026-11-25/tasks/unified-user-editing-and-filters.md) و [نقش](../delivery/backoffice-refinement-2026-11-25/tasks/dedicated-role-management-and-user-grants.md) ← [قرارداد](../architecture/contracts/user-management.md) ← [BDD](../bdd/features/experiences/user-management-and-roles.feature) ← [آزمون و تصاویر](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md). مجوز اجرا محدود همین دو و تغییرها محلی است؛ ممیزی عمومی scope در #71 باقی می‌ماند.

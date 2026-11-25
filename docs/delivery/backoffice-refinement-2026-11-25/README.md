@@ -6,11 +6,13 @@ owner: eliassarband
 updated: 2026-11-25
 related: [PLAN-BACKLOG-RECONCILIATION-001, FEAT-NEXT-012, FEAT-NEXT-020]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: in-progress
+execution_authorized: true
 ---
 
 # برنامه درخواست تازه پنل
+
+وضعیت جاری: #111 و #112 به انتخاب مالک اجرا شده‌اند؛ [گزارش کاربران/نقش‌ها](issues-111-112-verification.md). سایر۹Issue تازه هنوز انتخاب اجرا ندارند. بخش آغازین پایین سابقه ثبت برنامه است؛ پوش تغییرهای تازه مجاز نشده است.
 
 درخواست مالک فقط استخراج/ثبت تسک است. **هیچ کد محصول، migration یا داده‌ای در این نوبت تغییر/اجرا نشد و هیچ تسک اجرایی با تهیه سند done نشد.** یازده Issue تازه به `eliassarband` اساین و در [والد برنامه #95](https://github.com/MohamadParsa/marketplace/issues/95) ثبت شدند. روش فروش در #73 و ممیزی گریدها در #81 به‌روز شدند؛ Issue تکراری برای آن‌ها ساخته نشد. اسناد تازه در `D:\Cherriva` محلی‌اند و پوش نشده‌اند؛ شرح کامل داخل Issueها روی GitHub موجود است.
 
@@ -57,3 +59,7 @@ execution_authorized: false
 ## انتخاب اجرای بعدی #73 و #81
 
 عبارت‌های «فقط برنامه‌ریزی/اجرا انتخاب نشده» در بالا تاریخچه مرحله ثبت‌اند. مالک سپس #73 و #81 را انتخاب کرد؛ این دو محلی تکمیل شدند. [گزارش و محدودیت‌ها](../next-phase/issues-73-81-verification.md). هیچ‌یک از۱۱Issue تازه با این تحویل done نشده و پوش انجام نشده است.
+
+## اجرای انتخاب‌شده کاربران و نقش‌ها
+
+صفحه کاربران و نقش مستقل، انتساب scoped، اطلاعات فردی و رمز موقت با سیاست OTP تأییدشده در [گزارش #111/#112](issues-111-112-verification.md) ثبت شدند. [قرارداد](../../architecture/contracts/user-management.md). این تحویل به معنی تکمیل ممیزی #71 یا فرم‌های دیگر، پوش یا لیارا نیست.

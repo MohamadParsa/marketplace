@@ -3,8 +3,8 @@
   "updated": "2026-11-25",
   "owner": "eliassarband",
   "document_status": "in-review",
-  "implementation_status": "todo",
-  "execution_authorized": false,
+  "implementation_status": "in-progress",
+  "execution_authorized": true,
   "parent_issue": 95,
   "items": [
     {
@@ -243,10 +243,10 @@
         "سیاست دقیق رفع وضعیت رمز موقت هنگام ورود OTP و بازنشانی رمز کاربر موجود، قبل از اجرا مشخص شود."
       ],
       "id": "FEAT-BO-REFINEMENT-005",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nبه انتخاب صریح مالک اجرا و پس از تست با کامنت شواهد بسته شد؛ implementation_status=done محلی و سند in-review است. سورس تا دستور مستقیم مالک پوش نشود. گزارش کاربران/نقش‌ها و رسید تحویل مرجع‌اند.",
       "related_issues": [
         81
       ],
@@ -258,7 +258,12 @@
         1,
         2,
         100
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "source_pushed": false,
+      "state": "closed",
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json"
     },
     {
       "n": 6,
@@ -291,10 +296,10 @@
       ],
       "questions": [],
       "id": "FEAT-BO-REFINEMENT-006",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nبه انتخاب صریح مالک اجرا و پس از تست با کامنت شواهد بسته شد؛ implementation_status=done محلی و سند in-review است. سورس تا دستور مستقیم مالک پوش نشود. گزارش کاربران/نقش‌ها و رسید تحویل مرجع‌اند.",
       "related_issues": [
         71
       ],
@@ -305,7 +310,12 @@
       "github_dependencies": [
         1,
         111
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "source_pushed": false,
+      "state": "closed",
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json"
     },
     {
       "n": 7,
@@ -587,5 +597,14 @@
     114,
     117,
     81
-  ]
+  ],
+  "authorized_issue_numbers": [
+    111,
+    112
+  ],
+  "last_completed_local_issues": [
+    111,
+    112
+  ],
+  "publication_policy": "local-only-until-explicit-owner-push-request"
 }

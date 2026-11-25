@@ -1,0 +1,22 @@
+{
+  "id": "DELIVERY-USERS-ROLES-20261125",
+  "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+  "source_pushed": false,
+  "deployed": false,
+  "workspace": "D:\\Cherriva",
+  "issues": [
+    {
+      "number": 111,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/111#issuecomment-7159606229"
+    },
+    {
+      "number": 112,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/112#issuecomment-7159608857"
+    }
+  ],
+  "parent_comment_url": "https://github.com/MohamadParsa/marketplace/issues/95#issuecomment-7159611632"
+}

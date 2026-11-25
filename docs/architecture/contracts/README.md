@@ -62,3 +62,7 @@
 ## روش فروش و گرید نسخه بررسی
 
 [API-SALES-METHODS-001](sales-methods.md): نرخ/نگاشت/ارث‌بری/quote و مرز provider. [API-BACKOFFICE-GRIDS-001](backoffice-grids.md): فیلتر مشترک، مجوز و XLSX، با محدودیت صریح workspace کامل.
+
+## کاربر واحد و نقش‌ها
+
+[API-USER-MANAGEMENT-001](user-management.md): فهرست/ویرایش/فیلتر کاربران، رمز موقت و نشست محدود سه محیط، نقش مستقل و انتساب scoped؛ ادامه اجرایی #111/#112.

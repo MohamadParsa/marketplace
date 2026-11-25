@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-24",
+  "updated": "2026-11-25",
   "workspace": "D:\\Cherriva",
   "current_source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
   "rows": [
@@ -300,6 +300,28 @@
       "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
       "source_tree_matches_documentation_revision": true,
       "status": "pushed-awaiting-review"
+    },
+    {
+      "issue": 111,
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "implementation_status": "done",
+      "issue_state": "closed",
+      "publication_status": "local-only-unpushed",
+      "source_tree_matches_documentation_revision": true,
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit"
+    },
+    {
+      "issue": 112,
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "implementation_status": "done",
+      "issue_state": "closed",
+      "publication_status": "local-only-unpushed",
+      "source_tree_matches_documentation_revision": true,
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -377,7 +399,7 @@
       }
     ]
   },
-  "current_local_integration_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+  "current_local_integration_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
   "local_integration_publication_pending": true,
   "local_integration_verification": "docs/delivery/backlog-review-2026-11-24/parsa-integration.md",
   "local_publication_issue": 105,
@@ -386,5 +408,6 @@
     103,
     104
   ],
-  "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md"
+  "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
+  "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md"
 }

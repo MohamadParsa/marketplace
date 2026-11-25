@@ -71,3 +71,5 @@
 ۱۶ سناریوی پذیرش FEAT-REV-001 تا004 در [checkout-wallet-policy.feature](features/experiences/checkout-wallet-policy.feature) ثبت شد؛ [اجرای مستقل API/سرویس/مرورگر و محدودیت‌ها](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). runner مستقلی برای Gherkin اجرا نشده است.
 
 [روش فروش و خروجی گرید #73/#81](features/experiences/sales-methods-and-grid-export.feature) به [گزارش اجرای Go/مرورگر/مولد](../delivery/next-phase/issues-73-81-verification.md) متصل است؛ اجرای runner مستقل BDD ادعا نمی‌شود.
+
+[کاربر واحد، رمز موقت و نقش‌های مستقل #111/#112](features/experiences/user-management-and-roles.feature) به [قرارداد اجرایی](../architecture/contracts/user-management.md) و [شواهد](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md) لینک دارد؛ runner مستقل Gherkin اجرا نشده است.
