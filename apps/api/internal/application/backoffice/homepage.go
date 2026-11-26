@@ -394,7 +394,7 @@ func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 			continue
 		}
 		for _, s := range stores {
-			if s.ID == o.StoreID && s.Active {
+			if s.ID == o.StoreID && s.Active && StoreAllowsCategory(w, s, p.CategoryID) && StoreAllowsMethod(s, "cash") {
 				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDays: s.LeadDays})
 				break
 			}

@@ -42,6 +42,9 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 	if os.Getenv("CHERRIVA_AXES_BROWSER") == "1" {
 		w = axisConversionSeed(t)
 	}
+	if os.Getenv("CHERRIVA_STORE_POLICY_BROWSER") == "1" {
+		w = storeEligibilitySeed(t)
+	}
 	if os.Getenv("CHERRIVA_STORES_BROWSER") == "1" {
 		for i := 0; i < 45; i++ {
 			w.Stores = append(w.Stores, store.Store{ID: fmt.Sprintf("store-browser-%02d", i), Name: fmt.Sprintf("فروشگاه نمونه %02d", i), Active: true, City: "تهران", Profile: &store.Profile{Province: "تهران"}})

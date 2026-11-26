@@ -65,7 +65,9 @@ export function OperationsPage({
                 <dt>خرید چندفروشگاهی</dt>
                 <dd>{selected.purchase_number ?? selected.purchase_id}</dd>
                 <dt>فروشگاه</dt>
-                <dd>{seller(selected.store_id)}</dd>
+                <dd>
+                  {selected.store_display_name || seller(selected.store_id)}
+                </dd>
                 <dt>شهر مقصد</dt>
                 <dd>{selected.city}</dd>
                 <dt>زمان ثبت</dt>
@@ -151,7 +153,10 @@ export function OperationsPage({
                     </>
                   ),
                 },
-                { title: "فروشگاه", render: (o) => seller(o.store_id) },
+                {
+                  title: "فروشگاه",
+                  render: (o) => o.store_display_name || seller(o.store_id),
+                },
                 { title: "مقصد", render: (o) => o.city },
                 {
                   title: "مبلغ کالا",

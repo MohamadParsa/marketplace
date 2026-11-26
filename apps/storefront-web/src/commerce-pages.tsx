@@ -549,8 +549,7 @@ export function CartPage() {
                     )}
                     {!item.available && (
                       <p className="buy-alert">
-                        این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده
-                        را اصلاح کنید.
+                        {item.restricted ? "این فروشنده برای دسته یا فروش نقدی این کالا مجوز ندارد؛ فروشنده را تغییر دهید." : "این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده را اصلاح کنید."}
                       </p>
                     )}
                     <div className="buy-row">
@@ -1340,7 +1339,7 @@ function CheckoutForm() {
                             />
                             <span>
                               <b>{m.name}</b>
-                              {m.sales_method && (
+                              {m.sales_method && m.eligible && (
                                 <small>
                                   {m.sales_method.name} · مبلغ این روش:{" "}
                                   {money(m.total_toman ?? "0")}

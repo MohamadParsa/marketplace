@@ -11,16 +11,30 @@ type Profile struct {
 	ImageID     string `json:"image_id,omitempty"`
 }
 
+// Nil preserves the permissions of legacy stores until a policy is explicitly saved.
+type SalePermission struct {
+	MethodID    string `json:"method_id"`
+	DisplayName string `json:"display_name,omitempty"`
+}
+type Eligibility struct {
+	Version           int              `json:"version"`
+	CategoryMode      string           `json:"category_mode"`
+	AllowedCategories []string         `json:"allowed_categories"`
+	DeniedCategories  []string         `json:"denied_categories"`
+	Methods           []SalePermission `json:"methods"`
+}
+
 type Store struct {
-	Version              int      `json:"version,omitempty"`
-	Profile              *Profile `json:"profile,omitempty"`
-	ContentPolicy        string   `json:"content_policy,omitempty"`
-	ContentPolicyVersion int      `json:"content_policy_version"`
-	ID                   string   `json:"id"`
-	Name                 string   `json:"name"`
-	Owner                string   `json:"owner"`
-	City                 string   `json:"city"`
-	Active               bool     `json:"active"`
-	Model                string   `json:"model"`
-	LeadDays             int      `json:"lead_days"`
+	Eligibility          *Eligibility `json:"eligibility,omitempty"`
+	Version              int          `json:"version,omitempty"`
+	Profile              *Profile     `json:"profile,omitempty"`
+	ContentPolicy        string       `json:"content_policy,omitempty"`
+	ContentPolicyVersion int          `json:"content_policy_version"`
+	ID                   string       `json:"id"`
+	Name                 string       `json:"name"`
+	Owner                string       `json:"owner"`
+	City                 string       `json:"city"`
+	Active               bool         `json:"active"`
+	Model                string       `json:"model"`
+	LeadDays             int          `json:"lead_days"`
 }

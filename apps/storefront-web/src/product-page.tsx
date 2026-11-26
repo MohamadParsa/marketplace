@@ -47,6 +47,7 @@ type Content = {
   nofollow: boolean;
 };
 type Offer = {
+ restricted?: boolean;
   variant_label: string;
   id: string;
   variant_id: string;
@@ -558,7 +559,7 @@ export function ProductPage({ url }: { url: string }) {
               </section>
               <aside className="pdp-buybox" aria-label="انتخاب فروشنده و خرید">
                 <span className="pdp-buybox-tag">
-                  {available ? "قیمت نقدی این انتخاب" : "این انتخاب موجود نیست"}
+                  {available ? "قیمت نقدی این انتخاب" : offer?.restricted ? "عرضه فعلاً قابل خرید نیست" : "این انتخاب موجود نیست"}
                 </span>
                 <h2>{offer?.store_name ?? "فروشنده فعالی ندارد"}</h2>
                 {offer && (
@@ -597,7 +598,7 @@ export function ProductPage({ url }: { url: string }) {
                       />
                     </div>
                   ) : (
-                    <p className="pdp-unavailable">ناموجود</p>
+                    <p className="pdp-unavailable">{offer?.restricted ? "فروش این عرضه برای خرید نقدی مجاز نیست" : "ناموجود"}</p>
                   )}
                   <div
                     className="pdp-purchase"
@@ -661,7 +662,7 @@ export function ProductPage({ url }: { url: string }) {
                         </div>
                         <p>{dispatchTime(o.lead_days)}</p>
                         <b>
-                          {o.available && o.price != null
+                          {o.restricted ? "فروش نقدی مجاز نیست" : o.available && o.price != null
                             ? money(o.price) + " تومان"
                             : "ناموجود"}
                         </b>

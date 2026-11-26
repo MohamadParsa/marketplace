@@ -50,25 +50,28 @@ type AdminStoreRow struct {
 	Members []StoreMember `json:"members,omitempty"`
 }
 type StoreFilter struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Active   string `json:"active"`
-	Province string `json:"province"`
-	City     string `json:"city"`
-	Member   string `json:"member"`
-	Page     int    `json:"page"`
-	Size     int    `json:"size"`
+	SalesMethod string `json:"sales_method"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Active      string `json:"active"`
+	Province    string `json:"province"`
+	City        string `json:"city"`
+	Member      string `json:"member"`
+	Page        int    `json:"page"`
+	Size        int    `json:"size"`
 }
 type StoreDirectory struct {
-	Geography  []commerce.Province `json:"geography"`
-	Rows       []AdminStoreRow     `json:"rows"`
-	Total      int                 `json:"total"`
-	Page       int                 `json:"page"`
-	Size       int                 `json:"size"`
-	CanWrite   bool                `json:"can_write"`
-	CanMedia   bool                `json:"can_media"`
-	CanMembers bool                `json:"can_members"`
-	CanUsers   bool                `json:"can_users"`
+	CanEligibility bool                    `json:"can_eligibility"`
+	SalesMethods   []StoreSaleMethodChoice `json:"sales_methods"`
+	Geography      []commerce.Province     `json:"geography"`
+	Rows           []AdminStoreRow         `json:"rows"`
+	Total          int                     `json:"total"`
+	Page           int                     `json:"page"`
+	Size           int                     `json:"size"`
+	CanWrite       bool                    `json:"can_write"`
+	CanMedia       bool                    `json:"can_media"`
+	CanMembers     bool                    `json:"can_members"`
+	CanUsers       bool                    `json:"can_users"`
 }
 type StoreMutation struct {
 	Key         string `json:"key"`
@@ -119,7 +122,7 @@ func privateStoreRow(w Workspace, st store.Store, members bool) AdminStoreRow {
 }
 func (s *Service) ListStores(ctx context.Context, a identity.User, f StoreFilter, export bool, ids []string) (StoreDirectory, error) {
 	out := StoreDirectory{Rows: []AdminStoreRow{}}
-	if f.Page < 0 || f.Size < 0 || f.Size > 100 || len(ids) > 10000 || (f.Active != "" && f.Active != "true" && f.Active != "false") {
+	if len(f.SalesMethod) > 64 || f.Page < 0 || f.Size < 0 || f.Size > 100 || len(ids) > 10000 || (f.Active != "" && f.Active != "true" && f.Active != "false") {
 		return out, ErrInvalid
 	}
 	for _, v := range []string{f.ID, f.Name, f.Province, f.City, f.Member} {
@@ -147,6 +150,19 @@ func (s *Service) ListStores(ctx context.Context, a identity.User, f StoreFilter
 	if w.Commerce != nil {
 		out.Geography = publicGeography(w.Commerce.Settings.Geography)
 	}
+	out.CanEligibility = allowsAction(actor, StoresEligibilityWrite)
+	for _, m := range salesSettings(w).Methods {
+		out.SalesMethods = append(out.SalesMethods, StoreSaleMethodChoice{ID: m.ID, Name: m.Name, Active: m.Active})
+	}
+	if f.SalesMethod != "" {
+		known := false
+		for _, m := range out.SalesMethods {
+			known = known || m.ID == f.SalesMethod
+		}
+		if !known {
+			return out, ErrInvalid
+		}
+	}
 	out.CanWrite = allowsAction(actor, StoresWrite)
 	out.CanMedia = allowsAction(actor, StoresMediaWrite)
 	out.CanMembers = canMembers
@@ -161,6 +177,9 @@ func (s *Service) ListStores(ctx context.Context, a identity.User, f StoreFilter
 		selected[id] = true
 	}
 	for _, st := range w.Stores {
+		if f.SalesMethod != "" && !StoreAllowsMethod(st, f.SalesMethod) {
+			continue
+		}
 		if f.ID != "" && st.ID != f.ID || !strings.Contains(foldUser(st.Name), foldUser(f.Name)) || !strings.Contains(foldUser(st.City), foldUser(f.City)) || f.Active != "" && st.Active != (f.Active == "true") {
 			continue
 		}

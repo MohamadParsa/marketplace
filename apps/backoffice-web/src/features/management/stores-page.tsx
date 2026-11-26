@@ -1,3 +1,4 @@
+import { StoreEligibilityEditor } from "./store-eligibility-editor";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -16,7 +17,11 @@ import { Link } from "react-router-dom";
 import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
 import { DataTable, PageHeader } from "../../shared/components";
-import type { Store, StoreProfile } from "../../shared/types";
+import type {
+  Store,
+  StoreProfile,
+  StoreSaleMethodChoice,
+} from "../../shared/types";
 import type { Province } from "../../../../../packages/commerce-client/types";
 
 type StoreMember = {
@@ -32,8 +37,11 @@ type Filter = {
   province: string;
   city: string;
   member: string;
+  sales_method: string;
 };
 type Directory = {
+  can_eligibility: boolean;
+  sales_methods: StoreSaleMethodChoice[];
   rows: ManagedStore[];
   total: number;
   page: number;
@@ -50,6 +58,7 @@ const defaults: Filter = {
   province: "",
   city: "",
   member: "",
+  sales_method: "",
 };
 const apiRoot =
   (import.meta.env.VITE_API_BASE_URL ?? "") + "/backoffice/stores";
@@ -156,6 +165,7 @@ export function StoresPage() {
     void cache.invalidateQueries({ queryKey: ["managed-stores"] });
     void cache.invalidateQueries({ queryKey: ["workspace"] });
     void cache.invalidateQueries({ queryKey: ["product"] });
+    void cache.invalidateQueries({ queryKey: ["variant-resolution"] });
   };
   if (query.isError && !data)
     return (
@@ -251,6 +261,29 @@ export function StoresPage() {
                 onClick={() => setDraft({ ...draft, province: p.name })}
               >
                 {p.name}
+              </Button>
+            ))}
+          </div>
+          <div
+            className="toolbar"
+            role="group"
+            aria-label="فیلتر روش فروش فروشگاه"
+          >
+            <strong>روش فروش</strong>
+            <Button
+              aria-pressed={!draft.sales_method}
+              onClick={() => setDraft({ ...draft, sales_method: "" })}
+            >
+              همه روش‌ها
+            </Button>
+            {data?.sales_methods?.map((m) => (
+              <Button
+                key={m.id}
+                aria-pressed={draft.sales_method === m.id}
+                variant={draft.sales_method === m.id ? "contained" : "text"}
+                onClick={() => setDraft({ ...draft, sales_method: m.id })}
+              >
+                {m.name}
               </Button>
             ))}
           </div>
@@ -684,6 +717,25 @@ function StoreEditor({
                 </Button>
               </div>
             </section>
+            <StoreEligibilityEditor
+              store={current}
+              locked={busy}
+              onBusyChange={setBusy}
+              methods={directory.sales_methods ?? []}
+              allowed={directory.can_eligibility}
+              save={(input, key) =>
+                request<ManagedStore>(
+                  token,
+                  `/${current.id}/eligibility`,
+                  input,
+                  key,
+                )
+              }
+              saved={(value) => {
+                setCurrent(value);
+                saved();
+              }}
+            />
             <section className="store-detail-box">
               <h3>سیاست انتشار محتوا</h3>
               <div className="toolbar">

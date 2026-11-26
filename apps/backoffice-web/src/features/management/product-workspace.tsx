@@ -238,6 +238,9 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
                 render: (o) => (
                   <span>
                     {o.stock} / {o.reserved} / <b>{o.available}</b>
+                    {o.sale_restricted && (
+                      <small>برای خرید نقدی مجاز نیست</small>
+                    )}
                   </span>
                 ),
               },

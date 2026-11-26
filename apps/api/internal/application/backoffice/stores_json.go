@@ -26,3 +26,23 @@ func (in *StoreInput) UnmarshalJSON(data []byte) error {
 	*in = StoreInput(value)
 	return nil
 }
+
+func (in *StoreEligibilityInput) UnmarshalJSON(data []byte) error {
+	type plain StoreEligibilityInput
+	var value plain
+	d := json.NewDecoder(bytes.NewReader(data))
+	d.DisallowUnknownFields()
+	if e := d.Decode(&value); e != nil {
+		return e
+	}
+	var fields map[string]json.RawMessage
+	if e := json.Unmarshal(data, &fields); e != nil {
+		return e
+	}
+	v, ok := fields["version"]
+	if !ok || bytes.Equal(bytes.TrimSpace(v), []byte("null")) {
+		return ErrInvalid
+	}
+	*in = StoreEligibilityInput(value)
+	return nil
+}

@@ -1086,3 +1086,9 @@ dd {
 .axis-conversion-dialog .MuiAlert-root { margin-block: 10px; }
 
 .axis-impact-box { border: 1px solid var(--line,#eee); padding: 16px; border-radius: 14px; margin-block: 14px; }
+
+.store-policy-method { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; border-block-end: 1px solid var(--line,#eee); padding: 12px 0; }
+.store-policy-method label { display: flex; align-items: center; }
+.store-policy-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.store-policy-name-preview { font-weight: 700; color: var(--primary,#a61946); padding: 12px; background: #fcf4f7; border-radius: 10px; }
+@media(max-width:600px) { .store-policy-method { grid-template-columns: 1fr; } }

@@ -34,6 +34,7 @@ type ProductPermissions struct {
 	StockStores       []string `json:"stock_stores"`
 }
 type OfferView struct {
+	SaleRestricted bool `json:"sale_restricted,omitempty"`
 	catalog.Offer
 	Available   int  `json:"available"`
 	LeadDays    int  `json:"lead_days"`
@@ -147,7 +148,7 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 		}
 		st.Profile = nil
 		result.Stores = append(result.Stores, st)
-		if !st.Active || (p.Model == "independent" && p.OwnerStoreID != st.ID) {
+		if !storeHasSale(st, state, p.CategoryID) || (p.Model == "independent" && p.OwnerStoreID != st.ID) {
 			continue
 		}
 		if canStore(state, actor, st.ID, "create") {
@@ -169,7 +170,7 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 		}
 		for _, st := range result.Stores {
 			if st.ID == o.StoreID {
-				result.Offers = append(result.Offers, OfferView{Offer: o, Available: o.Stock - o.Reserved, LeadDays: st.LeadDays, StoreActive: st.Active})
+				result.Offers = append(result.Offers, OfferView{SaleRestricted: !StoreAllowsCategory(state, st, p.CategoryID) || !StoreAllowsMethod(st, "cash"), Offer: o, Available: o.Stock - o.Reserved, LeadDays: st.LeadDays, StoreActive: st.Active})
 				break
 			}
 		}
@@ -379,7 +380,7 @@ func applyProduct(state *Workspace, c Command, id string) error {
 		validStore := false
 		for _, st := range state.Stores {
 			if st.ID == input.StoreID && st.Active {
-				validStore = true
+				validStore = storeHasSale(st, *state, p.CategoryID)
 			}
 		}
 		if !validStore || (p.Model == "independent" && p.OwnerStoreID != input.StoreID) {
@@ -424,6 +425,15 @@ func applyProduct(state *Workspace, c Command, id string) error {
 		for _, st := range state.Stores {
 			if st.ID == o.StoreID && st.Active {
 				active = true
+			}
+		}
+		product, e := findProduct(state, o.ProductID)
+		if e != nil {
+			return e
+		}
+		for _, st := range state.Stores {
+			if st.ID == o.StoreID && !storeHasSale(st, *state, product.CategoryID) {
+				return ErrForbidden
 			}
 		}
 		if !active {

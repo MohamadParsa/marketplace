@@ -23,6 +23,7 @@ type PublicProductVariant struct {
 	ImageURL  string                   `json:"image_url,omitempty"`
 }
 type PublicProductOffer struct {
+	Restricted   bool   `json:"restricted,omitempty"`
 	VariantLabel string `json:"variant_label"`
 	ID           string `json:"id"`
 	VariantID    string `json:"variant_id"`
@@ -213,8 +214,9 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string, resolveGroup
 		}
 		for _, st := range w.Stores {
 			if st.ID == o.StoreID && st.Active {
-				a := o.Stock-o.Reserved > 0
-				view := PublicProductOffer{VariantLabel: realVariantLabel(w, vs, o.VariantID), ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDays: st.LeadDays, Available: a, Version: o.Version}
+				restricted := !StoreAllowsCategory(w, st, p.CategoryID) || !StoreAllowsMethod(st, "cash")
+				a := o.Stock-o.Reserved > 0 && !restricted
+				view := PublicProductOffer{Restricted: restricted, VariantLabel: realVariantLabel(w, vs, o.VariantID), ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDays: st.LeadDays, Available: a, Version: o.Version}
 				if a {
 					price := o.Price
 					view.Price = &price

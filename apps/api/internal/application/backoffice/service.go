@@ -29,7 +29,7 @@ func roleAllows(role identity.Role, action string) bool {
 		return role == identity.RoleOperations
 	case CouponsCreate, CouponsEdit, CouponsActivate:
 		return role == identity.RoleOperations
-	case StoresRead, StoresWrite, StoresMembersRead, StoresMediaWrite:
+	case StoresRead, StoresWrite, StoresMembersRead, StoresMediaWrite, StoresEligibilityWrite:
 		return role == identity.RoleOperations
 	case SalesRead, CommerceSettingsRead, CommerceOrdersRead, CouponsRead:
 		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance

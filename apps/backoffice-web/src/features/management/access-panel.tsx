@@ -15,6 +15,7 @@ import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
 const names: Record<string, string> = {
   "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
+  "stores.eligibility.write": "مدیریت مجوز دسته و روش فروش فروشگاه",
   "stores.read": "مشاهده پروفایل خصوصی فروشگاه‌ها",
   "stores.write": "ایجاد و ویرایش پروفایل فروشگاه",
   "stores.members.read": "مشاهده اعضای متصل به فروشگاه",

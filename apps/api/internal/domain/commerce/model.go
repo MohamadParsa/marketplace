@@ -129,6 +129,7 @@ type Address struct {
 	PostalCode string `json:"postal_code"`
 }
 type LineSnapshot struct {
+	StorePolicyVersion int             `json:"store_policy_version,omitempty"`
 	CashUnitPrice      *Amount         `json:"cash_unit_price,omitempty"`
 	Markup             *MarkupSnapshot `json:"markup,omitempty"`
 	ReferenceUnitPrice *Amount         `json:"reference_unit_price,omitempty"`

@@ -38,7 +38,20 @@ export interface StoreProfile {
   mobile?: string;
   image_id?: string;
 }
+export interface StoreEligibility {
+  version: number;
+  category_mode: "all" | "selected";
+  allowed_categories: string[];
+  denied_categories: string[];
+  methods: { method_id: string; display_name?: string }[];
+}
+export interface StoreSaleMethodChoice {
+  id: string;
+  name: string;
+  active: boolean;
+}
 export interface Store {
+  eligibility?: StoreEligibility;
   version?: number;
   profile?: StoreProfile;
   content_policy?: "review" | "direct";
@@ -174,6 +187,7 @@ export interface Variant {
   version: number;
 }
 export interface OfferView extends Offer {
+  sale_restricted?: boolean;
   available: number;
   lead_days: number;
   store_active: boolean;
@@ -205,6 +219,7 @@ export interface OrderItem {
   status: string;
 }
 export interface Order {
+  store_display_name?: string;
   purchase_number?: string;
   id: string;
   purchase_id: string;

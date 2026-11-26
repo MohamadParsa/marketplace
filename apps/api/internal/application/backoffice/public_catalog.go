@@ -34,7 +34,7 @@ func CatalogReadWorkspace(w Workspace) Workspace {
 		}
 	}
 	for _, st := range w.Stores {
-		r.Stores = append(r.Stores, store.Store{ID: st.ID, Name: st.Name, Active: st.Active, LeadDays: st.LeadDays})
+		r.Stores = append(r.Stores, store.Store{ID: st.ID, Name: st.Name, Active: st.Active, LeadDays: st.LeadDays, Eligibility: st.Eligibility})
 	}
 	for _, p := range w.Products {
 		p.ContentRevision = nil

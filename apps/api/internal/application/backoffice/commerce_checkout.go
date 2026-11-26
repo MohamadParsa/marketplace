@@ -317,6 +317,9 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 	if e := applySales(w, &q, in.PaymentMethodID); e != nil {
 		return q, e
 	}
+	if e := applyStorePolicies(w, &q); e != nil {
+		return q, e
+	}
 	stores := sortedStoreIDs(q.Lines)
 	if len(in.Shipping) != len(stores) {
 		return q, ErrInvalid
@@ -329,7 +332,7 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 			}
 			for _, method := range c.Settings.Shipping {
 				if method.ID == in.Shipping[storeID] && shippingEligible(method, q.Address.City, storeID) {
-					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{StoreID: st.ID, StoreName: st.Name, Method: method, LeadDays: st.LeadDays, DeliveryFrom: deliveryDate(now, st.LeadDays+method.MinDays, c.Settings), DeliveryTo: deliveryDate(now, st.LeadDays+method.MaxDays, c.Settings)})
+					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{StoreID: st.ID, StoreName: storeDisplayName(st, quoteDisplayMethod(q)), Method: method, LeadDays: st.LeadDays, DeliveryFrom: deliveryDate(now, st.LeadDays+method.MinDays, c.Settings), DeliveryTo: deliveryDate(now, st.LeadDays+method.MaxDays, c.Settings)})
 					var e error
 					q.ShippingTotal, e = commerce.Add(q.ShippingTotal, method.Fee)
 					if e != nil {
@@ -501,7 +504,7 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 	p.OrderIDs = []string{}
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
-		order := orders.Order{PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
+		order := orders.Order{StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
 				order.Items = append(order.Items, orders.Item{VariantLabel: l.VariantLabel, ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})

@@ -251,6 +251,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				eligible = true
 			}
 		}
+		eligible = eligible && storePoliciesStillAllowed(*w, *q)
 		if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
 			eligible = false
 		}

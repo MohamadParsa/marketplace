@@ -221,7 +221,7 @@ func (s *Service) SalesPrices(ctx context.Context, product, variant, offer strin
 			continue
 		}
 		for _, m := range publicSalesSettings(w).Methods {
-			if !m.Active || len(m.PaymentMethodIDs) == 0 {
+			if !m.Active || len(m.PaymentMethodIDs) == 0 || !storeEligibility(w, o.StoreID, category, m.ID) {
 				continue
 			}
 			rate := resolvedMarkup(w, m, category)
@@ -251,13 +251,23 @@ func (s *Service) SalesPrices(ctx context.Context, product, variant, offer strin
 			if !eligible {
 				continue
 			}
-			out = append(out, map[string]any{"method_id": m.ID, "name": m.Name, "cash_toman": commerce.Toman(commerce.Amount(*o.Price)), "price_toman": commerce.Toman(total), "markup_toman": commerce.Toman(rate.UnitAmount), "markup_bps": rate.BPS, "source_category_id": rate.CategoryID})
+			name := o.StoreName
+			for _, st := range w.Stores {
+				if st.ID == o.StoreID {
+					name = storeDisplayName(st, m.ID)
+					break
+				}
+			}
+			out = append(out, map[string]any{"store_name": name, "method_id": m.ID, "name": m.Name, "cash_toman": commerce.Toman(commerce.Amount(*o.Price)), "price_toman": commerce.Toman(total), "markup_toman": commerce.Toman(rate.UnitAmount), "markup_bps": rate.BPS, "source_category_id": rate.CategoryID})
 		}
 	}
 	return out, nil
 }
 
 func salesPaymentStillAllowed(w Workspace, q commerce.Quote) bool {
+	if !storePoliciesStillAllowed(w, q) {
+		return false
+	}
 	if q.PaymentMethod.Kind == "wallet" || q.PaymentMethod.ID == "" {
 		return true
 	}

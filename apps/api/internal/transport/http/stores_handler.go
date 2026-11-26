@@ -17,6 +17,15 @@ func (h *CommerceHandler) Stores(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	if strings.HasSuffix(r.URL.Path, "/eligibility") {
+		var in backoffice.StoreEligibilityInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		out, e := h.service.SaveStoreEligibility(r.Context(), actor, r.PathValue("id"), in, r.Header.Get("Idempotency-Key"))
+		commerceResult(w, r, out, e)
+		return
+	}
 	if strings.HasSuffix(r.URL.Path, "/image") {
 		id := r.PathValue("id")
 		if r.Method == http.MethodGet {
