@@ -525,14 +525,12 @@
         "apps/api/internal/domain/catalog/catalog.go",
         "apps/api/internal/application/backoffice/public_catalog.go"
       ],
-      "questions": [
-        "رفتار نمایش عمومی PDP محصول غیرفعال با قرارداد visibility جاری هماهنگ و در شروع تسک صریح ثبت شود؛ خرید تازه در هر حالت ممنوع است."
-      ],
+      "questions": [],
       "id": "FEAT-BO-REFINEMENT-010",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "اجرای مستقل طبق پاسخ صریح مالک و قرارداد محصول؛ سند in-review و استقرار جدا.",
       "related_issues": [
         81
       ],
@@ -546,7 +544,8 @@
         102,
         108,
         115
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-116-verification.md"
     },
     {
       "n": 11,
@@ -684,7 +683,8 @@
     112,
     113,
     114,
-    115
+    115,
+    116
   ],
   "last_completed_local_issues": [
     107,
@@ -695,7 +695,8 @@
     112,
     113,
     114,
-    115
+    115,
+    116
   ],
   "publication_policy": "push-completed-work-at-owner-request-2026-11-25",
   "publication": {

@@ -43,7 +43,7 @@ approved_by: []
 
 ## کش و خطا
 
-Projection روی پاسخ عمومیِ cache hit و miss یکسان اعمال می‌شود و خواندن اضافه دیتابیس ایجاد نمی‌کند. ETag از بدنه نهایی عمومی محاسبه می‌شود. namespace/envelope کش به `public:v7` رفت تا URL مشتق قدیمی دوباره استفاده نشود؛ TTL، invalidation و warmup راه‌اندازی #41 برقرارند. کش داخلیِ DTO عمومی whitelist قبلی را نگه می‌دارد؛ داده مالی/کاربر وارد آن نمی‌شود.
+Projection روی پاسخ عمومیِ cache hit و miss یکسان اعمال می‌شود و خواندن اضافه دیتابیس ایجاد نمی‌کند. ETag از بدنه نهایی عمومی محاسبه می‌شود. namespace/envelope کش در تحویل #102 به `public:v7` رفت تا URL مشتق قدیمی دوباره استفاده نشود؛ TTL، invalidation و warmup راه‌اندازی #41 برقرارند. کش داخلیِ DTO عمومی whitelist قبلی را نگه می‌دارد؛ داده مالی/کاربر وارد آن نمی‌شود.
 
 ورودی مرجع نامعتبر۴۰۰، موجودیت منتشرنشده/ناشناخته۴۰۴ و انتخاب خرید ناموجود۴۰۹ طبق قراردادهای قبلی است؛ خطا no-store است. پاسخ سبد، سفارش، wishlist/recent و محتوای نظر/پرسش خصوصی در کش عمومی نمی‌روند. معنای خطاهای مالی تغییر نکرده است.
 
@@ -52,3 +52,5 @@ Projection روی پاسخ عمومیِ cache hit و miss یکسان اعمال 
 تست‌های codec، دقت پول، نوع اشتباه، query، سبد و retry قدیمی/جدید، wishlist/recent، مجوز رسانه و restart PostgreSQL در [تست دامنه](../../../apps/api/internal/application/backoffice/public_references_test.go)، [تست HTTP](../../../apps/api/internal/transport/http/catalog_references_test.go) و [پذیرش یکپارچه](../../../apps/api/internal/bootstrap/public_references_test.go) آمده‌اند. [گزارش سه تسک و تصاویر](../../delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md).
 
 این قرارداد API سرویس‌های داخلی را به پذیرش توکن عمومی تغییر نمی‌دهد؛ resolver در مرز HTTP است و کد داخلی باید همچنان شناسه داخلی بفرستد. اتصال SQL Server مبدأ، بازنویسی snapshot و مهاجرت داده در این تحویل انجام نشده‌اند. تأیید کل سند و انتشار محیط عمومی از انتخاب اجرای این تسک نتیجه نمی‌شود.
+
+تکمیل #116، namespace/envelope را برای فیلد فعال‌بودن محصول به `public:v8` ارتقا می‌دهد؛ [قرارداد محصول](product-management.md). TTL، invalidation و warmup تغییری نکرده‌اند.

@@ -1,7 +1,7 @@
 {
   "updated": "2026-11-26",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "4ec243011c3c37ddb2fbbc6da9976037e084915e",
+  "current_source_commit": "99ee075a58b45ff93c8116500ea3a62c8540b425",
   "rows": [
     {
       "issue": 27,
@@ -413,6 +413,15 @@
       "documentation_commit": "9ff99146b273d49b23d9f3e8ba37897e7a8ea91d",
       "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-115-delivery.json",
       "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 116,
+      "source_commit": "99ee075a58b45ff93c8116500ea3a62c8540b425",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-116-verification.md",
+      "implementation_status": "done",
+      "publication_status": "awaiting-push",
+      "pull_request": 106,
+      "source_pushed": false
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",

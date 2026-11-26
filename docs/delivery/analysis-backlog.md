@@ -93,3 +93,5 @@
 #114 با دستور مالک اجرا شد؛ [مجوز دسته/روش و alias خرید](backoffice-refinement-2026-11-25/issue-114-verification.md). نمایش روش‌محور PDP در #118 جدا ثبت شد و اجرا نشده است.
 
 [تحویل مستقل برند #115؛ مدل، فرم، فیلتر، رسانه و حفظ تاریخچه](backoffice-refinement-2026-11-25/issue-115-verification.md).
+
+[تحویل مستقل محصول #116؛ فعال‌بودن، فرم، فیلتر و خرید](backoffice-refinement-2026-11-25/issue-116-verification.md).

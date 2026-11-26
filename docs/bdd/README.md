@@ -81,3 +81,5 @@
 [سیاست فروشگاه #114](features/experiences/store-sales-policy.feature): دسته، روش، نام snapshot و جلوگیری از مصرف وجه پیش از بازبینی.
 
 [مدیریت برند، حفاظت تاریخچه و فیلتر — #115](features/experiences/brand-management.feature).
+
+[محصول غیرفعال، کد عمومی و حفاظت خرید — #116](features/experiences/product-management.feature).

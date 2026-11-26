@@ -3,7 +3,7 @@ id: FEAT-SF-CACHE-001
 title: تحلیل و تسک کش عمومی کاتالوگ با Redis
 status: approved
 owner: eliassarband
-updated: 2026-11-24
+updated: 2026-11-26
 related: [API-HOMEPAGE-LAUNCH-001, API-PRODUCT-DETAIL-001, API-PLP-SEARCH-001, NFR-INDEX-001]
 approved_by: [eliassarband]
 implementation_status: done
@@ -59,7 +59,7 @@ Issue: [#41](https://github.com/MohamadParsa/marketplace/issues/41) · مسئو�
 ## تازگی و رقابت؛ پیشنهاد راه‌حل فنی
 
 1. PostgreSQL مرجع حقیقت بماند. نسخه هر محصول، نسخه وابستگی‌های مشترک و generation خانه/لیست در همان تراکنش تغییر حوزه ثبت شوند. مسیرهای update معمولی، seller، بارگذاری رسانه، `UpdateCatalogWithFiles` واردات، رزرو/آزادسازی و پایان مهلت همگی پوشش داده شوند؛ اتصال صرفاً به endpoint ادمین کافی نیست.
-2. قبل از خواندن cache، نسخه با یک query کوچک از PostgreSQL خوانده شود؛ cache hit نباید `Snapshot` کامل بگیرد. کلید مفهومی: `cherriva:{environment}:{database-namespace}:public:v7:product:{internal-id}:{product-rev}:{dependency-rev}`. namespace از secret یا connection string ساخته و لاگ نشود.
+2. قبل از خواندن cache، نسخه با یک query کوچک از PostgreSQL خوانده شود؛ cache hit نباید `Snapshot` کامل بگیرد. کلید مفهومی: `cherriva:{environment}:{database-namespace}:public:v8:product:{internal-id}:{product-rev}:{dependency-rev}`. namespace از secret یا connection string ساخته و لاگ نشود.
 3. کلید خانه/لیست هم generation مربوط را داشته باشد. پاسخ خانه در نسخه اول شامل کارت است؛ پس تغییر قیمت/موجودی/تخفیف/انتشار مرتبط باید generation آن را عوض کند. TTL پنج دقیقه اجازه نمایش قیمت قدیمی پس از commit نیست. تفکیک layout از کارت‌ها فقط در صورت اثبات نیاز انجام شود.
 4. در miss، DTO سفید عمومی از داده هم‌ساز با نسخه ساخته شود. نسخه دوباره بررسی شود؛ در صورت تغییر، retry محدود یا خواندن مرجع تازه؛ داده قدیمی در کلید نسخه جدید نوشته نشود. درخواستی که **پس از commit** شروع شده نباید نسخه پیش از آن را بگیرد؛ خواندن هم‌زمانِ شروع‌شده پیش از commit، snapshot خودش را دارد.
 5. داده نسخه قبلی با TTL حذف می‌شود. خراب‌شدن Redis پس از commit، نسخه پایدار را از بین نمی‌برد. حذف/prewarm پس از commit فقط بهینه‌سازی است، نه تضمین صحت. rollback نسخه عمومی را تغییر ندهد؛ retry یک command idempotent نیز نباید بی‌علت همه cacheها را خالی کند.
@@ -136,3 +136,7 @@ ETag عمومی بعد از انتخاب نسخه معتبر محاسبه/است
 تکمیل محلی۲۰۲۶-۱۱-۲۴: [نگاشت گارانتی](../../architecture/contracts/checkout-adjustments.md) در dependency عمومی است؛ کوپن/اعتبار خصوصی بیرون کش عمومی باقی‌اند. نسخه v6 با PR #94 پوش شده و هنوز ادغام نشده است. نسخه v7 همین نوبت محلی است.
 
 نسخه محلی۲۰۲۶-۱۱-۲۴: [قرارداد شناسه عمومی #102](../../architecture/contracts/public-catalog-references.md) به namespace/envelope۷ می‌رود؛ TTL و warmup تغییر نکردند. Projection پاسخ HTTP و ETag، شناسه عمومی جدید را حتی در cache hit یکسان صادر می‌کنند. این تغییر تازه هنوز پوش نشده است.
+
+## سازگاری پاسخ محصول پس از #116
+
+کلید و envelope عمومی به v8 ارتقا یافتند تا پاسخ قدیمی فاقد Active مصرف نشود؛ [قرارداد](../../architecture/contracts/product-management.md). TTL و warmup سابق و دفتر مالی بدون تغییرند؛ flush عمومی Redis انجام نمی‌شود.
