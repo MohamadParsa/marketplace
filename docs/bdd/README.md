@@ -83,3 +83,5 @@
 [مدیریت برند، حفاظت تاریخچه و فیلتر — #115](features/experiences/brand-management.feature).
 
 [محصول غیرفعال، کد عمومی و حفاظت خرید — #116](features/experiences/product-management.feature).
+
+[صفحات عمومی و شبکه‌های اجتماعی — #87](features/experiences/business-content.feature).

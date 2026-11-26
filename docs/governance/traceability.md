@@ -277,3 +277,7 @@ FEAT-BO-REFINEMENT-009-AC01..03 → [قرارداد](../architecture/contracts/b
 ## تکمیل مستقل محصول — #116
 
 FEAT-BO-REFINEMENT-010-AC01..04 → [قرارداد](../architecture/contracts/product-management.md) → [سناریو](../bdd/features/experiences/product-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-116-verification.md). نمایش محصول غیرفعال به پاسخ مالک متصل است؛ وضعیت سند از اجرای محصول و انتشار جداست.
+
+## تکمیل فوتر و شبکه‌ها — #87
+
+FEAT-NEXT-026-AC01..04 → [قرارداد](../architecture/contracts/business-content.md) → [شواهد](../delivery/next-phase/issue-87-verification.md). متن پیشنهادی از انتشار واقعی مالک جداست.

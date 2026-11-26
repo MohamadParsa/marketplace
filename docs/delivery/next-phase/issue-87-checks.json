@@ -1,0 +1,97 @@
+{
+  "id": "CHECKS-BUSINESS-CONTENT-20261126",
+  "issues": [
+    87
+  ],
+  "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
+  "source_pushed": false,
+  "go": {
+    "passed_tests_and_subtests": 389,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "business-new-text-stays-draft",
+        "pass": true
+      },
+      {
+        "id": "footer-only-published-pages",
+        "pass": true
+      },
+      {
+        "id": "footer-social-priority",
+        "pass": true
+      },
+      {
+        "id": "footer-safe-external-links",
+        "pass": true
+      },
+      {
+        "id": "business-page-real-destination",
+        "pass": true
+      },
+      {
+        "id": "business-draft-not-public",
+        "pass": true
+      },
+      {
+        "id": "business-invalid-url-rejected",
+        "pass": true
+      },
+      {
+        "id": "business-error-keeps-input",
+        "pass": true
+      },
+      {
+        "id": "footer-plp-deactivation",
+        "pass": true
+      },
+      {
+        "id": "footer-pdp-reuse",
+        "pass": true
+      },
+      {
+        "id": "business-editor-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "footer-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "footer-empty-social-no-placeholder",
+        "pass": true
+      },
+      {
+        "id": "unpublished-page-has-no-draft",
+        "pass": true
+      },
+      {
+        "id": "business-viewer-cannot-edit",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 16,
+    "errors": [],
+    "isolated_postgres": true
+  },
+  "backoffice_build": "passed",
+  "storefront_build": "passed",
+  "primary_preservation": {
+    "sections": 28,
+    "unchanged": true
+  },
+  "content_publication": "owner-controlled-not-performed",
+  "merged": false,
+  "deployed": false
+}
