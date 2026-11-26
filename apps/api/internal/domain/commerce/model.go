@@ -2,6 +2,7 @@ package commerce
 
 import (
 	"encoding/json"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
 	"time"
 )
 
@@ -41,15 +42,16 @@ type Province struct {
 	Cities []City `json:"cities"`
 }
 type Settings struct {
-	Geography          []Province       `json:"geography"`
-	DestinationHistory []Destination    `json:"destination_history,omitempty"`
-	Version            int              `json:"version"`
-	Methods            []PaymentMethod  `json:"methods"`
-	Shipping           []ShippingMethod `json:"shipping"`
-	ClosedWeekdays     []int            `json:"closed_weekdays"`
-	Holidays           []string         `json:"holidays"`
-	Destination        Destination      `json:"destination"`
-	Business           Business         `json:"business"`
+	ShippingTiming     *shipping.TimingPolicy `json:"shipping_timing,omitempty"`
+	Geography          []Province             `json:"geography"`
+	DestinationHistory []Destination          `json:"destination_history,omitempty"`
+	Version            int                    `json:"version"`
+	Methods            []PaymentMethod        `json:"methods"`
+	Shipping           []ShippingMethod       `json:"shipping"`
+	ClosedWeekdays     []int                  `json:"closed_weekdays"`
+	Holidays           []string               `json:"holidays"`
+	Destination        Destination            `json:"destination"`
+	Business           Business               `json:"business"`
 }
 type PaymentMethod struct {
 	ID                 string   `json:"id"`
@@ -64,15 +66,16 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
-	ID        string   `json:"id"`
-	Name      string   `json:"name"`
-	Active    bool     `json:"active"`
-	AllCities bool     `json:"all_cities"`
-	Cities    []string `json:"cities"`
-	StoreIDs  []string `json:"store_ids"`
-	Fee       Amount   `json:"fee"`
-	MinDays   int      `json:"min_days"`
-	MaxDays   int      `json:"max_days"`
+	DayBasis  shipping.DayBasis `json:"day_basis,omitempty"`
+	ID        string            `json:"id"`
+	Name      string            `json:"name"`
+	Active    bool              `json:"active"`
+	AllCities bool              `json:"all_cities"`
+	Cities    []string          `json:"cities"`
+	StoreIDs  []string          `json:"store_ids"`
+	Fee       Amount            `json:"fee"`
+	MinDays   int               `json:"min_days"`
+	MaxDays   int               `json:"max_days"`
 }
 type Destination struct {
 	ID         string `json:"id"`
@@ -156,12 +159,13 @@ type LineSnapshot struct {
 	OfferVersion       int             `json:"offer_version"`
 }
 type ShipmentSnapshot struct {
-	StoreID      string         `json:"store_id"`
-	StoreName    string         `json:"store_name"`
-	Method       ShippingMethod `json:"method"`
-	LeadDays     int            `json:"lead_days"`
-	DeliveryFrom string         `json:"delivery_from"`
-	DeliveryTo   string         `json:"delivery_to"`
+	Preparation  *shipping.PreparationSnapshot `json:"preparation,omitempty"`
+	StoreID      string                        `json:"store_id"`
+	StoreName    string                        `json:"store_name"`
+	Method       ShippingMethod                `json:"method"`
+	LeadDays     int                           `json:"lead_days"`
+	DeliveryFrom string                        `json:"delivery_from"`
+	DeliveryTo   string                        `json:"delivery_to"`
 }
 type Quote struct {
 	SalesMethod        *SalesMethod       `json:"sales_method,omitempty"`

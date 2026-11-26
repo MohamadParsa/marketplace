@@ -3,17 +3,18 @@
   "updated": "2026-11-26",
   "document_status": "in-review",
   "owner": "eliassarband",
-  "scope": "analysis-and-task-planning-only",
-  "execution_authorized": false,
+  "scope": "sequential-implementation-authorized",
+  "execution_authorized": true,
   "source_reviewed_commit": "69aee5e970a99a55267198e641bd8b7e9b87dfeb",
-  "source_changes": false,
+  "source_changes": true,
   "parent_issue": 95,
   "proposed_execution_order": [
     120,
     121,
     122,
     16,
-    123
+    123,
+    10
   ],
   "items": [
     {
@@ -23,11 +24,12 @@
       "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/store-preparation-calendars.md",
       "assignee": "eliassarband",
       "priority": "P1",
-      "state": "open",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
       "dependencies": [],
-      "conditional_dependencies": []
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-120-verification.md"
     },
     {
       "id": "FEAT-SHIP-002",
@@ -38,7 +40,7 @@
       "priority": "P1",
       "state": "open",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         120
       ],
@@ -53,7 +55,7 @@
       "priority": "P1",
       "state": "open",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         120,
         121
@@ -69,7 +71,7 @@
       "priority": "P1",
       "state": "open",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         120,
         121,
@@ -84,21 +86,17 @@
       "number": 16,
       "owner": "daily-method-capacity-and-slot-schedule-with-atomic-reservation",
       "implementation_status": "todo",
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "number": 10,
       "owner": "overdue-supply-monitoring-only",
       "implementation_status": "todo",
-      "calendar_dependency": 120
+      "calendar_dependency": 120,
+      "execution_authorized": true
     }
   ],
-  "open_questions": [
-    "SHIP-Q04",
-    "SHIP-Q05",
-    "SHIP-Q06",
-    "SHIP-Q07"
-  ],
+  "open_questions": [],
   "deployment": false,
   "confirmed_capacity": {
     "unit": "shipment",

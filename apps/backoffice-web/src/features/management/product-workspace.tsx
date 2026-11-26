@@ -251,7 +251,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
               },
               {
                 title: "وقفه تأمین",
-                render: (o) => `${o.lead_days} روز کاری · از فروشنده`,
+                render: (o) => `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"} · از فروشنده`,
               },
               {
                 title: "عملیات",
@@ -737,7 +737,7 @@ function OfferEditor({
             }
           />
           <p className="muted">
-            وقفه تأمین: {current.lead_days} روز کاری؛ از فروشنده، فقط خواندنی.
+            وقفه تأمین: {current.lead_days} روز {current.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}؛ از فروشنده، فقط خواندنی.
           </p>
         </DialogContent>
         <DialogActions>
@@ -830,7 +830,7 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
               },
               { title: "قیمت نهایی نقدی", render: (o) => money(o.price) },
               { title: "قابل تخصیص", render: (o) => o.available },
-              { title: "وقفه تأمین", render: (o) => `${o.lead_days} روز کاری` },
+              { title: "وقفه تأمین", render: (o) => `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}` },
             ]}
           />
         </div>

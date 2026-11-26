@@ -8,6 +8,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
 	"strconv"
 	"strings"
 	"time"
@@ -45,16 +46,19 @@ type QuoteLineView struct {
 	TotalToman              string                   `json:"total_toman"`
 }
 type ShipmentView struct {
-	StoreID      string `json:"store_id"`
-	StoreName    string `json:"store_name"`
-	MethodID     string `json:"method_id"`
-	MethodName   string `json:"method_name"`
-	FeeToman     string `json:"fee_toman"`
-	LeadDays     int    `json:"lead_days"`
-	MinDays      int    `json:"min_days"`
-	MaxDays      int    `json:"max_days"`
-	DeliveryFrom string `json:"delivery_from"`
-	DeliveryTo   string `json:"delivery_to"`
+	LeadDayBasis      shipping.DayBasis `json:"lead_day_basis"`
+	TransportDayBasis shipping.DayBasis `json:"transport_day_basis"`
+	ReadyAt           *time.Time        `json:"ready_at,omitempty"`
+	StoreID           string            `json:"store_id"`
+	StoreName         string            `json:"store_name"`
+	MethodID          string            `json:"method_id"`
+	MethodName        string            `json:"method_name"`
+	FeeToman          string            `json:"fee_toman"`
+	LeadDays          int               `json:"lead_days"`
+	MinDays           int               `json:"min_days"`
+	MaxDays           int               `json:"max_days"`
+	DeliveryFrom      string            `json:"delivery_from"`
+	DeliveryTo        string            `json:"delivery_to"`
 }
 type QuoteView struct {
 	SalesMethod         *commerce.SalesMethod `json:"sales_method,omitempty"`
@@ -170,7 +174,13 @@ func quoteView(q commerce.Quote) QuoteView {
 		v.Lines = append(v.Lines, lineView)
 	}
 	for _, s := range q.Shipments {
-		v.Shipments = append(v.Shipments, ShipmentView{StoreID: s.StoreID, StoreName: s.StoreName, MethodID: s.Method.ID, MethodName: s.Method.Name, FeeToman: commerce.Toman(s.Method.Fee), LeadDays: s.LeadDays, MinDays: s.Method.MinDays, MaxDays: s.Method.MaxDays, DeliveryFrom: s.DeliveryFrom, DeliveryTo: s.DeliveryTo})
+		view := ShipmentView{LeadDayBasis: shipping.WorkingDays, TransportDayBasis: shipping.WorkingDays, StoreID: s.StoreID, StoreName: s.StoreName, MethodID: s.Method.ID, MethodName: s.Method.Name, FeeToman: commerce.Toman(s.Method.Fee), LeadDays: s.LeadDays, MinDays: s.Method.MinDays, MaxDays: s.Method.MaxDays, DeliveryFrom: s.DeliveryFrom, DeliveryTo: s.DeliveryTo}
+		if s.Preparation != nil {
+			view.LeadDayBasis = s.Preparation.Policy.DayBasis
+			view.TransportDayBasis = s.Preparation.TransportBasis
+			view.ReadyAt = &s.Preparation.ReadyAt
+		}
+		v.Shipments = append(v.Shipments, view)
 	}
 	return v
 }
@@ -332,7 +342,11 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 			}
 			for _, method := range c.Settings.Shipping {
 				if method.ID == in.Shipping[storeID] && shippingEligible(method, q.Address.City, storeID) {
-					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{StoreID: st.ID, StoreName: storeDisplayName(st, quoteDisplayMethod(q)), Method: method, LeadDays: st.LeadDays, DeliveryFrom: deliveryDate(now, st.LeadDays+method.MinDays, c.Settings), DeliveryTo: deliveryDate(now, st.LeadDays+method.MaxDays, c.Settings)})
+					preparation, from, to, err := shipmentPreparation(c.Settings, st, method, now)
+					if err != nil {
+						return q, err
+					}
+					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{Preparation: &preparation, StoreID: st.ID, StoreName: storeDisplayName(st, quoteDisplayMethod(q)), Method: method, LeadDays: st.LeadDays, DeliveryFrom: from, DeliveryTo: to})
 					var e error
 					q.ShippingTotal, e = commerce.Add(q.ShippingTotal, method.Fee)
 					if e != nil {
@@ -484,6 +498,16 @@ func qComparable(q commerce.Quote) string {
 	q.ReservedUntil = time.Time{}
 	q.AcceptedAt = nil
 	q.Lines = append([]commerce.LineSnapshot{}, q.Lines...)
+	q.Shipments = append([]commerce.ShipmentSnapshot{}, q.Shipments...)
+	for i := range q.Shipments {
+		if q.Shipments[i].Preparation == nil {
+			continue
+		}
+		copy := *q.Shipments[i].Preparation
+		copy.SourceAt = time.Time{}
+		copy.ReadyAt = shipping.AtTime(copy.ReadyAt, "00:00")
+		q.Shipments[i].Preparation = &copy
+	}
 	for i := range q.Lines {
 		q.Lines[i].OfferVersion = 0
 	}
@@ -504,7 +528,7 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 	p.OrderIDs = []string{}
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
-		order := orders.Order{StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
+		order := orders.Order{Preparation: ship.Preparation, StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
 				order.Items = append(order.Items, orders.Item{VariantLabel: l.VariantLabel, ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})

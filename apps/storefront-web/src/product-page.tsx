@@ -58,6 +58,7 @@ type Offer = {
   store_id: string;
   store_name: string;
   lead_days: number;
+  lead_day_basis?: string;
   available: boolean;
   price: number | null;
   regular_price?: number;
@@ -583,7 +584,7 @@ export function ProductPage({ url }: { url: string }) {
                 {offer && (
                   <p>
                     <Icon name="bag" />
-                    {dispatchTime(offer.lead_days)}
+                    {dispatchTime(offer.lead_days, offer.lead_day_basis)}
                   </p>
                 )}
                 <small>
@@ -680,7 +681,7 @@ export function ProductPage({ url }: { url: string }) {
                                 : "ناموجود"}
                           </span>
                         </div>
-                        <p>{dispatchTime(o.lead_days)}</p>
+                        <p>{dispatchTime(o.lead_days, o.lead_day_basis)}</p>
                         <b>
                           {!data.active ? "غیرقابل خرید" : o.restricted ? "فروش نقدی مجاز نیست" : o.available && o.price != null
                             ? money(o.price) + " تومان"

@@ -620,10 +620,11 @@ function StoreEditor({
               <p>شناسه ثابت · {current.id}</p>
               <p>
                 مالک ثبت‌شده: {current.owner || "ثبت نشده"} · وقفه تأمین:{" "}
-                {current.lead_days} روز کاری · مدل:{" "}
+                {current.lead_days} روز {current.preparation?.day_basis === "calendar" ? "تقویمی" : "کاری"} · مدل:{" "}
                 {current.model === "independent" ? "مستقل" : "مشترک"}
               </p>
               <p>این اطلاعات با ویرایش پروفایل بازنویسی نمی‌شوند.</p>
+              <Button component={Link} to="/store-preparation">تنظیم وقفه و تقویم فروشگاه</Button>
             </section>
             <section className="store-detail-box">
               <h3>تصویر فروشگاه</h3>

@@ -7,13 +7,13 @@ updated: 2026-11-26
 related: [DOM-SHIPPING-POLICY-001, API-SHIPPING-METHODS-PLAN-001]
 approved_by: []
 implementation_status: todo
-execution_authorized: false
+execution_authorized: true
 priority: P1
 ---
 
 # روش‌های عمومی حمل، دریافت هزینه و محدودیت شهر/دسته
 
-Issue: [#121](https://github.com/MohamadParsa/marketplace/issues/121) · مسئول @eliassarband · فقط برنامه‌ریزی؛ اجرای کد انتخاب نشده است.
+Issue: [#121](https://github.com/MohamadParsa/marketplace/issues/121) · مسئول @eliassarband · اجرای گام‌به‌گام در ۲۰۲۶-۱۱-۲۶ به دستور کاربر انتخاب شد.
 
 ## مسئله و نتیجه
 

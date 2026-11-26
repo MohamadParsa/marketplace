@@ -531,7 +531,7 @@ export function CartPage() {
                     <p>{item.variant_label}</p>
                     <p>
                       فروشنده: {item.store_name} ·{" "}
-                      {dispatchTime(item.lead_days)}
+                      {dispatchTime(item.lead_days, item.lead_day_basis)}
                     </p>
                     <strong>{item.inactive ? "غیرقابل خرید" : money(item.unit_price_toman)}</strong>
                     {item.review_required && (
@@ -990,13 +990,13 @@ function CheckoutForm() {
     ? oldPurchase.quote.shipments.map((s) => ({
         id: s.store_id,
         name: s.store_name,
-        lead_days: s.lead_days,
+        lead_days: s.lead_days, lead_day_basis: s.lead_day_basis,
       }))
     : Array.from(
         new Map(
           prepare?.cart.items.map((i) => [
             i.store_id,
-            { id: i.store_id, name: i.store_name, lead_days: i.lead_days },
+            { id: i.store_id, name: i.store_name, lead_days: i.lead_days, lead_day_basis: i.lead_day_basis },
           ]),
         ).values(),
       );
@@ -1110,11 +1110,11 @@ function CheckoutForm() {
                                     <b>{m.name}</b>
                                     <small>{money(m.fee_toman)}</small>
                                     <small>
-                                      تحویل {st.lead_days + m.min_days} تا{" "}
-                                      {st.lead_days + m.max_days} روز کاری با
-                                      احتساب زمان آماده‌سازی فروشنده
+                                      حمل پس از تأمین {m.min_days} تا{" "}
+                                      {m.max_days} روز {m.day_basis === "calendar" ? "تقویمی" : "کاری"}؛ علاوه بر
+                                      زمان آماده‌سازی فروشنده
                                     </small>
-                                    <small>{dispatchTime(st.lead_days)}</small>
+                                    <small>{dispatchTime(st.lead_days, st.lead_day_basis)}</small>
                                   </span>
                                 </label>
                               ))
@@ -1495,7 +1495,7 @@ export function OrderSummary({ quote }: { quote: Quote }) {
           </b>
           <p>هزینه ارسال: {money(s.fee_toman)}</p>
           <p>
-            {dispatchTime(s.lead_days)}؛ تحویل از{" "}
+            {dispatchTime(s.lead_days, s.lead_day_basis)}؛ تحویل از{" "}
             {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
             {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
           </p>

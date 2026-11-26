@@ -66,6 +66,11 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /storefront/wallet/receipts/{id}", h.Receipt)
 		mux.HandleFunc("GET /backoffice/commerce/receipts/{id}", h.Receipt)
 		mux.HandleFunc("GET /seller/checkout/orders", h.Seller)
+		for _, surface := range []string{"backoffice", "seller"} {
+			mux.HandleFunc("GET /"+surface+"/stores/preparation", h.StorePreparation)
+			mux.HandleFunc("PUT /"+surface+"/stores/{id}/preparation", h.StorePreparation)
+			mux.HandleFunc("POST /"+surface+"/stores/{id}/preparation/preview", h.StorePreparation)
+		}
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
 	}
 	if h := cfg.ProductQA; h != nil {

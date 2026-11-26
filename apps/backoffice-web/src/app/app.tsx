@@ -1,4 +1,5 @@
 import { StoresPage } from "../features/management/stores-page";
+import { StorePreparationPage } from "../features/management/store-preparation-page";
 import { UsersPage } from "../features/management/users-page";
 import { RolesPage } from "../features/management/access-panel";
 import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
@@ -110,6 +111,7 @@ const menu = [
         roles: ["super-admin"],
       },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
+      { path: "/store-preparation", label: "وقفه و تقویم فروشگاه", icon: <LocalShippingOutlined /> },
       {
         path: "/product-reviews",
         label: "نظرات محصولات",
@@ -295,10 +297,10 @@ function Workspace({
       ...group,
       items: group.items.filter((i) =>
         session.user.Surface === "seller"
-          ? ["/products", "/commerce"].includes(i.path)
+          ? ["/products", "/commerce", "/store-preparation"].includes(i.path)
           : i.path === "/users"
             ? canCreditWallet || permissions.includes("users.read")
-            : i.path === "/stores"
+            : ["/stores", "/store-preparation"].includes(i.path)
               ? role === "super-admin" ||
                 role === "operations" ||
                 permissions.includes("stores.read")
@@ -555,6 +557,7 @@ function Workspace({
                   }
                 />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/store-preparation" element={<StorePreparationPage />} />
                 <Route
                   path="/stores"
                   element={

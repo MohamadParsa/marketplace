@@ -798,7 +798,7 @@ function PurchaseReview({
                 <p>
                   {s.method_name} · {money(s.fee_toman)}
                 </p>
-                <small>وقفه تأمین: {s.lead_days} روز کاری</small>
+                <small>وقفه تأمین: {s.lead_days} روز {s.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}</small>
                 <p>
                   تحویل از{" "}
                   {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
@@ -998,6 +998,7 @@ function SettingsForm({
     [destination, setDestination] = useState(s.destination),
     [shipping, setShipping] = useState(s.shipping),
     [days, setDays] = useState(s.closed_weekdays),
+    [timing, setTiming] = useState(s.shipping_timing),
     [holidays, setHolidays] = useState(s.holidays.join("\n")),
     [business, setBusiness] = useState(businessDraft(s.business));
   const can = (key: string) => !!permissions["commerce." + key];
@@ -1185,17 +1186,20 @@ function SettingsForm({
                   onChange={(fee_toman) => patchShipping(i, { fee_toman })}
                 />
                 <Field
-                  label="حداقل روز پس از تأمین"
+                  label="حداقل مدت حمل پس از تأمین"
                   type="number"
                   value={String(m.min_days)}
                   onChange={(v) => patchShipping(i, { min_days: Number(v) })}
                 />
                 <Field
-                  label="حداکثر روز پس از تأمین"
+                  label="حداکثر مدت حمل پس از تأمین"
                   type="number"
                   value={String(m.max_days)}
                   onChange={(v) => patchShipping(i, { max_days: Number(v) })}
                 />
+                <div role="group" aria-label={`واحد مدت حمل ${m.name}`} className="toolbar">
+                  {([ ["working","روز کاری"],["calendar","روز تقویمی"] ] as const).map(([value,label]) => <Button key={value} aria-pressed={(m.day_basis ?? "working") === value} variant={(m.day_basis ?? "working") === value ? "contained":"outlined"} onClick={() => patchShipping(i,{day_basis:value})}>{label}</Button>)}
+                </div>
               </div>
               <FormControlLabel
                 control={
@@ -1256,12 +1260,21 @@ function SettingsForm({
                   fee_toman: "0",
                   min_days: 1,
                   max_days: 3,
+                  day_basis: "working",
                 },
               ])
             }
           >
             افزودن روش ارسال
           </Button>
+          <h3>زمان آماده‌سازی و تحویل</h3>
+          <div className="commerce-grid">
+            <Field label="ساعت آماده‌سازی (تهران، HH:mm)" value={timing.ready_time} onChange={ready_time => setTiming({...timing,ready_time})} />
+            <Field label="مهلت شروع همان روز (HH:mm)" value={timing.cutoff_time} onChange={cutoff_time => setTiming({...timing,cutoff_time})} />
+            <Field label="حداقل فاصله تا اسلات (دقیقه)" type="number" value={String(timing.min_slot_lead_minutes)} onChange={value => setTiming({...timing,min_slot_lead_minutes:Number(value)})} />
+          </div>
+          <FormControlLabel label="اسلات همان روز با رعایت فرصت آماده‌سازی مجاز باشد" control={<Checkbox checked={timing.allow_same_day_slots} onChange={event => setTiming({...timing,allow_same_day_slots:event.target.checked})} />} />
+          <p>پایان وقفه در تعطیلی به اولین روز کاری منتقل می‌شود. روز شروع در وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به بعد، از اولین روز کاری بعد آغاز می‌شود.</p>
           <h3>روزهای تعطیل هفته</h3>
           {[
             "یکشنبه",
@@ -1302,6 +1315,7 @@ function SettingsForm({
               void save({
                 version: s.version,
                 shipping: {
+                  timing,
                   methods: shipping,
                   closed_weekdays: days,
                   holidays: holidays

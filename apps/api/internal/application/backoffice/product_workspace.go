@@ -36,9 +36,10 @@ type ProductPermissions struct {
 type OfferView struct {
 	SaleRestricted bool `json:"sale_restricted,omitempty"`
 	catalog.Offer
-	Available   int  `json:"available"`
-	LeadDays    int  `json:"lead_days"`
-	StoreActive bool `json:"store_active"`
+	Available    int    `json:"available"`
+	LeadDayBasis string `json:"lead_day_basis"`
+	LeadDays     int    `json:"lead_days"`
+	StoreActive  bool   `json:"store_active"`
 }
 type ProductWorkspace struct {
 	Product     catalog.Product               `json:"product"`
@@ -170,7 +171,7 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 		}
 		for _, st := range result.Stores {
 			if st.ID == o.StoreID {
-				result.Offers = append(result.Offers, OfferView{SaleRestricted: !StoreAllowsCategory(state, st, p.CategoryID) || !StoreAllowsMethod(st, "cash"), Offer: o, Available: o.Stock - o.Reserved, LeadDays: st.LeadDays, StoreActive: st.Active})
+				result.Offers = append(result.Offers, OfferView{SaleRestricted: !StoreAllowsCategory(state, st, p.CategoryID) || !StoreAllowsMethod(st, "cash"), Offer: o, Available: o.Stock - o.Reserved, LeadDayBasis: string(preparationPolicy(st).DayBasis), LeadDays: st.LeadDays, StoreActive: st.Active})
 				break
 			}
 		}

@@ -62,7 +62,9 @@ export interface Store {
   city: string;
   model: string;
   active: boolean;
+  preparation?: { day_basis: "working" | "calendar"; };
   lead_days: number;
+  lead_day_basis?: string;
 }
 export interface CategorySEO {
   meta_title: string;
@@ -193,6 +195,7 @@ export interface OfferView extends Offer {
   sale_restricted?: boolean;
   available: number;
   lead_days: number;
+  lead_day_basis?: string;
   store_active: boolean;
 }
 export interface ProductWorkspace {

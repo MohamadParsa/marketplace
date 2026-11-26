@@ -43,6 +43,7 @@ type CartItemView struct {
 	TotalToman           string `json:"total_toman"`
 	Available            bool   `json:"available"`
 	PriceChanged         bool   `json:"price_changed"`
+	LeadDayBasis         string `json:"lead_day_basis"`
 	LeadDays             int    `json:"lead_days"`
 }
 type CartView struct {
@@ -114,7 +115,7 @@ func cartItem(w Workspace, l commerce.CartLine) (CartItemView, error) {
 	if ov == nil {
 		return CartItemView{}, ErrNotFound
 	}
-	v := CartItemView{Inactive: !p.IsActive(), Restricted: ov.Restricted, ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
+	v := CartItemView{Inactive: !p.IsActive(), Restricted: ov.Restricted, ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDayBasis: ov.LeadDayBasis, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
 	for _, variant := range d.Variants {
 		if variant.ID == o.VariantID {
 			values := []string{}

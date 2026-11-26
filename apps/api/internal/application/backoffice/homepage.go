@@ -410,6 +410,7 @@ type PublicOffer struct {
 	ID           string `json:"id"`
 	VariantID    string `json:"variant_id"`
 	Price        int64  `json:"price"`
+	LeadDayBasis string `json:"lead_day_basis"`
 	LeadDays     int    `json:"lead_days"`
 }
 
@@ -444,7 +445,7 @@ func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 		}
 		for _, s := range stores {
 			if s.ID == o.StoreID && s.Active && StoreAllowsCategory(w, s, p.CategoryID) && StoreAllowsMethod(s, "cash") {
-				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDays: s.LeadDays})
+				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDayBasis: string(preparationPolicy(s).DayBasis), LeadDays: s.LeadDays})
 				break
 			}
 		}

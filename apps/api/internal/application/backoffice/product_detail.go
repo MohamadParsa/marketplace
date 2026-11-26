@@ -29,6 +29,7 @@ type PublicProductOffer struct {
 	VariantID    string `json:"variant_id"`
 	StoreID      string `json:"store_id"`
 	StoreName    string `json:"store_name"`
+	LeadDayBasis string `json:"lead_day_basis"`
 	LeadDays     int    `json:"lead_days"`
 	Available    bool   `json:"available"`
 	Price        *int64 `json:"price"`
@@ -218,7 +219,7 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string, resolveGroup
 			if st.ID == o.StoreID && st.Active {
 				restricted := !StoreAllowsCategory(w, st, p.CategoryID) || !StoreAllowsMethod(st, "cash")
 				a := p.IsActive() && o.Stock-o.Reserved > 0 && !restricted
-				view := PublicProductOffer{Restricted: restricted, VariantLabel: realVariantLabel(w, vs, o.VariantID), ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDays: st.LeadDays, Available: a, Version: o.Version}
+				view := PublicProductOffer{Restricted: restricted, VariantLabel: realVariantLabel(w, vs, o.VariantID), ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDayBasis: string(preparationPolicy(st).DayBasis), LeadDays: st.LeadDays, Available: a, Version: o.Version}
 				if a {
 					price := o.Price
 					view.Price = &price

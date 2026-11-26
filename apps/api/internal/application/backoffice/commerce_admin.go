@@ -284,6 +284,9 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				return purchaseView(c, *p), nil
 			}
 		}
+		if err := finalizeShipmentCalendars(q, now); err != nil {
+			return nil, err
+		}
 		if q.ContractVersion == 2 {
 			if q.Credit == nil || q.Credit.Status != "held" {
 				return nil, ErrConflict
@@ -327,6 +330,12 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 		for i := range w.Orders {
 			if w.Orders[i].CheckoutID == p.ID {
 				w.Orders[i].Payment = "paid"
+				for _, ship := range q.Shipments {
+					if ship.StoreID == w.Orders[i].StoreID {
+						w.Orders[i].Preparation = ship.Preparation
+						w.Orders[i].DeliveryFrom, w.Orders[i].DeliveryTo = ship.DeliveryFrom, ship.DeliveryTo
+					}
+				}
 				w.Orders[i].Status = "awaiting-supply"
 				w.Orders[i].Version++
 				for j := range w.Orders[i].Items {

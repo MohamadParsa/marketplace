@@ -20,6 +20,7 @@ export interface CartItem {
   available: boolean;
   price_changed: boolean;
   lead_days: number;
+  lead_day_basis?: string;
 }
 export interface Cart {
   id: string;
@@ -64,6 +65,7 @@ export interface Method {
   instructions: string;
 }
 export interface Shipping {
+  day_basis?: "working" | "calendar";
   id: string;
   name: string;
   active: boolean;
@@ -110,6 +112,7 @@ export interface Config {
   server_date: string;
 }
 export interface Settings {
+  shipping_timing: { ready_time: string; cutoff_time: string; min_slot_lead_minutes: number; allow_same_day_slots: boolean };
   geography: Province[];
   version: number;
   methods: Method[];
@@ -136,12 +139,15 @@ export interface QuoteLine {
   total_toman: string;
 }
 export interface Shipment {
+  transport_day_basis?: "working" | "calendar";
+  ready_at?: string;
   store_id: string;
   store_name: string;
   method_id: string;
   method_name: string;
   fee_toman: string;
   lead_days: number;
+  lead_day_basis?: string;
   min_days: number;
   max_days: number;
   delivery_from: string;

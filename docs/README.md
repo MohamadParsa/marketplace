@@ -63,4 +63,4 @@
 
 [تکمیل چهار کار #96–#99، گزارش تست و تصاویر](delivery/backlog-review-2026-11-24/issues-96-99-verification.md) · [قرارداد اعتبار و شارژ ادمین](architecture/contracts/wallet-credit-policy.md).
 
-[تحلیل روش‌های ارسال، پیش‌کرایه/پس‌کرایه، تقویم و وقفه تأمین — فقط برنامه‌ریزی #120 تا #123 و تکمیل #16](delivery/shipping-refinement-2026-11-26/README.md)
+[روش‌های ارسال، تقویم و وقفه تأمین — اجرای ترتیبی #120، #121، #122، #16، #123 و #10](delivery/shipping-refinement-2026-11-26/README.md) · [شواهد تقویم و وقفه #120](delivery/shipping-refinement-2026-11-26/issue-120-verification.md)
