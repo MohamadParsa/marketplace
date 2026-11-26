@@ -46,3 +46,7 @@ PDP جاری فقط قیمت نقدی و نام اصلی دارد؛ با انت�
 سورس مستقل [47b798a](https://github.com/MohamadParsa/marketplace/commit/47b798a0b22a40f5f0309dd18978b25b9f6829f8). موتور مارکاپ/کوپن/اعتبار، دفتر و هویت مالی از #73 و مدل موجود استفاده می‌کنند. مجوز global مستقل stores.eligibility.write قابل انتساب است؛ [هماهنگی #71](coordination-71.md) به‌روز شد و ممیزی کامل آن انجام‌شده محسوب نمی‌شود.
 
 رکورد بدون سیاست اختصاصی مجوز موجود را حفظ می‌کند؛ پس از ثبت، روش‌ها صریح‌اند. حذف مجوز نقدی در تنظیمات، خرید نقدی فعلی PDP را غیرفعال می‌کند و UI آن را توضیح می‌دهد؛ توسعه روش‌محور متعلق به #118 است. فیلتر/صفحه‌بندی سرور هنوز از snapshot کامل مخزن استفاده می‌کند و benchmark تولید ادعا نمی‌شود. main/Liara ادغام یا مستقر نشده‌اند؛ رسید پوش و CI پس از ثبت افزوده می‌شود. #115 تحویل بعدی مستقل است.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/47b798a0b22a40f5f0309dd18978b25b9f6829f8) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/e6831ad6997e1efbe63b42e46a24b311448a22fc) روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/114#issuecomment-7190989002) ثبت و #114 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45811990945) روی مدارک با source tree یکسان موفق‌اند؛ race/vet شامل آن است. [رسید ماشین‌خوان](issue-114-delivery.json). #114/#115 جدا و main/Liara بدون استقرار باقی‌اند.

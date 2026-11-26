@@ -85,7 +85,7 @@
   },
   "future_pdp_issue": 118,
   "future_pdp_implemented": false,
-  "source_pushed": false,
+  "source_pushed": true,
   "deployed": false,
   "artifacts": [
     "output/playwright/issue-114/checkout-method-alias.png",
@@ -93,5 +93,38 @@
     "output/playwright/issue-114/restricted-pdp.png",
     "output/playwright/issue-114/store-policy-mobile.png",
     "output/playwright/issue-114/store-policy.png"
-  ]
+  ],
+  "ci": {
+    "tested_revision": "e6831ad6997e1efbe63b42e46a24b311448a22fc",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945",
+    "jobs": [
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881900684"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901221"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901316"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901346"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901608"
+      }
+    ]
+  }
 }
