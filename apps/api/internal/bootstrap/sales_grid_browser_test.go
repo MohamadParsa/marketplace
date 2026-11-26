@@ -8,6 +8,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/config"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/store"
 	"net"
 	"net/http"
 	"os"
@@ -40,6 +41,11 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 	}
 	if os.Getenv("CHERRIVA_AXES_BROWSER") == "1" {
 		w = axisConversionSeed(t)
+	}
+	if os.Getenv("CHERRIVA_STORES_BROWSER") == "1" {
+		for i := 0; i < 45; i++ {
+			w.Stores = append(w.Stores, store.Store{ID: fmt.Sprintf("store-browser-%02d", i), Name: fmt.Sprintf("فروشگاه نمونه %02d", i), Active: true, City: "تهران", Profile: &store.Profile{Province: "تهران"}})
+		}
 	}
 	repo := backofficememory.New(w)
 	for _, entry := range []struct{ port, surface, app string }{{"8097", "backoffice", "backoffice-web"}, {"5199", "storefront", "storefront-web"}} {

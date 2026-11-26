@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { permissionName } from "./access-panel";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -137,8 +138,17 @@ function Choices({
 export function UsersPage() {
   const { authToken, state, role, can } = useWorkspace();
   const cache = useQueryClient();
-  const [draft, setDraft] = useState(defaults),
-    [filter, setFilter] = useState(defaults),
+  const [params, setParams] = useSearchParams();
+  const linkedUser = params.get("user");
+  const linkedOpened = useRef("");
+  const [draft, setDraft] = useState<Filter>({
+      ...defaults,
+      id: linkedUser ?? undefined,
+    }),
+    [filter, setFilter] = useState<Filter>({
+      ...defaults,
+      id: linkedUser ?? undefined,
+    }),
     [page, setPage] = useState(0),
     [size, setSize] = useState(20),
     [editing, setEditing] = useState<ManagedUser | "new">(),
@@ -156,6 +166,34 @@ export function UsersPage() {
       ),
   });
   const data = query.data;
+  useEffect(() => {
+    if (linkedUser) {
+      setFilter((old) =>
+        old.id === linkedUser ? old : { ...defaults, id: linkedUser },
+      );
+      setDraft((old) =>
+        old.id === linkedUser ? old : { ...defaults, id: linkedUser },
+      );
+      setPage(0);
+    } else linkedOpened.current = "";
+  }, [linkedUser]);
+  useEffect(() => {
+    if (linkedUser && linkedOpened.current !== linkedUser) {
+      const row = data?.rows.find((r) => r.id === linkedUser);
+      if (row) {
+        linkedOpened.current = linkedUser;
+        setEditing(row);
+      }
+    }
+  }, [linkedUser, data]);
+  const closeEditing = () => {
+    setEditing(undefined);
+    if (linkedUser) {
+      const next = new URLSearchParams(params);
+      next.delete("user");
+      setParams(next, { replace: true });
+    }
+  };
   const refresh = () =>
     cache.invalidateQueries({ queryKey: ["managed-users"] });
   const setField = (k: keyof Filter, v: string) =>
@@ -389,7 +427,7 @@ export function UsersPage() {
           key={typeof editing === "string" ? "new" : editing.id}
           row={editing === "new" ? undefined : editing}
           directory={data}
-          close={() => setEditing(undefined)}
+          close={closeEditing}
           saved={(u) => {
             setEditing(u);
             void refresh();

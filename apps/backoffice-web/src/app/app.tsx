@@ -1,3 +1,4 @@
+import { StoresPage } from "../features/management/stores-page";
 import { UsersPage } from "../features/management/users-page";
 import { RolesPage } from "../features/management/access-panel";
 import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
@@ -297,7 +298,11 @@ function Workspace({
           ? ["/products", "/commerce"].includes(i.path)
           : i.path === "/users"
             ? canCreditWallet || permissions.includes("users.read")
-            : visible("roles" in i ? i.roles : undefined),
+            : i.path === "/stores"
+              ? role === "super-admin" ||
+                role === "operations" ||
+                permissions.includes("stores.read")
+              : visible("roles" in i ? i.roles : undefined),
       ),
     }))
     .filter((group) => group.items.length > 0);
@@ -551,6 +556,19 @@ function Workspace({
                 />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route
+                  path="/stores"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    (role === "super-admin" ||
+                      role === "operations" ||
+                      permissions.includes("stores.read")) ? (
+                      <StoresPage />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+                <Route
                   path="/home-catalog"
                   element={
                     session.user.Surface === "seller" ? (
@@ -642,7 +660,7 @@ function Workspace({
                     )
                   }
                 />
-                {(["stores", "pricing", "shipping"] as const).map((section) => (
+                {(["pricing", "shipping"] as const).map((section) => (
                   <Route
                     key={section}
                     path={"/" + section}

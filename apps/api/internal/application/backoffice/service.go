@@ -29,6 +29,8 @@ func roleAllows(role identity.Role, action string) bool {
 		return role == identity.RoleOperations
 	case CouponsCreate, CouponsEdit, CouponsActivate:
 		return role == identity.RoleOperations
+	case StoresRead, StoresWrite, StoresMembersRead, StoresMediaWrite:
+		return role == identity.RoleOperations
 	case SalesRead, CommerceSettingsRead, CommerceOrdersRead, CouponsRead:
 		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance
 	case CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite:
@@ -54,6 +56,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		return Workspace{}, err
 	}
 	state.UserMutations = nil
+	state.StoreMutations = nil
 	state.AxisPlans = nil
 	state.Wishlist = nil
 	state.RecentlyViewed = nil
@@ -69,6 +72,11 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	}
 	if actor.Role == "" && !slices.Contains(actor.Permissions, WorkspaceRead) {
 		return Workspace{}, ErrForbidden
+	}
+	if !allowsAction(actor, StoresRead) {
+		for i := range state.Stores {
+			state.Stores[i].Profile = nil
+		}
 	}
 	if actor.Role != identity.RoleSuperAdmin {
 		if !allowsAction(actor, CommerceWalletCredit) && !allowsAction(actor, UsersRead) {

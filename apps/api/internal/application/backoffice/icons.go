@@ -124,6 +124,11 @@ func collectUnusedIcons(state *Workspace) {
 	for _, x := range state.Brands {
 		used[x.IconID] = true
 	}
+	for _, st := range state.Stores {
+		if st.Profile != nil {
+			used[st.Profile.ImageID] = true
+		}
+	}
 	kept := make([]catalog.IconMedia, 0, len(state.IconMedia))
 	for _, x := range state.IconMedia {
 		if used[x.ID] {

@@ -17,6 +17,7 @@ func applyCatalog(state *Workspace, c Command, id string) error {
 		for i := range state.Stores {
 			if state.Stores[i].ID == c.Target {
 				state.Stores[i].Active = !state.Stores[i].Active
+				state.Stores[i].Version++
 				return nil
 			}
 		}

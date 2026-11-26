@@ -28,7 +28,19 @@ export interface User {
   role: Role;
   active: boolean;
 }
+export interface StoreProfile {
+  description?: string;
+  email?: string;
+  province?: string;
+  address?: string;
+  postal_code?: string;
+  phone?: string;
+  mobile?: string;
+  image_id?: string;
+}
 export interface Store {
+  version?: number;
+  profile?: StoreProfile;
   content_policy?: "review" | "direct";
   content_policy_version?: number;
   id: string;

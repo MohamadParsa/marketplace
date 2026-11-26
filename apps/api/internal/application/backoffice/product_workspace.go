@@ -145,6 +145,7 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 		if actor.Surface == identity.SurfaceSeller && !canStore(state, actor, st.ID, "read") && !hasContentStoreAccess(state, actor, st.ID) {
 			continue
 		}
+		st.Profile = nil
 		result.Stores = append(result.Stores, st)
 		if !st.Active || (p.Model == "independent" && p.OwnerStoreID != st.ID) {
 			continue
@@ -221,6 +222,7 @@ func sellerWorkspace(state Workspace, actor identity.User) Workspace {
 	}
 	for _, st := range state.Stores {
 		if canStore(state, actor, st.ID, "read") || hasContentStoreAccess(state, actor, st.ID) {
+			st.Profile = nil
 			result.Stores = append(result.Stores, st)
 		}
 	}

@@ -14,7 +14,11 @@ import type { CustomRole, RoleScope } from "../../shared/types";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
 const names: Record<string, string> = {
- "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
+  "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
+  "stores.read": "مشاهده پروفایل خصوصی فروشگاه‌ها",
+  "stores.write": "ایجاد و ویرایش پروفایل فروشگاه",
+  "stores.members.read": "مشاهده اعضای متصل به فروشگاه",
+  "stores.media.write": "بارگذاری و حذف تصویر فروشگاه",
   "users.read": "مشاهده فهرست کاربران",
   "users.write": "ایجاد و ویرایش کاربران",
   "users.password.reset": "تعیین و بازنشانی رمز موقت",

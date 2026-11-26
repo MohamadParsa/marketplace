@@ -90,6 +90,7 @@ type Audit struct {
 }
 type Workspace struct {
 	AxisPlans      []AxisPlan                     `json:"axis_plans,omitempty"`
+	StoreMutations []StoreMutation                `json:"store_mutations,omitempty"`
 	UserMutations  []UserMutation                 `json:"user_mutations,omitempty"`
 	SalesPayments  []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
 	Sales          *commerce.SalesSettings        `json:"sales,omitempty"`
