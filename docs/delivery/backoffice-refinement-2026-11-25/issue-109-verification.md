@@ -41,3 +41,7 @@ execution_authorized: true
 ## نسخه و محدودیت
 
 سورس مستقل: [a029b88](https://github.com/MohamadParsa/marketplace/commit/a029b88f6d78d9745311cf4afbdeb8dd3f4538d9). برای این قابلیت تغییر DDL لازم نشد؛ برنامه و آرشیو تنوع به JSONB موجود افزوده شدند. تراکنش دسته محدود به۱۰۰۰محصول/۱۰۰۰۰تنوع و بدنه۸MiB است؛ زمان قفل تولید benchmark نشده است. ادغام چندبه‌یک و تغییر تعریف مشترک enum در این نسخه انجام نمی‌شود. #113/#114/#115 تحویل‌های مستقل‌اند. main و Liara ادغام/مستقر نشده‌اند؛ رسید پوش و CI پس از ثبت اضافه می‌شود.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/a029b88f6d78d9745311cf4afbdeb8dd3f4538d9) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/d317123a39504fd2c190b4ed69c6d0a61a673534) پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/109#issuecomment-7189712677) ثبت و #109 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45803253989) روی مدارک با source tree یکسان موفق‌اند؛ race/vet شامل آن است. [رسید ماشین‌خوان](issue-109-delivery.json). #113/#114/#115 جدا، و main/Liara دست‌نخورده‌اند.
