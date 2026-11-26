@@ -1,4 +1,7 @@
 export interface CartItem {
+ review_required?: boolean;
+ previous_variant_label?: string;
+ variant_version?: number;
   product_url: string;
   product_id: string;
   variant_id: string;

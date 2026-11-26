@@ -110,6 +110,7 @@ interface Context {
     quantity: number;
     version: number;
     new_offer_id?: string;
+    review_variant_version?: number;
   }) => Promise<Cart>;
   login: (token: string) => Promise<void>;
   logout: () => void;

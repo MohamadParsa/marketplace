@@ -54,6 +54,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		return Workspace{}, err
 	}
 	state.UserMutations = nil
+	state.AxisPlans = nil
 	state.Wishlist = nil
 	state.RecentlyViewed = nil
 	if state.Commerce != nil {

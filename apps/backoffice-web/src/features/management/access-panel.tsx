@@ -14,6 +14,7 @@ import type { CustomRole, RoleScope } from "../../shared/types";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
 const names: Record<string, string> = {
+ "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
   "users.read": "مشاهده فهرست کاربران",
   "users.write": "ایجاد و ویرایش کاربران",
   "users.password.reset": "تعیین و بازنشانی رمز موقت",

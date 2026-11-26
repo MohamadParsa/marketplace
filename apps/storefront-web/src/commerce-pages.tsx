@@ -533,6 +533,14 @@ export function CartPage() {
                       {dispatchTime(item.lead_days)}
                     </p>
                     <strong>{money(item.unit_price_toman)}</strong>
+                    {item.review_required && (
+                      <div className="buy-alert" role="status">
+                        <p>تنوع این کالا تغییر کرده؛ انتخاب قبلی: {item.previous_variant_label || "بدون محور"} · انتخاب فعلی: {item.variant_label || "بدون محور"}</p>
+                        <button className="buy-link" disabled={action.busy || !item.available} onClick={() => void action.run(async () => {
+                          await mutate({ action: "review", offer_id: item.offer_id, quantity: item.quantity, version: cart.version, review_variant_version: item.variant_version });
+                        })}>تأیید انتخاب فعلی</button>
+                      </div>
+                    )}
                     {item.price_changed && (
                       <p className="buy-alert">
                         قیمت از {money(item.previous_price_toman)} به‌روز شده؛

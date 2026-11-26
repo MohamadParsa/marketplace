@@ -269,6 +269,9 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 	}
 	seen := map[string]bool{}
 	for _, l := range lines {
+		if l.ReviewRequired {
+			return q, ErrCheckoutChanged
+		}
 		if seen[l.OfferID] || l.Quantity < 1 || l.Quantity > 99 {
 			return q, ErrInvalid
 		}

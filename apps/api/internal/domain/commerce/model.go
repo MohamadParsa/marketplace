@@ -101,9 +101,11 @@ type Cart struct {
 	UpdatedAt  time.Time  `json:"updated_at"`
 }
 type CartLine struct {
-	OfferID   string `json:"offer_id"`
-	Quantity  int    `json:"quantity"`
-	SeenPrice Amount `json:"seen_price"`
+	ReviewRequired       bool   `json:"review_required,omitempty"`
+	PreviousVariantLabel string `json:"previous_variant_label,omitempty"`
+	OfferID              string `json:"offer_id"`
+	Quantity             int    `json:"quantity"`
+	SeenPrice            Amount `json:"seen_price"`
 }
 type Address struct {
 	DetailVersion       int      `json:"detail_version,omitempty"`

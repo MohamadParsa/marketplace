@@ -34,6 +34,9 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("POST /storefront/account/address-map/reverse", h.Handle)
 	}
 	if h := cfg.Commerce; h != nil {
+		for _, route := range []string{"GET /backoffice/categories/{id}/axis-conversion", "POST /backoffice/axis-conversions/preview", "POST /backoffice/axis-conversions/prepare", "POST /backoffice/axis-conversions/apply"} {
+			mux.HandleFunc(route, h.AxisConversion)
+		}
 		for _, path := range []string{"query", "save", "export"} {
 			mux.HandleFunc("POST /backoffice/users/"+path, h.Users)
 		}

@@ -1,3 +1,4 @@
+import { AxisConversionDialog } from "./axis-conversion-dialog";
 import { useMemo, useState } from "react";
 import {
   Alert,
@@ -28,6 +29,8 @@ export function CategoryBindingsDialog({
   close: () => void;
 }) {
   const { state, execute, can } = useWorkspace();
+  const [conversion, setConversion] = useState(false);
+
   const [original, setOriginal] = useState(category),
     [bindings, setBindings] = useState(category.bindings ?? []),
     [search, setSearch] = useState(""),
@@ -105,6 +108,14 @@ export function CategoryBindingsDialog({
     ]);
     setKey(crypto.randomUUID());
   };
+  if (conversion)
+    return (
+      <AxisConversionDialog
+        category={category}
+        close={() => setConversion(false)}
+        completed={close}
+      />
+    );
   return (
     <Dialog
       open
@@ -289,8 +300,8 @@ export function CategoryBindingsDialog({
                           >
                             تسک ۱۰۹
                           </a>{" "}
-                          پیگیری می‌شود؛ هنوز عملیات تبدیل از این فرم اجرا
-                          نمی‌شود.
+                          مستند است؛ از «تبدیل کنترل‌شده محورها» در پایین این
+                          فرم استفاده کنید.
                         </p>
                       )}
                     </details>
@@ -300,6 +311,24 @@ export function CategoryBindingsDialog({
             })}
           {!assigned.filter((x) => matches(x.attribute)).length && (
             <p>خصوصیت منتسبی با این جست‌وجو پیدا نشد.</p>
+          )}
+        </section>
+        <section className="store-detail-box">
+          <h3>تبدیل محورهای تنوع</h3>
+          <p>
+            برای افزودن، حذف یا تغییر محورهای مصرف‌شده، نگاشت صریح و پیش‌نمایش
+            اثر لازم است.
+          </p>
+          <Button
+            disabled={
+              !can("category.axes.convert") || original.archived || pending
+            }
+            onClick={() => setConversion(true)}
+          >
+            تبدیل کنترل‌شده محورها
+          </Button>
+          {!can("category.axes.convert") && (
+            <p>مجوز مستقل تبدیل محور لازم است.</p>
           )}
         </section>
         <section
