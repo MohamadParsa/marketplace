@@ -44,3 +44,7 @@ execution_authorized: true
 ## بررسی نسخه اصلی محلی
 
 سایت5197 و پنل8098 پاسخ200 دادند؛ نمونه [محصول واقعیِ واردشده](http://localhost:5197/product/chr-10082) پس از به‌روزرسانی active=true و دارای تصویر/عرضه بود. این خواندن صرفاً smoke است؛ تست غیرفعال‌سازی با داده اصلی انجام نشد.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/99ee075a58b45ff93c8116500ea3a62c8540b425) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/13eb7c6db9ffafdcf0927fc01ae486c7554d03db) روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/116#issuecomment-7197602934) ثبت و #116 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45858044282) با source tree یکسان، شامل race/vet، موفق‌اند. [رسید ماشین‌خوان](issue-116-delivery.json).

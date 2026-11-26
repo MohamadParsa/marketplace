@@ -703,5 +703,17 @@
     "branch": "codex/local-parsa-integration-20261124",
     "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
     "deployed": false
-  }
+  },
+  "next_proposed_issue_order": [
+    117,
+    71,
+    70,
+    77,
+    87,
+    74,
+    72,
+    118,
+    119
+  ],
+  "next_proposal_execution_authorized": false
 }
