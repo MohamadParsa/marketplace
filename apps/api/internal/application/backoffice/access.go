@@ -16,12 +16,13 @@ const (
 func permissionRegistry() map[identity.RoleScope][]string {
 	return map[identity.RoleScope][]string{
 		identity.ScopeGlobal: {
+			StoresShippingRead, StoresShippingWrite, StoresShippingReview,
 			StoresPreparationWrite, StoresRead, StoresWrite, StoresMembersRead, StoresMediaWrite, StoresEligibilityWrite, CategoryAxesConvert, UsersRead, UsersWrite, UsersPasswordReset, GridExport, SalesRead, SalesWrite, WorkspaceRead, FinanceRead, CommerceWalletCredit, CouponsRead, CouponsCreate, CouponsEdit, CouponsActivate, "store.content-policy.set", "product.content.review", CommerceSettingsRead, CommercePaymentWrite, CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite, CommerceOrdersRead, CommerceOrdersConfirm, CommerceDepositsRead, CommerceDepositsReview, CommerceRefundsResolve, "category.publish", "banner.read", "banner.create", "banner.save", "banner.publish", "banner.media.set", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.media.update", "product.icon.set", "product.icon.remove", "store.create", "store.toggle", "category.create",
 			"category.archive", "product.publish", "product.reject", "shipping.update",
 			"case.start", "case.close", "case.refund", "case.assign", "order.deliver", "transfer.resolve",
 			"rule.toggle", "notification.retry",
 		},
-		identity.ScopeStore: {StoresPreparationRead, StoresPreparationWrite, GridExport, "products.content.write", "orders.read", string(identity.StoreOffersRead), string(identity.StoreStockWrite), "offers.create", "offers.price.write"},
+		identity.ScopeStore: {StoresShippingRead, StoresShippingWrite, StoresPreparationRead, StoresPreparationWrite, GridExport, "products.content.write", "orders.read", string(identity.StoreOffersRead), string(identity.StoreStockWrite), "offers.create", "offers.price.write"},
 	}
 }
 

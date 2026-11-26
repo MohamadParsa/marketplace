@@ -68,3 +68,5 @@
   .data-grid .data-table th,.data-grid .data-table td { padding: 11px 12px; }
 }
 @media(prefers-reduced-motion:reduce) { .nav-panel-arrow { transition: none; } }
+
+.store-shipping-stores{display:flex;gap:8px;flex-wrap:wrap;max-height:190px;overflow:auto;padding:4px}.store-shipping-diff{max-width:100%;overflow:auto;margin-block:16px}.store-shipping-diff table{width:100%;border-collapse:collapse;font-size:12px}.store-shipping-diff th,.store-shipping-diff td{padding:10px;border:1px solid #eadfe5;text-align:right;vertical-align:top;overflow-wrap:anywhere;min-width:100px}.store-shipping-diff th{background:#fcf8fa}.store-shipping-page .toolbar{flex-wrap:wrap}

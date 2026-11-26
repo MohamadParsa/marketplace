@@ -14,6 +14,9 @@ import type { CustomRole, RoleScope } from "../../shared/types";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
 const names: Record<string, string> = {
+  "stores.shipping.read": "مشاهدهٔ روش‌ها و نسخه‌های حمل فروشگاه",
+  "stores.shipping.write": "انتساب و درخواست نسخهٔ اختصاصی حمل فروشگاه",
+  "stores.shipping.review": "بررسی و انتشار نسخهٔ اختصاصی حمل فروشگاه",
   "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
   "stores.eligibility.write": "مدیریت مجوز دسته و روش فروش فروشگاه",
   "stores.preparation.read": "مشاهدهٔ وقفه و تقویم همین فروشگاه",

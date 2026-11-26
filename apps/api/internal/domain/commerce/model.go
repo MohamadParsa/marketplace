@@ -14,21 +14,22 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
-	Sales              *SalesSettings  `json:"sales,omitempty"`
-	Coupons            []Coupon        `json:"coupons,omitempty"`
-	CreditLots         []CreditLot     `json:"credit_lots,omitempty"`
-	CreditAccounts     []CreditAccount `json:"credit_accounts,omitempty"`
-	NextPurchaseNumber int64           `json:"next_purchase_number"`
-	Settings           Settings        `json:"settings"`
-	Carts              []Cart          `json:"carts"`
-	Addresses          []Address       `json:"addresses"`
-	Quotes             []Quote         `json:"quotes"`
-	Purchases          []Purchase      `json:"purchases"`
-	Deposits           []Deposit       `json:"deposits"`
-	Receipts           []Receipt       `json:"receipts"`
-	Entries            []WalletEntry   `json:"entries"`
-	Refunds            []RefundRequest `json:"refunds"`
-	Operations         []Operation     `json:"operations"`
+	StoreShipping      []StoreShippingPolicy `json:"store_shipping,omitempty"`
+	Sales              *SalesSettings        `json:"sales,omitempty"`
+	Coupons            []Coupon              `json:"coupons,omitempty"`
+	CreditLots         []CreditLot           `json:"credit_lots,omitempty"`
+	CreditAccounts     []CreditAccount       `json:"credit_accounts,omitempty"`
+	NextPurchaseNumber int64                 `json:"next_purchase_number"`
+	Settings           Settings              `json:"settings"`
+	Carts              []Cart                `json:"carts"`
+	Addresses          []Address             `json:"addresses"`
+	Quotes             []Quote               `json:"quotes"`
+	Purchases          []Purchase            `json:"purchases"`
+	Deposits           []Deposit             `json:"deposits"`
+	Receipts           []Receipt             `json:"receipts"`
+	Entries            []WalletEntry         `json:"entries"`
+	Refunds            []RefundRequest       `json:"refunds"`
+	Operations         []Operation           `json:"operations"`
 }
 type City struct {
 	ID     string `json:"id"`
@@ -66,6 +67,8 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
+	BaseVersion       int               `json:"base_version,omitempty"`
+	StoreRevision     int               `json:"store_revision,omitempty"`
 	Version           int               `json:"version,omitempty"`
 	CollectionMode    string            `json:"collection_mode,omitempty"`
 	DeliveryMode      string            `json:"delivery_mode,omitempty"`

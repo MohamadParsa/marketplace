@@ -37,6 +37,12 @@ approved_by: []
 
 ## محاسبه و مالی
 
+### قرارداد نسخهٔ فروشگاه در #122
+
+`GET/POST /{backoffice|seller}/stores/shipping` قرارداد خصوصیِ انتساب و نسخهٔ فروشگاه است؛ actionهای public/disable/draft/submit/approve/reject با base_version، stores=id/version و Idempotency-Key اجرا می‌شوند. فقط draft، method دارد. عمومی بدون کپی، اختصاصی فقط از live تأییدشده و با سقف محدودیت عمومی جاری حل می‌شود؛ draft/pending/rejected وارد خرید تازه نمی‌شوند. در اولین درخواست بدون live، روش اختصاصی قابل فروش نیست؛ در درخواست بعدی live قبلی تا تأیید تازه حفظ می‌شود.
+
+مجوزهای read/write فروشگاه از review سراسری جدا هستند؛ ادمین یک/همهٔ فروشگاه‌ها را تنظیم می‌کند، عضو فروشگاه فقط scope خودش. bulk فهرست کامل شناسه/نسخه و تصمیم بررسی تک‌فروشگاهی دارد. تغییر پایه قبل از تأیید نیازمند بازبینی/ارسال تازه است؛ تغییر نوع دریافت عمومی، نسخهٔ اختصاصی ناسازگار را تا تأیید تازه غیرقابل ارائه می‌کند. نام و collection_mode در نسخهٔ اختصاصی فقط‌خواندنی‌اند. [شواهد و DTOها](../../delivery/shipping-refinement-2026-11-26/issue-122-verification.md).
+
 ### قرارداد روش عمومی در #121
 
 - `GET /backoffice/shipping/methods`: فیلترهای query/active/collection_mode/delivery_mode/category_id/city_id و page/size (حداکثر۱۰۰)؛ پاسخ خصوصی rows/total/page/size، جغرافیای فعال و can_write. صفحهٔ حمل از همین صفحه‌بندی استفاده می‌کند؛ export گرید مجوز مستقل موجود را دارد.

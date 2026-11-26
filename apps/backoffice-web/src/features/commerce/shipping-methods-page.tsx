@@ -23,7 +23,7 @@ import type {
   Province,
 } from "../../../../../packages/commerce-client/types";
 
-type Method = Shipping & { version: number; unresolved_cities?: string[] };
+export type Method = Shipping & { version: number; unresolved_cities?: string[] };
 type Directory = {
   rows: Method[];
   total: number;
@@ -40,7 +40,7 @@ type Filters = {
   category_id: string;
   city_id: string;
 };
-class MethodError extends ApiError {
+export class MethodError extends ApiError {
   constructor(
     status: number,
     code?: string,
@@ -398,7 +398,7 @@ export function ShippingMethodsPage() {
   );
 }
 
-function MethodEditor({
+export function MethodEditor({
   initial,
   create,
   allowed,
@@ -406,6 +406,9 @@ function MethodEditor({
   close,
   save,
   reload,
+  custom = false,
+  scopeLabel,
+  bulk = false,
 }: {
   initial: Method;
   create: boolean;
@@ -414,6 +417,9 @@ function MethodEditor({
   close: () => void;
   save: (body: Method, key: string) => Promise<void>;
   reload: () => Promise<Method>;
+  custom?: boolean;
+  scopeLabel?: string;
+  bulk?: boolean;
 }) {
   const { state } = useWorkspace();
   const categories = state.categories ?? [];
@@ -425,6 +431,7 @@ function MethodEditor({
     [stale, setStale] = useState(false),
     [category, setCategory] = useState(""),
     [citySearch, setCitySearch] = useState("");
+  const [batchConfirmed, setBatchConfirmed] = useState(false);
   function patch(value: Partial<Method>) {
     setDraft({ ...draft, ...value });
     setKey(crypto.randomUUID());
@@ -442,6 +449,7 @@ function MethodEditor({
     draft.daily_capacity >= 0 &&
     draft.daily_capacity <= 1000000;
   const valid =
+    (!bulk || batchConfirmed) &&
     !!draft.name.trim() &&
     dayValid &&
     capacityValid &&
@@ -496,9 +504,11 @@ function MethodEditor({
   return (
     <Dialog open fullWidth maxWidth="md" onClose={() => !busy && close()}>
       <DialogTitle>
-        {create ? "روش حمل جدید" : `روش حمل ${draft.name}`}
+        {custom ? `پیش‌نویس اختصاصی ${draft.name}` : create ? "روش حمل جدید" : `روش حمل ${draft.name}`}
       </DialogTitle>
       <DialogContent className="shipping-methods-page">
+        {custom && <Alert severity="info">نوع دریافت هزینه از روش عمومی ارث می‌رسد و فقط‌خواندنی است. پوشش شهر/دسته فقط می‌تواند محدودتر شود. ذخیره، پیش‌نویس می‌سازد؛ انتشار پس از ارسال و تأیید پلتفرم است. {scopeLabel}</Alert>}
+        {bulk && <FormControlLabel label="ساخت پیش‌نویس برای همهٔ فروشگاه‌های نمایش‌داده‌شده را تأیید می‌کنم" control={<Checkbox checked={batchConfirmed} onChange={e=>setBatchConfirmed(e.target.checked)} disabled={busy}/>} />}
         {!allowed && (
           <Alert severity="info">فقط مشاهده؛ دسترسی ویرایش ندارید.</Alert>
         )}
@@ -537,6 +547,7 @@ function MethodEditor({
           <TextField
             fullWidth
             label="نام روش حمل"
+            disabled={custom}
             value={draft.name}
             error={!!fields.name}
             helperText={fields.name}
@@ -546,6 +557,7 @@ function MethodEditor({
             label="فعال"
             control={
               <Checkbox
+                disabled={custom}
                 checked={draft.active}
                 onChange={(event) => patch({ active: event.target.checked })}
               />
@@ -560,6 +572,7 @@ function MethodEditor({
             ).map(([value, label]) => (
               <Button
                 key={value}
+                disabled={custom}
                 aria-pressed={draft.collection_mode === value}
                 variant={
                   draft.collection_mode === value ? "contained" : "outlined"
@@ -852,7 +865,7 @@ function MethodEditor({
             disabled={busy || !valid || stale}
             onClick={() => void submit()}
           >
-            ذخیرهٔ روش حمل
+            {custom ? "ذخیرهٔ پیش‌نویس اختصاصی" : "ذخیرهٔ روش حمل"}
           </Button>
         )}
       </DialogActions>

@@ -9,6 +9,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -345,8 +346,9 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 			if st.ID != storeID || !st.Active {
 				continue
 			}
-			for _, method := range c.Settings.Shipping {
-				if method.ID == in.Shipping[storeID] && method.DeliveryMode != "slots" && ShippingMethodEligible(w, method, q.Address, storeID, q.Lines) {
+			for _, base := range c.Settings.Shipping {
+				method, allowed := EffectiveStoreShipping(w, storeID, base)
+				if allowed && method.ID == in.Shipping[storeID] && method.DeliveryMode != "slots" && storeShippingEligible(w, base, method, q.Address, storeID, q.Lines) {
 					preparation, from, to, err := shipmentPreparation(c.Settings, st, method, now)
 					if err != nil {
 						return q, err
@@ -475,9 +477,33 @@ func (s *Service) PrepareCheckout(ctx context.Context, a identity.User) (Prepare
 		}
 	}
 	shipping := []ShippingMethodInput{}
-	for _, m := range settings.Shipping {
-		if m.Active && m.DeliveryMode != "slots" {
-			shipping = append(shipping, m)
+	storeIDs := map[string]bool{}
+	for _, item := range cart.Items {
+		storeIDs[item.StoreID] = true
+	}
+	orderedStores := make([]string, 0, len(storeIDs))
+	for id := range storeIDs {
+		orderedStores = append(orderedStores, id)
+	}
+	sort.Strings(orderedStores)
+	for _, storeID := range orderedStores {
+		for _, base := range c.Settings.Shipping {
+			m, allowed := EffectiveStoreShipping(w, storeID, base)
+			if allowed && m.DeliveryMode != "slots" {
+				row := shippingMethodInput(m)
+				row.StoreIDs = []string{storeID}
+				// Legacy checkout consumes city names; canonical checks remain on the server.
+				for _, province := range c.Settings.Geography {
+					for _, city := range province.Cities {
+						for _, id := range row.CityIDs {
+							if city.ID == id {
+								row.Cities = append(row.Cities, city.Name)
+							}
+						}
+					}
+				}
+				shipping = append(shipping, row)
+			}
 		}
 	}
 	return PrepareView{Cart: cart, Addresses: addresses, Shipping: shipping, Methods: methods, WalletBalanceToman: commerce.Toman(balance), WalletAvailableToman: commerce.Toman(balance - held), Currency: "toman"}, nil

@@ -25,6 +25,8 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case StoresShippingRead, StoresShippingWrite, StoresShippingReview:
+		return role == identity.RoleOperations
 	case "product.content.review", "store.content-policy.set":
 		return role == identity.RoleOperations
 	case CouponsCreate, CouponsEdit, CouponsActivate:
@@ -106,7 +108,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	}
 	state.Commerce = nil
 	state.ProductReviews = nil
-	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") })
+	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") || strings.HasPrefix(a.Action, "stores.shipping.") })
 	state.IconMedia = nil
 	state.BannerAssets = nil
 	state.Banners = nil

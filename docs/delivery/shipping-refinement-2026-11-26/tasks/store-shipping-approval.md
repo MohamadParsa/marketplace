@@ -3,10 +3,10 @@ id: FEAT-SHIP-003
 title: انتساب حمل و نسخه اختصاصی فروشگاه با تأیید پلتفرم
 status: in-review
 owner: eliassarband
-updated: 2026-11-26
+updated: 2026-11-27
 related: [DOM-SHIPPING-POLICY-001, API-SHIPPING-METHODS-PLAN-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 priority: P1
 ---
@@ -38,12 +38,17 @@ Issue: [#122](https://github.com/MohamadParsa/marketplace/issues/122) · مسئ�
 
 ## پذیرش
 
-- [ ] FEAT-SHIP-003-AC01: انتخاب روش عمومی بدون کپی اضافی کار کند؛ درخواست اختصاصی draft از نسخه معلوم بسازد و داده سایر فروشگاه‌ها تغییر نکند.
-- [ ] FEAT-SHIP-003-AC02: pending/rejected عمومی نشود، approval فقط به ادمین مجاز و با diff/version/reason؛ ویرایش پس از تأیید دوباره نیازمند approval باشد.
-- [ ] FEAT-SHIP-003-AC03: گسترش شهر/دسته از سقف عمومی و دورزدن active از API هم رد شود؛ تغییر پایه هم‌زمان، conflict/review تازه بدهد و تاریخچه خرید محفوظ باشد.
-- [ ] FEAT-SHIP-003-AC04: مجوز چندفروشگاهی، دو تصمیم هم‌زمان، retry و restart، فهرست/فیلتر وضعیت و تجربه پنل A شاهد داشته باشند؛ تغییر collection_mode تا تعیین Q07 پذیرفته نشود.
+- [x] FEAT-SHIP-003-AC01: انتخاب روش عمومی بدون کپی اضافی کار کند؛ درخواست اختصاصی draft از نسخه معلوم بسازد و داده سایر فروشگاه‌ها تغییر نکند.
+- [x] FEAT-SHIP-003-AC02: pending/rejected عمومی نشود، approval فقط به ادمین مجاز و با diff/version/reason؛ ویرایش پس از تأیید دوباره نیازمند approval باشد.
+- [x] FEAT-SHIP-003-AC03: گسترش شهر/دسته از سقف عمومی و دورزدن active از API هم رد شود؛ تغییر پایه هم‌زمان، conflict/review تازه بدهد و تاریخچه خرید محفوظ باشد.
+- [x] FEAT-SHIP-003-AC04: مجوز چندفروشگاهی، دو تصمیم هم‌زمان، retry و restart، فهرست/فیلتر وضعیت و تجربه پنل A شاهد داشته باشند؛ نوع collection_mode طبق پاسخ Q07 از عمومی ارث برسد و تغییر مستقل آن رد شود.
 
 ## منابع و طراحی
 
 [قواعد مشترک](../../../domains/shipping/method-policies.md) · [طرح فنی](../../../architecture/contracts/shipping-methods-plan.md) · [پرسش‌های باز](../../../product/open-questions.md#shipping-policy-20261126) · [برنامه و عدم هم‌پوشانی](../README.md). طرح A؛ انتخاب‌ها به‌صورت باکس/چیپ خوانا و بدون dropdown تازه، به‌جز cascade استان/شهر موجود. حق مجاز در سرور، version/idempotency، loading/empty/error/forbidden و حفظ draft در خطا الزامی‌اند.
 
+
+
+## تحویل
+
+[گزارش تست، مجوزها و تصاویر #122](../issue-122-verification.md). وضعیت مشخصات in-review از تکمیل پیاده‌سازی جداست؛ برنامهٔ ساعت و رزرو ظرفیت در #16 ادامه دارند.
