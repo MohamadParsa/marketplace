@@ -25,11 +25,13 @@ type Category struct {
 }
 
 type Brand struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Active  bool   `json:"active"`
-	IconID  string `json:"icon_id,omitempty"`
-	Version int    `json:"version"`
+	EnglishName string `json:"english_name,omitempty"`
+	Description string `json:"description,omitempty"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Active      bool   `json:"active"`
+	IconID      string `json:"icon_id,omitempty"`
+	Version     int    `json:"version"`
 }
 
 // IconMedia keeps inline bytes in memory; PostgreSQL stores bytes separately and returns a stored reference.

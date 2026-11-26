@@ -239,8 +239,32 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			return nil
 		}
 	case "catalog.brand.create", "catalog.brand.update":
+		if c.Action == "catalog.brand.update" {
+			found := false
+			for _, b := range w.Brands {
+				if b.ID == c.Target {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return ErrNotFound
+			}
+		}
+		// Keep old blank optional names compatible; nonblank names are unique.
+		key := func(v string) string {
+			return strings.ToLower(strings.TrimSpace(strings.NewReplacer("ي", "ی", "ك", "ک").Replace(v)))
+		}
+		for _, b := range w.Brands {
+			if c.Action == "catalog.brand.update" && b.ID == c.Target {
+				continue
+			}
+			if (c.Action == "catalog.brand.create" && b.ID == id) || key(b.Name) == key(in.Name) || (in.EnglishName != "" && key(b.EnglishName) == key(in.EnglishName)) {
+				return ErrConflict
+			}
+		}
 		if c.Action == "catalog.brand.create" {
-			w.Brands = append(w.Brands, catalog.Brand{ID: id, Name: in.Name, Active: in.Published, Version: 1})
+			w.Brands = append(w.Brands, catalog.Brand{ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: strings.TrimSpace(in.Description), Active: in.Published, Version: 1})
 			return nil
 		}
 		for i := range w.Brands {
@@ -250,6 +274,8 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 					return ErrConflict
 				}
 				x.Name = in.Name
+				x.EnglishName = in.EnglishName
+				x.Description = strings.TrimSpace(in.Description)
 				x.Active = in.Published
 				x.Version++
 				return nil

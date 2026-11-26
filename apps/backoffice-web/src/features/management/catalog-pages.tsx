@@ -1,11 +1,7 @@
+import { BrandCatalogGrid } from "./brand-catalog-grid";
 import { CategorySalesDialog } from "../commerce/sales-methods-page";
 import { CategoryCatalogGrid } from "./category-catalog-grid";
 import { ManagementPage } from "./management-page";
-import {
-  CatalogIcon,
-  CatalogIconDialog,
-  type IconTarget,
-} from "./catalog-icon";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   Alert,
@@ -24,7 +20,6 @@ import type {
   CategorySEO,
 } from "../../shared/types";
 import { CategoryTree } from "./category-tree";
-import { PaginationControls, usePagedRows } from "../../shared/pagination";
 import {
   ProductContentFields,
   emptyProductContent,
@@ -58,8 +53,6 @@ export function CatalogPage({
   const opened = useRef("");
   const tab = section === "home" ? "rails" : section;
   const [salesCategory, setSalesCategory] = useState<string>();
-  const [iconTarget, setIconTarget] = useState<IconTarget>();
-  const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [editing, setEditing] = useState<{
@@ -246,12 +239,6 @@ export function CatalogPage({
       /* form stays open */
     }
   }
-  const query = search.toLocaleLowerCase();
-  const brandRows = usePagedRows(
-    (state.brands ?? []).filter((b) =>
-      b.name.toLocaleLowerCase().includes(query),
-    ),
-  );
   return (
     <>
       {section !== "products" && (
@@ -293,15 +280,6 @@ export function CatalogPage({
             : "panel home-admin-panel"
         }
       >
-        {tab === "brands" && (
-          <input
-            className="search"
-            aria-label="جست‌وجو در کاتالوگ"
-            placeholder="جست‌وجو در این بخش…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        )}
         {tab === "products" && (
           <ManagementPage
             section="products"
@@ -312,50 +290,7 @@ export function CatalogPage({
           <CategoryCatalogGrid onEdit={(row) => open("category", row)} />
         )}
         {tab === "brands" && (
-          <>
-            <div className="toolbar">
-              <h2>برندها</h2>
-              <Button
-                variant="contained"
-                disabled={busy || !can("catalog.brand.create", "management")}
-                onClick={() => open("brand")}
-              >
-                برند جدید
-              </Button>
-            </div>
-            <div className="home-admin-list">
-              {brandRows.rows.map((b) => (
-                <article key={b.id}>
-                  <div className="catalog-name">
-                    <CatalogIcon
-                      kind="brand"
-                      name={b.name}
-                      iconId={b.icon_id}
-                    />
-                    <b>{b.name}</b>
-                  </div>
-                  <span>{b.active ? "فعال" : "غیرفعال"}</span>
-                  <Button
-                    disabled={
-                      busy || !can("catalog.brand.update", "management")
-                    }
-                    onClick={() => open("brand", b)}
-                  >
-                    ویرایش برند
-                  </Button>
-                  <Button
-                    disabled={
-                      busy || !b.active || !can("brand.icon.set", "management")
-                    }
-                    onClick={() => setIconTarget({ ...b, kind: "brand" })}
-                  >
-                    آیکن
-                  </Button>
-                </article>
-              ))}
-            </div>
-            <PaginationControls {...brandRows.controls} />
-          </>
+          <BrandCatalogGrid onEdit={(row) => open("brand", row)} />
         )}
         {tab === "rails" && (
           <>
@@ -435,12 +370,6 @@ export function CatalogPage({
           </>
         )}
       </section>
-      {iconTarget && (
-        <CatalogIconDialog
-          target={iconTarget}
-          close={() => setIconTarget(undefined)}
-        />
-      )}
       <Dialog
         open={!!editing}
         onClose={() => !busy && closeEditing()}
@@ -486,45 +415,61 @@ export function CatalogPage({
                       }
                     />
                   </label>
-                  {editing.kind !== "brand" && (
-                    <>
+                  <>
+                    <label>
+                      نام انگلیسی
+                      <input
+                        required={editing.kind === "category"}
+                        dir="ltr"
+                        maxLength={160}
+                        value={editing.input.english_name}
+                        onChange={(e) =>
+                          setEditing({
+                            ...editing,
+                            input: {
+                              ...editing.input,
+                              english_name: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </label>
+                    {editing.kind !== "product" && (
                       <label>
-                        نام انگلیسی
-                        <input
-                          required={editing.kind === "category"}
-                          dir="ltr"
-                          maxLength={160}
-                          value={editing.input.english_name}
+                        توضیحات
+                        <textarea
+                          aria-label="توضیحات"
+                          maxLength={4000}
+                          rows={4}
+                          value={editing.input.description}
                           onChange={(e) =>
                             setEditing({
                               ...editing,
                               input: {
                                 ...editing.input,
-                                english_name: e.target.value,
+                                description: e.target.value,
                               },
                             })
                           }
                         />
                       </label>
-                      {editing.kind === "category" && (
-                        <label>
-                          توضیحات
-                          <textarea
-                            maxLength={4000}
-                            rows={4}
-                            value={editing.input.description}
-                            onChange={(e) =>
-                              setEditing({
-                                ...editing,
-                                input: {
-                                  ...editing.input,
-                                  description: e.target.value,
-                                },
-                              })
-                            }
-                          />
-                        </label>
-                      )}
+                    )}
+                  </>
+                  {editing.kind === "brand" && (
+                    <>
+                      <Alert
+                        severity={editing.input.published ? "info" : "warning"}
+                      >
+                        {editing.input.published
+                          ? "برند فعال در نمایش عمومی استفاده می‌شود."
+                          : "محصولات این برند تا فعال‌شدن آن از نمایش عمومی خارج می‌شوند؛ اتصال محصولات و سفارش‌های گذشته محفوظ می‌مانند."}
+                        {editing.id &&
+                          ` تعداد محصولات متصل: ${(state.products ?? []).filter((p) => p.brand_id === editing.id).length.toLocaleString("fa-IR")}`}
+                      </Alert>
+                      <small>
+                        تصویر از دکمه «تصویر برند» روی ردیف مدیریت می‌شود؛ ابتدا
+                        اطلاعات برند را ذخیره کنید.
+                      </small>
                     </>
                   )}
                   {editing.kind === "category" && editing.id && (

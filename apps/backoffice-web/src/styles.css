@@ -1092,3 +1092,5 @@ dd {
 .store-policy-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
 .store-policy-name-preview { font-weight: 700; color: var(--primary,#a61946); padding: 12px; background: #fcf4f7; border-radius: 10px; }
 @media(max-width:600px) { .store-policy-method { grid-template-columns: 1fr; } }
+
+.brand-description { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 22rem; }

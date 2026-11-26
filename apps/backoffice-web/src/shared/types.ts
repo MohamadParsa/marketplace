@@ -85,6 +85,8 @@ export interface Category {
   version: number;
 }
 export interface Brand {
+  english_name?: string;
+  description?: string;
   id: string;
   name: string;
   active: boolean;

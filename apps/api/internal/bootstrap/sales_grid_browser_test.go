@@ -50,6 +50,12 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 			w.Stores = append(w.Stores, store.Store{ID: fmt.Sprintf("store-browser-%02d", i), Name: fmt.Sprintf("فروشگاه نمونه %02d", i), Active: true, City: "تهران", Profile: &store.Profile{Province: "تهران"}})
 		}
 	}
+	if os.Getenv("CHERRIVA_BRANDS_BROWSER") == "1" {
+		w = brandManagementSeed(t)
+		for i := 0; i < 45; i++ {
+			w.Brands = append(w.Brands, catalog.Brand{ID: fmt.Sprintf("brand-browser-%02d", i), Name: fmt.Sprintf("برند نمونه %02d", i), EnglishName: fmt.Sprintf("Sample %02d", i), Active: i%2 == 0, Version: 1})
+		}
+	}
 	repo := backofficememory.New(w)
 	for _, entry := range []struct{ port, surface, app string }{{"8097", "backoffice", "backoffice-web"}, {"5199", "storefront", "storefront-web"}} {
 		listener, e := net.Listen("tcp", "127.0.0.1:"+entry.port)

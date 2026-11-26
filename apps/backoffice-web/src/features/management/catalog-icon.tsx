@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { CategoryOutlined, LabelOutlined } from "@mui/icons-material";
 import { api } from "../../shared/api";
-import { useWorkspace, can } from "../../shared/workspace";
+import { useWorkspace } from "../../shared/workspace";
 
 export type IconTarget = {
   kind: "category" | "brand";
@@ -58,7 +58,7 @@ export function CatalogIconDialog({
   target: IconTarget;
   close: () => void;
 }) {
-  const { state, role, uploadIcon, execute } = useWorkspace();
+  const { state, can, uploadIcon, execute } = useWorkspace();
   const [selected, setSelected] = useState<File>();
   const [preview, setPreview] = useState("");
   const [error, setError] = useState("");
@@ -68,7 +68,8 @@ export function CatalogIconDialog({
   const uploadKey = useRef(crypto.randomUUID());
   const deleteKey = useRef(crypto.randomUUID());
   const policy = state.icon_policy;
-  const editable = can(role, "management") && !!policy;
+  const editable = can(`${target.kind}.icon.set`, "management") && !!policy;
+  const removable = can(`${target.kind}.icon.remove`, "management") && !!policy;
   useEffect(() => {
     if (!selected) {
       setPreview("");
@@ -123,7 +124,12 @@ export function CatalogIconDialog({
     }
   }
   async function save(remove: boolean) {
-    if (!editable || pending || selectionPending || (!remove && !selected))
+    if (
+      (remove ? !removable : !editable) ||
+      pending ||
+      selectionPending ||
+      (!remove && !selected)
+    )
       return;
     setPending(true);
     setError("");
@@ -167,6 +173,13 @@ export function CatalogIconDialog({
         آیکن {target.kind === "category" ? "دسته" : "برند"} {target.name}
       </DialogTitle>
       <DialogContent>
+        {target.kind === "brand" &&
+          !(state.brands ?? []).find((b) => b.id === target.id)?.active && (
+            <Alert severity="info">
+              تصویر برند غیرفعال در سایت نمایش داده نمی‌شود؛ تصویر ذخیره‌شده
+              محفوظ است و پس از فعال‌سازی نمایش داده می‌شود.
+            </Alert>
+          )}
         <div className="icon-previews">
           <div>
             <small>تصویر ثبت‌شده</small>
@@ -223,7 +236,9 @@ export function CatalogIconDialog({
         </Button>
         <Button
           color="warning"
-          disabled={!editable || !target.icon_id || pending || selectionPending}
+          disabled={
+            !removable || !target.icon_id || pending || selectionPending
+          }
           onClick={() => void save(true)}
         >
           بازگشت به پیش‌فرض
