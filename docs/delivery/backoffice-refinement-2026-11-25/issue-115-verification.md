@@ -38,3 +38,7 @@ execution_authorized: true
 ## محدودیت و مرز انتشار
 
 تصویر بعد از ذخیره اطلاعات از اکشن همان ردیف مدیریت می‌شود؛ ذخیره متن و فایل دو اقدام صریح و نسخه‌دارند. برند غیرفعال در پیش‌نمایش عمومی آیکن fallback دارد؛ فایل محفوظ و این رفتار توضیح داده شده است. فیلتر و صفحه‌بندی روی workspace مجاز فعلی در کلاینت انجام می‌شود، نه query حجیم سرور. نام‌های انگلیسی قدیمی حدس زده یا بازنویسی نشدند. سند in-review است؛ main/Liara ادغام یا مستقر نشده‌اند.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/4ec243011c3c37ddb2fbbc6da9976037e084915e) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/9ff99146b273d49b23d9f3e8ba37897e7a8ea91d) روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/115#issuecomment-7191924505) ثبت و #115 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45818578876) با source tree یکسان، شامل race/vet، موفق‌اند. [رسید ماشین‌خوان](issue-115-delivery.json).
