@@ -1,4 +1,5 @@
 import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
+import { SupplyOverduePanel } from "../operations/supply-overdue-panel";
 import { Link } from "react-router-dom";
 import {
   BusinessContentEditor,
@@ -1300,6 +1301,7 @@ export function SellerCheckoutPage({ token }: { token: string }) {
         </div>
         <Button onClick={() => void load()}>تازه‌سازی</Button>
       </div>
+      <SupplyOverduePanel />
       {error && <Alert severity="error">{error}</Alert>}
       <section className="panel commerce-list">
         {rows === null ? (

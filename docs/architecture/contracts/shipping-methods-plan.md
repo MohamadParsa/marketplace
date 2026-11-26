@@ -102,3 +102,9 @@ approved_by: []
 wizard جاری `shipping-options` را با آدرس و در ادامهٔ خرید با purchase_id مصرف می‌کند؛ `shipping_selections` در preview/quote/accept و بازسازی خرید حفظ می‌شود. نبود روش یا خطای409 مانع ادامه است و موعد دیگری خودکار انتخاب نمی‌شود. درخواست اولیهٔ جعلی400؛ نامعتبرشدن quote پذیرفتنی قبلی `checkout_changed`409 است. پس‌کرایه fee نمایشی خالی و shipping_total صفر دارد؛ prepaid صفر به معنای رایگان است.
 
 پیش از قطعیت، شرایط انسانی حمل و قواعد مؤثر آماده‌سازی دوباره با snapshot مقایسه می‌شوند؛ ظرفیت و version صرف، دلیل لغو hold نیستند. تغییر شرایط، release و requires-reconfirmation بدون debit ایجاد می‌کند. سفارش دارای shipping_terms و delivery snapshot است؛ projection فروشنده collection_mode/shipping_fee_toman/delivery و نسخه‌های روش/فروشگاه را فقط در محدودهٔ orders.read همان فروشگاه برمی‌گرداند. سفارش قطعی از تنظیم جاری بازسازی نمی‌شود. [شواهد #123](../../delivery/shipping-refinement-2026-11-26/issue-123-verification.md).
+## قرارداد اجراشدهٔ پایش تأمین #10
+
+`GET /{backoffice|seller}/orders/supply-overdue` با search/store_id اختیاری، صف دارای پرداخت قطعی و وضعیت awaiting-supply را از لحظهٔ ReadyAt تاریخی برمی‌گرداند. پاسخ شامل checked_at، rows و missing_deadline_count است؛ هر ردیف شماره/شناسه سفارش، فروشگاه، paid_at، deadline، overdue_minutes، lead_days/day_basis/calendar_version دارد. مبدأ و موعد از Preparation snapshot سفارش‌اند؛ تنظیم جاری روی آن اعمال نمی‌شود. نبود snapshot معتبر جدا گزارش می‌شود.
+
+ادمین به commerce.orders.read و seller به عضویت+orders.read همان فروشگاه نیاز دارد؛ پاسخ و شمار فاقد موعد scoped و no-store هستند. query فقط‌خواندنی است و تکرار آن هیچ اعلان، تأیید، لغو یا عملیات مالی نمی‌سازد. صف در صفحهٔ باز هر۶۰ثانیه و با دکمهٔ بررسی فوری تازه می‌شود؛ پیگیری به جزئیات/پشتیبانی موجود پیوند دارد. [آزمون و تحویل #10](../../delivery/shipping-refinement-2026-11-26/issue-10-verification.md).
+

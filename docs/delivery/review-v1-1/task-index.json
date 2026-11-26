@@ -406,18 +406,16 @@
       "title": "وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش",
       "priority": "P0",
       "wave": "W2",
-      "implementation_status": "in-progress",
+      "implementation_status": "done",
       "document_status": "in-review",
-      "owner": "unassigned",
+      "owner": "eliassarband",
       "dependencies": [
         "CV-IAM-06",
         "CV-CAT-06",
         "CV-OPS-01",
         "CV-R2-13"
       ],
-      "questions": [
-        "R2-Q05"
-      ],
+      "questions": [],
       "related": [
         "DOM-SHIPPING-001",
         "DOM-ORDERS-001"
@@ -435,18 +433,20 @@
         "در روش بدون اسلات، بازه = آماده‌شدن + min/max حمل باشد؛ شمارش روز و تعطیلی قابل تنظیم طبق قرارداد سنجیده شود.",
         "پایان وقفه بدون تأیید در صف بررسی admin دیده شود و به‌تنهایی تأیید/لغو/refund ایجاد نکند."
       ],
-      "blocked": "ساعت قطع عدد مصوب ندارد؛ R15 تا تصمیم تازه برقرار. نسبت هشدار یک‌روز قبلی و پایان وقفه و نسخه/اثر تقویم پیش از پذیرش همان مهلت تکمیل شود. مهاجرت تولید فرضی مانع پروژه صفر نیست.",
-      "technical": "Store lead و order snapshot؛ تنظیم تقویم نسخه‌دار و min/max نامنفی و مرتب؛ مجوز فروشگاه/ارسال. خطای ورودی یا نسخه قدیمی قابل فهم.",
-      "evidence": "integration با دو فروشنده، سفارش قبلی و quote جدید، تقویم متفاوت و min/max؛ گزارش صف بی‌پاسخی با شاهد عدم تغییر خودکار سفارش.",
+      "blocked": "",
+      "technical": "GET scoped روی موعد Preparation.ReadyAt؛ بدون mutation یا تولید اعلان/مالی",
+      "evidence": "issue-10-verification.md",
       "amends": [
         "CV-IAM-06",
         "CV-CAT-06",
         "CV-OPS-05",
         "CV-OPS-06"
       ],
-      "github_state": "open",
-      "audit_disposition": "فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است",
-      "remaining_scope": "فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است"
+      "github_state": "closed",
+      "audit_disposition": "صف پایش خواندنی با snapshot پرداخت؛ شواهد HTTP/PostgreSQL/مرورگر",
+      "remaining_scope": "",
+      "execution_authorized": true,
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-10-verification.md"
     },
     {
       "id": "CV-R2-11",

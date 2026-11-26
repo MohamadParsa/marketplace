@@ -96,9 +96,11 @@
     {
       "number": 10,
       "owner": "overdue-supply-monitoring-only",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "calendar_dependency": 120,
-      "execution_authorized": true
+      "execution_authorized": true,
+      "state": "closed",
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-10-verification.md"
     }
   ],
   "open_questions": [],

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SupplyOverduePanel } from "./supply-overdue-panel";
 import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
@@ -24,7 +25,7 @@ export function OperationsPage({
     fields: Field[];
     command: Command;
   } | null>(null);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => section==="support" ? new URLSearchParams(location.search).get("order") ?? "" : "");
   const open = (
     title: string,
     command: Command,
@@ -56,6 +57,7 @@ export function OperationsPage({
         }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
       />
+      {section === "orders" && !selected && <SupplyOverduePanel />}
       {selected ? (
         <>
           <Link to="/orders">← بازگشت به سفارش‌ها</Link>
