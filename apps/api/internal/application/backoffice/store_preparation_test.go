@@ -132,6 +132,18 @@ func TestStorePreparationTwoStageCheckoutAndPaidSnapshot(t *testing.T) {
 	h.clock.Advance(10 * time.Minute) // Exactly the cutoff: payment, not the deposit, starts preparation.
 	b, e := h.s.ConfirmPurchase(ctx, h.admin, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
 	p = decodeCommerce[backoffice.PurchaseView](t, b, e)
+	if p.Status != "requires-reconfirmation" {
+		t.Fatal("cutoff must not silently move a reserved dispatch date", p.Status)
+	}
+	state, _ := h.repo.Snapshot(ctx)
+	if state.Commerce.ShippingReservations[0].Status != "released" || len(state.Commerce.Entries) != 1 {
+		t.Fatal("old capacity or financial state", state.Commerce.ShippingReservations, state.Commerce.Entries)
+	}
+	b, e = h.s.CreateQuote(ctx, h.buyer, backoffice.QuoteInput{PurchaseID: p.ID, AddressID: p.Quote.Address.ID, Shipping: map[string]string{"store1": "post"}, PaymentMethodID: "local"}, h.key())
+	updated := decodeCommerce[backoffice.QuoteView](t, b, e)
+	p = h.accept(t, h.buyer, updated)
+	b, e = h.s.ConfirmPurchase(ctx, h.admin, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
+	p = decodeCommerce[backoffice.PurchaseView](t, b, e)
 	paid, _ := h.repo.Snapshot(ctx)
 	snap := paid.Orders[0].Preparation
 	if snap == nil || !snap.SourceAt.Equal(h.clock.Now()) || snap.ReadyAt.Format("2006-01-02") != "2026-11-25" || paid.Orders[0].DeliveryFrom != "2026-11-26" {

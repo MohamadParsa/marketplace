@@ -127,10 +127,11 @@ func findPurchase(c *commerce.State, id string) *commerce.Purchase {
 	}
 	return nil
 }
-func releaseQuote(w *Workspace, q *commerce.Quote) {
+func releaseQuote(w *Workspace, q *commerce.Quote, now time.Time) {
 	if q.Status != "reserved" {
 		return
 	}
+	releaseShipping(w, q.ID, false, now)
 	if q.Credit != nil && q.Credit.Status == "held" {
 		q.Credit.Status = "released"
 	}
@@ -154,7 +155,7 @@ func expireCommerce(w *Workspace, now time.Time) bool {
 	for i := range w.Commerce.Quotes {
 		q := &w.Commerce.Quotes[i]
 		if q.Status == "reserved" && !now.Before(q.ReservedUntil) {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "expired"
 			if p := findPurchase(w.Commerce, q.PurchaseID); p != nil && p.Status != "confirmed" && p.Status != "cancelled" {
 				p.Status = "requires-reconfirmation"

@@ -87,8 +87,10 @@
     {
       "number": 16,
       "owner": "daily-method-capacity-and-slot-schedule-with-atomic-reservation",
-      "implementation_status": "todo",
-      "execution_authorized": true
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-16-verification.md",
+      "state": "closed"
     },
     {
       "number": 10,

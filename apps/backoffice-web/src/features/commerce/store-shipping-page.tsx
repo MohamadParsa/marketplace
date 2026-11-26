@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWorkspace } from "../../shared/workspace";
+import {ShippingCapacityDialog} from "./shipping-capacity-dialog";
 import { DataTable, PageHeader } from "../../shared/components";
 import {
   MethodEditor,
@@ -103,6 +104,7 @@ export function StoreShippingPage() {
     row: Binding;
     command: Command;
   }>();
+  const [capacity,setCapacity]=useState<Binding>();
   async function request(body?: Command, key?: string): Promise<Directory> {
     const response = await fetch(root, {
       method: body ? "POST" : "GET",
@@ -132,7 +134,7 @@ export function StoreShippingPage() {
   const directory = query.data;
   const store =
     directory?.stores.find((s) => s.id === selected) ?? directory?.stores[0];
-  const busy = !!editing || !!decision;
+  const busy = !!editing || !!decision || !!capacity;
   const allAllowed =
     surface === "backoffice" &&
     !!directory?.stores.length &&
@@ -382,6 +384,7 @@ export function StoreShippingPage() {
                     <Button disabled={busy} onClick={() => action(row, "view")}>
                       جزئیات و تفاوت‌ها
                     </Button>
+                  <Button disabled={busy} onClick={()=>setCapacity(row)}>ظرفیت روز</Button>
                     {store.can_review && row.draft?.status === "submitted" && (
                       <>
                         <Button
@@ -476,6 +479,7 @@ export function StoreShippingPage() {
           }}
         />
       )}
+      {capacity&&store&&<ShippingCapacityDialog storeID={store.id} methodID={capacity.base.id} name={`${store.name} / ${capacity.base.name}`} close={()=>setCapacity(undefined)}/>}
     </div>
   );
 }
@@ -500,6 +504,7 @@ function ShippingDecision({
   const review = command.action === "approve" || command.action === "reject";
   const view = command.action === "view";
   const fields: [keyof Method, string][] = [
+    ["schedule","برنامهٔ روزها و ساعت"],
     ["collection_mode", "دریافت هزینه"],
     ["delivery_mode", "نوع تحویل"],
     ["fee_toman", "پیش‌کرایه (تومان)"],
@@ -525,6 +530,7 @@ function ShippingDecision({
   };
   const { state } = useWorkspace();
   const display = (value: unknown) => {
+    if(value&&typeof value==='object'&&'windows' in value&&'days' in value){const schedule=value as NonNullable<Method['schedule']>;const days=['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنج‌شنبه','جمعه','شنبه'];return schedule.days.map(day=>`${days[day.weekday]} ${day.active?'باز':'بسته'}: ${day.slots.map(slot=>{const window=schedule.windows.find(w=>w.id===slot.window_id);return `${window?.start??'—'} تا ${window?.end??'—'} / ظرفیت ${slot.capacity??'—'}`}).join('، ')}`).join('؛ ')||'برنامهٔ خالی'}
     if (Array.isArray(value))
       return (
         value

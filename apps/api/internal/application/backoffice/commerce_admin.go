@@ -256,7 +256,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 			eligible = false
 		}
 		if !eligible {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "invalidated"
 			p.Status = "requires-reconfirmation"
 			p.Reason = "روش پرداخت، ارسال یا محدودیت آن تغییر کرده است."
@@ -275,7 +275,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 			}
 			item, itemError := cartItem(copyWorkspace, commerce.CartLine{OfferID: l.OfferID, Quantity: l.Quantity})
 			if e != nil || itemError != nil || !item.Available || o.ProductID != l.ProductID || o.VariantID != l.VariantID || o.Stock < l.Quantity || o.Reserved < l.Quantity {
-				releaseQuote(w, q)
+				releaseQuote(w, q, now)
 				q.Status = "invalidated"
 				p.Status = "requires-reconfirmation"
 				p.Reason = "موجودی نیاز به بررسی دوباره دارد."
@@ -284,9 +284,22 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				return purchaseView(c, *p), nil
 			}
 		}
-		if err := finalizeShipmentCalendars(q, now); err != nil {
-			return nil, err
+		finalized := *q
+		finalized.Shipments = append([]commerce.ShipmentSnapshot{}, q.Shipments...)
+		shippingError := finalizeShipmentCalendars(&finalized, now)
+		if shippingError == nil {
+			shippingError = commitShipping(w, finalized, now)
 		}
+		if shippingError != nil {
+			releaseQuote(w, q, now)
+			q.Status = "invalidated"
+			p.Status = "requires-reconfirmation"
+			p.Reason = "فرصت آماده‌سازی یا رزرو ظرفیت تغییر کرده؛ روش و موعد تحویل باید دوباره انتخاب و تأیید شوند."
+			p.Version++
+			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+			return purchaseView(c, *p), nil
+		}
+		q.Shipments = finalized.Shipments
 		if q.ContractVersion == 2 {
 			if q.Credit == nil || q.Credit.Status != "held" {
 				return nil, ErrConflict
@@ -333,6 +346,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				for _, ship := range q.Shipments {
 					if ship.StoreID == w.Orders[i].StoreID {
 						w.Orders[i].Preparation = ship.Preparation
+						w.Orders[i].Delivery = ship.Delivery
 						w.Orders[i].DeliveryFrom, w.Orders[i].DeliveryTo = ship.DeliveryFrom, ship.DeliveryTo
 					}
 				}
@@ -367,10 +381,11 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 		}
 		if p.Status == "confirmed" {
 			for _, order := range w.Orders {
-				if order.CheckoutID == p.ID && order.Status != "awaiting-supply" {
+				if order.CheckoutID == p.ID && !beforeShipping(order.Status) {
 					return nil, ErrConflict
 				}
 			}
+			releaseShipping(w, q.ID, true, now)
 			if q.Total > 0 {
 				if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
 					return nil, e
@@ -391,7 +406,7 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 				}
 			}
 		} else {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "cancelled"
 		}
 		p.Status = "cancelled"

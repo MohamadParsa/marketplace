@@ -108,6 +108,23 @@ func finalizeShipmentCalendars(q *commerce.Quote, paidAt time.Time) error {
 		if err != nil {
 			return ErrInvalid
 		}
+		if ship.Delivery != nil {
+			plan := ship.Delivery
+			if plan.Slot != nil {
+				earliest, e := shipping.EarliestSlot(resolved, ship.Method.MinDays)
+				if e != nil {
+					return ErrInvalid
+				}
+				if plan.Slot.StartAt.Before(earliest) || !paidAt.Before(plan.Slot.StartAt) {
+					return ErrShippingExpired
+				}
+			} else if resolved.ReadyAt.In(shipping.Tehran()).Format("2006-01-02") > plan.DispatchDate {
+				return ErrShippingExpired
+			}
+			ship.Preparation = &resolved
+			ship.DeliveryFrom, ship.DeliveryTo = plan.DeliveryFrom, plan.DeliveryTo
+			continue
+		}
 		from, to, err := shipmentDeliveryDates(resolved, ship.Method)
 		if err != nil {
 			return err

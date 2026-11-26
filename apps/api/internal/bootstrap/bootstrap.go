@@ -23,15 +23,15 @@ func NewHTTPHandler(cfg config.Config) http.Handler {
 	return NewHTTPHandlerWithRepository(cfg, backofficememory.New(backofficememory.Fixture()))
 }
 
-func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repository) http.Handler {
-	h, _ := newCatalogHandler(cfg, repository, nil)
+func NewHTTPHandlerWithRepository(cfg config.Config, repository backoffice.Repository, clocks ...backoffice.Clock) http.Handler {
+	h, _ := newCatalogHandler(cfg, repository, nil, clocks...)
 	return h
 }
 func NewHTTPHandlerWithPublicCache(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache) http.Handler {
 	h, _ := newCatalogHandler(cfg, repository, c)
 	return h
 }
-func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache) (http.Handler, *backoffice.Service) {
+func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache, clocks ...backoffice.Clock) (http.Handler, *backoffice.Service) {
 	store := authmemory.NewStore(nil)
 	users := backofficeidentity.New(repository)
 	notifier := authmemory.NewNotifier()
@@ -42,7 +42,11 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 	service := auth.NewService(users, store, store, sender, authmemory.Clock{}, authmemory.Random{})
 	testData := cfg.Environment == "local" || cfg.Environment == "test"
 	handler := httptransport.NewAuthHandler(service, notifier, testData)
-	workspace := backoffice.NewService(repository, authmemory.Clock{}, authmemory.Random{})
+	var clock backoffice.Clock = authmemory.Clock{}
+	if len(clocks) > 0 && clocks[0] != nil {
+		clock = clocks[0]
+	}
+	workspace := backoffice.NewService(repository, clock, authmemory.Random{})
 	workspace.UsePublicCache(c)
 	storefrontRoot := ""
 	if cfg.WebSurface == "storefront" {

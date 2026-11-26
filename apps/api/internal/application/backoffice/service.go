@@ -108,7 +108,9 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	}
 	state.Commerce = nil
 	state.ProductReviews = nil
-	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") || strings.HasPrefix(a.Action, "stores.shipping.") })
+	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool {
+		return strings.HasPrefix(a.Action, "commerce.") || strings.HasPrefix(a.Action, "stores.shipping.")
+	})
 	state.IconMedia = nil
 	state.BannerAssets = nil
 	state.Banners = nil

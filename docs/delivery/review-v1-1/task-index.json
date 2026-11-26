@@ -688,7 +688,7 @@
       "title": "ظرفیت روزانه روش حمل، برنامه تحویل و رزرو اسلات",
       "priority": "P1",
       "wave": "shipping-followup",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "document_status": "in-review",
       "owner": "eliassarband",
       "dependencies": [
@@ -696,10 +696,7 @@
         "FEAT-SHIP-002",
         "FEAT-SHIP-003"
       ],
-      "questions": [
-        "SHIP-Q04",
-        "SHIP-Q06"
-      ],
+      "questions": [],
       "related": [
         "DOM-SHIPPING-001",
         "DOM-CHECKOUT-001"
@@ -720,15 +717,20 @@
         "AC07 ظرفیت روز ارسال روش بدون اسلات و بازه تحویل",
         "AC08 DتاD+۵شامل۶تاریخ، بدون تمدید به۶روز آزاد"
       ],
-      "blocked": "SHIP-Q04/SHIP-Q06: فقط lifecycle رزرو ظرفیت و ساعت آماده‌شدن/فرصت تحویل هنوز بازند.",
-      "technical": "پیشنهاد مدل: SlotDefinition و CapacityReservation با مرجع سفارش/جلسه و idempotency؛ جزئیات DB/قفل انتخاب نهایی نیست. خطای slot_full/stale و امکان انتخاب مجدد روشن باشد.",
-      "evidence": "پس از پاسخ سیاست: integration هم‌زمانی با ظرفیت۱ و دو جلسه، retry، expiry و cancellation، و مرور انتخاب اسلات؛ fixture نمایشی ظرفیت شاهد قبولی نیست.",
+      "blocked": "",
+      "technical": "ShippingReservation در JSON state موجود با قفل FOR UPDATE؛ hold/commit/release اتمیک و کنترل سقف روز و بازه.",
+      "evidence": "issue-16-verification.md: Go/HTTP/PostgreSQL و مرورگر دسکتاپ/موبایل",
       "amends": [
         "shipping-policy-20261126"
       ],
-      "github_state": "open",
+      "github_state": "closed",
       "audit_disposition": "",
-      "execution_authorized": false
+      "execution_authorized": true,
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-16-verification.md",
+      "resolved_questions": [
+        "SHIP-Q04",
+        "SHIP-Q06"
+      ]
     },
     {
       "id": "CV-R2-15",

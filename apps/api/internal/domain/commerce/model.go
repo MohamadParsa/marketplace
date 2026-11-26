@@ -14,22 +14,23 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
-	StoreShipping      []StoreShippingPolicy `json:"store_shipping,omitempty"`
-	Sales              *SalesSettings        `json:"sales,omitempty"`
-	Coupons            []Coupon              `json:"coupons,omitempty"`
-	CreditLots         []CreditLot           `json:"credit_lots,omitempty"`
-	CreditAccounts     []CreditAccount       `json:"credit_accounts,omitempty"`
-	NextPurchaseNumber int64                 `json:"next_purchase_number"`
-	Settings           Settings              `json:"settings"`
-	Carts              []Cart                `json:"carts"`
-	Addresses          []Address             `json:"addresses"`
-	Quotes             []Quote               `json:"quotes"`
-	Purchases          []Purchase            `json:"purchases"`
-	Deposits           []Deposit             `json:"deposits"`
-	Receipts           []Receipt             `json:"receipts"`
-	Entries            []WalletEntry         `json:"entries"`
-	Refunds            []RefundRequest       `json:"refunds"`
-	Operations         []Operation           `json:"operations"`
+	ShippingReservations []ShippingReservation `json:"shipping_reservations,omitempty"`
+	StoreShipping        []StoreShippingPolicy `json:"store_shipping,omitempty"`
+	Sales                *SalesSettings        `json:"sales,omitempty"`
+	Coupons              []Coupon              `json:"coupons,omitempty"`
+	CreditLots           []CreditLot           `json:"credit_lots,omitempty"`
+	CreditAccounts       []CreditAccount       `json:"credit_accounts,omitempty"`
+	NextPurchaseNumber   int64                 `json:"next_purchase_number"`
+	Settings             Settings              `json:"settings"`
+	Carts                []Cart                `json:"carts"`
+	Addresses            []Address             `json:"addresses"`
+	Quotes               []Quote               `json:"quotes"`
+	Purchases            []Purchase            `json:"purchases"`
+	Deposits             []Deposit             `json:"deposits"`
+	Receipts             []Receipt             `json:"receipts"`
+	Entries              []WalletEntry         `json:"entries"`
+	Refunds              []RefundRequest       `json:"refunds"`
+	Operations           []Operation           `json:"operations"`
 }
 type City struct {
 	ID     string `json:"id"`
@@ -67,26 +68,27 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
-	BaseVersion       int               `json:"base_version,omitempty"`
-	StoreRevision     int               `json:"store_revision,omitempty"`
-	Version           int               `json:"version,omitempty"`
-	CollectionMode    string            `json:"collection_mode,omitempty"`
-	DeliveryMode      string            `json:"delivery_mode,omitempty"`
-	DailyCapacity     *int              `json:"daily_capacity,omitempty"`
-	CategoryMode      string            `json:"category_mode,omitempty"`
-	AllowedCategories []string          `json:"allowed_categories,omitempty"`
-	DeniedCategories  []string          `json:"denied_categories,omitempty"`
-	CityIDs           []string          `json:"city_ids,omitempty"`
-	DayBasis          shipping.DayBasis `json:"day_basis,omitempty"`
-	ID                string            `json:"id"`
-	Name              string            `json:"name"`
-	Active            bool              `json:"active"`
-	AllCities         bool              `json:"all_cities"`
-	Cities            []string          `json:"cities"`
-	StoreIDs          []string          `json:"store_ids"`
-	Fee               Amount            `json:"fee"`
-	MinDays           int               `json:"min_days"`
-	MaxDays           int               `json:"max_days"`
+	Schedule          *shipping.Schedule `json:"schedule,omitempty"`
+	BaseVersion       int                `json:"base_version,omitempty"`
+	StoreRevision     int                `json:"store_revision,omitempty"`
+	Version           int                `json:"version,omitempty"`
+	CollectionMode    string             `json:"collection_mode,omitempty"`
+	DeliveryMode      string             `json:"delivery_mode,omitempty"`
+	DailyCapacity     *int               `json:"daily_capacity,omitempty"`
+	CategoryMode      string             `json:"category_mode,omitempty"`
+	AllowedCategories []string           `json:"allowed_categories,omitempty"`
+	DeniedCategories  []string           `json:"denied_categories,omitempty"`
+	CityIDs           []string           `json:"city_ids,omitempty"`
+	DayBasis          shipping.DayBasis  `json:"day_basis,omitempty"`
+	ID                string             `json:"id"`
+	Name              string             `json:"name"`
+	Active            bool               `json:"active"`
+	AllCities         bool               `json:"all_cities"`
+	Cities            []string           `json:"cities"`
+	StoreIDs          []string           `json:"store_ids"`
+	Fee               Amount             `json:"fee"`
+	MinDays           int                `json:"min_days"`
+	MaxDays           int                `json:"max_days"`
 }
 type Destination struct {
 	ID         string `json:"id"`
@@ -170,6 +172,7 @@ type LineSnapshot struct {
 	OfferVersion       int             `json:"offer_version"`
 }
 type ShipmentSnapshot struct {
+	Delivery     *shipping.DeliveryPlan        `json:"delivery,omitempty"`
 	Preparation  *shipping.PreparationSnapshot `json:"preparation,omitempty"`
 	StoreID      string                        `json:"store_id"`
 	StoreName    string                        `json:"store_name"`

@@ -158,6 +158,7 @@ func TestShippingCoverageCanonicalCitiesDescendantsMixedShipmentAndNewCity(t *te
 func TestShippingMethodDirectoryFiltersAndPagination(t *testing.T) {
 	h := newCommerceHarness(t)
 	ctx := context.Background()
+	h.repo.Update(ctx, func(w *backoffice.Workspace) error { w.Commerce.Settings.Shipping[0].DailyCapacity = nil; return nil })
 	for i := 0; i < 4; i++ {
 		in := methodInput(fmt.Sprintf("ship-%d", i))
 		in.Name = fmt.Sprintf("روش %d", i)

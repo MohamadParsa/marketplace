@@ -41,6 +41,12 @@ func commerceError(w http.ResponseWriter, e error) {
 	}
 	status, code := 503, "commerce_unavailable"
 	switch {
+	case errors.Is(e, backoffice.ErrShippingUnavailable):
+		status, code = 409, "shipping_unavailable"
+	case errors.Is(e, backoffice.ErrShippingFull):
+		status, code = 409, "slot_full"
+	case errors.Is(e, backoffice.ErrShippingExpired):
+		status, code = 409, "slot_expired"
 	case errors.Is(e, backoffice.ErrReauthenticationRequired):
 		status, code = 403, "reauthentication_required"
 	case errors.Is(e, backoffice.ErrUserContactConflict):
@@ -101,7 +107,7 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
-	if strings.HasPrefix(r.URL.Path, "/backoffice/shipping/methods") {
+	if strings.HasPrefix(r.URL.Path, "/backoffice/shipping/methods") || r.URL.Path == "/backoffice/stores/shipping" || r.URL.Path == "/seller/stores/shipping" {
 		limit = 2 * 1024 * 1024
 	}
 	if r.URL.Path == "/backoffice/stores/preparation/batch" {

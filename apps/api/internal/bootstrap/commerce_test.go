@@ -50,7 +50,8 @@ func commerceSeed() backoffice.Workspace {
 			settings.Methods[i].ExcludedCategories = []string{"gold"}
 		}
 	}
-	settings.Shipping = []commerce.ShippingMethod{{ID: "post", Name: "پست", Active: true, AllCities: true, Fee: 100000, MinDays: 1, MaxDays: 3}}
+	capacity := 1000 // Test fixture configuration, never a product default.
+	settings.Shipping = []commerce.ShippingMethod{{DailyCapacity: &capacity, ID: "post", Name: "پست", Active: true, AllCities: true, Fee: 100000, MinDays: 1, MaxDays: 3}}
 	w.Commerce = &commerce.State{Settings: settings}
 	return w
 }

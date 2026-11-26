@@ -66,7 +66,8 @@ func newCommerceHarness(t *testing.T) *commerceHarness {
 			settings.Methods[i].Instructions = "داده آزمون؛ پرداخت حضوری با بررسی تیم"
 		}
 	}
-	settings.Shipping = []commerce.ShippingMethod{{ID: "post", Name: "پست نمونه", Active: true, AllCities: true, Fee: 200000, MinDays: 1, MaxDays: 3}}
+	capacity := 1000 // Explicit fixture quota; production has no assumed capacity.
+	settings.Shipping = []commerce.ShippingMethod{{DailyCapacity: &capacity, ID: "post", Name: "پست نمونه", Active: true, AllCities: true, Fee: 200000, MinDays: 1, MaxDays: 3}}
 	w.Commerce = &commerce.State{Settings: settings}
 	h := &commerceHarness{clock: &commerceClock{now: time.Date(2026, 11, 22, 9, 0, 0, 0, time.UTC)}}
 	for _, u := range w.Users {

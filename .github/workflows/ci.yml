@@ -55,6 +55,7 @@ jobs:
           node-version: 20
       - run: npm ci --no-audit --no-fund
       - run: npm run lint
+      - run: npm run test:shipping-dates
       - run: npm run build
 
   seller-portal-web:

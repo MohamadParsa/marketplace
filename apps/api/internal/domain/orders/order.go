@@ -14,6 +14,7 @@ type Item struct {
 	Status       string `json:"status"`
 }
 type Order struct {
+	Delivery         *shipping.DeliveryPlan        `json:"delivery,omitempty"`
 	Preparation      *shipping.PreparationSnapshot `json:"preparation,omitempty"`
 	StoreDisplayName string                        `json:"store_display_name,omitempty"`
 	PurchaseNumber   string                        `json:"purchase_number,omitempty"`

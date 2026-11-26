@@ -16,14 +16,15 @@ import (
 )
 
 type QuoteInput struct {
-	ContractVersion int               `json:"contract_version,omitempty"`
-	CouponCode      string            `json:"coupon_code,omitempty"`
-	WalletToman     string            `json:"wallet_toman,omitempty"`
-	CartVersion     int               `json:"cart_version"`
-	AddressID       string            `json:"address_id"`
-	Shipping        map[string]string `json:"shipping"`
-	PaymentMethodID string            `json:"payment_method_id"`
-	PurchaseID      string            `json:"purchase_id,omitempty"`
+	ShippingSelections map[string]shipping.DeliverySelection `json:"shipping_selections,omitempty"`
+	ContractVersion    int                                   `json:"contract_version,omitempty"`
+	CouponCode         string                                `json:"coupon_code,omitempty"`
+	WalletToman        string                                `json:"wallet_toman,omitempty"`
+	CartVersion        int                                   `json:"cart_version"`
+	AddressID          string                                `json:"address_id"`
+	Shipping           map[string]string                     `json:"shipping"`
+	PaymentMethodID    string                                `json:"payment_method_id"`
+	PurchaseID         string                                `json:"purchase_id,omitempty"`
 }
 type AcceptQuoteInput struct {
 	TermsDigest        string `json:"terms_digest,omitempty"`
@@ -47,20 +48,21 @@ type QuoteLineView struct {
 	TotalToman              string                   `json:"total_toman"`
 }
 type ShipmentView struct {
-	CollectionMode    string            `json:"collection_mode"`
-	LeadDayBasis      shipping.DayBasis `json:"lead_day_basis"`
-	TransportDayBasis shipping.DayBasis `json:"transport_day_basis"`
-	ReadyAt           *time.Time        `json:"ready_at,omitempty"`
-	StoreID           string            `json:"store_id"`
-	StoreName         string            `json:"store_name"`
-	MethodID          string            `json:"method_id"`
-	MethodName        string            `json:"method_name"`
-	FeeToman          string            `json:"fee_toman"`
-	LeadDays          int               `json:"lead_days"`
-	MinDays           int               `json:"min_days"`
-	MaxDays           int               `json:"max_days"`
-	DeliveryFrom      string            `json:"delivery_from"`
-	DeliveryTo        string            `json:"delivery_to"`
+	Delivery          *shipping.DeliveryPlan `json:"delivery,omitempty"`
+	CollectionMode    string                 `json:"collection_mode"`
+	LeadDayBasis      shipping.DayBasis      `json:"lead_day_basis"`
+	TransportDayBasis shipping.DayBasis      `json:"transport_day_basis"`
+	ReadyAt           *time.Time             `json:"ready_at,omitempty"`
+	StoreID           string                 `json:"store_id"`
+	StoreName         string                 `json:"store_name"`
+	MethodID          string                 `json:"method_id"`
+	MethodName        string                 `json:"method_name"`
+	FeeToman          string                 `json:"fee_toman"`
+	LeadDays          int                    `json:"lead_days"`
+	MinDays           int                    `json:"min_days"`
+	MaxDays           int                    `json:"max_days"`
+	DeliveryFrom      string                 `json:"delivery_from"`
+	DeliveryTo        string                 `json:"delivery_to"`
 }
 type QuoteView struct {
 	SalesMethod         *commerce.SalesMethod `json:"sales_method,omitempty"`
@@ -183,6 +185,7 @@ func quoteView(q commerce.Quote) QuoteView {
 			view.ReadyAt = &s.Preparation.ReadyAt
 		}
 		view.CollectionMode = shippingMethodInput(s.Method).CollectionMode
+		view.Delivery = s.Delivery
 		if view.CollectionMode == "collect" {
 			view.FeeToman = ""
 		}
@@ -340,6 +343,11 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 	if len(in.Shipping) != len(stores) {
 		return q, ErrInvalid
 	}
+	for storeID := range in.ShippingSelections {
+		if _, ok := in.Shipping[storeID]; !ok {
+			return q, ErrInvalid
+		}
+	}
 	for _, storeID := range stores {
 		found := false
 		for _, st := range w.Stores {
@@ -348,12 +356,21 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 			}
 			for _, base := range c.Settings.Shipping {
 				method, allowed := EffectiveStoreShipping(w, storeID, base)
-				if allowed && method.ID == in.Shipping[storeID] && method.DeliveryMode != "slots" && storeShippingEligible(w, base, method, q.Address, storeID, q.Lines) {
+				if allowed && method.ID == in.Shipping[storeID] && storeShippingEligible(w, base, method, q.Address, storeID, q.Lines) {
 					preparation, from, to, err := shipmentPreparation(c.Settings, st, method, now)
 					if err != nil {
 						return q, err
 					}
-					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{Preparation: &preparation, StoreID: st.ID, StoreName: storeDisplayName(st, quoteDisplayMethod(q)), Method: method, LeadDays: st.LeadDays, DeliveryFrom: from, DeliveryTo: to})
+					availability, err := shippingAvailability(w, storeID, method, preparation, now, id, in.PurchaseID)
+					if err != nil {
+						return q, err
+					}
+					plan, err := selectedDelivery(availability, in.ShippingSelections[storeID], now)
+					if err != nil {
+						return q, err
+					}
+					from, to = plan.DeliveryFrom, plan.DeliveryTo
+					q.Shipments = append(q.Shipments, commerce.ShipmentSnapshot{Delivery: &plan, Preparation: &preparation, StoreID: st.ID, StoreName: storeDisplayName(st, quoteDisplayMethod(q)), Method: method, LeadDays: st.LeadDays, DeliveryFrom: from, DeliveryTo: to})
 					var e error
 					q.ShippingTotal, e = commerce.Add(q.ShippingTotal, method.Fee)
 					if e != nil {
@@ -552,6 +569,12 @@ func quoteAsInput(q commerce.Quote) QuoteInput {
 	}
 	for _, v := range q.Shipments {
 		in.Shipping[v.StoreID] = v.Method.ID
+		if v.Delivery != nil && v.Delivery.Slot != nil {
+			if in.ShippingSelections == nil {
+				in.ShippingSelections = map[string]shipping.DeliverySelection{}
+			}
+			in.ShippingSelections[v.StoreID] = shipping.DeliverySelection{Date: v.Delivery.CapacityDay, WindowID: v.Delivery.Slot.WindowID}
+		}
 	}
 	return in
 }
@@ -559,7 +582,7 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 	p.OrderIDs = []string{}
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
-		order := orders.Order{Preparation: ship.Preparation, StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
+		order := orders.Order{Delivery: ship.Delivery, Preparation: ship.Preparation, StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
 				order.Items = append(order.Items, orders.Item{VariantLabel: l.VariantLabel, ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})
@@ -619,7 +642,7 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 			}
 			old := findQuote(c, p.QuoteID)
 			if old != nil {
-				releaseQuote(w, old)
+				releaseQuote(w, old, now)
 				old.Status = "replaced"
 			}
 			p.PreviousQuotes = append(p.PreviousQuotes, p.QuoteID)
@@ -657,6 +680,9 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 			if !found {
 				return nil, ErrStock
 			}
+		}
+		if e := holdShipping(w, q, p.ID, now); e != nil {
+			return nil, e
 		}
 		if e := reserveCredit(c, q, now); e != nil {
 			return nil, e
@@ -731,7 +757,7 @@ func (s *Service) CancelPurchase(ctx context.Context, a identity.User, id, reaso
 			return purchaseView(c, *p), nil
 		}
 		if q := findQuote(c, p.QuoteID); q != nil {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "cancelled"
 		}
 		p.Status = "cancelled"

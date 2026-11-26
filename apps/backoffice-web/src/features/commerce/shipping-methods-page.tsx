@@ -18,6 +18,7 @@ import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
 import { DataTable, PageHeader } from "../../shared/components";
 import { CategoryTree, categoryPath } from "../management/category-tree";
+import {WeeklyScheduleEditor,scheduleError} from "./weekly-schedule-editor";
 import type {
   Shipping,
   Province,
@@ -449,6 +450,7 @@ export function MethodEditor({
     draft.daily_capacity >= 0 &&
     draft.daily_capacity <= 1000000;
   const valid =
+    (draft.delivery_mode !== "slots" || !scheduleError(draft.schedule)) &&
     (!bulk || batchConfirmed) &&
     !!draft.name.trim() &&
     dayValid &&
@@ -619,7 +621,7 @@ export function MethodEditor({
                 onClick={() =>
                   patch({
                     delivery_mode: value,
-                    ...(value === "slots" ? { min_days: 0, max_days: 0 } : {}),
+                    ...(value === "slots" ? { min_days: 0, max_days: 0, schedule:draft.schedule??{windows:[],days:[]} } : {}),
                   })
                 }
               >
@@ -672,10 +674,10 @@ export function MethodEditor({
               </div>
             </>
           ) : (
-            <Alert severity="info">
-              ساعت‌ها و تعداد بازه‌های هر روز قابل تعریف‌اند؛ پیش از ارائه به
-              مشتری، برنامهٔ تحویل باید تکمیل شود.
-            </Alert>
+            <>
+              <div className="commerce-grid"><TextField type="number" label="حداقل فرصت حمل تا بازه (روز)" value={draft.min_days} inputProps={{min:0,max:60}} onChange={e=>patch({min_days:Number(e.target.value),max_days:Number(e.target.value)})}/><div className="toolbar" role="group" aria-label="واحد فرصت حمل">{([['working','روز کاری'],['calendar','روز تقویمی']] as const).map(([value,label])=><Button key={value} aria-pressed={draft.day_basis===value} variant={draft.day_basis===value?'contained':'outlined'} onClick={()=>patch({day_basis:value})}>{label}</Button>)}</div></div>
+              <WeeklyScheduleEditor value={draft.schedule??{windows:[],days:[]}} onChange={schedule=>patch({schedule})} disabled={busy||!allowed} error={fields.schedule}/>
+            </>
           )}
           <TextField
             type="number"

@@ -65,6 +65,7 @@ export interface Method {
   instructions: string;
 }
 export interface Shipping {
+  schedule?: ShippingSchedule | null;
   version?: number;
   collection_mode?: "prepaid" | "collect";
   delivery_mode?: "range" | "slots";
@@ -83,6 +84,25 @@ export interface Shipping {
   fee_toman: string;
   min_days: number;
   max_days: number;
+}
+export interface ShippingSchedule {
+  windows: {id:string;start:string;end:string;active:boolean}[];
+  days: {weekday:number;active:boolean;slots:{window_id:string;capacity:number|null}[]}[];
+}
+export interface DeliveryPlan {
+  capacity_day:string;
+  dispatch_date:string;
+  delivery_from:string;
+  delivery_to:string;
+  method_version:number;
+  store_revision:number;
+  slot?:{window_id:string;start_at:string;end_at:string;capacity:number};
+}
+export interface ShippingAvailability {
+  store_id:string;
+  store_name:string;
+  reason?:string;
+  methods:{method:Shipping;range?:DeliveryPlan;range_remaining?:number;days:{date:string;open:boolean;daily_remaining:number;slots:{plan:DeliveryPlan;remaining:number}[]}[]}[];
 }
 export interface Destination {
   id: string;
