@@ -204,7 +204,10 @@
         108
       ],
       "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
-      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md"
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md",
+      "state": "closed",
+      "source_pushed": true,
+      "publication_status": "pushed-branch-awaiting-merge"
     },
     {
       "n": 5,
@@ -262,10 +265,11 @@
         100
       ],
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
-      "source_pushed": false,
+      "source_pushed": true,
       "state": "closed",
       "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
-      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json"
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "publication_status": "pushed-branch-awaiting-merge"
     },
     {
       "n": 6,
@@ -314,10 +318,11 @@
         111
       ],
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
-      "source_pushed": false,
+      "source_pushed": true,
       "state": "closed",
       "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
-      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json"
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "publication_status": "pushed-branch-awaiting-merge"
     },
     {
       "n": 7,
@@ -610,5 +615,10 @@
     111,
     112
   ],
-  "publication_policy": "push-completed-work-at-owner-request-2026-11-25"
+  "publication_policy": "push-completed-work-at-owner-request-2026-11-25",
+  "publication": {
+    "branch": "codex/local-parsa-integration-20261124",
+    "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+    "deployed": false
+  }
 }

@@ -18,5 +18,12 @@
       "comment_url": "https://github.com/MohamadParsa/marketplace/issues/112#issuecomment-7159608857"
     }
   ],
-  "parent_comment_url": "https://github.com/MohamadParsa/marketplace/issues/95#issuecomment-7159611632"
+  "parent_comment_url": "https://github.com/MohamadParsa/marketplace/issues/95#issuecomment-7159611632",
+  "subsequent_publication": {
+    "date": "2026-11-26",
+    "source_pushed": true,
+    "branch": "codex/local-parsa-integration-20261124",
+    "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+    "deployed": false
+  }
 }

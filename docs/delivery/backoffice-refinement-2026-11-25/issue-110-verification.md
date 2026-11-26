@@ -57,3 +57,13 @@ checksum snapshot اصلی با manifest تطبیق دارد؛ فایل/manifest
 [جست‌وجوی کد](../../../output/playwright/issue-110/attribute-search.png) · [ویرایش از لینک قدیمی](../../../output/playwright/issue-110/legacy-link-editor.png) · [انتساب دسته](../../../output/playwright/issue-110/category-bindings.png) · [کتابخانه موبایل](../../../output/playwright/issue-110/attributes-mobile.png) · [گیرنده در خرید](../../../output/playwright/issue-110/checkout-other-recipient.png) · [آدرس موبایل](../../../output/playwright/issue-110/address-mobile.png) · [آدرس پروفایل](../../../output/playwright/issue-110/profile-address.png). همه داده‌های تصاویر ساختگی‌اند.
 
 سورس در کامیت 2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950 ثبت شد؛ کامیت مدارک با trailer Source-Commit به آن وصل می‌شود. دستور تازه مالک پوش در انتهای تکمیل را مجاز کرده است؛ رسید پوش/کامنت و بستن در همین بسته ثبت می‌شود. پوش شاخه با merge و استقرار لیارا متفاوت است.
+
+
+## رسید پوش و بستن
+
+[کامیت سورس](https://github.com/MohamadParsa/marketplace/commit/2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b) روی شاخه `codex/local-parsa-integration-20261124` پوش شدند. [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) نسخه یکپارچه است؛ [Issue #110 با کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/110#issuecomment-7183781436) و دلیل completed بسته شد. اصلاح آدرس در [کامنت #100](https://github.com/MohamadParsa/marketplace/issues/100#issuecomment-7183783057) نیز ثبت شد. [رسید ماشین‌خوان](issue-110-delivery.json).
+
+کامیت‌های قبلی محلی #100/#101/#73/#81/#111/#112 نیز همراه تاریخچه همین شاخه پوش شدند؛ یادداشت‌های قدیمی «پوش‌نشده» وضعیت زمان ثبتشان بودند. source tree کد و مدارک برابر کنترل شد. main/لیارا ادغام یا مستقر نشده و #95/#105 باز می‌مانند.
+
+
+CI روی revision مدارک اولیه `c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b` با source tree یکسان، هر۵job موفق داشت؛ [اجرای GitHub Actions](https://github.com/MohamadParsa/marketplace/actions/runs/45763573029) شامل Go race/vet، lint/build بک‌آفیس و سایت و پنل فروشنده و contracts است. کامیت نهایی فقط رسید و مستندات همین نتیجه را ثبت می‌کند و کد اجرایی را تغییر نمی‌دهد.

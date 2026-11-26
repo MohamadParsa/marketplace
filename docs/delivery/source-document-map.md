@@ -147,3 +147,5 @@
 ## خصوصیات چریوا در پنل و ساده‌سازی آدرس — #110
 
 سورس و تست‌ها در `2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` در D:\Cherriva ثبت شدند؛ [گزارش و تصاویر](backoffice-refinement-2026-11-25/issue-110-verification.md) و [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issue-110-checks.json). دستور جدید مالک پوش پس از تکمیل را مجاز کرده و این نسخه همراه کامیت‌های قبلی محلی #100/#101/#73/#81/#111/#112 روی همان شاخه تحویل می‌شود؛ main و لیارا جدا هستند. کامیت مدارک trailer `Source-Commit: 2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` دارد و درخت اجرایی آن با همین سورس برابر است.
+
+پوش این دسته تأیید شد: [سورس](https://github.com/MohamadParsa/marketplace/commit/2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950) و [مدارک](https://github.com/MohamadParsa/marketplace/commit/c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b) در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) موجودند؛ #110 با [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/110#issuecomment-7183781436) بسته شد. کامیت‌های قبلی محلی نیز در همان شاخه منتشر شدند؛ source اصلی و مدارک از نظر درخت اجرایی یکسان‌اند. main و لیارا مستقل باقی‌اند.

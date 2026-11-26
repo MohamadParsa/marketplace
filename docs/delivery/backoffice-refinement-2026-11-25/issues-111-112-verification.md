@@ -78,3 +78,8 @@ execution_authorized: true
 ## ثبت تحویل
 
 سورس و تست‌ها در کامیت محلی `37ec82c31408d69736a4f7826fa5ae07ec905077` ثبت شدند. [رسید GitHub](issues-111-112-delivery.json): [کامنت #111](https://github.com/MohamadParsa/marketplace/issues/111#issuecomment-7159606229) و [کامنت #112](https://github.com/MohamadParsa/marketplace/issues/112#issuecomment-7159608857)؛ هر دو با دلیل completed بسته شدند. فهرست والد #95 اصلاح و باز ماند؛ انتشار #105 جداست. طبق دستور مالک، **هیچ push/merge/deploy انجام نشد** و پیوند commit روی GitHub تا زمان پوش معتبر نیست. کامیت مدارک با trailer `Source-Commit` به این سورس متصل می‌شود.
+
+
+## انتشار بعدی به دستور مالک — ۲۰۲۶-۱۱-۲۶
+
+دستور تازه پوش پس از تکمیل، سیاست فقط‌لوکال قبلی را برای تحویل‌های آماده جایگزین کرد. سورس `37ec82c31408d69736a4f7826fa5ae07ec905077` و مدارک این دو Issue همراه شاخه [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) پوش شدند؛ کامنت به‌روزرسانی در هر دو Issue بسته ثبت شد. بخش‌های «پوش‌نشده» بالا تاریخچه زمان تحویل اولیه‌اند؛ استقرار و ادغام همچنان جداست.

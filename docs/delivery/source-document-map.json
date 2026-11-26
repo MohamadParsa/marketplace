@@ -308,9 +308,11 @@
       "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
       "implementation_status": "done",
       "issue_state": "closed",
-      "publication_status": "local-only-unpushed",
+      "publication_status": "pushed-branch-awaiting-merge",
       "source_tree_matches_documentation_revision": true,
-      "documentation_commit_reference": "Source-Commit trailer on local documentation commit"
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit",
+      "source_pushed": true,
+      "pull_request": 106
     },
     {
       "issue": 112,
@@ -319,22 +321,27 @@
       "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
       "implementation_status": "done",
       "issue_state": "closed",
-      "publication_status": "local-only-unpushed",
+      "publication_status": "pushed-branch-awaiting-merge",
       "source_tree_matches_documentation_revision": true,
-      "documentation_commit_reference": "Source-Commit trailer on local documentation commit"
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit",
+      "source_pushed": true,
+      "pull_request": 106
     },
     {
       "issue": 110,
       "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md",
       "implementation_status": "done",
-      "publication_status": "ready-to-push",
+      "publication_status": "pushed-branch-awaiting-merge",
       "source_tree_matches_documentation_revision": true,
       "additional_owner_changes": [
         "address-title-map-full-address-order",
         "checkout-only-recipient-switch",
         "self-hides-recipient-fields-except-profile-completion"
-      ]
+      ],
+      "issue_state": "closed",
+      "source_pushed": true,
+      "pull_request": 106
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -422,5 +429,14 @@
     104
   ],
   "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
-  "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md"
+  "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+  "latest_branch_source_publication": {
+    "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+    "initial_documentation_commit": "c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b",
+    "branch": "codex/local-parsa-integration-20261124",
+    "published": true,
+    "merged": false,
+    "deployed": false,
+    "receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-delivery.json"
+  }
 }
