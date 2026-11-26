@@ -1,6 +1,6 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-25",
+  "updated": "2026-11-26",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
@@ -685,6 +685,24 @@
         73
       ],
       "execution_authorized": false
+    },
+    {
+      "n": 31,
+      "code": "CV-NEXT-31",
+      "id": "FEAT-NEXT-031",
+      "title": "CV-NEXT-31 — پنج ستاره طلایی و میانگین نظرات تأییدشده در PDP",
+      "path": "docs/delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md",
+      "priority": "P2",
+      "kind": "implementation",
+      "deps": [
+        89
+      ],
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "state": "open",
+      "number": 119,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/119",
+      "assignee": "eliassarband"
     }
   ],
   "reused_issues": [

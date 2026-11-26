@@ -271,3 +271,5 @@ FEAT-BO-REFINEMENT-008 → [گزارش #114](../delivery/backoffice-refinement-2
 ## تکمیل مستقل برند — #115
 
 FEAT-BO-REFINEMENT-009-AC01..03 → [قرارداد](../architecture/contracts/brand-management.md) → [سناریو](../bdd/features/experiences/brand-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-115-verification.md). تکمیل پیاده‌سازی به معنی approved شدن سند یا استقرار نیست.
+
+[FEAT-NEXT-031: درخواست ستاره طلایی و میانگین نظرات PDP، #119](../delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md): فقط برنامه‌ریزی، بدون شاهد پیاده‌سازی.
