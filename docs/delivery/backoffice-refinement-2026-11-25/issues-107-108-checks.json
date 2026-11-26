@@ -1,0 +1,217 @@
+{
+  "id": "CHECKS-CATALOG-MANAGEMENT-20261126",
+  "issues": [
+    107,
+    108
+  ],
+  "go": {
+    "passed_tests_and_subtests": 332,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "keyboard-expands-catalog-parent",
+        "pass": true
+      },
+      {
+        "id": "dedicated-category-route",
+        "pass": true
+      },
+      {
+        "id": "no-aggregate-menu-link",
+        "pass": true
+      },
+      {
+        "id": "category-grid-initial-twenty",
+        "pass": true
+      },
+      {
+        "id": "combined-filters-reset-page",
+        "pass": true
+      },
+      {
+        "id": "combined-filter-paging-exact-remainder",
+        "pass": true
+      },
+      {
+        "id": "direct-parent-filter-count",
+        "pass": true
+      },
+      {
+        "id": "branch-includes-parent",
+        "pass": true
+      },
+      {
+        "id": "create-category-through-tree",
+        "pass": true
+      },
+      {
+        "id": "legacy-category-link-redirects",
+        "pass": true
+      },
+      {
+        "id": "edit-category-content-preserves-tree",
+        "pass": true
+      },
+      {
+        "id": "used-axis-and-removal-stay-locked",
+        "pass": true
+      },
+      {
+        "id": "row-has-lock-reason",
+        "pass": true
+      },
+      {
+        "id": "dependent-products-have-real-links",
+        "pass": true
+      },
+      {
+        "id": "conversion-is-followup-not-unsafe-action",
+        "pass": true
+      },
+      {
+        "id": "non-enum-axis-explanation",
+        "pass": true
+      },
+      {
+        "id": "role-previews-follow-draft",
+        "pass": true
+      },
+      {
+        "id": "reuse-shared-attribute-without-definition-clone",
+        "pass": true
+      },
+      {
+        "id": "conflict-keeps-binding-draft",
+        "pass": true
+      },
+      {
+        "id": "save-safe-flags-in-one-category",
+        "pass": true
+      },
+      {
+        "id": "plp-filter-renewed-after-backoffice-save",
+        "pass": true
+      },
+      {
+        "id": "child-has-no-automatic-attribute-inheritance",
+        "pass": true
+      },
+      {
+        "id": "brand-create-on-dedicated-route",
+        "pass": true
+      },
+      {
+        "id": "brand-old-link-edits-same-record",
+        "pass": true
+      },
+      {
+        "id": "product-create-on-dedicated-route",
+        "pass": true
+      },
+      {
+        "id": "legacy-product-link-opens-dedicated-editor",
+        "pass": true
+      },
+      {
+        "id": "home-has-dedicated-content-route",
+        "pass": true
+      },
+      {
+        "id": "home-rails-preserved",
+        "pass": true
+      },
+      {
+        "id": "banners-remain-available",
+        "pass": true
+      },
+      {
+        "id": "viewer-category-edit-disabled",
+        "pass": true
+      },
+      {
+        "id": "viewer-binding-save-disabled",
+        "pass": true
+      },
+      {
+        "id": "viewer-sees-permission-reason",
+        "pass": true
+      },
+      {
+        "id": "viewer-deep-link-readonly",
+        "pass": true
+      },
+      {
+        "id": "binding-dialog-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "category-grid-mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "catalog-parent-mobile-visible",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 37,
+    "errors": [],
+    "isolated_memory": true
+  },
+  "frontend": {
+    "backoffice": "lint-build-passed",
+    "existing_chunk_warning": true,
+    "new_dependencies": false,
+    "storefront": "source-unchanged"
+  },
+  "snapshot_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "snapshot_manifest_match": true,
+  "source_pushed": false,
+  "deployed": false,
+  "artifacts": [
+    {
+      "path": "output/playwright/issues-107-108/catalog-menu-mobile.png",
+      "sha256": "0a2df65b0555edde69e6d1ef01b24a16c563c09aa27248c78d33f71da6591167"
+    },
+    {
+      "path": "output/playwright/issues-107-108/category-binding-impact.png",
+      "sha256": "cd6f30ff5f2c2188097348f65724493d8754f91f9291dbd97ada03c0f9df070a"
+    },
+    {
+      "path": "output/playwright/issues-107-108/category-bindings-mobile.png",
+      "sha256": "254a47aaf189c20500914740a7a4d66139c8959d3a76406c6984e1ad9b379d78"
+    },
+    {
+      "path": "output/playwright/issues-107-108/category-filters.png",
+      "sha256": "f92f93d69dfd3b41001582d446f3e483080db2df659557cb0386732194e6fa9b"
+    },
+    {
+      "path": "output/playwright/issues-107-108/category-grid-mobile.png",
+      "sha256": "0826719ecef8471884ded8386f73cdaaddd58aeb3d1020adced54885d8de2a13"
+    },
+    {
+      "path": "output/playwright/issues-107-108/category-tree-editor.png",
+      "sha256": "9c1dd36db3ca40eeeb77cc5e94b4d8c199277207da7c4b2adb3bd9fe9f22f582"
+    },
+    {
+      "path": "output/playwright/issues-107-108/content-home-route.png",
+      "sha256": "811cb4d8b803ef6050231ede4c494aeb38a9546315315dbcea3d4ef5d203170a"
+    }
+  ],
+  "local_restart": {
+    "preserved_sections": 24,
+    "all_equal": true,
+    "startup_warmup_enabled": true
+  },
+  "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda"
+}

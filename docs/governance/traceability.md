@@ -256,3 +256,8 @@ FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/cust
 ## مرز خصوصیات پنل — #110 و اصلاح آدرس
 
 [تسک FEAT-BO-REFINEMENT-004](../delivery/backoffice-refinement-2026-11-25/tasks/cherriva-attribute-codes-and-labels.md) → [قرارداد خصوصیات](../architecture/contracts/catalog-attributes.md) → [گزارش API/مرورگر/حفظ داده و چیدمان آدرس](../delivery/backoffice-refinement-2026-11-25/issue-110-verification.md). گرید/دیالوگ/انتساب عنوان خوانا دارند و alias سازگار با ورودی قدیمی است؛ بازنویسی داده واردشده و تبدیل محور در این کار نیست.
+
+
+## کاتالوگ مستقل و خصوصیات دسته — #107/#108
+
+FEAT-BO-REFINEMENT-001/002 → [گزارش ناوبری و دسته](../delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md) → [قرارداد خصوصیات و سطح نشست](../architecture/contracts/catalog-attributes.md). تست API، cache/عدم ارث، صفحه‌بندی/فیلتر و مرورگر به همان گزارش متصل‌اند؛ تغییر محور مصرف‌شده #109 و تکمیل فیلدهای برند/محصول #115/#116 جداست.

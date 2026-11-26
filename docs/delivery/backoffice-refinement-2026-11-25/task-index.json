@@ -36,14 +36,15 @@
       ],
       "files": [
         "apps/backoffice-web/src/app/app.tsx",
-        "apps/backoffice-web/src/features/management/home-catalog-page.tsx"
+        "apps/backoffice-web/src/features/management/catalog-pages.tsx",
+        "apps/backoffice-web/src/features/management/legacy-catalog-route.tsx"
       ],
       "questions": [],
       "id": "FEAT-BO-REFINEMENT-001",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین کار با دستور صریح مالک اجرا و تست شد؛ پوش و بستن پس از تحویل مطابق سیاست تازه انجام می‌شود.",
       "related_issues": [],
       "code": "CV-BOR-01",
       "number": 107,
@@ -51,10 +52,16 @@
       "path": "docs/delivery/backoffice-refinement-2026-11-25/tasks/catalog-navigation-and-dedicated-pages.md",
       "github_dependencies": [
         108,
-        115,
-        116,
         112
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
+      "source_pushed": false,
+      "coordination_issues": [
+        115,
+        116
+      ],
+      "dependency_resolution": "existing-brand-product-forms-moved-without-implementing-their-supplemental-fields",
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda"
     },
     {
       "n": 2,
@@ -87,14 +94,16 @@
       "files": [
         "apps/backoffice-web/src/features/management/shared-attributes.tsx",
         "apps/backoffice-web/src/features/management/management-page.tsx",
-        "apps/api/internal/application/backoffice/attributes.go"
+        "apps/api/internal/application/backoffice/attributes.go",
+        "apps/backoffice-web/src/features/management/category-catalog-grid.tsx",
+        "apps/backoffice-web/src/features/management/category-bindings-dialog.tsx"
       ],
       "questions": [],
       "id": "FEAT-BO-REFINEMENT-002",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین کار با دستور صریح مالک اجرا و تست شد؛ پوش و بستن پس از تحویل مطابق سیاست تازه انجام می‌شود.",
       "related_issues": [
         81
       ],
@@ -105,7 +114,10 @@
       "github_dependencies": [
         5,
         28
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
+      "source_pushed": false,
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda"
     },
     {
       "n": 3,
@@ -606,11 +618,15 @@
     81
   ],
   "authorized_issue_numbers": [
+    107,
+    108,
     110,
     111,
     112
   ],
   "last_completed_local_issues": [
+    107,
+    108,
     110,
     111,
     112

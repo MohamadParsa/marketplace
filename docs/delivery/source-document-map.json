@@ -342,6 +342,17 @@
       "issue_state": "closed",
       "source_pushed": true,
       "pull_request": 106
+    },
+    {
+      "issues": [
+        107,
+        108
+      ],
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
+      "implementation_status": "done",
+      "source_tree_matches_documentation_revision": true,
+      "publication_status": "ready-to-push"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -419,7 +430,7 @@
       }
     ]
   },
-  "current_local_integration_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+  "current_local_integration_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
   "local_integration_publication_pending": true,
   "local_integration_verification": "docs/delivery/backlog-review-2026-11-24/parsa-integration.md",
   "local_publication_issue": 105,
