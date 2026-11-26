@@ -214,7 +214,7 @@ export function UsersPage() {
           </Button>
         }
       />
-      <section className="panel">
+      <section className="panel user-directory">
         <form
           className="user-filter-form"
           onSubmit={(e) => {
@@ -223,6 +223,7 @@ export function UsersPage() {
             setPage(0);
           }}
         >
+          <h2 className="filter-panel-title">فیلترهای کاربران</h2>
           <div className="user-form-grid">
             {(
               [

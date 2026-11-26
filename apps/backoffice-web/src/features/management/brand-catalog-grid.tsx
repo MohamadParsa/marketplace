@@ -55,6 +55,7 @@ export function BrandCatalogGrid({
   return (
     <>
       <section className="catalog-filters" aria-label="فیلترهای برند">
+        <h2 className="filter-panel-title">فیلترهای برند</h2>
         <div className="catalog-filter-text">
           <TextField
             size="small"
@@ -104,6 +105,7 @@ export function BrandCatalogGrid({
       </section>
       <section aria-label="فهرست برندها" className="category-catalog-grid">
         <DataTable
+        searchable={false}
           key={JSON.stringify([name, english, active, image])}
           rows={rows}
           columns={[

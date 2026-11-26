@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-26
 related: [DOM-SHIPPING-POLICY-001, API-SHIPPING-METHODS-PLAN-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 priority: P1
 ---
@@ -41,12 +41,16 @@ Issue: [#121](https://github.com/MohamadParsa/marketplace/issues/121) · مسئ�
 
 ## پذیرش
 
-- [ ] FEAT-SHIP-002-AC01: ایجاد/ویرایش/active و reload روش هر دو نوع دریافت، ظرفیت روزانه روش در فرم پنل و API با permission/version/retry صحیح باشند؛ range مقدار/واحد خودش را داشته باشد.
-- [ ] FEAT-SHIP-002-AC02: resolver برای شهر مجاز/نامجاز، دسته/زیرشاخه و مرسوله با یک قلم نامجاز، نتیجه امن بدهد؛ درخواست مستقیم قید را دور نزند.
-- [ ] FEAT-SHIP-002-AC03: zero prepaid با collect تفکیک شود و روش قدیمی با تفسیر سازگار prepaid/range/working باقی بماند؛ هیچ سفارش/دفتر تاریخی بازنویسی نشود.
-- [ ] FEAT-SHIP-002-AC04: فیلتر و صفحه‌بندی/ویرایش روشن، انتخاب درخت دسته و شهر، حالات خطا و موبایل پنل با API/مرورگر و restart شاهد داشته باشند؛ اجرای فعلی هنوز todo است.
+- [x] FEAT-SHIP-002-AC01: ایجاد/ویرایش/active و reload روش هر دو نوع دریافت، ظرفیت روزانه روش در فرم پنل و API با permission/version/retry صحیح باشند؛ range مقدار/واحد خودش را داشته باشد.
+- [x] FEAT-SHIP-002-AC02: resolver برای شهر مجاز/نامجاز، دسته/زیرشاخه و مرسوله با یک قلم نامجاز، نتیجه امن بدهد؛ درخواست مستقیم قید را دور نزند.
+- [x] FEAT-SHIP-002-AC03: zero prepaid با collect تفکیک شود و روش قدیمی با تفسیر سازگار prepaid/range/working باقی بماند؛ هیچ سفارش/دفتر تاریخی بازنویسی نشود.
+- [x] FEAT-SHIP-002-AC04: فیلتر و صفحه‌بندی/ویرایش روشن، انتخاب درخت دسته و شهر، حالات خطا و موبایل پنل با API/مرورگر و restart شاهد داشته باشند؛ شواهد اجرای همین برش در گزارش تحویل ثبت است.
 
 ## منابع و طراحی
 
 [قواعد مشترک](../../../domains/shipping/method-policies.md) · [طرح فنی](../../../architecture/contracts/shipping-methods-plan.md) · [پرسش‌های باز](../../../product/open-questions.md#shipping-policy-20261126) · [برنامه و عدم هم‌پوشانی](../README.md). طرح A؛ انتخاب‌ها به‌صورت باکس/چیپ خوانا و بدون dropdown تازه، به‌جز cascade استان/شهر موجود. حق مجاز در سرور، version/idempotency، loading/empty/error/forbidden و حفظ draft در خطا الزامی‌اند.
 
+
+## شواهد تحویل
+
+[گزارش API، تست، restart و تصاویر #121](../issue-121-verification.md) · [اصلاح تکمیلی رابط طبق درخواست مالک](../backoffice-ui-consistency.md). ظرفیت عملیاتی و برنامه در #16 باقی‌اند.

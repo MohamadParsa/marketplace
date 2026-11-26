@@ -284,4 +284,6 @@ FEAT-NEXT-026-AC01..04 → [قرارداد](../architecture/contracts/business-c
 
 ## تقویم، وقفه و روش حمل — اجرای ترتیبی انتخاب‌شده
 
+FEAT-SHIP-002-AC01..04 → [قرارداد روش عمومی](../architecture/contracts/shipping-methods-plan.md) → [شواهد #121](../delivery/shipping-refinement-2026-11-26/issue-121-verification.md). اصلاح مستقیم مالک برای فیلتر/گرید و panelbar نیز در [گزارش رابط](../delivery/shipping-refinement-2026-11-26/backoffice-ui-consistency.md) و قرارداد جاری گرید ثبت شد.
+
 DOM-SHIPPING-POLICY-001 → [قواعد](../domains/shipping/method-policies.md) → [قرارداد](../architecture/contracts/shipping-methods-plan.md) → [صف اجرا](../delivery/shipping-refinement-2026-11-26/README.md) → [سناریوها](../bdd/features/experiences/shipping-method-policies.feature). FEAT-SHIP-001-AC01..04 → [شواهد تست #120](../delivery/shipping-refinement-2026-11-26/issue-120-verification.md). پاسخ‌های Q04..Q07 ثبت شده‌اند؛ وضعیت اجرا و شاهد هر برش مستقل است.

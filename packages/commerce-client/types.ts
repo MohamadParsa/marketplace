@@ -65,6 +65,14 @@ export interface Method {
   instructions: string;
 }
 export interface Shipping {
+  version?: number;
+  collection_mode?: "prepaid" | "collect";
+  delivery_mode?: "range" | "slots";
+  daily_capacity?: number | null;
+  category_mode?: "all" | "selected";
+  allowed_categories?: string[];
+  denied_categories?: string[];
+  city_ids?: string[];
   day_basis?: "working" | "calendar";
   id: string;
   name: string;
@@ -139,6 +147,7 @@ export interface QuoteLine {
   total_toman: string;
 }
 export interface Shipment {
+  collection_mode?: "prepaid" | "collect";
   transport_day_basis?: "working" | "calendar";
   ready_at?: string;
   store_id: string;

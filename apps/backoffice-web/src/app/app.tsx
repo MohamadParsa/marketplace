@@ -1,4 +1,5 @@
 import { StoresPage } from "../features/management/stores-page";
+import { ShippingMethodsPage } from "../features/commerce/shipping-methods-page";
 import { StorePreparationPage } from "../features/management/store-preparation-page";
 import { UsersPage } from "../features/management/users-page";
 import { RolesPage } from "../features/management/access-panel";
@@ -126,7 +127,7 @@ const menu = [
       },
       {
         path: "/shipping",
-        label: "ارسال و تقویم",
+        label: "روش‌های حمل",
         icon: <LocalShippingOutlined />,
       },
     ],
@@ -262,19 +263,13 @@ function Workspace({
   useEffect(() => {
     if (query.error instanceof ApiError && query.error.status === 401) logout();
   }, [query.error, logout]);
-  const catalogActive = [
-    "/categories",
-    "/attributes",
-    "/brands",
-    "/products",
-  ].some(
-    (path) =>
-      location.pathname === path || location.pathname.startsWith(path + "/"),
+  const [expandedPanels, setExpandedPanels] = useState<Record<string,boolean>>(
+    Object.fromEntries(menu.map(group => [group.heading,group.heading!=="کاتالوگ"]))
   );
-  const [catalogOpen, setCatalogOpen] = useState(catalogActive);
   useEffect(() => {
-    if (catalogActive) setCatalogOpen(true);
-  }, [catalogActive, location.pathname]);
+    const active=menu.find(group=>group.items.some(item=>location.pathname===item.path||item.path!=="/"&&location.pathname.startsWith(item.path+"/")));
+    if(active)setExpandedPanels(previous=>({...previous,[active.heading]:true}));
+  }, [location.pathname]);
   const current = menu
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
@@ -332,36 +327,17 @@ function Workspace({
           <span className="live-dot" />
         </div>
         <nav>
-          {visibleMenu.map((group) => (
-            <div className="nav-group" key={group.heading}>
-              {group.heading === "کاتالوگ" ? (
-                <button
-                  className={
-                    "catalog-nav-parent " + (catalogActive ? "is-current" : "")
-                  }
-                  aria-expanded={catalogOpen}
-                  aria-controls="catalog-nav-children"
-                  onClick={() => setCatalogOpen((v) => !v)}
-                >
-                  <CategoryOutlined />
-                  <span>کاتالوگ</span>
-                  <span aria-hidden="true">{catalogOpen ? "⌃" : "⌄"}</span>
-                </button>
-              ) : (
-                <h3>{group.heading}</h3>
-              )}
+          {visibleMenu.map((group,index) => (
+            <section className="nav-group nav-panel" key={group.heading}>
+              <button className="nav-panel-heading" id={`nav-panel-heading-${index}`} aria-expanded={!!expandedPanels[group.heading]} aria-controls={`nav-panel-content-${index}`} onClick={()=>setExpandedPanels(previous=>({...previous,[group.heading]:!previous[group.heading]}))}>
+                <span>{group.heading}</span><span className="nav-panel-arrow" aria-hidden="true">⌄</span>
+              </button>
               <div
-                id={
-                  group.heading === "کاتالوگ"
-                    ? "catalog-nav-children"
-                    : undefined
-                }
-                className={
-                  group.heading === "کاتالوگ"
-                    ? "catalog-nav-children"
-                    : undefined
-                }
-                hidden={group.heading === "کاتالوگ" && !catalogOpen}
+                id={`nav-panel-content-${index}`}
+                role="group"
+                aria-labelledby={`nav-panel-heading-${index}`}
+                className="nav-panel-content"
+                hidden={!expandedPanels[group.heading]}
               >
                 {group.items.map((item) => (
                   <NavLink
@@ -381,7 +357,7 @@ function Workspace({
                   </NavLink>
                 ))}
               </div>
-            </div>
+            </section>
           ))}
         </nav>
         <div className="sidebar-bottom">
@@ -663,7 +639,8 @@ function Workspace({
                     )
                   }
                 />
-                {(["pricing", "shipping"] as const).map((section) => (
+                <Route path="/shipping" element={session.user.Surface === "seller" ? <Navigate to="/store-preparation" replace /> : <ShippingMethodsPage />} />
+                {(["pricing"] as const).map((section) => (
                   <Route
                     key={section}
                     path={"/" + section}

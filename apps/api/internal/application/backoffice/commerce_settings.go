@@ -6,6 +6,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
+	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -36,16 +37,24 @@ type PaymentMethodInput struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethodInput struct {
-	DayBasis  shipping.DayBasis `json:"day_basis,omitempty"`
-	ID        string            `json:"id"`
-	Name      string            `json:"name"`
-	Active    bool              `json:"active"`
-	AllCities bool              `json:"all_cities"`
-	Cities    []string          `json:"cities"`
-	StoreIDs  []string          `json:"store_ids"`
-	FeeToman  string            `json:"fee_toman"`
-	MinDays   int               `json:"min_days"`
-	MaxDays   int               `json:"max_days"`
+	Version           int               `json:"version"`
+	CollectionMode    string            `json:"collection_mode,omitempty"`
+	DeliveryMode      string            `json:"delivery_mode,omitempty"`
+	DailyCapacity     *int              `json:"daily_capacity,omitempty"`
+	CategoryMode      string            `json:"category_mode,omitempty"`
+	AllowedCategories []string          `json:"allowed_categories,omitempty"`
+	DeniedCategories  []string          `json:"denied_categories,omitempty"`
+	CityIDs           []string          `json:"city_ids,omitempty"`
+	DayBasis          shipping.DayBasis `json:"day_basis,omitempty"`
+	ID                string            `json:"id"`
+	Name              string            `json:"name"`
+	Active            bool              `json:"active"`
+	AllCities         bool              `json:"all_cities"`
+	Cities            []string          `json:"cities"`
+	StoreIDs          []string          `json:"store_ids"`
+	FeeToman          string            `json:"fee_toman"`
+	MinDays           int               `json:"min_days"`
+	MaxDays           int               `json:"max_days"`
 }
 type PaymentSettingsInput struct {
 	Methods     []PaymentMethodInput `json:"methods"`
@@ -91,11 +100,7 @@ func settingsView(s commerce.Settings) CommerceSettingsView {
 		v.Methods = append(v.Methods, methodInput(m))
 	}
 	for _, m := range s.Shipping {
-		basis := m.DayBasis
-		if basis == "" {
-			basis = shipping.WorkingDays
-		}
-		v.Shipping = append(v.Shipping, ShippingMethodInput{ID: m.ID, Name: m.Name, Active: m.Active, AllCities: m.AllCities, Cities: m.Cities, StoreIDs: m.StoreIDs, FeeToman: commerce.Toman(m.Fee), MinDays: m.MinDays, MaxDays: m.MaxDays, DayBasis: basis})
+		v.Shipping = append(v.Shipping, shippingMethodInput(m))
 	}
 	return v
 }
@@ -307,7 +312,7 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 				}
 				c.Settings.ShippingTiming = &timing
 			}
-			if len(v.Methods) > 30 || len(v.ClosedWeekdays) > 6 || len(v.Holidays) > 366 {
+			if len(v.Methods) > 1000 || len(v.ClosedWeekdays) > 6 || len(v.Holidays) > 366 {
 				return nil, ErrInvalid
 			}
 			days := map[int]bool{}
@@ -327,32 +332,41 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 			methods := []commerce.ShippingMethod{}
 			seen := map[string]bool{}
 			for _, m := range v.Methods {
-				if m.DayBasis == "" {
-					m.DayBasis = shipping.WorkingDays
-				}
-				if !shipping.ValidBasis(m.DayBasis) {
-					return nil, ErrInvalid
-				}
-				fee, e := commerce.ParseToman(m.FeeToman)
-				if e != nil || m.ID == "" || len(m.ID) > 80 || seen[m.ID] || strings.TrimSpace(m.Name) == "" || !textBound(m.Name, 100) || m.MinDays < 0 || m.MaxDays < m.MinDays || m.MaxDays > 60 || len(m.Cities) > 100 || len(m.StoreIDs) > 100 || m.Active && !m.AllCities && len(m.Cities) == 0 {
+				if seen[m.ID] {
 					return nil, ErrInvalid
 				}
 				seen[m.ID] = true
-				for _, city := range m.Cities {
-					if strings.TrimSpace(city) == "" || !textBound(city, 100) {
-						return nil, ErrInvalid
+				var previous *commerce.ShippingMethod
+				for index := range c.Settings.Shipping {
+					if c.Settings.Shipping[index].ID == m.ID {
+						previous = &c.Settings.Shipping[index]
+						break
 					}
 				}
-				for _, id := range m.StoreIDs {
-					found := false
-					for _, st := range w.Stores {
-						found = found || st.ID == id
-					}
-					if !found {
-						return nil, ErrInvalid
-					}
+				method, err := normalizeShippingMethod(*w, m, previous == nil)
+				if err != nil {
+					return nil, err
 				}
-				methods = append(methods, commerce.ShippingMethod{ID: m.ID, Name: m.Name, Active: m.Active, AllCities: m.AllCities, Cities: m.Cities, StoreIDs: m.StoreIDs, Fee: fee, MinDays: m.MinDays, MaxDays: m.MaxDays, DayBasis: m.DayBasis})
+				if previous != nil {
+					if previous.Version != m.Version {
+						return nil, ErrConflict
+					}
+					old, err := normalizeShippingMethod(*w, shippingMethodInput(*previous), false)
+					if err != nil {
+						return nil, err
+					}
+					if !reflect.DeepEqual(old, method) {
+						method.Version++
+					}
+				} else {
+					method.Version = 1
+				}
+				methods = append(methods, method)
+			}
+			for _, existing := range c.Settings.Shipping {
+				if !seen[existing.ID] {
+					return nil, shippingInvalid("methods", "روش موجود حذف نمی‌شود؛ برای توقف، آن را غیرفعال کنید.")
+				}
 			}
 			c.Settings.Shipping = methods
 			c.Settings.ClosedWeekdays = v.ClosedWeekdays
@@ -379,29 +393,6 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 		commerceAudit(w, id, a, "settings.update", "settings", "", now)
 		return settingsView(c.Settings), nil
 	})
-}
-func shippingEligible(m commerce.ShippingMethod, city, store string) bool {
-	if !m.Active {
-		return false
-	}
-	if len(m.StoreIDs) > 0 {
-		found := false
-		for _, id := range m.StoreIDs {
-			found = found || id == store
-		}
-		if !found {
-			return false
-		}
-	}
-	if m.AllCities {
-		return true
-	}
-	for _, c := range m.Cities {
-		if NormalizeSearch(c) == NormalizeSearch(city) {
-			return true
-		}
-	}
-	return false
 }
 func sortedStoreIDs(lines []commerce.LineSnapshot) []string {
 	m := map[string]bool{}

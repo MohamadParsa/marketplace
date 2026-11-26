@@ -70,11 +70,13 @@ export function DataTable<T extends { id: string }>({
   rows,
   columns,
   empty = "موردی برای نمایش وجود ندارد.",
+  searchable = true,
   remote,
 }: {
   rows: T[];
   columns: Column<T>[];
   empty?: string;
+  searchable?: boolean;
   remote?: {
     controls: Parameters<typeof PaginationControls>[0];
     filterKey: string;
@@ -85,8 +87,6 @@ export function DataTable<T extends { id: string }>({
   const exportAbort = useRef<AbortController>();
   useEffect(() => () => exportAbort.current?.abort(), []);
   const [search, setSearch] = useState(""),
-    [filters, setFilters] = useState<Record<string, string>>({}),
-    [showFilters, setShowFilters] = useState(false),
     [sort, setSort] = useState<{ column: number; desc: boolean }>(),
     [selected, setSelected] = useState<string[]>([]),
     [exporting, setExporting] = useState(false),
@@ -94,7 +94,7 @@ export function DataTable<T extends { id: string }>({
   useEffect(() => {
     if (remote) setSelected([]);
   }, [remote?.filterKey]);
-  const deferred = useDeferredValue(search);
+  const deferred = useDeferredValue(searchable ? search : "");
   const cells = useMemo(
     () =>
       rows.map((row) => ({
@@ -107,11 +107,7 @@ export function DataTable<T extends { id: string }>({
     value.trim().replace(/ي/g, "ی").replace(/ك/g, "ک").toLocaleLowerCase();
   const filtered = useMemo(() => {
     const out = cells.filter(
-      (x) =>
-        (!deferred || norm(x.text.join(" ")).includes(norm(deferred))) &&
-        Object.entries(filters).every(
-          ([i, v]) => !v || norm(x.text[Number(i)]).includes(norm(v)),
-        ),
+      (x) => !deferred || norm(x.text.join(" ")).includes(norm(deferred)),
     );
     if (sort)
       out.sort((a, b) => {
@@ -121,7 +117,7 @@ export function DataTable<T extends { id: string }>({
         return (sort.desc ? -n : n) || a.row.id.localeCompare(b.row.id);
       });
     return out;
-  }, [cells, deferred, filters, sort]);
+  }, [cells, deferred, sort]);
   const paged = usePagedRows(filtered.map((x) => x.row));
   const selectedVisible = filtered.filter((x) => selected.includes(x.row.id));
   const exportRows = async (onlySelected: boolean) => {
@@ -195,31 +191,24 @@ export function DataTable<T extends { id: string }>({
     }
   };
   return (
-    <>
+    <section className="data-grid" aria-label="نتایج جدول">
       <div className="grid-tools">
-        {!remote && (
+        {!remote && searchable && (
           <>
             <TextField
               size="small"
-              label="جست‌وجو در جدول"
+              label="جست‌وجو در نتایج"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             <Button
-              aria-expanded={showFilters}
-              onClick={() => setShowFilters((v) => !v)}
-            >
-              فیلتر ستون‌ها
-            </Button>
-            <Button
               onClick={() => {
                 setSearch("");
-                setFilters({});
                 setSort(undefined);
                 setSelected([]);
               }}
             >
-              پاک‌کردن فیلترها
+              پاک‌کردن جست‌وجو
             </Button>
           </>
         )}
@@ -232,18 +221,22 @@ export function DataTable<T extends { id: string }>({
           انتخاب
         </span>
         <Button
+          variant="outlined"
+          size="small"
           disabled={exporting || !(remote?.controls.total ?? filtered.length)}
           onClick={() => void exportRows(false)}
         >
-          Excel نتایج
+          خروجی Excel نتایج
         </Button>
         <Button
+          variant="outlined"
+          size="small"
           disabled={
             exporting || !(remote ? selected.length : selectedVisible.length)
           }
           onClick={() => void exportRows(true)}
         >
-          Excel انتخاب‌شده‌ها
+          خروجی Excel انتخاب‌ها
         </Button>
         {exporting && (
           <Button onClick={() => exportAbort.current?.abort()}>
@@ -251,23 +244,6 @@ export function DataTable<T extends { id: string }>({
           </Button>
         )}
       </div>
-      {showFilters && (
-        <div className="grid-column-filters">
-          {columns.map((c, i) =>
-            actionColumn(c.title) ? null : (
-              <TextField
-                key={c.title}
-                size="small"
-                label={`فیلتر ${c.title}`}
-                value={filters[i] ?? ""}
-                onChange={(e) =>
-                  setFilters({ ...filters, [i]: e.target.value })
-                }
-              />
-            ),
-          )}
-        </div>
-      )}
       {error && (
         <Alert severity="error" role="alert">
           {error}
@@ -378,7 +354,7 @@ export function DataTable<T extends { id: string }>({
         {!filtered.length && <div className="empty">{empty}</div>}
       </div>
       <PaginationControls {...(remote?.controls ?? paged.controls)} />
-    </>
+    </section>
   );
 }
 export function PageHeader({

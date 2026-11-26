@@ -441,6 +441,7 @@ export function ManagementPage({
             />
             <DataTable
               key={JSON.stringify(productFilters)}
+              searchable={false}
               rows={filtered(filterProductRows(state, productFilters))}
               columns={[
                 {

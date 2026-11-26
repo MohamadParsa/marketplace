@@ -46,6 +46,7 @@ type QuoteLineView struct {
 	TotalToman              string                   `json:"total_toman"`
 }
 type ShipmentView struct {
+	CollectionMode    string            `json:"collection_mode"`
 	LeadDayBasis      shipping.DayBasis `json:"lead_day_basis"`
 	TransportDayBasis shipping.DayBasis `json:"transport_day_basis"`
 	ReadyAt           *time.Time        `json:"ready_at,omitempty"`
@@ -179,6 +180,10 @@ func quoteView(q commerce.Quote) QuoteView {
 			view.LeadDayBasis = s.Preparation.Policy.DayBasis
 			view.TransportDayBasis = s.Preparation.TransportBasis
 			view.ReadyAt = &s.Preparation.ReadyAt
+		}
+		view.CollectionMode = shippingMethodInput(s.Method).CollectionMode
+		if view.CollectionMode == "collect" {
+			view.FeeToman = ""
 		}
 		v.Shipments = append(v.Shipments, view)
 	}
@@ -341,7 +346,7 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 				continue
 			}
 			for _, method := range c.Settings.Shipping {
-				if method.ID == in.Shipping[storeID] && shippingEligible(method, q.Address.City, storeID) {
+				if method.ID == in.Shipping[storeID] && method.DeliveryMode != "slots" && ShippingMethodEligible(w, method, q.Address, storeID, q.Lines) {
 					preparation, from, to, err := shipmentPreparation(c.Settings, st, method, now)
 					if err != nil {
 						return q, err
@@ -471,7 +476,7 @@ func (s *Service) PrepareCheckout(ctx context.Context, a identity.User) (Prepare
 	}
 	shipping := []ShippingMethodInput{}
 	for _, m := range settings.Shipping {
-		if m.Active {
+		if m.Active && m.DeliveryMode != "slots" {
 			shipping = append(shipping, m)
 		}
 	}

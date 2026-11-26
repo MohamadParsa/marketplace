@@ -1,0 +1,70 @@
+/* Shared backoffice panels, filters, navigation and result grids. */
+.workspace-main .catalog-filters,
+.workspace-main .user-filter-form,
+.workspace-main .shipping-method-filters {
+  background: #fff;
+  border: 1px solid #eadfe5;
+  border-radius: 14px;
+  padding: 20px;
+  margin-block: 0 18px;
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+.workspace-main .filter-panel-title { margin: 0; font-size: 14px; font-weight: 600; color: #392b35; }
+.category-tree > input { width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #dfced8; border-radius: 10px; padding: 10px 12px; background: #fff; color: #493841; font: inherit; font-size: 12px; }
+.category-tree > input:focus { outline: 2px solid #b51f4633; border-color: #b51f46; }
+.workspace-main .catalog-filter-text,
+.workspace-main .user-filter-form .user-form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,240px),1fr)); gap: 14px; }
+.workspace-main .catalog-filters .toolbar,
+.workspace-main .user-filter-form .toolbar,
+.workspace-main .shipping-method-filters .toolbar { padding: 0; margin: 0; gap: 8px; justify-content: flex-start; flex-wrap: wrap; }
+.workspace-main .catalog-filters .MuiTextField-root,
+.workspace-main .user-filter-form .MuiTextField-root,
+.workspace-main .shipping-method-filters .MuiTextField-root { min-width: 0; max-width: 100%; }
+.workspace-main .catalog-filter-choice { gap: 12px; align-items: center; }
+.workspace-main .catalog-filter-choice > strong { min-width: 96px; font-size: 12px; font-weight: 500; }
+.shipping-filter-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; align-items: center; }
+.shipping-method-filters > details > summary { cursor: pointer; padding: 4px 0; font-size: 12px; color: #705261; }
+.workspace-main .panel.store-directory,
+.workspace-main .panel.user-directory { border: 0; background: transparent; padding: 0; box-shadow: none; }
+.data-grid { min-width: 0; max-width: 100%; border: 1px solid #eadfe5; border-radius: 14px; background: #fff; overflow: hidden; }
+.data-grid .grid-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0; padding: 16px; border-bottom: 1px solid #f0e7ec; }
+.data-grid .grid-tools > .MuiTextField-root { flex: 1 1 240px; max-width: 360px; }
+.data-grid .grid-tools > span { margin-inline-start: auto; color: #7c6b77; font-size: 12px; white-space: nowrap; }
+.data-grid .grid-tools .MuiButton-root { font-size: 11px; min-height: 34px; }
+.data-grid .table-scroll { margin: 0; border: 0; border-radius: 0; overflow-x: auto; max-width: 100%; }
+.data-grid .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-grid .data-table th { background: #fcfafc; color: #756370; font-size: 12px; font-weight: 600; padding: 13px 14px; border-bottom: 1px solid #eadfe5; text-align: right; }
+.data-grid .data-table td { color: #4f414a; padding: 13px 14px; line-height: 1.9; vertical-align: middle; border-bottom: 1px solid #f2eaf0; }
+.data-grid .data-table td b { font-weight: 600; color: #30232c; }
+.data-grid .data-table td small { display: block; font-size: 11px; color: #8b7985; margin-top: 3px; }
+.data-grid .data-table tbody tr:hover { background: #fffafd; }
+.data-grid .data-table tbody tr:last-child td { border-bottom: 0; }
+.data-grid .grid-selection { width: 44px; min-width: 44px; }
+.data-grid .grid-selection input,.data-grid .data-table td>input[type=checkbox] { accent-color: #b51f46; width: 16px; height: 16px; vertical-align: middle; }
+.data-grid .table-actions-cell { min-width: 160px; max-width: 260px; }
+.data-grid .table-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.data-grid .table-row-actions .MuiButton-root { font-size: 11px; min-width: 0; padding: 5px 9px; }
+.data-grid .data-pagination { margin: 0; border-top: 1px solid #f0e7ec; padding: 12px 16px; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.data-grid .data-pagination .MuiButton-root { min-width: 36px; font-size: 11px; }
+.data-grid .pagination-sizes [aria-pressed=true] { color: #b51f46; background: #fff1f5; font-weight: 600; }
+.nav-panel { margin: 0 0 6px; min-width: 0; }
+.nav-panel-heading { display: flex; align-items: center; width: 100%; min-height: 42px; gap: 10px; border: 0; border-radius: 10px; background: transparent; padding: 8px 12px; color: #796573; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; text-align: start; }
+.nav-panel-heading:hover { background: #fcf6f9; }
+.nav-panel-heading[aria-expanded=true] { color: #49303e; background: #fcf8fa; }
+.nav-panel-heading:focus-visible { outline: 2px solid #b51f46; outline-offset: 2px; }
+.nav-panel-arrow { margin-inline-start: auto; font-size: 18px; line-height: 1; transition: transform .15s; }
+.nav-panel-heading[aria-expanded=true] .nav-panel-arrow { transform: rotate(180deg); }
+.nav-panel-content { position: static; padding-inline-start: 8px; margin: 6px 12px 12px 0; border-inline-start: 1px solid #eadfe5; }
+.nav-panel-content[hidden] { display: none; }
+.nav-panel .nav-panel-content a { margin-block: 2px; min-height: 38px; font-size: 12px; }
+@media(max-width:700px) {
+  .shipping-filter-fields { grid-template-columns: 1fr; }
+  .workspace-main .catalog-filters,.workspace-main .user-filter-form,.workspace-main .shipping-method-filters { padding: 14px; }
+  .data-grid .grid-tools { padding: 12px; }
+  .data-grid .grid-tools > span { margin-inline-start: 0; }
+  .data-grid .data-pagination { align-items: flex-start; padding: 12px; }
+  .data-grid .data-table th,.data-grid .data-table td { padding: 11px 12px; }
+}
+@media(prefers-reduced-motion:reduce) { .nav-panel-arrow { transition: none; } }

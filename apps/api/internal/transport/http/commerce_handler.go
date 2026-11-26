@@ -34,6 +34,11 @@ func NewCommerceHandler(s *backoffice.Service, a *auth.Service) *CommerceHandler
 	return &CommerceHandler{service: s, auth: a, guestLimits: map[string]guestLimit{}}
 }
 func commerceError(w http.ResponseWriter, e error) {
+	var field *backoffice.ShippingFieldError
+	if errors.As(e, &field) {
+		writeJSON(w, 400, map[string]any{"code": "invalid_shipping_method", "fields": map[string]string{field.Field: field.Message}})
+		return
+	}
 	status, code := 503, "commerce_unavailable"
 	switch {
 	case errors.Is(e, backoffice.ErrReauthenticationRequired):
@@ -96,6 +101,9 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
+	if strings.HasPrefix(r.URL.Path, "/backoffice/shipping/methods") {
+		limit = 2 * 1024 * 1024
+	}
 	if r.URL.Path == "/backoffice/stores/preparation/batch" {
 		limit = 1024 * 1024
 	}

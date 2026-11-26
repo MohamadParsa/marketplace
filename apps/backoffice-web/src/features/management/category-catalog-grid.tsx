@@ -94,6 +94,7 @@ export function CategoryCatalogGrid({
         className="panel catalog-filters"
         aria-label="فیلترهای دسته‌بندی"
       >
+        <h2 className="filter-panel-title">فیلترهای دسته‌بندی</h2>
         <div className="catalog-filter-text">
           <TextField
             size="small"
@@ -188,6 +189,7 @@ export function CategoryCatalogGrid({
         aria-label="فهرست دسته‌بندی‌ها"
       >
         <DataTable
+        searchable={false}
           key={JSON.stringify([
             name,
             english,

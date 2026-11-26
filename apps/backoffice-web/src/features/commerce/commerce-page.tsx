@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   BusinessContentEditor,
   businessDraft,
@@ -31,7 +32,6 @@ import type {
   Purchase,
   Settings,
   Method,
-  Shipping,
   Refund,
 } from "../../../../../packages/commerce-client/types";
 import { label, money } from "../../../../../packages/commerce-client/types";
@@ -796,7 +796,7 @@ function PurchaseReview({
               <article key={s.store_id} className="commerce-shipment-card">
                 <b>{s.store_name}</b>
                 <p>
-                  {s.method_name} · {money(s.fee_toman)}
+                  {s.method_name} · {s.collection_mode === "collect" ? "پرداخت هزینهٔ حمل هنگام تحویل" : money(s.fee_toman)}
                 </p>
                 <small>وقفه تأمین: {s.lead_days} روز {s.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}</small>
                 <p>
@@ -983,7 +983,6 @@ function SettingsForm({
   settings: s,
   permissions,
   categories,
-  stores,
   busy,
   save,
 }: {
@@ -996,7 +995,7 @@ function SettingsForm({
 }) {
   const [methods, setMethods] = useState(s.methods),
     [destination, setDestination] = useState(s.destination),
-    [shipping, setShipping] = useState(s.shipping),
+    [shipping] = useState(s.shipping),
     [days, setDays] = useState(s.closed_weekdays),
     [timing, setTiming] = useState(s.shipping_timing),
     [holidays, setHolidays] = useState(s.holidays.join("\n")),
@@ -1005,10 +1004,6 @@ function SettingsForm({
   const patchMethod = (i: number, patch: Partial<Method>) =>
     setMethods(
       methods.map((m, index) => (index === i ? { ...m, ...patch } : m)),
-    );
-  const patchShipping = (i: number, patch: Partial<Shipping>) =>
-    setShipping(
-      shipping.map((m, index) => (index === i ? { ...m, ...patch } : m)),
     );
   function Multiple({
     caption,
@@ -1172,101 +1167,8 @@ function SettingsForm({
       {section(
         "روش‌های ارسال و تقویم کاری",
         <fieldset disabled={busy || !can("shipping.write")}>
-          {shipping.map((m, i) => (
-            <article className="commerce-setting-card" key={m.id}>
-              <div className="commerce-grid">
-                <Field
-                  label="نام ارسال"
-                  value={m.name}
-                  onChange={(name) => patchShipping(i, { name })}
-                />
-                <Field
-                  label="هزینه هر فروشگاه (تومان)"
-                  value={m.fee_toman}
-                  onChange={(fee_toman) => patchShipping(i, { fee_toman })}
-                />
-                <Field
-                  label="حداقل مدت حمل پس از تأمین"
-                  type="number"
-                  value={String(m.min_days)}
-                  onChange={(v) => patchShipping(i, { min_days: Number(v) })}
-                />
-                <Field
-                  label="حداکثر مدت حمل پس از تأمین"
-                  type="number"
-                  value={String(m.max_days)}
-                  onChange={(v) => patchShipping(i, { max_days: Number(v) })}
-                />
-                <div role="group" aria-label={`واحد مدت حمل ${m.name}`} className="toolbar">
-                  {([ ["working","روز کاری"],["calendar","روز تقویمی"] ] as const).map(([value,label]) => <Button key={value} aria-pressed={(m.day_basis ?? "working") === value} variant={(m.day_basis ?? "working") === value ? "contained":"outlined"} onClick={() => patchShipping(i,{day_basis:value})}>{label}</Button>)}
-                </div>
-              </div>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={m.active}
-                    onChange={(e) =>
-                      patchShipping(i, { active: e.target.checked })
-                    }
-                  />
-                }
-                label="فعال"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={m.all_cities}
-                    onChange={(e) =>
-                      patchShipping(i, { all_cities: e.target.checked })
-                    }
-                  />
-                }
-                label="همه شهرها"
-              />
-              {!m.all_cities && (
-                <Field
-                  label="شهرهای مجاز، جداشده با ویرگول"
-                  value={m.cities.join("،")}
-                  onChange={(v) =>
-                    patchShipping(i, {
-                      cities: v
-                        .split(/[,،]/)
-                        .map((x) => x.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                />
-              )}
-              <Multiple
-                caption="فروشگاه‌های مجاز (خالی = همه)"
-                value={m.store_ids ?? []}
-                options={stores}
-                onChange={(store_ids) => patchShipping(i, { store_ids })}
-              />
-            </article>
-          ))}
-          <Button
-            disabled={busy || !can("shipping.write")}
-            onClick={() =>
-              setShipping([
-                ...shipping,
-                {
-                  id: "ship-" + crypto.randomUUID(),
-                  name: "روش ارسال جدید",
-                  active: false,
-                  all_cities: true,
-                  cities: [],
-                  store_ids: [],
-                  fee_toman: "0",
-                  min_days: 1,
-                  max_days: 3,
-                  day_basis: "working",
-                },
-              ])
-            }
-          >
-            افزودن روش ارسال
-          </Button>
+          <p>روش‌های عمومی، پوشش شهر/دسته و دریافت هزینه از صفحهٔ روش‌های حمل مدیریت می‌شوند.</p>
+          <Button component={Link} to="/shipping">مدیریت روش‌های حمل</Button>
           <h3>زمان آماده‌سازی و تحویل</h3>
           <div className="commerce-grid">
             <Field label="ساعت آماده‌سازی (تهران، HH:mm)" value={timing.ready_time} onChange={ready_time => setTiming({...timing,ready_time})} />

@@ -251,7 +251,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				eligible = true
 			}
 		}
-		eligible = eligible && storePoliciesStillAllowed(*w, *q)
+		eligible = eligible && storePoliciesStillAllowed(*w, *q) && shippingStillAllowed(*w, *q)
 		if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
 			eligible = false
 		}
@@ -259,7 +259,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 			releaseQuote(w, q)
 			q.Status = "invalidated"
 			p.Status = "requires-reconfirmation"
-			p.Reason = "روش پرداخت یا محدودیت آن تغییر کرده است."
+			p.Reason = "روش پرداخت، ارسال یا محدودیت آن تغییر کرده است."
 			p.Version++
 			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
 			return purchaseView(c, *p), nil

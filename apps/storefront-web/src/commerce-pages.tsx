@@ -1108,7 +1108,7 @@ function CheckoutForm() {
                                   />
                                   <span>
                                     <b>{m.name}</b>
-                                    <small>{money(m.fee_toman)}</small>
+                                    <small>{m.collection_mode === "collect" ? "پرداخت هزینهٔ حمل هنگام تحویل" : money(m.fee_toman)}</small>
                                     <small>
                                       حمل پس از تأمین {m.min_days} تا{" "}
                                       {m.max_days} روز {m.day_basis === "calendar" ? "تقویمی" : "کاری"}؛ علاوه بر
@@ -1493,7 +1493,7 @@ export function OrderSummary({ quote }: { quote: Quote }) {
           <b>
             {s.store_name} · {s.method_name}
           </b>
-          <p>هزینه ارسال: {money(s.fee_toman)}</p>
+          <p>هزینه ارسال: {s.collection_mode === "collect" ? "پرداخت به حمل‌کننده هنگام تحویل" : money(s.fee_toman)}</p>
           <p>
             {dispatchTime(s.lead_days, s.lead_day_basis)}؛ تحویل از{" "}
             {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}

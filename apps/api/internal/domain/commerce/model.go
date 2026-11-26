@@ -66,16 +66,24 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
-	DayBasis  shipping.DayBasis `json:"day_basis,omitempty"`
-	ID        string            `json:"id"`
-	Name      string            `json:"name"`
-	Active    bool              `json:"active"`
-	AllCities bool              `json:"all_cities"`
-	Cities    []string          `json:"cities"`
-	StoreIDs  []string          `json:"store_ids"`
-	Fee       Amount            `json:"fee"`
-	MinDays   int               `json:"min_days"`
-	MaxDays   int               `json:"max_days"`
+	Version           int               `json:"version,omitempty"`
+	CollectionMode    string            `json:"collection_mode,omitempty"`
+	DeliveryMode      string            `json:"delivery_mode,omitempty"`
+	DailyCapacity     *int              `json:"daily_capacity,omitempty"`
+	CategoryMode      string            `json:"category_mode,omitempty"`
+	AllowedCategories []string          `json:"allowed_categories,omitempty"`
+	DeniedCategories  []string          `json:"denied_categories,omitempty"`
+	CityIDs           []string          `json:"city_ids,omitempty"`
+	DayBasis          shipping.DayBasis `json:"day_basis,omitempty"`
+	ID                string            `json:"id"`
+	Name              string            `json:"name"`
+	Active            bool              `json:"active"`
+	AllCities         bool              `json:"all_cities"`
+	Cities            []string          `json:"cities"`
+	StoreIDs          []string          `json:"store_ids"`
+	Fee               Amount            `json:"fee"`
+	MinDays           int               `json:"min_days"`
+	MaxDays           int               `json:"max_days"`
 }
 type Destination struct {
 	ID         string `json:"id"`

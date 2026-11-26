@@ -37,6 +37,16 @@ approved_by: []
 
 ## محاسبه و مالی
 
+### قرارداد روش عمومی در #121
+
+- `GET /backoffice/shipping/methods`: فیلترهای query/active/collection_mode/delivery_mode/category_id/city_id و page/size (حداکثر۱۰۰)؛ پاسخ خصوصی rows/total/page/size، جغرافیای فعال و can_write. صفحهٔ حمل از همین صفحه‌بندی استفاده می‌کند؛ export گرید مجوز مستقل موجود را دارد.
+- `POST /backoffice/shipping/methods` و `PUT /backoffice/shipping/methods/{id}`: ایجاد/ویرایش با version صریح، `Idempotency-Key` و مجوزهای `commerce.settings.read` + `commerce.shipping.write`. عضو فروشگاه حق تغییر روش عمومی ندارد. تنظیمات کلی قدیمی نیز همان validator را استفاده می‌کند؛ حذف شناسهٔ موجود پذیرفته نیست و توقف روش با active=false انجام می‌شود.
+- دادهٔ روش: version، collection_mode=prepaid/collect، delivery_mode=range/slots، fee_toman در پیش‌کرایه، daily_capacity صحیح نامنفی (سقف فنی۱میلیون)، min/max۰..۶۰، day_basis و category_mode=all/selected همراه allowed_categories/denied_categories. روش تازه به ظرفیت صریح نیاز دارد؛ مقدار خالی روش قدیمی «تعیین نشده» است، نه عدد نمونه یا ظرفیت نامحدودِ تأییدشده. مصرف ظرفیت در #16 است.
+- `city_ids` شناسه‌های پایدار جغرافیا هستند؛ انتخاب همهٔ شهرها شامل شهر فعال تازه نیز می‌شود. نام شهر legacy فقط با نگاشت یکتای کل جغرافیای فعال تبدیل می‌شود؛ موارد نامعتبر/مبهم در unresolved_cities گزارش می‌شوند و روش انتخابی آن‌ها در resolver پذیرفته نیست. مقصد سفارش تاریخی تغییر نمی‌کند. inactive/نامعتبر بودن انتخاب، خطای فیلد و امکان حذف از چیپ انتخابی دارد.
+- دستهٔ انتخابی شامل زیرشاخه‌هاست؛ ممنوعیت روی هر والد مقدم است. یک قلم ممنوع، روش را برای مرسولهٔ همان فروشگاه نامجاز می‌کند. resolver مشترک در quote و کنترل پذیرش/پرداخت نهایی مصرف می‌شود؛ سفارش از قبل قطعی از snapshot می‌خواند.
+- `invalid_shipping_method` با fields فارسی و HTTP400، forbidden403، state_conflict409 و اعتبارسنجی strict JSON. retry پس از تغییر دسترسی دوباره مجوز را می‌سنجد. version روش مستقل است و تغییر روش، version تنظیمات عمومی را هم جلو می‌برد تا فرم عمومی قدیمی روی آن overwrite نکند.
+- `collect` فاقد fee قابل وصول است؛ ورودی fee غیرصفر رد می‌شود، خروجی نمایشی fee خالی و collection_mode صریح دارد و به shipping_total چریوا مبلغی اضافه نمی‌کند. prepaid صفر «رایگان» است. بازهٔ ساعت بدون برنامهٔ ظرفیت آماده از گزینه خرید حذف می‌شود؛ تعریف/مصرف برنامه در #16 تکمیل می‌شود.
+
 ### قرارداد اجراشدهٔ #120
 
 - `POST /backoffice/stores/preparation/batch`: مخصوص ادمین مجاز؛ بدنه شامل `all`، `stores:[{id,version}]` و مقادیر مشترک lead/day_basis/calendar_mode/working_weekdays است. در `all=true` فهرست ارسالی باید snapshot تمام فروشگاه‌ها باشد؛ تغییر تعداد/عضویت یا version یک ردیف، کل عملیات را رد می‌کند. سرور پیش از هر تغییر تمام نسخه‌ها را بررسی و با یک ممیزی و idempotency اعمال می‌کند. عضو فروشگاه مسیر گروهی ندارد؛ پنل پیش از ثبت جمعی تعداد/نام فروشگاه‌ها و مقادیر جایگزین را نمایش می‌دهد.

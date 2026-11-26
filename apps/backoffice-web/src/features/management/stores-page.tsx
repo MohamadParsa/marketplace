@@ -200,6 +200,7 @@ export function StoresPage() {
             setPage(0);
           }}
         >
+          <h2 className="filter-panel-title">فیلترهای فروشگاه</h2>
           <div className="user-form-grid">
             {(
               [

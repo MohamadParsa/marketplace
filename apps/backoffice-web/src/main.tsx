@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./app/app";
 import "./styles.css";
 import "./design-a.css";
+import "./panel-system.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

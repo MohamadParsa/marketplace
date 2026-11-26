@@ -77,6 +77,7 @@ export function ProductCatalogFilters({
   );
   return (
     <section className="catalog-filters" aria-label="فیلترهای محصول">
+      <h2 className="filter-panel-title">فیلترهای محصول</h2>
       <div className="catalog-filter-text">
         {(
           [
