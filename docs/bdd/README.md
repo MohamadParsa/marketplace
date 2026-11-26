@@ -87,3 +87,5 @@
 [صفحات عمومی و شبکه‌های اجتماعی — #87](features/experiences/business-content.feature).
 
 [امتیاز و میانگین نظرات PDP — #119](features/experiences/product-review-rating.feature)؛ runner مستقل Gherkin اجرا نشده و شواهد اجرایی Go/مرورگر در گزارش است.
+
+[برنامه سناریوهای روش حمل/وقفه/تقویم](features/experiences/shipping-method-policies.feature) مربوط به #120/#121/#122/#123 و #16 است؛ این سناریوهای تازه هنوز پیاده‌سازی یا اجرا نشده‌اند.

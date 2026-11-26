@@ -1,0 +1,104 @@
+{
+  "id": "DEL-SHIPPING-REFINEMENT-20261126",
+  "updated": "2026-11-26",
+  "document_status": "in-review",
+  "owner": "eliassarband",
+  "scope": "analysis-and-task-planning-only",
+  "execution_authorized": false,
+  "source_reviewed_commit": "69aee5e970a99a55267198e641bd8b7e9b87dfeb",
+  "source_changes": false,
+  "parent_issue": 95,
+  "proposed_execution_order": [
+    120,
+    121,
+    122,
+    16,
+    123
+  ],
+  "items": [
+    {
+      "id": "FEAT-SHIP-001",
+      "number": 120,
+      "title": "تقویم سایت/فروشگاه و واحد وقفه تأمین و حمل",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/store-preparation-calendars.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "conditional_dependencies": []
+    },
+    {
+      "id": "FEAT-SHIP-002",
+      "number": 121,
+      "title": "روش‌های عمومی حمل، دریافت هزینه و محدودیت شهر/دسته",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/system-shipping-methods.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        120
+      ],
+      "conditional_dependencies": []
+    },
+    {
+      "id": "FEAT-SHIP-003",
+      "number": 122,
+      "title": "انتساب حمل و نسخه اختصاصی فروشگاه با تأیید پلتفرم",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/store-shipping-approval.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        120,
+        121
+      ],
+      "conditional_dependencies": []
+    },
+    {
+      "id": "FEAT-SHIP-004",
+      "number": 123,
+      "title": "انتخاب ارسال هر مرسوله، وعده تحویل و هزینه در سفارش",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/checkout-shipping-terms.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        120,
+        121,
+        122
+      ],
+      "conditional_dependencies": [
+        16
+      ]
+    }
+  ],
+  "reused_issues": [
+    {
+      "number": 16,
+      "owner": "schedule-and-atomic-slot-capacity",
+      "implementation_status": "todo",
+      "execution_authorized": false
+    },
+    {
+      "number": 10,
+      "owner": "overdue-supply-monitoring-only",
+      "implementation_status": "todo",
+      "calendar_dependency": 120
+    }
+  ],
+  "open_questions": [
+    "SHIP-Q04",
+    "SHIP-Q05",
+    "SHIP-Q06",
+    "SHIP-Q07"
+  ],
+  "deployment": false
+}

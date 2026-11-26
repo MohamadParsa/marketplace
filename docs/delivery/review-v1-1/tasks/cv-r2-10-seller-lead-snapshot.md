@@ -3,7 +3,7 @@ id: CV-R2-10
 title: وقفه تأمین فروشنده، تقویم و حفظ وعده سفارش
 status: in-review
 owner: unassigned
-updated: 2026-11-20
+updated: 2026-11-26
 related: [DOM-SHIPPING-001, DOM-ORDERS-001]
 approved_by: []
 implementation_status: todo
@@ -71,3 +71,7 @@ integration با دو فروشنده، سفارش قبلی و quote جدید، �
 ## تطبیق صف در۲۰۲۶-۱۱-۲۴
 
 فقط پایش deadline/صف ادمین؛ پایه زمان و snapshot موجود است؛ [شرح فعال Issue #10](https://github.com/MohamadParsa/marketplace/issues/10) و [ماتریس ممیزی](../../backlog-review-2026-11-24/README.md) مرجع‌اند. بخش انجام‌شده دوباره اجرا نشود.
+
+## وابستگی تقویم جدید — بدون توسعه دامنه پایش
+
+طبق درخواست صریح۲۰۲۶-۱۱-۲۶، واحد کاری/تقویمی وقفه و روزهای کاری inherit/override فروشگاه در [#120](../../shipping-refinement-2026-11-26/tasks/store-preparation-calendars.md) پیگیری می‌شود. #10 فقط موعد snapshotشده را برای صف تأخیر و هشدار مصرف می‌کند؛ فرم/موتور تقویم یا min/max حمل را دوباره نمی‌سازد. آمادگی deadline با SHIP-Q06 و پرسش قبلی ساعت قطع بررسی شود؛ تغییر تقویم جاری موعد سفارش قبلی را بازنویسی نکند. #10 باز است و با تدوین این تحلیل انجام‌شده نیست.

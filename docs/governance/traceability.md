@@ -281,3 +281,7 @@ FEAT-BO-REFINEMENT-010-AC01..04 → [قرارداد](../architecture/contracts/p
 ## تکمیل فوتر و شبکه‌ها — #87
 
 FEAT-NEXT-026-AC01..04 → [قرارداد](../architecture/contracts/business-content.md) → [شواهد](../delivery/next-phase/issue-87-verification.md). متن پیشنهادی از انتشار واقعی مالک جداست.
+
+## برنامه تقویم، وقفه و روش حمل — بدون اجرا
+
+DOM-SHIPPING-POLICY-001 → [قواعد](../domains/shipping/method-policies.md) → [طرح پیشنهادی](../architecture/contracts/shipping-methods-plan.md) → [چهار تسک FEAT-SHIP-001..004 و تکمیل CV-R2-14](../delivery/shipping-refinement-2026-11-26/README.md) → [سناریوهای برنامه‌ریزی‌شده](../bdd/features/experiences/shipping-method-policies.feature). شواهد تست اجرایی تازه وجود ندارد؛ Q04/Q05/Q06/Q07 در دفتر پرسش‌ها و آمادگی هر بخش ثبت شده‌اند.
