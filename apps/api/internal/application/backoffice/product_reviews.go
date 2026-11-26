@@ -82,10 +82,29 @@ type AdminProductReview struct {
 	RejectionReason string `json:"rejection_reason,omitempty"`
 }
 
+type ReviewRatingTotals struct {
+	Count int64
+	Sum   int64
+}
+type ReviewRatingSummary struct {
+	Count   int64    `json:"count"`
+	Average *float64 `json:"average"`
+}
+
+func summarizeReviewRatings(t ReviewRatingTotals) *ReviewRatingSummary {
+	s := &ReviewRatingSummary{Count: t.Count}
+	if t.Count > 0 {
+		average := float64((t.Sum*10+t.Count/2)/t.Count) / 10
+		s.Average = &average
+	}
+	return s
+}
+
 type ProductReviewPage[T any] struct {
-	Reviews            []T    `json:"reviews"`
-	NextCursor         string `json:"next_cursor,omitempty"`
-	SubmissionsEnabled bool   `json:"submissions_enabled"`
+	RatingSummary      *ReviewRatingSummary `json:"rating_summary,omitempty"`
+	Reviews            []T                  `json:"reviews"`
+	NextCursor         string               `json:"next_cursor,omitempty"`
+	SubmissionsEnabled bool                 `json:"submissions_enabled"`
 }
 
 func reviewAccess(w Workspace, productID string) (catalog.InteractionAccess, error) {
@@ -141,7 +160,7 @@ func (s *Service) SubmitProductReview(ctx context.Context, productID string, inp
 // publicReviewRepository returns the catalog inputs and page from one database
 // snapshot. The public path does not need a full workspace or access to identity.
 type publicReviewRepository interface {
-	ReadPublicReviewPage(context.Context, string, string, int) (Workspace, []PublicProductReview, error)
+	ReadPublicReviewPage(context.Context, string, string, int) (Workspace, []PublicProductReview, ReviewRatingTotals, error)
 }
 
 func (s *Service) PublicProductReviews(ctx context.Context, productID, cursor string) (ProductReviewPage[PublicProductReview], error) {
@@ -149,7 +168,7 @@ func (s *Service) PublicProductReviews(ctx context.Context, productID, cursor st
 		return ProductReviewPage[PublicProductReview]{}, ErrInvalid
 	}
 	if repo, ok := s.repository.(publicReviewRepository); ok {
-		w, rows, err := repo.ReadPublicReviewPage(ctx, productID, cursor, publicReviewPageSize+1)
+		w, rows, totals, err := repo.ReadPublicReviewPage(ctx, productID, cursor, publicReviewPageSize+1)
 		if err != nil {
 			return ProductReviewPage[PublicProductReview]{}, err
 		}
@@ -158,7 +177,7 @@ func (s *Service) PublicProductReviews(ctx context.Context, productID, cursor st
 			return ProductReviewPage[PublicProductReview]{}, err
 		}
 		page := ProductReviewPage[PublicProductReview]{
-			Reviews: rows, SubmissionsEnabled: access.NewSubmissions,
+			Reviews: rows, SubmissionsEnabled: access.NewSubmissions, RatingSummary: summarizeReviewRatings(totals),
 		}
 		if len(rows) > publicReviewPageSize {
 			page.Reviews = rows[:publicReviewPageSize]
@@ -177,6 +196,16 @@ func (s *Service) PublicProductReviews(ctx context.Context, productID, cursor st
 	page := projectReviewPage(w.ProductReviews, cursor, publicReviewPageSize, func(r ProductReview) bool {
 		return r.ProductID == productID && r.Status == reviewApproved && access.ApprovedContentVisible
 	}, projectPublicReview)
+	totals := ReviewRatingTotals{}
+	if access.ApprovedContentVisible {
+		for _, r := range w.ProductReviews {
+			if r.ProductID == productID && r.Status == reviewApproved && r.Rating >= 1 && r.Rating <= 5 {
+				totals.Count++
+				totals.Sum += int64(r.Rating)
+			}
+		}
+	}
+	page.RatingSummary = summarizeReviewRatings(totals)
 	page.SubmissionsEnabled = access.NewSubmissions
 	return page, nil
 }

@@ -1,3 +1,4 @@
+import { ReviewStar, ReviewStars } from "./review-stars";
 import {
   useCallback,
   useEffect,
@@ -20,15 +21,26 @@ type Review = {
   created_at: string;
   reply?: string;
 };
+export type RatingSummary = { count: number; average: number | null };
 type ReviewPage = {
+  rating_summary: RatingSummary;
   reviews: Review[];
   next_cursor?: string;
   submissions_enabled: boolean;
 };
 
-export function ProductReviews({ productId }: { productId: string }) {
+export function ProductReviews({
+  productId,
+  onSummary,
+}: {
+  productId: string;
+  onSummary?: (summary: RatingSummary | undefined) => void;
+}) {
+  const summaryCallback = useRef(onSummary);
+  summaryCallback.current = onSummary;
   const endpoint = `${api}/storefront/products/${encodeURIComponent(productId)}/reviews`;
   const [pages, setPages] = useState<Review[][]>([]);
+  const [summary, setSummary] = useState<RatingSummary>();
   const [cursor, setCursor] = useState<string>();
   const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -48,17 +60,25 @@ export function ProductReviews({ productId }: { productId: string }) {
         const url = after
           ? endpoint + `?cursor=${encodeURIComponent(after)}`
           : endpoint;
-        const response = await fetch(url, { signal: controller.signal });
+        const response = await fetch(url, {
+          signal: controller.signal,
+          cache: "no-store",
+        });
         if (!response.ok) throw new Error("reviews_unavailable");
         const page: ReviewPage = await response.json();
         if (controller.signal.aborted) return;
         setPages((current) =>
           after ? [...current, page.reviews] : [page.reviews],
         );
+        setSummary(page.rating_summary);
+        summaryCallback.current?.(page.rating_summary);
         setCursor(page.next_cursor);
         setEnabled(page.submissions_enabled);
       } catch {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) {
+          setError(true);
+          summaryCallback.current?.(undefined);
+        }
       } finally {
         if (request.current === controller) request.current = null;
         if (!controller.signal.aborted) setLoading(false);
@@ -69,7 +89,10 @@ export function ProductReviews({ productId }: { productId: string }) {
 
   useEffect(() => {
     void loadPage();
+    const refresh = () => void loadPage();
+    addEventListener("focus", refresh);
     return () => {
+      removeEventListener("focus", refresh);
       request.current?.abort();
       request.current = null;
     };
@@ -92,12 +115,59 @@ export function ProductReviews({ productId }: { productId: string }) {
   return (
     <section className="pdp-section" id="reviews">
       <h2>نظرات کاربران</h2>
+      {summary && (
+        <div
+          className="pdp-rating-summary"
+          aria-label="میانگین امتیاز محصول"
+          aria-busy={loading}
+          aria-live="polite"
+        >
+          {loading && (
+            <span
+              className="pdp-rating-progress"
+              role="progressbar"
+              aria-label="به‌روزرسانی امتیاز محصول"
+            />
+          )}
+          <ReviewStars
+            value={summary.average ?? 0}
+            label={
+              summary.average == null
+                ? "هنوز امتیازی ثبت نشده"
+                : `امتیاز ${new Intl.NumberFormat("fa-IR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(summary.average)} از ۵ بر اساس ${number.format(summary.count)} نظر تأییدشده`
+            }
+          />
+          {summary.average == null ? (
+            <p>هنوز امتیازی ثبت نشده</p>
+          ) : (
+            <>
+              <strong>
+                {new Intl.NumberFormat("fa-IR", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }).format(summary.average)}{" "}
+                <small>از ۵</small>
+              </strong>
+              <span>بر اساس {number.format(summary.count)} نظر تأییدشده</span>
+            </>
+          )}
+        </div>
+      )}
       {!pages.length && loading && (
         <LoadingPlaceholder label="در حال دریافت نظرات…" />
       )}
       {!pages.length && error && (
         <p role="alert">
           دریافت نظرات ممکن نشد.{" "}
+          <button type="button" onClick={() => void loadPage()}>
+            تلاش دوباره
+          </button>
+        </p>
+      )}
+      {pages.length > 0 && error && (
+        <p role="alert">
+          به‌روزرسانی نظرات ممکن نشد؛ آخرین اطلاعات دریافت‌شده نمایش داده
+          می‌شود.{" "}
           <button type="button" onClick={() => void loadPage()}>
             تلاش دوباره
           </button>
@@ -166,9 +236,10 @@ function ReviewCard({ review }: { review: Review }) {
     <article className="pdp-review-card">
       <header>
         <strong>{review.name || "بدون نام"}</strong>
-        <span aria-label={`امتیاز ${number.format(review.rating)} از ۵`}>
-          ★ {number.format(review.rating)} از ۵
-        </span>
+        <ReviewStars
+          value={review.rating}
+          label={`امتیاز ${number.format(review.rating)} از ۵`}
+        />
       </header>
       <time dateTime={review.created_at}>
         {date.format(new Date(review.created_at))}
@@ -194,6 +265,7 @@ function ReviewForm({
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
   const [anonymous, setAnonymous] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -284,24 +356,40 @@ function ReviewForm({
           )}
         </label>
         <div
-          role="group"
+          role="radiogroup"
+          onMouseLeave={() => setHoverRating(0)}
           aria-labelledby="pdp-rating-label"
           className="pdp-review-rating"
         >
           <span id="pdp-rating-label">امتیاز</span>
-          {[1, 2, 3, 4, 5].map((value) => (
-            <label key={value}>
-              <input
-                type="radio"
-                name="product-rating"
-                required
-                value={value}
-                checked={rating === value}
-                onChange={() => setRating(value)}
-              />
-              {number.format(value)}
-            </label>
-          ))}
+          <div className="pdp-rating-input-stars">
+            {" "}
+            {[1, 2, 3, 4, 5].map((value) => (
+              <label
+                key={value}
+                className="pdp-rating-choice"
+                onMouseEnter={() => setHoverRating(value)}
+              >
+                <input
+                  aria-label={`${number.format(value)} از ۵ ستاره`}
+                  type="radio"
+                  name="product-rating"
+                  required
+                  value={value}
+                  checked={rating === value}
+                  onChange={() => setRating(value)}
+                />
+                <ReviewStar fill={(hoverRating || rating) >= value ? 1 : 0} />
+              </label>
+            ))}
+          </div>
+          <span className="pdp-rating-feedback" aria-live="polite">
+            {
+              ["انتخاب کنید", "بسیار ضعیف", "ضعیف", "متوسط", "خوب", "عالی"][
+                hoverRating || rating
+              ]
+            }
+          </span>
         </div>
         <label>
           متن نظر{" "}
@@ -327,5 +415,37 @@ function ReviewForm({
         <p role="status">نظر شما ثبت شد و پس از تأیید نمایش داده می‌شود.</p>
       )}
     </form>
+  );
+}
+
+export function ProductRatingLink({ summary }: { summary?: RatingSummary }) {
+  const average = summary?.average;
+  const formatted =
+    average == null
+      ? ""
+      : new Intl.NumberFormat("fa-IR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        }).format(average);
+  return (
+    <a
+      className="pdp-rating-link"
+      href="#reviews"
+      aria-label={
+        summary && average != null
+          ? `امتیاز ${formatted} از ۵؛ مشاهده ${number.format(summary.count)} دیدگاه`
+          : "مشاهده نظرات کاربران"
+      }
+    >
+      {summary && average != null ? (
+        <>
+          <ReviewStars value={average} label={`امتیاز ${formatted} از ۵`} />
+          <b>{formatted}</b>
+          <span>({number.format(summary.count)} دیدگاه)</span>
+        </>
+      ) : (
+        <span>{summary ? "هنوز امتیازی ثبت نشده" : "نظرات کاربران"}</span>
+      )}
+    </a>
   );
 }

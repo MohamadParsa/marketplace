@@ -2,7 +2,11 @@ import { SalesPrices } from "./sales-prices";
 import { useRecordRecentlyViewed } from "./recently-viewed";
 import { WishlistButton } from "./wishlist";
 import { ProductQA } from "./product-qa";
-import { ProductReviews } from "./product-reviews";
+import {
+  ProductReviews,
+  ProductRatingLink,
+  type RatingSummary,
+} from "./product-reviews";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
@@ -177,6 +181,10 @@ export function ProductPage({ url }: { url: string }) {
     [attempt, setAttempt] = useState(0),
     [photo, setPhoto] = useState(0),
     [zoom, setZoom] = useState(false);
+  const [reviewRating, setReviewRating] = useState<{
+    productId: string;
+    summary?: RatingSummary;
+  }>();
   const quantity = 1;
   useRecordRecentlyViewed(!loading && !status && data ? data.id : "");
   const initialPosition = useRef(true);
@@ -464,16 +472,25 @@ export function ProductPage({ url }: { url: string }) {
                     {data.brand?.name ?? data.category.name}
                   </span>
                   <h1>{data.name}</h1>
-                  {data.public_code && (
-                    <p className="pdp-public-code" dir="ltr">
-                      {data.public_code}
-                    </p>
-                  )}
                   {data.english_name && (
                     <p className="pdp-english" dir="auto">
                       {data.english_name}
                     </p>
                   )}
+                  <div className="pdp-product-meta">
+                    <ProductRatingLink
+                      summary={
+                        reviewRating?.productId === data.id
+                          ? reviewRating.summary
+                          : undefined
+                      }
+                    />
+                    {data.public_code && (
+                      <span className="pdp-public-code" dir="ltr">
+                        {data.public_code}
+                      </span>
+                    )}
+                  </div>
                   {content.short_description && (
                     <p className="pdp-short">{content.short_description}</p>
                   )}
@@ -779,7 +796,13 @@ export function ProductPage({ url }: { url: string }) {
                       )}
                   </ExpandableContent>
                 </section>
-                <ProductReviews key={data.id} productId={data.id} />
+                <ProductReviews
+                  key={data.id}
+                  productId={data.id}
+                  onSummary={(summary) =>
+                    setReviewRating({ productId: data.id, summary })
+                  }
+                />
                 <ProductQA key={data.id} productId={data.id} />
               </div>
             </BusyRegion>

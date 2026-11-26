@@ -72,8 +72,16 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 		w = commerceSeed()
 		w.IconMedia[0].Data = iconPNG(t, 8)
 	}
+	if os.Getenv("CHERRIVA_RATINGS_BROWSER") == "1" {
+		w = ratingSeed(t)
+		for i, rating := range []int{5, 3, 5, 5, 5, 5, 5} {
+			w.ProductReviews = append(w.ProductReviews, seededReview(fmt.Sprintf("rating-%d", i), "product", "approved", rating))
+		}
+		w.ProductReviews = append(w.ProductReviews, seededReview("pending-rating", "product", "pending", 5), seededReview("other-rating", "other-product", "approved", 1))
+		w.Products = append(w.Products, catalog.Product{ID: "empty-product", Name: "محصول بدون امتیاز آزمون", CategoryID: "regular", Status: "published", ImageID: "photo", Version: 1})
+	}
 	var repo backoffice.Repository = backofficememory.New(w)
-	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" || os.Getenv("CHERRIVA_BUSINESS_BROWSER") == "1" {
+	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" || os.Getenv("CHERRIVA_BUSINESS_BROWSER") == "1" || os.Getenv("CHERRIVA_RATINGS_BROWSER") == "1" {
 		persistent, _ := cachePostgres(t)
 		if e := persistent.Update(context.Background(), func(state *backoffice.Workspace) error { *state = w; return nil }); e != nil {
 			t.Fatal(e)
