@@ -23,6 +23,7 @@ type CartMutation struct {
 	Action               string `json:"action"`
 }
 type CartItemView struct {
+	Inactive             bool   `json:"inactive,omitempty"`
 	Restricted           bool   `json:"restricted,omitempty"`
 	ReviewRequired       bool   `json:"review_required,omitempty"`
 	PreviousVariantLabel string `json:"previous_variant_label,omitempty"`
@@ -113,7 +114,7 @@ func cartItem(w Workspace, l commerce.CartLine) (CartItemView, error) {
 	if ov == nil {
 		return CartItemView{}, ErrNotFound
 	}
-	v := CartItemView{Restricted: ov.Restricted, ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
+	v := CartItemView{Inactive: !p.IsActive(), Restricted: ov.Restricted, ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
 	for _, variant := range d.Variants {
 		if variant.ID == o.VariantID {
 			values := []string{}
@@ -133,6 +134,11 @@ func cartItem(w Workspace, l commerce.CartLine) (CartItemView, error) {
 	}
 	if len(d.Gallery) > 0 {
 		v.ImageURL = d.Gallery[0]
+	}
+	if !p.IsActive() {
+		v.PreviousPriceToman = ""
+		v.PriceChanged = false
+		return v, nil
 	}
 	v.UnitPriceToman = commerce.Toman(commerce.Amount(o.Price))
 	total, e := commerce.Multiply(commerce.Amount(o.Price), l.Quantity)

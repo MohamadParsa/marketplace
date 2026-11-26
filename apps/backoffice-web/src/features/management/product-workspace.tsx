@@ -140,7 +140,12 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
       <div className="product-workspace-heading">
         <div>
           <h2>{w.product.name}</h2>
-          <small dir="ltr">{w.product.id}</small>
+          <small dir="ltr">{w.product.public_code || "کد در حال تخصیص"}</small>
+          <small>
+            {w.product.active === false
+              ? "غیرفعال؛ خرید تازه مجاز نیست"
+              : "فعال"}
+          </small>
         </div>
         <Chip
           label={w.product.model === "shared" ? "محصول مشترک" : "محصول مستقل"}

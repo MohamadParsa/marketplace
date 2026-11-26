@@ -81,6 +81,8 @@ type ProductContentRevision struct {
 }
 
 type Product struct {
+	// Missing legacy flag preserves the existing ability to offer the product.
+	Active          *bool                   `json:"active,omitempty"`
 	PublicCode      string                  `json:"public_code,omitempty"`
 	ContentRevision *ProductContentRevision `json:"content_revision,omitempty"`
 	Content         *ProductContent         `json:"content,omitempty"`
@@ -100,6 +102,8 @@ type Product struct {
 	OwnerStoreID    string                  `json:"owner_store_id,omitempty"`
 	VariantVersion  int                     `json:"variant_version"`
 }
+
+func (p Product) IsActive() bool { return p.Active == nil || *p.Active }
 
 type Variant struct {
 	ImageID   string           `json:"image_id,omitempty"`

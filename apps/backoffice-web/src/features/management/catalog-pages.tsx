@@ -1,3 +1,4 @@
+import { CatalogChoice } from "./catalog-choice";
 import { BrandCatalogGrid } from "./brand-catalog-grid";
 import { CategorySalesDialog } from "../commerce/sales-methods-page";
 import { CategoryCatalogGrid } from "./category-catalog-grid";
@@ -105,6 +106,7 @@ export function CatalogPage({
       version: row?.version,
       input: row
         ? {
+            active: kind === "product" ? row.active !== false : undefined,
             name: row.name,
             display_priority:
               kind === "category" ? row.display_priority : undefined,
@@ -135,7 +137,11 @@ export function CatalogPage({
             published:
               row.published ?? row.active ?? row.status === "published",
           }
-        : { ...empty, content: emptyProductContent() },
+        : {
+            ...empty,
+            active: kind === "product" ? true : undefined,
+            content: emptyProductContent(),
+          },
     });
   }
   const closeEditing = () => {
@@ -196,6 +202,15 @@ export function CatalogPage({
       )
     )
       return;
+    if (
+      editing.kind === "product" &&
+      (!editing.input.category_id ||
+        (editing.input.model === "independent" &&
+          !editing.input.owner_store_id))
+    ) {
+      setError("دسته و در محصول مستقل، فروشگاه مالک را انتخاب کنید.");
+      return;
+    }
     const original = state.categories?.find((c) => c.id === editing.id);
     if (
       editing.kind === "category" &&
@@ -514,6 +529,7 @@ export function CatalogPage({
                     <label>
                       کد عمومی محصول (فقط‌خواندنی)
                       <input
+                        aria-label="کد عمومی محصول (فقط‌خواندنی)"
                         readOnly
                         dir="ltr"
                         value={
@@ -617,80 +633,97 @@ export function CatalogPage({
                       </div>
                       {!editing.id && (
                         <>
-                          <label>
-                            نوع محصول
-                            <select
-                              value={editing.input.model ?? "shared"}
-                              onChange={(e) =>
+                          <CatalogChoice
+                            label="نوع محصول"
+                            value={editing.input.model ?? "shared"}
+                            options={[
+                              { id: "shared", name: "مشترک" },
+                              { id: "independent", name: "مستقل فروشگاه" },
+                            ]}
+                            onChange={(v) =>
+                              setEditing({
+                                ...editing,
+                                input: {
+                                  ...editing.input,
+                                  model: v as "shared" | "independent",
+                                  owner_store_id: "",
+                                },
+                              })
+                            }
+                          />
+                          {editing.input.model === "independent" && (
+                            <CatalogChoice
+                              label="فروشگاه مالک"
+                              value={editing.input.owner_store_id ?? ""}
+                              options={(state.stores ?? [])
+                                .filter((st) => st.active)
+                                .map((st) => ({ id: st.id, name: st.name }))}
+                              onChange={(v) =>
                                 setEditing({
                                   ...editing,
                                   input: {
                                     ...editing.input,
-                                    model: e.target.value as
-                                      | "shared"
-                                      | "independent",
-                                    owner_store_id: "",
+                                    owner_store_id: v,
                                   },
                                 })
                               }
-                            >
-                              <option value="shared">مشترک</option>
-                              <option value="independent">مستقل فروشگاه</option>
-                            </select>
-                          </label>
-                          {editing.input.model === "independent" && (
-                            <label>
-                              فروشگاه مالک
-                              <select
-                                required
-                                value={editing.input.owner_store_id ?? ""}
-                                onChange={(e) =>
-                                  setEditing({
-                                    ...editing,
-                                    input: {
-                                      ...editing.input,
-                                      owner_store_id: e.target.value,
-                                    },
-                                  })
-                                }
-                              >
-                                <option value="">انتخاب فروشگاه</option>
-                                {state.stores
-                                  ?.filter((s) => s.active)
-                                  .map((s) => (
-                                    <option key={s.id} value={s.id}>
-                                      {s.name}
-                                    </option>
-                                  ))}
-                              </select>
-                            </label>
+                            />
                           )}
                         </>
                       )}
-                      <label>
-                        برند
-                        <select
-                          value={editing.input.brand_id}
+                      <CatalogChoice
+                        label="برند"
+                        value={editing.input.brand_id}
+                        options={(state.brands ?? [])
+                          .filter(
+                            (b) => b.active || b.id === editing.input.brand_id,
+                          )
+                          .map((b) => ({
+                            id: b.id,
+                            name: b.name + (b.active ? "" : " (غیرفعال)"),
+                          }))}
+                        clearLabel="بدون برند"
+                        onChange={(v) =>
+                          setEditing({
+                            ...editing,
+                            input: { ...editing.input, brand_id: v },
+                          })
+                        }
+                      />
+                      <label className="home-admin-check">
+                        <input
+                          type="checkbox"
+                          checked={editing.input.active !== false}
                           onChange={(e) =>
                             setEditing({
                               ...editing,
                               input: {
                                 ...editing.input,
-                                brand_id: e.target.value,
+                                active: e.target.checked,
                               },
                             })
                           }
-                        >
-                          <option value="">بدون برند</option>
-                          {(state.brands ?? [])
-                            .filter((b) => b.active)
-                            .map((b) => (
-                              <option key={b.id} value={b.id}>
-                                {b.name}
-                              </option>
-                            ))}
-                        </select>
+                        />
+                        محصول فعال و مجاز به خرید باشد
                       </label>
+                      {editing.input.active === false && (
+                        <Alert severity="warning">
+                          محصول از خانه حذف می‌شود؛ در PLP و PDP با برچسب
+                          «غیرقابل خرید» و بدون قیمت و خرید باقی می‌ماند. انتشار
+                          محتوا و سفارش گذشته محفوظ‌اند.
+                        </Alert>
+                      )}
+                      {!editing.id && (
+                        <div className="catalog-code-guide">
+                          <b>کد عمومی خودکار</b>
+                          <code dir="ltr">chr-[id]</code>
+                          <small>
+                            پس از ذخیره تخصیص می‌یابد؛ شناسه مبدأ یا کد دلخواه
+                            وارد نکنید. تصویر، تنوع و قیمت از اکشن‌های ردیف
+                            تکمیل می‌شوند.
+                          </small>
+                        </div>
+                      )}
                     </>
                   )}
                   {editing.kind === "product" && (
@@ -706,7 +739,23 @@ export function CatalogPage({
                   )}
                   {editing.kind === "product" && (
                     <fieldset className="home-admin-form">
-                      <legend>ویژگی‌های نمایشی و فیلتر</legend>
+                      <legend>مقادیر خصوصیات همین دسته</legend>
+                      <p>
+                        این فهرست فقط از خصوصیات غیرمحورِ منتسب به دسته
+                        انتخاب‌شده می‌آید. نمایش روی کارت و فیلتر در تنظیم دسته
+                        تعیین می‌شود؛ رنگ/گارانتی و سایر محورهای تنوع در فرم
+                        تنوع ثبت می‌شوند.
+                      </p>
+                      {editing.input.category_id && (
+                        <Link
+                          to={
+                            "/categories?category=" +
+                            encodeURIComponent(editing.input.category_id)
+                          }
+                        >
+                          مشاهده تنظیم دسته و خصوصیات
+                        </Link>
+                      )}
                       {(
                         state.categories?.find(
                           (c) => c.id === editing.input.category_id,
@@ -738,23 +787,25 @@ export function CatalogPage({
                               },
                             });
                           return (
-                            <label key={a.id}>
-                              {a.name}
-                              {a.unit ? " (" + a.unit + ")" : ""}
+                            <div className="home-admin-form" key={a.id}>
+                              <b>
+                                {a.name}
+                                {a.unit ? " (" + a.unit + ")" : ""}
+                              </b>
                               {a.kind === "enum" ? (
-                                <select
+                                <CatalogChoice
+                                  label={a.name}
                                   value={value}
-                                  onChange={(e) => setValue(e.target.value)}
-                                >
-                                  <option value="">ثبت نشده</option>
-                                  {a.options.map((o) => (
-                                    <option key={o} value={o}>
-                                      {o}
-                                    </option>
-                                  ))}
-                                </select>
+                                  options={a.options.map((o) => ({
+                                    id: o,
+                                    name: o,
+                                  }))}
+                                  clearLabel="ثبت نشده"
+                                  onChange={setValue}
+                                />
                               ) : (
                                 <input
+                                  aria-label={a.name}
                                   type={a.kind === "number" ? "number" : "text"}
                                   step="any"
                                   maxLength={160}
@@ -762,7 +813,7 @@ export function CatalogPage({
                                   onChange={(e) => setValue(e.target.value)}
                                 />
                               )}
-                            </label>
+                            </div>
                           );
                         })}
                       <small>

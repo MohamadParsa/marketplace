@@ -47,6 +47,7 @@ type ListingFilter struct {
 	Options []string `json:"options"`
 }
 type ListingCard struct {
+	Inactive        bool                  `json:"inactive,omitempty"`
 	ID              string                `json:"id"`
 	Name            string                `json:"name"`
 	CategoryName    string                `json:"category_name"`
@@ -313,7 +314,7 @@ func listingCard(w Workspace, p catalog.Product, q ListingQuery) (ListingCard, b
 	if c == nil || p.Status != "published" || !validBrand(w, p.BrandID) {
 		return ListingCard{}, false
 	}
-	card := ListingCard{ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: ProductURL(p), Features: []catalog.CardFeature{}}
+	card := ListingCard{Inactive: !p.IsActive(), ID: p.ID, Name: p.Name, CategoryName: c.Name, URL: ProductURL(p), Features: []catalog.CardFeature{}}
 	if imageAttached(w, p.ImageID) {
 		card.ImageURL = "/catalog/icons/" + url.PathEscape(p.ImageID)
 	}

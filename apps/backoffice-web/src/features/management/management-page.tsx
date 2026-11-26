@@ -1,8 +1,13 @@
+import {
+  ProductCatalogFilters,
+  filterProductRows,
+  emptyProductFilters,
+} from "./product-catalog-filters";
 import { WalletCreditDialog } from "./wallet-credit-dialog";
 import type { User } from "../../shared/types";
 import type { WalletCreditResult } from "../../../../../packages/commerce-client/types";
 import { CategorySalesDialog } from "../commerce/sales-methods-page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
@@ -53,9 +58,22 @@ export function ManagementPage({
   const [walletUpdates, setWalletUpdates] = useState<
     Record<string, WalletCreditResult>
   >({});
+  const categoryParam = params.get("category") ?? "";
+  useEffect(
+    () =>
+      setProductFilters((previous) => ({
+        ...previous,
+        category: categoryParam,
+      })),
+    [categoryParam],
+  );
   const [policyError, setError] = useState("");
   const [salesCategory, setSalesCategory] = useState<string>();
   const [search, setSearch] = useState("");
+  const [productFilters, setProductFilters] = useState({
+    ...emptyProductFilters,
+    category: params.get("category") ?? "",
+  });
   const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [bindingTarget, setBindingTarget] = useState<Category>();
   const [productTarget, setProductTarget] = useState<{
@@ -415,108 +433,120 @@ export function ManagementPage({
           />
         )}
         {section === "products" && (
-          <DataTable
-            rows={filtered(
-              (state.products ?? []).filter(
-                (p) =>
-                  !params.get("category") ||
-                  p.category_id === params.get("category"),
-              ),
-            )}
-            columns={[
-              {
-                title: "محصول",
-                render: (p) => (
-                  <>
-                    <b>{p.name}</b>
-                    {p.content_revision?.state === "pending" && (
+          <>
+            <ProductCatalogFilters
+              state={state}
+              value={productFilters}
+              onChange={setProductFilters}
+            />
+            <DataTable
+              key={JSON.stringify(productFilters)}
+              rows={filtered(filterProductRows(state, productFilters))}
+              columns={[
+                {
+                  title: "محصول",
+                  render: (p) => (
+                    <>
+                      <b>{p.name}</b>
+                      {p.content_revision?.state === "pending" && (
+                        <small>
+                          ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                        </small>
+                      )}
+                      <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
                       <small>
-                        ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                        نسخه {p.version} · {p.public_code || "کد در حال تخصیص"}
                       </small>
-                    )}
-                    <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
-                    <small>
-                      نسخه {p.version} · {p.id}
-                    </small>
-                  </>
-                ),
-              },
-              {
-                title: "دسته",
-                render: (p) =>
-                  state.categories?.find((c) => c.id === p.category_id)?.name,
-              },
-              { title: "نوع", render: (p) => labels[p.model] },
-              { title: "وضعیت", render: (p) => <Status value={p.status} /> },
-              {
-                title: "عملیات",
-                render: (p) => (
-                  <>
-                    <Button
-                      onClick={() => onCatalogEdit?.(p)}
-                      disabled={
-                        surface !== "backoffice" ||
-                        !allowed("catalog.product.update", "management")
-                      }
-                    >
-                      ویرایش
-                    </Button>
-                    <Button
-                      onClick={() => setProductTarget({ id: p.id, tab: 0 })}
-                    >
-                      تنوع‌ها
-                    </Button>
-                    <Button
-                      onClick={() => setProductTarget({ id: p.id, tab: 1 })}
-                    >
-                      قیمت و موجودی
-                    </Button>
-                    <Button
-                      disabled={
-                        !editable ||
-                        p.status === "published" ||
-                        p.content_revision?.state === "pending"
-                      }
-                      onClick={() =>
-                        open(
-                          "تأیید و انتشار محتوا",
-                          {
-                            action: "product.publish",
-                            target: p.id,
-                            version: p.version,
-                          },
-                          [{ name: "reason", label: "یادداشت بررسی" }],
-                        )
-                      }
-                    >
-                      انتشار
-                    </Button>
-                    <Button
-                      color="error"
-                      disabled={
-                        !editable ||
-                        p.status === "rejected" ||
-                        p.content_revision?.state === "pending"
-                      }
-                      onClick={() =>
-                        open(
-                          "رد محتوای محصول",
-                          {
-                            action: "product.reject",
-                            target: p.id,
-                            version: p.version,
-                          },
-                          [{ name: "reason", label: "دلیل رد" }],
-                        )
-                      }
-                    >
-                      رد
-                    </Button>
-                  </>
-                ),
-              },
-            ]}
-          />
+                    </>
+                  ),
+                },
+                {
+                  title: "دسته",
+                  render: (p) =>
+                    state.categories?.find((c) => c.id === p.category_id)?.name,
+                },
+                { title: "نام انگلیسی", render: (p) => p.english_name || "—" },
+                {
+                  title: "برند",
+                  render: (p) =>
+                    state.brands?.find((b) => b.id === p.brand_id)?.name || "—",
+                },
+                {
+                  title: "فعال‌بودن",
+                  render: (p) => (p.active === false ? "غیرفعال" : "فعال"),
+                },
+                { title: "نوع", render: (p) => labels[p.model] },
+                { title: "وضعیت", render: (p) => <Status value={p.status} /> },
+                {
+                  title: "عملیات",
+                  render: (p) => (
+                    <>
+                      <Button
+                        onClick={() => onCatalogEdit?.(p)}
+                        disabled={
+                          surface !== "backoffice" ||
+                          !allowed("catalog.product.update", "management")
+                        }
+                      >
+                        ویرایش
+                      </Button>
+                      <Button
+                        onClick={() => setProductTarget({ id: p.id, tab: 0 })}
+                      >
+                        تنوع‌ها
+                      </Button>
+                      <Button
+                        onClick={() => setProductTarget({ id: p.id, tab: 1 })}
+                      >
+                        قیمت و موجودی
+                      </Button>
+                      <Button
+                        disabled={
+                          !allowed("product.publish", "management") ||
+                          p.status === "published" ||
+                          p.content_revision?.state === "pending"
+                        }
+                        onClick={() =>
+                          open(
+                            "تأیید و انتشار محتوا",
+                            {
+                              action: "product.publish",
+                              target: p.id,
+                              version: p.version,
+                            },
+                            [{ name: "reason", label: "یادداشت بررسی" }],
+                          )
+                        }
+                      >
+                        انتشار
+                      </Button>
+                      <Button
+                        color="error"
+                        disabled={
+                          !allowed("product.reject", "management") ||
+                          p.status === "rejected" ||
+                          p.content_revision?.state === "pending"
+                        }
+                        onClick={() =>
+                          open(
+                            "رد محتوای محصول",
+                            {
+                              action: "product.reject",
+                              target: p.id,
+                              version: p.version,
+                            },
+                            [{ name: "reason", label: "دلیل رد" }],
+                          )
+                        }
+                      >
+                        رد
+                      </Button>
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </>
         )}
         {section === "pricing" && (
           <DataTable

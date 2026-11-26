@@ -1,4 +1,5 @@
 export interface CartItem {
+ inactive?: boolean;
  restricted?: boolean;
  review_required?: boolean;
  previous_variant_label?: string;

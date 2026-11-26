@@ -1,6 +1,7 @@
 package bootstrap_test
 
 import (
+	"context"
 	"fmt"
 	"github.com/cherriva/marketplace/apps/api/internal/adapters/backofficememory"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
@@ -56,7 +57,25 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 			w.Brands = append(w.Brands, catalog.Brand{ID: fmt.Sprintf("brand-browser-%02d", i), Name: fmt.Sprintf("برند نمونه %02d", i), EnglishName: fmt.Sprintf("Sample %02d", i), Active: i%2 == 0, Version: 1})
 		}
 	}
-	repo := backofficememory.New(w)
+	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" {
+		w = productManagementSeed(t)
+		for i := 0; i < 45; i++ {
+			active := i%2 == 0
+			status := "draft"
+			if i%3 == 0 {
+				status = "published"
+			}
+			w.Products = append(w.Products, catalog.Product{ID: fmt.Sprintf("product-browser-%02d", i), Name: fmt.Sprintf("محصول نمونه %02d", i), EnglishName: fmt.Sprintf("Sample Product %02d", i), CategoryID: "gold", Active: &active, Status: status, Model: "shared", Version: 1})
+		}
+	}
+	var repo backoffice.Repository = backofficememory.New(w)
+	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" {
+		persistent, _ := cachePostgres(t)
+		if e := persistent.Update(context.Background(), func(state *backoffice.Workspace) error { *state = w; return nil }); e != nil {
+			t.Fatal(e)
+		}
+		repo = persistent
+	}
 	for _, entry := range []struct{ port, surface, app string }{{"8097", "backoffice", "backoffice-web"}, {"5199", "storefront", "storefront-web"}} {
 		listener, e := net.Listen("tcp", "127.0.0.1:"+entry.port)
 		if e != nil {
@@ -67,6 +86,6 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 		t.Cleanup(func() { server.Close() })
 		go server.Serve(listener)
 	}
-	t.Log("sales/grid harness ready:8097 and5199; memory only")
+	t.Log("sales/grid harness ready:8097 and5199; isolated fixture (products: PostgreSQL schema, others: memory)")
 	time.Sleep(15 * time.Minute)
 }

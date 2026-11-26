@@ -15,6 +15,7 @@ interface HomeCategory {
   count: number;
 }
 export interface Card {
+  inactive?: boolean;
   available?: boolean;
   features?: {
     attribute_id: string;
@@ -180,7 +181,7 @@ export function ProductCard({ card }: { card: Card }) {
         {card.price !== null && card.available !== false ? (
           <Price value={card.price} />
         ) : (
-          <strong className="lh-unavailable">ناموجود</strong>
+          <strong className="lh-unavailable">{card.inactive ? "غیرقابل خرید" : "ناموجود"}</strong>
         )}
       </div>
     </a>

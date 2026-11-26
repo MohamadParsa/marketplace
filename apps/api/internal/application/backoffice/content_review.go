@@ -64,6 +64,7 @@ func setStoreContentPolicy(w *Workspace, c Command) error {
 func approvedContentFingerprint(p catalog.Product) string {
 	// Public addressing metadata is independent of seller content approval.
 	p.PublicCode = ""
+	p.Active = nil
 	p.ContentRevision = nil
 	p.Version = 0
 	p.VariantVersion = 0
@@ -90,7 +91,7 @@ func submitProductContent(w *Workspace, c Command, id, actor string, now time.Ti
 		return ErrConflict
 	}
 	in := c.Catalog
-	if in == nil || !validCatalogText(*in) || in.Published || in.CategoryID != p.CategoryID || in.Model != "" && in.Model != p.Model || in.OwnerStoreID != "" && in.OwnerStoreID != p.OwnerStoreID || !validBrand(*w, in.BrandID) {
+	if in == nil || in.Active != nil || !validCatalogText(*in) || in.Published || in.CategoryID != p.CategoryID || in.Model != "" && in.Model != p.Model || in.OwnerStoreID != "" && in.OwnerStoreID != p.OwnerStoreID || !validBrand(*w, in.BrandID) {
 		return ErrInvalid
 	}
 	if in.Content != nil && !validProductContent(*in.Content) {
@@ -98,7 +99,7 @@ func submitProductContent(w *Workspace, c Command, id, actor string, now time.Ti
 	}
 	attrs := p.Attributes
 	if in.Attributes != nil {
-		if !validProductAttributes(*w, p.CategoryID, *in.Attributes) {
+		if !validContentAttributes(*w, p.CategoryID, p.Attributes, *in.Attributes) {
 			return ErrInvalid
 		}
 		attrs = *in.Attributes

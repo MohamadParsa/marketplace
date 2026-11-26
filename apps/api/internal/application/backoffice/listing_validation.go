@@ -84,3 +84,36 @@ func NormalizeSearch(s string) string {
 		return unicode.ToLower(r)
 	}, s)), " ")
 }
+
+// Axis assignments belong to variants. Preserve unchanged legacy duplicates
+// during content edits, but never introduce a new axis value on a product.
+func validContentAttributes(w Workspace, category string, previous, incoming []catalog.AttributeValue) bool {
+	if !validProductAttributes(w, category, incoming) {
+		return false
+	}
+	axes := map[string]bool{}
+	for _, c := range w.Categories {
+		if c.ID == category {
+			for _, b := range c.Bindings {
+				if b.Axis {
+					axes[b.AttributeID] = true
+				}
+			}
+		}
+	}
+	for _, v := range incoming {
+		if axes[v.AttributeID] {
+			same := false
+			for _, old := range previous {
+				if old == v {
+					same = true
+					break
+				}
+			}
+			if !same {
+				return false
+			}
+		}
+	}
+	return true
+}

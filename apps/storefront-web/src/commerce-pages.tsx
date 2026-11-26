@@ -532,7 +532,7 @@ export function CartPage() {
                       فروشنده: {item.store_name} ·{" "}
                       {dispatchTime(item.lead_days)}
                     </p>
-                    <strong>{money(item.unit_price_toman)}</strong>
+                    <strong>{item.inactive ? "غیرقابل خرید" : money(item.unit_price_toman)}</strong>
                     {item.review_required && (
                       <div className="buy-alert" role="status">
                         <p>تنوع این کالا تغییر کرده؛ انتخاب قبلی: {item.previous_variant_label || "بدون محور"} · انتخاب فعلی: {item.variant_label || "بدون محور"}</p>
@@ -549,7 +549,7 @@ export function CartPage() {
                     )}
                     {!item.available && (
                       <p className="buy-alert">
-                        {item.restricted ? "این فروشنده برای دسته یا فروش نقدی این کالا مجوز ندارد؛ فروشنده را تغییر دهید." : "این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده را اصلاح کنید."}
+                        {item.inactive ? "این محصول غیرفعال و غیرقابل خرید است؛ آن را از سبد حذف کنید." : item.restricted ? "این فروشنده برای دسته یا فروش نقدی این کالا مجوز ندارد؛ فروشنده را تغییر دهید." : "این تعداد یا عرضه فعلاً قابل خرید نیست؛ تعداد یا فروشنده را اصلاح کنید."}
                       </p>
                     )}
                     <div className="buy-row">
@@ -583,7 +583,7 @@ export function CartPage() {
                       </button>
                     </div>
                   </div>
-                  <strong>{money(item.total_toman)}</strong>
+                  <strong>{item.inactive ? "—" : money(item.total_toman)}</strong>
                 </article>
               ))
             ) : (

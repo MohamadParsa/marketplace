@@ -33,6 +33,7 @@ export function ProductContentFields({
         <label>
           توضیح کوتاه
           <textarea
+            aria-label="توضیح کوتاه"
             maxLength={2000}
             rows={3}
             value={value.short_description}
@@ -57,6 +58,7 @@ export function ProductContentFields({
           <label key={key}>
             {label}
             <textarea
+              aria-label={label}
               rows={3}
               value={value[key].join("\n")}
               onChange={(e) => set({ [key]: e.target.value.split("\n") })}

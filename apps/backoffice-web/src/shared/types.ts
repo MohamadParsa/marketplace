@@ -134,6 +134,7 @@ export interface ProductContentRevision {
   attributes: { attribute_id: string; value: string }[];
 }
 export interface Product {
+  active?: boolean;
   public_code?: string;
   content_revision?: ProductContentRevision;
   content?: ProductContent;
@@ -271,6 +272,7 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  active?: boolean;
   display_priority?: number;
   clear_display_priority?: boolean;
   slug?: string;
