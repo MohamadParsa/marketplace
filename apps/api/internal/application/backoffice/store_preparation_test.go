@@ -196,3 +196,55 @@ func TestStorePreparationSiteChangesOnlyReplaceInheritedWeekAndValidateSettings(
 		t.Fatal("invalid settings persisted")
 	}
 }
+
+func TestStorePreparationAdminBatchIsAtomicScopedAndRetrySafe(t *testing.T) {
+	h := newCommerceHarness(t)
+	ctx := context.Background()
+	in := backoffice.StorePreparationBatchInput{All: true, Stores: []backoffice.StorePreparationVersion{{ID: "store1"}, {ID: "store2"}}, LeadDays: 2, DayBasis: shipping.CalendarDays, CalendarMode: shipping.Inherit}
+	actor := h.admin
+	actor.Surface = identity.SurfaceSeller
+	if _, err := h.s.SaveStorePreparationBatch(ctx, actor, in, "seller-batch"); !errors.Is(err, backoffice.ErrForbidden) {
+		t.Fatal("seller batch", err)
+	}
+	if _, err := h.s.SaveStorePreparationBatch(ctx, h.finance, in, "finance-batch"); !errors.Is(err, backoffice.ErrForbidden) {
+		t.Fatal("finance batch", err)
+	}
+	before, _ := h.repo.Snapshot(ctx)
+	in.Stores[1].Version = 1
+	if _, err := h.s.SaveStorePreparationBatch(ctx, h.admin, in, "stale-batch"); !errors.Is(err, backoffice.ErrConflict) {
+		t.Fatal("stale batch", err)
+	}
+	after, _ := h.repo.Snapshot(ctx)
+	if !reflect.DeepEqual(before, after) {
+		t.Fatal("partial batch write")
+	}
+	in.Stores[1].Version = 0
+	rows, err := h.s.SaveStorePreparationBatch(ctx, h.admin, in, "valid-batch")
+	if err != nil || len(rows) != 2 {
+		t.Fatal(rows, err)
+	}
+	for _, row := range rows {
+		if row.Version != 1 || row.LeadDays != 2 || row.Policy.DayBasis != shipping.CalendarDays || row.Policy.CalendarMode != shipping.Inherit {
+			t.Fatal(row)
+		}
+	}
+	if retry, err := h.s.SaveStorePreparationBatch(ctx, h.admin, in, "valid-batch"); err != nil || !reflect.DeepEqual(rows, retry) {
+		t.Fatal("retry", retry, err)
+	}
+	in.LeadDays = 3
+	if _, err := h.s.SaveStorePreparationBatch(ctx, h.admin, in, "valid-batch"); !errors.Is(err, backoffice.ErrConflict) {
+		t.Fatal("key reuse", err)
+	}
+	in.LeadDays = 2
+	in.Stores[0].Version = 1
+	in.Stores[1].Version = 1
+	h.repo.Update(ctx, func(w *backoffice.Workspace) error {
+		st := w.Stores[0]
+		st.ID = "new-store"
+		w.Stores = append(w.Stores, st)
+		return nil
+	})
+	if _, err := h.s.SaveStorePreparationBatch(ctx, h.admin, in, "changed-directory"); !errors.Is(err, backoffice.ErrConflict) {
+		t.Fatal("all snapshot missed new store", err)
+	}
+}

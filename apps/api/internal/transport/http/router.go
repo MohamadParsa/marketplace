@@ -71,6 +71,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 			mux.HandleFunc("PUT /"+surface+"/stores/{id}/preparation", h.StorePreparation)
 			mux.HandleFunc("POST /"+surface+"/stores/{id}/preparation/preview", h.StorePreparation)
 		}
+		mux.HandleFunc("POST /backoffice/stores/preparation/batch", h.StorePreparation)
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
 	}
 	if h := cfg.ProductQA; h != nil {

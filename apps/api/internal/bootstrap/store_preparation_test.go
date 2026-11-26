@@ -111,3 +111,40 @@ func TestStorePreparationPostgresRestartPreservesCalendarAndHistory(t *testing.T
 		}
 	}
 }
+
+func TestStorePreparationAdminBatchHTTPAndPostgresRestart(t *testing.T) {
+	ctx := context.Background()
+	repo, db := cachePostgres(t)
+	seed := preparationSeed(t)
+	if err := repo.Update(ctx, func(w *backoffice.Workspace) error { *w = seed; return nil }); err != nil {
+		t.Fatal(err)
+	}
+	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
+	admin := login(t, h, "09000000001")
+	seller := sellerLogin(t, h, "09120000002")
+	in := backoffice.StorePreparationBatchInput{All: true, LeadDays: 4, DayBasis: shipping.CalendarDays, CalendarMode: shipping.Inherit}
+	for _, st := range seed.Stores {
+		in.Stores = append(in.Stores, backoffice.StorePreparationVersion{ID: st.ID, Version: st.Version})
+	}
+	commerceHTTP(t, h, seller, "", "POST", "/backoffice/stores/preparation/batch", in, "forbidden-batch", 401)
+	for _, bad := range []any{map[string]any{"all": true, "stores": []any{map[string]any{"id": "s1"}}, "lead_days": 2, "day_basis": "working", "calendar_mode": "inherit"}, map[string]any{"stores": in.Stores, "day_basis": "working", "calendar_mode": "inherit"}} {
+		commerceHTTP(t, h, admin, "", "POST", "/backoffice/stores/preparation/batch", bad, "invalid-batch", 400)
+	}
+	first := commerceHTTP(t, h, admin, "", "POST", "/backoffice/stores/preparation/batch", in, "save-batch", 200)
+	if string(first) != string(commerceHTTP(t, h, admin, "", "POST", "/backoffice/stores/preparation/batch", in, "save-batch", 200)) {
+		t.Fatal("batch retry")
+	}
+	restarted, err := reviewpostgres.New(ctx, db, seed)
+	if err != nil {
+		t.Fatal(err)
+	}
+	after, err := restarted.Snapshot(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, st := range after.Stores {
+		if st.LeadDays != 4 || st.Version != 1 || st.Preparation == nil || st.Preparation.CalendarMode != shipping.Inherit {
+			t.Fatal("persisted batch", st)
+		}
+	}
+}

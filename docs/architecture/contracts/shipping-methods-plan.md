@@ -39,6 +39,8 @@ approved_by: []
 
 ### قرارداد اجراشدهٔ #120
 
+- `POST /backoffice/stores/preparation/batch`: مخصوص ادمین مجاز؛ بدنه شامل `all`، `stores:[{id,version}]` و مقادیر مشترک lead/day_basis/calendar_mode/working_weekdays است. در `all=true` فهرست ارسالی باید snapshot تمام فروشگاه‌ها باشد؛ تغییر تعداد/عضویت یا version یک ردیف، کل عملیات را رد می‌کند. سرور پیش از هر تغییر تمام نسخه‌ها را بررسی و با یک ممیزی و idempotency اعمال می‌کند. عضو فروشگاه مسیر گروهی ندارد؛ پنل پیش از ثبت جمعی تعداد/نام فروشگاه‌ها و مقادیر جایگزین را نمایش می‌دهد.
+
 - `GET /backoffice/stores/preparation` و `GET /seller/stores/preparation`: projection مجاز شامل مقدار، واحد، mode، تقویم سایت/مؤثر، version فروشگاه و قواعد ساعت؛ پاسخ خصوصی `no-store` است. فروشنده فقط فروشگاه دارای عضویت و حق `stores.preparation.read` را می‌بیند.
 - `PUT /{surface}/stores/{id}/preparation`: بدنهٔ `version`, `lead_days` (۰..۳۶۵)، `day_basis` (`working|calendar`)، `calendar_mode` (`inherit|override`) و `working_weekdays`؛ inheritance فهرست روز خالی دارد، override حداقل یک روز یکتا در ۰..۶. `Idempotency-Key` الزامی است؛ تغییر همان کلید با ورودی متفاوت و version قدیمی 409، دسترسی نامعتبر 403، ورودی نامعتبر 400 است. مجوز تغییر فروشگاه `stores.preparation.write` مستقل از مجوز تغییر تقویم عمومی است؛ برای سلر هر دو حق read/write و عضویت همان فروشگاه لازم‌اند. ممیزی و نسخه در تراکنش ثبت می‌شوند و retry پس از لغو مجوز پذیرفته نمی‌شود.
 - `POST /{surface}/stores/{id}/preparation/preview`: همان ورودی، بدون ذخیره و فقط با مجوز مشاهده؛ `source_at` با فرض پرداخت الان و `ready_at` از موتور مشترک برمی‌گردند. این مسیر اعلام تحویل واقعی نیست.

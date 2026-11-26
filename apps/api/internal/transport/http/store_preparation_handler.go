@@ -17,6 +17,34 @@ func (h *CommerceHandler) StorePreparation(w http.ResponseWriter, r *http.Reques
 	if !ok {
 		return
 	}
+	if strings.HasSuffix(r.URL.Path, "/preparation/batch") {
+		var in struct {
+			backoffice.StorePreparationBatchInput
+			Stores []struct {
+				ID      string `json:"id"`
+				Version *int   `json:"version"`
+			} `json:"stores"`
+			LeadDays *int `json:"lead_days"`
+		}
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		if in.LeadDays == nil {
+			commerceError(w, backoffice.ErrInvalid)
+			return
+		}
+		in.StorePreparationBatchInput.LeadDays = *in.LeadDays
+		for _, item := range in.Stores {
+			if item.Version == nil {
+				commerceError(w, backoffice.ErrInvalid)
+				return
+			}
+			in.StorePreparationBatchInput.Stores = append(in.StorePreparationBatchInput.Stores, backoffice.StorePreparationVersion{ID: item.ID, Version: *item.Version})
+		}
+		out, err := h.service.SaveStorePreparationBatch(r.Context(), actor, in.StorePreparationBatchInput, r.Header.Get("Idempotency-Key"))
+		commerceResult(w, r, out, err)
+		return
+	}
 	if r.Method == http.MethodGet {
 		out, err := h.service.ReadStorePreparations(r.Context(), actor)
 		commerceResult(w, r, out, err)

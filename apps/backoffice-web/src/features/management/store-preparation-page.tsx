@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Alert, Button, LinearProgress, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  LinearProgress,
+  TextField,
+} from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
@@ -143,6 +152,35 @@ export function StorePreparationPage() {
           key={`${store.id}:${store.version}:${store.site_calendar.version}:${revision}`}
           store={store}
           busyChanged={setEditing}
+          batch={
+            surface === "backoffice" && rows.every((row) => row.can_write)
+              ? {
+                  names: rows.map((row) => row.name),
+                  save: async (body, key) => {
+                    const next = await request<StorePreparation[]>(
+                      "/preparation/batch",
+                      "POST",
+                      {
+                        all: true,
+                        stores: rows.map((row) => ({
+                          id: row.id,
+                          version: row.version,
+                        })),
+                        lead_days: body.lead_days,
+                        day_basis: body.day_basis,
+                        calendar_mode: body.calendar_mode,
+                        working_weekdays: body.working_weekdays,
+                      },
+                      key,
+                    );
+                    client.setQueryData<StorePreparation[]>(queryKey, next);
+                    setNotice(
+                      `تنظیمات مشترک برای ${next.length.toLocaleString("fa-IR")} فروشگاه ذخیره شد.`,
+                    );
+                  },
+                }
+              : undefined
+          }
           save={(body, key) =>
             request<StorePreparation>(
               `/${encodeURIComponent(store.id)}/preparation`,
@@ -192,6 +230,7 @@ function PreparationEditor({
   saved,
   reload,
   busyChanged,
+  batch,
 }: {
   store: StorePreparation;
   save: (body: Input, key: string) => Promise<StorePreparation>;
@@ -199,6 +238,10 @@ function PreparationEditor({
   saved: (row: StorePreparation) => void;
   reload: () => void;
   busyChanged: (busy: boolean) => void;
+  batch?: {
+    names: string[];
+    save: (body: Input, key: string) => Promise<void>;
+  };
 }) {
   const [lead, setLead] = useState(String(store.lead_days));
   const [basis, setBasis] = useState(store.policy.day_basis);
@@ -210,6 +253,8 @@ function PreparationEditor({
   const [error, setError] = useState("");
   const [conflict, setConflict] = useState(false);
   const [notice, setNotice] = useState("");
+  const [all, setAll] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [example, setExample] = useState<{
     ready_at: string;
     source_at: string;
@@ -241,6 +286,11 @@ function PreparationEditor({
     setConflict(false);
     try {
       if (saving) {
+        if (all && batch) {
+          await batch.save(input(), key);
+          setDirty(false);
+          return;
+        }
         const next = await save(input(), key);
         setDirty(false);
         setNotice("تنظیمات ذخیره شد.");
@@ -266,6 +316,39 @@ function PreparationEditor({
       aria-label={`تنظیم وقفه ${store.name}`}
     >
       <h2>{store.name}</h2>
+      {batch && (
+        <div className="toolbar" role="group" aria-label="محدوده اعمال تنظیمات">
+          <Button
+            disabled={busy}
+            aria-pressed={!all}
+            variant={!all ? "contained" : "outlined"}
+            onClick={() => {
+              setAll(false);
+              change();
+            }}
+          >
+            همین فروشگاه
+          </Button>
+          <Button
+            disabled={busy}
+            aria-pressed={all}
+            variant={all ? "contained" : "outlined"}
+            onClick={() => {
+              setAll(true);
+              change();
+            }}
+          >
+            همهٔ فروشگاه‌ها ({batch.names.length.toLocaleString("fa-IR")})
+          </Button>
+        </div>
+      )}
+      {all && batch && (
+        <Alert severity="warning">
+          مقادیر این فرم جایگزین وقفه، واحد و منبع روزهای کاری همهٔ فروشگاه‌ها
+          می‌شود؛ فروشگاه‌های غیرفعال هم شامل‌اند. پیش‌نمایش بر اساس همین مقادیر
+          مشترک است.
+        </Alert>
+      )}
       {!store.can_write && (
         <Alert severity="info">
           مجوز ویرایش ندارید؛ فقط مشاهده و پیش‌نمایش در دسترس است.
@@ -412,9 +495,9 @@ function PreparationEditor({
         <Button
           variant="contained"
           disabled={busy || !valid || !dirty || !store.can_write || conflict}
-          onClick={() => void run(true)}
+          onClick={() => (all && batch ? setConfirm(true) : void run(true))}
         >
-          ذخیرهٔ وقفه و تقویم
+          {all ? "ثبت تنظیمات برای همهٔ فروشگاه‌ها" : "ذخیرهٔ وقفه و تقویم"}
         </Button>
         <Button disabled={busy} onClick={reload}>
           دریافت آخرین تنظیمات
@@ -427,6 +510,50 @@ function PreparationEditor({
           حمل محاسبه می‌شود.
         </Alert>
       )}
+      <Dialog
+        open={confirm}
+        onClose={() => !busy && setConfirm(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>اعمال تنظیم مشترک روی همهٔ فروشگاه‌ها</DialogTitle>
+        <DialogContent>
+          <p>
+            {batch?.names.length.toLocaleString("fa-IR")} فروشگاه · وقفه {lead}{" "}
+            روز {basis === "calendar" ? "تقویمی" : "کاری"} ·{" "}
+            {mode === "inherit" ? "ارث‌بری از سایت" : "روزهای اختصاصی مشترک"}
+          </p>
+          <p>
+            {weekdays
+              .filter(([day]) => effective.includes(day))
+              .map(([, label]) => label)
+              .join("، ")}
+          </p>
+          <details>
+            <summary>فروشگاه‌های تحت تأثیر</summary>
+            <p>{batch?.names.join("، ")}</p>
+          </details>
+          <p>
+            تنظیم قبلی این فروشگاه‌ها جایگزین می‌شود. سفارش‌های قطعی گذشته تغییر
+            نمی‌کنند. اگر نسخهٔ هر فروشگاه تغییر کرده باشد، کل عملیات رد می‌شود.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button disabled={busy} onClick={() => setConfirm(false)}>
+            بازگشت
+          </Button>
+          <Button
+            variant="contained"
+            disabled={busy}
+            onClick={() => {
+              setConfirm(false);
+              void run(true);
+            }}
+          >
+            اعمال روی همهٔ فروشگاه‌ها
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }

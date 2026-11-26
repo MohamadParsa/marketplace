@@ -96,6 +96,9 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
+	if r.URL.Path == "/backoffice/stores/preparation/batch" {
+		limit = 1024 * 1024
+	}
 	if strings.HasPrefix(r.URL.Path, "/backoffice/stores/") && strings.HasSuffix(r.URL.Path, "/eligibility") {
 		limit = 1024 * 1024
 	}
