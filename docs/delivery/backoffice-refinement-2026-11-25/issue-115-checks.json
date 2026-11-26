@@ -1,0 +1,96 @@
+{
+  "id": "CHECKS-BRAND-MANAGEMENT-20261126",
+  "issues": [
+    115
+  ],
+  "source_commit": "4ec243011c3c37ddb2fbbc6da9976037e084915e",
+  "source_pushed": false,
+  "go": {
+    "passed_tests_and_subtests": 370,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "brand-pagination-first-20",
+        "pass": true
+      },
+      {
+        "id": "brand-pagination-next",
+        "pass": true
+      },
+      {
+        "id": "brand-english-filter-and-page-reset",
+        "pass": true
+      },
+      {
+        "id": "brand-combined-empty-filter",
+        "pass": true
+      },
+      {
+        "id": "brand-create-all-metadata",
+        "pass": true
+      },
+      {
+        "id": "brand-conflict-keeps-input",
+        "pass": true
+      },
+      {
+        "id": "brand-valid-image",
+        "pass": true
+      },
+      {
+        "id": "brand-invalid-image-retains-old",
+        "pass": true
+      },
+      {
+        "id": "brand-image-filter",
+        "pass": true
+      },
+      {
+        "id": "brand-remove-fallback",
+        "pass": true
+      },
+      {
+        "id": "brand-inactive-effect-preview",
+        "pass": true
+      },
+      {
+        "id": "brand-mobile-form-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-mobile-grid-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-viewer-cannot-create-or-edit",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 15,
+    "errors": [],
+    "isolated_memory": true
+  },
+  "backoffice_build": "passed",
+  "primary_preservation": {
+    "sections": 28,
+    "unchanged": true,
+    "changes": []
+  },
+  "primary_http": {
+    "backoffice": 200,
+    "storefront": 200
+  },
+  "merged": false,
+  "deployed": false
+}

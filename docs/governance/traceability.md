@@ -267,3 +267,7 @@ FEAT-BO-REFINEMENT-003 → [گزارش #109](../delivery/backoffice-refinement-2
 FEAT-BO-REFINEMENT-007 → [گزارش #113](../delivery/backoffice-refinement-2026-11-25/issue-113-verification.md) → [قرارداد فروشگاه](../architecture/contracts/store-management.md) → [BDD](../bdd/features/experiences/store-management.feature).
 
 FEAT-BO-REFINEMENT-008 → [گزارش #114](../delivery/backoffice-refinement-2026-11-25/issue-114-verification.md) → [قرارداد](../architecture/contracts/store-sales-eligibility.md) → [BDD](../bdd/features/experiences/store-sales-policy.feature). FEAT-BO-REFINEMENT-012 فقط ادامه PDP در #118 و todo است.
+
+## تکمیل مستقل برند — #115
+
+FEAT-BO-REFINEMENT-009-AC01..03 → [قرارداد](../architecture/contracts/brand-management.md) → [سناریو](../bdd/features/experiences/brand-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-115-verification.md). تکمیل پیاده‌سازی به معنی approved شدن سند یا استقرار نیست.

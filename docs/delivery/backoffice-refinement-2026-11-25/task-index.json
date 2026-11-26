@@ -472,10 +472,10 @@
       ],
       "questions": [],
       "id": "FEAT-BO-REFINEMENT-009",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "اجرای مستقل به دستور مستقیم مالک؛ قرارداد و شواهد در گزارش #115. سند in-review؛ main و استقرار جدا.",
       "related_issues": [
         81
       ],
@@ -486,7 +486,8 @@
       "github_dependencies": [
         4,
         27
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-115-verification.md"
     },
     {
       "n": 10,
@@ -677,16 +678,24 @@
   "authorized_issue_numbers": [
     107,
     108,
+    109,
     110,
     111,
-    112
+    112,
+    113,
+    114,
+    115
   ],
   "last_completed_local_issues": [
     107,
     108,
+    109,
     110,
     111,
-    112
+    112,
+    113,
+    114,
+    115
   ],
   "publication_policy": "push-completed-work-at-owner-request-2026-11-25",
   "publication": {

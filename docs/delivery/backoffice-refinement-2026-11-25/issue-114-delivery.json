@@ -9,14 +9,14 @@
     }
   ],
   "source_commit": "47b798a0b22a40f5f0309dd18978b25b9f6829f8",
-  "initial_documentation_commit": "e6831ad6997e1efbe63b42e46a24b311448a22fc",
+  "initial_documentation_commit": "eb4105889fcbded38a70206e2ea3697eaa0a3520",
   "source_pushed": true,
   "branch": "codex/local-parsa-integration-20261124",
   "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
   "merged": false,
   "deployed": false,
   "ci": {
-    "tested_revision": "e6831ad6997e1efbe63b42e46a24b311448a22fc",
+    "tested_revision": "eb4105889fcbded38a70206e2ea3697eaa0a3520",
     "all_passed": true,
     "api_race_and_vet": "passed",
     "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945",

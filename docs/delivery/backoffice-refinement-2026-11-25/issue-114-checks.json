@@ -95,7 +95,7 @@
     "output/playwright/issue-114/store-policy.png"
   ],
   "ci": {
-    "tested_revision": "e6831ad6997e1efbe63b42e46a24b311448a22fc",
+    "tested_revision": "eb4105889fcbded38a70206e2ea3697eaa0a3520",
     "all_passed": true,
     "api_race_and_vet": "passed",
     "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945",
