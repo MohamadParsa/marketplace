@@ -73,17 +73,16 @@
       "dependencies": [
         120,
         121,
-        122
-      ],
-      "conditional_dependencies": [
+        122,
         16
-      ]
+      ],
+      "conditional_dependencies": []
     }
   ],
   "reused_issues": [
     {
       "number": 16,
-      "owner": "schedule-and-atomic-slot-capacity",
+      "owner": "daily-method-capacity-and-slot-schedule-with-atomic-reservation",
       "implementation_status": "todo",
       "execution_authorized": false
     },
@@ -100,5 +99,17 @@
     "SHIP-Q06",
     "SHIP-Q07"
   ],
-  "deployment": false
+  "deployment": false,
+  "confirmed_capacity": {
+    "unit": "shipment",
+    "scope": "store-and-method",
+    "daily_method_limit": true,
+    "slot_limit": true,
+    "non_slot_capacity_day": "planned-dispatch-day",
+    "slot_display_start": "first-deliverable-day-with-free-slot",
+    "slot_display_end_offset_calendar_days": 5,
+    "slot_display_inclusive_dates": 6,
+    "skip_full_and_closed_choices": true,
+    "extend_window_to_collect_free_days": false
+  }
 }
