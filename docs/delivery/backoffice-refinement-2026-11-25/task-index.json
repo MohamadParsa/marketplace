@@ -157,14 +157,12 @@
         "apps/api/internal/application/backoffice/catalog_commands.go",
         "apps/backoffice-web/src/features/management/shared-attributes.tsx"
       ],
-      "questions": [
-        "طرح اجرایی نگاشت موارد برخوردی و هماهنگی با رزروها باید پیش از apply نهایی شود؛ نیازمند تأیید برنامه همان تبدیل است."
-      ],
+      "questions": [],
       "id": "FEAT-BO-REFINEMENT-003",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "اجرای قابلیت با دستور مستقیم مالک در ۲۰۲۶-۱۱-۲۶ مجاز شد؛ پس از تست، کامیت و پوش و کامنت پایان ثبت می‌شود. وضعیت سند همچنان in-review است. برنامه تبدیل روی داده فعلی اجرا نشده است.",
       "related_issues": [],
       "code": "CV-BOR-03",
       "number": 109,
@@ -173,7 +171,8 @@
       "github_dependencies": [
         5,
         108
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-109-verification.md"
     },
     {
       "n": 4,

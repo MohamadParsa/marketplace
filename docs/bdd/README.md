@@ -73,3 +73,5 @@
 [روش فروش و خروجی گرید #73/#81](features/experiences/sales-methods-and-grid-export.feature) به [گزارش اجرای Go/مرورگر/مولد](../delivery/next-phase/issues-73-81-verification.md) متصل است؛ اجرای runner مستقل BDD ادعا نمی‌شود.
 
 [کاربر واحد، رمز موقت و نقش‌های مستقل #111/#112](features/experiences/user-management-and-roles.feature) به [قرارداد اجرایی](../architecture/contracts/user-management.md) و [شواهد](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md) لینک دارد؛ runner مستقل Gherkin اجرا نشده است.
+
+[تبدیل محور #109](features/experiences/category-axis-conversion.feature): نگاشت، تراکنش و رضایت دوباره سبد؛ شاهد executable در گزارش تحویل.
