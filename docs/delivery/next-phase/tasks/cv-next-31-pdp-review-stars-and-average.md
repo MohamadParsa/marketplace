@@ -39,4 +39,4 @@ Issue: [#119](https://github.com/MohamadParsa/marketplace/issues/119)
 
 ## تحویل اجرا
 
-[قرارداد](../../../architecture/contracts/product-review-rating.md) · [گزارش و تصاویر](../issue-119-verification.md) · [شواهد ماشین‌خوان](../issue-119-checks.json). ۳۹۳تست/زیرتست Go و۲۱کنترل مرورگر موفق؛ داده اصلی و نظرات موجود پس از restart محفوظ‌اند. کامنت/بستن و CI پس از پوش در رسید ثبت می‌شوند.
+[قرارداد](../../../architecture/contracts/product-review-rating.md) · [گزارش و تصاویر](../issue-119-verification.md) · [شواهد ماشین‌خوان](../issue-119-checks.json). ۳۹۳تست/زیرتست Go و۲۱کنترل مرورگر موفق؛ داده اصلی و نظرات موجود پس از restart محفوظ‌اند. [رسید پوش، CI و بستن ایشو](../issue-119-delivery.json) ثبت شده است.

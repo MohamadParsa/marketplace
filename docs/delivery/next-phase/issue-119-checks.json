@@ -4,7 +4,7 @@
     119
   ],
   "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
-  "source_pushed": false,
+  "source_pushed": true,
   "go": {
     "passed_tests_and_subtests": 393,
     "skipped": 4,
@@ -112,5 +112,38 @@
     "unchanged": true
   },
   "merged": false,
-  "deployed": false
+  "deployed": false,
+  "ci": {
+    "tested_revision": "18862341d8376a6c9fb12eb8316509a251890cbe",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468",
+    "jobs": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064374885"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375113"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375124"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375213"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375398"
+      }
+    ]
+  }
 }

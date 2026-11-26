@@ -4,7 +4,7 @@
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "issues-73-81-local-complete-not-pushed",
+  "execution": "issues-87-119-complete-pushed-awaiting-merge",
   "items": [
     {
       "n": 1,
@@ -706,15 +706,17 @@
       ],
       "implementation_status": "done",
       "execution_authorized": true,
-      "state": "open",
+      "state": "closed",
       "number": 119,
       "url": "https://github.com/MohamadParsa/marketplace/issues/119",
       "assignee": "eliassarband",
       "verification": "docs/delivery/next-phase/issue-119-verification.md",
       "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
-      "source_pushed": false,
-      "publication_pending": true,
-      "local_only": true
+      "source_pushed": true,
+      "publication_pending": false,
+      "local_only": false,
+      "local_delivery_status": "pushed-branch-awaiting-merge",
+      "delivery_receipt": "docs/delivery/next-phase/issue-119-delivery.json"
     }
   ],
   "reused_issues": [
@@ -748,6 +750,7 @@
     84,
     85,
     86,
+    87,
     119
   ],
   "current_local_issue": null,
@@ -760,7 +763,9 @@
     69,
     73,
     78,
-    81
+    81,
+    87,
+    119
   ],
   "proposed_execution_order": [
     66,
@@ -771,7 +776,7 @@
     69,
     78
   ],
-  "publication_policy": "future-changes-local-until-explicit-owner-request",
+  "publication_policy": "push-and-comment-close-at-task-completion-owner-instruction",
   "last_completed_local_issue": 119,
   "next_proposed_issue": null,
   "last_completed_local_issues": [

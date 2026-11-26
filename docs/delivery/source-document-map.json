@@ -445,9 +445,13 @@
       "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
       "verification": "docs/delivery/next-phase/issue-119-verification.md",
       "implementation_status": "done",
-      "source_pushed": false,
-      "publication_status": "local-awaiting-push",
-      "pull_request": 106
+      "source_pushed": true,
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "issue_state": "closed",
+      "documentation_commit": "18862341d8376a6c9fb12eb8316509a251890cbe",
+      "delivery_receipt": "docs/delivery/next-phase/issue-119-delivery.json",
+      "source_tree_matches_documentation_revision": true
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -543,9 +547,10 @@
       113,
       114,
       115,
-      116
+      116,
+      119
     ],
-    "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
+    "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
     "source_pushed": true,
     "pull_request": 106,
     "merged": false,

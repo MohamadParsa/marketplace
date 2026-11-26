@@ -37,3 +37,7 @@ execution_authorized: true
 ## حدود
 
 سیاست ثبت/مدیریت نظرات #89 حفظ شده است؛ API جدید پس‌گرفتن تأیید/حذف/ویرایش امتیاز اضافه نشده. تست تغییر eligibility ذخیره‌شده، تازگی محاسبه را شبیه‌سازی می‌کند. aggregate ماندگار، کش مضاعف و migration نداریم؛ structured data SEO در #74 باقی است. main/Liara ادغام یا منتشر نشده‌اند؛ سند in-review است.
+
+## رسید نهایی
+
+سورس و مدارک روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/119#issuecomment-7198537746) ثبت و #119 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45864692468) با سورس یکسان، شامل race/vet موفق است؛ [رسید](issue-119-delivery.json). main/Liara ادغام یا منتشر نشده‌اند.
