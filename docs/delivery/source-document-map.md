@@ -142,3 +142,8 @@
 سورس، migration افزایشی۰۰۰۰۱۲، فرم‌ها و تست‌ها در کامیت محلی `37ec82c31408d69736a4f7826fa5ae07ec905077` در `D:\Cherriva` ثبت شدند. [گزارش و تصاویر](backoffice-refinement-2026-11-25/issues-111-112-verification.md) · [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issues-111-112-checks.json) · [رسید کامنت و بستن Issueها](backoffice-refinement-2026-11-25/issues-111-112-delivery.json).
 
 هر دو Issue با کامنت شواهد completed بسته شدند؛۳۲۵تست Go و۳۰کنترل مرورگر موفق،۱۷بخش داده بعد از restart محفوظ. مدارک این تحویل با trailer `Source-Commit: 37ec82c31408d69736a4f7826fa5ae07ec905077` به سورس وصل‌اند و tree فایل‌های اجرایی همان است. این کامیت **طبق دستور مالک پوش نشده**؛ last-published source و main/لیارا تغییری نکرده‌اند. خواندن داخلی snapshot هویت هنوز کامل است؛ paging ایندکس‌دار SQL و ممیزی جامع #71 در این تحویل ادعا نشده‌اند.
+
+
+## خصوصیات چریوا در پنل و ساده‌سازی آدرس — #110
+
+سورس و تست‌ها در `2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` در D:\Cherriva ثبت شدند؛ [گزارش و تصاویر](backoffice-refinement-2026-11-25/issue-110-verification.md) و [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issue-110-checks.json). دستور جدید مالک پوش پس از تکمیل را مجاز کرده و این نسخه همراه کامیت‌های قبلی محلی #100/#101/#73/#81/#111/#112 روی همان شاخه تحویل می‌شود؛ main و لیارا جدا هستند. کامیت مدارک trailer `Source-Commit: 2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` دارد و درخت اجرایی آن با همین سورس برابر است.

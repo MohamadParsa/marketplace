@@ -1,6 +1,6 @@
 {
   "id": "PLAN-BO-REFINEMENT-001",
-  "updated": "2026-11-25",
+  "updated": "2026-11-26",
   "owner": "eliassarband",
   "document_status": "in-review",
   "implementation_status": "in-progress",
@@ -187,13 +187,13 @@
         "apps/api/internal/application/backoffice/catalog_seed.go"
       ],
       "questions": [
-        "قالب دقیق کد قابل نمایش خصوصیت پیش از اجرا مستند شود؛ شناسه داخلی واردسازی با کد رابط یکی فرض نشود."
+        "قالب فنی در قرارداد خصوصیات ثبت شد؛ PK/FK محفوظ است."
       ],
       "id": "FEAT-BO-REFINEMENT-004",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nبا انتخاب مالک اجرا و تست شد؛ دستور تازه پوش پس از تکمیل برقرار است. #108/#109 مستقل باقی‌اند.",
       "related_issues": [],
       "code": "CV-BOR-04",
       "number": 110,
@@ -202,7 +202,9 @@
       "github_dependencies": [
         102,
         108
-      ]
+      ],
+      "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md"
     },
     {
       "n": 5,
@@ -599,12 +601,14 @@
     81
   ],
   "authorized_issue_numbers": [
+    110,
     111,
     112
   ],
   "last_completed_local_issues": [
+    110,
     111,
     112
   ],
-  "publication_policy": "local-only-until-explicit-owner-push-request"
+  "publication_policy": "push-completed-work-at-owner-request-2026-11-25"
 }

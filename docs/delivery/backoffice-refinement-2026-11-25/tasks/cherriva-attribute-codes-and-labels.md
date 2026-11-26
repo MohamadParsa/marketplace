@@ -3,11 +3,11 @@ id: FEAT-BO-REFINEMENT-004
 title: حذف کدهای gsp از نمایش و قرارداد مصرفی خصوصیات پنل با نام‌گذاری chr
 status: in-review
 owner: eliassarband
-updated: 2026-11-25
+updated: 2026-11-26
 related: [PLAN-BO-REFINEMENT-001]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 priority: P1
 ---
 
@@ -18,7 +18,7 @@ Issue: [#110](https://github.com/MohamadParsa/marketplace/issues/110)
 <!-- cherriva-backoffice-refinement-20261125 CV-BOR-04 -->
 مسئول: @eliassarband · والد برنامه #95 · اولویت پیشنهادی **P1**
 
-**وضعیت: فقط تسک‌بندی؛ اجرا انتخاب نشده است.** کد محصول/دیتابیس در این نوبت تغییر نمی‌کند.
+**وضعیت: به انتخاب مالک تکمیل و تست شد.** [گزارش، تصاویر و محدودیت‌ها](../issue-110-verification.md).
 
 ## مسئله و نتیجه
 کاربر پنل نیز هویت چریوا و عنوان خوانا ببیند، نه کد فنی مبدأ واردسازی.
@@ -38,17 +38,17 @@ Issue: [#110](https://github.com/MohamadParsa/marketplace/issues/110)
 - `apps/api/internal/application/backoffice/catalog_seed.go`
 
 ## ترتیب و عدم هم‌پوشانی
-پیش‌نیازها: #102، #108
+پیش‌نیاز پایه: #102؛ #108 برای UX کلی مرتبط است. alias/projection مستقل تکمیل شد و تبدیل محور یا UX کامل آن کار را اجرا نمی‌کند.
 
 ## معیار پذیرش
-- [ ] **FEAT-BO-REFINEMENT-004-AC01:** جست‌وجو، گرید و دیالوگ خصوصیات پنل به‌جای gsp-axis-color، عنوان خوانا و در صورت نیاز کد chr نشان دهند.
-- [ ] **FEAT-BO-REFINEMENT-004-AC02:** ورودی/لینک قدیمی به همان تعریف واقعی برسد؛ دو خصوصیت رنگ یا تنوع موازی ساخته نشوند.
-- [ ] **FEAT-BO-REFINEMENT-004-AC03:** مقادیر، قیمت، موجودی، گارانتی، سبد/سفارش و checksum snapshot ورودی محفوظ باشند؛ restart و retry واردسازی آزمون شوند.
+- [x] **FEAT-BO-REFINEMENT-004-AC01:** جست‌وجو، گرید و دیالوگ خصوصیات پنل به‌جای gsp-axis-color، عنوان خوانا و در صورت نیاز کد chr نشان دهند.
+- [x] **FEAT-BO-REFINEMENT-004-AC02:** ورودی/لینک قدیمی به همان تعریف واقعی برسد؛ دو خصوصیت رنگ یا تنوع موازی ساخته نشوند.
+- [x] **FEAT-BO-REFINEMENT-004-AC03:** مقادیر، قیمت، موجودی، گارانتی، سبد/سفارش و checksum snapshot ورودی محفوظ باشند؛ restart و retry واردسازی آزمون شوند.
 
 ## پرسش یا طراحی باقی‌مانده
-- قالب دقیق کد قابل نمایش خصوصیت پیش از اجرا مستند شود؛ شناسه داخلی واردسازی با کد رابط یکی فرض نشود.
+- حل‌شده در [قرارداد](../../../architecture/contracts/catalog-attributes.md#تکمیل-مرز-پنل-و-کد-چریوا--110): alias نوع a از ID و Code مستقل، با حفظ ذخیره اصلی.
 
 ## قواعد تحویل و شرط شروع
 طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.
 
-این شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.
+این کار با دستور صریح مالک اجرا شد؛ سند in-review و اجرا done هستند. دستور تازه مالک در۲۰۲۶-۱۱-۲۵ پوش پس از تکمیل را مجاز کرده است؛ انتشار لیارا جدا می‌ماند.

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25",
+  "updated": "2026-11-26",
   "workspace": "D:\\Cherriva",
   "current_source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
   "rows": [
@@ -322,6 +322,19 @@
       "publication_status": "local-only-unpushed",
       "source_tree_matches_documentation_revision": true,
       "documentation_commit_reference": "Source-Commit trailer on local documentation commit"
+    },
+    {
+      "issue": 110,
+      "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md",
+      "implementation_status": "done",
+      "publication_status": "ready-to-push",
+      "source_tree_matches_documentation_revision": true,
+      "additional_owner_changes": [
+        "address-title-map-full-address-order",
+        "checkout-only-recipient-switch",
+        "self-hides-recipient-fields-except-profile-completion"
+      ]
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -399,7 +412,7 @@
       }
     ]
   },
-  "current_local_integration_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+  "current_local_integration_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
   "local_integration_publication_pending": true,
   "local_integration_verification": "docs/delivery/backlog-review-2026-11-24/parsa-integration.md",
   "local_publication_issue": 105,

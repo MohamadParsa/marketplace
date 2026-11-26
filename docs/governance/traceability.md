@@ -251,3 +251,8 @@ FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/cust
 ## اجرای محلی #111 و #112
 
 [شرح کاربر](../delivery/backoffice-refinement-2026-11-25/tasks/unified-user-editing-and-filters.md) و [نقش](../delivery/backoffice-refinement-2026-11-25/tasks/dedicated-role-management-and-user-grants.md) ← [قرارداد](../architecture/contracts/user-management.md) ← [BDD](../bdd/features/experiences/user-management-and-roles.feature) ← [آزمون و تصاویر](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md). مجوز اجرا محدود همین دو و تغییرها محلی است؛ ممیزی عمومی scope در #71 باقی می‌ماند.
+
+
+## مرز خصوصیات پنل — #110 و اصلاح آدرس
+
+[تسک FEAT-BO-REFINEMENT-004](../delivery/backoffice-refinement-2026-11-25/tasks/cherriva-attribute-codes-and-labels.md) → [قرارداد خصوصیات](../architecture/contracts/catalog-attributes.md) → [گزارش API/مرورگر/حفظ داده و چیدمان آدرس](../delivery/backoffice-refinement-2026-11-25/issue-110-verification.md). گرید/دیالوگ/انتساب عنوان خوانا دارند و alias سازگار با ورودی قدیمی است؛ بازنویسی داده واردشده و تبدیل محور در این کار نیست.
