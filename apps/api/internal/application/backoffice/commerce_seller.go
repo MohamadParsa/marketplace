@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
 )
 
 type SellerCheckoutLine struct {
@@ -15,17 +16,23 @@ type SellerCheckoutLine struct {
 	UnitPriceToman string `json:"unit_price_toman"`
 }
 type SellerCheckoutOrder struct {
-	PurchaseNumber string               `json:"purchase_number"`
-	ID             string               `json:"id"`
-	PurchaseID     string               `json:"purchase_id"`
-	StoreID        string               `json:"store_id"`
-	City           string               `json:"city"`
-	Status         string               `json:"status"`
-	PaymentStatus  string               `json:"payment_status"`
-	Items          []SellerCheckoutLine `json:"items"`
-	ShippingMethod string               `json:"shipping_method"`
-	DeliveryFrom   string               `json:"delivery_from"`
-	DeliveryTo     string               `json:"delivery_to"`
+	Delivery          *shipping.DeliveryPlan `json:"delivery,omitempty"`
+	CollectionMode    string                 `json:"collection_mode,omitempty"`
+	ShippingFeeToman  string                 `json:"shipping_fee_toman,omitempty"`
+	TransportDayBasis shipping.DayBasis      `json:"transport_day_basis,omitempty"`
+	MethodVersion     int                    `json:"method_version,omitempty"`
+	StoreRevision     int                    `json:"store_revision,omitempty"`
+	PurchaseNumber    string                 `json:"purchase_number"`
+	ID                string                 `json:"id"`
+	PurchaseID        string                 `json:"purchase_id"`
+	StoreID           string                 `json:"store_id"`
+	City              string                 `json:"city"`
+	Status            string                 `json:"status"`
+	PaymentStatus     string                 `json:"payment_status"`
+	Items             []SellerCheckoutLine   `json:"items"`
+	ShippingMethod    string                 `json:"shipping_method"`
+	DeliveryFrom      string                 `json:"delivery_from"`
+	DeliveryTo        string                 `json:"delivery_to"`
 }
 
 func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User, id string) ([]SellerCheckoutOrder, error) {
@@ -52,6 +59,12 @@ func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User,
 			continue
 		}
 		v := SellerCheckoutOrder{PurchaseNumber: o.PurchaseNumber, ID: o.ID, PurchaseID: o.PurchaseID, StoreID: o.StoreID, City: o.City, Status: o.Status, PaymentStatus: o.Payment, Items: []SellerCheckoutLine{}, ShippingMethod: o.ShippingMethod, DeliveryFrom: o.DeliveryFrom, DeliveryTo: o.DeliveryTo}
+		v.Delivery = o.Delivery
+		if o.ShippingTerms != nil {
+			terms := shippingMethodInput(*o.ShippingTerms)
+			v.CollectionMode, v.ShippingFeeToman, v.TransportDayBasis = terms.CollectionMode, terms.FeeToman, terms.DayBasis
+			v.MethodVersion, v.StoreRevision = o.ShippingTerms.Version, o.ShippingTerms.StoreRevision
+		}
 		for _, l := range o.Items {
 			v.Items = append(v.Items, SellerCheckoutLine{ProductID: l.ProductID, VariantID: l.VariantID, OfferID: l.OfferID, Name: l.Name, Quantity: l.Quantity, UnitPriceToman: commerce.Toman(commerce.Amount(l.UnitPrice))})
 		}

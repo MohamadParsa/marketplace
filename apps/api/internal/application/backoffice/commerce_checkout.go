@@ -3,6 +3,7 @@ package backoffice
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
@@ -583,6 +584,8 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
 		order := orders.Order{Delivery: ship.Delivery, Preparation: ship.Preparation, StoreDisplayName: ship.StoreName, PurchaseNumber: strconv.FormatInt(p.Number, 10), ID: id, CheckoutID: p.ID, PurchaseID: p.ID, StoreID: ship.StoreID, City: q.Address.City, Status: "awaiting-payment", Payment: "unpaid", CreatedAt: now.Format(time.RFC3339), Version: 1, Packages: []string{}, ShippingFee: int64(ship.Method.Fee), ShippingMethod: ship.Method.Name, DeliveryFrom: ship.DeliveryFrom, DeliveryTo: ship.DeliveryTo, Items: []orders.Item{}}
+		methodSnapshot := ship.Method
+		order.ShippingTerms = &methodSnapshot
 		for i, l := range q.Lines {
 			if l.StoreID == ship.StoreID {
 				order.Items = append(order.Items, orders.Item{VariantLabel: l.VariantLabel, ID: fmt.Sprintf("%s:%d", id, i), ProductID: l.ProductID, OfferID: l.OfferID, VariantID: l.VariantID, Name: l.Name, Quantity: l.Quantity, UnitPrice: int64(l.UnitPrice), Status: "awaiting-payment"})
@@ -629,6 +632,9 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 		}
 		current, e := buildQuote(*w, a, quoteAsInput(*q), q.ID, now)
 		if e != nil {
+			if errors.Is(e, ErrInvalid) || errors.Is(e, ErrNotFound) {
+				return nil, ErrCheckoutChanged
+			}
 			return nil, e
 		}
 		if qComparable(current) != qComparable(*q) {

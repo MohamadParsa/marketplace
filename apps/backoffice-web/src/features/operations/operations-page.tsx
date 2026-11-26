@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
@@ -85,6 +86,11 @@ export function OperationsPage({
                   {selected.packages.join("، ") || "هنوز بسته‌ای ثبت نشده"}
                 </dd>
               </dl>
+              {selected.delivery_from && <section aria-label="وعده ثبت‌شدهٔ حمل">
+                <h3>{selected.shipping_terms?.name ?? selected.shipping_method}</h3>
+                <p>{shippingCharge(selected.shipping_terms?.collection_mode,String((selected.shipping_terms?.fee ?? 0)/10))}</p>
+                <p>{deliveryPromise(selected.delivery,selected.delivery_from,selected.delivery_to ?? selected.delivery_from)}</p>
+              </section>}
               {selected.status === "shipped" && (
                 <Button
                   disabled={!can("order.deliver", "support")}

@@ -1,3 +1,5 @@
+import { ShippingChoiceCards } from "./shipping-choice-cards";
+import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
 import {TemporaryPassword} from "../../../packages/identity-client/temporary-password";
 import { AddressEditor } from "./address-editor";
@@ -40,6 +42,8 @@ import {
   type Preview,
   type Quote,
   type QuoteInput,
+  type ShippingAvailability,
+  type DeliverySelection,
   type Wallet,
   type Method,
   type Province,
@@ -861,6 +865,11 @@ function CheckoutForm() {
   const [prepare, setPrepare] = useState<Prepare | null>(null),
     [address, setAddress] = useState<Address | null>(null),
     [shipping, setShipping] = useState<Record<string, string>>({}),
+    [shippingSelections, setShippingSelections] = useState<Record<string, DeliverySelection>>({}),
+    [shippingChoices, setShippingChoices] = useState<ShippingAvailability[] | null>(null),
+    [shippingLoading, setShippingLoading] = useState(false),
+    [shippingError, setShippingError] = useState(""),
+    [shippingReload, setShippingReload] = useState(0),
     [preview, setPreview] = useState<Preview | null>(null),
     [method, setMethod] = useState(""),
     [quote, setQuote] = useState<Quote | null>(null),
@@ -887,6 +896,9 @@ function CheckoutForm() {
           token,
         );
         setOldPurchase(old);
+        setShipping(Object.fromEntries(old.quote.shipments.map(s=>[s.store_id,s.method_id])));
+        setShippingSelections(Object.fromEntries(old.quote.shipments.filter(s=>s.delivery?.slot).map(s=>[s.store_id,{date:s.delivery!.capacity_day,window_id:s.delivery!.slot!.window_id}])));
+
         setAddress(
           p.addresses.find((a) => a.id === old.quote.address.id) ?? null,
         );
@@ -908,6 +920,33 @@ function CheckoutForm() {
     setWalletToman("0");
     setAdjustmentFeedback({});
   };
+  useEffect(() => {
+    if (!address || !prepare || (purchaseID && !oldPurchase)) return;
+    let active=true;
+    setShippingLoading(true);
+    setShippingError("");
+    const params=new URLSearchParams({address_id:address.id,...(oldPurchase?{purchase_id:oldPurchase.id}:{})});
+    void call<ShippingAvailability[]>("/storefront/checkout/shipping-options?"+params, token).then(rows=>{
+      if (!active) return;
+      setShippingChoices(rows);
+      setShipping(old=>Object.fromEntries(Object.entries(old).filter(([store,id])=>rows.some(r=>r.store_id===store && r.methods.some(m=>m.method.id===id)))));
+      setShippingSelections(old=>Object.fromEntries(Object.entries(old).filter(([store,selected])=>rows.some(r=>r.store_id===store && r.methods.some(m=>m.days.some(d=>d.date===selected.date && d.slots.some(s=>s.plan.slot?.window_id===selected.window_id)))))));
+    }).catch((e:Error)=>{if(active)setShippingError(e instanceof CommerceError ? e.message : "دریافت موعدهای تحویل انجام نشد؛ ارتباط را بررسی و دوباره تلاش کنید.");}).finally(()=>{if(active)setShippingLoading(false);});
+    return ()=>{active=false;};
+  },[token,address?.id,address?.version,oldPurchase?.id,prepare?.cart.version,shippingReload]);
+  const shippingReady = !!shippingChoices?.length && shippingChoices.every(row=>{
+    const chosen=row.methods.find(m=>m.method.id===shipping[row.store_id]);
+    if (!chosen) return false;
+    if (chosen.range) return true;
+    const selection=shippingSelections[row.store_id];
+    return chosen.days.some(d=>d.open && d.date===selection?.date && d.slots.some(s=>s.plan.slot?.window_id===selection?.window_id));
+  });
+  const shippingFailure = (error:unknown) => {
+    if (error instanceof CommerceError && ["shipping_unavailable","slot_full","slot_expired","checkout_changed","invalid_request","address_unavailable","address_incomplete"].includes(error.code)) {
+      change(); setShipping({}); setShippingSelections({}); setShippingReload(n=>n+1);
+    }
+    throw error;
+  };
   const input: QuoteInput = {
     contract_version: 2,
     coupon_code: couponCode,
@@ -915,6 +954,7 @@ function CheckoutForm() {
     cart_version: prepare?.cart.version ?? 0,
     address_id: address?.id ?? "",
     shipping,
+    shipping_selections: shippingSelections,
     payment_method_id: method,
     ...(purchaseID ? { purchase_id: oldPurchase?.id ?? purchaseID } : {}),
   };
@@ -982,31 +1022,11 @@ function CheckoutForm() {
               : "اعتبار کیف پول با موفقیت اعمال شد.",
         );
       } catch (error) {
+        if (error instanceof CommerceError && ["shipping_unavailable","slot_full","slot_expired","checkout_changed","invalid_request"].includes(error.code)) shippingFailure(error);
         feedback("error", (error as Error).message);
       }
     });
   };
-  const stores = oldPurchase
-    ? oldPurchase.quote.shipments.map((s) => ({
-        id: s.store_id,
-        name: s.store_name,
-        lead_days: s.lead_days, lead_day_basis: s.lead_day_basis,
-      }))
-    : Array.from(
-        new Map(
-          prepare?.cart.items.map((i) => [
-            i.store_id,
-            { id: i.store_id, name: i.store_name, lead_days: i.lead_days, lead_day_basis: i.lead_day_basis },
-          ]),
-        ).values(),
-      );
-  const normalize = (s: string) =>
-    s
-      .trim()
-      .replace(/ي/g, "ی")
-      .replace(/ك/g, "ک")
-      .replace(/\s+/g, " ")
-      .toLowerCase();
   return (
     <BusyRegion busy={action.busy}>
       <>
@@ -1061,6 +1081,8 @@ function CheckoutForm() {
                       onSelect={(_id, a) => {
                         setAddress(a ?? null);
                         setShipping({});
+                        setShippingSelections({});
+                        setShippingChoices(null);
                         change();
                       }}
                     />
@@ -1073,61 +1095,18 @@ function CheckoutForm() {
                         مقصد نمایش داده شوند.
                       </p>
                     ) : (
-                      stores.map((st) => {
-                        const methods = prepare.shipping.filter(
-                          (m) =>
-                            m.active &&
-                            (!m.store_ids?.length ||
-                              m.store_ids.includes(st.id)) &&
-                            (m.all_cities ||
-                              m.cities.some(
-                                (c) => normalize(c) === normalize(address.city),
-                              )),
-                        );
-                        return (
-                          <fieldset
-                            key={st.id}
-                            className="buy-shipping-group"
-                            disabled={action.busy}
-                          >
-                            <legend>{st.name}</legend>
-                            {methods.length ? (
-                              methods.map((m) => (
-                                <label key={m.id} className="buy-choice">
-                                  <input
-                                    type="radio"
-                                    name={"shipping-" + st.id}
-                                    checked={shipping[st.id] === m.id}
-                                    onChange={() => {
-                                      setShipping({
-                                        ...shipping,
-                                        [st.id]: m.id,
-                                      });
-                                      change();
-                                    }}
-                                  />
-                                  <span>
-                                    <b>{m.name}</b>
-                                    <small>{m.collection_mode === "collect" ? "پرداخت هزینهٔ حمل هنگام تحویل" : money(m.fee_toman)}</small>
-                                    <small>
-                                      حمل پس از تأمین {m.min_days} تا{" "}
-                                      {m.max_days} روز {m.day_basis === "calendar" ? "تقویمی" : "کاری"}؛ علاوه بر
-                                      زمان آماده‌سازی فروشنده
-                                    </small>
-                                    <small>{dispatchTime(st.lead_days, st.lead_day_basis)}</small>
-                                  </span>
-                                </label>
-                              ))
-                            ) : (
-                              <p className="buy-alert">
-                                برای این فروشنده در {address.city} روش ارسال
-                                فعالی وجود ندارد؛ آدرس دیگری انتخاب کنید.
-                              </p>
-                            )}
-                          </fieldset>
-                        );
-                      })
+                      <BusyRegion busy={shippingLoading} label="دریافت موعدهای تحویل">
+                        {!shippingChoices ? <LoadingPlaceholder label="دریافت روش‌های ارسال" className="buy-shipping-loading"/> : shippingChoices.map(row=><ShippingChoiceCards
+                          key={row.store_id} row={row} methodID={shipping[row.store_id]} selection={shippingSelections[row.store_id]}
+                          items={(oldPurchase?.quote.lines ?? prepare.cart.items).filter(i=>i.store_id===row.store_id)}
+                          disabled={action.busy || shippingLoading || !!shippingError}
+                          onMethod={id=>{setShipping(old=>({...old,[row.store_id]:id}));setShippingSelections(old=>{const copy={...old};delete copy[row.store_id];return copy;});change();}}
+                          onSelection={value=>{setShippingSelections(old=>({...old,[row.store_id]:value}));change();}}
+                        />)}
+                      </BusyRegion>
                     )}
+                    {shippingError && <p className="buy-alert" role="alert">{shippingError}</p>}
+                    {address && <button type="button" className="buy-secondary" disabled={action.busy || shippingLoading} onClick={()=>{change();setShippingReload(n=>n+1);}}>دریافت دوبارهٔ موعدهای تحویل</button>}
                     <button
                       className="buy-primary"
                       disabled={
@@ -1137,8 +1116,7 @@ function CheckoutForm() {
                           address,
                           config?.geography ?? [],
                         ) ||
-                        !stores.length ||
-                        stores.some((s) => !shipping[s.id])
+                        shippingLoading || !!shippingError || !shippingReady
                       }
                       onClick={() =>
                         void action.run(async () => {
@@ -1146,7 +1124,7 @@ function CheckoutForm() {
                             "/storefront/checkout/preview",
                             token,
                             { ...input, payment_method_id: "" },
-                          );
+                          ).catch(shippingFailure);
                           setPreview(result);
                           setMethod("");
                           setQuote(null);
@@ -1190,16 +1168,8 @@ function CheckoutForm() {
                           <b>
                             {s.store_name} · {s.method_name}
                           </b>
-                          <p>
-                            تحویل{" "}
-                            {new Date(s.delivery_from).toLocaleDateString(
-                              "fa-IR",
-                            )}{" "}
-                            تا{" "}
-                            {new Date(s.delivery_to).toLocaleDateString(
-                              "fa-IR",
-                            )}
-                          </p>
+                          <p>{deliveryPromise(s.delivery,s.delivery_from,s.delivery_to)}</p>
+                          <small>{shippingCharge(s.collection_mode,s.fee_toman)}</small>
                         </div>
                       ))}
                     </section>
@@ -1330,7 +1300,7 @@ function CheckoutForm() {
                                     "/storefront/checkout/preview",
                                     token,
                                     { ...input, payment_method_id: m.id },
-                                  );
+                                  ).catch(shippingFailure);
                                   setPreview(updated);
                                   setMethod(m.id);
                                   setQuote(null);
@@ -1376,7 +1346,7 @@ function CheckoutForm() {
                                 input,
                                 undefined,
                                 key,
-                              ),
+                              ).catch(shippingFailure),
                             );
                             setConsent(false);
                           }, JSON.stringify(input))
@@ -1421,6 +1391,7 @@ function CheckoutForm() {
                                   [400, 409].includes(error.status)
                                 )
                                   setQuote(null);
+                                shippingFailure(error);
                                 throw error;
                               });
                               await refreshCart();
@@ -1493,12 +1464,9 @@ export function OrderSummary({ quote }: { quote: Quote }) {
           <b>
             {s.store_name} · {s.method_name}
           </b>
-          <p>هزینه ارسال: {s.collection_mode === "collect" ? "پرداخت به حمل‌کننده هنگام تحویل" : money(s.fee_toman)}</p>
-          <p>
-            {dispatchTime(s.lead_days, s.lead_day_basis)}؛ تحویل از{" "}
-            {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
-            {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
-          </p>
+          <p>{shippingCharge(s.collection_mode,s.fee_toman)}</p>
+          <p>{deliveryPromise(s.delivery,s.delivery_from,s.delivery_to)}</p>
+          <small>{dispatchTime(s.lead_days,s.lead_day_basis)}</small>
         </div>
       ))}
       <div className="buy-total">

@@ -14,6 +14,9 @@ import type {
 } from "../../../packages/commerce-client/types";
 export const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
 const errors: Record<string, string> = {
+  shipping_unavailable: "روش یا موعد حمل دیگر در دسترس نیست؛ گزینه‌های تازه را بررسی کنید.",
+  slot_full: "ظرفیت موعد انتخاب‌شده تکمیل شده؛ روز و ساعت را دوباره انتخاب کنید.",
+  slot_expired: "مهلت رزرو حمل پایان یافته؛ موعد تحویل را دوباره انتخاب کنید.",
   unauthorized: "نشست شما منقضی شده؛ دوباره وارد شوید.",
   forbidden: "اجازه این عملیات را ندارید.",
   not_found: "اطلاعات پیدا نشد.",

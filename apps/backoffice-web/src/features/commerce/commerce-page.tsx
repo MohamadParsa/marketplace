@@ -1,3 +1,4 @@
+import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
 import { Link } from "react-router-dom";
 import {
   BusinessContentEditor,
@@ -811,14 +812,10 @@ function PurchaseReview({
               <article key={s.store_id} className="commerce-shipment-card">
                 <b>{s.store_name}</b>
                 <p>
-                  {s.method_name} · {s.collection_mode === "collect" ? "پرداخت هزینهٔ حمل هنگام تحویل" : money(s.fee_toman)}
+                  {s.method_name} · {shippingCharge(s.collection_mode,s.fee_toman)}
                 </p>
                 <small>وقفه تأمین: {s.lead_days} روز {s.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}</small>
-                <p>
-                  تحویل از{" "}
-                  {new Date(s.delivery_from).toLocaleDateString("fa-IR")} تا{" "}
-                  {new Date(s.delivery_to).toLocaleDateString("fa-IR")}
-                </p>
+                <p>{deliveryPromise(s.delivery,s.delivery_from,s.delivery_to)}</p>
                 <small>
                   {p.quote.lines
                     .filter((l) => l.store_id === s.store_id)
@@ -1273,6 +1270,11 @@ export function SellerCheckoutPage({ token }: { token: string }) {
           status: string;
           payment_status: string;
           shipping_method: string;
+          collection_mode?: string;
+          shipping_fee_toman?: string;
+          delivery?: import("../../../../../packages/commerce-client/types").DeliveryPlan;
+          delivery_from: string;
+          delivery_to: string;
           items: { name: string; quantity: number; unit_price_toman: string }[];
         }[]
       | null
@@ -1311,6 +1313,8 @@ export function SellerCheckoutPage({ token }: { token: string }) {
                 <b>
                   {o.city} · {o.shipping_method}
                 </b>
+                <p>{shippingCharge(o.collection_mode,o.shipping_fee_toman ?? "0")}</p>
+                {o.delivery_from && <p>{deliveryPromise(o.delivery,o.delivery_from,o.delivery_to)}</p>}
                 <p>
                   وضعیت سفارش: {label(o.status)} · وضعیت پرداخت:{" "}
                   {label(o.payment_status)}

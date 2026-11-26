@@ -225,6 +225,11 @@ export interface OrderItem {
   status: string;
 }
 export interface Order {
+  delivery?: import("../../../../packages/commerce-client/types").DeliveryPlan;
+  shipping_terms?: {collection_mode?:string;fee:number;name:string;version?:number;store_revision?:number};
+  shipping_method?: string;
+  delivery_from?: string;
+  delivery_to?: string;
   store_display_name?: string;
   purchase_number?: string;
   id: string;

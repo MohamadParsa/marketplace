@@ -98,6 +98,7 @@ export interface DeliveryPlan {
   store_revision:number;
   slot?:{window_id:string;start_at:string;end_at:string;capacity:number};
 }
+export interface DeliverySelection { date:string; window_id:string }
 export interface ShippingAvailability {
   store_id:string;
   store_name:string;
@@ -167,6 +168,7 @@ export interface QuoteLine {
   total_toman: string;
 }
 export interface Shipment {
+  delivery?: DeliveryPlan;
   collection_mode?: "prepaid" | "collect";
   transport_day_basis?: "working" | "calendar";
   ready_at?: string;
@@ -323,6 +325,7 @@ export interface Preview {
   methods: (Method & { eligible: boolean; reason?: string })[];
 }
 export interface QuoteInput {
+  shipping_selections?: Record<string,DeliverySelection>;
   contract_version?: number;
   coupon_code?: string;
   wallet_toman?: string;

@@ -243,7 +243,7 @@ func shippingStillAllowed(w Workspace, q commerce.Quote) bool {
 		found := false
 		for _, method := range preparationSettings(w).Shipping {
 			effective, allowed := EffectiveStoreShipping(w, shipment.StoreID, method)
-			if allowed && method.ID == shipment.Method.ID && storeShippingEligible(w, method, effective, q.Address, shipment.StoreID, q.Lines) {
+			if allowed && method.ID == shipment.Method.ID && storeShippingEligible(w, method, effective, q.Address, shipment.StoreID, q.Lines) && shippingTermsCurrent(w, shipment, effective) {
 				found = true
 				break
 			}

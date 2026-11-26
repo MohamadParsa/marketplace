@@ -3,10 +3,10 @@ id: FEAT-SHIP-004
 title: انتخاب ارسال هر مرسوله، وعده تحویل و هزینه در سفارش
 status: in-review
 owner: eliassarband
-updated: 2026-11-26
+updated: 2026-11-27
 related: [DOM-SHIPPING-POLICY-001, API-SHIPPING-METHODS-PLAN-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 priority: P1
 ---
@@ -40,15 +40,17 @@ Issue: [#123](https://github.com/MohamadParsa/marketplace/issues/123) · مسئ�
 
 ## پذیرش
 
-- [ ] FEAT-SHIP-004-AC01: دو فروشگاه/شهر متفاوت و مرسوله چنددسته‌ای فقط روش مجاز داشته باشند؛ دستکاری client، تغییر آدرس/قانون و نبود روش، API و wizard را ایمن نگه دارند.
-- [ ] FEAT-SHIP-004-AC02: prepaid مثبت، prepaid صفر و collect سه نمایش صحیح؛ فقط prepaid در totals و کوپن ارسال/کیف پول اثر کند؛ لغو collect هیچ refund مالی حمل برای چریوا نسازد.
-- [ ] FEAT-SHIP-004-AC03: وقفه کاری/تقویمی و حمل با واحد متفاوت، تاریخ شمسی و slot تحویل مشتری صحیح باشند؛ انتخاب slot پر/گذشته و روش روزانه پر از API مستقیم رد شود؛ D تا D+۵شامل دو سر و حضور روز+۵/نبود روز+۶تست شود.
-- [ ] FEAT-SHIP-004-AC04: snapshot وعده/هزینه/تقویم/واحد/نسخه روش در نمای سفارش و پس از restart ثابت بماند؛ تغییر شرایط قبل از قطعیت رضایت تازه بخواهد و داده مالی/تاریخی محفوظ باشد.
-- [ ] FEAT-SHIP-004-AC05: شواهد Go/API/PG/مرورگر موبایل و دسکتاپ با دو مرسوله، retry/انقضا، zero/collect و کوپن/کیف پول ثبت شوند؛ تکمیل بخش range به‌تنهایی معیار بستن کل کار نیست.
+- [x] FEAT-SHIP-004-AC01: دو فروشگاه/شهر متفاوت و مرسوله چنددسته‌ای فقط روش مجاز داشته باشند؛ دستکاری client، تغییر آدرس/قانون و نبود روش، API و wizard را ایمن نگه دارند.
+- [x] FEAT-SHIP-004-AC02: prepaid مثبت، prepaid صفر و collect سه نمایش صحیح؛ فقط prepaid در totals و کوپن ارسال/کیف پول اثر کند؛ لغو collect هیچ refund مالی حمل برای چریوا نسازد.
+- [x] FEAT-SHIP-004-AC03: وقفه کاری/تقویمی و حمل با واحد متفاوت، تاریخ شمسی و slot تحویل مشتری صحیح باشند؛ انتخاب slot پر/گذشته و روش روزانه پر از API مستقیم رد شود؛ D تا D+۵شامل دو سر و حضور روز+۵/نبود روز+۶تست شود.
+- [x] FEAT-SHIP-004-AC04: snapshot وعده/هزینه/تقویم/واحد/نسخه روش در نمای سفارش و پس از restart ثابت بماند؛ تغییر شرایط قبل از قطعیت رضایت تازه بخواهد و داده مالی/تاریخی محفوظ باشد.
+- [x] FEAT-SHIP-004-AC05: شواهد Go/API/PG/مرورگر موبایل و دسکتاپ با دو مرسوله، retry/انقضا، zero/collect و کوپن/کیف پول ثبت شوند؛ تکمیل بخش range به‌تنهایی معیار بستن کل کار نیست.
 
-- [ ] FEAT-SHIP-004-AC06: الگوی UX اختصاصی با ایده‌گیری از منابع عمومی و تصویر مالک: کارت روش، کارت روز RTL، ساعت wrap، خلاصه تحویل، primary چریوا و فاصله فشرده؛ keyboard/mobile/overlay و عدم dropdown یا انتخاب ساعت برای پست با شاهد مرورگر بررسی شوند.
+- [x] FEAT-SHIP-004-AC06: الگوی UX اختصاصی با ایده‌گیری از منابع عمومی و تصویر مالک: کارت روش، کارت روز RTL، ساعت wrap، خلاصه تحویل، primary چریوا و فاصله فشرده؛ keyboard/mobile/overlay و عدم dropdown یا انتخاب ساعت برای پست با شاهد مرورگر بررسی شوند.
 
 ## منابع و طراحی
 
 [قواعد مشترک](../../../domains/shipping/method-policies.md) · [طرح فنی](../../../architecture/contracts/shipping-methods-plan.md) · [پرسش‌های باز](../../../product/open-questions.md#shipping-policy-20261126) · [برنامه و عدم هم‌پوشانی](../README.md). طرح A؛ انتخاب‌ها به‌صورت باکس/چیپ خوانا و بدون dropdown تازه، به‌جز cascade استان/شهر موجود. حق مجاز در سرور، version/idempotency، loading/empty/error/forbidden و حفظ draft در خطا الزامی‌اند.
 
+
+[گزارش تحویل، آزمون‌ها و تصاویر #123](../issue-123-verification.md).

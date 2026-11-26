@@ -71,8 +71,8 @@
       "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/checkout-shipping-terms.md",
       "assignee": "eliassarband",
       "priority": "P1",
-      "state": "open",
-      "implementation_status": "todo",
+      "state": "closed",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         120,
@@ -80,7 +80,8 @@
         122,
         16
       ],
-      "conditional_dependencies": []
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-123-verification.md"
     }
   ],
   "reused_issues": [

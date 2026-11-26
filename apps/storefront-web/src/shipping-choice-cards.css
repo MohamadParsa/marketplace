@@ -1,0 +1,133 @@
+.buy-method-card {
+  border: 1px solid var(--border, #e5dfe4);
+  border-radius: 14px;
+  margin: 10px 0;
+  overflow: hidden;
+  background: #fff;
+}
+.buy-method-card.selected {
+  border-color: var(--primary, #be185d);
+  box-shadow: 0 0 0 1px var(--primary, #be185d);
+}
+.buy-method-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  cursor: pointer;
+  position: relative;
+}
+.buy-method-choice > span:last-child {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.buy-method-choice input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.buy-method-choice:focus-within {
+  outline: 2px solid var(--primary, #be185d);
+  outline-offset: -4px;
+}
+.buy-method-mark {
+  font-size: 20px;
+  color: var(--primary, #be185d);
+}
+.buy-delivery-selection {
+  border-top: 1px solid #eee;
+  padding: 12px;
+}
+.buy-delivery-days {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-snap-type: x proximity;
+}
+.buy-delivery-days button {
+  flex: 0 0 105px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-height: 82px;
+  scroll-snap-align: start;
+  white-space: normal;
+}
+.buy-delivery-hours {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.buy-delivery-days button,
+.buy-delivery-hours button {
+  font: inherit;
+  border: 1px solid #e4dbe0;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  color: inherit;
+  cursor: pointer;
+}
+.buy-delivery-days button[aria-pressed="true"],
+.buy-delivery-hours button[aria-pressed="true"] {
+  background: var(--primary, #be185d);
+  border-color: var(--primary, #be185d);
+  color: white;
+}
+.buy-delivery-days button:disabled {
+  background: #f4f3f4;
+  color: #777;
+  cursor: default;
+}
+.buy-delivery-days button:focus-visible,
+.buy-delivery-hours button:focus-visible {
+  outline: 3px solid #7b1741;
+  outline-offset: 2px;
+}
+.buy-selected-delivery {
+  font-size: 13px;
+  min-height: 24px;
+}
+.buy-shipment-thumbnails {
+  display: flex;
+  gap: 10px;
+  overflow: auto;
+  padding: 8px 0;
+}
+.buy-shipment-thumbnails > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  flex-shrink: 0;
+}
+.buy-shipment-thumbnails img {
+  height: 38px;
+  width: 38px;
+  object-fit: contain;
+}
+.buy-shipment-thumbnails small {
+  max-width: 150px;
+}
+.buy-shipping-group {
+  min-width: 0;
+}
+.buy-shipping-loading {
+  min-height: 180px;
+}
+@media (max-width: 600px) {
+  .buy-delivery-hours button {
+    flex: 1 1 44%;
+    min-height: 44px;
+  }
+  .buy-method-choice {
+    padding: 12px;
+  }
+  .buy-delivery-days button {
+    flex-basis: 96px;
+  }
+}

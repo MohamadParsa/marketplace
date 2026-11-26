@@ -1,6 +1,7 @@
 package orders
 
 import "github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
+import "github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 
 type Item struct {
 	VariantLabel string `json:"variant_label,omitempty"`
@@ -14,6 +15,7 @@ type Item struct {
 	Status       string `json:"status"`
 }
 type Order struct {
+	ShippingTerms    *commerce.ShippingMethod      `json:"shipping_terms,omitempty"`
 	Delivery         *shipping.DeliveryPlan        `json:"delivery,omitempty"`
 	Preparation      *shipping.PreparationSnapshot `json:"preparation,omitempty"`
 	StoreDisplayName string                        `json:"store_display_name,omitempty"`

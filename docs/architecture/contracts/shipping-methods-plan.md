@@ -96,3 +96,9 @@ approved_by: []
 - hold سی‌دقیقه همراه خرید و موجودی در repository.Update؛ PostgreSQL با قفل workspace FOR UPDATE. commit در قطعیت و release یک‌بار در انقضا/لغو، پس از قطعیت فقط پیش از ارسال. خطای مالی rollback کامل دارد. migration جدید لازم نیست.
 - `shipping_unavailable`، `slot_full` و `slot_expired` با HTTP409؛ ورودی جعلی اولیه 400. انتخاب موعد دیگر یا تمدید رزرو خودکار نیست. کاهش سهمیه تعهد قبلی را لغو نمی‌کند؛ حذف یا تغییر فیزیکی برنامه نیازمند انتخاب تازه است.
 - ظرفیت خالی فاقد گزینهٔ خرید است؛ عدد عملیاتی پیش‌فرض ساخته نمی‌شود. مخزن مستقل فروشگاه/شناسهٔ روش است؛ هم‌پوشانی ساعت واقعی مانع صفرشدن مصرف با تغییر نام بازه یا revision می‌شود.
+
+## قرارداد تکمیل‌شدهٔ خرید #123
+
+wizard جاری `shipping-options` را با آدرس و در ادامهٔ خرید با purchase_id مصرف می‌کند؛ `shipping_selections` در preview/quote/accept و بازسازی خرید حفظ می‌شود. نبود روش یا خطای409 مانع ادامه است و موعد دیگری خودکار انتخاب نمی‌شود. درخواست اولیهٔ جعلی400؛ نامعتبرشدن quote پذیرفتنی قبلی `checkout_changed`409 است. پس‌کرایه fee نمایشی خالی و shipping_total صفر دارد؛ prepaid صفر به معنای رایگان است.
+
+پیش از قطعیت، شرایط انسانی حمل و قواعد مؤثر آماده‌سازی دوباره با snapshot مقایسه می‌شوند؛ ظرفیت و version صرف، دلیل لغو hold نیستند. تغییر شرایط، release و requires-reconfirmation بدون debit ایجاد می‌کند. سفارش دارای shipping_terms و delivery snapshot است؛ projection فروشنده collection_mode/shipping_fee_toman/delivery و نسخه‌های روش/فروشگاه را فقط در محدودهٔ orders.read همان فروشگاه برمی‌گرداند. سفارش قطعی از تنظیم جاری بازسازی نمی‌شود. [شواهد #123](../../delivery/shipping-refinement-2026-11-26/issue-123-verification.md).

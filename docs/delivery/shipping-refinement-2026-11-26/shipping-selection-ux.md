@@ -3,14 +3,14 @@ id: UX-SHIPPING-SELECTION-001
 title: الگوی انتخاب روش ارسال و روز/ساعت تحویل در طرح A
 status: in-review
 owner: eliassarband
-updated: 2026-11-26
+updated: 2026-11-27
 related: [FEAT-SHIP-004, CV-R2-14, DOM-SHIPPING-POLICY-001]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
-# ایده‌گیری برای چریوا؛ بدون کپی و بدون اجرای رابط
+# الگوی انتخاب حمل چریوا
 
 ## شواهد بررسی‌شده
 
@@ -52,4 +52,4 @@ execution_authorized: false
 
 ## مالکیت و معیار بررسی بعدی
 
-#16 مدل برنامه، ظرفیت و پاسخ روز/بازه آزاد؛ #123 رابط فوق، quote و نمایش سفارش را مالک است. [سناریوهای پذیرش](../../bdd/features/experiences/shipping-method-policies.feature) و FEAT-SHIP-004-AC06 شامل بررسی موبایل/دسکتاپ، RTL، پوشش روز+۵، حذف گزینه پر، پس‌کرایه و نبود اسلات در پست است. این سند مشخصات پیشنهادی طراحی است؛ هنوز mockup تازه، رابط یا تست اجرایی این تغییر ساخته نشده است.
+#16 مدل برنامه، ظرفیت و پاسخ روز/بازه آزاد؛ #123 رابط فوق، quote و نمایش سفارش را مالک است. [سناریوهای پذیرش](../../bdd/features/experiences/shipping-method-policies.feature) و FEAT-SHIP-004-AC06 شامل بررسی موبایل/دسکتاپ، RTL، پوشش روز+۵، حذف گزینه پر، پس‌کرایه و نبود اسلات در پست است. این سند الگوی تعامل است؛ اجرای رابط و شواهد مستقل آن در [گزارش #123](issue-123-verification.md) ثبت شده‌اند.
