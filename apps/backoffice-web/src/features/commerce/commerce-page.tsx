@@ -159,12 +159,25 @@ export function CommercePage({
   const running = useRef(false),
     keys = useRef(new Map<string, string>());
   const load = useCallback(async () => {
+    setSettings(null);
     const v = await request<AdminView>("/backoffice/commerce", token);
     setData(v);
-    if (v.permissions["commerce.settings.read"])
-      setSettings(
-        await request<Settings>("/backoffice/commerce/settings", token),
-      );
+    if (v.permissions["commerce.settings.read"]) {
+      const next = await request<Settings>("/backoffice/commerce/settings", token);
+      const timing = next.shipping_timing;
+      if (
+        !timing ||
+        typeof timing.ready_time !== "string" ||
+        typeof timing.cutoff_time !== "string" ||
+        !Number.isInteger(timing.min_slot_lead_minutes) ||
+        typeof timing.allow_same_day_slots !== "boolean"
+      ) {
+        throw Error(
+          "تنظیمات زمان‌بندی از سرور دریافت نشد. نسخهٔ رابط و سرویس باید هماهنگ شوند؛ پس از به‌روزرسانی سرویس، تازه‌سازی را بزنید.",
+        );
+      }
+      setSettings(next);
+    }
   }, [token]);
   const run = async (
     work: (key: string) => Promise<void>,
@@ -265,9 +278,11 @@ export function CommercePage({
               }
             />
           </>
-        ) : (
+        ) : !data.permissions["commerce.settings.read"] ? (
           <Alert severity="warning">دسترسی مشاهده تنظیمات ندارید.</Alert>
-        )
+        ) : !error ? (
+          <p role="status">در حال دریافت تنظیمات…</p>
+        ) : null
       ) : (
         <>
           <Tabs

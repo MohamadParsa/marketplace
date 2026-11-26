@@ -26,6 +26,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Start-Cherriva.ps1 -NoBuil
 
 پس از تغییر React یا دریافت نسخه جدید، اجرای کامل را انجام دهید؛ `-NoBuild` فقط build frontend را رد می‌کند و می‌تواند رابط قدیمی نشان دهد.
 
+ساختن frontend به‌تنهایی API در حال اجرا را تازه نمی‌کند. اگر رابط جدید کنار executable قدیمی قرار بگیرد، مسیر تازه ممکن است۴۰۴ بدهد یا پاسخ تنظیمات فیلدهای لازم را نداشته باشد. برای ارتقای اجرای محلی، build رابط و restart API باید از یک نسخه سورس باشند؛ در نسخهٔ جاری این خطا پیام قابل بازیابی دارد و پنل سفید نمی‌شود. [بازتولید و اصلاح۸۰۹۸](delivery/shipping-refinement-2026-11-26/issue-121-verification.md#local-runtime-recovery).
+
+در آزمونِ سرویس جدا، خروجی frontend را نیز در مسیر جدا بسازید و `WEB_ROOT` همان سرویس را به آن بدهید؛ استفاده از `apps/backoffice-web/build` مشترک، رابط اجرای اصلی را پیش از ارتقای API آن عوض می‌کند. نمونهٔ خروجی آزمون از پوشهٔ `apps/backoffice-web`: `npm run build -- --outDir ../api/tmp/shipping-review/web`؛ پوشهٔ `tmp` وارد Git نمی‌شود.
+
 | محیط | آدرس |
 | --- | --- |
 | سایت | http://localhost:5197 |

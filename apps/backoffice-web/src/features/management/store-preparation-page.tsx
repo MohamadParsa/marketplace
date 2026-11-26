@@ -57,6 +57,15 @@ const dateTime = (value: string) =>
     timeStyle: "short",
   }).format(new Date(value));
 
+function preparationLoadError(error: Error) {
+  if (error instanceof ApiError) {
+    if (error.status === 404)
+      return "سرویس تقویم فروشگاه در دسترس نیست. نسخهٔ سرویس باید با رابط هماهنگ شود؛ پس از به‌روزرسانی، دوباره تلاش کنید.";
+    if (error.status === 401 || error.status === 403) return error.message;
+  }
+  return "دریافت تنظیمات انجام نشد. ارتباط با سرور را بررسی و دوباره تلاش کنید.";
+}
+
 export function StorePreparationPage() {
   const { authToken, surface } = useWorkspace();
   const client = useQueryClient();
@@ -105,7 +114,7 @@ export function StorePreparationPage() {
       {query.isPending && <LinearProgress aria-label="دریافت تقویم فروشگاه" />}
       {query.error && (
         <Alert severity="error">
-          دریافت تنظیمات انجام نشد.{" "}
+          {preparationLoadError(query.error)}{" "}
           <Button onClick={() => void query.refetch()}>تلاش دوباره</Button>
         </Alert>
       )}

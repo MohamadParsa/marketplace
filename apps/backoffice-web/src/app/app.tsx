@@ -1,6 +1,7 @@
 import { StoresPage } from "../features/management/stores-page";
 import { ShippingMethodsPage } from "../features/commerce/shipping-methods-page";
 import { StorePreparationPage } from "../features/management/store-preparation-page";
+import { PageErrorBoundary } from "../shared/page-error-boundary";
 import { UsersPage } from "../features/management/users-page";
 import { RolesPage } from "../features/management/access-panel";
 import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
@@ -506,6 +507,7 @@ function Workspace({
                 busy: mutation.isPending,
               }}
             >
+              <PageErrorBoundary key={location.pathname}>
               <Routes>
                 <Route path="/sales-methods" element={<SalesMethodsPage />} />
                 <Route
@@ -693,6 +695,7 @@ function Workspace({
                   }
                 />
               </Routes>
+              </PageErrorBoundary>
             </WorkspaceContext.Provider>
           )}
           <footer className="page-footer">
