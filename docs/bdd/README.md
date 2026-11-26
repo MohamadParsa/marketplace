@@ -85,3 +85,5 @@
 [محصول غیرفعال، کد عمومی و حفاظت خرید — #116](features/experiences/product-management.feature).
 
 [صفحات عمومی و شبکه‌های اجتماعی — #87](features/experiences/business-content.feature).
+
+[امتیاز و میانگین نظرات PDP — #119](features/experiences/product-review-rating.feature)؛ runner مستقل Gherkin اجرا نشده و شواهد اجرایی Go/مرورگر در گزارش است.

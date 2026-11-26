@@ -272,7 +272,7 @@ FEAT-BO-REFINEMENT-008 → [گزارش #114](../delivery/backoffice-refinement-2
 
 FEAT-BO-REFINEMENT-009-AC01..03 → [قرارداد](../architecture/contracts/brand-management.md) → [سناریو](../bdd/features/experiences/brand-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-115-verification.md). تکمیل پیاده‌سازی به معنی approved شدن سند یا استقرار نیست.
 
-[FEAT-NEXT-031: درخواست ستاره طلایی و میانگین نظرات PDP، #119](../delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md): فقط برنامه‌ریزی، بدون شاهد پیاده‌سازی.
+FEAT-NEXT-031-AC01..04 → [تسک #119](../delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md) → [قرارداد](../architecture/contracts/product-review-rating.md) → [سناریو](../bdd/features/experiences/product-review-rating.feature) → [شواهد](../delivery/next-phase/issue-119-verification.md). میانگین هدر و نظرات مستقل از صفحه و فقط approved است؛ تکمیل پیاده‌سازی از تأیید سند و استقرار جداست.
 
 ## تکمیل مستقل محصول — #116
 

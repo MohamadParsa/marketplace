@@ -439,6 +439,15 @@
       "documentation_commit": "de60e55df209d40878bb17e97616a98c09572b90",
       "delivery_receipt": "docs/delivery/next-phase/issue-87-delivery.json",
       "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 119,
+      "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
+      "verification": "docs/delivery/next-phase/issue-119-verification.md",
+      "implementation_status": "done",
+      "source_pushed": false,
+      "publication_status": "local-awaiting-push",
+      "pull_request": 106
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
