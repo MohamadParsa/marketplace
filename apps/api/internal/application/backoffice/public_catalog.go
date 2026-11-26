@@ -3,6 +3,7 @@ package backoffice
 import (
 	"context"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/store"
 	"time"
@@ -24,7 +25,11 @@ type PublicCatalogRepository interface {
 // CatalogReadWorkspace contains catalog inputs only, never accounts or financial state.
 // It is an internal PostgreSQL projection; only white-listed response DTOs enter Redis.
 func CatalogReadWorkspace(w Workspace) Workspace {
-	r := Workspace{Sales: publicSalesSettings(w), Categories: w.Categories, Brands: w.Brands, Attributes: w.Attributes, DisplaySettings: w.DisplaySettings, HomeSettings: w.HomeSettings}
+	b := commerce.Business{}
+	if w.Commerce != nil {
+		b = publicBusiness(w.Commerce.Settings.Business)
+	}
+	r := Workspace{PublicBusiness: &b, Sales: publicSalesSettings(w), Categories: w.Categories, Brands: w.Brands, Attributes: w.Attributes, DisplaySettings: w.DisplaySettings, HomeSettings: w.HomeSettings}
 	if w.Commerce != nil {
 		for _, m := range w.Commerce.Settings.Methods {
 			m.Instructions = ""

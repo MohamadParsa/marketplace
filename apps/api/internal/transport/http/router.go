@@ -49,6 +49,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 			mux.HandleFunc(route, publicCatalogHandler("p", h.Wishlist))
 		}
 		mux.HandleFunc("GET /storefront/commerce/config", h.Config)
+		mux.HandleFunc("GET /storefront/business", h.Business)
 		mux.HandleFunc("POST /storefront/cart/guest", h.CreateGuest)
 		mux.HandleFunc("GET /storefront/cart", h.Cart)
 		mux.HandleFunc("POST /storefront/cart", h.Cart)

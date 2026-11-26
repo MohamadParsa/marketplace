@@ -80,16 +80,26 @@ type Destination struct {
 	Holder     string `json:"holder"`
 	Bank       string `json:"bank"`
 }
+type SocialLink struct {
+	ID       string `json:"id"`
+	Title    string `json:"title"`
+	Kind     string `json:"kind"`
+	URL      string `json:"url"`
+	Position int    `json:"position"`
+	Active   bool   `json:"active"`
+}
 type Business struct {
-	Name           string `json:"name"`
-	SupportPhone   string `json:"support_phone"`
-	SupportEmail   string `json:"support_email"`
-	About          string `json:"about"`
-	Contact        string `json:"contact"`
-	ShippingPolicy string `json:"shipping_policy"`
-	ReturnPolicy   string `json:"return_policy"`
-	Privacy        string `json:"privacy"`
-	Terms          string `json:"terms"`
+	PublishedPages map[string]bool `json:"published_pages,omitempty"`
+	SocialLinks    []SocialLink    `json:"social_links,omitempty"`
+	Name           string          `json:"name"`
+	SupportPhone   string          `json:"support_phone"`
+	SupportEmail   string          `json:"support_email"`
+	About          string          `json:"about"`
+	Contact        string          `json:"contact"`
+	ShippingPolicy string          `json:"shipping_policy"`
+	ReturnPolicy   string          `json:"return_policy"`
+	Privacy        string          `json:"privacy"`
+	Terms          string          `json:"terms"`
 }
 type Cart struct {
 	ID         string     `json:"id"`

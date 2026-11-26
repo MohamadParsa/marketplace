@@ -68,8 +68,12 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 			w.Products = append(w.Products, catalog.Product{ID: fmt.Sprintf("product-browser-%02d", i), Name: fmt.Sprintf("محصول نمونه %02d", i), EnglishName: fmt.Sprintf("Sample Product %02d", i), CategoryID: "gold", Active: &active, Status: status, Model: "shared", Version: 1})
 		}
 	}
+	if os.Getenv("CHERRIVA_BUSINESS_BROWSER") == "1" {
+		w = commerceSeed()
+		w.IconMedia[0].Data = iconPNG(t, 8)
+	}
 	var repo backoffice.Repository = backofficememory.New(w)
-	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" {
+	if os.Getenv("CHERRIVA_PRODUCTS_BROWSER") == "1" || os.Getenv("CHERRIVA_BUSINESS_BROWSER") == "1" {
 		persistent, _ := cachePostgres(t)
 		if e := persistent.Update(context.Background(), func(state *backoffice.Workspace) error { *state = w; return nil }); e != nil {
 			t.Fatal(e)

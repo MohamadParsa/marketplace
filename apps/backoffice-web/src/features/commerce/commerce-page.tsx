@@ -1,3 +1,7 @@
+import {
+  BusinessContentEditor,
+  businessDraft,
+} from "./business-content-editor";
 import { GeographyEditor } from "./geography-editor";
 import {
   useCallback,
@@ -995,7 +999,7 @@ function SettingsForm({
     [shipping, setShipping] = useState(s.shipping),
     [days, setDays] = useState(s.closed_weekdays),
     [holidays, setHolidays] = useState(s.holidays.join("\n")),
-    [business, setBusiness] = useState(s.business);
+    [business, setBusiness] = useState(businessDraft(s.business));
   const can = (key: string) => !!permissions["commerce." + key];
   const patchMethod = (i: number, patch: Partial<Method>) =>
     setMethods(
@@ -1315,33 +1319,7 @@ function SettingsForm({
       {section(
         "اطلاعات عمومی و قوانین کسب‌وکار",
         <fieldset disabled={busy || !can("business.write")}>
-          <Alert severity="warning">
-            متن‌ها و اطلاعات واقعی باید پیش از انتشار عمومی توسط تیم تکمیل شوند؛
-            نشان مجوز یا تعهد ساختگی نمایش داده نمی‌شود.
-          </Alert>
-          {(
-            [
-              ["name", "نام کسب‌وکار"],
-              ["support_phone", "شماره پشتیبانی"],
-              ["support_email", "ایمیل پشتیبانی"],
-              ["about", "درباره ما"],
-              ["contact", "تماس با ما"],
-              ["shipping_policy", "شرایط ارسال"],
-              ["return_policy", "شرایط بازگشت"],
-              ["privacy", "حریم خصوصی"],
-              ["terms", "قوانین خرید"],
-            ] as const
-          ).map(([key, caption]) => (
-            <Field
-              key={key}
-              label={caption}
-              value={business[key]}
-              onChange={(v) => setBusiness({ ...business, [key]: v })}
-              multiline={
-                !["name", "support_phone", "support_email"].includes(key)
-              }
-            />
-          ))}
+          <BusinessContentEditor value={business} onChange={setBusiness} />
           <Button
             variant="contained"
             disabled={busy || !can("business.write")}

@@ -80,7 +80,10 @@ export interface Destination {
   holder: string;
   bank: string;
 }
+export interface SocialLink { id:string; title:string; kind:string; url:string; position:number; active:boolean }
 export interface Business {
+ published_pages?: Record<string,boolean>;
+ social_links?:SocialLink[];
   name: string;
   support_phone: string;
   support_email: string;

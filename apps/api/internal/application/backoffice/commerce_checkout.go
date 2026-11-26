@@ -765,5 +765,5 @@ func (s *Service) PublicCommerceConfig(ctx context.Context) (map[string]any, err
 	if loc == nil {
 		loc = time.FixedZone("Tehran", 12600)
 	}
-	return map[string]any{"geography": publicGeography(settings.Geography), "methods": methods, "destination": destination, "business": settings.Business, "currency": "toman", "reservation_minutes": commerce.ReservationMinutes, "server_date": s.clock.Now().In(loc).Format("2006-01-02")}, nil
+	return map[string]any{"geography": publicGeography(settings.Geography), "methods": methods, "destination": destination, "business": publicBusiness(settings.Business), "currency": "toman", "reservation_minutes": commerce.ReservationMinutes, "server_date": s.clock.Now().In(loc).Format("2006-01-02")}, nil
 }

@@ -530,3 +530,12 @@ func (h *CommerceHandler) Users(w http.ResponseWriter, r *http.Request) {
 	out, e := h.service.ListUsers(r.Context(), actor, in.Filter, strings.HasSuffix(r.URL.Path, "/export"), in.IDs)
 	commerceResult(w, r, out, e)
 }
+
+func (h *CommerceHandler) Business(w http.ResponseWriter, r *http.Request) {
+	b, e := h.service.PublicBusinessContent(r.Context())
+	if e != nil {
+		commerceError(w, e)
+		return
+	}
+	writeCatalogJSON(w, r, b)
+}

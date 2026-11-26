@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/content"
 	"github.com/jackc/pgx/v5"
 	"sort"
@@ -161,7 +162,7 @@ func savePublicCatalog(ctx context.Context, tx pgx.Tx, state backoffice.Workspac
 // It never replays financial saves or changes the original workspace/identity.
 func (r *Repository) ensurePublicCatalog(ctx context.Context) error {
 	var exists bool
-	if e := r.db.QueryRow(ctx, "SELECT EXISTS(SELECT 1 FROM catalog_public_state)").Scan(&exists); e != nil {
+	if e := r.db.QueryRow(ctx, "SELECT EXISTS(SELECT 1 FROM catalog_public_state WHERE payload ? 'public_business')").Scan(&exists); e != nil {
 		return e
 	}
 	if exists {
@@ -255,4 +256,15 @@ func (r *Repository) ReadManagedCatalogMedia(ctx context.Context, id string) ([]
 		e = backoffice.ErrNotFound
 	}
 	return data, e
+}
+
+// Published business content only; this query never loads accounts or money.
+func (r *Repository) ReadPublicBusiness(ctx context.Context) (commerce.Business, error) {
+	var raw []byte
+	e := r.db.QueryRow(ctx, "SELECT payload->'public_business' FROM catalog_public_state WHERE singleton").Scan(&raw)
+	var b commerce.Business
+	if e == nil {
+		e = json.Unmarshal(raw, &b)
+	}
+	return b, e
 }

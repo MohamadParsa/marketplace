@@ -1,3 +1,4 @@
+import { usePublicBusiness, businessPages, SocialIcon } from "./business-content";
 import { HeartIcon, useWishlist } from "./wishlist";
 import { CatalogImage } from "./catalog-image";
 import { HomeCatalogSkeleton } from "./catalog-loading";
@@ -824,6 +825,8 @@ export function SiteHeader() {
   );
 }
 export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
+  const {data:business,loading,error,refresh}=usePublicBusiness();
+  const pages=businessPages.filter(([,key])=>business?.[key]?.trim());
   return (
     <footer className="lh-footer">
       <div className="lh-wrap lh-footer-main">
@@ -839,7 +842,7 @@ export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
           <p>انتخابی ساده، برای همراه‌های هر روز.</p>
         </div>
         <div>
-          <h2>دسته‌های چریوا</h2>
+          {categories.length>0&&<h2>دسته‌های چریوا</h2>}
           {categories.map((r) => (
             <a href={r.url} key={r.key}>
               {r.title}
@@ -847,14 +850,13 @@ export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
           ))}
         </div>
         <div>
-          <h2>درباره چریوا</h2>
-          <a href="/info/about">آشنایی با چریوا</a>
-          <a href="/info/contact">تماس با ما</a>
-          <a href="/info/shipping">شرایط ارسال</a>
-          <a href="/info/returns">شرایط بازگشت</a>
-          <a href="/info/terms">قوانین خرید</a>
-          <a href="/info/privacy">حریم خصوصی</a>
-          <a href="/#home-categories">دسته‌بندی کالاها</a>
+          {loading&&!business?<div className="footer-skeleton" aria-label="در حال دریافت اطلاعات عمومی"><i/><i/><i/></div>:null}
+          {error&&<div role="status"><p>{error}</p><button onClick={refresh}>تلاش مجدد اطلاعات عمومی</button></div>}
+          {pages.length>0&&<h2>درباره چریوا</h2>}
+          {pages.map(([slug,,label])=><a href={'/info/'+slug} key={slug}>{label}</a>)}
+          {business?.support_phone&&<a href={'tel:'+business.support_phone.replace(/[^0-9+۰-۹]/g,'')}>پشتیبانی: <span dir="ltr">{business.support_phone}</span></a>}
+          {business?.support_email&&<a href={'mailto:'+encodeURIComponent(business.support_email)}>{business.support_email}</a>}
+          {!!business?.social_links?.length&&<nav className="footer-social-links" aria-label="شبکه‌های اجتماعی چریوا">{business.social_links.map(link=><a href={link.url} key={link.id} target="_blank" rel="noopener noreferrer" aria-label={link.title+'؛ باز شدن در پنجره جدید'} title={link.title}><SocialIcon kind={link.kind}/></a>)}</nav>}
         </div>
       </div>
       <div className="lh-wrap lh-copyright">

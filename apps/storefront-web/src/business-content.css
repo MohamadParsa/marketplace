@@ -1,0 +1,5 @@
+
+.footer-social-links{display:flex!important;flex-direction:row;flex-wrap:wrap;gap:.6rem;margin-top:1rem}.lh-footer .footer-social-links a{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid #ecd7df;color:#b8174a;background:#fff}.lh-footer .footer-social-links a:hover,.lh-footer .footer-social-links a:focus-visible{background:#b8174a;color:white;outline-offset:3px}.business-page-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:2}.footer-skeleton{display:grid;gap:.6rem;min-width:10rem}.footer-skeleton i{height:.8rem;background:#f0e8ec;border-radius:6px;animation:business-footer-pulse 1.5s ease-in-out infinite}
+
+@keyframes business-footer-pulse{50%{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.footer-skeleton i{animation:none}}

@@ -1099,3 +1099,5 @@ dd {
 .catalog-choice-options { display:flex; flex-wrap:wrap; gap:.4rem; max-height:16rem; overflow:auto; }
 .catalog-choice-options button { max-width:100%; overflow-wrap:anywhere; }
 .catalog-code-guide { display:grid; gap:.4rem; padding:.8rem; background:#faf7f8; border-radius:12px; }
+
+.business-content-editor {display:grid;gap:1rem;min-width:0}.business-page-editor,.business-social-editor {border:1px solid #eadfe3;border-radius:14px;padding:1rem;display:grid;gap:.75rem;min-width:0}.business-page-editor summary{cursor:pointer;font-weight:700;margin-bottom:.75rem}.business-text-preview{white-space:pre-wrap;overflow-wrap:anywhere;max-height:12rem;overflow:auto;background:#faf7f8;border-radius:10px;padding:.75rem}

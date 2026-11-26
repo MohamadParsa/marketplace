@@ -336,7 +336,10 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 			c.Settings.Holidays = v.Holidays
 		}
 		if in.Business != nil {
-			b := *in.Business
+			b, validationError := normalizeBusiness(*in.Business)
+			if validationError != nil {
+				return nil, validationError
+			}
 			for _, s := range []string{b.Name, b.SupportPhone, b.SupportEmail} {
 				if !textBound(s, 160) {
 					return nil, ErrInvalid

@@ -89,6 +89,7 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
+	PublicBusiness *commerce.Business             `json:"public_business,omitempty"`
 	AxisPlans      []AxisPlan                     `json:"axis_plans,omitempty"`
 	StoreMutations []StoreMutation                `json:"store_mutations,omitempty"`
 	UserMutations  []UserMutation                 `json:"user_mutations,omitempty"`

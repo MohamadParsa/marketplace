@@ -1,3 +1,4 @@
+import { usePublicBusiness, businessPages } from "./business-content";
 import {TemporaryPassword} from "../../../packages/identity-client/temporary-password";
 import { AddressEditor } from "./address-editor";
 import { CatalogImage } from "./catalog-image";
@@ -2379,35 +2380,10 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
   );
 }
 export function BusinessPage({ slug }: { slug: string }) {
-  const { config } = useCommerce();
-  const keys: Record<
-    string,
-    [string, keyof NonNullable<typeof config>["business"]]
-  > = {
-    about: ["درباره چریوا", "about"],
-    contact: ["تماس با ما", "contact"],
-    shipping: ["شرایط ارسال", "shipping_policy"],
-    returns: ["شرایط بازگشت", "return_policy"],
-    privacy: ["حریم خصوصی", "privacy"],
-    terms: ["قوانین خرید", "terms"],
-  };
-  const entry = keys[slug];
-  return (
-    <CommerceShell title={entry?.[0] ?? "صفحه پیدا نشد"}>
-      <section className="buy-panel buy-prose">
-        {entry
-          ? config?.business[entry[1]] ||
-            "اطلاعات این صفحه هنوز تکمیل نشده است."
-          : ""}
-        {config?.business.support_phone && (
-          <p>
-            پشتیبانی:{" "}
-            <a href={"tel:" + config.business.support_phone}>
-              {config.business.support_phone}
-            </a>
-          </p>
-        )}
-      </section>
-    </CommerceShell>
-  );
+ const {data:business,loading,error,refresh}=usePublicBusiness();
+ const entry=businessPages.find(([key])=>key===slug);
+ const text=entry?business?.[entry[1]]:'';
+ return <CommerceShell title={entry?.[2]??'صفحه پیدا نشد'}><section className="buy-panel buy-prose business-public-page">
+ {loading&&!business?<p role="status">در حال دریافت اطلاعات صفحه…</p>:error?<div role="alert"><p>{error}</p><button onClick={refresh}>تلاش مجدد</button></div>:text?<div className="business-page-body">{text}</div>:<><p>این صفحه در دسترس نیست.</p><a href="/">بازگشت به صفحه اصلی</a></>}
+ </section></CommerceShell>
 }
