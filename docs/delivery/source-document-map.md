@@ -154,3 +154,5 @@
 ## منوی کاتالوگ و خصوصیات دسته — #107/#108
 
 سورس `1ba3964142e43364e2fd4e0b9767389cca974cda` در D:\Cherriva، [گزارش و تصاویر](backoffice-refinement-2026-11-25/issues-107-108-verification.md) و [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issues-107-108-checks.json). فرم‌های پایه به مسیر مستقل منتقل شدند؛ #109/#115/#116 از این انتقال done نمی‌شوند.۳۳۲تست Go و۳۷کنترل مرورگر، vet و lint/build موفق و۲۴بخش داده پس از restart یکسان‌اند. کامیت مدارک trailer `Source-Commit: 1ba3964142e43364e2fd4e0b9767389cca974cda` دارد و درخت اجرایی برابر کنترل می‌شود. پوش و CI/بستن در رسید نهایی ثبت خواهند شد؛ main و لیارا جدا هستند.
+
+پوش این دو تسک تأیید شد: [سورس](https://github.com/MohamadParsa/marketplace/commit/1ba3964142e43364e2fd4e0b9767389cca974cda) و [مدارک](https://github.com/MohamadParsa/marketplace/commit/a0d739b5062b5f337c8b25e9c6a87493f715c301) در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) هستند. #107/#108 با کامنت و completed بسته شدند؛ [رسید](backoffice-refinement-2026-11-25/issues-107-108-delivery.json). ادغام/لیارا جداست.

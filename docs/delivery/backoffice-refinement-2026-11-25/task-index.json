@@ -55,13 +55,16 @@
         112
       ],
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
-      "source_pushed": false,
+      "source_pushed": true,
       "coordination_issues": [
         115,
         116
       ],
       "dependency_resolution": "existing-brand-product-forms-moved-without-implementing-their-supplemental-fields",
-      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda"
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+      "state": "closed",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-delivery.json"
     },
     {
       "n": 2,
@@ -116,8 +119,11 @@
         28
       ],
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
-      "source_pushed": false,
-      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda"
+      "source_pushed": true,
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+      "state": "closed",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-delivery.json"
     },
     {
       "n": 3,

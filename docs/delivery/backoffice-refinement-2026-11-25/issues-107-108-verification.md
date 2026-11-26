@@ -65,3 +65,13 @@ API هم سطح نشست را کنترل می‌کند: حتی حساب دارا
 ## نسخه سورس
 
 سورس و تست‌ها در کامیت `1ba3964142e43364e2fd4e0b9767389cca974cda` ثبت شدند. کامیت مدارک با trailer `Source-Commit` به آن متصل است. انتقال helperهای موجود به `catalog-pages.tsx` انجام شد؛ فایل تجمیعی قدیمی حذف و compatibility route مستقل باقی است. اسکریپت دستی #110 با منوی والد و کنترل تازه انتساب همگام شد؛۳۷کنترل جاری جایگزین شمارش دوباره سناریوهای تاریخی آن تحویل است.
+
+
+## رسید تحویل و پوش
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/1ba3964142e43364e2fd4e0b9767389cca974cda) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/a0d739b5062b5f337c8b25e9c6a87493f715c301) روی شاخه `codex/local-parsa-integration-20261124` پوش شدند و در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) موجودند. [کامنت پایان #107](https://github.com/MohamadParsa/marketplace/issues/107#issuecomment-7184428593) و [کامنت پایان #108](https://github.com/MohamadParsa/marketplace/issues/108#issuecomment-7184430166) ثبت و هر دو با دلیل completed بسته شدند؛ [رسید ماشین‌خوان](issues-107-108-delivery.json).
+
+#95/#105 و شش تکمیل #109/#113/#114/#115/#116/#117 باز ماندند. scope و اشاره فایل‌های #115/#116 برای فرم پایه منتقل‌شده به‌روز شد، بدون done کردن آن‌ها. source tree کد و مدارک یکسان کنترل شد. main ادغام و لیارا مستقر نشده است؛ نسخه محلی از همین سورس روی۸۰۹۸/۵۱۹۷ در دسترس است.
+
+
+CI روی revision `a0d739b5062b5f337c8b25e9c6a87493f715c301` با source tree یکسان، هر۵job موفق داشت؛ [اجرای GitHub Actions](https://github.com/MohamadParsa/marketplace/actions/runs/45768067276) شامل Go race/vet، lint/build بک‌آفیس/سایت/پنل فروشنده و contracts است. کامیت نهایی فقط رسید و مدارک این نتیجه را ثبت می‌کند و فایل اجرایی تغییر نمی‌کند.

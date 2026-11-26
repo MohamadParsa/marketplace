@@ -352,7 +352,15 @@
       "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
       "implementation_status": "done",
       "source_tree_matches_documentation_revision": true,
-      "publication_status": "ready-to-push"
+      "publication_status": "pushed-branch-awaiting-merge",
+      "issue_states": {
+        "107": "closed",
+        "108": "closed"
+      },
+      "source_pushed": true,
+      "pull_request": 106,
+      "documentation_commit": "a0d739b5062b5f337c8b25e9c6a87493f715c301",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-delivery.json"
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -442,12 +450,12 @@
   "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
   "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
   "latest_branch_source_publication": {
-    "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
-    "initial_documentation_commit": "c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b",
+    "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+    "initial_documentation_commit": "a0d739b5062b5f337c8b25e9c6a87493f715c301",
     "branch": "codex/local-parsa-integration-20261124",
     "published": true,
     "merged": false,
     "deployed": false,
-    "receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-delivery.json"
+    "receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-delivery.json"
   }
 }
