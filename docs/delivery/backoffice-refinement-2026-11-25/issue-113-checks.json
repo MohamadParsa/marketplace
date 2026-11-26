@@ -1,0 +1,131 @@
+{
+  "id": "CHECKS-STORE-MANAGEMENT-20261126",
+  "issues": [
+    113
+  ],
+  "go": {
+    "passed_tests_and_subtests": 356,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "issue": 113,
+        "id": "server-grid-first-page-twenty",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "second-page-loaded",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "combined-filter-resets-page",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "combined-filter-results",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "create-store-full-profile",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "managed-image-stored",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "invalid-image-keeps-existing-image",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "province-change-clears-incompatible-city",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "conflict-keeps-draft",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "edit-keeps-image-id",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "mobile-dialog-no-page-overflow",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "members-and-user-deep-link",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "member-link-opens-same-user",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "viewer-store-menu-hidden",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "viewer-deep-link-denied",
+        "pass": true
+      },
+      {
+        "issue": 113,
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 16,
+    "runtime_pageerrors": 0,
+    "isolated_memory": true
+  },
+  "frontend": {
+    "backoffice_build": "passed",
+    "storefront_build": "passed",
+    "new_dependencies": false,
+    "existing_chunk_warning": true
+  },
+  "local_restart": {
+    "backoffice_http": 200,
+    "storefront_http": 200,
+    "preserved_sections": 24,
+    "changed_sections": [],
+    "warmup_products": 100,
+    "warmup_listings": 4,
+    "warmup_failures": 0,
+    "redis_ping": "PONG",
+    "startup_cache_fallback_observed": true
+  },
+  "snapshot_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "snapshot_manifest_match": true,
+  "historical_bundle_changed_this_delivery": false,
+  "historical_preexisting_manifest_mismatches": 4,
+  "source_pushed": false,
+  "deployed": false,
+  "artifacts": [
+    "output/playwright/issue-113/store-filters.png",
+    "output/playwright/issue-113/store-profile-mobile.png",
+    "output/playwright/issue-113/store-profile.png"
+  ],
+  "source_commit": "1438140f260b3ca11fbb952c999f5ebbbc6c5a7a"
+}

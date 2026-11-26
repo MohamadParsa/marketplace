@@ -75,3 +75,5 @@
 [کاربر واحد، رمز موقت و نقش‌های مستقل #111/#112](features/experiences/user-management-and-roles.feature) به [قرارداد اجرایی](../architecture/contracts/user-management.md) و [شواهد](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md) لینک دارد؛ runner مستقل Gherkin اجرا نشده است.
 
 [تبدیل محور #109](features/experiences/category-axis-conversion.feature): نگاشت، تراکنش و رضایت دوباره سبد؛ شاهد executable در گزارش تحویل.
+
+[پروفایل فروشگاه #113](features/experiences/store-management.feature): CRUD، تصویر و مجوز؛ شاهد executable در گزارش تحویل.

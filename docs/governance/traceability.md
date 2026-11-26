@@ -263,3 +263,5 @@ FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/cust
 FEAT-BO-REFINEMENT-001/002 → [گزارش ناوبری و دسته](../delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md) → [قرارداد خصوصیات و سطح نشست](../architecture/contracts/catalog-attributes.md). تست API، cache/عدم ارث، صفحه‌بندی/فیلتر و مرورگر به همان گزارش متصل‌اند؛ تغییر محور مصرف‌شده #109 و تکمیل فیلدهای برند/محصول #115/#116 جداست.
 
 FEAT-BO-REFINEMENT-003 → [گزارش #109](../delivery/backoffice-refinement-2026-11-25/issue-109-verification.md) → [قرارداد تبدیل](../architecture/contracts/category-axis-conversion.md) → [BDD](../bdd/features/experiences/category-axis-conversion.feature).
+
+FEAT-BO-REFINEMENT-007 → [گزارش #113](../delivery/backoffice-refinement-2026-11-25/issue-113-verification.md) → [قرارداد فروشگاه](../architecture/contracts/store-management.md) → [BDD](../bdd/features/experiences/store-management.feature).

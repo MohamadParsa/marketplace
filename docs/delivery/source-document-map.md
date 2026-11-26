@@ -160,3 +160,7 @@
 ## تبدیل کنترل‌شده محور — #109
 
 سورس [a029b88](https://github.com/MohamadParsa/marketplace/commit/a029b88f6d78d9745311cf4afbdeb8dd3f4538d9) و [گزارش مستقل](backoffice-refinement-2026-11-25/issue-109-verification.md) مرجع این تحویل‌اند. #113 مستقل تحویل می‌شود؛ main و Liara تغییر نکرده‌اند.
+
+## پروفایل مستقل فروشگاه — #113
+
+سورس [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [گزارش مستقل فروشگاه](backoffice-refinement-2026-11-25/issue-113-verification.md) شامل CRUD، تصویر خصوصی، فیلتر/صفحه‌بندی و حفظ داده‌اند. #114 و #115 جدا تحویل می‌شوند.
