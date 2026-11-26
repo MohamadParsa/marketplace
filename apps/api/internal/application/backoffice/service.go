@@ -127,18 +127,22 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 	if err != nil {
 		return err
 	}
-	encoded, err := json.Marshal(command)
-	if err != nil {
-		return err
-	}
-	sum := sha256.Sum256(encoded)
-	fingerprint := hex.EncodeToString(sum[:])
 	execute := func(confirmed bool) error {
 		return s.repository.Update(ctx, func(state *Workspace) error {
 			current, err := catalogActor(*state, actor)
 			if err != nil {
 				return err
 			}
+			command, err := normalizeAttributeCommand(*state, command)
+			if err != nil {
+				return err
+			}
+			encoded, err := json.Marshal(command)
+			if err != nil {
+				return err
+			}
+			sum := sha256.Sum256(encoded)
+			fingerprint := hex.EncodeToString(sum[:])
 			if command.Action == "store.content-policy.set" && current.Surface != identity.SurfaceBackoffice {
 				return ErrForbidden
 			}

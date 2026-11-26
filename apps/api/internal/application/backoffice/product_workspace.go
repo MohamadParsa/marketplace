@@ -243,6 +243,10 @@ func (s *Service) ResolveVariant(ctx context.Context, actor identity.User, produ
 	if err != nil {
 		return VariantResolution{}, err
 	}
+	values, err = normalizeAttributeValues(values)
+	if err != nil {
+		return VariantResolution{}, err
+	}
 	key, err := canonicalSelection(w.Axes, values)
 	if err != nil {
 		return VariantResolution{}, err

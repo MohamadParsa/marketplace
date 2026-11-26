@@ -40,7 +40,7 @@ func TestAttributesHTTPCRUDAndPermissions(t *testing.T) {
 	state := iconWorkspace(t, h, ops)
 	var a catalog.AttributeDefinition
 	for _, x := range state.Attributes {
-		if x.Code == "material" {
+		if x.Code == backoffice.PublicReference("a", "material") {
 			a = x
 		}
 	}

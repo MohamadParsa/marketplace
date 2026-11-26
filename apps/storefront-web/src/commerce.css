@@ -953,6 +953,9 @@
   display: grid;
   gap: 12px;
 }
+.address-editor .address-profile-completion {
+  grid-column: 1 / -1;
+}
 .address-recipient .buy-row {
   justify-content: flex-start;
   gap: 12px;

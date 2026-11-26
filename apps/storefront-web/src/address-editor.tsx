@@ -15,7 +15,9 @@ export function AddressEditor({
   busy,
   error,
   onSave,
+  allowOtherRecipient = false,
 }: {
+  allowOtherRecipient?: boolean;
   initial: Address;
   geography: Province[];
   busy: boolean;
@@ -31,6 +33,7 @@ export function AddressEditor({
   useEffect(() => {
     setSelfProfile(profile);
   }, [profile]);
+  const [profileNeeded, setProfileNeeded] = useState(false);
   const [profileBusy, setProfileBusy] = useState(false),
     [profileError, setProfileError] = useState("");
   const [profileName, setProfileName] = useState(
@@ -81,7 +84,10 @@ export function AddressEditor({
       className="address-editor"
       onSubmit={(e) => {
         e.preventDefault();
-        if (draft.recipient_self && !ready) return;
+        if (draft.recipient_self && !ready) {
+          setProfileNeeded(true);
+          return;
+        }
         const {
           id,
           version,
@@ -121,7 +127,7 @@ export function AddressEditor({
       }}
     >
       <fieldset className="buy-fields" disabled={busy || profileBusy}>
-        {field("full_address", "نشانی کامل قابل ویرایش", false, 1500)}
+        {field("title", "عنوان آدرس (مثلاً خانه)")}
         <AddressMap
           latitude={draft.latitude}
           longitude={draft.longitude}
@@ -143,6 +149,7 @@ export function AddressEditor({
             }))
           }
         />
+        {field("full_address", "نشانی کامل قابل ویرایش", false, 1500)}
 
         <label className="buy-field">
           استان *
@@ -187,88 +194,91 @@ export function AddressEditor({
         {field("house_number", "پلاک", true, 32)}
         {field("unit", "واحد", false, 32)}
         {field("postal_code", "کد پستی", true, 10, true)}
-        {field("title", "عنوان آدرس (مثلاً خانه)")}
-        <section className="address-recipient">
-          <div className="buy-row">
-            <ToggleSwitch
-              checked={!!draft.recipient_self}
-              label="تحویل‌گیرنده خودم هستم"
-              onChange={(v) => setDraft((d) => ({ ...d, recipient_self: v }))}
-            />
-            <b>تحویل‌گیرنده خودم هستم</b>
-          </div>
-          {draft.recipient_self ? (
-            <>
-              {ready ? (
-                <p>
-                  {selfProfile?.name} · {selfProfile?.phone}
-                  <br />
-                  کد ملی از پروفایل ثبت می‌شود.
+        {allowOtherRecipient && (
+          <section className="address-recipient">
+            <div className="buy-row">
+              <ToggleSwitch
+                checked={!!draft.recipient_self}
+                label="تحویل‌گیرنده خودم هستم"
+                onChange={(v) => {
+                  setDraft((d) => ({ ...d, recipient_self: v }));
+                  setProfileNeeded(false);
+                }}
+              />
+              <b>تحویل‌گیرنده خودم هستم</b>
+            </div>
+            {!draft.recipient_self && (
+              <div className="address-other-recipient">
+                {field("recipient", "نام و نام خانوادگی گیرنده", true)}
+                {field(
+                  "recipient_national_id",
+                  "کد ملی گیرنده",
+                  true,
+                  10,
+                  true,
+                )}
+                {field("phone", "شماره موبایل گیرنده", true, 11, true)}
+              </div>
+            )}
+          </section>
+        )}
+        {(profileNeeded || !selfProfile?.national_id) &&
+          draft.recipient_self &&
+          !ready && (
+            <div className="address-profile-completion">
+              <p>
+                نام و نام خانوادگی و کد ملی را یک بار در پروفایل تکمیل کنید.
+              </p>
+              <label className="buy-field">
+                نام و نام خانوادگی *
+                <input
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  maxLength={100}
+                />
+              </label>
+              <label className="buy-field">
+                کد ملی *
+                <input
+                  value={nationalID}
+                  onChange={(e) => setNationalID(e.target.value)}
+                  maxLength={10}
+                  inputMode="numeric"
+                  dir="ltr"
+                />
+              </label>
+              <BusyRegion busy={profileBusy}>
+                <button
+                  type="button"
+                  className="buy-secondary"
+                  disabled={
+                    profileBusy || !profileName.trim() || !nationalID.trim()
+                  }
+                  onClick={() => {
+                    setProfileBusy(true);
+                    setProfileError("");
+                    void call(
+                      "/storefront/account/profile",
+                      token,
+                      { name: profileName, national_id: nationalID },
+                      "PATCH",
+                    )
+                      .then(() => refreshProfile())
+                      .then(setSelfProfile)
+                      .catch((e) => setProfileError((e as Error).message))
+                      .finally(() => setProfileBusy(false));
+                  }}
+                >
+                  ثبت اطلاعات در پروفایل
+                </button>
+              </BusyRegion>
+              {profileError && (
+                <p className="buy-alert" role="alert">
+                  {profileError}
                 </p>
-              ) : (
-                <div className="address-profile-completion">
-                  <p>
-                    نام و نام خانوادگی و کد ملی را یک بار در پروفایل تکمیل کنید.
-                  </p>
-                  <label className="buy-field">
-                    نام و نام خانوادگی *
-                    <input
-                      value={profileName}
-                      onChange={(e) => setProfileName(e.target.value)}
-                      maxLength={100}
-                    />
-                  </label>
-                  <label className="buy-field">
-                    کد ملی *
-                    <input
-                      value={nationalID}
-                      onChange={(e) => setNationalID(e.target.value)}
-                      maxLength={10}
-                      inputMode="numeric"
-                      dir="ltr"
-                    />
-                  </label>
-                  <BusyRegion busy={profileBusy}>
-                    <button
-                      type="button"
-                      className="buy-secondary"
-                      disabled={
-                        profileBusy || !profileName.trim() || !nationalID.trim()
-                      }
-                      onClick={() => {
-                        setProfileBusy(true);
-                        setProfileError("");
-                        void call(
-                          "/storefront/account/profile",
-                          token,
-                          { name: profileName, national_id: nationalID },
-                          "PATCH",
-                        )
-                          .then(() => refreshProfile())
-                          .then(setSelfProfile)
-                          .catch((e) => setProfileError((e as Error).message))
-                          .finally(() => setProfileBusy(false));
-                      }}
-                    >
-                      ثبت اطلاعات در پروفایل
-                    </button>
-                  </BusyRegion>
-                  {profileError && (
-                    <p className="buy-alert" role="alert">
-                      {profileError}
-                    </p>
-                  )}
-                </div>
               )}
-            </>
-          ) : (
-            <div className="address-other-recipient">
-              {field("recipient", "نام و نام خانوادگی گیرنده", true)}
-              {field("recipient_national_id", "کد ملی گیرنده", true, 10, true)}
-              {field("phone", "شماره موبایل گیرنده", true, 11, true)}
             </div>
           )}
-        </section>
         {!geography.length && (
           <p className="buy-alert">فهرست استان و شهر هنوز تنظیم نشده است.</p>
         )}
@@ -277,12 +287,7 @@ export function AddressEditor({
             {error}
           </p>
         )}
-        <button
-          className="buy-primary"
-          disabled={
-            !province || !cityValid || (!!draft.recipient_self && !ready)
-          }
-        >
+        <button className="buy-primary" disabled={!province || !cityValid}>
           ذخیره آدرس
         </button>
       </fieldset>

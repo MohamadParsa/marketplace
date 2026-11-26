@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Alert,
   Button,
@@ -7,7 +8,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
   TextField,
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
@@ -21,6 +21,35 @@ const message = (e: unknown) =>
 export function SharedAttributesPage() {
   const { state, execute, can: may } = useWorkspace();
   const [editor, setEditor] = useState<AttributeDefinition>();
+  const [params, setParams] = useSearchParams();
+  const reference = params.get("attribute");
+  const canonicalReference = (id: string) =>
+    "chr-a-" +
+    btoa(String.fromCharCode(...new TextEncoder().encode(id)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  const linkedAttribute = reference
+    ? state.attributes?.find(
+        (a) => a.id === reference || a.id === canonicalReference(reference),
+      )
+    : undefined;
+  useEffect(() => {
+    if (linkedAttribute) setEditor(linkedAttribute);
+  // Keep the editor snapshot stable during workspace refresh, including after save.
+  }, [reference, linkedAttribute?.id]);
+  const openEditor = (a: AttributeDefinition) => {
+    setEditor(a);
+    const next = new URLSearchParams(params);
+    next.set("attribute", a.id);
+    setParams(next, { replace: true });
+  };
+  const closeEditor = () => {
+    setEditor(undefined);
+    const next = new URLSearchParams(params);
+    next.delete("attribute");
+    setParams(next, { replace: true });
+  };
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(
     String(state.display_settings.card_attribute_limit),
@@ -48,7 +77,7 @@ export function SharedAttributesPage() {
             onClick={() =>
               setEditor({
                 id: "",
-                code: "",
+                code: "chr-",
                 name: "",
                 kind: "enum",
                 options: [],
@@ -60,6 +89,11 @@ export function SharedAttributesPage() {
           </Button>
         }
       />
+      {reference && !linkedAttribute && (
+        <Alert severity="warning">
+          خصوصیت این پیوند در دسترس نیست؛ از فهرست خصوصیات انتخاب کنید.
+        </Alert>
+      )}
       <section className="panel">
         <div className="toolbar">
           <input
@@ -82,7 +116,6 @@ export function SharedAttributesPage() {
               render: (a) => (
                 <>
                   <b>{a.name}</b>
-                  <small dir="ltr">{a.code}</small>
                 </>
               ),
             },
@@ -103,7 +136,7 @@ export function SharedAttributesPage() {
             {
               title: "عملیات",
               render: (a) => (
-                <Button onClick={() => setEditor(a)}>مشاهده و ویرایش</Button>
+                <Button onClick={() => openEditor(a)}>مشاهده و ویرایش</Button>
               ),
             },
           ]}
@@ -206,7 +239,7 @@ export function SharedAttributesPage() {
         <AttributeEditor
           key={editor.id || "new"}
           attribute={editor}
-          close={() => setEditor(undefined)}
+          close={closeEditor}
         />
       )}
     </>
@@ -326,27 +359,31 @@ function AttributeEditor({
             inputProps={{ maxLength: 80 }}
           />
           <TextField
-            label="کد یکتا"
+            label={attribute.id ? "کد چریوا (ثابت)" : "کد یکتا"}
             value={draft.code}
             onChange={(e) => change("code", e.target.value)}
             required
             disabled={!editable || pending || !!attribute.id}
             inputProps={{ pattern: "[a-z][a-z0-9\\-]{0,63}", dir: "ltr" }}
-            helperText="حروف کوچک انگلیسی، رقم و خط تیره؛ پس از ایجاد ثابت است."
+            helperText={
+              attribute.id
+                ? "کد چریوا برای جست‌وجو و ارجاع؛ نام خصوصیت در فرم‌ها نمایش داده می‌شود."
+                : "با chr- شروع کنید؛ حروف کوچک انگلیسی، رقم و خط تیره. پس از ایجاد، کد ثابت چریوا نمایش داده می‌شود."
+            }
           />
-          <TextField
-            select
-            label="نوع خصوصیت"
-            value={draft.kind}
-            onChange={(e) => change("kind", e.target.value)}
-            disabled={!editable || pending || used}
-          >
+          <div role="group" aria-label="نوع خصوصیت" className="toolbar">
             {Object.entries(kinds).map(([k, v]) => (
-              <MenuItem key={k} value={k}>
+              <Button
+                key={k}
+                aria-pressed={draft.kind === k}
+                variant={draft.kind === k ? "contained" : "outlined"}
+                disabled={!editable || pending || used}
+                onClick={() => change("kind", k)}
+              >
                 {v}
-              </MenuItem>
+              </Button>
             ))}
-          </TextField>
+          </div>
           <TextField
             label="واحد (اختیاری)"
             value={draft.unit ?? ""}
@@ -617,7 +654,10 @@ export function CategoryBindingsDialog({
                     }}
                   />
                   {a.name}
-                  <small dir="ltr">{a.code}</small>
+                  <small>
+                    {kinds[a.kind]}
+                    {a.unit ? ` / ${a.unit}` : ""}
+                  </small>
                 </label>
                 {(["axis", "card", "filter"] as const).map((flag) => (
                   <label key={flag}>

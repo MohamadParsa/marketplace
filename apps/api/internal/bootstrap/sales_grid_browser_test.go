@@ -32,6 +32,9 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 		}
 		w.Users = append(w.Users, backoffice.User{ID: fmt.Sprintf("grid-user-%03d", i), Name: name, Phone: fmt.Sprintf("09%09d", 10000+i), Active: true, Role: identity.RoleViewer})
 	}
+	if os.Getenv("CHERRIVA_PANEL_ATTRIBUTE_BROWSER") == "1" {
+		w = panelAttributeFixture(t)
+	}
 	repo := backofficememory.New(w)
 	for _, entry := range []struct{ port, surface, app string }{{"8097", "backoffice", "backoffice-web"}, {"5199", "storefront", "storefront-web"}} {
 		listener, e := net.Listen("tcp", "127.0.0.1:"+entry.port)

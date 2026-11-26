@@ -814,6 +814,7 @@ export function AddressBook({
             <AddressEditor
               key={draft.id || "new"}
               initial={draft}
+              allowOtherRecipient={!!onSelect}
               geography={geography}
               busy={action.busy}
               error={action.error}

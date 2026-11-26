@@ -44,7 +44,7 @@ func (h *BackofficeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("user_directory") == "separate" {
 			state.Users = nil
 		}
-		writeJSON(w, 200, state)
+		writeJSON(w, 200, panelWorkspace(state))
 		return
 	}
 	var input struct {
