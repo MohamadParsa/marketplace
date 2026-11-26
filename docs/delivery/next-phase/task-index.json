@@ -599,7 +599,7 @@
       "kind": "content-and-implementation",
       "deps": [],
       "implementation_status": "done",
-      "state": "open",
+      "state": "closed",
       "number": 87,
       "url": "https://github.com/MohamadParsa/marketplace/issues/87",
       "assignee": "eliassarband",
@@ -607,8 +607,11 @@
       "execution_authorized": true,
       "verification": "docs/delivery/next-phase/issue-87-verification.md",
       "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
-      "source_pushed": false,
-      "local_delivery_status": "awaiting-branch-push"
+      "source_pushed": true,
+      "local_delivery_status": "pushed-branch-awaiting-merge",
+      "publication_pending": false,
+      "local_only": false,
+      "delivery_receipt": "docs/delivery/next-phase/issue-87-delivery.json"
     },
     {
       "n": 27,

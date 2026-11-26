@@ -432,9 +432,13 @@
       "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
       "verification": "docs/delivery/next-phase/issue-87-verification.md",
       "implementation_status": "done",
-      "source_pushed": false,
-      "publication_status": "awaiting-push",
-      "pull_request": 106
+      "source_pushed": true,
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "issue_state": "closed",
+      "documentation_commit": "de60e55df209d40878bb17e97616a98c09572b90",
+      "delivery_receipt": "docs/delivery/next-phase/issue-87-delivery.json",
+      "source_tree_matches_documentation_revision": true
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -525,13 +529,14 @@
   "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
   "latest_branch_source_publication": {
     "issues": [
+      87,
       109,
       113,
       114,
       115,
       116
     ],
-    "source_commit": "99ee075a58b45ff93c8116500ea3a62c8540b425",
+    "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
     "source_pushed": true,
     "pull_request": 106,
     "merged": false,
