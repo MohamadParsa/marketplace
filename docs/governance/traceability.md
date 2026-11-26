@@ -265,3 +265,5 @@ FEAT-BO-REFINEMENT-001/002 → [گزارش ناوبری و دسته](../delivery
 FEAT-BO-REFINEMENT-003 → [گزارش #109](../delivery/backoffice-refinement-2026-11-25/issue-109-verification.md) → [قرارداد تبدیل](../architecture/contracts/category-axis-conversion.md) → [BDD](../bdd/features/experiences/category-axis-conversion.feature).
 
 FEAT-BO-REFINEMENT-007 → [گزارش #113](../delivery/backoffice-refinement-2026-11-25/issue-113-verification.md) → [قرارداد فروشگاه](../architecture/contracts/store-management.md) → [BDD](../bdd/features/experiences/store-management.feature).
+
+FEAT-BO-REFINEMENT-008 → [گزارش #114](../delivery/backoffice-refinement-2026-11-25/issue-114-verification.md) → [قرارداد](../architecture/contracts/store-sales-eligibility.md) → [BDD](../bdd/features/experiences/store-sales-policy.feature). FEAT-BO-REFINEMENT-012 فقط ادامه PDP در #118 و todo است.

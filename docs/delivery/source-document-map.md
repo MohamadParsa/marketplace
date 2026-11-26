@@ -164,3 +164,7 @@
 ## پروفایل مستقل فروشگاه — #113
 
 سورس [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [گزارش مستقل فروشگاه](backoffice-refinement-2026-11-25/issue-113-verification.md) شامل CRUD، تصویر خصوصی، فیلتر/صفحه‌بندی و حفظ داده‌اند. #114 و #115 جدا تحویل می‌شوند.
+
+## مجوز و نام روش‌محور فروشگاه — #114
+
+سورس [47b798a](https://github.com/MohamadParsa/marketplace/commit/47b798a0b22a40f5f0309dd18978b25b9f6829f8) و [گزارش مستقل](backoffice-refinement-2026-11-25/issue-114-verification.md) شامل سیاست درختی/روش، snapshot نام و بازبینی خرید بدون مصرف وجه‌اند. توسعه PDP روش‌محور #118 فقط ثبت شده است.

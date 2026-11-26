@@ -422,14 +422,12 @@
         "apps/api/internal/application/backoffice/commerce_checkout.go",
         "apps/backoffice-web/src/features/management/management-page.tsx"
       ],
-      "questions": [
-        "سطح دقیق نمایش alias پیش از انتخاب روش فروش در کارت عمومی باید در preview نهایی روشن شود؛ پیشنهاد نام اصلی/حالت نقدی است."
-      ],
+      "questions": [],
       "id": "FEAT-BO-REFINEMENT-008",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "assignee": "eliassarband",
-      "common": "طرح **A — متعادل و شیک** و نشان C مرجع‌اند. مجوز actor و scope کاربر/فروشگاه در سرور، version/idempotency متناسب، حفظ ورودی در خطا و حالت‌های loading/empty/error/forbidden/conflict لازم‌اند. تغییر معتبر عمومی باید cache و projection مرتبط را تازه کند؛ داده خصوصی/رمز/کد ملی وارد cache عمومی و log/export بی‌مجوز نشود. RTL، کیبورد، عرض محدود و اکشن/صفحه‌بندی قابل دسترس باشند؛ dropdown تازه جز استان/شهر استثنای تأییدشده ساخته نشود. نام و شماره و داده نمونه ساختگی باشند.\n\nاین شرح **فقط برنامه‌ریزی** است: implementation_status=todo و execution_authorized=false. اجرای کد/مهاجرت/سرویس واقعی با ساخت Issue مجاز نشده و انتخاب شروع با مالک است. پوش تغییرهای لوکال تا دستور مستقیم مالک انجام نشود. بعد از اجرای مجاز، ACها به شواهد تست و سورس واقعی وصل و سپس Issue با کامنت مناسب بسته شود.",
+      "common": "اجرا با دستور مستقیم مالک تکمیل شد؛ سند in-review و استقرار جداست. نام اصلی پیش از روش، alias پس از انتخاب در خرید؛ PDP روش‌محور در #118 مستقل و هنوز اجرا نشده است.",
       "related_issues": [
         71
       ],
@@ -440,7 +438,8 @@
       "github_dependencies": [
         73,
         113
-      ]
+      ],
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-114-verification.md"
     },
     {
       "n": 9,
@@ -598,6 +597,58 @@
         108,
         116
       ]
+    },
+    {
+      "n": 12,
+      "id": "FEAT-BO-REFINEMENT-012",
+      "code": "CV-BOR-12",
+      "slug": "pdp-store-sales-method-prices",
+      "title": "CV-BOR-12 — نمایش فروشندگان و قیمت محاسبه‌شده در PDP بر اساس روش فروش",
+      "number": 118,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/118",
+      "path": "docs/delivery/backoffice-refinement-2026-11-25/tasks/pdp-store-sales-method-prices.md",
+      "priority": "P2",
+      "deps": [
+        114,
+        73,
+        29
+      ],
+      "github_dependencies": [
+        114,
+        73,
+        29
+      ],
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "assignee": "eliassarband",
+      "business": "نمایش نام و قیمت فروشنده بر اساس روش انتخابی در PDP؛ جدا از cash فعلی و خرید #114.",
+      "questions": [
+        "رفتار پیش‌فرض روش و فروشگاه فقط‌اقساطی هنگام شروع اجرا نهایی شود."
+      ],
+      "facts": [
+        "PDP فعلی نقدی و با نام اصلی است؛ پس از انتخاب روش در خرید نام همان روش نمایش داده می‌شود.",
+        "توسعه نمایش فروشندگان و قیمت محاسبه‌شده بر اساس روش در PDP به دستور مالک تسک بعدی مستقل است."
+      ],
+      "technical": [
+        "مصرف قیمت و نگاشت واحد #73 و مجوز فروشگاه #114؛ بدون موتور مالی موازی.",
+        "انتخاب سازگار تنوع/روش/عرضه و نام روش‌محور با StoreID و OfferID ثابت.",
+        "کنترل مستقیم API، RTL/موبایل/کیبورد، loading پایدار و cache با بعد روش."
+      ],
+      "ac": [
+        "تغییر روش، فروشندگان مجاز و قیمت همان روش و تنوع را نمایش دهد.",
+        "انتخاب نام و عرضه واقعی، محدودیت را در افزودن مستقیم نیز حفظ کند.",
+        "تغییر قیمت/موجودی/سیاست در خرید بازبینی و cache روش‌ها مجزا باشد؛ تاریخچه ثابت.",
+        "cash فعلی، نبود عرضه، فروشگاه فقط‌اقساطی و قیمت تخمینی/قطعی آزموده شوند."
+      ],
+      "files": [
+        "apps/api/internal/application/backoffice/sales_methods.go",
+        "apps/api/internal/application/backoffice/product_detail.go",
+        "apps/storefront-web/src/product-page.tsx"
+      ],
+      "related_issues": [
+        91
+      ],
+      "common": "فقط برنامه‌ریزی؛ سند in-review، اجرای قابلیت نیازمند انتخاب بعدی مالک و حل سؤال‌های همان PDP است."
     }
   ],
   "reused_issues": [

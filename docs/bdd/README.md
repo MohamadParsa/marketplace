@@ -77,3 +77,5 @@
 [تبدیل محور #109](features/experiences/category-axis-conversion.feature): نگاشت، تراکنش و رضایت دوباره سبد؛ شاهد executable در گزارش تحویل.
 
 [پروفایل فروشگاه #113](features/experiences/store-management.feature): CRUD، تصویر و مجوز؛ شاهد executable در گزارش تحویل.
+
+[سیاست فروشگاه #114](features/experiences/store-sales-policy.feature): دسته، روش، نام snapshot و جلوگیری از مصرف وجه پیش از بازبینی.
