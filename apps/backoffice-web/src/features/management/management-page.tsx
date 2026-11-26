@@ -15,9 +15,9 @@ import {
   type Field,
 } from "../../shared/components";
 import { labels, money } from "../../shared/format";
-import type { Command, Category } from "../../shared/types";
+import type { Command, Category, Product } from "../../shared/types";
 import { CategoryBindingsDialog } from "./shared-attributes";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { categoryPath } from "./category-tree";
 import { ProductQuickDialog } from "./product-workspace";
 import {
@@ -34,7 +34,9 @@ const roleOptions = [
 ].map((value) => ({ value, label: value }));
 export function ManagementPage({
   section,
+  onCatalogEdit,
 }: {
+  onCatalogEdit?: (row?: Product) => void;
   section:
     | "users"
     | "stores"
@@ -45,7 +47,8 @@ export function ManagementPage({
     | "shipping";
 }) {
   const navigate = useNavigate();
-  const { state, role, execute, busy, can: allowed } = useWorkspace();
+  const [params] = useSearchParams();
+  const { state, role, execute, busy, surface, can: allowed } = useWorkspace();
   const [creditTarget, setCreditTarget] = useState<User>();
   const [walletUpdates, setWalletUpdates] = useState<
     Record<string, WalletCreditResult>
@@ -78,7 +81,7 @@ export function ManagementPage({
   };
   const create = () =>
     section === "categories"
-      ? navigate("/home-catalog?create=category")
+      ? navigate("/categories?create=category")
       : section === "users"
         ? open("کاربر جدید", { action: "user.create" }, [
             { name: "name", label: "نام کاربر" },
@@ -105,15 +108,26 @@ export function ManagementPage({
         title={titles[section]}
         description="مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"
         action={
-          ["users", "stores", "categories"].includes(section) &&
-          (role === "super-admin" || (section !== "users" && editable)) ? (
-            <Button variant="contained" startIcon={<Add />} onClick={create}>
+          ["users", "stores", "categories", "products"].includes(section) &&
+          (section === "products"
+            ? surface === "backoffice" &&
+              allowed("catalog.product.create", "management")
+            : role === "super-admin" || (section !== "users" && editable)) ? (
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() =>
+                section === "products" ? onCatalogEdit?.() : create()
+              }
+            >
               افزودن{" "}
               {section === "users"
                 ? "کاربر"
                 : section === "stores"
                   ? "فروشگاه"
-                  : "دسته"}
+                  : section === "products"
+                    ? "محصول"
+                    : "دسته"}
             </Button>
           ) : undefined
         }
@@ -327,7 +341,7 @@ export function ManagementPage({
                   <>
                     <Button
                       component={Link}
-                      to={`/home-catalog?category=${encodeURIComponent(c.id)}`}
+                      to={`/categories?category=${encodeURIComponent(c.id)}`}
                       disabled={c.archived || !editable}
                     >
                       ویرایش
@@ -402,7 +416,13 @@ export function ManagementPage({
         )}
         {section === "products" && (
           <DataTable
-            rows={filtered(state.products ?? [])}
+            rows={filtered(
+              (state.products ?? []).filter(
+                (p) =>
+                  !params.get("category") ||
+                  p.category_id === params.get("category"),
+              ),
+            )}
             columns={[
               {
                 title: "محصول",
@@ -433,9 +453,11 @@ export function ManagementPage({
                 render: (p) => (
                   <>
                     <Button
-                      component={Link}
-                      to={`/home-catalog?product=${encodeURIComponent(p.id)}`}
-                      disabled={!editable}
+                      onClick={() => onCatalogEdit?.(p)}
+                      disabled={
+                        surface !== "backoffice" ||
+                        !allowed("catalog.product.update", "management")
+                      }
                     >
                       ویرایش
                     </Button>

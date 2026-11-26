@@ -125,7 +125,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
           <Button
             disabled={!can("catalog.product.update", "management")}
             component={Link}
-            to={"/home-catalog?product=" + encodeURIComponent(id)}
+            to={"/products?product=" + encodeURIComponent(id)}
           >
             ویرایش محتوای محصول
           </Button>

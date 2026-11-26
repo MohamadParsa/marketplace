@@ -35,6 +35,9 @@ func TestSalesGridBrowserHarness(t *testing.T) {
 	if os.Getenv("CHERRIVA_PANEL_ATTRIBUTE_BROWSER") == "1" {
 		w = panelAttributeFixture(t)
 	}
+	if os.Getenv("CHERRIVA_CATALOG_MANAGEMENT_BROWSER") == "1" {
+		w = catalogManagementFixture(t)
+	}
 	repo := backofficememory.New(w)
 	for _, entry := range []struct{ port, surface, app string }{{"8097", "backoffice", "backoffice-web"}, {"5199", "storefront", "storefront-web"}} {
 		listener, e := net.Listen("tcp", "127.0.0.1:"+entry.port)

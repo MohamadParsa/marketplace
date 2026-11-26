@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
-import type { AttributeDefinition, Category } from "../../shared/types";
+import type { AttributeDefinition } from "../../shared/types";
 
 const kinds = { enum: "انتخابی", text: "متن", number: "عدد" };
 const message = (e: unknown) =>
@@ -36,7 +36,7 @@ export function SharedAttributesPage() {
     : undefined;
   useEffect(() => {
     if (linkedAttribute) setEditor(linkedAttribute);
-  // Keep the editor snapshot stable during workspace refresh, including after save.
+    // Keep the editor snapshot stable during workspace refresh, including after save.
   }, [reference, linkedAttribute?.id]);
   const openEditor = (a: AttributeDefinition) => {
     setEditor(a);
@@ -573,183 +573,7 @@ function AttributeEditor({
   );
 }
 
-export function CategoryBindingsDialog({
-  category,
-  close,
-}: {
-  category: Category;
-  close: () => void;
-}) {
-  const { state, execute, can: may } = useWorkspace();
-  const [original] = useState(category);
-  const [bindings, setBindings] = useState(category.bindings ?? []);
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
-  const [key, setKey] = useState(crypto.randomUUID());
-  const editable =
-    may("category.bindings.set", "management") && !category.archived;
-  const used = (state.products ?? []).some(
-    (p) => p.category_id === category.id,
-  );
-  return (
-    <Dialog
-      open
-      fullWidth
-      maxWidth="md"
-      onClose={() => {
-        if (!pending) close();
-      }}
-    >
-      <DialogTitle>خصوصیات دسته {category.name}</DialogTitle>
-      <DialogContent>
-        <Alert severity="info">
-          انتساب فقط برای همین دسته است؛ خصوصیت والد خودکار اضافه نمی‌شود.{" "}
-          {used &&
-            "این دسته محصول دارد؛ تغییر مجموعه محورهای تنوع تا تعیین سیاست تبدیل غیرفعال است."}
-        </Alert>
-        {error && <Alert severity="error">{error}</Alert>}
-        <div className="binding-list">
-          {(state.attributes ?? []).map((a, index) => {
-            const binding = bindings.find((b) => b.attribute_id === a.id);
-            const originalBinding = original.bindings?.find(
-              (b) => b.attribute_id === a.id,
-            );
-            const valueUsed = (state.products ?? []).some(
-              (p) =>
-                p.category_id === category.id &&
-                p.attributes?.some((v) => v.attribute_id === a.id),
-            );
-            return (
-              <div
-                className="binding-row"
-                key={a.id}
-                data-testid={`binding-${a.id}`}
-              >
-                <label>
-                  <Checkbox
-                    checked={!!binding}
-                    disabled={
-                      !editable ||
-                      pending ||
-                      (!!binding &&
-                        (valueUsed || (used && !!originalBinding?.axis)))
-                    }
-                    inputProps={{ "aria-label": `انتساب ${a.name}` }}
-                    onChange={(_, checked) => {
-                      setBindings(
-                        checked
-                          ? [
-                              ...bindings,
-                              {
-                                attribute_id: a.id,
-                                axis: false,
-                                card: false,
-                                filter: false,
-                                position: index,
-                              },
-                            ]
-                          : bindings.filter((b) => b.attribute_id !== a.id),
-                      );
-                      setKey(crypto.randomUUID());
-                    }}
-                  />
-                  {a.name}
-                  <small>
-                    {kinds[a.kind]}
-                    {a.unit ? ` / ${a.unit}` : ""}
-                  </small>
-                </label>
-                {(["axis", "card", "filter"] as const).map((flag) => (
-                  <label key={flag}>
-                    <Checkbox
-                      checked={binding?.[flag] ?? false}
-                      disabled={
-                        !editable ||
-                        pending ||
-                        !binding ||
-                        (flag === "axis" && (used || a.kind !== "enum"))
-                      }
-                      inputProps={{
-                        "aria-label": `${{ axis: "محور", card: "کارت", filter: "فیلتر" }[flag]} ${a.name}`,
-                      }}
-                      onChange={(_, checked) => {
-                        setBindings(
-                          bindings.map((b) =>
-                            b.attribute_id === a.id
-                              ? { ...b, [flag]: checked }
-                              : b,
-                          ),
-                        );
-                        setKey(crypto.randomUUID());
-                      }}
-                    />
-                    {
-                      {
-                        axis: "محور تنوع",
-                        card: "نمایش کارت",
-                        filter: "فیلتر",
-                      }[flag]
-                    }
-                  </label>
-                ))}
-                <TextField
-                  size="small"
-                  label={`ترتیب ${a.name}`}
-                  type="number"
-                  value={binding?.position ?? ""}
-                  disabled={!editable || pending || !binding}
-                  inputProps={{ min: 0, max: 10000, step: 1 }}
-                  onChange={(e) => {
-                    setBindings(
-                      bindings.map((b) =>
-                        b.attribute_id === a.id
-                          ? { ...b, position: Number(e.target.value) }
-                          : b,
-                      ),
-                    );
-                    setKey(crypto.randomUUID());
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-        {!state.attributes?.length && (
-          <p>ابتدا یک خصوصیت در کتابخانه تعریف کنید.</p>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={pending} onClick={close}>
-          انصراف
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!editable || pending}
-          onClick={async () => {
-            setPending(true);
-            setError("");
-            try {
-              await execute({
-                action: "category.bindings.set",
-                target: original.id,
-                version: original.version,
-                bindings,
-                idempotency_key: key,
-              });
-              close();
-            } catch (e) {
-              setError(message(e));
-            } finally {
-              setPending(false);
-            }
-          }}
-        >
-          ثبت انتساب‌ها
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
+export { CategoryBindingsDialog } from "./category-bindings-dialog";
 
 function SalesWindowSettings() {
   const { state, execute, can } = useWorkspace();

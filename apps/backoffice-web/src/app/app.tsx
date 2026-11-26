@@ -55,7 +55,8 @@ import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
 import { SalesMethodsPage } from "../features/commerce/sales-methods-page";
-import { HomeCatalogPage } from "../features/management/home-catalog-page";
+import { CatalogPage } from "../features/management/catalog-pages";
+import { LegacyCatalogRoute } from "../features/management/legacy-catalog-route";
 import { ProductReviewsPage } from "../features/management/product-reviews-page";
 import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
@@ -96,11 +97,6 @@ const menu = [
         icon: <Inventory2Outlined />,
       },
       {
-        path: "/home-catalog",
-        label: "کاتالوگ و صفحه اصلی",
-        icon: <Inventory2Outlined />,
-      },
-      {
         path: "/users",
         label: "کاربران",
         icon: <PeopleOutline />,
@@ -113,27 +109,6 @@ const menu = [
         roles: ["super-admin"],
       },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
-      {
-        path: "/categories",
-        label: "دسته‌ها و خصوصیات",
-        icon: <CategoryOutlined />,
-      },
-      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
-      {
-        path: "/banners",
-        label: "بنرهای دو اندازه",
-        icon: <Inventory2Outlined />,
-      },
-      {
-        path: "/attributes",
-        label: "کتابخانه خصوصیات",
-        icon: <CategoryOutlined />,
-      },
-      {
-        path: "/products",
-        label: "محصولات و محتوا",
-        icon: <Inventory2Outlined />,
-      },
       {
         path: "/product-reviews",
         label: "نظرات محصولات",
@@ -150,6 +125,42 @@ const menu = [
         path: "/shipping",
         label: "ارسال و تقویم",
         icon: <LocalShippingOutlined />,
+      },
+    ],
+  },
+  {
+    heading: "کاتالوگ",
+    items: [
+      {
+        path: "/categories",
+        label: "دسته‌بندی‌ها",
+        icon: <CategoryOutlined />,
+      },
+      {
+        path: "/attributes",
+        label: "کتابخانه خصوصیات",
+        icon: <CategoryOutlined />,
+      },
+      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
+      {
+        path: "/products",
+        label: "محصولات و محتوا",
+        icon: <Inventory2Outlined />,
+      },
+    ],
+  },
+  {
+    heading: "محتوا",
+    items: [
+      {
+        path: "/home-settings",
+        label: "مدیریت صفحه اصلی",
+        icon: <DashboardOutlined />,
+      },
+      {
+        path: "/banners",
+        label: "بنرهای دو اندازه",
+        icon: <Inventory2Outlined />,
       },
     ],
   },
@@ -248,6 +259,19 @@ function Workspace({
   useEffect(() => {
     if (query.error instanceof ApiError && query.error.status === 401) logout();
   }, [query.error, logout]);
+  const catalogActive = [
+    "/categories",
+    "/attributes",
+    "/brands",
+    "/products",
+  ].some(
+    (path) =>
+      location.pathname === path || location.pathname.startsWith(path + "/"),
+  );
+  const [catalogOpen, setCatalogOpen] = useState(catalogActive);
+  useEffect(() => {
+    if (catalogActive) setCatalogOpen(true);
+  }, [catalogActive, location.pathname]);
   const current = menu
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
@@ -265,6 +289,18 @@ function Workspace({
     !roles ||
     roles.includes(role) ||
     (roles.includes("finance") && financeVisible);
+  const visibleMenu = menu
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((i) =>
+        session.user.Surface === "seller"
+          ? ["/products", "/commerce"].includes(i.path)
+          : i.path === "/users"
+            ? canCreditWallet || permissions.includes("users.read")
+            : visible("roles" in i ? i.roles : undefined),
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
   return (
     <div className="app-layout">
       <aside className={"sidebar " + (menuOpen ? "is-open" : "")}>
@@ -289,18 +325,38 @@ function Workspace({
           <span className="live-dot" />
         </div>
         <nav>
-          {menu.map((group) => (
+          {visibleMenu.map((group) => (
             <div className="nav-group" key={group.heading}>
-              <h3>{group.heading}</h3>
-              {group.items
-                .filter((i) =>
-                  session.user.Surface === "seller"
-                    ? ["/products", "/commerce"].includes(i.path)
-                    : i.path === "/users"
-                      ? canCreditWallet || permissions.includes("users.read")
-                      : visible("roles" in i ? i.roles : undefined),
-                )
-                .map((item) => (
+              {group.heading === "کاتالوگ" ? (
+                <button
+                  className={
+                    "catalog-nav-parent " + (catalogActive ? "is-current" : "")
+                  }
+                  aria-expanded={catalogOpen}
+                  aria-controls="catalog-nav-children"
+                  onClick={() => setCatalogOpen((v) => !v)}
+                >
+                  <CategoryOutlined />
+                  <span>کاتالوگ</span>
+                  <span aria-hidden="true">{catalogOpen ? "⌃" : "⌄"}</span>
+                </button>
+              ) : (
+                <h3>{group.heading}</h3>
+              )}
+              <div
+                id={
+                  group.heading === "کاتالوگ"
+                    ? "catalog-nav-children"
+                    : undefined
+                }
+                className={
+                  group.heading === "کاتالوگ"
+                    ? "catalog-nav-children"
+                    : undefined
+                }
+                hidden={group.heading === "کاتالوگ" && !catalogOpen}
+              >
+                {group.items.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
@@ -317,6 +373,7 @@ function Workspace({
                     )}
                   </NavLink>
                 ))}
+              </div>
             </div>
           ))}
         </nav>
@@ -499,7 +556,7 @@ function Workspace({
                     session.user.Surface === "seller" ? (
                       <Navigate to="/" replace />
                     ) : (
-                      <HomeCatalogPage />
+                      <LegacyCatalogRoute />
                     )
                   }
                 />
@@ -513,6 +570,24 @@ function Workspace({
                     )
                   }
                 />
+                {(["categories", "brands", "products", "home"] as const).map(
+                  (section) => (
+                    <Route
+                      key={section}
+                      path={
+                        section === "home" ? "/home-settings" : "/" + section
+                      }
+                      element={
+                        session.user.Surface === "seller" &&
+                        section !== "products" ? (
+                          <Navigate to="/products" replace />
+                        ) : (
+                          <CatalogPage key={section} section={section} />
+                        )
+                      }
+                    />
+                  ),
+                )}
                 <Route path="/products/:id" element={<ProductDetailsPage />} />
                 <Route
                   path="/banners"
@@ -535,7 +610,16 @@ function Workspace({
                     )
                   }
                 />
-                <Route path="/attributes" element={<SharedAttributesPage />} />
+                <Route
+                  path="/attributes"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <SharedAttributesPage />
+                    )
+                  }
+                />
                 <Route
                   path="/users"
                   element={
@@ -558,22 +642,12 @@ function Workspace({
                     )
                   }
                 />
-                {(
-                  [
-                    "stores",
-                    "categories",
-                    "brands",
-                    "products",
-                    "pricing",
-                    "shipping",
-                  ] as const
-                ).map((section) => (
+                {(["stores", "pricing", "shipping"] as const).map((section) => (
                   <Route
                     key={section}
                     path={"/" + section}
                     element={
-                      (session.user.Surface === "seller" &&
-                        section !== "products") ||
+                      session.user.Surface === "seller" ||
                       (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (

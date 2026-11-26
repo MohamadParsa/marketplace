@@ -20,6 +20,7 @@ export function CategoryTree({
   disabled = false,
   currentId,
   allowRoot = true,
+  includeArchived = false,
 }: {
   categories: Category[];
   value: string;
@@ -27,18 +28,19 @@ export function CategoryTree({
   disabled?: boolean;
   currentId?: string;
   allowRoot?: boolean;
+  includeArchived?: boolean;
 }) {
   const [search, setSearch] = useState("");
   const children = useMemo(() => {
     const groups = new Map<string, Category[]>();
-    for (const c of categories.filter((c) => !c.archived)) {
+    for (const c of categories.filter((c) => includeArchived || !c.archived)) {
       const parent = c.parent_id ?? "";
       groups.set(parent, [...(groups.get(parent) ?? []), c]);
     }
     for (const items of groups.values())
       items.sort((a, b) => a.name.localeCompare(b.name, "fa"));
     return groups;
-  }, [categories]);
+  }, [categories, includeArchived]);
   const matches = new Set<string>();
   const activePath = new Set<string>();
   for (const id of [value, currentId ?? ""]) {
@@ -74,7 +76,7 @@ export function CategoryTree({
               type="button"
               disabled={disabled || c.id === currentId}
               data-category-id={c.id}
-          aria-pressed={value === c.id}
+              aria-pressed={value === c.id}
               onClick={() => onChange(c.id)}
             >
               <span>{c.name}</span>

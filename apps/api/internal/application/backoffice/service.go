@@ -133,6 +133,11 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 			if err != nil {
 				return err
 			}
+			// Catalog administration is a backoffice surface operation, including
+			// for an account that also owns global roles and seller memberships.
+			if current.Surface == identity.SurfaceSeller && (strings.HasPrefix(command.Action, "catalog.") || strings.HasPrefix(command.Action, "attribute.") || strings.HasPrefix(command.Action, "category.") || command.Action == "homepage.save" || command.Action == "settings.card-limit" || command.Action == "settings.sales-window" || command.Action == "product.publish" || command.Action == "product.reject") {
+				return ErrForbidden
+			}
 			command, err := normalizeAttributeCommand(*state, command)
 			if err != nil {
 				return err
