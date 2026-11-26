@@ -41,3 +41,7 @@ execution_authorized: true
 سورس مستقل [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a). ذخیره افزایشی در JSONB و جدول رسانه موجود است و DDL/backfill جدید لازم نیست. تنها نام اجباری است؛ داده تماس تازه اختیاری و شهر قدیمی بدون استان فقط بدون تغییر قابل حفظ است. retry یک key اثر دوباره ندارد؛ پاسخ رکورد جاری است. فیلتر/صفحه‌بندی در سرور است ولی repository هنوز workspace کامل را snapshot می‌کند؛ SQL ایندکس‌شده تازه و benchmark تولید ادعا نمی‌شود.
 
 تصویر فعلاً خصوصی پنل است. محدودیت دسته/روش و نام روش‌محور فروشگاه در #114، و تکمیل برند در #115 جدا اجرا می‌شوند. main/Liara ادغام یا مستقر نشده‌اند؛ رسید پوش/CI پس از ثبت افزوده می‌شود.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/e6831ad6997e1efbe63b42e46a24b311348a22fc) روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/113#issuecomment-7189889238) ثبت و #113 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45804449092) روی مدارک با source tree یکسان موفق‌اند؛ race/vet شامل آن است. [رسید ماشین‌خوان](issue-113-delivery.json). #114/#115 جدا و main/Liara بدون استقرار باقی‌اند.

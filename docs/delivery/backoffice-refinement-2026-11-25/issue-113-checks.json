@@ -120,12 +120,45 @@
   "snapshot_manifest_match": true,
   "historical_bundle_changed_this_delivery": false,
   "historical_preexisting_manifest_mismatches": 4,
-  "source_pushed": false,
+  "source_pushed": true,
   "deployed": false,
   "artifacts": [
     "output/playwright/issue-113/store-filters.png",
     "output/playwright/issue-113/store-profile-mobile.png",
     "output/playwright/issue-113/store-profile.png"
   ],
-  "source_commit": "1438140f260b3ca11fbb952c999f5ebbbc6c5a7a"
+  "source_commit": "1438140f260b3ca11fbb952c999f5ebbbc6c5a7a",
+  "ci": {
+    "tested_revision": "e6831ad6997e1efbe63b42e46a24b311348a22fc",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092",
+    "jobs": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865350"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865485"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865560"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865581"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865696"
+      }
+    ]
+  }
 }

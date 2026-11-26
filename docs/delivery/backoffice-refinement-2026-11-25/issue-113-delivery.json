@@ -1,0 +1,51 @@
+{
+  "id": "DELIVERY-STORE-MANAGEMENT-20261126",
+  "issues": [
+    {
+      "number": 113,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/113#issuecomment-7189889238"
+    }
+  ],
+  "source_commit": "1438140f260b3ca11fbb952c999f5ebbbc6c5a7a",
+  "initial_documentation_commit": "e6831ad6997e1efbe63b42e46a24b311348a22fc",
+  "source_pushed": true,
+  "branch": "codex/local-parsa-integration-20261124",
+  "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+  "merged": false,
+  "deployed": false,
+  "ci": {
+    "tested_revision": "e6831ad6997e1efbe63b42e46a24b311348a22fc",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092",
+    "jobs": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865350"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865485"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865560"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865581"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45804449092/job/139855865696"
+      }
+    ]
+  }
+}
