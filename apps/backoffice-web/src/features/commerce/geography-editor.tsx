@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { useState } from "react";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import type { Province } from "../../../../../packages/commerce-client/types";
@@ -151,7 +152,7 @@ export function GeographyEditor({
                       از {cities.length.toLocaleString("fa-IR")})
                     </Button>
                   )}
-                  <Button
+                  <CreateButton
                     onClick={() => {
                       change(i, {
                         cities: [
@@ -171,7 +172,7 @@ export function GeographyEditor({
                     }}
                   >
                     افزودن شهر به این استان
-                  </Button>
+                  </CreateButton>
                 </>
               )}
             </details>
@@ -189,7 +190,7 @@ export function GeographyEditor({
           </p>
         )}
         <div className="commerce-actions">
-          <Button
+          <CreateButton
             variant="outlined"
             onClick={() => {
               const id = crypto.randomUUID();
@@ -199,7 +200,7 @@ export function GeographyEditor({
             }}
           >
             افزودن استان
-          </Button>
+          </CreateButton>
           <Button
             variant="contained"
             disabled={

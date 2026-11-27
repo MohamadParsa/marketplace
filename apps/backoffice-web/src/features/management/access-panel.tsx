@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
 import { useRef, useState } from "react";
@@ -171,7 +172,7 @@ export function RolesPage() {
         title="نقش‌ها و مجوزها"
         description="تعریف نقش مستقل از انتساب است؛ برای اختصاص نقش به یک حساب، فرم کاربران را باز کنید."
         action={
-          <Button
+          <CreateButton
             variant="contained"
             onClick={() => {
               setDraft({
@@ -186,7 +187,7 @@ export function RolesPage() {
             }}
           >
             نقش جدید
-          </Button>
+          </CreateButton>
         }
       />
       <Alert severity="info">

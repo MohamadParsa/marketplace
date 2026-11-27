@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
@@ -174,7 +175,7 @@ export function WeeklyScheduleEditor({
           </Button>
         </div>
       ))}
-      <Button
+      <CreateButton
         disabled={disabled || value.windows.length >= 200}
         onClick={() =>
           onChange({
@@ -187,7 +188,7 @@ export function WeeklyScheduleEditor({
         }
       >
         افزودن تعریف ساعت
-      </Button>
+      </CreateButton>
       <h3>انتساب به روزهای هفته</h3>
       <div className="toolbar" role="group" aria-label="روز برنامهٔ تحویل">
         <OptionSelect

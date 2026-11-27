@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
@@ -75,7 +76,7 @@ export function SharedAttributesPage() {
         title="کتابخانه خصوصیات"
         description="یک تعریف مشترک؛ کاربرد مستقل در هر دسته، بدون ارث از والد"
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={!editable}
             onClick={() =>
@@ -90,7 +91,7 @@ export function SharedAttributesPage() {
             }
           >
             خصوصیت جدید
-          </Button>
+          </CreateButton>
         }
       />
       {reference && !linkedAttribute && (
@@ -481,7 +482,7 @@ function AttributeEditor({
                   </Button>
                 </fieldset>
               ))}
-              <Button
+              <CreateButton
                 disabled={
                   !groupEditable ||
                   pending ||
@@ -504,7 +505,7 @@ function AttributeEditor({
                 }}
               >
                 افزودن گروه نمایشی
-              </Button>
+              </CreateButton>
             </section>
           )}
         </DialogContent>

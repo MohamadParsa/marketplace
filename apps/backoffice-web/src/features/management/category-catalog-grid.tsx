@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
 import { useMemo, useState } from "react";
@@ -116,13 +117,13 @@ export function CategoryCatalogGrid({
   return (
     <>
       <div className="toolbar">
-        <Button
+        <CreateButton
           variant="contained"
           disabled={busy || !can("catalog.category.create", "management")}
           onClick={() => onEdit()}
         >
           دسته جدید
-        </Button>
+        </CreateButton>
       </div>
       <FilterPanel
         onSearch={() =>

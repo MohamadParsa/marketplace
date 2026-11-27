@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
@@ -162,7 +163,7 @@ export function ShippingMethodsPage() {
         title="روش‌های عمومی حمل"
         description="دریافت هزینه، زمان حمل و پوشش مجاز هر روش"
         action={
-          <Button
+          <CreateButton
             disabled={!directory?.can_write}
             variant="contained"
             onClick={() => {
@@ -171,7 +172,7 @@ export function ShippingMethodsPage() {
             }}
           >
             روش حمل جدید
-          </Button>
+          </CreateButton>
         }
       />
       {notice && <Alert severity="success">{notice}</Alert>}
@@ -822,7 +823,7 @@ export function MethodEditor({
             disabled={busy || !allowed}
           />
           <div className="toolbar">
-            <Button
+            <CreateButton
               disabled={!category || draft.category_mode !== "selected"}
               onClick={() =>
                 patch({
@@ -833,8 +834,8 @@ export function MethodEditor({
               }
             >
               افزودن به مجازها
-            </Button>
-            <Button
+            </CreateButton>
+            <CreateButton
               disabled={!category}
               onClick={() =>
                 patch({
@@ -845,7 +846,7 @@ export function MethodEditor({
               }
             >
               افزودن به ممنوع‌ها
-            </Button>
+            </CreateButton>
           </div>
           {draft.category_mode === "selected" && (
             <>

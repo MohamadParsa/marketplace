@@ -108,3 +108,24 @@
 .weekly-schedule-editor{min-width:0;width:100%;border:1px solid #eadfe5;border-radius:12px;padding:16px;box-sizing:border-box}.shipping-window-definition{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-block:12px;border-bottom:1px solid #f0e7ec}.shipping-window-definition .MuiTextField-root{flex:1 1 180px;min-width:0}.shipping-slot-capacities{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;margin-block:16px}.weekly-schedule-editor details{margin-top:16px}.weekly-schedule-editor summary{cursor:pointer;color:#a71f43}.weekly-schedule-editor .toolbar{gap:8px;flex-wrap:wrap}
 .shipping-capacity-preview{border-top:1px solid #eadfe5;margin-block:20px;padding-block:12px}.shipping-preview-days{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px}.shipping-preview-days .MuiButton-root{display:flex;flex-direction:column;gap:8px;padding:12px}.shipping-preview-days small{display:block;font-size:11px}
 .supply-overdue-panel{padding:20px;margin-block:20px;min-width:0}.supply-overdue-panel>.page-heading{margin-top:0}.supply-overdue-panel .filter-bar{margin-block:12px}@media(max-width:600px){.supply-overdue-panel{padding:14px}.supply-overdue-panel>.page-heading{align-items:stretch;flex-direction:column}}
+
+.admin-create-button.MuiButton-root {min-height:40px;padding:8px 16px;border-radius:10px;white-space:nowrap;gap:4px;}
+.workspace-main .user-filter-form .user-form-grid {grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;}
+.user-form-grid > .MuiAutocomplete-root {width:100%;}
+.admin-inline-check {display:flex;align-items:center;align-self:end;min-height:42px;}
+.admin-editor-tabs {min-width:0;}
+.admin-editor-tabs > .MuiTabs-root {border-bottom:1px solid #eadfe5;margin-bottom:20px;}
+.admin-editor-tabs .MuiTab-root {min-height:48px;font-size:13px;}
+.admin-editor-tab-panel {min-width:0;}
+.admin-editor-tab-panel[hidden] {display:none!important;}
+.admin-editor-tab-panel > :first-child {margin-top:0;}
+.admin-editor-tab-panel .user-access-box:first-child {border-top:0;padding-top:0;}
+.admin-editor-tab-panel .user-access-box + .user-access-box {margin-top:20px;}
+.admin-membership-picker {display:flex;align-items:end;gap:12px;}
+.admin-membership-chips {display:flex;gap:10px;flex-wrap:wrap;margin-block:20px;}
+.admin-membership-chips .MuiChip-root {max-width:100%;height:auto;min-height:34px;}
+.admin-membership-chips .MuiChip-label {white-space:normal;overflow-wrap:anywhere;padding-block:6px;}
+.sales-method-editor {display:grid;gap:16px;}
+.sales-method-editor > p {margin:0;font-size:12px;line-height:1.9;color:#756370;}
+@media(max-width:1000px) {.workspace-main .user-filter-form .user-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:600px) {.workspace-main .user-filter-form .user-form-grid{grid-template-columns:minmax(0,1fr);}.admin-membership-picker{align-items:stretch;flex-direction:column;}.admin-membership-picker>.MuiAutocomplete-root{flex-basis:auto;}.admin-editor-tabs .MuiTab-root{font-size:12px;min-width:100px;}}

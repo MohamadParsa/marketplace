@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { AxisConversionDialog } from "./axis-conversion-dialog";
 import { useMemo, useState } from "react";
 import {
@@ -374,13 +375,13 @@ export function CategoryBindingsDialog({
                     {a.unit ? ` · ${a.unit}` : ""}
                   </small>
                 </div>
-                <Button
+                <CreateButton
                   disabled={!editable || pending || bindings.length >= 100}
                   aria-label={`افزودن خصوصیت ${a.name}`}
                   onClick={() => add(a)}
                 >
                   افزودن
-                </Button>
+                </CreateButton>
               </div>
             ))}
           </div>

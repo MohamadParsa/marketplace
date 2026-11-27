@@ -1,3 +1,5 @@
+import { CreateButton } from "../../shared/create-button";
+import { EditorTabs } from "../../shared/editor-tabs";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
@@ -6,6 +8,7 @@ import { permissionName } from "./access-panel";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Autocomplete,
   Button,
   Chip,
   Checkbox,
@@ -199,13 +202,13 @@ export function UsersPage() {
         title="کاربران"
         description="یک حساب برای مشتری، کارکنان و اعضای فروشگاه؛ اطلاعات و انتساب‌ها مستقل مدیریت می‌شوند."
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={!data?.can_write}
             onClick={() => setEditing("new")}
           >
             کاربر جدید
-          </Button>
+          </CreateButton>
         }
       />
       <section className="panel user-directory">
@@ -238,30 +241,28 @@ export function UsersPage() {
                   onChange={(e) => setField(k, e.target.value)}
                 />
               ))}
-            </div>
-            <Choices
-              label="وضعیت کاربر"
-              value={draft.active}
-              change={(v) => setField("active", v)}
-              options={[
-                { id: "", name: "همه" },
-                { id: "true", name: "فعال" },
-                { id: "false", name: "غیرفعال" },
-              ]}
-            />
-            <Choices
-              label="جنسیت"
-              value={draft.gender}
-              change={(v) => setField("gender", v)}
-              options={[
-                { id: "", name: "همه" },
-                { id: "female", name: "زن" },
-                { id: "male", name: "مرد" },
-                { id: "unspecified", name: "تعیین‌نشده" },
-              ]}
-            />
-            <details>
-              <summary>فیلتر نقش و فروشگاه</summary>
+              <Choices
+                label="وضعیت کاربر"
+                value={draft.active}
+                change={(v) => setField("active", v)}
+                options={[
+                  { id: "", name: "همه" },
+                  { id: "true", name: "فعال" },
+                  { id: "false", name: "غیرفعال" },
+                ]}
+              />
+              <Choices
+                label="جنسیت"
+                value={draft.gender}
+                change={(v) => setField("gender", v)}
+                options={[
+                  { id: "", name: "همه" },
+                  { id: "female", name: "زن" },
+                  { id: "male", name: "مرد" },
+                  { id: "unspecified", name: "تعیین‌نشده" },
+                ]}
+              />
+
               <Choices
                 label="نقش کاربر"
                 value={draft.role}
@@ -287,17 +288,17 @@ export function UsersPage() {
                   })),
                 ]}
               />
-            </details>
-            <Choices
-              label="مرتب‌سازی کاربران"
-              value={draft.sort}
-              change={(v) => setField("sort", v)}
-              options={[
-                { id: "name", name: "نام صعودی" },
-                { id: "name-desc", name: "نام نزولی" },
-                { id: "id", name: "شناسه" },
-              ]}
-            />
+              <Choices
+                label="مرتب‌سازی کاربران"
+                value={draft.sort}
+                change={(v) => setField("sort", v)}
+                options={[
+                  { id: "name", name: "نام صعودی" },
+                  { id: "name-desc", name: "نام نزولی" },
+                  { id: "id", name: "شناسه" },
+                ]}
+              />
+            </div>
             <div className="user-inline-actions">
               <Button type="submit" variant="contained">
                 جست‌وجو
@@ -473,7 +474,10 @@ function UserEditor({
     }),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
-    [pending, setPending] = useState<Command>();
+    [pending, setPending] = useState<Command>(),
+    [tab, setTab] = useState("account"),
+    [storeSearch, setStoreSearch] = useState(""),
+    [storeToAdd, setStoreToAdd] = useState("");
   const keys = useRef(new Map<string, string>());
   const formField = (k: string, v: string | boolean) =>
     setForm((x) => ({ ...x, [k]: v }));
@@ -517,12 +521,344 @@ function UserEditor({
       ? " · " +
         (state.stores?.find((s) => s.id === g.store_id)?.name ?? g.store_id)
       : " · بک‌آفیس");
+  const storeKey = (value: string) =>
+    value
+      .trim()
+      .replace(/ي/g, "ی")
+      .replace(/ك/g, "ک")
+      .replace(/[\s\u200c]+/g, "");
+  const accountContent = (
+    <>
+      {current && !current.first_name && !current.last_name && (
+        <Alert severity="info">
+          نام قبلی «{current.name}» بدون حدس‌زدن نام خانوادگی حفظ شده است؛ نام و
+          نام خانوادگی را می‌توانید جدا تکمیل کنید.
+        </Alert>
+      )}
+      <form
+        id="managed-user-form"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (busy) return;
+          setError("");
+          setBusy(true);
+          const input = {
+            ...form,
+            id: current?.id ?? "",
+            version: current?.version ?? 0,
+          };
+          const signature = JSON.stringify(input);
+          let key = keys.current.get(signature);
+          if (!key) {
+            key = crypto.randomUUID();
+            keys.current.set(signature, key);
+          }
+          try {
+            const next = await usersRequest<ManagedUser>(
+              authToken,
+              "save",
+              input,
+              key,
+            );
+            keys.current.delete(signature);
+            setCurrent(next);
+            setForm((x) => ({ ...x, temporary_password: "" }));
+            saved(next);
+          } catch (e) {
+            setError((e as Error).message);
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        <fieldset disabled={busy || !writable}>
+          <legend>اطلاعات حساب</legend>
+          <div className="user-form-grid">
+            {(
+              [
+                ["first_name", "نام"],
+                ["last_name", "نام خانوادگی"],
+                ["phone", "شماره موبایل"],
+                ["email", "ایمیل"],
+              ] as const
+            ).map(([k, label]) => (
+              <TextField
+                key={k}
+                fullWidth
+                label={label}
+                value={form[k]}
+                required={k === "phone"}
+                disabled={k === "phone" && !!current}
+                onChange={(e) => formField(k, e.target.value)}
+                inputProps={{
+                  maxLength: k === "email" ? 254 : 160,
+                  dir: k === "email" || k === "phone" ? "ltr" : "rtl",
+                }}
+              />
+            ))}
+            <Choices
+              label="جنسیت حساب"
+              value={form.gender}
+              disabled={busy || !writable}
+              change={(v) => formField("gender", v)}
+              options={[
+                { id: "", name: "تعیین‌نشده" },
+                { id: "female", name: "زن" },
+                { id: "male", name: "مرد" },
+              ]}
+            />
+            <label className="admin-inline-check">
+              <Checkbox
+                checked={form.active}
+                disabled={
+                  current?.base_role === "super-admin" && !current.active
+                }
+                onChange={(_, v) => formField("active", v)}
+              />
+              حساب فعال است
+            </label>
+          </div>
+        </fieldset>
+      </form>
+    </>
+  );
+  const securityContent = (
+    <>
+      {directory.can_reset_password && writable && (
+        <fieldset disabled={busy}>
+          <legend>رمز اولیه یا بازنشانی رمز</legend>
+          <TextField
+            fullWidth
+            label="رمز موقت جدید"
+            inputProps={{ form: "managed-user-form" }}
+            type="password"
+            autoComplete="new-password"
+            value={form.temporary_password}
+            onChange={(e) => formField("temporary_password", e.target.value)}
+            helperText="خالی یعنی بدون تغییر رمز. ثبت رمز جدید، نشست‌های قبلی را باطل و تعیین رمز شخصی را در ورود بعدی الزامی می‌کند."
+          />
+        </fieldset>
+      )}
+      {current && (
+        <p>
+          {current.password_change_required
+            ? "وضعیت رمز: تغییر رمز شخصی الزامی است"
+            : current.has_password
+              ? "رمز شخصی تنظیم شده است"
+              : "ورود با OTP؛ هنوز رمز ندارد"}
+        </p>
+      )}
+    </>
+  );
+  const membershipsContent = (
+    <>
+      {current && directory.can_assign && (
+        <section className="user-access-box user-memberships">
+          <h3>عضویت فروشگاه‌ها</h3>
+          <p className="muted">
+            نام یا شناسهٔ فروشگاه را جست‌وجو و فقط فروشگاه موردنظر را اضافه
+            کنید.
+          </p>
+          <div className="admin-membership-picker">
+            <Autocomplete
+              fullWidth
+              size="small"
+              disabled={busy}
+              value={
+                state.stores?.find((store) => store.id === storeToAdd) ?? null
+              }
+              inputValue={storeSearch}
+              options={(state.stores ?? []).filter(
+                (store) =>
+                  !current.store_ids.includes(store.id) &&
+                  storeKey(storeSearch).length >= 2 &&
+                  storeKey(store.name + " " + store.id).includes(
+                    storeKey(storeSearch),
+                  ),
+              )}
+              filterOptions={(options) => options}
+              getOptionLabel={(store) => store.name}
+              getOptionKey={(store) => store.id}
+              isOptionEqualToValue={(a, b) => a.id === b.id}
+              onInputChange={(_, value, reason) => {
+                setStoreSearch(value);
+                if (reason === "input") setStoreToAdd("");
+              }}
+              onChange={(_, store) => setStoreToAdd(store?.id ?? "")}
+              noOptionsText={
+                storeKey(storeSearch).length < 2
+                  ? "حداقل دو حرف از نام یا شناسهٔ فروشگاه را بنویسید"
+                  : "فروشگاه دیگری با این مشخصات پیدا نشد"
+              }
+              openText="جست‌وجوی فروشگاه"
+              closeText="بستن نتایج"
+              clearText="پاک‌کردن جست‌وجو"
+              renderInput={(params) => (
+                <TextField {...params} label="جست‌وجوی فروشگاه برای عضویت" />
+              )}
+            />
+            <CreateButton
+              disabled={busy || !storeToAdd}
+              onClick={() =>
+                command("membership.add", { store_id: storeToAdd })
+              }
+            >
+              افزودن عضویت
+            </CreateButton>
+          </div>
+          <div className="admin-membership-chips" aria-label="فروشگاه‌های عضو">
+            {current.store_ids.map((id) => (
+              <Chip
+                key={id}
+                label={
+                  state.stores?.find((store) => store.id === id)?.name ?? id
+                }
+                disabled={busy}
+                onDelete={() => command("membership.remove", { store_id: id })}
+              />
+            ))}
+            {!current.store_ids.length && (
+              <p className="muted">این حساب هنوز عضو فروشگاهی نیست.</p>
+            )}
+          </div>
+          {!!current.store_ids.length && (
+            <p className="muted">
+              حذف عضویت پس از تأیید، نقش‌های همین فروشگاه را هم لغو می‌کند.
+            </p>
+          )}
+        </section>
+      )}
+    </>
+  );
+  const rolesContent = (
+    <>
+      {current && directory.can_assign && (
+        <>
+          <section className="user-access-box">
+            <h3>نقش پایه بک‌آفیس</h3>
+            {current.base_role === "super-admin" && !current.active && (
+              <Button onClick={() => command("user.toggle", {})}>
+                فعال‌سازی ادمین با تأیید OTP
+              </Button>
+            )}
+            <p>
+              ادمین اختیار کامل دارد؛ ارتقا به ادمین به OTP احراز مجدد نیاز
+              دارد.
+            </p>
+            <ChoiceField
+              label="نقش پایه بک‌آفیس"
+              value={current.base_role}
+              disabled={busy}
+              options={baseRoles}
+              onChange={(value) => void command("user.role", { value })}
+            />
+          </section>
+          <section className="user-access-box">
+            <h3>نقش‌های منتسب</h3>
+            {current.grants.map((g) => (
+              <div className="user-access-row" key={g.role_id + g.store_id}>
+                <span>{roleNames(g)}</span>
+                <Button
+                  onClick={() =>
+                    command("user.role-revoke", {
+                      value: g.role_id,
+                      store_id: g.store_id,
+                    })
+                  }
+                >
+                  سلب نقش
+                </Button>
+              </div>
+            ))}
+            <ChoiceField
+              label="افزودن نقش بک‌آفیس"
+              value=""
+              clearLabel="انتخاب نقش"
+              disabled={busy}
+              options={directory.roles
+                .filter(
+                  (r) =>
+                    r.scope === "global" &&
+                    !current.grants.some((g) => g.role_id === r.id),
+                )
+                .map((r) => ({ id: r.id, name: r.name }))}
+              onChange={(value) => {
+                if (value) command("user.role-grant", { value });
+              }}
+            />
+            {current.store_ids.map((id) => (
+              <div key={id}>
+                <h4>
+                  نقش در {state.stores?.find((s) => s.id === id)?.name ?? id}
+                </h4>
+                <ChoiceField
+                  label={
+                    "افزودن نقش در " +
+                    (state.stores?.find((s) => s.id === id)?.name ?? id)
+                  }
+                  value=""
+                  clearLabel="انتخاب نقش فروشگاه"
+                  disabled={busy}
+                  options={directory.roles
+                    .filter(
+                      (r) =>
+                        r.scope === "store" &&
+                        !current.grants.some(
+                          (g) => g.role_id === r.id && g.store_id === id,
+                        ),
+                    )
+                    .map((r) => ({ id: r.id, name: r.name }))}
+                  onChange={(value) => {
+                    if (value)
+                      command("user.role-grant", { value, store_id: id });
+                  }}
+                />
+              </div>
+            ))}
+            <h4>دسترسی مؤثر در هر محدوده</h4>
+            {["", ...current.store_ids].map((id) => {
+              const roles = (state.access?.roles ?? []).filter((r) =>
+                current.grants.some(
+                  (g) => g.role_id === r.id && (g.store_id ?? "") === id,
+                ),
+              );
+              const permissions = [
+                ...new Set(roles.flatMap((r) => r.permissions)),
+              ];
+              return (
+                <div className="user-permission-summary" key={id || "global"}>
+                  <b>
+                    {id
+                      ? (state.stores?.find((s) => s.id === id)?.name ?? id)
+                      : "بک‌آفیس"}
+                  </b>
+                  <p>
+                    منبع:{" "}
+                    {roles.map((r) => r.name).join("، ") || "بدون نقش سفارشی"}
+                    {!id && current.base_role
+                      ? " · نقش پایه " +
+                        (baseRoles.find((r) => r.id === current.base_role)
+                          ?.name ?? current.base_role)
+                      : ""}
+                  </p>
+                  <p>
+                    {permissions.map(permissionName).join(" · ") ||
+                      "مجوز سفارشی ندارد"}
+                  </p>
+                </div>
+              );
+            })}
+          </section>
+        </>
+      )}
+    </>
+  );
   return (
     <>
       <Dialog
         open
         fullWidth
-        maxWidth="xl"
+        maxWidth="lg"
         onClose={() => {
           if (!busy) close();
         }}
@@ -532,278 +868,50 @@ function UserEditor({
         </DialogTitle>
         <DialogContent className="user-editor">
           {error && <Alert severity="error">{error}</Alert>}
-          {current && !current.first_name && !current.last_name && (
-            <Alert severity="info">
-              نام قبلی «{current.name}» بدون حدس‌زدن نام خانوادگی حفظ شده است؛
-              نام و نام خانوادگی را می‌توانید جدا تکمیل کنید.
-            </Alert>
-          )}
-          <form
-            id="managed-user-form"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              if (busy) return;
-              setError("");
-              setBusy(true);
-              const input = {
-                ...form,
-                id: current?.id ?? "",
-                version: current?.version ?? 0,
-              };
-              const signature = JSON.stringify(input);
-              let key = keys.current.get(signature);
-              if (!key) {
-                key = crypto.randomUUID();
-                keys.current.set(signature, key);
-              }
-              try {
-                const next = await usersRequest<ManagedUser>(
-                  authToken,
-                  "save",
-                  input,
-                  key,
-                );
-                keys.current.delete(signature);
-                setCurrent(next);
-                setForm((x) => ({ ...x, temporary_password: "" }));
-                saved(next);
-              } catch (e) {
-                setError((e as Error).message);
-              } finally {
-                setBusy(false);
-              }
-            }}
-          >
-            <fieldset disabled={busy || !writable}>
-              <legend>اطلاعات حساب</legend>
-              <div className="user-form-grid">
-                {(
-                  [
-                    ["first_name", "نام"],
-                    ["last_name", "نام خانوادگی"],
-                    ["phone", "شماره موبایل"],
-                    ["email", "ایمیل"],
-                  ] as const
-                ).map(([k, label]) => (
-                  <TextField
-                    key={k}
-                    fullWidth
-                    label={label}
-                    value={form[k]}
-                    required={k === "phone"}
-                    disabled={k === "phone" && !!current}
-                    onChange={(e) => formField(k, e.target.value)}
-                    inputProps={{
-                      maxLength: k === "email" ? 254 : 160,
-                      dir: k === "email" || k === "phone" ? "ltr" : "rtl",
-                    }}
-                  />
-                ))}
-              </div>
-              <Choices
-                label="جنسیت حساب"
-                value={form.gender}
-                disabled={busy || !writable}
-                change={(v) => formField("gender", v)}
-                options={[
-                  { id: "", name: "تعیین‌نشده" },
-                  { id: "female", name: "زن" },
-                  { id: "male", name: "مرد" },
-                ]}
-              />
-              <label>
-                <Checkbox
-                  checked={form.active}
-                  disabled={
-                    current?.base_role === "super-admin" && !current.active
-                  }
-                  onChange={(_, v) => formField("active", v)}
-                />
-                حساب فعال است
-              </label>
-            </fieldset>
-            {directory.can_reset_password && writable && (
-              <fieldset disabled={busy}>
-                <legend>رمز اولیه یا بازنشانی رمز</legend>
-                <TextField
-                  fullWidth
-                  label="رمز موقت جدید"
-                  type="password"
-                  autoComplete="new-password"
-                  value={form.temporary_password}
-                  onChange={(e) =>
-                    formField("temporary_password", e.target.value)
-                  }
-                  helperText="خالی یعنی بدون تغییر رمز. ثبت رمز جدید، نشست‌های قبلی را باطل و تعیین رمز شخصی را در ورود بعدی الزامی می‌کند."
-                />
-              </fieldset>
-            )}
-            {current && (
-              <p>
-                {current.password_change_required
-                  ? "وضعیت رمز: تغییر رمز شخصی الزامی است"
-                  : current.has_password
-                    ? "رمز شخصی تنظیم شده است"
-                    : "ورود با OTP؛ هنوز رمز ندارد"}
-              </p>
-            )}
-          </form>
-          {current && directory.can_assign && (
+          {current ? (
+            <EditorTabs
+              label="بخش‌های کاربر"
+              value={tab}
+              onChange={setTab}
+              disabled={busy}
+              panels={[
+                {
+                  id: "account",
+                  label: "اطلاعات حساب",
+                  content: accountContent,
+                },
+                ...(directory.can_assign
+                  ? [
+                      {
+                        id: "memberships",
+                        label: "عضویت فروشگاه‌ها",
+                        content: membershipsContent,
+                      },
+                      {
+                        id: "roles",
+                        label: "نقش‌ها و دسترسی‌ها",
+                        content: rolesContent,
+                      },
+                    ]
+                  : []),
+                {
+                  id: "security",
+                  label: "امنیت و رمز",
+                  content: securityContent,
+                },
+              ]}
+            />
+          ) : (
             <>
-              <section className="user-access-box">
-                <h3>نقش پایه بک‌آفیس</h3>
-                {current.base_role === "super-admin" && !current.active && (
-                  <Button onClick={() => command("user.toggle", {})}>
-                    فعال‌سازی ادمین با تأیید OTP
-                  </Button>
-                )}
-                <p>
-                  ادمین اختیار کامل دارد؛ ارتقا به ادمین به OTP احراز مجدد نیاز
-                  دارد.
-                </p>
-                <ChoiceField
-                  label="نقش پایه بک‌آفیس"
-                  value={current.base_role}
-                  disabled={busy}
-                  options={baseRoles}
-                  onChange={(value) => void command("user.role", { value })}
-                />
-              </section>
-              <section className="user-access-box">
-                <h3>عضویت فروشگاه‌ها</h3>
-                {(state.stores ?? []).map((s) => (
-                  <div className="user-access-row" key={s.id}>
-                    <span>
-                      {s.name}
-                      {current.store_ids.includes(s.id)
-                        ? " · عضو"
-                        : " · عضو نیست"}
-                    </span>
-                    <Button
-                      onClick={() =>
-                        command(
-                          current.store_ids.includes(s.id)
-                            ? "membership.remove"
-                            : "membership.add",
-                          { store_id: s.id },
-                        )
-                      }
-                    >
-                      {current.store_ids.includes(s.id)
-                        ? "لغو عضویت و نقش‌های این فروشگاه"
-                        : "افزودن عضویت"}
-                    </Button>
-                  </div>
-                ))}
-              </section>
-              <section className="user-access-box">
-                <h3>نقش‌های منتسب</h3>
-                {current.grants.map((g) => (
-                  <div className="user-access-row" key={g.role_id + g.store_id}>
-                    <span>{roleNames(g)}</span>
-                    <Button
-                      onClick={() =>
-                        command("user.role-revoke", {
-                          value: g.role_id,
-                          store_id: g.store_id,
-                        })
-                      }
-                    >
-                      سلب نقش
-                    </Button>
-                  </div>
-                ))}
-                <h4>نقش‌های بک‌آفیس قابل انتساب</h4>
-                {directory.roles
-                  .filter(
-                    (r) =>
-                      r.scope === "global" &&
-                      !current.grants.some((g) => g.role_id === r.id),
-                  )
-                  .map((r) => (
-                    <Button
-                      key={r.id}
-                      onClick={() =>
-                        command("user.role-grant", { value: r.id })
-                      }
-                    >
-                      انتساب {r.name}
-                    </Button>
-                  ))}
-                {current.store_ids.map((id) => (
-                  <div key={id}>
-                    <h4>
-                      نقش در{" "}
-                      {state.stores?.find((s) => s.id === id)?.name ?? id}
-                    </h4>
-                    {directory.roles
-                      .filter(
-                        (r) =>
-                          r.scope === "store" &&
-                          !current.grants.some(
-                            (g) => g.role_id === r.id && g.store_id === id,
-                          ),
-                      )
-                      .map((r) => (
-                        <Button
-                          key={r.id}
-                          onClick={() =>
-                            command("user.role-grant", {
-                              value: r.id,
-                              store_id: id,
-                            })
-                          }
-                        >
-                          انتساب {r.name}
-                        </Button>
-                      ))}
-                  </div>
-                ))}
-                <h4>دسترسی مؤثر در هر محدوده</h4>
-                {["", ...current.store_ids].map((id) => {
-                  const roles = (state.access?.roles ?? []).filter((r) =>
-                    current.grants.some(
-                      (g) => g.role_id === r.id && (g.store_id ?? "") === id,
-                    ),
-                  );
-                  const permissions = [
-                    ...new Set(roles.flatMap((r) => r.permissions)),
-                  ];
-                  return (
-                    <div
-                      className="user-permission-summary"
-                      key={id || "global"}
-                    >
-                      <b>
-                        {id
-                          ? (state.stores?.find((s) => s.id === id)?.name ?? id)
-                          : "بک‌آفیس"}
-                      </b>
-                      <p>
-                        منبع:{" "}
-                        {roles.map((r) => r.name).join("، ") ||
-                          "بدون نقش سفارشی"}
-                        {!id && current.base_role
-                          ? " · نقش پایه " +
-                            (baseRoles.find((r) => r.id === current.base_role)
-                              ?.name ?? current.base_role)
-                          : ""}
-                      </p>
-                      <p>
-                        {permissions.map(permissionName).join(" · ") ||
-                          "مجوز سفارشی ندارد"}
-                      </p>
-                    </div>
-                  );
-                })}
-              </section>
+              {accountContent}
+              {securityContent}
+              {!current && (
+                <Alert severity="info">
+                  پس از ایجاد حساب، عضویت فروشگاه و نقش‌های آن را در همین فرم
+                  مشخص کنید.
+                </Alert>
+              )}
             </>
-          )}
-          {!current && (
-            <Alert severity="info">
-              پس از ایجاد حساب، عضویت فروشگاه و نقش‌های آن را در همین فرم مشخص
-              کنید.
-            </Alert>
           )}
         </DialogContent>
         <DialogActions>
@@ -815,6 +923,12 @@ function UserEditor({
             form="managed-user-form"
             variant="contained"
             disabled={busy || !writable}
+            sx={{
+              display:
+                current && tab !== "account" && tab !== "security"
+                  ? "none"
+                  : undefined,
+            }}
           >
             ذخیره اطلاعات کاربر
           </Button>
@@ -830,6 +944,10 @@ function UserEditor({
           onSubmit={async (_values, reauthentication) => {
             await execute({ ...pending, reauthentication });
             await refreshCurrent();
+            if (pending.action === "membership.add") {
+              setStoreToAdd("");
+              setStoreSearch("");
+            }
             setPending(undefined);
           }}
         />

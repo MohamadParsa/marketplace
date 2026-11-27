@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
@@ -181,7 +182,7 @@ export function StoreEligibilityEditor({
           allowRoot={false}
         />
         <div className="toolbar">
-          <Button
+          <CreateButton
             disabled={
               !category || mode !== "selected" || allow.includes(category)
             }
@@ -191,8 +192,8 @@ export function StoreEligibilityEditor({
             }}
           >
             افزودن به دسته‌های مجاز
-          </Button>
-          <Button
+          </CreateButton>
+          <CreateButton
             disabled={!category || deny.includes(category)}
             onClick={() => {
               setDeny((old) => [...old, category]);
@@ -200,7 +201,7 @@ export function StoreEligibilityEditor({
             }}
           >
             افزودن به دسته‌های ممنوع
-          </Button>
+          </CreateButton>
         </div>
         <h4>دسته‌های مجاز</h4>
         {mode === "all" ? (

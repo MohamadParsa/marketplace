@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { OptionSelect } from "../../shared/option-select";
 import {
   Button,
@@ -116,7 +117,7 @@ export function BusinessContentEditor({
       <section aria-label="مدیریت شبکه‌های اجتماعی">
         <div className="toolbar">
           <h3>شبکه‌های اجتماعی</h3>
-          <Button
+          <CreateButton
             disabled={links.length >= 20}
             onClick={() =>
               onChange({
@@ -136,7 +137,7 @@ export function BusinessContentEditor({
             }
           >
             افزودن شبکه اجتماعی
-          </Button>
+          </CreateButton>
         </div>
         <p>
           نشانی کامل HTTPS؛ عدد کوچک‌تر مقدم است. شبکه غیرفعال یا بدون نشانی در

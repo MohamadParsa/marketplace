@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { OptionSelect } from "../../shared/option-select";
 import { ProductQA } from "./product-qa";
 import { ProductContentReview } from "./product-content-review";
@@ -171,13 +172,13 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
             <p className="muted">
               محورها: {w.axes.map((a) => a.name).join("، ") || "بدون محور تنوع"}
             </p>
-            <Button
+            <CreateButton
               variant="contained"
               disabled={!w.permissions.create_variant}
               onClick={() => setEditor("variant")}
             >
               افزودن تنوع
-            </Button>
+            </CreateButton>
           </div>
           <DataTable
             rows={w.variants}
@@ -209,7 +210,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
             <p className="muted">
               قیمت پایه نقدی و موجودی برای هر فروشنده و تنوع مستقل است.
             </p>
-            <Button
+            <CreateButton
               variant="contained"
               disabled={
                 !w.permissions.create_offer_stores.length || !w.variants.length
@@ -217,7 +218,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
               onClick={() => setEditor("offer")}
             >
               افزودن عرضه
-            </Button>
+            </CreateButton>
           </div>
           <DataTable
             rows={w.offers}

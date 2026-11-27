@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { TextField } from "@mui/material";
 import { FilterPanel } from "../../shared/filter-panel";
 import {
@@ -134,7 +135,7 @@ export function ManagementPage({
             ? surface === "backoffice" &&
               allowed("catalog.product.create", "management")
             : role === "super-admin" || (section !== "users" && editable)) ? (
-            <Button
+            <CreateButton
               variant="contained"
               startIcon={<Add />}
               onClick={() =>
@@ -149,7 +150,7 @@ export function ManagementPage({
                   : section === "products"
                     ? "محصول"
                     : "دسته"}
-            </Button>
+            </CreateButton>
           ) : undefined
         }
       />

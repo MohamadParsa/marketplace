@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
@@ -62,13 +63,13 @@ export function BrandCatalogGrid({
   return (
     <>
       <div className="toolbar">
-        <Button
+        <CreateButton
           variant="contained"
           disabled={busy || !can("catalog.brand.create", "management")}
           onClick={() => onEdit()}
         >
           برند جدید
-        </Button>
+        </CreateButton>
       </div>
       <FilterPanel
         onSearch={() => setApplied({ name, english, active, image })}

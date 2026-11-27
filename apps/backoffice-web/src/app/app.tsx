@@ -95,13 +95,23 @@ const menu = [
     items: [{ path: "/", label: "داشبورد", icon: <DashboardOutlined /> }],
   },
   {
-    heading: "مدیریت بازارگاه",
+    heading: "تنظیمات",
     items: [
       {
         path: "/sales-methods",
         label: "روش‌های فروش",
         icon: <Inventory2Outlined />,
       },
+      {
+        path: "/commerce-settings",
+        label: "تنظیمات خرید و حمل",
+        icon: <LocalShippingOutlined />,
+      },
+    ],
+  },
+  {
+    heading: "مدیریت کاربران و مشتریان",
+    items: [
       {
         path: "/users",
         label: "کاربران",
@@ -115,6 +125,11 @@ const menu = [
         roles: ["super-admin"],
       },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
+    ],
+  },
+  {
+    heading: "مدیریت بازارگاه",
+    items: [
       { path: "/store-preparation", label: "وقفه و تقویم فروشگاه", icon: <LocalShippingOutlined /> },
       { path: "/store-shipping", label: "حمل فروشگاه و تأیید نسخه", icon: <LocalShippingOutlined /> },
       {
@@ -184,11 +199,6 @@ const menu = [
         path: "/coupons",
         label: "کدهای تخفیف",
         icon: <PercentOutlined />,
-      },
-      {
-        path: "/commerce-settings",
-        label: "تنظیمات خرید و حمل",
-        icon: <LocalShippingOutlined />,
       },
       { path: "/orders", label: "سفارش‌ها", icon: <ReceiptLongOutlined /> },
       {

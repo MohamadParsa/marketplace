@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
@@ -163,7 +164,7 @@ export function CouponsPage({ token }: { token: string }) {
         title="کدهای تخفیف"
         description="قانون نسخه‌دار؛ رزرو سهمیه همراه سفارش و ثبت سهم هزینه چریوا و فروشنده"
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={busy || !permitted("create")}
             onClick={() => {
@@ -174,7 +175,7 @@ export function CouponsPage({ token }: { token: string }) {
             }}
           >
             کوپن جدید
-          </Button>
+          </CreateButton>
         }
       />
       {!draft && error && <Alert severity="error">{error}</Alert>}

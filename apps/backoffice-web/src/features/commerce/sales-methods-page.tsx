@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -127,7 +128,7 @@ export function SalesMethodsPage() {
         title="روش‌های فروش"
         description="مارکاپ پیش‌فرض و ارتباط روش پرداخت؛ کمیسیون و هزینه ارسال مستقل‌اند."
         action={
-          <Button
+          <CreateButton
             disabled={!dir.data?.can_write}
             onClick={() => {
               setLocalError("");
@@ -142,7 +143,7 @@ export function SalesMethodsPage() {
             }}
           >
             روش فروش جدید
-          </Button>
+          </CreateButton>
         }
       />
       {dir.error && <Alert severity="error">{dir.error}</Alert>}
@@ -188,13 +189,13 @@ export function SalesMethodsPage() {
         <Dialog
           open
           fullWidth
-          maxWidth="lg"
+          maxWidth="sm"
           onClose={() => {
             if (!dir.busy) setDraft(undefined);
           }}
         >
           <DialogTitle>تنظیم روش فروش</DialogTitle>
-          <DialogContent>
+          <DialogContent className="sales-method-editor">
             <TextField
               fullWidth
               disabled={!dir.data.can_write || dir.busy}
@@ -243,6 +244,7 @@ export function SalesMethodsPage() {
               انصراف
             </Button>
             <Button
+              variant="contained"
               disabled={dir.busy || !dir.data.can_write || !draft.name.trim()}
               onClick={() => {
                 let bps: number;

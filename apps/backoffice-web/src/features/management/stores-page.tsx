@@ -1,3 +1,5 @@
+import { CreateButton } from "../../shared/create-button";
+import { EditorTabs } from "../../shared/editor-tabs";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
@@ -185,13 +187,13 @@ export function StoresPage() {
         title="فروشگاه‌ها"
         description="پروفایل، تصویر و اطلاعات ارتباطی خصوصی فروشگاه؛ عضویت کاربران از فرم کاربران مدیریت می‌شود."
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={!data?.can_write}
             onClick={() => setEditing("new")}
           >
             فروشگاه جدید
-          </Button>
+          </CreateButton>
         }
       />
       <section className="panel store-directory">
@@ -227,48 +229,50 @@ export function StoresPage() {
                     }
                   />
                 ))}
-            </div>
-            <div
-              className="toolbar"
-              role="group"
-              aria-label="فیلتر وضعیت فروشگاه"
-            >
-              <OptionSelect
-                label={"فیلتر وضعیت فروشگاه"}
-                multiple={false}
-                options={[
-                  ["", "همه وضعیت‌ها"],
-                  ["true", "فعال"],
-                  ["false", "غیرفعال"],
-                ].map(([id, name]) => ({
-                  id: String(id),
-                  name: String("" + name + ""),
-                  selected: draft.active === id,
-                  disabled: false,
-                  onSelect: () => setDraft({ ...draft, active: id }),
+              <div
+                className="toolbar"
+                role="group"
+                aria-label="فیلتر وضعیت فروشگاه"
+              >
+                <OptionSelect
+                  label={"فیلتر وضعیت فروشگاه"}
+                  multiple={false}
+                  options={[
+                    ["", "همه وضعیت‌ها"],
+                    ["true", "فعال"],
+                    ["false", "غیرفعال"],
+                  ].map(([id, name]) => ({
+                    id: String(id),
+                    name: String("" + name + ""),
+                    selected: draft.active === id,
+                    disabled: false,
+                    onSelect: () => setDraft({ ...draft, active: id }),
+                  }))}
+                />
+              </div>
+              <ChoiceField
+                label="استان"
+                value={draft.province}
+                clearLabel="همه استان‌ها"
+                options={(data?.geography ?? []).map((p) => ({
+                  id: p.name,
+                  name: p.name,
                 }))}
+                onChange={(province) => setDraft({ ...draft, province })}
+              />
+              <ChoiceField
+                label="روش فروش"
+                value={draft.sales_method}
+                clearLabel="همه روش‌ها"
+                options={(data?.sales_methods ?? []).map((m) => ({
+                  id: m.id,
+                  name: m.name,
+                }))}
+                onChange={(sales_method) =>
+                  setDraft({ ...draft, sales_method })
+                }
               />
             </div>
-            <ChoiceField
-              label="استان"
-              value={draft.province}
-              clearLabel="همه استان‌ها"
-              options={(data?.geography ?? []).map((p) => ({
-                id: p.name,
-                name: p.name,
-              }))}
-              onChange={(province) => setDraft({ ...draft, province })}
-            />
-            <ChoiceField
-              label="روش فروش"
-              value={draft.sales_method}
-              clearLabel="همه روش‌ها"
-              options={(data?.sales_methods ?? []).map((m) => ({
-                id: m.id,
-                name: m.name,
-              }))}
-              onChange={(sales_method) => setDraft({ ...draft, sales_method })}
-            />
             <div className="toolbar">
               <Button
                 variant="contained"
@@ -409,7 +413,8 @@ function StoreEditor({
     [file, setFile] = useState<File>(),
     [preview, setPreview] = useState(""),
     [imageKey, setImageKey] = useState(crypto.randomUUID()),
-    [policy, setPolicy] = useState(row?.content_policy ?? "review");
+    [policy, setPolicy] = useState(row?.content_policy ?? "review"),
+    [tab, setTab] = useState("details");
   const fileInput = useRef<HTMLInputElement>(null);
   const province = directory.geography?.find(
       (p) => p.name === profile.province,
@@ -484,15 +489,343 @@ function StoreEditor({
       value={profile[field] ?? ""}
       multiline={multiline}
       minRows={multiline ? 3 : undefined}
-      inputProps={{ maxLength: limit }}
+      inputProps={{ maxLength: limit, form: "store-profile-form" }}
       onChange={(e) => change(field, e.target.value)}
     />
+  );
+  const detailsContent = (
+    <>
+      <form
+        id="store-profile-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void save();
+        }}
+      >
+        <fieldset
+          disabled={busy || !directory.can_write}
+          className="store-form-grid"
+        >
+          <TextField
+            label="نام فروشگاه"
+            required
+            value={name}
+            inputProps={{ maxLength: 160 }}
+            onChange={(e) => {
+              setName(e.target.value);
+              setKey(crypto.randomUUID());
+            }}
+          />
+          <label className="store-active">
+            <Checkbox
+              checked={active}
+              onChange={(e) => {
+                setActive(e.target.checked);
+                setKey(crypto.randomUUID());
+              }}
+            />
+            فروشگاه فعال است
+          </label>
+          <div className="store-form-wide">
+            {profileField("description", "توضیحات فروشگاه", 4000, true)}
+          </div>
+        </fieldset>
+      </form>
+      {current && (
+        <>
+          <section className="store-detail-box">
+            <h3>اطلاعات موجود</h3>
+            <p>شناسه ثابت · {current.id}</p>
+            <p>
+              مالک ثبت‌شده: {current.owner || "ثبت نشده"} · وقفه تأمین:{" "}
+              {current.lead_days} روز{" "}
+              {current.preparation?.day_basis === "calendar"
+                ? "تقویمی"
+                : "کاری"}{" "}
+              · مدل: {current.model === "independent" ? "مستقل" : "مشترک"}
+            </p>
+            <p>این اطلاعات با ویرایش پروفایل بازنویسی نمی‌شوند.</p>
+            <Button component={Link} to="/store-preparation">
+              تنظیم وقفه و تقویم فروشگاه
+            </Button>
+          </section>
+        </>
+      )}
+    </>
+  );
+  const contactContent = (
+    <>
+      <fieldset
+        disabled={busy || !directory.can_write}
+        className="store-form-grid"
+      >
+        {profileField("email", "ایمیل فروشگاه", 254)}
+        {profileField("phone", "تلفن ثابت فروشگاه", 16)}
+        {profileField("mobile", "موبایل فروشگاه", 11)}
+        <label className="store-geo-field">
+          استان
+          <select
+            form="store-profile-form"
+            aria-label="استان فروشگاه"
+            value={profile.province ?? ""}
+            onChange={(e) => {
+              change("province", e.target.value);
+              setCity("");
+            }}
+          >
+            <option value="">انتخاب استان</option>
+            {directory.geography?.map((p) => (
+              <option key={p.id} value={p.name}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="store-geo-field">
+          شهر
+          <select
+            form="store-profile-form"
+            aria-label="شهر فروشگاه"
+            disabled={!province}
+            required={!!profile.province}
+            value={cities.some((c) => c.name === city) ? city : ""}
+            onChange={(e) => {
+              setCity(e.target.value);
+              setKey(crypto.randomUUID());
+            }}
+          >
+            <option value="">انتخاب شهر</option>
+            {cities.map((c) => (
+              <option key={c.id} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {!profile.province && current?.city && (
+          <p className="store-form-wide muted">
+            شهر قدیمی «{current.city}» تا انتخاب استان حفظ می‌شود؛ استان از روی
+            نام شهر حدس زده نمی‌شود.
+          </p>
+        )}
+        <div className="store-form-wide">
+          {profileField("address", "آدرس کامل فروشگاه", 1500, true)}
+        </div>
+        {profileField("postal_code", "کد پستی فروشگاه", 10)}
+      </fieldset>
+    </>
+  );
+  const imageContent = current && (
+    <>
+      <section className="store-detail-box">
+        <h3>تصویر فروشگاه</h3>
+        {preview ? (
+          <img
+            className="store-photo large"
+            src={preview}
+            alt="پیش‌نمایش تصویر فروشگاه"
+          />
+        ) : (
+          <StorePhoto row={current} token={token} />
+        )}
+        <p>PNG، JPEG یا WebP؛ حداکثر۱MiB و هر ضلع۱۰۲۴پیکسل.</p>
+        <input
+          ref={fileInput}
+          type="file"
+          aria-label="انتخاب تصویر فروشگاه"
+          disabled={busy || !directory.can_media}
+          accept="image/png,image/jpeg,image/webp"
+          onChange={(e) => {
+            setFile(e.target.files?.[0]);
+            setImageKey(crypto.randomUUID());
+          }}
+        />
+        <div className="toolbar">
+          <Button
+            disabled={busy || !directory.can_media || !file}
+            onClick={async () => {
+              if (!file || busy) return;
+              setBusy(true);
+              setError("");
+              try {
+                const form = new FormData();
+                form.set("version", String(current.version));
+                form.set("file", file);
+                const next = await request<ManagedStore>(
+                  token,
+                  `/${current.id}/image`,
+                  form,
+                  imageKey,
+                );
+                setCurrent(next);
+                setProfile((p) => ({
+                  ...p,
+                  image_id: next.profile?.image_id,
+                }));
+                setFile(undefined);
+                if (fileInput.current) fileInput.current.value = "";
+                setImageKey(crypto.randomUUID());
+                setNotice("تصویر فروشگاه ذخیره شد.");
+                saved();
+              } catch (e) {
+                setError(message(e));
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            ذخیره تصویر فروشگاه
+          </Button>
+          <Button
+            disabled={
+              busy || !directory.can_media || !current.profile?.image_id
+            }
+            onClick={async () => {
+              setBusy(true);
+              setError("");
+              try {
+                const next = await request<ManagedStore>(
+                  token,
+                  `/${current.id}/image`,
+                  { version: current.version },
+                  imageKey,
+                  "DELETE",
+                );
+                setCurrent(next);
+                setProfile((p) => ({ ...p, image_id: undefined }));
+                setImageKey(crypto.randomUUID());
+                setNotice("تصویر حذف شد؛ نشان پیش‌فرض نمایش داده می‌شود.");
+                saved();
+              } catch (e) {
+                setError(message(e));
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            حذف تصویر فروشگاه
+          </Button>
+        </div>
+      </section>
+    </>
+  );
+  const eligibilityContent = current && (
+    <>
+      <StoreEligibilityEditor
+        store={current}
+        locked={busy}
+        onBusyChange={setBusy}
+        methods={directory.sales_methods ?? []}
+        allowed={directory.can_eligibility}
+        save={(input, key) =>
+          request<ManagedStore>(token, `/${current.id}/eligibility`, input, key)
+        }
+        saved={(value) => {
+          setCurrent(value);
+          saved();
+        }}
+      />
+    </>
+  );
+  const policyContent = current && (
+    <>
+      <section className="store-detail-box">
+        <h3>سیاست انتشار محتوا</h3>
+        <div className="toolbar">
+          <OptionSelect
+            label={"انتخاب سیاست"}
+            multiple={false}
+            options={(
+              [
+                ["review", "نیازمند تأیید"],
+                ["direct", "انتشار مستقیم"],
+              ] as const
+            ).map(([value, label]) => ({
+              id: String(value),
+              name: String("" + label + ""),
+              selected: policy === value,
+              disabled: busy || !policyAllowed,
+              onSelect: () => setPolicy(value),
+            }))}
+          />
+          <Button
+            disabled={
+              busy || !policyAllowed || policy === current.content_policy
+            }
+            onClick={async () => {
+              setBusy(true);
+              setError("");
+              try {
+                await execute({
+                  action: "store.content-policy.set",
+                  target: current.id,
+                  version: current.content_policy_version ?? 0,
+                  value: policy,
+                  idempotency_key: crypto.randomUUID(),
+                });
+                setCurrent({
+                  ...current,
+                  content_policy: policy,
+                  content_policy_version:
+                    (current.content_policy_version ?? 0) + 1,
+                });
+                saved();
+                setNotice("سیاست محتوا ثبت شد.");
+              } catch (e) {
+                setError(message(e));
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            ثبت سیاست محتوا
+          </Button>
+        </div>
+      </section>
+    </>
+  );
+  const membersContent = current && (
+    <>
+      <section className="store-detail-box">
+        <h3>کاربران متصل به فروشگاه</h3>
+        {directory.can_members ? (
+          <>
+            {current.members?.length ? (
+              current.members.map((m) => (
+                <div key={m.user_id} className="user-access-row">
+                  <div>
+                    {directory.can_users ? (
+                      <Link to={`/users?user=${encodeURIComponent(m.user_id)}`}>
+                        {m.name}
+                      </Link>
+                    ) : (
+                      <b>{m.name}</b>
+                    )}
+                    <small>
+                      {m.active ? "کاربر فعال" : "کاربر غیرفعال"} ·{" "}
+                      {m.roles.length
+                        ? m.roles.join("، ")
+                        : "عضو فروشگاه؛ بدون نقش فروشگاهی"}
+                    </small>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>هنوز کاربری به این فروشگاه متصل نیست.</p>
+            )}
+            <p>مدیریت عضویت و نقش از فرم کاربران انجام می‌شود.</p>
+          </>
+        ) : (
+          <p>مجوز مشاهده اعضای این فروشگاه را ندارید.</p>
+        )}
+      </section>
+    </>
   );
   return (
     <Dialog
       open
       fullWidth
-      maxWidth="xl"
+      maxWidth="lg"
       onClose={() => {
         if (!busy) close();
       }}
@@ -508,311 +841,37 @@ function StoreEditor({
             مجوز ویرایش ندارید؛ اطلاعات فقط خواندنی است.
           </Alert>
         )}
-        <form
-          id="store-profile-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void save();
-          }}
-        >
-          <fieldset
-            disabled={busy || !directory.can_write}
-            className="store-form-grid"
-          >
-            <TextField
-              label="نام فروشگاه"
-              required
-              value={name}
-              inputProps={{ maxLength: 160 }}
-              onChange={(e) => {
-                setName(e.target.value);
-                setKey(crypto.randomUUID());
-              }}
-            />
-            <label className="store-active">
-              <Checkbox
-                checked={active}
-                onChange={(e) => {
-                  setActive(e.target.checked);
-                  setKey(crypto.randomUUID());
-                }}
-              />
-              فروشگاه فعال است
-            </label>
-            <div className="store-form-wide">
-              {profileField("description", "توضیحات فروشگاه", 4000, true)}
-            </div>
-            {profileField("email", "ایمیل فروشگاه", 254)}
-            {profileField("phone", "تلفن ثابت فروشگاه", 16)}
-            {profileField("mobile", "موبایل فروشگاه", 11)}
-            <label className="store-geo-field">
-              استان
-              <select
-                aria-label="استان فروشگاه"
-                value={profile.province ?? ""}
-                onChange={(e) => {
-                  change("province", e.target.value);
-                  setCity("");
-                }}
-              >
-                <option value="">انتخاب استان</option>
-                {directory.geography?.map((p) => (
-                  <option key={p.id} value={p.name}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="store-geo-field">
-              شهر
-              <select
-                aria-label="شهر فروشگاه"
-                disabled={!province}
-                required={!!profile.province}
-                value={cities.some((c) => c.name === city) ? city : ""}
-                onChange={(e) => {
-                  setCity(e.target.value);
-                  setKey(crypto.randomUUID());
-                }}
-              >
-                <option value="">انتخاب شهر</option>
-                {cities.map((c) => (
-                  <option key={c.id} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {!profile.province && current?.city && (
-              <p className="store-form-wide muted">
-                شهر قدیمی «{current.city}» تا انتخاب استان حفظ می‌شود؛ استان از
-                روی نام شهر حدس زده نمی‌شود.
-              </p>
-            )}
-            <div className="store-form-wide">
-              {profileField("address", "آدرس کامل فروشگاه", 1500, true)}
-            </div>
-            {profileField("postal_code", "کد پستی فروشگاه", 10)}
-          </fieldset>
-        </form>
-        {current && (
-          <>
-            <section className="store-detail-box">
-              <h3>اطلاعات موجود</h3>
-              <p>شناسه ثابت · {current.id}</p>
-              <p>
-                مالک ثبت‌شده: {current.owner || "ثبت نشده"} · وقفه تأمین:{" "}
-                {current.lead_days} روز{" "}
-                {current.preparation?.day_basis === "calendar"
-                  ? "تقویمی"
-                  : "کاری"}{" "}
-                · مدل: {current.model === "independent" ? "مستقل" : "مشترک"}
-              </p>
-              <p>این اطلاعات با ویرایش پروفایل بازنویسی نمی‌شوند.</p>
-              <Button component={Link} to="/store-preparation">
-                تنظیم وقفه و تقویم فروشگاه
-              </Button>
-            </section>
-            <section className="store-detail-box">
-              <h3>تصویر فروشگاه</h3>
-              {preview ? (
-                <img
-                  className="store-photo large"
-                  src={preview}
-                  alt="پیش‌نمایش تصویر فروشگاه"
-                />
-              ) : (
-                <StorePhoto row={current} token={token} />
-              )}
-              <p>PNG، JPEG یا WebP؛ حداکثر۱MiB و هر ضلع۱۰۲۴پیکسل.</p>
-              <input
-                ref={fileInput}
-                type="file"
-                aria-label="انتخاب تصویر فروشگاه"
-                disabled={busy || !directory.can_media}
-                accept="image/png,image/jpeg,image/webp"
-                onChange={(e) => {
-                  setFile(e.target.files?.[0]);
-                  setImageKey(crypto.randomUUID());
-                }}
-              />
-              <div className="toolbar">
-                <Button
-                  disabled={busy || !directory.can_media || !file}
-                  onClick={async () => {
-                    if (!file || busy) return;
-                    setBusy(true);
-                    setError("");
-                    try {
-                      const form = new FormData();
-                      form.set("version", String(current.version));
-                      form.set("file", file);
-                      const next = await request<ManagedStore>(
-                        token,
-                        `/${current.id}/image`,
-                        form,
-                        imageKey,
-                      );
-                      setCurrent(next);
-                      setProfile((p) => ({
-                        ...p,
-                        image_id: next.profile?.image_id,
-                      }));
-                      setFile(undefined);
-                      if (fileInput.current) fileInput.current.value = "";
-                      setImageKey(crypto.randomUUID());
-                      setNotice("تصویر فروشگاه ذخیره شد.");
-                      saved();
-                    } catch (e) {
-                      setError(message(e));
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  ذخیره تصویر فروشگاه
-                </Button>
-                <Button
-                  disabled={
-                    busy || !directory.can_media || !current.profile?.image_id
-                  }
-                  onClick={async () => {
-                    setBusy(true);
-                    setError("");
-                    try {
-                      const next = await request<ManagedStore>(
-                        token,
-                        `/${current.id}/image`,
-                        { version: current.version },
-                        imageKey,
-                        "DELETE",
-                      );
-                      setCurrent(next);
-                      setProfile((p) => ({ ...p, image_id: undefined }));
-                      setImageKey(crypto.randomUUID());
-                      setNotice(
-                        "تصویر حذف شد؛ نشان پیش‌فرض نمایش داده می‌شود.",
-                      );
-                      saved();
-                    } catch (e) {
-                      setError(message(e));
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  حذف تصویر فروشگاه
-                </Button>
-              </div>
-            </section>
-            <StoreEligibilityEditor
-              store={current}
-              locked={busy}
-              onBusyChange={setBusy}
-              methods={directory.sales_methods ?? []}
-              allowed={directory.can_eligibility}
-              save={(input, key) =>
-                request<ManagedStore>(
-                  token,
-                  `/${current.id}/eligibility`,
-                  input,
-                  key,
-                )
-              }
-              saved={(value) => {
-                setCurrent(value);
-                saved();
-              }}
-            />
-            <section className="store-detail-box">
-              <h3>سیاست انتشار محتوا</h3>
-              <div className="toolbar">
-                <OptionSelect
-                  label={"انتخاب سیاست"}
-                  multiple={false}
-                  options={(
-                    [
-                      ["review", "نیازمند تأیید"],
-                      ["direct", "انتشار مستقیم"],
-                    ] as const
-                  ).map(([value, label]) => ({
-                    id: String(value),
-                    name: String("" + label + ""),
-                    selected: policy === value,
-                    disabled: busy || !policyAllowed,
-                    onSelect: () => setPolicy(value),
-                  }))}
-                />
-                <Button
-                  disabled={
-                    busy || !policyAllowed || policy === current.content_policy
-                  }
-                  onClick={async () => {
-                    setBusy(true);
-                    setError("");
-                    try {
-                      await execute({
-                        action: "store.content-policy.set",
-                        target: current.id,
-                        version: current.content_policy_version ?? 0,
-                        value: policy,
-                        idempotency_key: crypto.randomUUID(),
-                      });
-                      setCurrent({
-                        ...current,
-                        content_policy: policy,
-                        content_policy_version:
-                          (current.content_policy_version ?? 0) + 1,
-                      });
-                      saved();
-                      setNotice("سیاست محتوا ثبت شد.");
-                    } catch (e) {
-                      setError(message(e));
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  ثبت سیاست محتوا
-                </Button>
-              </div>
-            </section>
-            <section className="store-detail-box">
-              <h3>کاربران متصل به فروشگاه</h3>
-              {directory.can_members ? (
-                <>
-                  {current.members?.length ? (
-                    current.members.map((m) => (
-                      <div key={m.user_id} className="user-access-row">
-                        <div>
-                          {directory.can_users ? (
-                            <Link
-                              to={`/users?user=${encodeURIComponent(m.user_id)}`}
-                            >
-                              {m.name}
-                            </Link>
-                          ) : (
-                            <b>{m.name}</b>
-                          )}
-                          <small>
-                            {m.active ? "کاربر فعال" : "کاربر غیرفعال"} ·{" "}
-                            {m.roles.length
-                              ? m.roles.join("، ")
-                              : "عضو فروشگاه؛ بدون نقش فروشگاهی"}
-                          </small>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p>هنوز کاربری به این فروشگاه متصل نیست.</p>
-                  )}
-                  <p>مدیریت عضویت و نقش از فرم کاربران انجام می‌شود.</p>
-                </>
-              ) : (
-                <p>مجوز مشاهده اعضای این فروشگاه را ندارید.</p>
-              )}
-            </section>
-          </>
+        <EditorTabs
+          label="بخش‌های فروشگاه"
+          value={tab}
+          onChange={setTab}
+          disabled={busy}
+          panels={[
+            { id: "details", label: "اطلاعات اصلی", content: detailsContent },
+            { id: "contact", label: "نشانی و تماس", content: contactContent },
+            ...(current
+              ? [
+                  { id: "image", label: "تصویر", content: imageContent },
+                  {
+                    id: "eligibility",
+                    label: "مجوزهای فروش",
+                    content: eligibilityContent,
+                  },
+                  {
+                    id: "content",
+                    label: "انتشار محتوا",
+                    content: policyContent,
+                  },
+                  { id: "members", label: "اعضا", content: membersContent },
+                ]
+              : []),
+          ]}
+        />
+        {!current && (
+          <Alert severity="info">
+            پس از ایجاد فروشگاه، تب‌های تصویر، مجوزهای فروش، انتشار محتوا و اعضا
+            در همین فرم در دسترس خواهند بود.
+          </Alert>
         )}
       </DialogContent>
       <DialogActions>
@@ -824,6 +883,10 @@ function StoreEditor({
           form="store-profile-form"
           variant="contained"
           disabled={busy || !directory.can_write}
+          sx={{
+            display:
+              tab !== "details" && tab !== "contact" ? "none" : undefined,
+          }}
         >
           ذخیره فروشگاه
         </Button>
