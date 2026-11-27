@@ -2,12 +2,13 @@
 
 ## الحاق بررسی چرخه سفارش — ۲۰۲۶-۱۱-۲۷
 
-[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ پس از برنامه اولیه، مالک اجرای ترتیبی #131 تا #140 را خواست. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌ها](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند. [شواهد #131](../delivery/order-lifecycle-review-2026-11-27/issue-131-verification.md) از سایر کارهای هنوز انجام‌نشده جداست.
+[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ پس از برنامه اولیه، مالک اجرای ترتیبی #131 تا #140 و تکمیل تاریخ شمسی #141 را خواست. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌های پاسخ‌گرفته](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند. گزارش مستقل هر۱۱برش در فهرست تحویل ثبت شده است؛ پذیرش دستی مالک و اتصال واقعی/انتشار سرور از تکمیل فنی جدا هستند.
 
 | نیاز مالک | شرح قابل ردیابی |
 | --- | --- |
 | پرسش‌های همه محصولات | [FEAT-BO-ORDER-REV-001](../delivery/order-lifecycle-review-2026-11-27/tasks/global-product-questions.md) |
 | تخفیف جمع‌وجور/دو ستون | [FEAT-BO-ORDER-REV-002](../delivery/order-lifecycle-review-2026-11-27/tasks/compact-coupon-modal.md) |
+| تمام کنترل‌های تاریخ شمسی سایت و بک‌آفیس | [FEAT-BO-ORDER-REV-011](../delivery/order-lifecycle-review-2026-11-27/tasks/persian-date-controls.md) و [ممیزی/شواهد #141](../delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md) |
 | سه چرخه و نگاشت سابقه | [FEAT-BO-ORDER-REV-003](../delivery/order-lifecycle-review-2026-11-27/tasks/order-state-contract.md) |
 | ثبت پیش از پرداخت | [FEAT-BO-ORDER-REV-004](../delivery/order-lifecycle-review-2026-11-27/tasks/place-order-boundary.md) و ممیزی #70 |
 | تلاش/نتیجه پرداخت | [FEAT-BO-ORDER-REV-005](../delivery/order-lifecycle-review-2026-11-27/tasks/payment-attempt-states.md) |

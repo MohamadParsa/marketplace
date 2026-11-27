@@ -6,11 +6,13 @@ owner: eliassarband
 updated: 2026-11-28
 related: [PROD-SCOPE-001, DEL-ORDER-LIFECYCLE-REVIEW-20261127]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
 # CV-ORDER-REV-11 — همه کنترل‌های تاریخ شمسی
+
+[ممیزی کنترل‌ها، قرارداد API و شواهد تست/مرورگر](../issue-141-verification.md).
 
 درخواست تکمیلی مستقیم مالک هنگام اجرای #135: کل کنترل‌های تاریخ، چه storefront و چه بک‌آفیس، شمسی باشند. اجرای این تکمیل پس از #140 در همین صف است و پنل فروشنده مشترک نیز از کنترل مشترک بهره می‌برد.
 
@@ -28,4 +30,4 @@ execution_authorized: true
 
 ## وضعیت
 
-اجرا مجاز و هنوز todo است. Issue: [#141](https://github.com/MohamadParsa/marketplace/issues/141)؛ ایجاد این شرح به معنی انجام تغییر کنترل‌ها نیست.
+اجرا با شواهد بالا تکمیل شده است. Issue: [#141](https://github.com/MohamadParsa/marketplace/issues/141) پس از push و CI با کامنت شواهد بسته می‌شود؛ پذیرش دستی مالک و انتشار سرور مستقل‌اند.

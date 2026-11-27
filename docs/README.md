@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[ممیزی و شواهد همه کنترل‌های تاریخ شمسی سایت و بک‌آفیس](delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md).
+
 [بررسی و اجرای ترتیبی چرخه سفارش، Q&A سراسری و مودال تخفیف — ۲۰۲۶-۱۱-۲۷](delivery/order-lifecycle-review-2026-11-27/README.md)
 
 [هفت اصلاح بازبینی بک‌آفیس #124 تا #130؛ تقویم، زون خصوصیات، منو و محصول — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md)

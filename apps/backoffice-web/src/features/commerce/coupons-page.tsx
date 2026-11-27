@@ -1,3 +1,5 @@
+import { PersianDateField } from "../../../../../packages/date-controls/persian-date-field";
+import { validISOInstant } from "../../../../../packages/date-controls/calendar";
 import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
@@ -142,6 +144,7 @@ export function CouponsPage({ token }: { token: string }) {
   const editable = !!draft && permitted(draft.id ? "edit" : "create");
   const save = async () => {
     if (!draft || busy || !editable) return;
+    if([draft.starts_at,draft.ends_at].some(value=>!!value&&!validISOInstant(value))){setError("تاریخ و ساعت شروع یا پایان معتبر نیست؛ ورودی شمسی را اصلاح کنید.");return;}
     setBusy(true);
     setError("");
     try {
@@ -413,38 +416,20 @@ export function CouponsPage({ token }: { token: string }) {
               <fieldset disabled={!editable || busy}>
                 <legend>زمان و سهمیه</legend>
                 <p>
-                  زمان‌ها با منطقه زمانی همین دستگاه ثبت می‌شوند؛ بدون زمان یعنی
+                  تاریخ‌ها شمسی و ساعت‌ها به وقت تهران هستند؛ بدون زمان یعنی
                   بدون محدودیت همان طرف بازه.
                 </p>
                 {(["starts_at", "ends_at"] as const).map((field) => (
-                  <TextField
+                  <PersianDateField
                     key={field}
                     label={
                       field === "starts_at"
-                        ? "شروع (تقویم میلادی، ساعت دستگاه)"
-                        : "پایان (تقویم میلادی، ساعت دستگاه)"
+                        ? "شروع اعتبار"
+                        : "پایان اعتبار"
                     }
-                    type="datetime-local"
-                    InputLabelProps={{ shrink: true }}
-                    value={
-                      draft[field]
-                        ? new Date(
-                            new Date(draft[field]!).getTime() -
-                              new Date(draft[field]!).getTimezoneOffset() *
-                                60000,
-                          )
-                            .toISOString()
-                            .slice(0, 16)
-                        : ""
-                    }
-                    onChange={(e) =>
-                      change(
-                        field,
-                        e.target.value
-                          ? new Date(e.target.value).toISOString()
-                          : null,
-                      )
-                    }
+                    dateTime
+                    value={draft[field] ?? ""}
+                    onChange={value=>change(field,value||null)}
                   />
                 ))}
                 <label>

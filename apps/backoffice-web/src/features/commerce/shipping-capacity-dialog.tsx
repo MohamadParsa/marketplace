@@ -1,4 +1,6 @@
 import { OptionSelect } from "../../shared/option-select";
+import { PersianDateField } from "../../../../../packages/date-controls/persian-date-field";
+import { persianDigits,validISODate } from "../../../../../packages/date-controls/calendar";
 import { useState } from "react";
 import {
   Alert,
@@ -8,7 +10,6 @@ import {
   DialogContent,
   DialogActions,
   LinearProgress,
-  TextField,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useWorkspace } from "../../shared/workspace";
@@ -16,7 +17,6 @@ import { ApiError } from "../../shared/api";
 import { DataTable } from "../../shared/components";
 import type { ShippingAvailability } from "../../../../../packages/commerce-client/types";
 import {
-  parsePersianCapacityDate,
   persianCapacityDate,
   tehranCapacityDate,
 } from "./shipping-dates";
@@ -72,9 +72,6 @@ export function ShippingCapacityDialog({
 }) {
   const { authToken, surface } = useWorkspace();
   const [date, setDate] = useState(tehranCapacityDate);
-  const [dateText, setDateText] = useState(() =>
-    persianCapacityDate(tehranCapacityDate()),
-  );
   const query = useQuery({
     queryKey: [
       "shipping-capacity",
@@ -84,7 +81,7 @@ export function ShippingCapacityDialog({
       methodID,
       date,
     ],
-    enabled: /^\d{4}-\d{2}-\d{2}$/.test(date),
+    enabled: validISODate(date),
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const response = await fetch(
@@ -105,29 +102,14 @@ export function ShippingCapacityDialog({
     <Dialog open fullWidth maxWidth="md" onClose={close}>
       <DialogTitle>ظرفیت حمل — {name}</DialogTitle>
       <DialogContent>
-        <TextField
+        <PersianDateField
           label="روز ظرفیت (شمسی)"
-          margin="normal"
-          value={dateText}
-          onChange={(e) => {
-            setDateText(e.target.value);
-            setDate(parsePersianCapacityDate(e.target.value));
-          }}
-          placeholder="۱۴۰۵/۰۹/۰۹"
-          error={!!dateText && !date}
-          inputProps={{ dir: "ltr", maxLength: 10 }}
-          InputLabelProps={{ shrink: true }}
-          helperText={
-            date && Number.isFinite(new Date(date).valueOf())
-              ? new Date(date + "T12:00:00+03:30").toLocaleDateString("fa-IR", {
-                  dateStyle: "full",
-                  timeZone: "Asia/Tehran",
-                })
-              : "روز را انتخاب کنید"
-          }
+          value={date}
+          onChange={setDate}
+          required
         />
         <Button
-          disabled={query.isFetching || !date}
+          disabled={query.isFetching || !validISODate(date)}
           onClick={() => void query.refetch()}
         >
           دریافت آخرین مصرف
@@ -209,12 +191,11 @@ export function ShippingCapacityDialog({
                         multiple={false}
                         options={data.preview.days.map((day) => ({
                           id: String(day.date),
-                          name: String("" + "" + ""),
+                          name: persianDigits(persianCapacityDate(day.date)),
                           selected: date === day.date,
                           disabled: !day.open,
                           onSelect: () => {
                             setDate(day.date);
-                            setDateText(persianCapacityDate(day.date));
                           },
                         }))}
                       />

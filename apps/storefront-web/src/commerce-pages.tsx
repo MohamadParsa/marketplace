@@ -1,4 +1,6 @@
 import { CustomerRequests } from "./order-requests";
+import { PersianDateField } from "../../../packages/date-controls/persian-date-field";
+import { tehranCapacityDate, persianCapacityDate, persianDigits } from "../../../packages/date-controls/calendar";
 import { CustomerOrderHistory, CustomerShipments } from "./order-shipments";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
@@ -1842,7 +1844,7 @@ export function Deposits({
                   {d.method_name} · {money(d.amount_toman)}
                 </b>
                 <p>
-                  {label(d.status)} · {d.date} · مرجع {d.reference}
+                  {label(d.status)} · {persianDigits(persianCapacityDate(d.date))} · مرجع {d.reference}
                 </p>
                 {d.reason && <p>{d.reason}</p>}
                 {d.status === "pending" && (
@@ -1962,7 +1964,8 @@ export function DepositForm({
 }) {
   const { token, config } = useCommerce(),
     action = useAction(),
-    [method, setMethod] = useState(methods[0]?.id ?? "");
+    [method, setMethod] = useState(methods[0]?.id ?? ""),
+    [depositDate,setDepositDate]=useState(tehranCapacityDate);
   const chosen = methods.find((m) => m.id === method);
   return (
     <BusyRegion busy={action.busy}>
@@ -2019,11 +2022,11 @@ export function DepositForm({
             defaultValue={defaultAmount}
             required
           />
-          <Input
+          <PersianDateField
             name="date"
-            label="تاریخ واریز (میلادی)"
-            type="date"
-            defaultValue={config?.server_date}
+            label="تاریخ واریز"
+            value={depositDate}
+            onChange={setDepositDate}
             required
           />
           <Input

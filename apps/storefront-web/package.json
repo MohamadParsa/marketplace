@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "tsc --noEmit",
     "test:display-numbers": "node --test scripts/test-display-numbers.cjs",
+    "test:persian-dates": "node --test ../../packages/date-controls/calendar.test.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -3,7 +3,7 @@
   "updated": "2026-11-28",
   "document_status": "in-review",
   "owner": "eliassarband",
-  "implementation_status": "in-progress",
+  "implementation_status": "done",
   "execution_authorized": true,
   "source_commit": "2ac2da55a47d5cd444d251995734412c85f83ed7",
   "parent_issue": 95,
@@ -262,7 +262,13 @@
       "resolved_questions": [
         "ORDERREV-Q03",
         "ORDERREV-Q04"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "9806e9b2419cf9b0a47b209fe567e82b19f459da",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/140#issuecomment-7229414122",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46076151715"
+      }
     },
     {
       "id": "CV-ORDER-REV-11",
@@ -271,7 +277,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/141",
       "title": "کنترل تاریخ شمسی در storefront و بک‌آفیس",
       "file": "tasks/persian-date-controls.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-10"

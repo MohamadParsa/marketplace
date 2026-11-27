@@ -1,4 +1,6 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { PersianDateField, PersianDatesField } from "../../../../../packages/date-controls/persian-date-field";
+import { tehranCapacityDate, persianCapacityDate, persianDigits, validISODate } from "../../../../../packages/date-controls/calendar";
 import { PurchaseRequests, PurchaseHistory } from "../operations/order-requests-panel";
 import { OrderOperationsPanel } from "../operations/order-operations-panel";
 import { displayRecord } from "../../shared/format";
@@ -369,7 +371,7 @@ export function CommercePage({
                       `${d.customer_name || "مشتری"} · ${d.customer_phone || ""}`,
                   },
                   { title: "روش", render: (d) => d.method_name },
-                  { title: "تاریخ", render: (d) => d.date },
+                  { title: "تاریخ", render: (d) => persianDigits(persianCapacityDate(d.date)) },
                   { title: "مرجع", render: (d) => d.reference },
                   { title: "مبلغ", render: (d) => money(d.amount_toman) },
                   {
@@ -563,7 +565,7 @@ function DepositReview({
         {d.method_name} · {money(d.amount_toman)}
       </h3>
       <p>
-        مرجع اعلام‌شده: {d.reference} · تاریخ {d.date}
+        مرجع اعلام‌شده: {d.reference} · تاریخ {persianDigits(persianCapacityDate(d.date))}
       </p>
       {d.destination.card_number && (
         <p>
@@ -592,9 +594,9 @@ function DepositReview({
             onChange={setAmount}
           />
           <Field label="مرجع واقعی تراکنش" value={ref} onChange={setRef} />
-          <Field
+          <PersianDateField
             label="تاریخ واقعی واریز"
-            type="date"
+            required
             value={date}
             onChange={setDate}
           />
@@ -616,7 +618,7 @@ function DepositReview({
           <div className="commerce-actions">
             <Button
               variant="contained"
-              disabled={!checked || !amount || !ref || busy}
+              disabled={!checked || !amount || !ref || busy || !validISODate(date)}
               onClick={() =>
                 submit({
                   id: d.id,
@@ -884,7 +886,7 @@ export function PurchaseReview({
                   </span>
                 </div>
                 <p>
-                  {d.method_name} · {d.date}
+                  {d.method_name} · {persianDigits(persianCapacityDate(d.date))}
                 </p>
                 <p>
                   شماره پیگیری: <b dir="ltr">{d.reference}</b>
@@ -967,7 +969,7 @@ function RefundReview({
   submit: (input: unknown) => void;
 }) {
   const [ref, setRef] = useState(""),
-    [date, setDate] = useState(new Date().toISOString().slice(0, 10)),
+    [date, setDate] = useState(tehranCapacityDate),
     [reason, setReason] = useState(""),
     [checked, setChecked] = useState(false);
   return (
@@ -986,9 +988,9 @@ function RefundReview({
             کنید. تکمیل، مبلغ رزروشده را از کیف پول کم می‌کند.
           </Alert>
           <Field label="مرجع پرداخت انجام‌شده" value={ref} onChange={setRef} />
-          <Field
+          <PersianDateField
             label="تاریخ پرداخت"
-            type="date"
+            required
             value={date}
             onChange={setDate}
           />
@@ -1004,7 +1006,7 @@ function RefundReview({
           />
           <Button
             variant="contained"
-            disabled={busy || !checked || !ref || !reason.trim()}
+            disabled={busy || !checked || !ref || !reason.trim() || !validISODate(date)}
             onClick={() =>
               submit({
                 id: r.id,
@@ -1338,15 +1340,15 @@ function SettingsForm({
                       onChange={(ids) => setDays([0, 1, 2, 3, 4, 5, 6].filter((day) => !ids.includes(String(day))))}
                     />
                     <p>فروشگاه‌ها به‌صورت پیش‌فرض از این روزها استفاده می‌کنند؛ تغییر روزهای کاری هر فروشگاه از «وقفه و تقویم فروشگاه» است. تعطیلات تاریخ‌دار سایت در هر دو حالت اعمال می‌شوند.</p>
-                    <Field
-                      label="تعطیلات استثنایی؛ هر خط یک تاریخ YYYY-MM-DD"
-                      value={holidays}
-                      onChange={setHolidays}
-                      multiline
+                    <PersianDatesField
+                      label="تعطیلات استثنایی سایت"
+                      values={holidays ? holidays.split("\n") : []}
+                      onChange={values=>setHolidays(values.join("\n"))}
+                      disabled={busy || !can("shipping.write")}
                     />
                     <Button
                       variant="contained"
-                      disabled={busy || !can("shipping.write")}
+                      disabled={busy || !can("shipping.write") || holidays.split("\n").filter(Boolean).some(day=>!validISODate(day))}
                       onClick={() =>
                         void save({
                           version: s.version,

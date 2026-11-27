@@ -1,3 +1,4 @@
+import { PersianDateInput } from "../../../../packages/date-controls/persian-date-field";
 import { useWorkspace } from "./workspace";
 import { FilterPanel } from "./filter-panel";
 import { xlsxBlob } from "./xlsx";
@@ -485,7 +486,7 @@ export function ActionDialog({
             این عملیات روی داده آزمون اجرا و در سابقه فعالیت ثبت می‌شود.
           </Alert>
           {fields.map((field) => (
-            <TextField
+            field.type === "date" || field.type === "datetime-local" ? <PersianDateInput key={field.name} name={field.name} label={field.label} dateTime={field.type === "datetime-local"} defaultValue={field.default ?? ""} required disabled={!!pendingValues || busy}/> : <TextField
               key={field.name}
               name={field.name}
               label={field.label}
