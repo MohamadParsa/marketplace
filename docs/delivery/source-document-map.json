@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26",
+  "updated": "2026-11-27",
   "workspace": "D:\\Cherriva",
   "current_source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
   "rows": [
@@ -540,6 +540,16 @@
   ],
   "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
   "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+  "store_shipping_ui_integration": {
+    "source_commit": "b528fe5a5f4a489a7a00394a775518bfff0113c8",
+    "verification": "docs/delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md",
+    "source_pushed": true,
+    "source_ci_run": 46031207626,
+    "source_ci_successful_jobs": 5,
+    "pull_request": 106,
+    "merged": false,
+    "deployed": false
+  },
   "latest_branch_source_publication": {
     "issues": [
       87,

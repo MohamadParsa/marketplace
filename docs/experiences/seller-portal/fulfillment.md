@@ -3,7 +3,7 @@ id: FEAT-SP-002
 title: تأمین و ارسال فروشنده
 status: in-review
 owner: product-owner
-updated: 2026-11-26
+updated: 2026-11-27
 related: [DOM-ORDERS-001, DOM-SHIPPING-001]
 approved_by: []
 ---
@@ -50,6 +50,6 @@ approved_by: []
 
 Q-017 تا Q-020؛ عضویت و ورود فروشنده در Q-004. مهلت فروشنده در حوزه سفارش قطعی است؛ مهلت اولین رسیدگی پشتیبانی هم قطعی است؛ جزئیات محاسبه روز کاری، پاسخ دیرهنگام و ثبت مالی تأمین جایگزین هنوز نیازمند تصمیم‌اند.
 
-## برنامه تکمیل تنظیمات فروشگاه — بدون اجرا
+## تنظیمات فروشگاه و مرجع اجرا
 
-روزهای کاری inherit/override و واحد وقفه در [#120](../../delivery/shipping-refinement-2026-11-26/tasks/store-preparation-calendars.md)؛ انتساب حمل و draft اختصاصی با تأیید پلتفرم در [#122](../../delivery/shipping-refinement-2026-11-26/tasks/store-shipping-approval.md). تنظیم تقویم مجاز خودش از اختیار تغییر عمومی حمل مستقل است؛ برنامه‌ریزی به معنی قابلیت موجود نیست.
+روزهای کاری inherit/override و واحد وقفه در [#120](../../delivery/shipping-refinement-2026-11-26/issue-120-verification.md) و انتساب حمل و draft اختصاصی با تأیید پلتفرم در [#122](../../delivery/shipping-refinement-2026-11-26/issue-122-verification.md) اجرا شده‌اند. تنظیم تقویم مجاز خودش از اختیار تغییر عمومی حمل مستقل است. در رابط جاری، «فروشگاه‌های من» (`/my-stores`) فروشگاه‌های مجاز کاربر را با تب حمل و/یا وقفه/تقویم نمایش می‌دهد؛ هیچ فروشگاه پیش‌فرض پنهانی انتخاب نمی‌شود. [شواهد یکپارچه‌سازی، دسترسی و مسیرهای مستقیم](../../delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md).
