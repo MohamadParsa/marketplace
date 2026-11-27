@@ -1,4 +1,39 @@
 /* Shared backoffice panels, filters, navigation and result grids. */
+.admin-filter-panel {border:1px solid #e7dce3;border-radius:12px;background:#fff;margin-bottom:16px;min-width:0;overflow:visible;}
+.admin-filter-panel .admin-filter-toggle {display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 16px;text-align:start;color:#604752;background:#fcf8fa;border-radius:12px;}
+.admin-filter-toggle[aria-expanded=true] {border-radius:12px 12px 0 0;border-bottom:1px solid #eee3e9;}
+.admin-filter-body {padding:18px;min-width:0;}
+.admin-filter-body[hidden] {display:none!important;}
+.admin-filter-body > :is(.catalog-filters,.user-filter-form,.shipping-method-filters) {border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;}
+.admin-filter-body .filter-panel-title {display:none;}
+.admin-filter-body > .MuiButton-contained {margin-top:14px;}
+.admin-search-form {display:flex;align-items:end;gap:12px;flex-wrap:wrap;}
+.admin-search-form > .MuiTextField-root {flex:1 1 240px;max-width:560px;}
+.MuiTextField-root {min-width:0;}
+.MuiTextField-root > .MuiInputLabel-root {display:block;position:static;transform:none;max-width:100%;white-space:normal;line-height:1.7;margin:0 0 6px;color:#66515f;font-size:12px;pointer-events:auto;}
+.MuiTextField-root > .MuiInputBase-root {margin-top:0;min-height:42px;}
+.MuiTextField-root .MuiOutlinedInput-notchedOutline {top:0;}
+.MuiTextField-root .MuiOutlinedInput-notchedOutline legend {display:none;}
+.MuiAutocomplete-root {min-width:0;flex:1 1 220px;}
+.MuiAutocomplete-root .MuiAutocomplete-inputRoot {flex-wrap:nowrap;}
+.MuiAutocomplete-root .MuiAutocomplete-input {min-width:30px!important;}
+.admin-select-summary {max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;padding-inline:4px;}
+:is(.workspace-main,.MuiDialogContent-root) label:has(> input:not([type=checkbox],[type=radio],[type=file]),>textarea,>select) {display:flex;flex-direction:column;gap:6px;align-items:stretch;font-size:12px;color:#66515f;min-width:0;}
+:is(.workspace-main,.MuiDialogContent-root) label > :is(input:not([type=checkbox],[type=radio],[type=file]),select,textarea) {width:100%;box-sizing:border-box;border:1px solid #cbbfc6;border-radius:10px;background:#fff;padding:10px 12px;min-height:42px;font:inherit;color:#392b35;}
+.MuiDialog-paper {max-height:calc(100dvh - 48px);}
+.MuiDialogTitle-root {border-bottom:1px solid #eee3e9;flex-shrink:0;}
+.MuiDialogActions-root {border-top:1px solid #eee3e9;background:#fff;padding:14px 24px!important;flex-shrink:0;}
+.MuiDialogContent-root {padding-top:22px!important;min-width:0;}
+.MuiDialog-paper > form {display:flex;flex-direction:column;min-height:0;max-height:calc(100dvh - 48px);}
+.MuiDialogContent-root .home-admin-form {grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;}
+.MuiDialogContent-root .home-admin-form > :is(fieldset,.rich-product-editor,small,p,.MuiAlert-root) {grid-column:1/-1;}
+.MuiDialogContent-root .product-form {grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;}
+.MuiDialogContent-root .product-form > :is(.MuiAlert-root,p,fieldset) {grid-column:1/-1;}
+.catalog-filter-choice > div {width:100%;min-width:0;}
+.MuiDialogContent-root .home-admin-form .MuiAutocomplete-root input.MuiInputBase-input {border:0;border-radius:0;background:transparent;padding:0;box-shadow:none;min-height:0;}
+.data-pagination .pagination-sizes {min-width:120px;max-width:160px;}
+@media(max-width:600px) {.MuiDialog-paper{margin:12px!important;width:calc(100% - 24px)!important;max-height:calc(100dvh - 24px);}.admin-filter-body{padding:14px;}}
+@media(max-width:600px) {.MuiDialog-paper > form{max-height:calc(100dvh - 24px);}.MuiDialogContent-root :is(.home-admin-form,.product-form){grid-template-columns:minmax(0,1fr);}}
 .workspace-main .catalog-filters,
 .workspace-main .user-filter-form,
 .workspace-main .shipping-method-filters {

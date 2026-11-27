@@ -1,3 +1,4 @@
+import { OptionSelect } from "../../shared/option-select";
 import { ProductQA } from "./product-qa";
 import { ProductContentReview } from "./product-content-review";
 import { ProductMediaDialog } from "./product-media-dialog";
@@ -33,8 +34,8 @@ const errorMessage = (e: unknown) =>
   e instanceof Error
     ? e.message
     : "ارتباط با سرور برقرار نشد؛ دوباره تلاش کنید.";
-const variantName = (v: Variant) =>
-  v.values.map((x) => x.value).join(" / ") || "بدون محور";
+const variantName = (v?: Variant) =>
+  (v?.values ?? []).map((x) => x.value).join(" / ") || "بدون محور";
 const tomanToRial = (input: string) => {
   if (!/^\d+(\.\d)?$/.test(input)) return undefined;
   const [whole, fraction = "0"] = input.split(".");
@@ -54,7 +55,7 @@ export function ProductQuickDialog({
   close: () => void;
 }) {
   return (
-    <Dialog open fullWidth maxWidth="lg" onClose={close}>
+    <Dialog open fullWidth maxWidth="xl" onClose={close}>
       <DialogTitle>مدیریت تنوع و عرضه</DialogTitle>
       <DialogContent>
         <ProductPanel id={id} initialTab={initialTab} />
@@ -251,7 +252,8 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
               },
               {
                 title: "وقفه تأمین",
-                render: (o) => `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"} · از فروشنده`,
+                render: (o) =>
+                  `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"} · از فروشنده`,
               },
               {
                 title: "عملیات",
@@ -321,7 +323,7 @@ function VariantEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="sm"
+      maxWidth="xl"
       onClose={() => {
         if (!pending) close();
       }}
@@ -462,7 +464,7 @@ function OfferCreator({
     <Dialog
       open
       fullWidth
-      maxWidth="sm"
+      maxWidth="xl"
       onClose={() => {
         if (!pending) close();
       }}
@@ -599,7 +601,7 @@ function OfferEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="sm"
+      maxWidth="xl"
       onClose={() => {
         if (!pending) close();
       }}
@@ -737,7 +739,9 @@ function OfferEditor({
             }
           />
           <p className="muted">
-            وقفه تأمین: {current.lead_days} روز {current.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}؛ از فروشنده، فقط خواندنی.
+            وقفه تأمین: {current.lead_days} روز{" "}
+            {current.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}؛ از
+            فروشنده، فقط خواندنی.
           </p>
         </DialogContent>
         <DialogActions>
@@ -761,7 +765,7 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
   const { resolveVariant, surface } = useWorkspace();
   const [selection, setSelection] = useState<Record<string, string>>(() =>
     Object.fromEntries(
-      w.variants[0]?.values.map((v) => [v.attribute_id, v.value]) ?? [],
+      w.variants[0]?.values?.map((v) => [v.attribute_id, v.value]) ?? [],
     ),
   );
   const complete = w.axes.every((a) => !!selection[a.id]);
@@ -782,20 +786,18 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
       </Alert>
       {w.axes.map((a) => (
         <div className="variant-chip-group" key={a.id}>
-          <b>{a.name}</b>
           <div>
-            {a.options.map((option) => (
-              <Chip
-                key={option}
-                label={option}
-                component="button"
-                clickable
-                aria-label={`${a.name}: ${option}`}
-                aria-pressed={selection[a.id] === option}
-                color={selection[a.id] === option ? "primary" : "default"}
-                onClick={() => setSelection({ ...selection, [a.id]: option })}
-              />
-            ))}
+            <OptionSelect
+              label={a.name}
+              multiple={false}
+              options={a.options.map((option) => ({
+                id: String(option),
+                name: String(option),
+                selected: selection[a.id] === option,
+                disabled: false,
+                onSelect: () => setSelection({ ...selection, [a.id]: option }),
+              }))}
+            />
           </div>
         </div>
       ))}
@@ -830,7 +832,11 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
               },
               { title: "قیمت نهایی نقدی", render: (o) => money(o.price) },
               { title: "قابل تخصیص", render: (o) => o.available },
-              { title: "وقفه تأمین", render: (o) => `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}` },
+              {
+                title: "وقفه تأمین",
+                render: (o) =>
+                  `${o.lead_days} روز ${o.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}`,
+              },
             ]}
           />
         </div>

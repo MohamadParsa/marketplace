@@ -1,3 +1,4 @@
+import { OptionSelect } from "../../shared/option-select";
 import {
   Button,
   Checkbox,
@@ -177,17 +178,17 @@ export function BusinessContentEditor({
               aria-label="نوع آیکن شبکه"
               className="catalog-choice-options"
             >
-              {kinds.map(([key, label]) => (
-                <Button
-                  key={key}
-                  size="small"
-                  aria-pressed={l.kind === key}
-                  variant={l.kind === key ? "contained" : "outlined"}
-                  onClick={() => patch(i, { kind: key })}
-                >
-                  {label}
-                </Button>
-              ))}
+              <OptionSelect
+                label={"نوع آیکن شبکه"}
+                multiple={false}
+                options={kinds.map(([key, label]) => ({
+                  id: String(key),
+                  name: String("" + label + ""),
+                  selected: l.kind === key,
+                  disabled: false,
+                  onSelect: () => patch(i, { kind: key }),
+                }))}
+              />
             </div>
             <FormControlLabel
               control={

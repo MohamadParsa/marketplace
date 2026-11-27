@@ -1,3 +1,6 @@
+import { FilterPanel } from "../../shared/filter-panel";
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -153,6 +156,7 @@ export function CouponsPage({ token }: { token: string }) {
       setBusy(false);
     }
   };
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
@@ -175,24 +179,20 @@ export function CouponsPage({ token }: { token: string }) {
       />
       {!draft && error && <Alert severity="error">{error}</Alert>}
       <section className="panel">
-        <div className="toolbar">
-          <input
-            className="search"
-            aria-label="جست‌وجوی کوپن"
-            placeholder="کد یا عنوان…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+        <FilterPanel onSearch={() => setSearch(searchDraft)}>
+          <TextField
+            label="جست‌وجوی کوپن"
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
           />
-          <Button disabled={busy} onClick={() => void load()}>
-            تازه‌سازی فهرست
-          </Button>
-        </div>
+        </FilterPanel>
         {!data ? (
           <p role="status">
             {busy ? "در حال دریافت کوپن‌ها…" : "فهرست دریافت نشد."}
           </p>
         ) : (
           <DataTable
+            searchable={false}
             rows={data.items.filter((c) =>
               (c.name + " " + c.code)
                 .toLowerCase()
@@ -285,7 +285,7 @@ export function CouponsPage({ token }: { token: string }) {
       {draft && (
         <Dialog
           open
-          maxWidth="md"
+          maxWidth="xl"
           fullWidth
           onClose={() => {
             if (!busy) setDraft(undefined);
@@ -321,19 +321,20 @@ export function CouponsPage({ token }: { token: string }) {
                   onChange={(e) => change("name", e.target.value)}
                 />
                 <div className="coupon-choices">
-                  {(["percent", "fixed"] as const).map((k) => (
-                    <Button
-                      key={k}
-                      variant={draft.kind === k ? "contained" : "outlined"}
-                      aria-pressed={draft.kind === k}
-                      onClick={() => {
+                  <OptionSelect
+                    label={"نوع محدودیت"}
+                    multiple={false}
+                    options={(["percent", "fixed"] as const).map((k) => ({
+                      id: String(k),
+                      name: k === "percent" ? "درصدی" : "مبلغ ثابت تومان",
+                      selected: draft.kind === k,
+                      disabled: false,
+                      onSelect: () => {
                         change("kind", k);
                         change("cap_toman", "0");
-                      }}
-                    >
-                      {k === "percent" ? "درصدی" : "مبلغ ثابت تومان"}
-                    </Button>
-                  ))}
+                      },
+                    }))}
+                  />
                 </div>
                 <TextField
                   label={
@@ -347,16 +348,17 @@ export function CouponsPage({ token }: { token: string }) {
                   onChange={(e) => change("value", e.target.value)}
                 />
                 <div className="coupon-choices">
-                  {Object.entries(targets).map(([k, n]) => (
-                    <Button
-                      key={k}
-                      aria-pressed={draft.target === k}
-                      variant={draft.target === k ? "contained" : "outlined"}
-                      onClick={() => change("target", k as Coupon["target"])}
-                    >
-                      {n}
-                    </Button>
-                  ))}
+                  <OptionSelect
+                    label={"نوع محدودیت"}
+                    multiple={false}
+                    options={Object.entries(targets).map(([k, n]) => ({
+                      id: String(k),
+                      name: String("" + n + ""),
+                      selected: draft.target === k,
+                      disabled: false,
+                      onSelect: () => change("target", k as Coupon["target"]),
+                    }))}
+                  />
                 </div>
                 <TextField
                   label="حداقل مبلغ مبنا (تومان)"
@@ -395,28 +397,15 @@ export function CouponsPage({ token }: { token: string }) {
                   همه دسته‌ها
                 </label>
                 {!draft.all_categories && (
-                  <div className="coupon-category-list">
-                    {(state.categories ?? [])
+                  <MultiChoiceField
+                    label="دسته‌های مشمول"
+                    value={draft.categories}
+                    options={(state.categories ?? [])
                       .filter((c) => !c.archived)
-                      .map((c) => (
-                        <label key={c.id}>
-                          <Checkbox
-                            checked={draft.categories.includes(c.id)}
-                            onChange={(e) =>
-                              change(
-                                "categories",
-                                e.target.checked
-                                  ? [...draft.categories, c.id]
-                                  : draft.categories.filter(
-                                      (id) => id !== c.id,
-                                    ),
-                              )
-                            }
-                          />
-                          {c.name}
-                        </label>
-                      ))}
-                  </div>
+                      .map((c) => ({ id: c.id, name: c.name }))}
+                    disabled={!editable || busy}
+                    onChange={(ids) => change("categories", ids)}
+                  />
                 )}
               </fieldset>
               <fieldset disabled={!editable || busy}>

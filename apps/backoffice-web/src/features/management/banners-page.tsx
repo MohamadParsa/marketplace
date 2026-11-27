@@ -117,7 +117,7 @@ export function BannersPage() {
         <Dialog
           open
           fullWidth
-          maxWidth="sm"
+          maxWidth="xl"
           onClose={() => {
             if (!busy) setCreate(false);
           }}
@@ -287,7 +287,7 @@ function BannerEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="lg"
+      maxWidth="xl"
       onClose={() => {
         if (!busy) close();
       }}

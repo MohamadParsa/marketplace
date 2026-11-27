@@ -1,4 +1,5 @@
 import { useWorkspace } from "./workspace";
+import { FilterPanel } from "./filter-panel";
 import { xlsxBlob } from "./xlsx";
 import {
   useRef,
@@ -87,6 +88,7 @@ export function DataTable<T extends { id: string }>({
   const exportAbort = useRef<AbortController>();
   useEffect(() => () => exportAbort.current?.abort(), []);
   const [search, setSearch] = useState(""),
+    [searchDraft, setSearchDraft] = useState(""),
     [sort, setSort] = useState<{ column: number; desc: boolean }>(),
     [selected, setSelected] = useState<string[]>([]),
     [exporting, setExporting] = useState(false),
@@ -192,26 +194,37 @@ export function DataTable<T extends { id: string }>({
   };
   return (
     <section className="data-grid" aria-label="نتایج جدول">
-      <div className="grid-tools">
-        {!remote && searchable && (
-          <>
+      {!remote && searchable && (
+        <FilterPanel>
+          <form
+            className="admin-search-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearch(searchDraft);
+            }}
+          >
             <TextField
-              size="small"
               label="جست‌وجو در نتایج"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
             />
+            <Button type="submit" variant="contained">
+              جست‌وجو
+            </Button>
             <Button
               onClick={() => {
+                setSearchDraft("");
                 setSearch("");
                 setSort(undefined);
                 setSelected([]);
               }}
             >
-              پاک‌کردن جست‌وجو
+              پاک‌کردن
             </Button>
-          </>
-        )}
+          </form>
+        </FilterPanel>
+      )}
+      <div className="grid-tools">
         <span aria-live="polite">
           {(remote?.controls.total ?? filtered.length).toLocaleString("fa-IR")}{" "}
           نتیجه ·{" "}
@@ -431,7 +444,7 @@ export function ActionDialog({
       open={open}
       onClose={busy ? undefined : onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth={fields.length > 3 ? "lg" : "md"}
     >
       <Box
         component="form"

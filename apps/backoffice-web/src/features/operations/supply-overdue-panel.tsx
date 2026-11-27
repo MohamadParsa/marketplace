@@ -1,3 +1,4 @@
+import { FilterPanel } from "../../shared/filter-panel";
 import { Alert, Button, LinearProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -51,6 +52,7 @@ export function SupplyOverduePanel() {
     },
   });
   if (!enabled) return null;
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <section className="panel supply-overdue-panel" aria-label="صف تأخیر تأمین">
       <div className="page-heading">
@@ -92,15 +94,17 @@ export function SupplyOverduePanel() {
                 بررسی شود.
               </Alert>
             )}
-            <div className="filter-bar">
-              <input
-                className="search"
-                aria-label="جست‌وجوی صف تأخیر تأمین"
-                placeholder="شماره سفارش یا فروشگاه…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+            <FilterPanel onSearch={() => setSearch(searchDraft)}>
+              <div className="filter-bar">
+                <input
+                  className="search"
+                  aria-label="جست‌وجوی صف تأخیر تأمین"
+                  placeholder="شماره سفارش یا فروشگاه…"
+                  value={searchDraft}
+                  onChange={(e) => setSearchDraft(e.target.value)}
+                />
+              </div>
+            </FilterPanel>
             {!query.data.rows.length && (
               <p role="status">
                 در محدودهٔ مجاز شما سفارشی خارج از مهلت تأمین نیست.

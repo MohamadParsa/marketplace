@@ -1,3 +1,5 @@
+import { TextField } from "@mui/material";
+import { FilterPanel } from "../../shared/filter-panel";
 import {
   ProductCatalogFilters,
   filterProductRows,
@@ -120,6 +122,7 @@ export function ManagementPage({
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase()),
     );
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
@@ -152,18 +155,20 @@ export function ManagementPage({
       />
       {policyError && <Alert severity="error">{policyError}</Alert>}
       <section className="panel">
-        <div className="toolbar">
-          <input
-            aria-label="جست‌وجو"
-            className="search"
-            placeholder="جست‌وجو در این بخش…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <span className="muted">اطلاعات آزمون · به‌روز از سرور</span>
-        </div>
+        {section !== "products" && (
+          <FilterPanel onSearch={() => setSearch(searchDraft)}>
+            <TextField
+              label="جست‌وجو"
+
+              placeholder="جست‌وجو در این بخش…"
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+            />
+          </FilterPanel>
+        )}
         {section === "users" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.users ?? [])}
             columns={[
               {
@@ -242,6 +247,7 @@ export function ManagementPage({
         )}
         {section === "stores" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.stores ?? [])}
             columns={[
               {
@@ -312,6 +318,7 @@ export function ManagementPage({
         )}
         {section === "categories" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.categories ?? [])}
             columns={[
               {
@@ -399,6 +406,7 @@ export function ManagementPage({
         )}
         {section === "brands" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.brands ?? [])}
             columns={[
               {
@@ -440,8 +448,8 @@ export function ManagementPage({
               onChange={setProductFilters}
             />
             <DataTable
-              key={JSON.stringify(productFilters)}
               searchable={false}
+              key={JSON.stringify(productFilters)}
               rows={filtered(filterProductRows(state, productFilters))}
               columns={[
                 {
@@ -551,6 +559,7 @@ export function ManagementPage({
         )}
         {section === "pricing" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.rules ?? [])}
             columns={[
               { title: "قانون", render: (r) => <b>{r.name}</b> },
@@ -590,6 +599,7 @@ export function ManagementPage({
               </span>
             </div>
             <DataTable
+              searchable={false}
               rows={filtered(state.shipping ?? [])}
               columns={[
                 { title: "روش ارسال", render: (s) => <b>{s.method}</b> },

@@ -1,3 +1,5 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useRef, useState } from "react";
 import {
   Alert,
@@ -244,60 +246,37 @@ export function RolesPage() {
               inputProps={{ maxLength: 160 }}
               onChange={(e) => setDraft({ ...draft, name: e.target.value })}
             />
-            <fieldset className="user-choice-group">
-              <legend>محدوده نقش</legend>
-              {scopes.map((s) => (
-                <Chip
-                  key={s.id}
-                  component="button"
-                  type="button"
-                  clickable
-                  disabled={busy || !!draft.id}
-                  label={s.name}
-                  color={draft.scope === s.id ? "primary" : "default"}
-                  aria-pressed={draft.scope === s.id}
-                  onClick={() =>
-                    setDraft({ ...draft, scope: s.id, permissions: [] })
-                  }
-                />
-              ))}
-            </fieldset>
+            <ChoiceField
+              label="محدوده نقش"
+              value={draft.scope}
+              options={scopes}
+              disabled={busy || !!draft.id}
+              onChange={(scope) =>
+                setDraft({
+                  ...draft,
+                  scope: scope as RoleScope,
+                  permissions: [],
+                })
+              }
+            />
             <p>
               مجوز فروشگاه فقط هنگام انتساب به همان فروشگاه اثر دارد؛ به
               فروشگاه‌های دیگر تعمیم داده نمی‌شود.
             </p>
-            <TextField
-              fullWidth
-              size="small"
-              label="جست‌وجوی مجوزها"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <></>
             <p>
               {draft.permissions.length.toLocaleString("fa-IR")} مجوز انتخاب‌شده
             </p>
-            <div className="role-permission-grid">
-              {visible.map((p) => (
-                <label key={p}>
-                  <Checkbox
-                    disabled={busy}
-                    checked={draft.permissions.includes(p)}
-                    onChange={(_, v) =>
-                      setDraft({
-                        ...draft,
-                        permissions: v
-                          ? [...draft.permissions, p]
-                          : draft.permissions.filter((x) => x !== p),
-                      })
-                    }
-                  />
-                  <span>
-                    {permissionName(p)}
-                    <small dir="ltr">{p}</small>
-                  </span>
-                </label>
-              ))}
-            </div>
+            <MultiChoiceField
+              label="مجوزهای نقش"
+              value={draft.permissions}
+              options={registry.map((p) => ({
+                id: p,
+                name: permissionName(p),
+              }))}
+              disabled={busy}
+              onChange={(permissions) => setDraft({ ...draft, permissions })}
+            />
             {!visible.length && <p>مجوزی مطابق جست‌وجو وجود ندارد.</p>}
             {draft.id && (
               <p>

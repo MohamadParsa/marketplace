@@ -1,3 +1,6 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { StoreEligibilityEditor } from "./store-eligibility-editor";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -192,122 +195,100 @@ export function StoresPage() {
         }
       />
       <section className="panel store-directory">
-        <form
-          className="user-filter-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setFilter({ ...draft });
-            setPage(0);
-          }}
-        >
-          <h2 className="filter-panel-title">فیلترهای فروشگاه</h2>
-          <div className="user-form-grid">
-            {(
-              [
-                ["name", "نام فروشگاه"],
-                ["city", "شهر"],
-                ["member", "عضو فروشگاه"],
-              ] as const
-            )
-              .filter(([key]) => key !== "member" || data?.can_members)
-              .map(([key, label]) => (
-                <TextField
-                  key={key}
-                  size="small"
-                  label={`فیلتر ${label}`}
-                  value={draft[key]}
-                  onChange={(e) =>
-                    setDraft({ ...draft, [key]: e.target.value })
-                  }
-                />
-              ))}
-          </div>
-          <div
-            className="toolbar"
-            role="group"
-            aria-label="فیلتر وضعیت فروشگاه"
+        <FilterPanel>
+          <form
+            className="user-filter-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (JSON.stringify(filter) === JSON.stringify(draft))
+                void query.refetch();
+              else setFilter({ ...draft });
+              setPage(0);
+            }}
           >
-            {[
-              ["", "همه وضعیت‌ها"],
-              ["true", "فعال"],
-              ["false", "غیرفعال"],
-            ].map(([id, name]) => (
+            <h2 className="filter-panel-title">فیلترهای فروشگاه</h2>
+            <div className="user-form-grid">
+              {(
+                [
+                  ["name", "نام فروشگاه"],
+                  ["city", "شهر"],
+                  ["member", "عضو فروشگاه"],
+                ] as const
+              )
+                .filter(([key]) => key !== "member" || data?.can_members)
+                .map(([key, label]) => (
+                  <TextField
+                    key={key}
+                    size="small"
+                    label={`فیلتر ${label}`}
+                    value={draft[key]}
+                    onChange={(e) =>
+                      setDraft({ ...draft, [key]: e.target.value })
+                    }
+                  />
+                ))}
+            </div>
+            <div
+              className="toolbar"
+              role="group"
+              aria-label="فیلتر وضعیت فروشگاه"
+            >
+              <OptionSelect
+                label={"فیلتر وضعیت فروشگاه"}
+                multiple={false}
+                options={[
+                  ["", "همه وضعیت‌ها"],
+                  ["true", "فعال"],
+                  ["false", "غیرفعال"],
+                ].map(([id, name]) => ({
+                  id: String(id),
+                  name: String("" + name + ""),
+                  selected: draft.active === id,
+                  disabled: false,
+                  onSelect: () => setDraft({ ...draft, active: id }),
+                }))}
+              />
+            </div>
+            <ChoiceField
+              label="استان"
+              value={draft.province}
+              clearLabel="همه استان‌ها"
+              options={(data?.geography ?? []).map((p) => ({
+                id: p.name,
+                name: p.name,
+              }))}
+              onChange={(province) => setDraft({ ...draft, province })}
+            />
+            <ChoiceField
+              label="روش فروش"
+              value={draft.sales_method}
+              clearLabel="همه روش‌ها"
+              options={(data?.sales_methods ?? []).map((m) => ({
+                id: m.id,
+                name: m.name,
+              }))}
+              onChange={(sales_method) => setDraft({ ...draft, sales_method })}
+            />
+            <div className="toolbar">
               <Button
-                key={id}
-                aria-pressed={draft.active === id}
-                variant={draft.active === id ? "contained" : "outlined"}
-                onClick={() => setDraft({ ...draft, active: id })}
+                variant="contained"
+                type="submit"
+                disabled={query.isFetching}
               >
-                {name}
+                جست‌وجو
               </Button>
-            ))}
-          </div>
-          <div
-            className="toolbar"
-            role="group"
-            aria-label="فیلتر استان فروشگاه"
-          >
-            <strong>استان</strong>
-            <Button
-              aria-pressed={!draft.province}
-              onClick={() => setDraft({ ...draft, province: "" })}
-            >
-              همه استان‌ها
-            </Button>
-            {data?.geography?.map((p) => (
               <Button
-                key={p.id}
-                aria-pressed={draft.province === p.name}
-                variant={draft.province === p.name ? "contained" : "text"}
-                onClick={() => setDraft({ ...draft, province: p.name })}
+                onClick={() => {
+                  setDraft(defaults);
+                  setFilter(defaults);
+                  setPage(0);
+                }}
               >
-                {p.name}
+                پاک‌کردن فیلترهای فروشگاه
               </Button>
-            ))}
-          </div>
-          <div
-            className="toolbar"
-            role="group"
-            aria-label="فیلتر روش فروش فروشگاه"
-          >
-            <strong>روش فروش</strong>
-            <Button
-              aria-pressed={!draft.sales_method}
-              onClick={() => setDraft({ ...draft, sales_method: "" })}
-            >
-              همه روش‌ها
-            </Button>
-            {data?.sales_methods?.map((m) => (
-              <Button
-                key={m.id}
-                aria-pressed={draft.sales_method === m.id}
-                variant={draft.sales_method === m.id ? "contained" : "text"}
-                onClick={() => setDraft({ ...draft, sales_method: m.id })}
-              >
-                {m.name}
-              </Button>
-            ))}
-          </div>
-          <div className="toolbar">
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={query.isFetching}
-            >
-              اعمال فیلترهای فروشگاه
-            </Button>
-            <Button
-              onClick={() => {
-                setDraft(defaults);
-                setFilter(defaults);
-                setPage(0);
-              }}
-            >
-              پاک‌کردن فیلترهای فروشگاه
-            </Button>
-            <Button onClick={() => void query.refetch()}>بارگیری مجدد</Button>
-          </div>
-        </form>
+            </div>
+          </form>
+        </FilterPanel>
         {query.isFetching && <LinearProgress aria-label="دریافت فروشگاه‌ها" />}
         {query.isError && (
           <Alert severity="error">{message(query.error)}</Alert>
@@ -511,7 +492,7 @@ function StoreEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="md"
+      maxWidth="xl"
       onClose={() => {
         if (!busy) close();
       }}
@@ -621,11 +602,16 @@ function StoreEditor({
               <p>شناسه ثابت · {current.id}</p>
               <p>
                 مالک ثبت‌شده: {current.owner || "ثبت نشده"} · وقفه تأمین:{" "}
-                {current.lead_days} روز {current.preparation?.day_basis === "calendar" ? "تقویمی" : "کاری"} · مدل:{" "}
-                {current.model === "independent" ? "مستقل" : "مشترک"}
+                {current.lead_days} روز{" "}
+                {current.preparation?.day_basis === "calendar"
+                  ? "تقویمی"
+                  : "کاری"}{" "}
+                · مدل: {current.model === "independent" ? "مستقل" : "مشترک"}
               </p>
               <p>این اطلاعات با ویرایش پروفایل بازنویسی نمی‌شوند.</p>
-              <Button component={Link} to="/store-preparation">تنظیم وقفه و تقویم فروشگاه</Button>
+              <Button component={Link} to="/store-preparation">
+                تنظیم وقفه و تقویم فروشگاه
+              </Button>
             </section>
             <section className="store-detail-box">
               <h3>تصویر فروشگاه</h3>
@@ -741,22 +727,22 @@ function StoreEditor({
             <section className="store-detail-box">
               <h3>سیاست انتشار محتوا</h3>
               <div className="toolbar">
-                {(
-                  [
-                    ["review", "نیازمند تأیید"],
-                    ["direct", "انتشار مستقیم"],
-                  ] as const
-                ).map(([value, label]) => (
-                  <Button
-                    key={value}
-                    aria-pressed={policy === value}
-                    disabled={busy || !policyAllowed}
-                    variant={policy === value ? "contained" : "outlined"}
-                    onClick={() => setPolicy(value)}
-                  >
-                    {label}
-                  </Button>
-                ))}
+                <OptionSelect
+                  label={"انتخاب سیاست"}
+                  multiple={false}
+                  options={(
+                    [
+                      ["review", "نیازمند تأیید"],
+                      ["direct", "انتشار مستقیم"],
+                    ] as const
+                  ).map(([value, label]) => ({
+                    id: String(value),
+                    name: String("" + label + ""),
+                    selected: policy === value,
+                    disabled: busy || !policyAllowed,
+                    onSelect: () => setPolicy(value),
+                  }))}
+                />
                 <Button
                   disabled={
                     busy || !policyAllowed || policy === current.content_policy

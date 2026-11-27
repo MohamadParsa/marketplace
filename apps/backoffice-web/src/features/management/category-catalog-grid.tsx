@@ -1,3 +1,5 @@
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { useMemo, useState } from "react";
 import { Alert, Button, TextField } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
@@ -33,37 +35,61 @@ export function CategoryCatalogGrid({
     [archive, setArchive] = useState<Category>();
   const [archiveKey, setArchiveKey] = useState(crypto.randomUUID());
   const categories = state.categories ?? [];
+  const [applied, setApplied] = useState({
+    name: "",
+    english: "",
+    published: "all",
+    archived: "active",
+    attribute: "all",
+    parent: "",
+    branch: "direct",
+  });
   const rows = useMemo(
     () =>
       categories.filter((c) => {
         if (
-          !norm(c.name).includes(norm(name)) ||
-          !norm(c.english_name ?? "").includes(norm(english))
+          !norm(c.name).includes(norm(applied.name)) ||
+          !norm(c.english_name ?? "").includes(norm(applied.english))
         )
-          return false;
-        if (published !== "all" && c.published !== (published === "yes"))
-          return false;
-        if (archived !== "all" && c.archived !== (archived === "archived"))
           return false;
         if (
-          (attribute === "bound" && !c.bindings?.length) ||
-          (attribute === "none" && !!c.bindings?.length) ||
-          (attribute === "axis" && !c.bindings?.some((b) => b.axis))
+          applied.published !== "all" &&
+          c.published !== (applied.published === "yes")
         )
           return false;
-        if (branch === "root") return !c.parent_id;
-        if (!parent) return true;
-        if (branch === "direct") return c.parent_id === parent;
+        if (
+          applied.archived !== "all" &&
+          c.archived !== (applied.archived === "applied.archived")
+        )
+          return false;
+        if (
+          (applied.attribute === "bound" && !c.bindings?.length) ||
+          (applied.attribute === "none" && !!c.bindings?.length) ||
+          (applied.attribute === "axis" && !c.bindings?.some((b) => b.axis))
+        )
+          return false;
+        if (applied.branch === "root") return !c.parent_id;
+        if (!applied.parent) return true;
+        if (applied.branch === "direct") return c.parent_id === applied.parent;
         let current: Category | undefined = c;
         const seen = new Set<string>();
         while (current && !seen.has(current.id)) {
-          if (current.id === parent) return true;
+          if (current.id === applied.parent) return true;
           seen.add(current.id);
           current = categories.find((x) => x.id === current?.parent_id);
         }
         return false;
       }),
-    [categories, name, english, published, archived, attribute, parent, branch],
+    [
+      categories,
+      applied.name,
+      applied.english,
+      applied.published,
+      applied.archived,
+      applied.attribute,
+      applied.parent,
+      applied.branch,
+    ],
   );
   const chips = (
     label: string,
@@ -72,124 +98,148 @@ export function CategoryCatalogGrid({
     options: string[][],
   ) => (
     <div className="catalog-filter-choice" role="group" aria-label={label}>
-      <strong>{label}</strong>
       <div>
-        {options.map(([key, text]) => (
-          <Button
-            key={key}
-            size="small"
-            variant={key === value ? "contained" : "outlined"}
-            aria-pressed={key === value}
-            onClick={() => change(key)}
-          >
-            {text}
-          </Button>
-        ))}
+        <OptionSelect
+          label={label}
+          multiple={false}
+          options={options.map(([key, text]) => ({
+            id: String(key),
+            name: String("" + text + ""),
+            selected: key === value,
+            disabled: false,
+            onSelect: () => change(key),
+          }))}
+        />
       </div>
     </div>
   );
   return (
     <>
-      <section
-        className="panel catalog-filters"
-        aria-label="فیلترهای دسته‌بندی"
+      <div className="toolbar">
+        <Button
+          variant="contained"
+          disabled={busy || !can("catalog.category.create", "management")}
+          onClick={() => onEdit()}
+        >
+          دسته جدید
+        </Button>
+      </div>
+      <FilterPanel
+        onSearch={() =>
+          setApplied({
+            name,
+            english,
+            published,
+            archived,
+            attribute,
+            parent,
+            branch,
+          })
+        }
       >
-        <h2 className="filter-panel-title">فیلترهای دسته‌بندی</h2>
-        <div className="catalog-filter-text">
-          <TextField
-            size="small"
-            label="فیلتر نام فارسی"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            size="small"
-            label="فیلتر نام انگلیسی"
-            value={english}
-            onChange={(e) => setEnglish(e.target.value)}
-          />
-        </div>
-        {chips("انتشار", published, setPublished, [
-          ["all", "همه انتشارها"],
-          ["yes", "منتشرشده"],
-          ["no", "پیش‌نویس"],
-        ])}
-        {chips("بایگانی", archived, setArchived, [
-          ["active", "غیربایگانی"],
-          ["archived", "بایگانی‌شده"],
-          ["all", "همه وضعیت‌ها"],
-        ])}
-        {chips("خصوصیت", attribute, setAttribute, [
-          ["all", "همه دسته‌ها"],
-          ["bound", "دارای خصوصیت"],
-          ["none", "بدون خصوصیت"],
-          ["axis", "دارای محور تنوع"],
-        ])}
-        <details className="catalog-branch-filter">
-          <summary>
-            والد و شاخه:{" "}
-            {branch === "root"
-              ? "دسته‌های اصلی"
-              : parent
-                ? categoryPath(categories, parent)
-                : "همه دسته‌ها"}
-          </summary>
-          {chips("محدوده شاخه", branch, setBranch, [
-            ["direct", "فرزندان مستقیم"],
-            ["branch", "والد و همه زیرشاخه‌ها"],
-            ["root", "فقط دسته‌های اصلی"],
-          ])}
-          {branch !== "root" && (
-            <CategoryTree
-              categories={categories}
-              value={parent}
-              includeArchived
-              allowRoot={false}
-              onChange={setParent}
+        <section
+          className="panel catalog-filters"
+          aria-label="فیلترهای دسته‌بندی"
+        >
+          <h2 className="filter-panel-title">فیلترهای دسته‌بندی</h2>
+          <div className="catalog-filter-text">
+            <TextField
+              size="small"
+              label="فیلتر نام فارسی"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-          )}
-          <Button
-            onClick={() => {
-              setParent("");
-              setBranch("direct");
-            }}
-          >
-            حذف فیلتر شاخه
-          </Button>
-        </details>
-        <div className="toolbar">
-          <span aria-live="polite">
-            {rows.length.toLocaleString("fa-IR")} دسته از{" "}
-            {categories.length.toLocaleString("fa-IR")}
-          </span>
-          <Button
-            onClick={() => {
-              setName("");
-              setEnglish("");
-              setPublished("all");
-              setArchived("active");
-              setAttribute("all");
-              setParent("");
-              setBranch("direct");
-            }}
-          >
-            پاک‌کردن فیلترهای دسته
-          </Button>
-          <Button
-            variant="contained"
-            disabled={busy || !can("catalog.category.create", "management")}
-            onClick={() => onEdit()}
-          >
-            دسته جدید
-          </Button>
-        </div>
-      </section>
+            <TextField
+              size="small"
+              label="فیلتر نام انگلیسی"
+              value={english}
+              onChange={(e) => setEnglish(e.target.value)}
+            />
+          </div>
+          {chips("انتشار", published, setPublished, [
+            ["all", "همه انتشارها"],
+            ["yes", "منتشرشده"],
+            ["no", "پیش‌نویس"],
+          ])}
+          {chips("بایگانی", archived, setArchived, [
+            ["active", "غیربایگانی"],
+            ["archived", "بایگانی‌شده"],
+            ["all", "همه وضعیت‌ها"],
+          ])}
+          {chips("خصوصیت", attribute, setAttribute, [
+            ["all", "همه دسته‌ها"],
+            ["bound", "دارای خصوصیت"],
+            ["none", "بدون خصوصیت"],
+            ["axis", "دارای محور تنوع"],
+          ])}
+          <details className="catalog-branch-filter">
+            <summary>
+              والد و شاخه:{" "}
+              {branch === "root"
+                ? "دسته‌های اصلی"
+                : parent
+                  ? categoryPath(categories, parent)
+                  : "همه دسته‌ها"}
+            </summary>
+            {chips("محدوده شاخه", branch, setBranch, [
+              ["direct", "فرزندان مستقیم"],
+              ["branch", "والد و همه زیرشاخه‌ها"],
+              ["root", "فقط دسته‌های اصلی"],
+            ])}
+            {branch !== "root" && (
+              <CategoryTree
+                categories={categories}
+                value={parent}
+                includeArchived
+                allowRoot={false}
+                onChange={setParent}
+              />
+            )}
+            <Button
+              onClick={() => {
+                setParent("");
+                setBranch("direct");
+              }}
+            >
+              حذف فیلتر شاخه
+            </Button>
+          </details>
+          <div className="toolbar">
+            <span aria-live="polite">
+              {rows.length.toLocaleString("fa-IR")} دسته از{" "}
+              {categories.length.toLocaleString("fa-IR")}
+            </span>
+            <Button
+              onClick={() => {
+                setApplied({
+                  name: "",
+                  english: "",
+                  published: "all",
+                  archived: "active",
+                  attribute: "all",
+                  parent: "",
+                  branch: "direct",
+                });
+                setName("");
+                setEnglish("");
+                setPublished("all");
+                setArchived("active");
+                setAttribute("all");
+                setParent("");
+                setBranch("direct");
+              }}
+            >
+              پاک‌کردن فیلترهای دسته
+            </Button>
+          </div>
+        </section>
+      </FilterPanel>
       <section
         className="panel category-catalog-grid"
         aria-label="فهرست دسته‌بندی‌ها"
       >
         <DataTable
-        searchable={false}
+          searchable={false}
           key={JSON.stringify([
             name,
             english,

@@ -1,3 +1,5 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import {
   Alert,
@@ -83,21 +85,7 @@ export function StoreEligibilityEditor({
     }
     return permit;
   };
-  function chips(ids: string[], remove: (id: string) => void) {
-    return (
-      <div className="store-policy-chips">
-        {ids.map((id) => (
-          <Chip
-            key={id}
-            label={categoryPath(categories, id) || "دسته در دسترس نیست"}
-            disabled={busy || locked || !allowed}
-            onDelete={() => remove(id)}
-          />
-        ))}
-        {!ids.length && <small>موردی انتخاب نشده است.</small>}
-      </div>
-    );
-  }
+
   async function submit() {
     if (busy || locked || !allowed) return;
     setBusy(true);
@@ -162,24 +150,25 @@ export function StoreEligibilityEditor({
       <fieldset disabled={busy || locked || !allowed} className="axis-inputs">
         <legend>محدوده دسته‌ها</legend>
         <div className="toolbar" role="group" aria-label="حالت دسته‌های مجاز">
-          {(
-            [
-              ["all", "همه دسته‌ها"],
-              ["selected", "فقط دسته‌های انتخابی"],
-            ] as const
-          ).map(([id, name]) => (
-            <Button
-              key={id}
-              aria-pressed={mode === id}
-              variant={mode === id ? "contained" : "outlined"}
-              onClick={() => {
+          <OptionSelect
+            label={"حالت دسته‌های مجاز"}
+            multiple={false}
+            options={(
+              [
+                ["all", "همه دسته‌ها"],
+                ["selected", "فقط دسته‌های انتخابی"],
+              ] as const
+            ).map(([id, name]) => ({
+              id: String(id),
+              name: String("" + name + ""),
+              selected: mode === id,
+              disabled: false,
+              onSelect: () => {
                 setMode(id);
                 changed();
-              }}
-            >
-              {name}
-            </Button>
-          ))}
+              },
+            }))}
+          />
         </div>
         <p>
           انتخاب هر دسته شامل زیرشاخه‌های فعلی و آینده است؛ ممنوعیت همیشه بر
@@ -217,10 +206,19 @@ export function StoreEligibilityEditor({
         {mode === "all" ? (
           <p>همه دسته‌ها، به‌جز شاخه‌های ممنوع پایین.</p>
         ) : (
-          chips(allow, (id) => {
-            setAllow((old) => old.filter((x) => x !== id));
-            changed();
-          })
+          <MultiChoiceField
+            label="دسته‌های مجاز"
+            value={allow}
+            disabled={busy || locked || !allowed}
+            options={categories.map((c) => ({
+              id: c.id,
+              name: categoryPath(categories, c.id),
+            }))}
+            onChange={(ids) => {
+              setAllow(ids);
+              changed();
+            }}
+          />
         )}
         {mode === "selected" && !allow.length && (
           <Alert severity="warning">
@@ -229,10 +227,21 @@ export function StoreEligibilityEditor({
           </Alert>
         )}
         <h4>دسته‌های ممنوع</h4>
-        {chips(deny, (id) => {
-          setDeny((old) => old.filter((x) => x !== id));
-          changed();
-        })}
+        {
+          <MultiChoiceField
+            label="دسته‌های ممنوع"
+            value={deny}
+            disabled={busy || locked || !allowed}
+            options={categories.map((c) => ({
+              id: c.id,
+              name: categoryPath(categories, c.id),
+            }))}
+            onChange={(ids) => {
+              setDeny(ids);
+              changed();
+            }}
+          />
+        }
         {category && (
           <Alert severity={previewCategory() ? "success" : "warning"}>
             نتیجه این پیش‌نویس برای «{categoryPath(categories, category)}»:{" "}
@@ -245,23 +254,19 @@ export function StoreEligibilityEditor({
           در PDP فعلی فقط قیمت نقدی و نام اصلی نمایش داده می‌شود. نام اختصاصی پس
           از انتخاب روش در مسیر خرید اعمال می‌شود؛ هویت فروشگاه تغییر نمی‌کند.
         </p>
+        <MultiChoiceField
+          label="روش‌های فروش مجاز"
+          value={enabled}
+          options={methods.map((m) => ({ id: m.id, name: m.name }))}
+          disabled={busy || locked || !allowed}
+          onChange={(ids) => {
+            setEnabled(ids);
+            changed();
+          }}
+        />
         {methods.map((m) => (
           <div className="store-policy-method" key={m.id}>
-            <label>
-              <Checkbox
-                checked={enabled.includes(m.id)}
-                onChange={(e) => {
-                  setEnabled((old) =>
-                    e.target.checked
-                      ? [...old, m.id]
-                      : old.filter((id) => id !== m.id),
-                  );
-                  changed();
-                }}
-              />
-              اجازه فروش با روش {m.name}
-              {!m.active && <small> · روش سراسری فعلاً غیرفعال است</small>}
-            </label>
+            <></>
             <TextField
               size="small"
               label={`نام نمایشی فروشگاه برای ${m.name}`}
@@ -309,26 +314,15 @@ export function StoreEligibilityEditor({
           </Alert>
         )}
         <h4>پیش‌نمایش نام</h4>
-        <div
-          className="toolbar"
-          role="group"
-          aria-label="پیش‌نمایش نام فروشگاه"
-        >
-          <Button aria-pressed={!preview} onClick={() => setPreview("")}>
-            پیش از انتخاب روش
-          </Button>
-          {methods
+        <ChoiceField
+          label="پیش‌نمایش نام فروشگاه"
+          value={preview}
+          clearLabel="پیش از انتخاب روش"
+          options={methods
             .filter((m) => enabled.includes(m.id))
-            .map((m) => (
-              <Button
-                key={m.id}
-                aria-pressed={preview === m.id}
-                onClick={() => setPreview(m.id)}
-              >
-                {m.name}
-              </Button>
-            ))}
-        </div>
+            .map((m) => ({ id: m.id, name: m.name }))}
+          onChange={setPreview}
+        />
         <p className="store-policy-name-preview">
           {preview && enabled.includes(preview)
             ? aliases[preview]?.trim() || store.name

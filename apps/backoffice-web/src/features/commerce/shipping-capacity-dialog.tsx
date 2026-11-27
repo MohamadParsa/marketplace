@@ -1,3 +1,4 @@
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import {
   Alert,
@@ -203,25 +204,20 @@ export function ShippingCapacityDialog({
                       role="group"
                       aria-label="پیش‌نمایش تاریخ‌های قابل تحویل"
                     >
-                      {data.preview.days.map((day) => (
-                        <Button
-                          key={day.date}
-                          disabled={!day.open}
-                          aria-pressed={date === day.date}
-                          variant={date === day.date ? "contained" : "outlined"}
-                          onClick={() => {
+                      <OptionSelect
+                        label={"پیش‌نمایش تاریخ‌های قابل تحویل"}
+                        multiple={false}
+                        options={data.preview.days.map((day) => ({
+                          id: String(day.date),
+                          name: String("" + "" + ""),
+                          selected: date === day.date,
+                          disabled: !day.open,
+                          onSelect: () => {
                             setDate(day.date);
                             setDateText(persianCapacityDate(day.date));
-                          }}
-                        >
-                          <span>{dateLabel(day.date)}</span>
-                          <small>
-                            {day.open
-                              ? `${number(day.slots.length)} بازهٔ آزاد`
-                              : "بسته یا پر"}
-                          </small>
-                        </Button>
-                      ))}
+                          },
+                        }))}
+                      />
                     </div>
                   </>
                 )}

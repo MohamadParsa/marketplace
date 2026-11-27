@@ -1,3 +1,4 @@
+import { OptionSelect } from "../../shared/option-select";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -243,23 +244,24 @@ export function AxisConversionDialog({
                   role="group"
                   aria-label="محورهای مقصد"
                 >
-                  {data.attributes.map((a) => (
-                    <Button
-                      key={a.id}
-                      aria-pressed={axes.includes(a.id)}
-                      variant={axes.includes(a.id) ? "contained" : "outlined"}
-                      onClick={() => {
+                  <OptionSelect
+                    label={"محورهای مقصد"}
+                    multiple={true}
+                    options={data.attributes.map((a) => ({
+                      id: String(a.id),
+                      name: String("" + a.name + ""),
+                      selected: axes.includes(a.id),
+                      disabled: false,
+                      onSelect: () => {
                         setAxes((old) =>
                           old.includes(a.id)
                             ? old.filter((id) => id !== a.id)
                             : [...old, a.id],
                         );
                         reset();
-                      }}
-                    >
-                      {a.name}
-                    </Button>
-                  ))}
+                      },
+                    }))}
+                  />
                 </div>
                 {!axes.length && (
                   <p>
@@ -300,14 +302,15 @@ export function AxisConversionDialog({
                             role="group"
                             aria-label={`مقدار ${a.name}`}
                           >
-                            {a.options.map((value) => (
-                              <Button
-                                key={value}
-                                aria-pressed={selected === value}
-                                variant={
-                                  selected === value ? "contained" : "outlined"
-                                }
-                                onClick={() => {
+                            <OptionSelect
+                              label={`مقدار ${a.name}`}
+                              multiple={false}
+                              options={a.options.map((value) => ({
+                                id: String(value),
+                                name: String("" + value + ""),
+                                selected: selected === value,
+                                disabled: false,
+                                onSelect: () => {
                                   setMapping((old) => ({
                                     ...old,
                                     [v.id]: [
@@ -318,11 +321,9 @@ export function AxisConversionDialog({
                                     ],
                                   }));
                                   reset();
-                                }}
-                              >
-                                {value}
-                              </Button>
-                            ))}
+                                },
+                              }))}
+                            />
                           </div>
                         </details>
                       );

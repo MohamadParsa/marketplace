@@ -84,6 +84,7 @@ const theme = createTheme({
   palette: { primary: { main: "#B51F46" }, background: { default: "#F7F7F9" } },
   shape: { borderRadius: 10 },
   components: {
+    MuiTextField: { defaultProps: { size: "small", fullWidth: true, InputLabelProps: { shrink: true } } },
     MuiButton: { defaultProps: { disableElevation: true } },
     MuiDialog: { defaultProps: { dir: "rtl" } },
   },

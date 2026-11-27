@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[یکدست‌سازی کنترل‌ها، فیلترها و فرم‌های بک‌آفیس — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/admin-controls-and-filters-2026-11-27.md)
+
 [خوانایی قیمت، فرم‌های بسته و کروسل‌های پنج‌تایی سایت — ۲۰۲۶-۱۱-۲۷](delivery/storefront-followups/storefront-readability-review-2026-11-27.md)
 
 [اصلاحات بازبینی سایت ۲۰۲۶-۱۱-۲۷ و شواهد مرورگر](delivery/storefront-followups/storefront-review-fixes-2026-11-27.md)

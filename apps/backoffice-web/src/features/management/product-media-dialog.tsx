@@ -88,7 +88,7 @@ export function ProductMediaDialog({
     ),
   ];
   return (
-    <Dialog open fullWidth maxWidth="md" onClose={() => !busy && close()}>
+    <Dialog open fullWidth maxWidth="lg" onClose={() => !busy && close()}>
       <DialogTitle>گالری و تصویر تنوع</DialogTitle>
       <DialogContent>
         <div className="home-admin-form">

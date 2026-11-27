@@ -1,3 +1,6 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import {
   Alert,
@@ -11,7 +14,7 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWorkspace } from "../../shared/workspace";
-import {ShippingCapacityDialog} from "./shipping-capacity-dialog";
+import { ShippingCapacityDialog } from "./shipping-capacity-dialog";
 import { DataTable, PageHeader } from "../../shared/components";
 import {
   MethodEditor,
@@ -95,6 +98,8 @@ export function StoreShippingPage() {
     [status, setStatus] = useState(""),
     [all, setAll] = useState(false),
     [notice, setNotice] = useState("");
+  const [draftMethodSearch, setDraftMethodSearch] = useState("");
+  const [draftStatus, setDraftStatus] = useState("");
   const [editing, setEditing] = useState<{
     row: Binding;
     targets: Target[];
@@ -104,7 +109,7 @@ export function StoreShippingPage() {
     row: Binding;
     command: Command;
   }>();
-  const [capacity,setCapacity]=useState<Binding>();
+  const [capacity, setCapacity] = useState<Binding>();
   async function request(body?: Command, key?: string): Promise<Directory> {
     const response = await fetch(root, {
       method: body ? "POST" : "GET",
@@ -191,93 +196,88 @@ export function StoreShippingPage() {
       )}
       {store && (
         <>
-          <section className="catalog-filters">
-            <h2 className="filter-panel-title">فروشگاه و فیلتر روش‌ها</h2>
-            <TextField
-              label="جست‌وجوی فروشگاه"
-              size="small"
-              value={search}
-              disabled={busy}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <TextField
-              label="جست‌وجوی روش حمل"
-              size="small"
-              value={methodSearch}
-              onChange={(e) => setMethodSearch(e.target.value)}
-            />
-            <div
-              role="group"
-              aria-label="انتخاب فروشگاه حمل"
-              className="store-shipping-stores"
-            >
-              {directory?.stores
-                .filter((s) => s.name.includes(search))
-                .map((s) => (
-                  <Button
-                    key={s.id}
-                    disabled={busy}
-                    variant={store.id === s.id ? "contained" : "outlined"}
-                    aria-pressed={store.id === s.id}
-                    onClick={() => setSelected(s.id)}
-                  >
-                    {s.name}
-                  </Button>
-                ))}
-            </div>
-            {allAllowed && (
+          <FilterPanel
+            onSearch={() => {
+              setMethodSearch(draftMethodSearch);
+              setStatus(draftStatus);
+            }}
+          >
+            <section className="catalog-filters">
+              <h2 className="filter-panel-title">فروشگاه و فیلتر روش‌ها</h2>
+              <TextField
+                label="جست‌وجوی فروشگاه"
+                size="small"
+                value={search}
+                disabled={busy}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <TextField
+                label="جست‌وجوی روش حمل"
+                size="small"
+                value={draftMethodSearch}
+                onChange={(e) => setDraftMethodSearch(e.target.value)}
+              />
               <div
                 role="group"
-                aria-label="محدوده تغییر حمل"
+                aria-label="انتخاب فروشگاه حمل"
+                className="store-shipping-stores"
+              >
+                <OptionSelect
+                  label={"انتخاب فروشگاه حمل"}
+                  multiple={false}
+                  options={directory?.stores
+                    .filter((s) => s.name.includes(search))
+                    .map((s) => ({
+                      id: String(s.id),
+                      name: String("" + s.name + ""),
+                      selected: store.id === s.id,
+                      disabled: busy,
+                      onSelect: () => setSelected(s.id),
+                    }))}
+                />
+              </div>
+              {allAllowed && (
+                <ChoiceField
+                  label="محدوده تغییر حمل"
+                  value={all ? "all" : "one"}
+                  disabled={busy}
+                  options={[
+                    { id: "one", name: "همین فروشگاه" },
+                    { id: "all", name: "همه فروشگاه‌ها" },
+                  ]}
+                  onChange={(value) => setAll(value === "all")}
+                />
+              )}
+              {all && allAllowed && (
+                <Alert severity="warning">
+                  انتساب، غیرفعال‌سازی و ساخت/ارسال پیش‌نویس روی همهٔ فروشگاه‌ها
+                  اعمال می‌شود. بررسی و تأیید هر نسخه جداگانه انجام می‌شود.
+                </Alert>
+              )}
+              <div
+                role="group"
+                aria-label="وضعیت روش حمل فروشگاه"
                 className="toolbar"
               >
-                <Button
-                  disabled={busy}
-                  aria-pressed={!all}
-                  variant={!all ? "contained" : "outlined"}
-                  onClick={() => setAll(false)}
-                >
-                  همین فروشگاه
-                </Button>
-                <Button
-                  disabled={busy}
-                  aria-pressed={all}
-                  variant={all ? "contained" : "outlined"}
-                  onClick={() => setAll(true)}
-                >
-                  همهٔ فروشگاه‌ها (
-                  {directory?.stores.length.toLocaleString("fa-IR")})
-                </Button>
+                <OptionSelect
+                  label={"وضعیت روش حمل فروشگاه"}
+                  multiple={false}
+                  options={[
+                    ["", "همه"],
+                    ...Object.entries(statuses).filter(
+                      ([key]) => key !== "withdrawn",
+                    ),
+                  ].map(([key, label]) => ({
+                    id: String(key),
+                    name: String("" + label + ""),
+                    selected: draftStatus === key,
+                    disabled: false,
+                    onSelect: () => setDraftStatus(key),
+                  }))}
+                />
               </div>
-            )}
-            {all && allAllowed && (
-              <Alert severity="warning">
-                انتساب، غیرفعال‌سازی و ساخت/ارسال پیش‌نویس روی همهٔ فروشگاه‌ها
-                اعمال می‌شود. بررسی و تأیید هر نسخه جداگانه انجام می‌شود.
-              </Alert>
-            )}
-            <div
-              role="group"
-              aria-label="وضعیت روش حمل فروشگاه"
-              className="toolbar"
-            >
-              {[
-                ["", "همه"],
-                ...Object.entries(statuses).filter(
-                  ([key]) => key !== "withdrawn",
-                ),
-              ].map(([key, label]) => (
-                <Button
-                  key={key}
-                  aria-pressed={status === key}
-                  variant={status === key ? "contained" : "outlined"}
-                  onClick={() => setStatus(key)}
-                >
-                  {label}
-                </Button>
-              ))}
-            </div>
-          </section>
+            </section>
+          </FilterPanel>
           <h2>{store.name}</h2>
           <DataTable
             key={`${store.id}:${status}:${methodSearch}`}
@@ -384,7 +384,9 @@ export function StoreShippingPage() {
                     <Button disabled={busy} onClick={() => action(row, "view")}>
                       جزئیات و تفاوت‌ها
                     </Button>
-                  <Button disabled={busy} onClick={()=>setCapacity(row)}>ظرفیت روز</Button>
+                    <Button disabled={busy} onClick={() => setCapacity(row)}>
+                      ظرفیت روز
+                    </Button>
                     {store.can_review && row.draft?.status === "submitted" && (
                       <>
                         <Button
@@ -479,7 +481,14 @@ export function StoreShippingPage() {
           }}
         />
       )}
-      {capacity&&store&&<ShippingCapacityDialog storeID={store.id} methodID={capacity.base.id} name={`${store.name} / ${capacity.base.name}`} close={()=>setCapacity(undefined)}/>}
+      {capacity && store && (
+        <ShippingCapacityDialog
+          storeID={store.id}
+          methodID={capacity.base.id}
+          name={`${store.name} / ${capacity.base.name}`}
+          close={() => setCapacity(undefined)}
+        />
+      )}
     </div>
   );
 }
@@ -504,7 +513,7 @@ function ShippingDecision({
   const review = command.action === "approve" || command.action === "reject";
   const view = command.action === "view";
   const fields: [keyof Method, string][] = [
-    ["schedule","برنامهٔ روزها و ساعت"],
+    ["schedule", "برنامهٔ روزها و ساعت"],
     ["collection_mode", "دریافت هزینه"],
     ["delivery_mode", "نوع تحویل"],
     ["fee_toman", "پیش‌کرایه (تومان)"],
@@ -530,7 +539,38 @@ function ShippingDecision({
   };
   const { state } = useWorkspace();
   const display = (value: unknown) => {
-    if(value&&typeof value==='object'&&'windows' in value&&'days' in value){const schedule=value as NonNullable<Method['schedule']>;const days=['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنج‌شنبه','جمعه','شنبه'];return schedule.days.map(day=>`${days[day.weekday]} ${day.active?'باز':'بسته'}: ${day.slots.map(slot=>{const window=schedule.windows.find(w=>w.id===slot.window_id);return `${window?.start??'—'} تا ${window?.end??'—'} / ظرفیت ${slot.capacity??'—'}`}).join('، ')}`).join('؛ ')||'برنامهٔ خالی'}
+    if (
+      value &&
+      typeof value === "object" &&
+      "windows" in value &&
+      "days" in value
+    ) {
+      const schedule = value as NonNullable<Method["schedule"]>;
+      const days = [
+        "یکشنبه",
+        "دوشنبه",
+        "سه‌شنبه",
+        "چهارشنبه",
+        "پنج‌شنبه",
+        "جمعه",
+        "شنبه",
+      ];
+      return (
+        schedule.days
+          .map(
+            (day) =>
+              `${days[day.weekday]} ${day.active ? "باز" : "بسته"}: ${day.slots
+                .map((slot) => {
+                  const window = schedule.windows.find(
+                    (w) => w.id === slot.window_id,
+                  );
+                  return `${window?.start ?? "—"} تا ${window?.end ?? "—"} / ظرفیت ${slot.capacity ?? "—"}`;
+                })
+                .join("، ")}`,
+          )
+          .join("؛ ") || "برنامهٔ خالی"
+      );
+    }
     if (Array.isArray(value))
       return (
         value

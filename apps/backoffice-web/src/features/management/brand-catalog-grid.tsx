@@ -1,3 +1,5 @@
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { DataTable } from "../../shared/components";
@@ -22,12 +24,18 @@ export function BrandCatalogGrid({
     [active, setActive] = useState("all"),
     [image, setImage] = useState("all");
   const [icon, setIcon] = useState<IconTarget>();
+  const [applied, setApplied] = useState({
+    name: "",
+    english: "",
+    active: "all",
+    image: "all",
+  });
   const rows = (state.brands ?? []).filter(
     (b) =>
-      norm(b.name).includes(norm(name)) &&
-      norm(b.english_name ?? "").includes(norm(english)) &&
-      (active === "all" || b.active === (active === "yes")) &&
-      (image === "all" || !!b.icon_id === (image === "yes")),
+      norm(b.name).includes(norm(applied.name)) &&
+      norm(b.english_name ?? "").includes(norm(applied.english)) &&
+      (applied.active === "all" || b.active === (applied.active === "yes")) &&
+      (applied.image === "all" || !!b.icon_id === (applied.image === "yes")),
   );
   const choice = (
     label: string,
@@ -36,77 +44,88 @@ export function BrandCatalogGrid({
     options: string[][],
   ) => (
     <div className="catalog-filter-choice" role="group" aria-label={label}>
-      <strong>{label}</strong>
       <div>
-        {options.map(([key, text]) => (
-          <Button
-            key={key}
-            size="small"
-            variant={key === value ? "contained" : "outlined"}
-            aria-pressed={key === value}
-            onClick={() => change(key)}
-          >
-            {text}
-          </Button>
-        ))}
+        <OptionSelect
+          label={label}
+          multiple={false}
+          options={options.map(([key, text]) => ({
+            id: String(key),
+            name: String("" + text + ""),
+            selected: key === value,
+            disabled: false,
+            onSelect: () => change(key),
+          }))}
+        />
       </div>
     </div>
   );
   return (
     <>
-      <section className="catalog-filters" aria-label="فیلترهای برند">
-        <h2 className="filter-panel-title">فیلترهای برند</h2>
-        <div className="catalog-filter-text">
-          <TextField
-            size="small"
-            label="فیلتر نام فارسی برند"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            size="small"
-            label="فیلتر نام انگلیسی برند"
-            value={english}
-            onChange={(e) => setEnglish(e.target.value)}
-          />
-        </div>
-        {choice("وضعیت برند", active, setActive, [
-          ["all", "همه وضعیت‌ها"],
-          ["yes", "فعال"],
-          ["no", "غیرفعال"],
-        ])}
-        {choice("تصویر برند", image, setImage, [
-          ["all", "همه تصاویر"],
-          ["yes", "دارای تصویر"],
-          ["no", "بدون تصویر"],
-        ])}
-        <div className="toolbar">
-          <span aria-live="polite">
-            {rows.length.toLocaleString("fa-IR")} برند
-          </span>
-          <Button
-            onClick={() => {
-              setName("");
-              setEnglish("");
-              setActive("all");
-              setImage("all");
-            }}
-          >
-            پاک‌کردن فیلترهای برند
-          </Button>
-          <Button
-            variant="contained"
-            disabled={busy || !can("catalog.brand.create", "management")}
-            onClick={() => onEdit()}
-          >
-            برند جدید
-          </Button>
-        </div>
-      </section>
+      <div className="toolbar">
+        <Button
+          variant="contained"
+          disabled={busy || !can("catalog.brand.create", "management")}
+          onClick={() => onEdit()}
+        >
+          برند جدید
+        </Button>
+      </div>
+      <FilterPanel
+        onSearch={() => setApplied({ name, english, active, image })}
+      >
+        <section className="catalog-filters" aria-label="فیلترهای برند">
+          <h2 className="filter-panel-title">فیلترهای برند</h2>
+          <div className="catalog-filter-text">
+            <TextField
+              size="small"
+              label="فیلتر نام فارسی برند"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              size="small"
+              label="فیلتر نام انگلیسی برند"
+              value={english}
+              onChange={(e) => setEnglish(e.target.value)}
+            />
+          </div>
+          {choice("وضعیت برند", active, setActive, [
+            ["all", "همه وضعیت‌ها"],
+            ["yes", "فعال"],
+            ["no", "غیرفعال"],
+          ])}
+          {choice("تصویر برند", image, setImage, [
+            ["all", "همه تصاویر"],
+            ["yes", "دارای تصویر"],
+            ["no", "بدون تصویر"],
+          ])}
+          <div className="toolbar">
+            <span aria-live="polite">
+              {rows.length.toLocaleString("fa-IR")} برند
+            </span>
+            <Button
+              onClick={() => {
+                setApplied({
+                  name: "",
+                  english: "",
+                  active: "all",
+                  image: "all",
+                });
+                setName("");
+                setEnglish("");
+                setActive("all");
+                setImage("all");
+              }}
+            >
+              پاک‌کردن فیلترهای برند
+            </Button>
+          </div>
+        </section>
+      </FilterPanel>
       <section aria-label="فهرست برندها" className="category-catalog-grid">
         <DataTable
-        searchable={false}
-          key={JSON.stringify([name, english, active, image])}
+          searchable={false}
+          key={JSON.stringify(applied)}
           rows={rows}
           columns={[
             {

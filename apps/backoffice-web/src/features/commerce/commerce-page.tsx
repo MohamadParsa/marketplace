@@ -1,4 +1,8 @@
-import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
+import { MultiChoiceField } from "../../shared/option-select";
+import {
+  deliveryPromise,
+  shippingCharge,
+} from "../../../../../packages/commerce-client/shipping-presentation";
 import { SupplyOverduePanel } from "../operations/supply-overdue-panel";
 import { Link } from "react-router-dom";
 import {
@@ -165,7 +169,10 @@ export function CommercePage({
     const v = await request<AdminView>("/backoffice/commerce", token);
     setData(v);
     if (v.permissions["commerce.settings.read"]) {
-      const next = await request<Settings>("/backoffice/commerce/settings", token);
+      const next = await request<Settings>(
+        "/backoffice/commerce/settings",
+        token,
+      );
       const timing = next.shipping_timing;
       if (
         !timing ||
@@ -175,7 +182,7 @@ export function CommercePage({
         typeof timing.allow_same_day_slots !== "boolean"
       ) {
         throw Error(
-          "تنظیمات زمان‌بندی از سرور دریافت نشد. نسخهٔ رابط و سرویس باید هماهنگ شوند؛ پس از به‌روزرسانی سرویس، تازه‌سازی را بزنید.",
+          "تنظیمات زمان‌بندی از سرور دریافت نشد. نسخهٔ رابط و سرویس باید هماهنگ شوند؛ پس از به‌روزرسانی سرویس، به‌روزرسانی فهرست را بزنید.",
         );
       }
       setSettings(next);
@@ -251,7 +258,7 @@ export function CommercePage({
             })
           }
         >
-          تازه‌سازی
+          به‌روزرسانی فهرست
         </Button>
       </div>
       {error && <Alert severity="error">{error}</Alert>}
@@ -413,7 +420,7 @@ export function CommercePage({
           if (!busy) setSelected(null);
         }}
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
       >
         <DialogTitle>
           {selectedDeposit
@@ -813,10 +820,16 @@ function PurchaseReview({
               <article key={s.store_id} className="commerce-shipment-card">
                 <b>{s.store_name}</b>
                 <p>
-                  {s.method_name} · {shippingCharge(s.collection_mode,s.fee_toman)}
+                  {s.method_name} ·{" "}
+                  {shippingCharge(s.collection_mode, s.fee_toman)}
                 </p>
-                <small>وقفه تأمین: {s.lead_days} روز {s.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}</small>
-                <p>{deliveryPromise(s.delivery,s.delivery_from,s.delivery_to)}</p>
+                <small>
+                  وقفه تأمین: {s.lead_days} روز{" "}
+                  {s.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}
+                </small>
+                <p>
+                  {deliveryPromise(s.delivery, s.delivery_from, s.delivery_to)}
+                </p>
                 <small>
                   {p.quote.lines
                     .filter((l) => l.store_id === s.store_id)
@@ -1009,9 +1022,9 @@ function SettingsForm({
   const [methods, setMethods] = useState(s.methods),
     [destination, setDestination] = useState(s.destination),
     [shipping] = useState(s.shipping),
-    [days, setDays] = useState(s.closed_weekdays),
+    [days, setDays] = useState(s.closed_weekdays ?? []),
     [timing, setTiming] = useState(s.shipping_timing),
-    [holidays, setHolidays] = useState(s.holidays.join("\n")),
+    [holidays, setHolidays] = useState((s.holidays ?? []).join("\n")),
     [business, setBusiness] = useState(businessDraft(s.business));
   const can = (key: string) => !!permissions["commerce." + key];
   const patchMethod = (i: number, patch: Partial<Method>) =>
@@ -1180,43 +1193,69 @@ function SettingsForm({
       {section(
         "روش‌های ارسال و تقویم کاری",
         <fieldset disabled={busy || !can("shipping.write")}>
-          <p>روش‌های عمومی، پوشش شهر/دسته و دریافت هزینه از صفحهٔ روش‌های حمل مدیریت می‌شوند.</p>
-          <Button component={Link} to="/shipping">مدیریت روش‌های حمل</Button>
+          <p>
+            روش‌های عمومی، پوشش شهر/دسته و دریافت هزینه از صفحهٔ روش‌های حمل
+            مدیریت می‌شوند.
+          </p>
+          <Button component={Link} to="/shipping">
+            مدیریت روش‌های حمل
+          </Button>
           <h3>زمان آماده‌سازی و تحویل</h3>
           <div className="commerce-grid">
-            <Field label="ساعت آماده‌سازی (تهران، HH:mm)" value={timing.ready_time} onChange={ready_time => setTiming({...timing,ready_time})} />
-            <Field label="مهلت شروع همان روز (HH:mm)" value={timing.cutoff_time} onChange={cutoff_time => setTiming({...timing,cutoff_time})} />
-            <Field label="حداقل فاصله تا اسلات (دقیقه)" type="number" value={String(timing.min_slot_lead_minutes)} onChange={value => setTiming({...timing,min_slot_lead_minutes:Number(value)})} />
-          </div>
-          <FormControlLabel label="اسلات همان روز با رعایت فرصت آماده‌سازی مجاز باشد" control={<Checkbox checked={timing.allow_same_day_slots} onChange={event => setTiming({...timing,allow_same_day_slots:event.target.checked})} />} />
-          <p>پایان وقفه در تعطیلی به اولین روز کاری منتقل می‌شود. روز شروع در وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به بعد، از اولین روز کاری بعد آغاز می‌شود.</p>
-          <h3>روزهای تعطیل هفته</h3>
-          {[
-            "یکشنبه",
-            "دوشنبه",
-            "سه‌شنبه",
-            "چهارشنبه",
-            "پنج‌شنبه",
-            "جمعه",
-            "شنبه",
-          ].map((d, i) => (
-            <FormControlLabel
-              key={i}
-              control={
-                <Checkbox
-                  checked={days.includes(i)}
-                  onChange={(e) =>
-                    setDays(
-                      e.target.checked
-                        ? [...days, i]
-                        : days.filter((v) => v !== i),
-                    )
-                  }
-                />
-              }
-              label={d}
+            <Field
+              label="ساعت آماده‌سازی (تهران، HH:mm)"
+              value={timing.ready_time}
+              onChange={(ready_time) => setTiming({ ...timing, ready_time })}
             />
-          ))}
+            <Field
+              label="مهلت شروع همان روز (HH:mm)"
+              value={timing.cutoff_time}
+              onChange={(cutoff_time) => setTiming({ ...timing, cutoff_time })}
+            />
+            <Field
+              label="حداقل فاصله تا اسلات (دقیقه)"
+              type="number"
+              value={String(timing.min_slot_lead_minutes)}
+              onChange={(value) =>
+                setTiming({ ...timing, min_slot_lead_minutes: Number(value) })
+              }
+            />
+          </div>
+          <FormControlLabel
+            label="اسلات همان روز با رعایت فرصت آماده‌سازی مجاز باشد"
+            control={
+              <Checkbox
+                checked={timing.allow_same_day_slots}
+                onChange={(event) =>
+                  setTiming({
+                    ...timing,
+                    allow_same_day_slots: event.target.checked,
+                  })
+                }
+              />
+            }
+          />
+          <p>
+            پایان وقفه در تعطیلی به اولین روز کاری منتقل می‌شود. روز شروع در
+            وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به بعد، از اولین روز
+            کاری بعد آغاز می‌شود.
+          </p>
+          <h3>روزهای تعطیل هفته</h3>
+          <MultiChoiceField
+            label="روزهای تعطیل هفته"
+            value={days.map(String)}
+            options={[
+              "یکشنبه",
+              "دوشنبه",
+              "سه‌شنبه",
+              "چهارشنبه",
+              "پنج‌شنبه",
+              "جمعه",
+              "شنبه",
+            ].map((name, i) => ({ id: String(i), name }))}
+            disabled={busy || !can("shipping.write")}
+            onChange={(ids) => setDays(ids.map(Number))}
+          />
           <Field
             label="تعطیلات استثنایی؛ هر خط یک تاریخ YYYY-MM-DD"
             value={holidays}
@@ -1299,7 +1338,7 @@ export function SellerCheckoutPage({ token }: { token: string }) {
           <h1>سفارش‌های فروشگاه</h1>
           <p>نمایش فقط با عضویت و مجوز مشاهده سفارش همان فروشگاه</p>
         </div>
-        <Button onClick={() => void load()}>تازه‌سازی</Button>
+        <Button onClick={() => void load()}>به‌روزرسانی فهرست</Button>
       </div>
       <SupplyOverduePanel />
       {error && <Alert severity="error">{error}</Alert>}
@@ -1315,8 +1354,21 @@ export function SellerCheckoutPage({ token }: { token: string }) {
                 <b>
                   {o.city} · {o.shipping_method}
                 </b>
-                <p>{shippingCharge(o.collection_mode,o.shipping_fee_toman ?? "0")}</p>
-                {o.delivery_from && <p>{deliveryPromise(o.delivery,o.delivery_from,o.delivery_to)}</p>}
+                <p>
+                  {shippingCharge(
+                    o.collection_mode,
+                    o.shipping_fee_toman ?? "0",
+                  )}
+                </p>
+                {o.delivery_from && (
+                  <p>
+                    {deliveryPromise(
+                      o.delivery,
+                      o.delivery_from,
+                      o.delivery_to,
+                    )}
+                  </p>
+                )}
                 <p>
                   وضعیت سفارش: {label(o.status)} · وضعیت پرداخت:{" "}
                   {label(o.payment_status)}

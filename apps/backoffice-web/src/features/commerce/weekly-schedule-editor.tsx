@@ -1,3 +1,5 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import {
   Alert,
@@ -188,18 +190,17 @@ export function WeeklyScheduleEditor({
       </Button>
       <h3>انتساب به روزهای هفته</h3>
       <div className="toolbar" role="group" aria-label="روز برنامهٔ تحویل">
-        {weekdays.map(([id, name]) => (
-          <Button
-            key={id}
-            disabled={disabled}
-            aria-pressed={selected === id}
-            variant={selected === id ? "contained" : "outlined"}
-            onClick={() => setSelected(id)}
-          >
-            {name} (
-            {value.days.find((d) => d.weekday === id)?.slots.length ?? 0})
-          </Button>
-        ))}
+        <OptionSelect
+          label={"روز برنامهٔ تحویل"}
+          multiple={false}
+          options={weekdays.map(([id, name]) => ({
+            id: String(id),
+            name: String(name),
+            selected: selected === id,
+            disabled: disabled,
+            onSelect: () => setSelected(id),
+          }))}
+        />
       </div>
       <FormControlLabel
         label={`تحویل در ${label} مجاز باشد`}
@@ -211,30 +212,31 @@ export function WeeklyScheduleEditor({
           />
         }
       />
-      <div className="toolbar" role="group" aria-label={`بازه‌های ${label}`}>
-        {value.windows.map((window) => {
-          const selected = day.slots.some((s) => s.window_id === window.id);
-          return (
-            <Button
-              key={window.id}
-              disabled={disabled}
-              aria-pressed={selected}
-              variant={selected ? "contained" : "outlined"}
-              onClick={() =>
-                setDay({
-                  ...day,
-                  slots: selected
-                    ? day.slots.filter((s) => s.window_id !== window.id)
-                    : [...day.slots, { window_id: window.id, capacity: null }],
-                })
-              }
-            >
-              {window.start || "شروع"} تا {window.end || "پایان"}
-              {window.active ? "" : " (غیرفعال)"}
-            </Button>
-          );
-        })}
-      </div>
+      <MultiChoiceField
+        label={"بازه‌های " + label}
+        value={day.slots.map((s) => s.window_id)}
+        disabled={disabled}
+        options={value.windows.map((w) => ({
+          id: w.id,
+          name:
+            (w.start || "شروع") +
+            " تا " +
+            (w.end || "پایان") +
+            (w.active ? "" : " (غیرفعال)"),
+        }))}
+        onChange={(ids) =>
+          setDay({
+            ...day,
+            slots: ids.map(
+              (id) =>
+                day.slots.find((s) => s.window_id === id) ?? {
+                  window_id: id,
+                  capacity: null,
+                },
+            ),
+          })
+        }
+      />
       <div className="shipping-slot-capacities">
         {day.slots.map((slot) => {
           const window = value.windows.find((w) => w.id === slot.window_id);
@@ -270,29 +272,15 @@ export function WeeklyScheduleEditor({
       </div>
       <details>
         <summary>کپی برنامهٔ {label} به روزهای دیگر</summary>
-        <div className="toolbar">
-          {weekdays
+        <MultiChoiceField
+          label="روزهای مقصد کپی"
+          value={copyTargets.map(String)}
+          options={weekdays
             .filter(([id]) => id !== selected)
-            .map(([id, name]) => (
-              <FormControlLabel
-                key={id}
-                label={name}
-                control={
-                  <Checkbox
-                    disabled={disabled}
-                    checked={copyTargets.includes(id)}
-                    onChange={(e) =>
-                      setCopyTargets(
-                        e.target.checked
-                          ? [...copyTargets, id]
-                          : copyTargets.filter((d) => d !== id),
-                      )
-                    }
-                  />
-                }
-              />
-            ))}
-        </div>
+            .map(([id, name]) => ({ id: String(id), name }))}
+          disabled={disabled}
+          onChange={(ids) => setCopyTargets(ids.map(Number))}
+        />
         <Button
           disabled={disabled || !copyTargets.length}
           onClick={() => {

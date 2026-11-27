@@ -1,3 +1,5 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import {
   Alert,
@@ -140,19 +142,19 @@ export function StorePreparationPage() {
             aria-label="انتخاب فروشگاه"
             style={{ flexWrap: "wrap", marginTop: 12 }}
           >
-            {rows
-              .filter((row) => row.name.includes(filter))
-              .map((row) => (
-                <Button
-                  key={row.id}
-                  disabled={editing}
-                  aria-pressed={store?.id === row.id}
-                  variant={store?.id === row.id ? "contained" : "outlined"}
-                  onClick={() => setSelected(row.id)}
-                >
-                  {row.name}
-                </Button>
-              ))}
+            <OptionSelect
+              label={"انتخاب فروشگاه"}
+              multiple={false}
+              options={rows
+                .filter((row) => row.name.includes(filter))
+                .map((row) => ({
+                  id: String(row.id),
+                  name: String("" + row.name + ""),
+                  selected: store?.id === row.id,
+                  disabled: editing,
+                  onSelect: () => setSelected(row.id),
+                }))}
+            />
           </div>
         </section>
       )}
@@ -255,7 +257,7 @@ function PreparationEditor({
   const [lead, setLead] = useState(String(store.lead_days));
   const [basis, setBasis] = useState(store.policy.day_basis);
   const [mode, setMode] = useState(store.policy.calendar_mode);
-  const [days, setDays] = useState(store.policy.working_weekdays);
+  const [days, setDays] = useState(store.policy.working_weekdays ?? []);
   const [key, setKey] = useState(crypto.randomUUID());
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -326,30 +328,19 @@ function PreparationEditor({
     >
       <h2>{store.name}</h2>
       {batch && (
-        <div className="toolbar" role="group" aria-label="محدوده اعمال تنظیمات">
-          <Button
-            disabled={busy}
-            aria-pressed={!all}
-            variant={!all ? "contained" : "outlined"}
-            onClick={() => {
-              setAll(false);
-              change();
-            }}
-          >
-            همین فروشگاه
-          </Button>
-          <Button
-            disabled={busy}
-            aria-pressed={all}
-            variant={all ? "contained" : "outlined"}
-            onClick={() => {
-              setAll(true);
-              change();
-            }}
-          >
-            همهٔ فروشگاه‌ها ({batch.names.length.toLocaleString("fa-IR")})
-          </Button>
-        </div>
+        <ChoiceField
+          label="محدوده اعمال تنظیمات"
+          value={all ? "all" : "one"}
+          disabled={busy}
+          options={[
+            { id: "one", name: "همین فروشگاه" },
+            { id: "all", name: "همه فروشگاه‌ها" },
+          ]}
+          onChange={(value) => {
+            setAll(value === "all");
+            change();
+          }}
+        />
       )}
       {all && batch && (
         <Alert severity="warning">
@@ -390,46 +381,48 @@ function PreparationEditor({
           }}
         />
         <div className="toolbar" role="group" aria-label="واحد وقفه تأمین">
-          {(
-            [
-              ["working", "روز کاری"],
-              ["calendar", "روز تقویمی"],
-            ] as const
-          ).map(([value, label]) => (
-            <Button
-              key={value}
-              aria-pressed={basis === value}
-              variant={basis === value ? "contained" : "outlined"}
-              onClick={() => {
+          <OptionSelect
+            label={"واحد وقفه تأمین"}
+            multiple={false}
+            options={(
+              [
+                ["working", "روز کاری"],
+                ["calendar", "روز تقویمی"],
+              ] as const
+            ).map(([value, label]) => ({
+              id: String(value),
+              name: String("" + label + ""),
+              selected: basis === value,
+              disabled: false,
+              onSelect: () => {
                 setBasis(value);
                 change();
-              }}
-            >
-              {label}
-            </Button>
-          ))}
+              },
+            }))}
+          />
         </div>
         <div className="toolbar" role="group" aria-label="منبع روزهای کاری">
-          {(
-            [
-              ["inherit", "ارث‌بری از سایت"],
-              ["override", "روزهای اختصاصی فروشگاه"],
-            ] as const
-          ).map(([value, label]) => (
-            <Button
-              key={value}
-              aria-pressed={mode === value}
-              variant={mode === value ? "contained" : "outlined"}
-              onClick={() => {
+          <OptionSelect
+            label={"منبع روزهای کاری"}
+            multiple={false}
+            options={(
+              [
+                ["inherit", "ارث‌بری از سایت"],
+                ["override", "روزهای اختصاصی فروشگاه"],
+              ] as const
+            ).map(([value, label]) => ({
+              id: String(value),
+              name: String("" + label + ""),
+              selected: mode === value,
+              disabled: false,
+              onSelect: () => {
                 setMode(value);
                 if (value === "override" && !days.length)
                   setDays(store.site_calendar.working_weekdays);
                 change();
-              }}
-            >
-              {label}
-            </Button>
-          ))}
+              },
+            }))}
+          />
         </div>
         {mode === "override" && (
           <div
@@ -438,23 +431,24 @@ function PreparationEditor({
             aria-label="روزهای کاری اختصاصی"
             style={{ flexWrap: "wrap" }}
           >
-            {weekdays.map(([day, label]) => (
-              <Button
-                key={day}
-                aria-pressed={days.includes(day)}
-                variant={days.includes(day) ? "contained" : "outlined"}
-                onClick={() => {
+            <OptionSelect
+              label={"روزهای کاری اختصاصی"}
+              multiple={true}
+              options={weekdays.map(([day, label]) => ({
+                id: String(day),
+                name: String("" + label + ""),
+                selected: days.includes(day),
+                disabled: false,
+                onSelect: () => {
                   setDays(
                     days.includes(day)
                       ? days.filter((value) => value !== day)
                       : [...days, day],
                   );
                   change();
-                }}
-              >
-                {label}
-              </Button>
-            ))}
+                },
+              }))}
+            />
           </div>
         )}
       </fieldset>

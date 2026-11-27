@@ -18,12 +18,23 @@ export const emptyProductContent = (): ProductContent => ({
   nofollow: false,
 });
 export function ProductContentFields({
-  value,
+  value: initial,
   onChange,
 }: {
   value: ProductContent;
   onChange: (c: ProductContent) => void;
 }) {
+  const defaults = emptyProductContent();
+  const value: ProductContent = {
+    ...defaults,
+    ...initial,
+    short_description: initial.short_description ?? "",
+    full_description: initial.full_description ?? "",
+    advantages: initial.advantages ?? [],
+    disadvantages: initial.disadvantages ?? [],
+    shipping: { ...defaults.shipping, ...initial.shipping },
+    seo: { ...defaults.seo, ...initial.seo },
+  };
   const set = (patch: Partial<ProductContent>) =>
     onChange({ ...value, ...patch });
   return (

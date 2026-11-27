@@ -216,7 +216,7 @@ function ContentEditDialog({
     <Dialog
       open
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       onClose={() => {
         if (!busy) close();
       }}

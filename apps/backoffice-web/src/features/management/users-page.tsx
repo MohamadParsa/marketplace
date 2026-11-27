@@ -1,3 +1,6 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { useSearchParams } from "react-router-dom";
 import { permissionName } from "./access-panel";
 import { useEffect, useRef, useState } from "react";
@@ -117,22 +120,13 @@ function Choices({
   disabled?: boolean;
 }) {
   return (
-    <fieldset className="user-choice-group">
-      <legend>{label}</legend>
-      {options.map((o) => (
-        <Chip
-          key={o.id}
-          label={o.name}
-          component="button"
-          type="button"
-          clickable
-          disabled={disabled}
-          aria-pressed={value === o.id}
-          color={value === o.id ? "primary" : "default"}
-          onClick={() => change(o.id)}
-        />
-      ))}
-    </fieldset>
+    <ChoiceField
+      label={label}
+      value={value}
+      options={options}
+      onChange={change}
+      disabled={disabled}
+    />
   );
 }
 export function UsersPage() {
@@ -215,107 +209,111 @@ export function UsersPage() {
         }
       />
       <section className="panel user-directory">
-        <form
-          className="user-filter-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setFilter({ ...draft });
-            setPage(0);
-          }}
-        >
-          <h2 className="filter-panel-title">فیلترهای کاربران</h2>
-          <div className="user-form-grid">
-            {(
-              [
-                ["first_name", "نام"],
-                ["last_name", "نام خانوادگی"],
-                ["phone", "شماره موبایل"],
-                ["email", "ایمیل"],
-              ] as const
-            ).map(([k, label]) => (
-              <TextField
-                size="small"
-                key={k}
-                label={`فیلتر ${label}`}
-                value={draft[k]}
-                onChange={(e) => setField(k, e.target.value)}
+        <FilterPanel>
+          <form
+            className="user-filter-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (JSON.stringify(filter) === JSON.stringify(draft))
+                void query.refetch();
+              else setFilter({ ...draft });
+              setPage(0);
+            }}
+          >
+            <h2 className="filter-panel-title">فیلترهای کاربران</h2>
+            <div className="user-form-grid">
+              {(
+                [
+                  ["first_name", "نام"],
+                  ["last_name", "نام خانوادگی"],
+                  ["phone", "شماره موبایل"],
+                  ["email", "ایمیل"],
+                ] as const
+              ).map(([k, label]) => (
+                <TextField
+                  size="small"
+                  key={k}
+                  label={`فیلتر ${label}`}
+                  value={draft[k]}
+                  onChange={(e) => setField(k, e.target.value)}
+                />
+              ))}
+            </div>
+            <Choices
+              label="وضعیت کاربر"
+              value={draft.active}
+              change={(v) => setField("active", v)}
+              options={[
+                { id: "", name: "همه" },
+                { id: "true", name: "فعال" },
+                { id: "false", name: "غیرفعال" },
+              ]}
+            />
+            <Choices
+              label="جنسیت"
+              value={draft.gender}
+              change={(v) => setField("gender", v)}
+              options={[
+                { id: "", name: "همه" },
+                { id: "female", name: "زن" },
+                { id: "male", name: "مرد" },
+                { id: "unspecified", name: "تعیین‌نشده" },
+              ]}
+            />
+            <details>
+              <summary>فیلتر نقش و فروشگاه</summary>
+              <Choices
+                label="نقش کاربر"
+                value={draft.role}
+                change={(v) => setField("role", v)}
+                options={[
+                  { id: "", name: "همه نقش‌ها" },
+                  ...baseRoles.filter((r) => r.id),
+                  ...(data?.roles ?? []).map((r) => ({
+                    id: r.id,
+                    name: r.name,
+                  })),
+                ]}
               />
-            ))}
-          </div>
-          <Choices
-            label="وضعیت کاربر"
-            value={draft.active}
-            change={(v) => setField("active", v)}
-            options={[
-              { id: "", name: "همه" },
-              { id: "true", name: "فعال" },
-              { id: "false", name: "غیرفعال" },
-            ]}
-          />
-          <Choices
-            label="جنسیت"
-            value={draft.gender}
-            change={(v) => setField("gender", v)}
-            options={[
-              { id: "", name: "همه" },
-              { id: "female", name: "زن" },
-              { id: "male", name: "مرد" },
-              { id: "unspecified", name: "تعیین‌نشده" },
-            ]}
-          />
-          <details>
-            <summary>فیلتر نقش و فروشگاه</summary>
+              <Choices
+                label="فروشگاه"
+                value={draft.store}
+                change={(v) => setField("store", v)}
+                options={[
+                  { id: "", name: "همه فروشگاه‌ها" },
+                  ...(state.stores ?? []).map((s) => ({
+                    id: s.id,
+                    name: s.name,
+                  })),
+                ]}
+              />
+            </details>
             <Choices
-              label="نقش کاربر"
-              value={draft.role}
-              change={(v) => setField("role", v)}
+              label="مرتب‌سازی کاربران"
+              value={draft.sort}
+              change={(v) => setField("sort", v)}
               options={[
-                { id: "", name: "همه نقش‌ها" },
-                ...baseRoles.filter((r) => r.id),
-                ...(data?.roles ?? []).map((r) => ({ id: r.id, name: r.name })),
+                { id: "name", name: "نام صعودی" },
+                { id: "name-desc", name: "نام نزولی" },
+                { id: "id", name: "شناسه" },
               ]}
             />
-            <Choices
-              label="فروشگاه"
-              value={draft.store}
-              change={(v) => setField("store", v)}
-              options={[
-                { id: "", name: "همه فروشگاه‌ها" },
-                ...(state.stores ?? []).map((s) => ({
-                  id: s.id,
-                  name: s.name,
-                })),
-              ]}
-            />
-          </details>
-          <Choices
-            label="مرتب‌سازی کاربران"
-            value={draft.sort}
-            change={(v) => setField("sort", v)}
-            options={[
-              { id: "name", name: "نام صعودی" },
-              { id: "name-desc", name: "نام نزولی" },
-              { id: "id", name: "شناسه" },
-            ]}
-          />
-          <div className="user-inline-actions">
-            <Button type="submit" variant="contained">
-              اعمال فیلترها
-            </Button>
-            <Button
-              onClick={() => {
-                setDraft(defaults);
-                setFilter(defaults);
-                setPage(0);
-              }}
-            >
-              پاک‌کردن فیلترها
-            </Button>
-            <Button onClick={() => void query.refetch()}>
-              دریافت داده تازه
-            </Button>
-          </div>
-        </form>
+            <div className="user-inline-actions">
+              <Button type="submit" variant="contained">
+                جست‌وجو
+              </Button>
+              <Button
+                onClick={() => {
+                  setDraft(defaults);
+                  setFilter(defaults);
+                  setPage(0);
+                }}
+              >
+                پاک‌کردن فیلترها
+              </Button>
+            </div>
+          </form>
+        </FilterPanel>
         {query.isFetching && <LinearProgress aria-label="دریافت کاربران" />}
         {query.error && <Alert severity="error">{query.error.message}</Alert>}
         <fieldset
@@ -524,7 +522,7 @@ function UserEditor({
       <Dialog
         open
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
         onClose={() => {
           if (!busy) close();
         }}
@@ -663,19 +661,13 @@ function UserEditor({
                   ادمین اختیار کامل دارد؛ ارتقا به ادمین به OTP احراز مجدد نیاز
                   دارد.
                 </p>
-                <div className="user-inline-actions">
-                  {baseRoles.map((r) => (
-                    <Chip
-                      component="button"
-                      type="button"
-                      key={r.id}
-                      label={r.name}
-                      clickable
-                      color={current.base_role === r.id ? "primary" : "default"}
-                      onClick={() => command("user.role", { value: r.id })}
-                    />
-                  ))}
-                </div>
+                <ChoiceField
+                  label="نقش پایه بک‌آفیس"
+                  value={current.base_role}
+                  disabled={busy}
+                  options={baseRoles}
+                  onChange={(value) => void command("user.role", { value })}
+                />
               </section>
               <section className="user-access-box">
                 <h3>عضویت فروشگاه‌ها</h3>

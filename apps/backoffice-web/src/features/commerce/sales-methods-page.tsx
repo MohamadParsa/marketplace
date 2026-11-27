@@ -1,3 +1,4 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -146,7 +147,7 @@ export function SalesMethodsPage() {
       />
       {dir.error && <Alert severity="error">{dir.error}</Alert>}
       {dir.notice && <Alert severity="success">{dir.notice}</Alert>}
-      <Button onClick={() => void dir.load()}>دریافت داده تازه</Button>
+      <Button onClick={() => void dir.load()}>به‌روزرسانی فهرست</Button>
       <DataTable
         rows={dir.data?.methods ?? []}
         columns={[
@@ -187,7 +188,7 @@ export function SalesMethodsPage() {
         <Dialog
           open
           fullWidth
-          maxWidth="sm"
+          maxWidth="lg"
           onClose={() => {
             if (!dir.busy) setDraft(undefined);
           }}
@@ -221,23 +222,18 @@ export function SalesMethodsPage() {
               هر روش پرداخت فقط به یک روش فروش وصل می‌شود؛ انتخاب آن، ارتباط روش
               قبلی را منتقل می‌کند.
             </p>
-            {dir.data.payment_methods.map((p) => (
-              <label key={p.id}>
-                <Checkbox
-                  disabled={!dir.data?.can_write || dir.busy}
-                  checked={draft.payment_method_ids.includes(p.id)}
-                  onChange={(_, v) =>
-                    setDraft({
-                      ...draft,
-                      payment_method_ids: v
-                        ? [...draft.payment_method_ids, p.id]
-                        : draft.payment_method_ids.filter((id) => id !== p.id),
-                    })
-                  }
-                />
-                {p.name}
-              </label>
-            ))}
+            <MultiChoiceField
+              label="روش‌های پرداخت"
+              value={draft.payment_method_ids}
+              options={dir.data.payment_methods.map((p) => ({
+                id: p.id,
+                name: p.name,
+              }))}
+              disabled={!dir.data.can_write || dir.busy}
+              onChange={(payment_method_ids) =>
+                setDraft({ ...draft, payment_method_ids })
+              }
+            />
             {(dir.error || localError) && (
               <Alert severity="error">{dir.error || localError}</Alert>
             )}
@@ -330,7 +326,7 @@ export function CategorySalesDialog({
     <Dialog
       open
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       onClose={() => {
         if (!dir.busy) close();
       }}

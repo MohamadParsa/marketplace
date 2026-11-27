@@ -1,6 +1,11 @@
+import { TextField } from "@mui/material";
+import { FilterPanel } from "../../shared/filter-panel";
 import { useState } from "react";
 import { SupplyOverduePanel } from "./supply-overdue-panel";
-import { deliveryPromise, shippingCharge } from "../../../../../packages/commerce-client/shipping-presentation";
+import {
+  deliveryPromise,
+  shippingCharge,
+} from "../../../../../packages/commerce-client/shipping-presentation";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
@@ -25,7 +30,11 @@ export function OperationsPage({
     fields: Field[];
     command: Command;
   } | null>(null);
-  const [search, setSearch] = useState(() => section==="support" ? new URLSearchParams(location.search).get("order") ?? "" : "");
+  const [search, setSearch] = useState(() =>
+    section === "support"
+      ? (new URLSearchParams(location.search).get("order") ?? "")
+      : "",
+  );
   const open = (
     title: string,
     command: Command,
@@ -47,6 +56,7 @@ export function OperationsPage({
   const product = (productId: string) =>
     state.products?.find((p) => p.id === productId)?.name ?? productId;
   const selected = state.orders?.find((o) => o.id === id);
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
@@ -88,11 +98,26 @@ export function OperationsPage({
                   {selected.packages.join("، ") || "هنوز بسته‌ای ثبت نشده"}
                 </dd>
               </dl>
-              {selected.delivery_from && <section aria-label="وعده ثبت‌شدهٔ حمل">
-                <h3>{selected.shipping_terms?.name ?? selected.shipping_method}</h3>
-                <p>{shippingCharge(selected.shipping_terms?.collection_mode,String((selected.shipping_terms?.fee ?? 0)/10))}</p>
-                <p>{deliveryPromise(selected.delivery,selected.delivery_from,selected.delivery_to ?? selected.delivery_from)}</p>
-              </section>}
+              {selected.delivery_from && (
+                <section aria-label="وعده ثبت‌شدهٔ حمل">
+                  <h3>
+                    {selected.shipping_terms?.name ?? selected.shipping_method}
+                  </h3>
+                  <p>
+                    {shippingCharge(
+                      selected.shipping_terms?.collection_mode,
+                      String((selected.shipping_terms?.fee ?? 0) / 10),
+                    )}
+                  </p>
+                  <p>
+                    {deliveryPromise(
+                      selected.delivery,
+                      selected.delivery_from,
+                      selected.delivery_to ?? selected.delivery_from,
+                    )}
+                  </p>
+                </section>
+              )}
               {selected.status === "shipped" && (
                 <Button
                   disabled={!can("order.deliver", "support")}
@@ -112,6 +137,7 @@ export function OperationsPage({
             <section className="panel detail">
               <h2>اقلام و snapshot خرید</h2>
               <DataTable
+                searchable={false}
                 rows={selected.items}
                 columns={[
                   { title: "محصول", render: (i) => product(i.product_id) },
@@ -132,18 +158,18 @@ export function OperationsPage({
         </>
       ) : (
         <section className="panel">
-          <div className="toolbar">
-            <input
-              aria-label="جست‌وجو"
-              className="search"
+          <FilterPanel onSearch={() => setSearch(searchDraft)}>
+            <TextField
+              label="جست‌وجو"
+
               placeholder="جست‌وجو با شناسه، فروشگاه یا وضعیت…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
             />
-            <span className="muted">محیط آزمون</span>
-          </div>
+          </FilterPanel>
           {section === "orders" && (
             <DataTable
+              searchable={false}
               rows={filter(state.orders ?? [])}
               columns={[
                 {
@@ -194,6 +220,7 @@ export function OperationsPage({
           )}
           {section === "support" && (
             <DataTable
+              searchable={false}
               rows={filter(state.cases ?? [])}
               columns={[
                 {
@@ -321,6 +348,7 @@ export function OperationsPage({
                 </span>
               </div>
               <DataTable
+                searchable={false}
                 rows={filter(state.assignments ?? [])}
                 empty="هنوز واگذاری ثبت نشده. از صفحه پشتیبانی، یک قلم را به فروشگاه جایگزین واگذار کنید."
                 columns={[
@@ -342,6 +370,7 @@ export function OperationsPage({
           )}
           {section === "notifications" && (
             <DataTable
+              searchable={false}
               rows={filter(state.notifications ?? [])}
               columns={[
                 { title: "رخداد", render: (n) => <b>{n.event}</b> },
@@ -379,6 +408,7 @@ export function OperationsPage({
           )}
           {section === "reports" && (
             <DataTable
+              searchable={false}
               rows={filter([...(state.audit ?? [])].reverse())}
               empty="هنوز عملیاتی ثبت نشده است."
               columns={[

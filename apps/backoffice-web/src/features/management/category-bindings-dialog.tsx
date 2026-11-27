@@ -120,7 +120,7 @@ export function CategoryBindingsDialog({
     <Dialog
       open
       fullWidth
-      maxWidth="lg"
+      maxWidth="xl"
       onClose={() => {
         if (!pending) close();
       }}

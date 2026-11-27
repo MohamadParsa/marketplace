@@ -1,3 +1,5 @@
+import { ChoiceField } from "../../shared/option-select";
+import { FilterPanel } from "../../shared/filter-panel";
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -32,6 +34,8 @@ const reviewTextStyle = { whiteSpace: "pre-wrap", overflowWrap: "anywhere" };
 export function ProductReviewsPage({ token }: { token: string }) {
   const cache = useQueryClient();
   const [status, setStatus] = useState<ProductReviewStatus>("pending");
+  const [draftStatus, setDraftStatus] =
+    useState<ProductReviewStatus>("pending");
   const [cursors, setCursors] = useState<string[]>([""]);
   const cursor = cursors[cursors.length - 1];
   const query = useQuery({
@@ -49,18 +53,20 @@ export function ProductReviewsPage({ token }: { token: string }) {
       <Typography component="h1" variant="h5">
         نظرات محصولات
       </Typography>
-      <Tabs
-        value={status}
-        aria-label="وضعیت بررسی نظرات"
-        onChange={(_, value: ProductReviewStatus) => {
-          setStatus(value);
+      <FilterPanel
+        onSearch={() => {
+          setStatus(draftStatus);
           setCursors([""]);
+          if (status === draftStatus) void query.refetch();
         }}
       >
-        {statusTabs.map(({ value, label }) => (
-          <Tab key={value} value={value} label={label} />
-        ))}
-      </Tabs>
+        <ChoiceField
+          label="وضعیت بررسی نظرات"
+          value={draftStatus}
+          options={statusTabs.map((t) => ({ id: t.value, name: t.label }))}
+          onChange={(value) => setDraftStatus(value as ProductReviewStatus)}
+        />
+      </FilterPanel>
       {query.isPending && (
         <CircularProgress size={24} aria-label="در حال دریافت نظرات" />
       )}
@@ -256,7 +262,7 @@ function ReviewDecisionCard({
           action={
             mutation.error instanceof ApiError &&
             mutation.error.status === 409 ? (
-              <Button onClick={() => void refresh()}>تازه‌سازی</Button>
+              <Button onClick={() => void refresh()}>به‌روزرسانی فهرست</Button>
             ) : undefined
           }
         >

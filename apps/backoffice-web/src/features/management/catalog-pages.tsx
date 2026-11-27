@@ -389,7 +389,7 @@ export function CatalogPage({
         open={!!editing}
         onClose={() => !busy && closeEditing()}
         fullWidth
-        maxWidth="sm"
+        maxWidth="xl"
         dir="rtl"
       >
         <form onSubmit={save}>
@@ -617,8 +617,9 @@ export function CatalogPage({
                   {editing.kind === "product" && (
                     <>
                       <div>
-                        <b>دسته *</b>
                         <CategoryTree
+                          label="دسته"
+                          required
                           categories={state.categories ?? []}
                           value={editing.input.category_id}
                           disabled={!!editing.id}

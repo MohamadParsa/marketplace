@@ -1,3 +1,6 @@
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { FilterPanel } from "../../shared/filter-panel";
+import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -18,13 +21,16 @@ import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
 import { DataTable, PageHeader } from "../../shared/components";
 import { CategoryTree, categoryPath } from "../management/category-tree";
-import {WeeklyScheduleEditor,scheduleError} from "./weekly-schedule-editor";
+import { WeeklyScheduleEditor, scheduleError } from "./weekly-schedule-editor";
 import type {
   Shipping,
   Province,
 } from "../../../../../packages/commerce-client/types";
 
-export type Method = Shipping & { version: number; unresolved_cities?: string[] };
+export type Method = Shipping & {
+  version: number;
+  unresolved_cities?: string[];
+};
 type Directory = {
   rows: Method[];
   total: number;
@@ -86,6 +92,7 @@ export function ShippingMethodsPage() {
     [size, setSize] = useState(20),
     [editing, setEditing] = useState<{ method: Method; create: boolean }>(),
     [notice, setNotice] = useState("");
+  const [draftFilter, setDraftFilter] = useState<Filters>(defaults);
   const root =
     (import.meta.env.VITE_API_BASE_URL ?? "") + "/backoffice/shipping/methods";
   async function request<T>(
@@ -126,8 +133,7 @@ export function ShippingMethodsPage() {
   });
   const directory = query.data;
   const change = (patch: Partial<Filters>) => {
-    setFilter({ ...filter, ...patch });
-    setPage(0);
+    setDraftFilter({ ...draftFilter, ...patch });
   };
   function choices(
     field: "active" | "collection_mode" | "delivery_mode",
@@ -136,17 +142,17 @@ export function ShippingMethodsPage() {
   ) {
     return (
       <div role="group" aria-label={label} className="toolbar">
-        <small>{label}</small>
-        {options.map(([value, name]) => (
-          <Button
-            key={value}
-            aria-pressed={filter[field] === value}
-            variant={filter[field] === value ? "contained" : "outlined"}
-            onClick={() => change({ [field]: value })}
-          >
-            {name}
-          </Button>
-        ))}
+        <OptionSelect
+          label={label}
+          multiple={false}
+          options={options.map(([value, name]) => ({
+            id: String(value),
+            name: String("" + name + ""),
+            selected: draftFilter[field] === value,
+            disabled: false,
+            onSelect: () => change({ [field]: value }),
+          }))}
+        />
       </div>
     );
   }
@@ -169,80 +175,75 @@ export function ShippingMethodsPage() {
         }
       />
       {notice && <Alert severity="success">{notice}</Alert>}
-      <section className="store-detail-box shipping-method-filters">
-        <h2 className="filter-panel-title">فیلترهای روش حمل</h2>
-        <div className="shipping-filter-fields">
-          <TextField
-            label="جست‌وجوی نام روش"
-            value={filter.query}
-            onChange={(event) => change({ query: event.target.value })}
-            size="small"
-          />
-          {choices("active", "وضعیت", [
-            ["", "همه"],
-            ["true", "فعال"],
-            ["false", "غیرفعال"],
-          ])}
-          {choices("collection_mode", "دریافت هزینه", [
-            ["", "همه"],
-            ["prepaid", "پیش‌کرایه"],
-            ["collect", "پس‌کرایه"],
-          ])}
-          {choices("delivery_mode", "زمان تحویل", [
-            ["", "همه"],
-            ["range", "بازهٔ روز"],
-            ["slots", "بازهٔ ساعت"],
-          ])}
-        </div>
-        <details>
-          <summary>فیلتر دسته و شهر</summary>
-          <CategoryTree
-            categories={state.categories ?? []}
-            value={filter.category_id}
-            onChange={(category_id) => change({ category_id })}
-          />
+      <FilterPanel
+        onSearch={() => {
+          if (JSON.stringify(filter) === JSON.stringify(draftFilter))
+            void query.refetch();
+          else setFilter({ ...draftFilter });
+          setPage(0);
+        }}
+      >
+        <section className="store-detail-box shipping-method-filters">
+          <h2 className="filter-panel-title">فیلترهای روش حمل</h2>
+          <div className="shipping-filter-fields">
+            <TextField
+              label="جست‌وجوی نام روش"
+              value={draftFilter.query}
+              onChange={(event) => change({ query: event.target.value })}
+              size="small"
+            />
+            {choices("active", "وضعیت", [
+              ["", "همه"],
+              ["true", "فعال"],
+              ["false", "غیرفعال"],
+            ])}
+            {choices("collection_mode", "دریافت هزینه", [
+              ["", "همه"],
+              ["prepaid", "پیش‌کرایه"],
+              ["collect", "پس‌کرایه"],
+            ])}
+            {choices("delivery_mode", "زمان تحویل", [
+              ["", "همه"],
+              ["range", "بازهٔ روز"],
+              ["slots", "بازهٔ ساعت"],
+            ])}
+          </div>
+          <details>
+            <summary>فیلتر دسته و شهر</summary>
+            <CategoryTree
+              categories={state.categories ?? []}
+              value={draftFilter.category_id}
+              onChange={(category_id) => change({ category_id })}
+            />
+            <ChoiceField
+              label="شهر"
+              value={draftFilter.city_id}
+              clearLabel="همه شهرها"
+              options={(directory?.geography ?? []).flatMap((p) =>
+                p.cities.map((c) => ({
+                  id: c.id,
+                  name: p.name + " / " + c.name,
+                })),
+              )}
+              onChange={(city_id) => change({ city_id })}
+            />
+          </details>
           <div className="toolbar">
             <Button
-              aria-pressed={!filter.city_id}
-              onClick={() => change({ city_id: "" })}
+              onClick={() => {
+                setFilter(defaults);
+                setDraftFilter(defaults);
+                setPage(0);
+              }}
             >
-              همه شهرها
+              پاک‌کردن فیلترها
             </Button>
-            {directory?.geography.map((province) => (
-              <details key={province.id}>
-                <summary>{province.name}</summary>
-                <div className="toolbar">
-                  {province.cities.map((city) => (
-                    <Button
-                      key={city.id}
-                      aria-pressed={filter.city_id === city.id}
-                      variant={
-                        filter.city_id === city.id ? "contained" : "outlined"
-                      }
-                      onClick={() => change({ city_id: city.id })}
-                    >
-                      {city.name}
-                    </Button>
-                  ))}
-                </div>
-              </details>
-            ))}
+            <Button component={Link} to="/commerce-settings">
+              تقویم عمومی و ساعت آماده‌سازی
+            </Button>
           </div>
-        </details>
-        <div className="toolbar">
-          <Button
-            onClick={() => {
-              setFilter(defaults);
-              setPage(0);
-            }}
-          >
-            پاک‌کردن فیلترها
-          </Button>
-          <Button component={Link} to="/commerce-settings">
-            تقویم عمومی و ساعت آماده‌سازی
-          </Button>
-        </div>
-      </section>
+        </section>
+      </FilterPanel>
       {query.isFetching && <LinearProgress aria-label="دریافت روش‌های حمل" />}
       {query.error && (
         <Alert severity="error">
@@ -490,27 +491,48 @@ export function MethodEditor({
     }
   }
   const list = (field: "allowed_categories" | "denied_categories") => (
-    <div className="toolbar">
-      {draft[field]?.map((id) => (
-        <Chip
-          key={id}
-          label={categoryPath(categories, id) || id}
-          disabled={busy || !allowed}
-          onDelete={() =>
-            patch({ [field]: draft[field]?.filter((value) => value !== id) })
-          }
-        />
-      ))}
-    </div>
+    <MultiChoiceField
+      label={
+        field === "allowed_categories" ? "دسته‌های مجاز" : "دسته‌های ممنوع"
+      }
+      value={draft[field] ?? []}
+      options={categories.map((c) => ({
+        id: c.id,
+        name: categoryPath(categories, c.id),
+      }))}
+      disabled={busy || !allowed}
+      onChange={(ids) => patch({ [field]: ids })}
+    />
   );
   return (
-    <Dialog open fullWidth maxWidth="md" onClose={() => !busy && close()}>
+    <Dialog open fullWidth maxWidth="xl" onClose={() => !busy && close()}>
       <DialogTitle>
-        {custom ? `پیش‌نویس اختصاصی ${draft.name}` : create ? "روش حمل جدید" : `روش حمل ${draft.name}`}
+        {custom
+          ? `پیش‌نویس اختصاصی ${draft.name}`
+          : create
+            ? "روش حمل جدید"
+            : `روش حمل ${draft.name}`}
       </DialogTitle>
       <DialogContent className="shipping-methods-page">
-        {custom && <Alert severity="info">نوع دریافت هزینه از روش عمومی ارث می‌رسد و فقط‌خواندنی است. پوشش شهر/دسته فقط می‌تواند محدودتر شود. ذخیره، پیش‌نویس می‌سازد؛ انتشار پس از ارسال و تأیید پلتفرم است. {scopeLabel}</Alert>}
-        {bulk && <FormControlLabel label="ساخت پیش‌نویس برای همهٔ فروشگاه‌های نمایش‌داده‌شده را تأیید می‌کنم" control={<Checkbox checked={batchConfirmed} onChange={e=>setBatchConfirmed(e.target.checked)} disabled={busy}/>} />}
+        {custom && (
+          <Alert severity="info">
+            نوع دریافت هزینه از روش عمومی ارث می‌رسد و فقط‌خواندنی است. پوشش
+            شهر/دسته فقط می‌تواند محدودتر شود. ذخیره، پیش‌نویس می‌سازد؛ انتشار
+            پس از ارسال و تأیید پلتفرم است. {scopeLabel}
+          </Alert>
+        )}
+        {bulk && (
+          <FormControlLabel
+            label="ساخت پیش‌نویس برای همهٔ فروشگاه‌های نمایش‌داده‌شده را تأیید می‌کنم"
+            control={
+              <Checkbox
+                checked={batchConfirmed}
+                onChange={(e) => setBatchConfirmed(e.target.checked)}
+                disabled={busy}
+              />
+            }
+          />
+        )}
         {!allowed && (
           <Alert severity="info">فقط مشاهده؛ دسترسی ویرایش ندارید.</Alert>
         )}
@@ -566,30 +588,27 @@ export function MethodEditor({
             }
           />
           <div className="toolbar" role="group" aria-label="شیوه دریافت هزینه">
-            {(
-              [
-                ["prepaid", "پیش‌کرایه"],
-                ["collect", "پس‌کرایه"],
-              ] as const
-            ).map(([value, label]) => (
-              <Button
-                key={value}
-                disabled={custom}
-                aria-pressed={draft.collection_mode === value}
-                variant={
-                  draft.collection_mode === value ? "contained" : "outlined"
-                }
-                onClick={() =>
+            <OptionSelect
+              label={"شیوه دریافت هزینه"}
+              multiple={false}
+              options={(
+                [
+                  ["prepaid", "پیش‌کرایه"],
+                  ["collect", "پس‌کرایه"],
+                ] as const
+              ).map(([value, label]) => ({
+                id: String(value),
+                name: String("" + label + ""),
+                selected: draft.collection_mode === value,
+                disabled: custom,
+                onSelect: () =>
                   patch({
                     collection_mode: value,
                     fee_toman:
                       value === "collect" ? "" : draft.fee_toman || "0",
-                  })
-                }
-              >
-                {label}
-              </Button>
-            ))}
+                  }),
+              }))}
+            />
           </div>
           {draft.collection_mode === "collect" ? (
             <Alert severity="info">
@@ -606,28 +625,32 @@ export function MethodEditor({
             />
           )}
           <div className="toolbar" role="group" aria-label="نوع زمان تحویل">
-            {(
-              [
-                ["range", "بازهٔ روز"],
-                ["slots", "بازهٔ ساعت"],
-              ] as const
-            ).map(([value, label]) => (
-              <Button
-                key={value}
-                aria-pressed={draft.delivery_mode === value}
-                variant={
-                  draft.delivery_mode === value ? "contained" : "outlined"
-                }
-                onClick={() =>
+            <OptionSelect
+              label={"نوع زمان تحویل"}
+              multiple={false}
+              options={(
+                [
+                  ["range", "بازهٔ روز"],
+                  ["slots", "بازهٔ ساعت"],
+                ] as const
+              ).map(([value, label]) => ({
+                id: String(value),
+                name: String("" + label + ""),
+                selected: draft.delivery_mode === value,
+                disabled: false,
+                onSelect: () =>
                   patch({
                     delivery_mode: value,
-                    ...(value === "slots" ? { min_days: 0, max_days: 0, schedule:draft.schedule??{windows:[],days:[]} } : {}),
-                  })
-                }
-              >
-                {label}
-              </Button>
-            ))}
+                    ...(value === "slots"
+                      ? {
+                          min_days: 0,
+                          max_days: 0,
+                          schedule: draft.schedule ?? { windows: [], days: [] },
+                        }
+                      : {}),
+                  }),
+              }))}
+            />
           </div>
           {draft.delivery_mode === "range" ? (
             <>
@@ -654,29 +677,68 @@ export function MethodEditor({
                 />
               </div>
               <div className="toolbar" role="group" aria-label="واحد مدت حمل">
-                {(
-                  [
-                    ["working", "روز کاری"],
-                    ["calendar", "روز تقویمی"],
-                  ] as const
-                ).map(([value, label]) => (
-                  <Button
-                    key={value}
-                    aria-pressed={draft.day_basis === value}
-                    variant={
-                      draft.day_basis === value ? "contained" : "outlined"
-                    }
-                    onClick={() => patch({ day_basis: value })}
-                  >
-                    {label}
-                  </Button>
-                ))}
+                <OptionSelect
+                  label={"واحد مدت حمل"}
+                  multiple={false}
+                  options={(
+                    [
+                      ["working", "روز کاری"],
+                      ["calendar", "روز تقویمی"],
+                    ] as const
+                  ).map(([value, label]) => ({
+                    id: String(value),
+                    name: String("" + label + ""),
+                    selected: draft.day_basis === value,
+                    disabled: false,
+                    onSelect: () => patch({ day_basis: value }),
+                  }))}
+                />
               </div>
             </>
           ) : (
             <>
-              <div className="commerce-grid"><TextField type="number" label="حداقل فرصت حمل تا بازه (روز)" value={draft.min_days} inputProps={{min:0,max:60}} onChange={e=>patch({min_days:Number(e.target.value),max_days:Number(e.target.value)})}/><div className="toolbar" role="group" aria-label="واحد فرصت حمل">{([['working','روز کاری'],['calendar','روز تقویمی']] as const).map(([value,label])=><Button key={value} aria-pressed={draft.day_basis===value} variant={draft.day_basis===value?'contained':'outlined'} onClick={()=>patch({day_basis:value})}>{label}</Button>)}</div></div>
-              <WeeklyScheduleEditor value={draft.schedule??{windows:[],days:[]}} onChange={schedule=>patch({schedule})} disabled={busy||!allowed} error={fields.schedule}/>
+              <div className="commerce-grid">
+                <TextField
+                  type="number"
+                  label="حداقل فرصت حمل تا بازه (روز)"
+                  value={draft.min_days}
+                  inputProps={{ min: 0, max: 60 }}
+                  onChange={(e) =>
+                    patch({
+                      min_days: Number(e.target.value),
+                      max_days: Number(e.target.value),
+                    })
+                  }
+                />
+                <div
+                  className="toolbar"
+                  role="group"
+                  aria-label="واحد فرصت حمل"
+                >
+                  <OptionSelect
+                    label={"واحد فرصت حمل"}
+                    multiple={false}
+                    options={(
+                      [
+                        ["working", "روز کاری"],
+                        ["calendar", "روز تقویمی"],
+                      ] as const
+                    ).map(([value, label]) => ({
+                      id: String(value),
+                      name: String(label),
+                      selected: draft.day_basis === value,
+                      disabled: false,
+                      onSelect: () => patch({ day_basis: value }),
+                    }))}
+                  />
+                </div>
+              </div>
+              <WeeklyScheduleEditor
+                value={draft.schedule ?? { windows: [], days: [] }}
+                onChange={(schedule) => patch({ schedule })}
+                disabled={busy || !allowed}
+                error={fields.schedule}
+              />
             </>
           )}
           <TextField
@@ -700,118 +762,56 @@ export function MethodEditor({
             }
           />
           <h3>پوشش شهر</h3>
-          <div className="toolbar" role="group" aria-label="حالت پوشش شهر">
-            <Button
-              aria-pressed={draft.all_cities}
-              variant={draft.all_cities ? "contained" : "outlined"}
-              onClick={() =>
-                patch({ all_cities: true, city_ids: [], cities: [] })
-              }
-            >
-              همهٔ شهرهای فعال
-            </Button>
-            <Button
-              aria-pressed={!draft.all_cities}
-              variant={!draft.all_cities ? "contained" : "outlined"}
-              onClick={() => patch({ all_cities: false })}
-            >
-              شهرهای انتخابی
-            </Button>
-          </div>
+          <ChoiceField
+            label="پوشش شهر"
+            value={draft.all_cities ? "all" : "selected"}
+            options={[
+              { id: "all", name: "همه شهرهای فعال" },
+              { id: "selected", name: "شهرهای انتخابی" },
+            ]}
+            onChange={(mode) =>
+              patch(
+                mode === "all"
+                  ? { all_cities: true, city_ids: [], cities: [] }
+                  : { all_cities: false },
+              )
+            }
+          />
           {draft.all_cities ? (
             <p>شهر فعال تازه نیز خودکار پوشش داده می‌شود.</p>
           ) : (
-            <>
-              <TextField
-                label="جست‌وجوی شهر"
-                value={citySearch}
-                onChange={(event) => setCitySearch(event.target.value)}
-              />
-              <div className="shipping-city-list">
-                {geography.map((province) => (
-                  <details
-                    key={province.id}
-                    open={citySearch ? true : undefined}
-                  >
-                    <summary>{province.name}</summary>
-                    {province.cities
-                      .filter((city) =>
-                        (province.name + " " + city.name).includes(citySearch),
-                      )
-                      .map((city) => (
-                        <FormControlLabel
-                          key={city.id}
-                          label={`${province.name} / ${city.name}`}
-                          control={
-                            <Checkbox
-                              checked={
-                                draft.city_ids?.includes(city.id) ?? false
-                              }
-                              onChange={(event) =>
-                                patch({
-                                  city_ids: event.target.checked
-                                    ? [...(draft.city_ids ?? []), city.id]
-                                    : draft.city_ids?.filter(
-                                        (id) => id !== city.id,
-                                      ),
-                                })
-                              }
-                            />
-                          }
-                        />
-                      ))}
-                  </details>
-                ))}
-              </div>
-            </>
+            <MultiChoiceField
+              label="شهرهای تحت پوشش"
+              value={draft.city_ids ?? []}
+              options={geography.flatMap((p) =>
+                p.cities.map((c) => ({
+                  id: c.id,
+                  name: p.name + " / " + c.name,
+                })),
+              )}
+              disabled={busy || !allowed}
+              onChange={(city_ids) => patch({ city_ids })}
+            />
           )}
-          {!draft.all_cities && (
-            <div className="toolbar" aria-label="شهرهای انتخاب‌شده">
-              {(draft.city_ids ?? []).map((id) => {
-                const province = geography.find((province) =>
-                  province.cities.some((city) => city.id === id),
-                );
-                const city = province?.cities.find((city) => city.id === id);
-                return (
-                  <Chip
-                    key={id}
-                    label={
-                      city
-                        ? `${province?.name} / ${city.name}`
-                        : `شهر غیرفعال یا در دسترس نیست (${id})`
-                    }
-                    disabled={busy || !allowed}
-                    onDelete={() =>
-                      patch({
-                        city_ids: draft.city_ids?.filter(
-                          (value) => value !== id,
-                        ),
-                      })
-                    }
-                  />
-                );
-              })}
-            </div>
-          )}
+          {!draft.all_cities && <></>}
           <h3>پوشش دسته</h3>
           <div className="toolbar" role="group" aria-label="حالت پوشش دسته">
-            {(
-              [
-                ["all", "همهٔ دسته‌ها"],
-                ["selected", "فقط دسته‌های انتخابی"],
-              ] as const
-            ).map(([value, label]) => (
-              <Button
-                key={value}
-                aria-pressed={draft.category_mode === value}
-                variant={
-                  draft.category_mode === value ? "contained" : "outlined"
-                }
-                onClick={() => patch({ category_mode: value })}
-              >
-                {label}
-              </Button>
-            ))}
+            <OptionSelect
+              label={"حالت پوشش دسته"}
+              multiple={false}
+              options={(
+                [
+                  ["all", "همهٔ دسته‌ها"],
+                  ["selected", "فقط دسته‌های انتخابی"],
+                ] as const
+              ).map(([value, label]) => ({
+                id: String(value),
+                name: String("" + label + ""),
+                selected: draft.category_mode === value,
+                disabled: false,
+                onSelect: () => patch({ category_mode: value }),
+              }))}
+            />
           </div>
           <p>زیرشاخه‌ها نیز تابع انتخاب‌اند؛ ممنوعیت بر مجازبودن مقدم است.</p>
           <CategoryTree

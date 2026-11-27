@@ -1,3 +1,6 @@
+import { FilterPanel } from "../../shared/filter-panel";
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -65,6 +68,7 @@ export function SharedAttributesPage() {
     [state.display_settings.version],
   );
   const editable = may("attribute.create", "management");
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
@@ -95,16 +99,16 @@ export function SharedAttributesPage() {
         </Alert>
       )}
       <section className="panel">
-        <div className="toolbar">
-          <input
-            className="search"
-            aria-label="جست‌وجوی خصوصیت"
+        <FilterPanel onSearch={() => setSearch(searchDraft)}>
+          <TextField
+            label="جست‌وجوی خصوصیت"
             placeholder="نام یا کد خصوصیت…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
           />
-        </div>
+        </FilterPanel>
         <DataTable
+          searchable={false}
           rows={(state.attributes ?? []).filter((a) =>
             (a.name + " " + a.code)
               .toLocaleLowerCase()
@@ -328,7 +332,7 @@ function AttributeEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="sm"
+      maxWidth="xl"
       onClose={() => {
         if (!pending) close();
       }}
@@ -372,17 +376,17 @@ function AttributeEditor({
             }
           />
           <div role="group" aria-label="نوع خصوصیت" className="toolbar">
-            {Object.entries(kinds).map(([k, v]) => (
-              <Button
-                key={k}
-                aria-pressed={draft.kind === k}
-                variant={draft.kind === k ? "contained" : "outlined"}
-                disabled={!editable || pending || used}
-                onClick={() => change("kind", k)}
-              >
-                {v}
-              </Button>
-            ))}
+            <OptionSelect
+              label={"نوع خصوصیت"}
+              multiple={false}
+              options={Object.entries(kinds).map(([k, v]) => ({
+                id: String(k),
+                name: String("" + v + ""),
+                selected: draft.kind === k,
+                disabled: !editable || pending || used,
+                onSelect: () => change("kind", k),
+              }))}
+            />
           </div>
           <TextField
             label="واحد (اختیاری)"
@@ -445,35 +449,24 @@ function AttributeEditor({
                     />
                     فعال در نمایش
                   </label>
-                  <div className="warranty-group-values">
-                    {options
+                  <MultiChoiceField
+                    label="مقادیر عضو گروه"
+                    value={group.values}
+                    options={options
                       .split("\n")
                       .filter(Boolean)
-                      .map((value) => (
-                        <label key={value}>
-                          <Checkbox
-                            checked={group.values.includes(value)}
-                            onChange={(e) => {
-                              setDraft({
-                                ...draft,
-                                groups: draft.groups!.map((g, i) =>
-                                  i === index
-                                    ? {
-                                        ...g,
-                                        values: e.target.checked
-                                          ? [...g.values, value]
-                                          : g.values.filter((v) => v !== value),
-                                      }
-                                    : g,
-                                ),
-                              });
-                              setKey(crypto.randomUUID());
-                            }}
-                          />
-                          {value}
-                        </label>
-                      ))}
-                  </div>
+                      .map((value) => ({ id: value, name: value }))}
+                    disabled={!groupEditable || pending}
+                    onChange={(values) => {
+                      setDraft({
+                        ...draft,
+                        groups: draft.groups!.map((g, i) =>
+                          i === index ? { ...g, values } : g,
+                        ),
+                      });
+                      setKey(crypto.randomUUID());
+                    }}
+                  />
                   <Button
                     color="error"
                     onClick={() => {
