@@ -31,7 +31,7 @@
   font: inherit;
 }
 
-.product-qa button {
+.product-qa > [role="alert"] button {
   justify-self: start;
   min-height: 44px;
   padding: 6px 14px;
@@ -44,10 +44,4 @@
 
 .product-qa button:disabled {
   opacity: 0.55;
-}
-
-.product-qa-pages {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }

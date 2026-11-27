@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[خوانایی قیمت، فرم‌های بسته و کروسل‌های پنج‌تایی سایت — ۲۰۲۶-۱۱-۲۷](delivery/storefront-followups/storefront-readability-review-2026-11-27.md)
+
 [اصلاحات بازبینی سایت ۲۰۲۶-۱۱-۲۷ و شواهد مرورگر](delivery/storefront-followups/storefront-review-fixes-2026-11-27.md)
 
 [اصلاح فرم‌های پنل، کاتالوگ، کاربران/نقش، فروشگاه و روش فروش — ۱۱ تسک تازه و تکمیل #73/#81](delivery/backoffice-refinement-2026-11-25/README.md)

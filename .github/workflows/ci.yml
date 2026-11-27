@@ -84,6 +84,7 @@ jobs:
           node-version: 20
       - run: npm ci --no-audit --no-fund
       - run: npm run lint
+      - run: npm run test:display-numbers
       - run: npm run build
 
   contracts:

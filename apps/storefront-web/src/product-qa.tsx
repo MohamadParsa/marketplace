@@ -1,6 +1,20 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { FeedbackDisclosure } from "./feedback-disclosure";
+import { FeedbackCarousel } from "./feedback-carousel";
 import { LoadingPlaceholder } from "./busy-region";
-import { call, CommerceError, operationKey, useCommerce } from "./commerce";
+import {
+  apiBase,
+  call,
+  CommerceError,
+  operationKey,
+  useCommerce,
+} from "./commerce";
 import "./product-qa.css";
 import "./product-reviews.css";
 import "./product-feedback.css";
@@ -23,10 +37,9 @@ function message(error: unknown) {
 export function ProductQA({ productId }: { productId: string }) {
   const { token } = useCommerce();
   const path = `/storefront/products/${encodeURIComponent(productId)}/questions`;
-  const [cursors, setCursors] = useState([0]);
-  const after = cursors[cursors.length - 1];
-  const [reload, setReload] = useState(0);
-  const [page, setPage] = useState<{ after: number; data: QuestionPage }>();
+  const [page, setPage] = useState<QuestionPage & { shown: number }>();
+  const [loading, setLoading] = useState(true);
+  const request = useRef<AbortController | null>(null);
   const [loadError, setLoadError] = useState("");
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -35,29 +48,65 @@ export function ProductQA({ productId }: { productId: string }) {
   const pending = useRef<{ text: string; key: string } | null>(null);
   const sendingRef = useRef(false);
 
+  const loadPage = useCallback(
+    async (after = 0) => {
+      if (request.current) return;
+      const controller = new AbortController();
+      request.current = controller;
+      setLoading(true);
+      setLoadError("");
+      try {
+        const response = await fetch(
+          `${apiBase}${path}${after ? `?after=${after}` : ""}`,
+          { signal: controller.signal, cache: "no-store" },
+        );
+        if (!response.ok) throw new Error("دریافت پرسش‌ها ممکن نشد.");
+        const data: QuestionPage = await response.json();
+        if (!controller.signal.aborted)
+          setPage((current) => ({
+            ...data,
+            questions: after
+              ? [...(current?.questions ?? []), ...data.questions]
+              : data.questions,
+            shown: after ? (current?.shown ?? 0) + 5 : 5,
+          }));
+      } catch (error) {
+        if (!controller.signal.aborted) setLoadError(message(error));
+      } finally {
+        if (request.current === controller) request.current = null;
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    },
+    [path],
+  );
   useEffect(() => {
-    let active = true;
-    void call<QuestionPage>(`${path}${after ? `?after=${after}` : ""}`)
-      .then((data) => {
-        if (active) setPage({ after, data });
-      })
-      .catch((error: unknown) => {
-        if (active) setLoadError(message(error));
-      });
+    void loadPage();
     return () => {
-      active = false;
+      request.current?.abort();
+      request.current = null;
     };
-  }, [path, after, reload]);
+  }, [loadPage]);
 
   function refresh() {
-    setLoadError("");
-    setReload((value) => value + 1);
+    void loadPage();
+  }
+  function showMore() {
+    if (!page || loading) return;
+    if (page.shown < page.questions.length) {
+      setPage((current) => current && { ...current, shown: current.shown + 5 });
+    } else if (page.next_cursor) {
+      void loadPage(page.next_cursor);
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const trimmed = text.trim();
-    if (!trimmed || !token || sendingRef.current) return;
+    if (!token || sendingRef.current || !page?.can_ask) return;
+    if (!trimmed) {
+      setSendError("متن پرسش را وارد کنید.");
+      return;
+    }
     if (pending.current?.text !== trimmed)
       pending.current = { text: trimmed, key: operationKey() };
     sendingRef.current = true;
@@ -90,7 +139,7 @@ export function ProductQA({ productId }: { productId: string }) {
     }
   }
 
-  const visible = page?.after === after ? page.data : undefined;
+  const visible = page;
   const returnTo = location.pathname + location.search + "#questions";
   return (
     <section
@@ -102,7 +151,7 @@ export function ProductQA({ productId }: { productId: string }) {
       {!visible && !loadError && (
         <LoadingPlaceholder label="در حال دریافت پرسش‌ها" />
       )}
-      {loadError && (
+      {loadError && !page && (
         <div role="alert">
           <p>{loadError}</p>
           <button type="button" onClick={refresh}>
@@ -116,112 +165,88 @@ export function ProductQA({ productId }: { productId: string }) {
             <p>هنوز پرسش تأییدشده‌ای ثبت نشده است.</p>
           )}
           {visible.questions.length > 0 && (
-            <div
-              className="pdp-review-track"
-              role="region"
-              aria-label="کارت‌های پرسش و پاسخ"
-              tabIndex={0}
-            >
-              {Array.from(
-                { length: Math.ceil(visible.questions.length / 5) },
-                (_, index) => visible.questions.slice(index * 5, index * 5 + 5),
-              ).map((group) => (
-                <div className="pdp-review-group" key={group[0].id}>
-                  {group.map((question) => (
-                    <article
-                      key={question.id}
-                      className="pdp-review-card product-qa-question"
+            <FeedbackCarousel
+              items={visible.questions.slice(0, visible.shown)}
+              label="کارت‌های پرسش و پاسخ"
+              moreLabel="مشاهده بیشتر پرسش و پاسخ"
+              hasMore={
+                visible.shown < visible.questions.length ||
+                !!visible.next_cursor
+              }
+              loading={loading}
+              error={!!loadError}
+              onMore={showMore}
+              renderItem={(question) => (
+                <article
+                  key={question.id}
+                  className="pdp-review-card product-qa-question"
+                >
+                  <header>
+                    <strong>پرسش کاربر</strong>
+                  </header>
+                  <p dir="auto">{question.text}</p>
+                  {question.answers.map((answer) => (
+                    <div
+                      key={answer.id}
+                      className="pdp-review-reply product-qa-answer"
                     >
-                      <header>
-                        <strong>پرسش کاربر</strong>
-                      </header>
-                      <p dir="auto">{question.text}</p>
-                      {question.answers.map((answer) => (
-                        <div
-                          key={answer.id}
-                          className="pdp-review-reply product-qa-answer"
-                        >
-                          <strong>پاسخ رسمی</strong>
-                          <p dir="auto">{answer.text}</p>
-                        </div>
-                      ))}
-                    </article>
+                      <strong>پاسخ رسمی</strong>
+                      <p dir="auto">{answer.text}</p>
+                    </div>
                   ))}
-                </div>
-              ))}
-            </div>
+                </article>
+              )}
+            />
           )}
         </>
       )}
-      {(cursors.length > 1 || visible?.next_cursor) && (
-        <nav aria-label="صفحه‌های پرسش و پاسخ" className="product-qa-pages">
-          <button
-            type="button"
-            disabled={cursors.length < 2}
-            onClick={() => {
-              setLoadError("");
-              setCursors((value) => value.slice(0, -1));
-            }}
-          >
-            صفحه قبل
-          </button>
-          <button
-            type="button"
-            disabled={!visible?.next_cursor}
-            onClick={() => {
-              const cursor = visible?.next_cursor;
-              if (cursor) {
-                setLoadError("");
-                setCursors((value) => [...value, cursor]);
-              }
-            }}
-          >
-            صفحه بعد
-          </button>
-        </nav>
-      )}
-      {page && !page.data.can_ask && (
+      {page && !page.can_ask && (
         <p>ثبت پرسش جدید برای این محصول غیرفعال است.</p>
       )}
-      {page?.data.can_ask && !token && (
-        <a href={`/login?return=${encodeURIComponent(returnTo)}`}>
-          برای ثبت پرسش وارد شوید
-        </a>
+      {(page?.can_ask || text) && (
+        <FeedbackDisclosure label="ثبت پرسش">
+          {!token && (
+            <a href={`/login?return=${encodeURIComponent(returnTo)}`}>
+              برای ثبت پرسش وارد شوید
+            </a>
+          )}
+          {token && (
+            <form
+              className="product-qa-form"
+              aria-label="فرم ثبت پرسش"
+              onSubmit={(event) => void submit(event)}
+            >
+              <label htmlFor="product-qa-text">پرسش شما</label>
+              <textarea
+                id="product-qa-text"
+                rows={3}
+                dir="auto"
+                maxLength={2000}
+                required
+                disabled={sending}
+                value={text}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setText(value);
+                  setSendError("");
+                  setNotice("");
+                  if (pending.current?.text !== value.trim())
+                    pending.current = null;
+                }}
+              />
+              <button
+                type="submit"
+                className="pdp-feedback-action"
+                disabled={!page?.can_ask || sending}
+              >
+                {sending ? "در حال ارسال…" : "ثبت پرسش"}
+              </button>
+            </form>
+          )}
+          {sendError && <p role="alert">{sendError}</p>}
+          {notice && <p role="status">{notice}</p>}
+        </FeedbackDisclosure>
       )}
-      {token && (page?.data.can_ask || text) && (
-        <form
-          className="product-qa-form"
-          onSubmit={(event) => void submit(event)}
-        >
-          <label htmlFor="product-qa-text">پرسش شما</label>
-          <textarea
-            id="product-qa-text"
-            rows={3}
-            dir="auto"
-            maxLength={2000}
-            required
-            disabled={sending}
-            value={text}
-            onChange={(event) => {
-              const value = event.target.value;
-              setText(value);
-              setSendError("");
-              setNotice("");
-              if (pending.current?.text !== value.trim())
-                pending.current = null;
-            }}
-          />
-          <button
-            type="submit"
-            className="pdp-feedback-action"
-            disabled={!page?.data.can_ask || sending || !text.trim()}
-          >
-            {sending ? "در حال ارسال…" : "ثبت پرسش"}
-          </button>
-        </form>
-      )}
-      {sendError && <p role="alert">{sendError}</p>}
-      {notice && <p role="status">{notice}</p>}
     </section>
   );
 }

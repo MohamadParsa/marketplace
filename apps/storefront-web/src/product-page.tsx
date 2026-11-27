@@ -595,13 +595,13 @@ export function ProductPage({ url }: { url: string }) {
                     <div className="pdp-price">
                       {offer.regular_price &&
                       offer.regular_price > offer.price ? (
-                        <div>
+                        <div className="pdp-price-discount-row">
                           <del>{money(offer.regular_price)}</del>
                           <b className="pdp-discount">
                             {Math.floor(
                               ((offer.regular_price - offer.price) * 100) /
                                 offer.regular_price,
-                            )}
+                            ).toLocaleString("fa-IR")}
                             ٪
                           </b>
                         </div>

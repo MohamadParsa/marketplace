@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from "react";
 import "./variant-axis.css";
+import { attributeLabel } from "./display-numbers";
 export type Axis = {
   id: string;
   name: string;
@@ -101,7 +102,7 @@ export function VariantAxis({
       <legend>
         {axis.name}:{" "}
         <b dir="auto">
-          {selected ? (axis.labels?.[selected] ?? selected) : "انتخاب نشده"}
+          {selected ? attributeLabel(axis.name, axis.labels?.[selected] ?? selected) : "انتخاب نشده"}
         </b>
       </legend>
       <div className="pdp-axis-options" id={id}>
@@ -110,12 +111,12 @@ export function VariantAxis({
             type="button"
             key={value}
             className="pdp-axis-chip"
-            title={axis.labels?.[value] ?? value}
+            title={attributeLabel(axis.name, axis.labels?.[value] ?? value)}
             aria-pressed={value === selected}
             disabled={disabled || !isDefined(value)}
             onClick={() => onSelect(value)}
           >
-            <bdi>{axis.labels?.[value] ?? value}</bdi>
+            <bdi>{attributeLabel(axis.name, axis.labels?.[value] ?? value)}</bdi>
           </button>
         ))}
       </div>

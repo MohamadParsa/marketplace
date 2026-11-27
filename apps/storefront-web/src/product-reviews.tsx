@@ -1,4 +1,6 @@
 import { ReviewStar, ReviewStars } from "./review-stars";
+import { FeedbackDisclosure } from "./feedback-disclosure";
+import { FeedbackCarousel } from "./feedback-carousel";
 import {
   useCallback,
   useEffect,
@@ -47,8 +49,6 @@ export function ProductReviews({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const request = useRef<AbortController | null>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const nextPage = useRef<HTMLDivElement>(null);
 
   const loadPage = useCallback(
     async (after?: string) => {
@@ -98,19 +98,6 @@ export function ProductReviews({
       request.current = null;
     };
   }, [loadPage]);
-
-  useEffect(() => {
-    if (!cursor || loading || error || !track.current || !nextPage.current)
-      return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) void loadPage(cursor);
-      },
-      { root: track.current, threshold: 0.25 },
-    );
-    observer.observe(nextPage.current);
-    return () => observer.disconnect();
-  }, [cursor, loading, error, loadPage]);
 
   const reviewsExist = Boolean(pages[0]?.length);
   return (
@@ -165,7 +152,7 @@ export function ProductReviews({
           </button>
         </p>
       )}
-      {pages.length > 0 && error && (
+      {pages.length > 0 && error && !cursor && (
         <p role="alert">
           به‌روزرسانی نظرات ممکن نشد؛ آخرین اطلاعات دریافت‌شده نمایش داده
           می‌شود.{" "}
@@ -176,54 +163,21 @@ export function ProductReviews({
       )}
       {pages.length > 0 && !reviewsExist && <p>هنوز نظری منتشر نشده است.</p>}
       {reviewsExist && (
-        <div
-          className="pdp-review-track"
-          ref={track}
-          tabIndex={0}
-          role="region"
-          aria-label="کارت‌های نظرات محصول"
-        >
-          {pages.map(
-            (page) =>
-              page.length > 0 && (
-                <div className="pdp-review-group" key={page[0].id}>
-                  {page.map((review) => (
-                    <ReviewCard key={review.id} review={review} />
-                  ))}
-                </div>
-              ),
-          )}
-          {cursor && (
-            <div className="pdp-review-more" ref={nextPage}>
-              {loading ? (
-                <LoadingPlaceholder label="در حال دریافت نظرات بیشتر…" />
-              ) : (
-                <button type="button" onClick={() => void loadPage(cursor)}>
-                  {error
-                    ? "تلاش دوباره برای دریافت نظرات"
-                    : "نمایش نظرات بیشتر"}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-      {reviewsExist && cursor && (
-        <button
-          className="pdp-review-scroll"
-          type="button"
-          onClick={() =>
-            nextPage.current?.scrollIntoView({
-              block: "nearest",
-              inline: "start",
-            })
-          }
-        >
-          رفتن به نظرات بیشتر
-        </button>
+        <FeedbackCarousel
+          items={pages.flat()}
+          label="کارت‌های نظرات محصول"
+          moreLabel="مشاهده بیشتر نظرات"
+          hasMore={!!cursor}
+          loading={loading}
+          error={error}
+          onMore={() => void loadPage(cursor)}
+          renderItem={(review) => <ReviewCard review={review} />}
+        />
       )}
       {pages.length > 0 && enabled && (
-        <ReviewForm endpoint={endpoint} onClosed={() => setEnabled(false)} />
+        <FeedbackDisclosure label="ثبت نظر">
+          <ReviewForm endpoint={endpoint} onClosed={() => setEnabled(false)} />
+        </FeedbackDisclosure>
       )}
       {pages.length > 0 && !enabled && (
         <p>ثبت نظر برای این محصول غیرفعال است.</p>
@@ -328,10 +282,10 @@ function ReviewForm({
   return (
     <form
       className="pdp-review-form"
+      aria-label="فرم ثبت نظر"
       onSubmit={(event) => void submit(event)}
       aria-busy={sending}
     >
-      <h3>ثبت نظر</h3>
       <fieldset disabled={sending}>
         <label className="pdp-review-checkbox">
           <input

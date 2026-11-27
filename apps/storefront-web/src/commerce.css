@@ -737,7 +737,7 @@
   transform: rotate(45deg);
   direction: ltr;
   unicode-bidi: isolate;
-  margin-inline: 8px;
+  margin-inline: 6px;
 }
 
 .buy-coupon-box fieldset,
