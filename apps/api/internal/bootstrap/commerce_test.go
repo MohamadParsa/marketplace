@@ -119,6 +119,10 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "placed" {
 		t.Fatal(p)
 	}
+	if p.PaymentStage != "requested" || len(p.PaymentAttempts) != 1 {
+		t.Fatal("missing order request attempt", p)
+	}
+	get(customer, "POST", "/storefront/wallet/deposits", map[string]any{"method_id": "card-transfer", "status": "paid"}, "spoof-payment-status", 400)
 	get(other, "GET", "/storefront/account/orders/"+p.ID, nil, "", 404)
 	get(other, "GET", "/storefront/account/orders/"+p.Number, nil, "", 404)
 	get(customer, "GET", "/storefront/account/orders/"+p.Number, nil, "", 200)
@@ -136,6 +140,9 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	json.Unmarshal(get(customer, "GET", "/storefront/account/orders/"+p.ID, nil, "", 200), &p)
 	if p.PaymentStatus != "unpaid" || p.WalletBalanceToman != quote.TotalToman {
 		t.Fatal("credit conflated payment")
+	}
+	if p.PaymentStage != "pending" || len(p.PaymentAttempts) != 2 {
+		t.Fatal("funding confused with order payment", p)
 	}
 	get(admin, "POST", "/backoffice/commerce/orders/confirm", backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, "confirm", 200)
 	json.Unmarshal(get(customer, "GET", "/storefront/account/orders/"+p.ID, nil, "", 200), &p)

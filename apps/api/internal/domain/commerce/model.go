@@ -14,6 +14,7 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
+	PaymentAttempts      []PaymentAttempt      `json:"payment_attempts,omitempty"`
 	ShippingReservations []ShippingReservation `json:"shipping_reservations,omitempty"`
 	StoreShipping        []StoreShippingPolicy `json:"store_shipping,omitempty"`
 	Sales                *SalesSettings        `json:"sales,omitempty"`
@@ -294,4 +295,18 @@ type OrderEvent struct {
 	ActorID       string    `json:"actor_id"`
 	ActorKind     string    `json:"actor_kind"`
 	At            time.Time `json:"at"`
+}
+
+type PaymentAttempt struct {
+	ID          string    `json:"id"`
+	PurchaseID  string    `json:"purchase_id,omitempty"`
+	QuoteID     string    `json:"quote_id,omitempty"`
+	Purpose     string    `json:"purpose"`
+	MethodName  string    `json:"method_name"`
+	SourceID    string    `json:"source_id"`
+	Amount      Amount    `json:"amount"`
+	Status      string    `json:"status"`
+	FailureCode string    `json:"failure_code,omitempty"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

@@ -161,6 +161,7 @@ func expireCommerce(w *Workspace, now time.Time) bool {
 			q.Status = "expired"
 			if p := findPurchase(w.Commerce, q.PurchaseID); p != nil && p.Status != "confirmed" && p.Status != "cancelled" {
 				p.Status = "requires-reconfirmation"
+				updateOrderPayment(w.Commerce, q.ID, "failed", "reservation_expired", now)
 				p.Version++
 				recordPurchaseEvent(p, identity.User{}, "reservation.expired", now)
 			}

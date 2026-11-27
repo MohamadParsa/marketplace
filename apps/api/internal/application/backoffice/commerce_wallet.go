@@ -230,6 +230,7 @@ func (s *Service) CreateDeposit(ctx context.Context, a identity.User, in Deposit
 		}
 		d := commerce.Deposit{ID: id, UserID: a.ID, PurchaseID: in.PurchaseID, Method: method, Destination: destination, Amount: amount, Date: in.Date, Reference: ref, ReferenceKey: rk, Status: "pending", Version: 1, CreatedAt: now}
 		c.Deposits = append(c.Deposits, d)
+		updateFundingAttempt(c, d, now)
 		commerceAudit(w, id+":audit", a, "deposit.declare", id, "", now)
 		return depositView(d), nil
 	})
@@ -261,6 +262,7 @@ func (s *Service) AttachReceipt(ctx context.Context, a identity.User, depositID 
 				return nil, ErrConflict
 			}
 			d.ReceiptID = id
+			updateFundingAttempt(c, *d, now)
 			d.Version++
 			kept := []commerce.Receipt{}
 			for _, r := range c.Receipts {

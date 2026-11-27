@@ -3,10 +3,10 @@ id: FEAT-BO-ORDER-REV-005
 title: تلاش‌های پرداخت مستقل از سفارش و شارژ کیف پول
 status: in-review
 owner: eliassarband
-updated: 2026-11-27
+updated: 2026-11-28
 related: [DOM-ORDER-LIFECYCLE-001, ADR-007, FEAT-BO-ORDER-REV-003]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -35,3 +35,6 @@ Issue: [#135](https://github.com/MohamadParsa/marketplace/issues/135) · مسئ�
 ## وابستگی و مانع
 
 REV-03/04؛ ORDERREV-Q01/Q02/Q06. تصمیم provider و قرارداد verify/capture اگر واقعاً وارد دامنه شوند پیش‌نیاز اجرای خارجی‌اند، نه مجوز فرض‌کردن آن‌ها. بخش مبهم تا پاسخ متوقف و کار مستقل مستند می‌شود.
+
+
+[شواهد تست و تصویر تلاش‌های مستقل](../issue-135-verification.md). اتصال provider واقعی در این برش فعال نشده است.

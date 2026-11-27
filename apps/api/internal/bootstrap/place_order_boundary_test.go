@@ -59,6 +59,9 @@ func TestPlacedOrderPostgresBeforeFundingAndReplayAfterRestart(t *testing.T) {
 	}
 	commerceHTTP(t, h, buyer, "", "POST", "/storefront/checkout/purchases", bad, "place-before-funding", 409)
 	w, _ = reopened.Snapshot(ctx)
+	if len(w.Commerce.PaymentAttempts) != 1 || w.Commerce.PaymentAttempts[0].Status != "requested" || w.Commerce.PaymentAttempts[0].PurchaseID != p.ID {
+		t.Fatal("payment attempt did not survive restart", w.Commerce.PaymentAttempts)
+	}
 	if len(w.Commerce.Purchases) != 1 || len(w.Orders) != 2 || len(w.Commerce.Entries) != 0 || len(w.Commerce.Deposits) != 0 {
 		t.Fatal("replay duplicated order/funding")
 	}

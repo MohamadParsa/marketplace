@@ -669,6 +669,16 @@ function PurchaseReview({
         <span>{new Date(p.created_at).toLocaleString("fa-IR")}</span>
       </div>
       <States p={p} />
+      {!!p.payment_attempts?.length && (
+        <section className="commerce-order-box" aria-label="سابقه تلاش‌های پرداخت">
+          <h3>سابقه تلاش‌های پرداخت</h3>
+          {p.payment_attempts.map((attempt,index) => <div key={attempt.id} className="commerce-order-heading">
+            <span>تلاش {(index+1).toLocaleString("fa-IR")} · {attempt.purpose === "wallet-funding" ? "تأمین وجه کیف پول" : "پرداخت سفارش"} · {attempt.method_name}</span>
+            <span>{money(attempt.amount_toman)} · {label(attempt.status)}</span>
+          </div>)}
+          <small>تأیید تأمین وجه فقط کیف پول را شارژ می‌کند؛ پرداخت سفارش با مصرف جداگانه قطعی می‌شود.</small>
+        </section>
+      )}
       <div className="commerce-order-grid">
         <section
           className="commerce-order-box commerce-payment-box"

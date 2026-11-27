@@ -114,6 +114,7 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 			view := purchaseView(c, p)
 			if !v.Permissions[CommerceDepositsRead] {
 				view.Deposits = []DepositView{}
+				view.PaymentAttempts = nil
 			}
 			if !v.Permissions[CommerceOrdersConfirm] {
 				view.WalletBalanceToman = ""
@@ -210,6 +211,7 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 			d.ReviewedAt = &now
 			d.ReviewedBy = a.ID
 			d.Version++
+			updateFundingAttempt(c, *d, now)
 			if p := findPurchase(c, d.PurchaseID); p != nil {
 				recordPurchaseEvent(p, a, "deposit."+d.Status, now)
 			}
@@ -339,6 +341,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 		q.Status = "consumed"
 		p.Status = "confirmed"
 		p.ConfirmedAt = &now
+		updateOrderPayment(c, q.ID, "paid", "", now)
 		p.Version++
 		for i := range w.Orders {
 			if w.Orders[i].CheckoutID == p.ID {
@@ -411,6 +414,9 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 			q.Status = "cancelled"
 		}
 		p.Status = "cancelled"
+		if p.ConfirmedAt == nil {
+			updateOrderPayment(c, p.QuoteID, "failed", "staff_cancelled", now)
+		}
 		p.CancelledAt = &now
 		p.Reason = in.Reason
 		p.Version++

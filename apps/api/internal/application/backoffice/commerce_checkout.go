@@ -92,26 +92,28 @@ type QuoteView struct {
 	Currency            string                `json:"currency"`
 }
 type PurchaseView struct {
-	CreditSources         []CreditSourceView `json:"credit_sources,omitempty"`
-	Number                string             `json:"number"`
-	OrderStatus           string             `json:"order_status"`
-	FulfillmentStatus     string             `json:"fulfillment_status,omitempty"`
-	PaymentStatus         string             `json:"payment_status"`
-	Events                []OrderEventView   `json:"events"`
-	CancellationRequested bool               `json:"cancellation_requested"`
-	CancellationReason    string             `json:"cancellation_reason,omitempty"`
-	ID                    string             `json:"id"`
-	Status                string             `json:"status"`
-	Version               int                `json:"version"`
-	Quote                 QuoteView          `json:"quote"`
-	OrderIDs              []string           `json:"order_ids"`
-	CreatedAt             time.Time          `json:"created_at"`
-	ConfirmedAt           *time.Time         `json:"confirmed_at,omitempty"`
-	WalletBalanceToman    string             `json:"wallet_balance_toman"`
-	WalletAvailableToman  string             `json:"wallet_available_toman"`
-	ShortfallToman        string             `json:"shortfall_toman"`
-	Deposits              []DepositView      `json:"deposits"`
-	Reason                string             `json:"reason,omitempty"`
+	PaymentAttempts       []PaymentAttemptView `json:"payment_attempts,omitempty"`
+	PaymentStage          string               `json:"payment_stage"`
+	CreditSources         []CreditSourceView   `json:"credit_sources,omitempty"`
+	Number                string               `json:"number"`
+	OrderStatus           string               `json:"order_status"`
+	FulfillmentStatus     string               `json:"fulfillment_status,omitempty"`
+	PaymentStatus         string               `json:"payment_status"`
+	Events                []OrderEventView     `json:"events"`
+	CancellationRequested bool                 `json:"cancellation_requested"`
+	CancellationReason    string               `json:"cancellation_reason,omitempty"`
+	ID                    string               `json:"id"`
+	Status                string               `json:"status"`
+	Version               int                  `json:"version"`
+	Quote                 QuoteView            `json:"quote"`
+	OrderIDs              []string             `json:"order_ids"`
+	CreatedAt             time.Time            `json:"created_at"`
+	ConfirmedAt           *time.Time           `json:"confirmed_at,omitempty"`
+	WalletBalanceToman    string               `json:"wallet_balance_toman"`
+	WalletAvailableToman  string               `json:"wallet_available_toman"`
+	ShortfallToman        string               `json:"shortfall_toman"`
+	Deposits              []DepositView        `json:"deposits"`
+	Reason                string               `json:"reason,omitempty"`
 }
 type MethodEligibility struct {
 	TotalToman  string                `json:"total_toman"`
@@ -201,6 +203,7 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	orderStatus, paymentStatus := purchaseStatuses(p)
 	v := PurchaseView{Number: strconv.FormatInt(p.Number, 10), OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
 	v.FulfillmentStatus = p.FulfillmentState
+	v.PaymentAttempts, v.PaymentStage = paymentAttemptViews(c, p)
 	for _, e := range p.Events {
 		v.Events = append(v.Events, OrderEventView{e.Action, e.FlowStatus, e.OrderStatus, e.PaymentStatus, e.ActorKind, e.At})
 	}
@@ -720,6 +723,7 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 			}
 		}
 		syncPurchaseOrders(w, p, *q, now)
+		requestOrderPayment(c, p, q, now)
 		recordPurchaseEvent(p, a, "order.accepted", now)
 		commerceAudit(w, id+":audit", a, "purchase.accept", p.ID, "", now)
 		return purchaseView(c, *p), nil
@@ -779,6 +783,7 @@ func (s *Service) CancelPurchase(ctx context.Context, a identity.User, id, reaso
 			q.Status = "cancelled"
 		}
 		p.Status = "cancelled"
+		updateOrderPayment(c, p.QuoteID, "failed", "customer_cancelled", now)
 		p.Reason = strings.TrimSpace(reason)
 		p.CancelledAt = &now
 		p.Version++

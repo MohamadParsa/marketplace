@@ -234,6 +234,8 @@ export interface Deposit {
   created_at: string;
 }
 export interface Purchase {
+  payment_stage?: string;
+  payment_attempts?: PaymentAttempt[];
   fulfillment_status?: string;
   discount_funding?: {
     platform_toman: string;
@@ -356,6 +358,10 @@ export interface AdminView {
   audit: { id: string; action: string; target: string; created_at: string }[];
 }
 export const statuses: Record<string, string> = {
+  requested: "درخواست پرداخت",
+  "awaiting-result": "در انتظار نتیجه",
+  failed: "ناموفق",
+  authorized: "مجاز؛ غیرقطعی",
   placed: "ثبت سفارش",
   processing: "در حال پردازش",
   supplied: "تأمین شده",
@@ -397,6 +403,17 @@ export function money(value: string) {
   const negative = value.startsWith("-");
   const [whole, fraction] = value.replace(/^-/, "").split(".");
   return `${negative ? "−" : ""}${whole.replace(/\B(?=(\d{3})+(?!\d))/g, "٬")}${fraction ? "٫" + fraction : ""} تومان`;
+}
+
+export interface PaymentAttempt {
+  id: string;
+  purpose: "order-payment" | "wallet-funding";
+  method_name: string;
+  amount_toman: string;
+  status: string;
+  failure_code?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface WalletCreditInput {

@@ -85,3 +85,10 @@ execution_authorized: true
 
 - #133 با کامیت `b73e752` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651) بسته شد.
 - #134: [ثبت پیش از تأمین وجه، وضعیت مستقل و replay پس از restart](issue-134-verification.md) تکمیل فنی و آماده CI/بستن است.
+
+- #134 با کامیت `cf46e0b` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/134#issuecomment-7227527986) بسته شد. ممیزی #70 هم با [تعیین مرز تحلیل/childها](https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080) بسته شد.
+- #135: [تلاش‌های پرداخت، وجه دیررس و عدم قطعیت مجاز](issue-135-verification.md) تکمیل فنی شد؛ منتظر CI/ثبت کامنت بستن.
+
+## تکمیل تازه مالک — ۲۰۲۶-۱۱-۲۸
+
+[#141 — همه کنترل‌های تاریخ شمسی در storefront و بک‌آفیس](tasks/persian-date-controls.md) پس از #140 به صف اجرا اضافه شد؛ todo و مجوز اجرا دارد. پذیرش یک‌جای مالک پس از این تکمیل است.

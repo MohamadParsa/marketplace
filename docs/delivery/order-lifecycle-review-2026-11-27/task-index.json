@@ -1,6 +1,6 @@
 {
   "id": "DEL-ORDER-LIFECYCLE-REVIEW-20261127",
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "document_status": "in-review",
   "owner": "eliassarband",
   "implementation_status": "in-progress",
@@ -95,7 +95,13 @@
         "ORDERREV-Q01",
         "ORDERREV-Q03",
         "ORDERREV-Q06"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "cf46e0b",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/134#issuecomment-7227527986",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46063441409"
+      }
     },
     {
       "id": "CV-ORDER-REV-05",
@@ -104,7 +110,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/135",
       "title": "تلاش‌های پرداخت و تفکیک شارژ کیف پول از پرداخت سفارش",
       "file": "tasks/payment-attempt-states.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
@@ -227,6 +233,20 @@
         "ORDERREV-Q03",
         "ORDERREV-Q04"
       ]
+    },
+    {
+      "id": "CV-ORDER-REV-11",
+      "spec_id": "FEAT-BO-ORDER-REV-011",
+      "issue": 141,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/141",
+      "title": "کنترل تاریخ شمسی در storefront و بک‌آفیس",
+      "file": "tasks/persian-date-controls.md",
+      "implementation_status": "todo",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-10"
+      ],
+      "blocking_questions": []
     }
   ],
   "execution_order": [
@@ -239,12 +259,19 @@
     137,
     138,
     139,
-    140
+    140,
+    141
   ],
   "deferred_scope": [
     "real gateway verification/capture and BNPL",
     "automatic/legal return deadlines",
     "live bank/carrier/notification services",
     "complete commission/settlement redesign #72"
-  ]
+  ],
+  "audit_delivery": {
+    "issue": 70,
+    "issue_state": "closed",
+    "comment": "https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080",
+    "source_commit": "cf46e0b"
+  }
 }
