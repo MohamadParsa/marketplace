@@ -1,0 +1,7636 @@
+{
+  "dataset_id": "iran-geography-1404-v3.1.2",
+  "source": {
+    "repository": "https://github.com/sajaddp/list-of-cities-in-Iran",
+    "commit": "ace21bb251f96ced350bbc01541acffd71121feb",
+    "version": "3.1.2",
+    "official_year": 1404,
+    "city_dataset": "cities-filtered",
+    "province_count": 31,
+    "city_count": 1481
+  },
+  "provinces": [
+    {
+      "id": "ir-p-100",
+      "name": "مرکزی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1000001001101",
+          "name": "اراک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000001001600",
+          "name": "کارچان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000001002074",
+          "name": "ساروق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000001002536",
+          "name": "داودآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000002001103",
+          "name": "آشتیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000003001104",
+          "name": "تفرش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000004001105",
+          "name": "خمین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000004002541",
+          "name": "قورچی باشی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000005001106",
+          "name": "دلیجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000005001107",
+          "name": "نراق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000006001110",
+          "name": "ساوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000006001111",
+          "name": "غرق آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000006002137",
+          "name": "نوبران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000006002827",
+          "name": "آوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007001112",
+          "name": "آستانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007001113",
+          "name": "شازند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007002032",
+          "name": "مهاجران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007002380",
+          "name": "هندودر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007002582",
+          "name": "توره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000007002774",
+          "name": "شهباز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000009001115",
+          "name": "محلات",
+          "active": true
+        },
+        {
+          "id": "ir-c-1000009001116",
+          "name": "نیمور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000010001108",
+          "name": "زاویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000010001109",
+          "name": "مامونیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000010002017",
+          "name": "خشکرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000010002228",
+          "name": "پرندک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000010002378",
+          "name": "رازقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000011001102",
+          "name": "کمیجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000011002379",
+          "name": "میلاجرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000012002073",
+          "name": "جاورسیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000012002304",
+          "name": "خنداب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000013002136",
+          "name": "فرمهین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000013002773",
+          "name": "خنجین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10000013002941",
+          "name": "تلخاب",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-101",
+      "name": "گیلان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1010001001117",
+          "name": "آستارا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010001002583",
+          "name": "لوندویل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010002001118",
+          "name": "کیاشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010002001119",
+          "name": "آستانه اشرفیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010003001120",
+          "name": "بندرانزلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010004001124",
+          "name": "هشتپر (تالش)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010004002381",
+          "name": "لیسار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010004002382",
+          "name": "اسالم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010004002584",
+          "name": "حویق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010004002585",
+          "name": "چوبر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001007",
+          "name": "پیربازار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001125",
+          "name": "خشکبیجار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001127",
+          "name": "کوچصفهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001128",
+          "name": "لشت نشاء",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001129",
+          "name": "رشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005001130",
+          "name": "سنگر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010005002075",
+          "name": "لولمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006001131",
+          "name": "لوشان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006001132",
+          "name": "رودبار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006001133",
+          "name": "منجیل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006002138",
+          "name": "جیرنده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006002139",
+          "name": "رستم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006002229",
+          "name": "توتکابن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010006002383",
+          "name": "بره سر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010007001135",
+          "name": "چابکسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010007001136",
+          "name": "رحیم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010007001137",
+          "name": "رودسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010007001138",
+          "name": "کلاچای",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010007001139",
+          "name": "واجارگاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010008001058",
+          "name": "طاهرگوراب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010008001059",
+          "name": "ضیابر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010008001140",
+          "name": "صومعه سرا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010008002140",
+          "name": "مرجقل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010008002328",
+          "name": "گوراب زرمیخ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010009001142",
+          "name": "فومن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010009001143",
+          "name": "ماسوله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1010009002804",
+          "name": "ماکلوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100010001144",
+          "name": "کومله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100010001145",
+          "name": "لنگرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100010002076",
+          "name": "چاف و چمخاله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100010002141",
+          "name": "شلمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100010002385",
+          "name": "اطاقور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100011001147",
+          "name": "لاهیجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100011002386",
+          "name": "رودبنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100012001141",
+          "name": "شفت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100012002387",
+          "name": "احمد سرگوراب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100013001134",
+          "name": "املش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100013002519",
+          "name": "رانکوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100014001121",
+          "name": "پره سر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100014001122",
+          "name": "رضوانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100015001146",
+          "name": "سیاهکل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100015002329",
+          "name": "دیلمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100016001123",
+          "name": "ماسال",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100016002510",
+          "name": "بازار جمعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100017001060",
+          "name": "چوکام",
+          "active": true
+        },
+        {
+          "id": "ir-c-10100017001126",
+          "name": "خمام",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-102",
+      "name": "مازندران",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1020001001148",
+          "name": "رینه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020001001149",
+          "name": "آمل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020001002388",
+          "name": "گزنک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020001002586",
+          "name": "دابودشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020001002772",
+          "name": "امامزاده عبدالله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020001002875",
+          "name": "بابکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002001153",
+          "name": "امیرکلا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002001154",
+          "name": "بابل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002002389",
+          "name": "خوش رودپی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002002390",
+          "name": "گلوگاه (بابل)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002002391",
+          "name": "مرزیکلا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002002392",
+          "name": "زرگر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020002002587",
+          "name": "گتاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020004001158",
+          "name": "بهشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020004001159",
+          "name": "رستمکلا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020004002647",
+          "name": "خلیل شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020005001100",
+          "name": "شیرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020005001161",
+          "name": "تنکابن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020005001162",
+          "name": "خرم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020005001166",
+          "name": "نشتارود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020006001069",
+          "name": "دالخانی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020006001167",
+          "name": "رامسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020006001168",
+          "name": "کتالم و سادات شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007001006",
+          "name": "اکند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007001169",
+          "name": "ساری",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007002170",
+          "name": "کیاسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007002588",
+          "name": "فریم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007002746",
+          "name": "پایین هولار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020007002874",
+          "name": "فرح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020008001170",
+          "name": "آلاشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020008001171",
+          "name": "پل سفید",
+          "active": true
+        },
+        {
+          "id": "ir-c-1020008001172",
+          "name": "زیرآب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200010001176",
+          "name": "قایم شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200010002747",
+          "name": "ارطه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200014001189",
+          "name": "نور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200014001193",
+          "name": "رویان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200014002119",
+          "name": "چمستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200014002396",
+          "name": "بلده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200014002648",
+          "name": "ایزدشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200015001194",
+          "name": "نوشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200015002713",
+          "name": "پول",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200015002779",
+          "name": "کجور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200016001151",
+          "name": "بابلسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200016002393",
+          "name": "بهنمیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200016002394",
+          "name": "هادی شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200018001150",
+          "name": "محمودآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200018002395",
+          "name": "سرخرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200019001160",
+          "name": "نکا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200020001190",
+          "name": "چالوس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200020001192",
+          "name": "مرزن آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200020002748",
+          "name": "هچیرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200021001093",
+          "name": "لاریم",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200021001175",
+          "name": "جویبار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200021002397",
+          "name": "کوهی خیل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200022001157",
+          "name": "گلوگاه (گلوگاه)",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200023001039",
+          "name": "آستانه سرا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200023001152",
+          "name": "فریدونکنار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200024001163",
+          "name": "سلمان شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200024001164",
+          "name": "عباس آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200024001165",
+          "name": "کلارآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200025002305",
+          "name": "سورک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200025002931",
+          "name": "طبقده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200026001177",
+          "name": "کیاکلا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200027001173",
+          "name": "شیرگاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10200028001191",
+          "name": "کلاردشت",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-103",
+      "name": "آذربایجان شرقی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1030002001200",
+          "name": "اهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001067",
+          "name": "اسفهلان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001068",
+          "name": "لاهیجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001206",
+          "name": "خسروشاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001213",
+          "name": "باسمنج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001214",
+          "name": "تبریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030003001215",
+          "name": "سردرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030005001216",
+          "name": "مهربان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030005001220",
+          "name": "سراب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030005002330",
+          "name": "شربیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030005002399",
+          "name": "دوزدوزان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030006001223",
+          "name": "مراغه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030006002331",
+          "name": "خداجو(خراجو)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007001026",
+          "name": "دیزج حسین بیگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007001227",
+          "name": "زنوز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007001228",
+          "name": "مرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007002143",
+          "name": "کشکسرای",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007002400",
+          "name": "یامچی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1030007002589",
+          "name": "بناب مرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300010001233",
+          "name": "میانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300010002144",
+          "name": "ترکمانچای",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300010002401",
+          "name": "آقکند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300010002402",
+          "name": "ترک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300010002842",
+          "name": "اچاچی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300011001234",
+          "name": "هشترود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300011002590",
+          "name": "نظرکهریزی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300012001221",
+          "name": "بناب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300012002934",
+          "name": "خوشه مهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300013001025",
+          "name": "کردکندی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300013001207",
+          "name": "بستان آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300013002295",
+          "name": "تیکمه داش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001083",
+          "name": "نظرلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001208",
+          "name": "تسوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001209",
+          "name": "خامنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001210",
+          "name": "شبستر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001211",
+          "name": "شرفخانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014001212",
+          "name": "صوفیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002101",
+          "name": "شندآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002148",
+          "name": "سیس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002149",
+          "name": "وایقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002544",
+          "name": "کوزه کنان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002946",
+          "name": "داریان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300014002947",
+          "name": "علیشاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300015001199",
+          "name": "کلیبر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300015002545",
+          "name": "آبش احمد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016001217",
+          "name": "هریس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016002146",
+          "name": "خواجه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016002147",
+          "name": "زرنق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016002230",
+          "name": "بخشایش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016002333",
+          "name": "کلوانق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300016002935",
+          "name": "اربطان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300019001225",
+          "name": "جلفا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300019001226",
+          "name": "هادیشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300019002497",
+          "name": "سیه رود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300020001224",
+          "name": "ملکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300020002844",
+          "name": "مبارک شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300021001201",
+          "name": "آذرشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300021001202",
+          "name": "گوگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300021001203",
+          "name": "ممقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300021002763",
+          "name": "تیمورلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300022001204",
+          "name": "اسکو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300022001205",
+          "name": "ایلخچی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300022002033",
+          "name": "سهند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300023002145",
+          "name": "قره آغاج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300024002142",
+          "name": "ورزقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300024002398",
+          "name": "خاروانا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300025001222",
+          "name": "عجب شیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300025002843",
+          "name": "جوان قلعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300026002332",
+          "name": "خمارلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300026002944",
+          "name": "عاشقلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300026002945",
+          "name": "لاریجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300027002294",
+          "name": "هوراند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10300028002296",
+          "name": "لیلان",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-104",
+      "name": "آذربایجان غربی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1040001001235",
+          "name": "ارومیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040001002150",
+          "name": "قوشچی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040001002151",
+          "name": "نوشین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040001002403",
+          "name": "سیلوانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040001002404",
+          "name": "سرو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040002001236",
+          "name": "پیرانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040002002546",
+          "name": "لاجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003001238",
+          "name": "خوی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003001239",
+          "name": "فیرورق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003002043",
+          "name": "دیزج دیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003002044",
+          "name": "قطور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003002405",
+          "name": "ایواوغلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040003002735",
+          "name": "زرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040004001240",
+          "name": "سردشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040004002547",
+          "name": "ربط",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040004002922",
+          "name": "نلاس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040005001241",
+          "name": "تازه شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040005001242",
+          "name": "سلماس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040006001246",
+          "name": "ماکو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040006002231",
+          "name": "بازرگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040007001248",
+          "name": "مهاباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040007002734",
+          "name": "خلیفان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040007002869",
+          "name": "گوگ تپه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040008001005",
+          "name": "بکتاش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040008001251",
+          "name": "میاندوآب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040009001253",
+          "name": "محمدیار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1040009001254",
+          "name": "نقده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400010001247",
+          "name": "بوکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400010002548",
+          "name": "سیمینه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400011001250",
+          "name": "شاهین دژ",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400011002407",
+          "name": "کشاورز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400011002591",
+          "name": "محمودآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400012001249",
+          "name": "تکاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400012002926",
+          "name": "تخت سلیمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400013001252",
+          "name": "اشنویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400013002408",
+          "name": "نالوس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400014001245",
+          "name": "سیه چشمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400014002549",
+          "name": "آواجیق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400015001243",
+          "name": "پلدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400015002733",
+          "name": "نازک علیا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400016001237",
+          "name": "قره ضیاءالدین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400016002879",
+          "name": "حاجیلار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400017001244",
+          "name": "شوط",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400017002736",
+          "name": "مرگنلر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400017002899",
+          "name": "یولاگلدی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400018002232",
+          "name": "چهاربرج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400019002592",
+          "name": "باروق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10400020002406",
+          "name": "میرآباد",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-105",
+      "name": "کرمانشاه",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1050001001256",
+          "name": "اسلام آبادغرب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050001002411",
+          "name": "حمیل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050002001258",
+          "name": "کرمانشاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050002002196",
+          "name": "رباط",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050002002410",
+          "name": "هلشی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050002002412",
+          "name": "کوزران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050002002896",
+          "name": "قلعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050003001261",
+          "name": "پاوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050003001262",
+          "name": "نودشه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050003001263",
+          "name": "نوسود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050003002103",
+          "name": "باینگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050003002761",
+          "name": "بانوره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050004001264",
+          "name": "سرپل ذهاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050005001265",
+          "name": "سنقر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050005002594",
+          "name": "سطر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050006001266",
+          "name": "قصرشیرین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050006002197",
+          "name": "سومار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050007001267",
+          "name": "کنگاور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050007002834",
+          "name": "گودین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050008001268",
+          "name": "گیلانغرب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050008002413",
+          "name": "سرمست",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050009001260",
+          "name": "جوانرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1050009002900",
+          "name": "شروینه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500010001257",
+          "name": "صحنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500010002414",
+          "name": "دینور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500011001259",
+          "name": "هرسین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500011002233",
+          "name": "بیستون",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500012002185",
+          "name": "تازه آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500012002593",
+          "name": "ازگله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500012002977",
+          "name": "میرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500013001255",
+          "name": "کرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500013002409",
+          "name": "گهواره",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500013002760",
+          "name": "ریجاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500014002034",
+          "name": "شاهو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10500014002102",
+          "name": "روانسر",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-106",
+      "name": "خوزستان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1060001001269",
+          "name": "اروندکنار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060001001270",
+          "name": "آبادان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060001002010",
+          "name": "چویبده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060002001271",
+          "name": "اندیمشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060002002595",
+          "name": "حسینیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060002002801",
+          "name": "آزادی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060002002802",
+          "name": "چم گلک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060002002803",
+          "name": "بیدروبه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060003001272",
+          "name": "اهواز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060003002791",
+          "name": "الهایی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060004001274",
+          "name": "ایذه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060005001275",
+          "name": "بندر امام خمینی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060005001276",
+          "name": "بندر ماهشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060005002311",
+          "name": "چمران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060006001279",
+          "name": "بهبهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060006002500",
+          "name": "سردشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060006002797",
+          "name": "منصوریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060006002798",
+          "name": "تشان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060007001280",
+          "name": "خرمشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060007002312",
+          "name": "مینوشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060007002334",
+          "name": "مقاومت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008001282",
+          "name": "دزفول",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002035",
+          "name": "حمزه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002100",
+          "name": "شمس آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002416",
+          "name": "سالند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002417",
+          "name": "شهر امام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002418",
+          "name": "صفی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002419",
+          "name": "میانرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002717",
+          "name": "چغامیش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002800",
+          "name": "سیاه منصور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002927",
+          "name": "شهیون",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002967",
+          "name": "منتظران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060008002983",
+          "name": "جندی شاپور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060009001283",
+          "name": "بستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060009001284",
+          "name": "سوسنگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060009002795",
+          "name": "کوت سیدنعیم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1060009002796",
+          "name": "ابوحمیظه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600010001004",
+          "name": "باوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600010001287",
+          "name": "رامهرمز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600010002921",
+          "name": "سلطان آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600010002929",
+          "name": "رود زرد ماشین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600011001288",
+          "name": "شادگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600011002008",
+          "name": "دارخوین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600011002794",
+          "name": "خنافره",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600012001290",
+          "name": "شوشتر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600012002036",
+          "name": "شرافت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600012002714",
+          "name": "گوریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600012002792",
+          "name": "سرداران",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600012002968",
+          "name": "عرب حسن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600013001291",
+          "name": "مسجدسلیمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600013002793",
+          "name": "گلگیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600013002930",
+          "name": "عنبر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600014001281",
+          "name": "شوش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600014002649",
+          "name": "حر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600014002718",
+          "name": "فتح المبین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600015001273",
+          "name": "باغ ملک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600015002551",
+          "name": "قلعه تل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600015002720",
+          "name": "میداود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600016002111",
+          "name": "امیدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600016002420",
+          "name": "جایزان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600016002969",
+          "name": "میانکوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600017001061",
+          "name": "تراز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600017002104",
+          "name": "لالی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600018001277",
+          "name": "هندیجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600018002650",
+          "name": "زهره",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600019001286",
+          "name": "رامشیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600019002719",
+          "name": "مشراگه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600020001289",
+          "name": "گتوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600020002007",
+          "name": "ترکالکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600020002009",
+          "name": "صالح شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600020002715",
+          "name": "سماله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600020002716",
+          "name": "جنت مکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600021002550",
+          "name": "قلعه خواجه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600021002799",
+          "name": "آبژدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600021002928",
+          "name": "زاووت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600022001292",
+          "name": "هفتگل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600023001285",
+          "name": "هویزه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600023002313",
+          "name": "رفیع",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600024002106",
+          "name": "ملاثانی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600024002309",
+          "name": "ویس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600024002310",
+          "name": "شیبان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600025002105",
+          "name": "حمیدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600026001278",
+          "name": "آغاجاری",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600026002920",
+          "name": "جولکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600027002790",
+          "name": "کوت عبداله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600028002037",
+          "name": "شاوور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600028002314",
+          "name": "الوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600029002415",
+          "name": "دهدز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10600030002596",
+          "name": "صیدون",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-107",
+      "name": "فارس",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1070001001296",
+          "name": "آباده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070001001297",
+          "name": "صغاد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070001002198",
+          "name": "بهمن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070001002335",
+          "name": "ایزدخواست",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070001002597",
+          "name": "سورمق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070002001298",
+          "name": "استهبان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070002002177",
+          "name": "رونیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070002002552",
+          "name": "ایج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070003001299",
+          "name": "اقلید",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070003002014",
+          "name": "دژکرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070003002082",
+          "name": "حسن آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070003002297",
+          "name": "سده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070004001301",
+          "name": "جهرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070004002178",
+          "name": "قطب آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070004002707",
+          "name": "دوزه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005001000",
+          "name": "پاسخن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005001303",
+          "name": "داراب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005002016",
+          "name": "فدامی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005002081",
+          "name": "دو برجی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005002179",
+          "name": "جنت شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070005002905",
+          "name": "رستاق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070006001304",
+          "name": "اردکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070006002711",
+          "name": "هماشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070007001309",
+          "name": "شیراز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070007001696",
+          "name": "شیراز6",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070007002015",
+          "name": "شهر صدرا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070007002057",
+          "name": "خانه زنیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070007002298",
+          "name": "داریان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008001310",
+          "name": "فسا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008002107",
+          "name": "زاهدشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008002180",
+          "name": "ششده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008002652",
+          "name": "نوبندگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008002762",
+          "name": "قره بلاغ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070008002829",
+          "name": "میانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070009001313",
+          "name": "فیروزآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1070009001314",
+          "name": "میمند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700010001315",
+          "name": "کازرون",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700010002109",
+          "name": "خشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700010002181",
+          "name": "کنارتخته",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700010002423",
+          "name": "بالاده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011001320",
+          "name": "لار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002013",
+          "name": "لطیفی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002182",
+          "name": "بنارویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002219",
+          "name": "بیرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002553",
+          "name": "خور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002709",
+          "name": "عماد شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700011002952",
+          "name": "دهکویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012001044",
+          "name": "فتح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012001324",
+          "name": "مرودشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002080",
+          "name": "رامجرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002336",
+          "name": "سیدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002555",
+          "name": "کامفیروز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002776",
+          "name": "خانیمن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002951",
+          "name": "فاروق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700012002961",
+          "name": "زنگی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700013001325",
+          "name": "نورآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700013002712",
+          "name": "خومه زار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700013002781",
+          "name": "بابامنیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700014001326",
+          "name": "نی ریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700014002058",
+          "name": "قطرویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700014002556",
+          "name": "مشکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015001015",
+          "name": "خیرگو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015001318",
+          "name": "لامرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015002212",
+          "name": "اشکنان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015002235",
+          "name": "اهل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015002236",
+          "name": "علامرودشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700015002906",
+          "name": "چاه ورز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700016001295",
+          "name": "بوانات",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700016002780",
+          "name": "مزایجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700017001321",
+          "name": "ارسنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700018001294",
+          "name": "صفاشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700018001323",
+          "name": "قادرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700019001302",
+          "name": "حاجی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700019002558",
+          "name": "شهرپیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700019002651",
+          "name": "دبیران",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700020001312",
+          "name": "قیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700020002011",
+          "name": "امام شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700020002012",
+          "name": "مبارک آباد دیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700020002422",
+          "name": "کارزین/فتح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700020002653",
+          "name": "افزر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002211",
+          "name": "مهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002425",
+          "name": "گله دار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002559",
+          "name": "وراوی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002708",
+          "name": "اسیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002820",
+          "name": "خوزی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700021002966",
+          "name": "فال",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700022001311",
+          "name": "فراشبند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700022002059",
+          "name": "دهرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700022002060",
+          "name": "نوجین",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700023001322",
+          "name": "سعادت شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700023002783",
+          "name": "مادر سلیمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700024001317",
+          "name": "خنج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700024002907",
+          "name": "محمله",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700025001306",
+          "name": "سروستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700025002710",
+          "name": "کوهنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700026002337",
+          "name": "مصیری",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700026002777",
+          "name": "کوپن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700027001319",
+          "name": "گراش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700027002903",
+          "name": "ارد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700028001042",
+          "name": "اکبرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700028001043",
+          "name": "مظفری",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700028001307",
+          "name": "کوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700028002904",
+          "name": "طسوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700029001308",
+          "name": "خرامه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700029002782",
+          "name": "سلطان شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700029002962",
+          "name": "معزآباد جابری",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700029002963",
+          "name": "خیرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700030001045",
+          "name": "رحمت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700030001305",
+          "name": "زرقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700030002421",
+          "name": "لپویی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700031002503",
+          "name": "بیضا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700032001057",
+          "name": "توجردی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700032001072",
+          "name": "باغ صفا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700032002095",
+          "name": "حسامی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700032002557",
+          "name": "کره ای",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700033002108",
+          "name": "قایمیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700033002424",
+          "name": "نودان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700034001300",
+          "name": "خاوران",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700034002234",
+          "name": "باب انار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700035001066",
+          "name": "خواجه جمالی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700035001077",
+          "name": "تم شولی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700035002199",
+          "name": "آباده طشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700036001046",
+          "name": "کوره",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700036001090",
+          "name": "بیدشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700036001316",
+          "name": "اوز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700037001094",
+          "name": "بلغان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10700037002183",
+          "name": "جویم",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-108",
+      "name": "کرمان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1080001001008",
+          "name": "کشکوییه (بافت)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080001001328",
+          "name": "بافت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080001002200",
+          "name": "بزنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080002001079",
+          "name": "دهبکری",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080002001330",
+          "name": "بم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080002001331",
+          "name": "بروات",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080003001332",
+          "name": "جیرفت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080003002237",
+          "name": "جبالبارز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080003002339",
+          "name": "درب بهشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080003002769",
+          "name": "بلوک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080003002953",
+          "name": "علی آباد (جیرفت)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004001335",
+          "name": "رفسنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004002085",
+          "name": "صفاییه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004002227",
+          "name": "مس سرچشمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004002319",
+          "name": "کشکوییه (رفسنجان)",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004002427",
+          "name": "بهرمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080004002954",
+          "name": "جوادیه الهیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080005001337",
+          "name": "زرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080005002201",
+          "name": "خانوک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080005002600",
+          "name": "ریحان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080005002601",
+          "name": "یزدان شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080005002955",
+          "name": "سیریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006001338",
+          "name": "سیرجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002320",
+          "name": "زیدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002340",
+          "name": "نجف شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002561",
+          "name": "پاریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002722",
+          "name": "هماشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002823",
+          "name": "خواجو شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080006002825",
+          "name": "بلورد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080007001339",
+          "name": "شهربابک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080007002030",
+          "name": "خورسند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080007002031",
+          "name": "جوزم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080007002086",
+          "name": "خاتون آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080007002238",
+          "name": "دهج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001329",
+          "name": "راین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001341",
+          "name": "شهداد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001342",
+          "name": "گلباف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001343",
+          "name": "جوپار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001344",
+          "name": "ماهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001345",
+          "name": "چترود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008001346",
+          "name": "کرمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002239",
+          "name": "باغین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002321",
+          "name": "محی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002323",
+          "name": "زنگی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002324",
+          "name": "کاظم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002428",
+          "name": "اختیارآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080008002603",
+          "name": "اندوهجرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080009001009",
+          "name": "چاه مرید",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080009001347",
+          "name": "کهنوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1080009002956",
+          "name": "ده کهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800010001348",
+          "name": "بردسیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800010002065",
+          "name": "لاله زار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800010002241",
+          "name": "گلزار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800010002326",
+          "name": "نگار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800010002824",
+          "name": "دشتکار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800011001340",
+          "name": "راور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800011002599",
+          "name": "هجدک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800012001333",
+          "name": "عنبرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800012002602",
+          "name": "مردهک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800012002721",
+          "name": "دوساری",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800013002240",
+          "name": "منوجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800013002604",
+          "name": "نودژ",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800014001336",
+          "name": "کوهبنان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800014002110",
+          "name": "کیانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800015002325",
+          "name": "رودبار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800016002176",
+          "name": "قلعه گنج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800016002908",
+          "name": "چاه دادخدا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800016002957",
+          "name": "رمشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800017001013",
+          "name": "رحمت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800017001014",
+          "name": "عباس آباد سردار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800017002316",
+          "name": "محمدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800018001327",
+          "name": "رابر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800018002771",
+          "name": "هنزا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800019001010",
+          "name": "دهنو اسلام آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800019002317",
+          "name": "فهرج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800020001334",
+          "name": "انار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800020002318",
+          "name": "امین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800021002338",
+          "name": "نرماشیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800021002598",
+          "name": "نظام شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800022001011",
+          "name": "پاسفید",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800022002429",
+          "name": "فاریاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800023001012",
+          "name": "علی آباد (ارزوییه)",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800023002315",
+          "name": "ارزوییه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800024002822",
+          "name": "گنبکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10800025002821",
+          "name": "زهکلوت",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-109",
+      "name": "خراسان رضوی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1090004001357",
+          "name": "تایباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090004002562",
+          "name": "کاریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090004002654",
+          "name": "مشهد ریزه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090005001024",
+          "name": "نسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090005001361",
+          "name": "تربت حیدریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090005002243",
+          "name": "کدکن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090005002341",
+          "name": "بایک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090005002434",
+          "name": "رباط سنگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090006001363",
+          "name": "تربت جام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090006002067",
+          "name": "احمدآباد صولت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090006002342",
+          "name": "نصرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090006002655",
+          "name": "نیل شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090006002888",
+          "name": "سمیع آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090007001364",
+          "name": "لطف آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090007001365",
+          "name": "درگز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090007001366",
+          "name": "نوخندان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090007002202",
+          "name": "چاپشلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090008001367",
+          "name": "سبزوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090008002245",
+          "name": "روداب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090008002677",
+          "name": "سبزوار1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1090008002678",
+          "name": "سبزوار2",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900013001020",
+          "name": "آلماجق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900013001022",
+          "name": "شهر کهنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900013001041",
+          "name": "مزرج",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900013001376",
+          "name": "باجگیران",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900013001378",
+          "name": "قوچان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900014001055",
+          "name": "فرگ قلعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900014001381",
+          "name": "کاشمر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900015001383",
+          "name": "بیدخت",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900015001384",
+          "name": "کاخک",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900015001385",
+          "name": "گناباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900015002987",
+          "name": "روشناوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900016001392",
+          "name": "مشهد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900016002436",
+          "name": "رضویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900016002437",
+          "name": "ملک آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900016002526",
+          "name": "مشهد ثامن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900017001394",
+          "name": "نیشابور",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900017002041",
+          "name": "بار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900017002564",
+          "name": "چکنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900018001386",
+          "name": "چناران",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900018002998",
+          "name": "رادکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900018002999",
+          "name": "سیدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019001021",
+          "name": "سده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019001358",
+          "name": "خواف",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019002213",
+          "name": "سنگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019002439",
+          "name": "قاسم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019002565",
+          "name": "نشتیفان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900019002605",
+          "name": "سلامی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900020001387",
+          "name": "سرخس",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900020002607",
+          "name": "مزدآوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900022001390",
+          "name": "فریمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900022002442",
+          "name": "قلندر آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900022002566",
+          "name": "فرهادگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900022002608",
+          "name": "سفید سنگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900023001379",
+          "name": "بردسکن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900023002090",
+          "name": "شهرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900023002440",
+          "name": "انابد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900027001359",
+          "name": "رشتخوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900027002606",
+          "name": "جنگل",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900028001019",
+          "name": "چنار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900028001023",
+          "name": "حسن آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900028001391",
+          "name": "کلات",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900028002609",
+          "name": "شهر زو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900029001380",
+          "name": "خلیل آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900029002656",
+          "name": "کندر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900030001092",
+          "name": "عبدل آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900030001360",
+          "name": "فیض آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900030002069",
+          "name": "شادمهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900031001382",
+          "name": "بجستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900031002610",
+          "name": "یونسی",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900032001388",
+          "name": "شاندیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900032001389",
+          "name": "طرقبه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900033001018",
+          "name": "گرماب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900033002066",
+          "name": "همت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900033002220",
+          "name": "فیروزه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900034001596",
+          "name": "جغتای",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900034002901",
+          "name": "ریواده",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900035002135",
+          "name": "دولت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900035002950",
+          "name": "چخماق",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900036002184",
+          "name": "نقاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900036002889",
+          "name": "حکم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900037002134",
+          "name": "باخرز",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900037002970",
+          "name": "قلعه نو علیا",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900038002343",
+          "name": "سلطان آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900038002902",
+          "name": "مشکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900038002986",
+          "name": "نوده انقلاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900039002244",
+          "name": "داورزن",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900039002964",
+          "name": "ریوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900040001362",
+          "name": "صالح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900040002980",
+          "name": "جنت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900041002348",
+          "name": "ریوش",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900042001393",
+          "name": "درود",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900042002246",
+          "name": "قدمگاه",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900042002349",
+          "name": "خرو",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900042002965",
+          "name": "اسحق آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900043001054",
+          "name": "شامکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900043002344",
+          "name": "ششتمد",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900044002068",
+          "name": "گلمکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900044002854",
+          "name": "گلبهار",
+          "active": true
+        },
+        {
+          "id": "ir-c-10900045002438",
+          "name": "عشق آباد",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-110",
+      "name": "اصفهان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1100001001395",
+          "name": "اردستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100001001396",
+          "name": "زواره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100001002214",
+          "name": "مهاباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100002001406",
+          "name": "اصفهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100002002021",
+          "name": "قهجاورستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100002002611",
+          "name": "بهارستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100002002830",
+          "name": "زیار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100003001410",
+          "name": "خمینی شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100003001411",
+          "name": "درچه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100003002188",
+          "name": "کوشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100003002755",
+          "name": "اصغرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100004001031",
+          "name": "ویست",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100004001413",
+          "name": "خوانسار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005001414",
+          "name": "سمیرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005002249",
+          "name": "حنا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005002351",
+          "name": "ونک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005002443",
+          "name": "کمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005002923",
+          "name": "بیده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100005002936",
+          "name": "فتح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100006001417",
+          "name": "داران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100006002251",
+          "name": "دامنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100007001418",
+          "name": "فریدونشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100007002569",
+          "name": "برف انبار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008001048",
+          "name": "طاد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008001049",
+          "name": "بوستان زر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008001419",
+          "name": "فلاورجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008001420",
+          "name": "کلیشاد و سودرجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008001439",
+          "name": "قهدریجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002215",
+          "name": "پیربکران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002252",
+          "name": "ابریشم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002444",
+          "name": "بهاران شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002445",
+          "name": "اشترجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002789",
+          "name": "زازران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100008002997",
+          "name": "مینادشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100009001422",
+          "name": "شهرضا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1100009002446",
+          "name": "منظریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010001424",
+          "name": "قمصر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010001425",
+          "name": "کاشان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010002302",
+          "name": "نیاسر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010002447",
+          "name": "جوشقان قالی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010002542",
+          "name": "برزک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010002657",
+          "name": "مشکات",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000010002831",
+          "name": "کامو و چوگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000011001426",
+          "name": "گلپایگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000011001427",
+          "name": "گوگد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000011002511",
+          "name": "گلشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012001429",
+          "name": "باغ بهادران",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012001430",
+          "name": "چمگردان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012001431",
+          "name": "زرین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012001432",
+          "name": "سده لنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012002112",
+          "name": "ورنامخواست",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012002121",
+          "name": "چرمهین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012002128",
+          "name": "فولادشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012002504",
+          "name": "زاینده رود",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000012002788",
+          "name": "باغشاد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000013001433",
+          "name": "انارک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000013001435",
+          "name": "نایین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000013002078",
+          "name": "بافران",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014001437",
+          "name": "دهق",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014001438",
+          "name": "علویجه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014001440",
+          "name": "نجف آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014002045",
+          "name": "جوزدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014002122",
+          "name": "گلدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000014002570",
+          "name": "کهریزسنگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000015001441",
+          "name": "بادرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000015001442",
+          "name": "نطنز",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000015002612",
+          "name": "خالدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000015002754",
+          "name": "طرق رود",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001401",
+          "name": "شاهین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001402",
+          "name": "گزبرخوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001408",
+          "name": "میمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001409",
+          "name": "وزوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001597",
+          "name": "گرگاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000016001598",
+          "name": "لای بید",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017001428",
+          "name": "مبارکه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017001599",
+          "name": "مجلسی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017002189",
+          "name": "دیزیچه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017002204",
+          "name": "طالخونچه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017002448",
+          "name": "کرکوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017002572",
+          "name": "زیباشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000017002937",
+          "name": "ده سرخ",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000018001423",
+          "name": "آران و بیدگل",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000018002279",
+          "name": "ابوزیدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000018002505",
+          "name": "نوش آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000018002543",
+          "name": "سفید شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000019001436",
+          "name": "تیران",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000019002449",
+          "name": "عسگران",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000019002573",
+          "name": "رضوانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000020001415",
+          "name": "چادگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000020002352",
+          "name": "رزوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000021001421",
+          "name": "دهاقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000021002093",
+          "name": "گلشن",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022001397",
+          "name": "حبیب آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022001398",
+          "name": "خورزوق",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022001399",
+          "name": "دستگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022001400",
+          "name": "دولت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022002094",
+          "name": "شاپورآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022002571",
+          "name": "کمشچه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000022002756",
+          "name": "سین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000023001434",
+          "name": "خور",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000023002077",
+          "name": "فرخی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000023002203",
+          "name": "جندق",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000024001416",
+          "name": "بویین و میاندشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000024002250",
+          "name": "افوس",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000025001403",
+          "name": "کوهپایه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000025002350",
+          "name": "سجزی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000025002513",
+          "name": "تودشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000026002186",
+          "name": "نیک آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000026002187",
+          "name": "حسن اباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000026002247",
+          "name": "محمدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000026002512",
+          "name": "نصرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000027001404",
+          "name": "ورزنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000028001405",
+          "name": "هرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-11000028002248",
+          "name": "اژیه",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-111",
+      "name": "سیستان و بلوچستان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1110001001443",
+          "name": "ایرانشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110001002450",
+          "name": "بزمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110002001446",
+          "name": "چاه بهار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110002002894",
+          "name": "پلان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110003001449",
+          "name": "خاش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110003002915",
+          "name": "ده رییس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110003002979",
+          "name": "اسماعیل آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110004001450",
+          "name": "زابل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110004002453",
+          "name": "بنجار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110005001451",
+          "name": "زاهدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110005002454",
+          "name": "نصرت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110005002891",
+          "name": "سرجنگل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110006001047",
+          "name": "اسفندک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110006001453",
+          "name": "سراوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110006002047",
+          "name": "محمدی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110006002048",
+          "name": "گشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110006002455",
+          "name": "سیرکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110007001001",
+          "name": "چانف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110007001448",
+          "name": "نیک شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110007002456",
+          "name": "بنت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110008002461",
+          "name": "راسک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110008002501",
+          "name": "پیشین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110008002890",
+          "name": "پارود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1110009001447",
+          "name": "کنارک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100010002173",
+          "name": "زهک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100010002978",
+          "name": "جزینک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100011002514",
+          "name": "دوست محمد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100011002916",
+          "name": "قرقری",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100012002451",
+          "name": "گلمورتی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100012002914",
+          "name": "چگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100013002355",
+          "name": "مهرستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100013002893",
+          "name": "آشار",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100014001027",
+          "name": "سیب",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100014002174",
+          "name": "سوران",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100014002613",
+          "name": "هیدوچ",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100015002353",
+          "name": "ادیمی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100016002046",
+          "name": "علی اکبر",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100016002354",
+          "name": "محمدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100017001078",
+          "name": "لادیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100017001452",
+          "name": "میرجاوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100017002912",
+          "name": "ریگ ملک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100018001445",
+          "name": "قصرقند",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100018002892",
+          "name": "ساربوک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100019002175",
+          "name": "فنوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100019002913",
+          "name": "گتیج",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100020001028",
+          "name": "قاسم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100020002049",
+          "name": "محمدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100020002172",
+          "name": "بمپور",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100021002452",
+          "name": "نوک آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100022001029",
+          "name": "بریس",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100022001444",
+          "name": "نگور",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100023002499",
+          "name": "سرباز",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100024002191",
+          "name": "جالق",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100025002506",
+          "name": "اسپکه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11100026002739",
+          "name": "زرآباد",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-112",
+      "name": "کردستان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1120001001454",
+          "name": "بانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120001002457",
+          "name": "آرمرده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120001002458",
+          "name": "کانی سور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120001002459",
+          "name": "بویین سفلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120002001455",
+          "name": "بیجار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120002002190",
+          "name": "یاسوکند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120002002460",
+          "name": "بابارشانی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120002002784",
+          "name": "توپ آغاج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120002002785",
+          "name": "پیرتاج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120003001456",
+          "name": "سقز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120003002502",
+          "name": "صاحب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120003002924",
+          "name": "سنته",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120004001458",
+          "name": "سنندج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120004002462",
+          "name": "شویشه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120004002895",
+          "name": "حسین آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120005001037",
+          "name": "مالوجه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120005001461",
+          "name": "سریش آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120005001462",
+          "name": "قروه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120005002426",
+          "name": "دلبران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120005002463",
+          "name": "دزج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120006001463",
+          "name": "مریوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120006002055",
+          "name": "کانی دینار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120006002464",
+          "name": "چناره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120006002753",
+          "name": "برده رشه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120007001459",
+          "name": "دیواندره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120007002465",
+          "name": "زرینه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120007002925",
+          "name": "هزارکانیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120008001457",
+          "name": "کامیاران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120008002466",
+          "name": "موچش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120009002205",
+          "name": "سروآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1120009002752",
+          "name": "اورامان تخت",
+          "active": true
+        },
+        {
+          "id": "ir-c-11200010001460",
+          "name": "دهگلان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11200010002042",
+          "name": "بلبان آباد",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-113",
+      "name": "همدان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1130001001464",
+          "name": "تویسرکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130001001465",
+          "name": "سرکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130001002467",
+          "name": "فرسفج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002001091",
+          "name": "علی آباددمق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002001466",
+          "name": "سامن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002001467",
+          "name": "ملایر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002002253",
+          "name": "ازندریان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002002468",
+          "name": "جوکار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002002658",
+          "name": "زنگنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130002002871",
+          "name": "اسلام شهر آق گل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130003001468",
+          "name": "نهاوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130003002206",
+          "name": "فیروزان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130003002659",
+          "name": "برزول",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130003002660",
+          "name": "گیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130004001474",
+          "name": "مریانج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130004001475",
+          "name": "همدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130004002254",
+          "name": "جورقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130004002356",
+          "name": "قهاوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130005001473",
+          "name": "کبودرآهنگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130005002469",
+          "name": "گل تپه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130005002470",
+          "name": "شیرین سو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130006001469",
+          "name": "اسدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130006002758",
+          "name": "آجین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130006002994",
+          "name": "پالیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130007001471",
+          "name": "بهار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130007001472",
+          "name": "لالجین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130007002216",
+          "name": "صالح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130007002757",
+          "name": "مهاجران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130008002171",
+          "name": "رزن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130008002357",
+          "name": "دمق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1130009002192",
+          "name": "فامنین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11300010001064",
+          "name": "شاهنجرین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11300010001470",
+          "name": "قروه درگزین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11300010002870",
+          "name": "کرفس",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-114",
+      "name": "چهارمحال و بختیاری",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1140001001477",
+          "name": "بلداجی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140001001478",
+          "name": "بروجن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140001001479",
+          "name": "فرادبنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140001002152",
+          "name": "گندمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140001002306",
+          "name": "سفیددشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140001002706",
+          "name": "نقنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002001482",
+          "name": "شهرکرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002001484",
+          "name": "هفشجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002113",
+          "name": "سورشجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002123",
+          "name": "کیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002359",
+          "name": "طاقانک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002471",
+          "name": "نافچ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002614",
+          "name": "سودجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140002002838",
+          "name": "هارونی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003001485",
+          "name": "جونقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003001486",
+          "name": "فارسان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003002124",
+          "name": "بآباحیدر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003002730",
+          "name": "پردنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003002805",
+          "name": "گوجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003002806",
+          "name": "چلیچه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140003002938",
+          "name": "فیل آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140004001487",
+          "name": "لردگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140004002731",
+          "name": "منج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140004002840",
+          "name": "سردشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140005001476",
+          "name": "اردل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140005002807",
+          "name": "کاج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140005002808",
+          "name": "دشتک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140005002809",
+          "name": "سرخون",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140006002360",
+          "name": "چلگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140006002839",
+          "name": "صمصامی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140006002841",
+          "name": "بازفت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140007002153",
+          "name": "شلمزار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140007002154",
+          "name": "ناغان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140007002358",
+          "name": "گهرو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140007002729",
+          "name": "دستنا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140008001481",
+          "name": "سامان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140008002918",
+          "name": "هوره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140009001480",
+          "name": "بن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140009002732",
+          "name": "وردنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1140009002919",
+          "name": "یان چشمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11400010002473",
+          "name": "آلونی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11400011002472",
+          "name": "مال خلیفه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11400012001483",
+          "name": "فرخ شهر",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-115",
+      "name": "لرستان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1150001001056",
+          "name": "تیتکان بزنوید",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150001001489",
+          "name": "الیگودرز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150001002728",
+          "name": "شول آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150001002876",
+          "name": "چمن سلطان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150001002877",
+          "name": "شاهپوراباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150002001490",
+          "name": "اشترینان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150002001492",
+          "name": "بروجرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150002002688",
+          "name": "بروجرد1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150002002689",
+          "name": "بروجرد2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150002002971",
+          "name": "ونایی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003001496",
+          "name": "خرم آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002361",
+          "name": "زاغه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002474",
+          "name": "سپیددشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002475",
+          "name": "بیران شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002685",
+          "name": "خرم آباد1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002686",
+          "name": "خرم آباد2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150003002687",
+          "name": "خرم آباد3",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150004001494",
+          "name": "نورآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150004002727",
+          "name": "هفت چشمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150004002995",
+          "name": "برخوردار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150005001491",
+          "name": "دورود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150005002363",
+          "name": "چالانچولان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150006001495",
+          "name": "کوهدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150006002257",
+          "name": "گراب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150006002364",
+          "name": "کوهنانی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150006002615",
+          "name": "درب گنبد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150007001488",
+          "name": "ازنا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150007002365",
+          "name": "مومن آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150008001497",
+          "name": "پلدختر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150008002996",
+          "name": "سراب حمام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150009001493",
+          "name": "الشتر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1150009002367",
+          "name": "فیروزآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500010002255",
+          "name": "سراب دوره",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500010002362",
+          "name": "ویسیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500010002973",
+          "name": "چم پلک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500011002256",
+          "name": "چقابل",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500011002972",
+          "name": "سوری",
+          "active": true
+        },
+        {
+          "id": "ir-c-11500012002366",
+          "name": "معمولان",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-116",
+      "name": "ایلام",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1160001001500",
+          "name": "ایلام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160001002974",
+          "name": "جعفراباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160002001503",
+          "name": "دره شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160002002849",
+          "name": "ماژین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160003001063",
+          "name": "دشت عباس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160003001504",
+          "name": "میمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160003001505",
+          "name": "دهلران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160003001506",
+          "name": "موسیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160003002127",
+          "name": "پهله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160004001507",
+          "name": "سرابله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160004002617",
+          "name": "آسمان آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160004002850",
+          "name": "شباب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160004002851",
+          "name": "بلاوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160005001509",
+          "name": "صالح آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160005001510",
+          "name": "مهران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160006001501",
+          "name": "آبدانان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160006002056",
+          "name": "سراب باغ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160006002616",
+          "name": "مورموری",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160007001498",
+          "name": "ایوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160007002476",
+          "name": "زرنه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160008001508",
+          "name": "ارکواز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160008002028",
+          "name": "دلگشا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160008002745",
+          "name": "مهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1160009002155",
+          "name": "لومار",
+          "active": true
+        },
+        {
+          "id": "ir-c-11600010001502",
+          "name": "بدره",
+          "active": true
+        },
+        {
+          "id": "ir-c-11600010002909",
+          "name": "چشمه شیرین",
+          "active": true
+        },
+        {
+          "id": "ir-c-11600011002574",
+          "name": "توحید",
+          "active": true
+        },
+        {
+          "id": "ir-c-11600012001499",
+          "name": "چوار",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-117",
+      "name": "کهگیلویه و بویراحمد",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1170001001080",
+          "name": "سپیدار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170001001512",
+          "name": "یاسوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170001002083",
+          "name": "چیتاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170001002478",
+          "name": "گراب سفلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170002001514",
+          "name": "دهدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170002002156",
+          "name": "سوق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170002002479",
+          "name": "قلعه رییسی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170002002480",
+          "name": "دیشموک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170003001515",
+          "name": "دوگنبدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170004001511",
+          "name": "سی سخت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170004002084",
+          "name": "پاتاوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170005001081",
+          "name": "قلعه ممبی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170005001082",
+          "name": "سرآسیاب یوسفی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170005002368",
+          "name": "لیکک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170006001513",
+          "name": "چرام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170006002828",
+          "name": "سرفاریاب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170007002130",
+          "name": "باشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170007002917",
+          "name": "بوستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170008002129",
+          "name": "لنده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1170009002477",
+          "name": "مارگون",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-118",
+      "name": "بوشهر",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1180001001516",
+          "name": "خارک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180001001517",
+          "name": "بوشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180001002481",
+          "name": "چغادک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180001002692",
+          "name": "بوشهر1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180001002693",
+          "name": "بوشهر2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180001002867",
+          "name": "عالی شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180002001518",
+          "name": "اهرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180002002258",
+          "name": "دلوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180002002816",
+          "name": "آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003001519",
+          "name": "سعد آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003001520",
+          "name": "برازجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002157",
+          "name": "شبانکاره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002308",
+          "name": "آب پخش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002369",
+          "name": "دالکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002482",
+          "name": "وحدتیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002618",
+          "name": "تنگ ارم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002619",
+          "name": "کلمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180003002817",
+          "name": "بوشکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180004001521",
+          "name": "خورموج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180004002050",
+          "name": "شنبه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180004002131",
+          "name": "کاکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180004002818",
+          "name": "بادوله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180005001522",
+          "name": "بندردیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180005002483",
+          "name": "بردخون",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180005002484",
+          "name": "آبدان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180005002737",
+          "name": "بردستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180005002819",
+          "name": "دوراهک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180006001076",
+          "name": "شیرینو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180006001523",
+          "name": "بندرکنگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180006002620",
+          "name": "بنک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180006002661",
+          "name": "سیراف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180007001525",
+          "name": "بندرریگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180007001526",
+          "name": "بندرگناوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180008001524",
+          "name": "بندردیلم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180008002370",
+          "name": "امام حسن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180009002087",
+          "name": "انارستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180009002259",
+          "name": "جم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180009002662",
+          "name": "ریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1180009002933",
+          "name": "بهارستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-11800010002621",
+          "name": "عسلویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-11800010002622",
+          "name": "نخل تقی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11800010002878",
+          "name": "چاه مبارک",
+          "active": true
+        },
+        {
+          "id": "ir-c-11800010002932",
+          "name": "بیدخون",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-119",
+      "name": "زنجان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1190001001528",
+          "name": "ابهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190001001530",
+          "name": "صایین قلعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190001001531",
+          "name": "هیدج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003001533",
+          "name": "قیدار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002039",
+          "name": "سهرورد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002260",
+          "name": "گرماب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002371",
+          "name": "سجاس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002376",
+          "name": "زرین رود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002832",
+          "name": "کرسف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190003002833",
+          "name": "نوربهار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190004001534",
+          "name": "زنجان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190004002038",
+          "name": "ارمغانخانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190004002764",
+          "name": "نیک پی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190006002327",
+          "name": "زرین آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190006002485",
+          "name": "حلب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190007001529",
+          "name": "خرمدره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190008001085",
+          "name": "گیلوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190008002262",
+          "name": "آب بر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190008002486",
+          "name": "چورزق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190009002207",
+          "name": "ماه نشان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1190009002261",
+          "name": "دندی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11900010001084",
+          "name": "گوزلدره‌ سفلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-11900010001527",
+          "name": "سلطانیه",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-120",
+      "name": "سمنان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1200001001540",
+          "name": "دامغان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200001002263",
+          "name": "امیریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200001002264",
+          "name": "دیباج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200001002759",
+          "name": "کلاته",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200002001542",
+          "name": "سمنان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003001545",
+          "name": "بسطام",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003001546",
+          "name": "مجن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003001547",
+          "name": "شاهرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003002160",
+          "name": "کلاته خیج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003002161",
+          "name": "بیارجمند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200003002775",
+          "name": "رودیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200004001548",
+          "name": "ایوانکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200004001550",
+          "name": "گرمسار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200005001543",
+          "name": "شهمیرزاد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200005001544",
+          "name": "مهدی شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200005002022",
+          "name": "درجزین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200006001549",
+          "name": "آرادان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200006002768",
+          "name": "کهن آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200007002162",
+          "name": "میامی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200007002990",
+          "name": "رضوان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1200008001541",
+          "name": "سرخه",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-121",
+      "name": "یزد",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1210001001551",
+          "name": "اردکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210001002265",
+          "name": "احمد‌آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210001002623",
+          "name": "عقدا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210001002984",
+          "name": "خرانق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210002001554",
+          "name": "بافق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210003001555",
+          "name": "تفت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210003001556",
+          "name": "نیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210003002976",
+          "name": "بخ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210004001558",
+          "name": "مهریز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210005001017",
+          "name": "یزد_منطقه تاریخی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210005001562",
+          "name": "یزد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210005002126",
+          "name": "شاهدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210005002163",
+          "name": "حمیدیا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210006001552",
+          "name": "میبد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210006002024",
+          "name": "بفروییه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210006002322",
+          "name": "ندوشن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210007001293",
+          "name": "ابرکوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210007002372",
+          "name": "مهردشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210008001560",
+          "name": "اشکذر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210008002377",
+          "name": "خضرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210008002985",
+          "name": "مجومرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1210009001559",
+          "name": "هرات",
+          "active": true
+        },
+        {
+          "id": "ir-c-12100011001553",
+          "name": "بهاباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12100012001557",
+          "name": "مروست",
+          "active": true
+        },
+        {
+          "id": "ir-c-12100013001561",
+          "name": "زارچ",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-122",
+      "name": "هرمزگان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1220001001086",
+          "name": "تنب بزرگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220001001563",
+          "name": "ابوموسی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002001087",
+          "name": "شمیل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002001567",
+          "name": "بندر عباس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002001572",
+          "name": "هرمز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002002063",
+          "name": "قلعه قاضی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002002088",
+          "name": "تخت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002002307",
+          "name": "فین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220002002812",
+          "name": "تازیان پایین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220003001570",
+          "name": "کنگ",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220003001571",
+          "name": "بندر لنگه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220003002193",
+          "name": "کیش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220003002266",
+          "name": "چارک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220003002813",
+          "name": "لمزان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004001033",
+          "name": "رمکان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004001034",
+          "name": "لافت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004001573",
+          "name": "قشم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004002487",
+          "name": "سوزا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004002627",
+          "name": "درگهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220004002940",
+          "name": "طبل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005001035",
+          "name": "زهوکی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005001036",
+          "name": "کرگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005001575",
+          "name": "میناب",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005002003",
+          "name": "هشتبندی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005002064",
+          "name": "سندرک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005002814",
+          "name": "تیرور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220005002910",
+          "name": "بند زرک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220006001565",
+          "name": "بندر جاسک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220006002872",
+          "name": "لیردف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220007001574",
+          "name": "دهبارز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220007002006",
+          "name": "بیکاء",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220007002663",
+          "name": "زیارتعلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220007002911",
+          "name": "بالا شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220008001566",
+          "name": "حاجی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220008002092",
+          "name": "سرگز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220008002626",
+          "name": "فارغان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220009001568",
+          "name": "بستک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220009002625",
+          "name": "جناح",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220009002959",
+          "name": "هنگوییه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1220009002960",
+          "name": "کوهیچ",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200010001088",
+          "name": "کهورستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200010001564",
+          "name": "خمیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200010002005",
+          "name": "رویدر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200010002939",
+          "name": "پل",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200011001569",
+          "name": "پارسیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200011002004",
+          "name": "کوشکنار",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200011002751",
+          "name": "دشتی",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200012002267",
+          "name": "سیریک",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200012002724",
+          "name": "گروک",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200012002815",
+          "name": "کوهستک",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200013002061",
+          "name": "سردشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-12200013002062",
+          "name": "گوهران",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-123",
+      "name": "تهران",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1230001001576",
+          "name": "تهران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230002001578",
+          "name": "دماوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230002001579",
+          "name": "رودهن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230002001580",
+          "name": "کیلان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230002002269",
+          "name": "آبسرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230002002629",
+          "name": "آبعلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002115",
+          "name": "ری",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002167",
+          "name": "حسن‌آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002270",
+          "name": "باقرشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002488",
+          "name": "کهریزک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002886",
+          "name": "قیام‌دشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230003002887",
+          "name": "قلعه‌نو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230004001582",
+          "name": "فشم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230004001583",
+          "name": "لواسان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230004002117",
+          "name": "تجریش",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230004002778",
+          "name": "شمشک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230006001594",
+          "name": "ورامین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230006002168",
+          "name": "جوادآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009001588",
+          "name": "شهریار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002277",
+          "name": "صباشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002293",
+          "name": "وحیدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002303",
+          "name": "شاهدشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002491",
+          "name": "فردوسیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002632",
+          "name": "باغستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002633",
+          "name": "اندیشه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002694",
+          "name": "شهریار1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002695",
+          "name": "شهریار2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1230009002696",
+          "name": "شهریار3",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010001581",
+          "name": "اسلامشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010002289",
+          "name": "اسلام‌شهر1",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010002290",
+          "name": "اسلام‌شهر2",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010002489",
+          "name": "چهاردانگه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010002560",
+          "name": "اسلام‌شهر3",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300010002770",
+          "name": "احمد‌آباد مستوفی",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300012001585",
+          "name": "رباط‌کریم",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300012002666",
+          "name": "نصیرشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300012002826",
+          "name": "پرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300013002120",
+          "name": "پاکدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300013002490",
+          "name": "شریف آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300013002705",
+          "name": "فرون‌آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300014001577",
+          "name": "فیروزکوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300014002634",
+          "name": "ارجمند",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300016002116",
+          "name": "قدس",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300017002217",
+          "name": "ملارد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300017002373",
+          "name": "صفادشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300018001592",
+          "name": "پیشوا",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300018002989",
+          "name": "جلیل‌آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300019002208",
+          "name": "نسیم شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300019002278",
+          "name": "گلستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300019002665",
+          "name": "صالحیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300020001040",
+          "name": "سعیدآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300020001051",
+          "name": "خسروآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300020002268",
+          "name": "بومهن",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300020002628",
+          "name": "پردیس",
+          "active": true
+        },
+        {
+          "id": "ir-c-12300021001593",
+          "name": "قرچک",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-124",
+      "name": "اردبیل",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1240001001195",
+          "name": "اردبیل",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240001002299",
+          "name": "هیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240001002882",
+          "name": "ثمرین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240001002949",
+          "name": "آراللو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240002001230",
+          "name": "بیله سوار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240002002209",
+          "name": "جعفرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240003001219",
+          "name": "خلخال",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240003002164",
+          "name": "هشتجین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240003002165",
+          "name": "کلور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004001229",
+          "name": "مشگین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002300",
+          "name": "رضی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002301",
+          "name": "لاهرود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002704",
+          "name": "فخراباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002723",
+          "name": "مرادلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002749",
+          "name": "قصابه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240004002948",
+          "name": "النی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240005001232",
+          "name": "گرمی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240005002880",
+          "name": "زهرا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240006001032",
+          "name": "اولتان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240006001231",
+          "name": "پارس آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240006002029",
+          "name": "مغان سر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240006002750",
+          "name": "اسلام اباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240007001073",
+          "name": "فیروزآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240007001218",
+          "name": "گیوی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240008001197",
+          "name": "نمین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240008002493",
+          "name": "آبی بیگلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240008002576",
+          "name": "عنبران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240009001198",
+          "name": "نیر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1240009002636",
+          "name": "کوراییم",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400010001196",
+          "name": "سرعین",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400010002881",
+          "name": "اردیموسی",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400011001074",
+          "name": "بران علیا",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400011002166",
+          "name": "اصلاندوز",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400012001065",
+          "name": "زیوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12400012002492",
+          "name": "تازه کندانگوت",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-125",
+      "name": "قم",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1250001001114",
+          "name": "قم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250001002027",
+          "name": "سلفچگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250001002515",
+          "name": "دستجرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250001002516",
+          "name": "قنوات",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250002001062",
+          "name": "قاهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250002002274",
+          "name": "جعفریه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1250003002275",
+          "name": "کهک",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-126",
+      "name": "قزوین",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1260001001537",
+          "name": "بویین زهرا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260001001538",
+          "name": "شال",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260001002159",
+          "name": "دانسفهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260001002577",
+          "name": "ارداق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260001002638",
+          "name": "سگزآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260001002991",
+          "name": "عصمت آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260002001532",
+          "name": "تاکستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260002002114",
+          "name": "اسفرورین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260002002158",
+          "name": "ضیاآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260002002374",
+          "name": "خرمدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260002002639",
+          "name": "نرجه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003001595",
+          "name": "قزوین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002125",
+          "name": "اقبالیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002375",
+          "name": "محمودآبادنمونه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002494",
+          "name": "معلم کلایه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002495",
+          "name": "رازمیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002579",
+          "name": "کوهین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260003002667",
+          "name": "سیردان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260004001535",
+          "name": "آبیک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260004002637",
+          "name": "خاکعلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260004002992",
+          "name": "زیاران",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260004002993",
+          "name": "قشلاق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260005001539",
+          "name": "الوند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260005002040",
+          "name": "شریفیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260005002218",
+          "name": "محمدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260005002578",
+          "name": "بیدستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260006001536",
+          "name": "آوج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1260006002517",
+          "name": "آبگرم",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-127",
+      "name": "گلستان",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1270001001178",
+          "name": "بندرگز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270001002194",
+          "name": "نوکنده",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270002001156",
+          "name": "بندرترکمن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270002002975",
+          "name": "سیجوال",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270003001174",
+          "name": "علی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270003002507",
+          "name": "فاضل آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270003002836",
+          "name": "مزرعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270003002837",
+          "name": "سنگدوین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270004001179",
+          "name": "کردکوی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270005001181",
+          "name": "گرگان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270005002018",
+          "name": "جلین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270005002508",
+          "name": "سرخنکلاته",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270005002868",
+          "name": "قرق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270006001030",
+          "name": "کرند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270006001186",
+          "name": "گنبدکاووس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270006002496",
+          "name": "اینچه برون",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270007001071",
+          "name": "القجر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270007001188",
+          "name": "مینودشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270007002883",
+          "name": "دوزین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270008001180",
+          "name": "آق قلا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270008002509",
+          "name": "انبار آلوم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270009001185",
+          "name": "کلاله",
+          "active": true
+        },
+        {
+          "id": "ir-c-1270009002835",
+          "name": "فراغی",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700010001182",
+          "name": "آزادشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700010002581",
+          "name": "نوده خاندوز",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700010002640",
+          "name": "نگین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700011001183",
+          "name": "خان ببین",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700011001184",
+          "name": "رامیان",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700011002195",
+          "name": "دلند",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700011002765",
+          "name": "تاتار علیا",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700012002498",
+          "name": "مراوه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700012002885",
+          "name": "گلیداغ",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700013001155",
+          "name": "گمیش تپه",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700013002580",
+          "name": "سیمین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700014001070",
+          "name": "ینقاق",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700014001187",
+          "name": "گالیکش",
+          "active": true
+        },
+        {
+          "id": "ir-c-12700014002884",
+          "name": "صادق آباد",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-128",
+      "name": "خراسان شمالی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1280001001349",
+          "name": "اسفراین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280002001353",
+          "name": "بجنورد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280002002431",
+          "name": "حصارگرمخان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280002002699",
+          "name": "بجنورد1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280002002700",
+          "name": "بجنورد2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280002002847",
+          "name": "چناران شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280003001350",
+          "name": "جاجرم",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280003002432",
+          "name": "سنخواست",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280003002433",
+          "name": "شوقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280004001038",
+          "name": "خانلق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280004001368",
+          "name": "شیروان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280004002435",
+          "name": "لوجلی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280004002845",
+          "name": "زیارت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280004002846",
+          "name": "قوشخانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280005001377",
+          "name": "فاروج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280005002079",
+          "name": "تیتکانلو",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280006001352",
+          "name": "آشخانه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280006002567",
+          "name": "قاضی",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280006002848",
+          "name": "آوا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280007002053",
+          "name": "ایور",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280007002054",
+          "name": "گرمه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280007002641",
+          "name": "درق",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280008002132",
+          "name": "راز",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280008002942",
+          "name": "غلامان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280008002943",
+          "name": "یکه سعود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1280009002430",
+          "name": "صفی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12800010002568",
+          "name": "پیش قلعه",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-129",
+      "name": "خراسان جنوبی",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1290001001355",
+          "name": "بیرجند",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290001002701",
+          "name": "بیرجند1",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290001002702",
+          "name": "بیرجند2",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290002002051",
+          "name": "قهستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290002002052",
+          "name": "طبس مسینا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290002002276",
+          "name": "اسدیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290002002725",
+          "name": "گزیک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290003001354",
+          "name": "سربیشه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290003002642",
+          "name": "مود",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290003002897",
+          "name": "درح",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290004001374",
+          "name": "خضری دشت بیاض",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290004001375",
+          "name": "قاین",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290004002643",
+          "name": "اسفدن",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290004002645",
+          "name": "آرین شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290004002646",
+          "name": "نیمبلوک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290005001356",
+          "name": "نهبندان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290005002441",
+          "name": "شوسف",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290006001371",
+          "name": "سرایان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290006002346",
+          "name": "آیسک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290006002563",
+          "name": "سه قلعه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290007001002",
+          "name": "باغستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290007001372",
+          "name": "اسلامیه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290007001373",
+          "name": "فردوس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290008001370",
+          "name": "بشرویه",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290008002726",
+          "name": "ارسک",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290009002347",
+          "name": "حاجی آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290009002644",
+          "name": "زهان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1290009002898",
+          "name": "آبیز",
+          "active": true
+        },
+        {
+          "id": "ir-c-12900010001003",
+          "name": "ماژان",
+          "active": true
+        },
+        {
+          "id": "ir-c-12900010002242",
+          "name": "خوسف",
+          "active": true
+        },
+        {
+          "id": "ir-c-12900011001369",
+          "name": "طبس",
+          "active": true
+        },
+        {
+          "id": "ir-c-12900011002345",
+          "name": "عشق آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-12900011002624",
+          "name": "دیهوک",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "ir-p-130",
+      "name": "البرز",
+      "active": true,
+      "cities": [
+        {
+          "id": "ir-c-1300001001590",
+          "name": "کرج",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300001002070",
+          "name": "آسارا",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300001002118",
+          "name": "ماهدشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300001002272",
+          "name": "کمال شهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300001002273",
+          "name": "محمدشهر",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300001002635",
+          "name": "گرمدره",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300002001587",
+          "name": "هشتگرد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300002002026",
+          "name": "گلسار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300002002630",
+          "name": "کوهسار",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300002002664",
+          "name": "مهستان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300003001586",
+          "name": "نظرآباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300003002025",
+          "name": "تنکمان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300004002169",
+          "name": "طالقان",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300005001584",
+          "name": "اشتهارد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300005002981",
+          "name": "پلنگ آباد",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300006002271",
+          "name": "مشکین‌دشت",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300006002282",
+          "name": "فردیس",
+          "active": true
+        },
+        {
+          "id": "ir-c-1300007002631",
+          "name": "چهارباغ",
+          "active": true
+        }
+      ]
+    }
+  ]
+}
