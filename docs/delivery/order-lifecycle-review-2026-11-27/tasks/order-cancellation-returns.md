@@ -6,11 +6,13 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, DOM-ORDERS-001, FEAT-BO-ORDER-REV-003]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
 # CV-ORDER-REV-07 — پرونده کنسلی/مرجوعی
+
+[شواهد اجرا، مجوز، API/PG و مرورگر](../issue-137-verification.md).
 
 Issue: [#137](https://github.com/MohamadParsa/marketplace/issues/137) · مسئول @eliassarband · اجرای ترتیبی با دستور صریح مالک در ادامه همین گفتگو انتخاب شد؛ بستن پس از تست، مدارک و push.
 

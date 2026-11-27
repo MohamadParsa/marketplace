@@ -1,4 +1,5 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { PurchaseRequests } from "../operations/order-requests-panel";
 import { OrderOperationsPanel } from "../operations/order-operations-panel";
 import { displayRecord } from "../../shared/format";
 import { MultiChoiceField } from "../../shared/option-select";
@@ -457,6 +458,7 @@ export function CommercePage({
               }
             />
           )}{" "}
+          {selectedPurchase && <PurchaseRequests id={selectedPurchase.id} onChanged={load}/>}
           {selectedPurchase && (
             <PurchaseReview
               key={selectedPurchase.id + ":" + selectedPurchase.version}
@@ -900,7 +902,7 @@ function PurchaseReview({
           درخواست لغو مشتری: {p.cancellation_reason}
         </Alert>
       )}
-      {allowed && p.status !== "cancelled" && (
+      {allowed && p.status !== "cancelled" && p.status !== "confirmed" && (
         <fieldset disabled={busy}>
           <Field
             label="دلیل لغو / توضیح رسیدگی"

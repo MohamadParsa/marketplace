@@ -1,0 +1,10 @@
+.order-requests-panel{margin-block:1rem;padding:1rem;border:1px solid #dce2e8;border-radius:14px;background:#fff;min-width:0;overflow-wrap:anywhere}
+.order-requests-panel details>summary{cursor:pointer;font-weight:700;padding:.7rem;background:#f4f6f8;border-radius:8px}
+.order-requests-panel fieldset{border:0;padding:.75rem 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem;min-width:0}
+.order-requests-panel label{display:flex;flex-direction:column;gap:.4rem;font-size:.9rem;min-width:0}
+.order-requests-panel input,.order-requests-panel select,.order-requests-panel textarea{font:inherit;border:1px solid #bdc6d0;border-radius:8px;padding:.65rem;width:100%;box-sizing:border-box;min-height:42px;background:#fff;color:#202530}
+.order-requests-panel textarea{min-height:76px;resize:vertical}
+.order-requests-panel button{font:inherit;cursor:pointer;border:0;border-radius:9px;padding:.7rem 1rem;background:#9d2449;color:#fff;align-self:end;min-height:42px}
+.order-requests-panel button:disabled{opacity:.6;cursor:wait}
+.order-request-card{border-block-start:1px solid #e0e5eb;padding-block:1rem;margin-block-start:1rem}
+.order-requests-panel [role=alert]{color:#a71932;background:#fff1f3;padding:.7rem;border-radius:8px}

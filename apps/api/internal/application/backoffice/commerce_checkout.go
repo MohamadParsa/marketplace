@@ -766,13 +766,10 @@ func (s *Service) CancelPurchase(ctx context.Context, a identity.User, id, reaso
 			if strings.TrimSpace(reason) == "" || !textBound(reason, 1000) {
 				return nil, ErrInvalid
 			}
-			if !p.CancellationRequested {
-				p.CancellationRequested = true
-				p.CancellationReason = reason
-				recordPurchaseEvent(p, a, "order.cancellation-requested", now)
-				p.Version++
-				commerceAudit(w, op, a, "purchase.cancel.request", p.ID, "", now)
+			if err := legacyOrderCancellationRequests(w, a, p, reason, op, now); err != nil {
+				return nil, err
 			}
+			commerceAudit(w, op, a, "purchase.cancel.request", p.ID, "", now)
 			return purchaseView(c, *p), nil
 		}
 		if p.Status == "cancelled" {

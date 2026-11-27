@@ -479,7 +479,7 @@ func TestCommerceReviewPermissionsAndVerifiedReferenceUniqueness(t *testing.T) {
 	}
 }
 
-func TestCommercePaidCancellationReturnsWalletOnce(t *testing.T) {
+func TestCommercePaidCancellationCreatesCaseWithoutWalletEffect(t *testing.T) {
 	h := newCommerceHarness(t)
 	ctx := context.Background()
 	h.add(t, h.buyer, "offer1", 1)
@@ -494,16 +494,20 @@ func TestCommercePaidCancellationReturnsWalletOnce(t *testing.T) {
 	if !requested.CancellationRequested || requested.PaymentStatus != "paid" {
 		t.Fatal("customer bypassed staff cancellation")
 	}
-	b, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
-	cancelled := decodeCommerce[backoffice.PurchaseView](t, b, e)
-	if cancelled.PaymentStatus != "returned-to-wallet" || cancelled.OrderStatus != "cancelled" || cancelled.WalletBalanceToman != q.TotalToman {
-		t.Fatal(cancelled)
+	_, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
+	if e != backoffice.ErrConflict {
+		t.Fatal("legacy path bypassed case", e)
 	}
-	b, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
-	decodeCommerce[backoffice.PurchaseView](t, b, e)
+	directory, e := h.s.ReadOrderRequests(ctx, h.admin, p.ID)
+	if e != nil || len(directory.Requests) != 1 {
+		t.Fatal(directory, e)
+	}
+	r := directory.Requests[0]
+	b, e = h.s.ReviewOrderRequest(ctx, h.admin, backoffice.OrderRequestReview{ID: r.ID, Version: r.Version, Action: "approve", Reason: "تأیید لغو قبل ارسال"}, h.key())
+	decodeCommerce[backoffice.OrderRequestView](t, b, e)
 	state, _ := h.repo.Snapshot(ctx)
-	if len(state.Commerce.Entries) != 3 || state.Offers[0].Stock != 5 {
-		t.Fatal("duplicate cancellation credit/restock")
+	if len(state.Commerce.Entries) != 2 || state.Offers[0].Stock != 5 {
+		t.Fatal("case changed money or failed restock")
 	}
 }
 func TestCommerceMethodRestrictionRecheckedWithoutRepricingFrozenOrder(t *testing.T) {

@@ -95,3 +95,6 @@ execution_authorized: true
 
 - #135 با کامیت `26fdef0` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/135#issuecomment-7227893028) بسته شد.
 - #136: [پردازش تا ارسال کددار و دریافت مستقل، مجوز scoped و تست/تصاویر](issue-136-verification.md) تکمیل فنی و آماده CI/بستن است.
+
+- #136: عملیات مستقل، کد ارسال و دریافت جدا با کامیت f813e5e و CI موفق بسته شد؛ [شواهد](issue-136-verification.md).
+- #137: پرونده کنسلی/مرجوعی، اقلام/تعداد، رسیدگی و برگشت موجودی مستقل از مالی؛ [شواهد تست و مرورگر](issue-137-verification.md). بستن پس از push و CI.

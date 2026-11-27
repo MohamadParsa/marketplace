@@ -149,7 +149,13 @@
         "ORDERREV-Q03",
         "ORDERREV-Q07",
         "ORDERREV-Q10"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "f813e5e4bf8fcb5d40d5f973d0070cf89af38b62",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46069219490",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/136#issuecomment-7228455403"
+      }
     },
     {
       "id": "CV-ORDER-REV-07",
@@ -158,7 +164,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/137",
       "title": "پرونده کنسلی و مرجوعی روی سفارش، شامل پس از تکمیل",
       "file": "tasks/order-cancellation-returns.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03"

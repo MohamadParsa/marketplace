@@ -373,6 +373,9 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 		if p == nil {
 			return nil, ErrNotFound
 		}
+		if hasLiveOrderRequest(c, p.ID) {
+			return nil, ErrConflict
+		}
 		if p.Status == "cancelled" {
 			return purchaseView(c, *p), nil
 		}

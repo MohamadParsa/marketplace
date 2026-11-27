@@ -42,6 +42,8 @@ const names: Record<string, string> = {
   "offers.price.write": "ویرایش قیمت عرضه",
   "orders.read": "مشاهده سفارش فروشگاه",
   "orders.operate": "پردازش، تأمین و ارسال سفارش",
+  "orders.requests.write": "ثبت درخواست کنسلی یا مرجوعی از طرف مشتری",
+  "orders.requests.review": "رسیدگی کنسلی، دریافت و بازرسی مرجوعی",
   "orders.receive": "ثبت دریافت توسط پشتیبانی",
   "orders.correct": "اصلاح مشخصات ارسال با دلیل مدیریتی",
   "products.content.write": "ویرایش محتوای فروشگاه",

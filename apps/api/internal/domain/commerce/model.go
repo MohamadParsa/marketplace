@@ -14,6 +14,8 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
+	OrderRequests        []OrderRequest        `json:"order_requests,omitempty"`
+	NextRequestNumber    int64                 `json:"next_request_number,omitempty"`
 	PaymentAttempts      []PaymentAttempt      `json:"payment_attempts,omitempty"`
 	ShippingReservations []ShippingReservation `json:"shipping_reservations,omitempty"`
 	StoreShipping        []StoreShippingPolicy `json:"store_shipping,omitempty"`
@@ -289,6 +291,7 @@ type Operation struct {
 }
 
 type OrderEvent struct {
+	RequestID           string    `json:"request_id,omitempty"`
 	ID                  string    `json:"id,omitempty"`
 	OrderID             string    `json:"order_id,omitempty"`
 	FromStatus          string    `json:"from_status,omitempty"`

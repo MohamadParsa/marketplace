@@ -451,6 +451,22 @@ export interface OrderOperationInput {
   all_items: boolean;
 }
 
+export interface RequestItem {
+  order_id: string; item_id: string; name: string; store_name: string;
+  quantity: number; available_cancel: number; available_return: number;
+}
+export interface OrderRequest {
+  id: string; number: string; kind: string; status: string; version: number;
+  reason?: string; review_reason?: string; created_at: string; reviewed_at?: string;
+  goods_received: boolean; inspected: boolean; healthy: boolean; stock_applied: boolean;
+  items: RequestItem[]; allowed_actions: string[];
+}
+export interface OrderRequests {
+  purchase_id: string; purchase_number: string; version: number;
+  can_create: boolean; can_review: boolean; legacy_requested: boolean; legacy_reason?: string;
+  items: RequestItem[]; requests: OrderRequest[];
+}
+
 export interface WalletCreditInput {
   user_id: string;
   amount_toman: string;

@@ -1,3 +1,4 @@
+import { CustomerRequests } from "./order-requests";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
@@ -1752,7 +1753,8 @@ function OrderContent({ id }: { id?: string }) {
                           </p>
                         </>
                       )}
-                      {p.status !== "cancelled" && (
+                      {p.status === "confirmed" && <CustomerRequests id={p.id} token={token} onChanged={load}/>}
+                      {p.status !== "cancelled" && p.status !== "confirmed" && (
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();

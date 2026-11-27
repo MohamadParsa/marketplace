@@ -60,6 +60,9 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (response.status === 204) return undefined as T;
   return response.json();
 }
+export function apiRequest<T>(path:string, token:string, body?:unknown, key?:string) {
+  return request<T>(path,{method:body===undefined?"GET":"POST",cache:"no-store",body:body===undefined?undefined:JSON.stringify(body),headers:{Authorization:`Bearer ${token}`,...(key?{"Idempotency-Key":key}:{})}});
+}
 export const api = {
   readCustomerWallet: (token: string, user: string, key: string) =>
     request<CustomerCreditWallet>(

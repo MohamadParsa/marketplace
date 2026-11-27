@@ -25,6 +25,10 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case OrdersRequestsWrite:
+		return role == identity.RoleOperations || role == identity.RoleSupport
+	case OrdersRequestsReview:
+		return role == identity.RoleSupport
 	case OrdersOperate:
 		return role == identity.RoleOperations
 	case OrdersReceive:
