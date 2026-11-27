@@ -56,3 +56,22 @@ func (h *CommerceHandler) OrderRequestReview(w http.ResponseWriter, r *http.Requ
 	result, err := h.service.ReviewOrderRequest(r.Context(), a, in, r.Header.Get("Idempotency-Key"))
 	commerceResult(w, r, result, err)
 }
+
+func (h *CommerceHandler) OrderRequestRefund(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	a, ok := h.actor(w, r, identity.SurfaceBackoffice)
+	if !ok {
+		return
+	}
+	var in backoffice.OrderRefundInput
+	if !commerceBody(w, r, &in) {
+		return
+	}
+	if in.ID != "" && in.ID != r.PathValue("request") {
+		commerceResult(w, r, nil, backoffice.ErrInvalid)
+		return
+	}
+	in.ID = r.PathValue("request")
+	result, err := h.service.RefundOrderRequest(r.Context(), a, in, r.Header.Get("Idempotency-Key"))
+	commerceResult(w, r, result, err)
+}

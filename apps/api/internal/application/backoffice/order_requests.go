@@ -45,21 +45,25 @@ type RequestItemView struct {
 	AvailableReturn int    `json:"available_return"`
 }
 type OrderRequestView struct {
-	ID             string            `json:"id"`
-	Number         string            `json:"number"`
-	Kind           string            `json:"kind"`
-	Status         string            `json:"status"`
-	Version        int               `json:"version"`
-	Reason         string            `json:"reason,omitempty"`
-	ReviewReason   string            `json:"review_reason,omitempty"`
-	CreatedAt      time.Time         `json:"created_at"`
-	ReviewedAt     *time.Time        `json:"reviewed_at,omitempty"`
-	GoodsReceived  bool              `json:"goods_received"`
-	Inspected      bool              `json:"inspected"`
-	Healthy        bool              `json:"healthy"`
-	StockApplied   bool              `json:"stock_applied"`
-	Items          []RequestItemView `json:"items"`
-	AllowedActions []string          `json:"allowed_actions"`
+	Refund          *OrderRefundSummary `json:"refund,omitempty"`
+	RefundableToman string              `json:"refundable_toman,omitempty"`
+	CanRefund       bool                `json:"can_refund"`
+	CanBank         bool                `json:"can_bank"`
+	ID              string              `json:"id"`
+	Number          string              `json:"number"`
+	Kind            string              `json:"kind"`
+	Status          string              `json:"status"`
+	Version         int                 `json:"version"`
+	Reason          string              `json:"reason,omitempty"`
+	ReviewReason    string              `json:"review_reason,omitempty"`
+	CreatedAt       time.Time           `json:"created_at"`
+	ReviewedAt      *time.Time          `json:"reviewed_at,omitempty"`
+	GoodsReceived   bool                `json:"goods_received"`
+	Inspected       bool                `json:"inspected"`
+	Healthy         bool                `json:"healthy"`
+	StockApplied    bool                `json:"stock_applied"`
+	Items           []RequestItemView   `json:"items"`
+	AllowedActions  []string            `json:"allowed_actions"`
 }
 type OrderRequestDirectory struct {
 	PurchaseID      string             `json:"purchase_id"`
@@ -213,6 +217,21 @@ func orderRequestView(w *Workspace, a identity.User, p commerce.Purchase, r comm
 	if a.Surface == identity.SurfaceSeller {
 		v.Reason = ""
 		v.ReviewReason = ""
+	} else {
+		financial := a.Surface == identity.SurfaceBackoffice && allowsAction(a, CommerceRefundsResolve)
+		if f := findCaseRefund(w.Commerce, r.ID); f != nil {
+			summary := caseRefundSummary(w.Commerce, *f, financial)
+			v.Refund = &summary
+		} else if financial {
+			if plan, e := caseRefundPlan(w, &p, &r); e == nil {
+				v.RefundableToman = commerce.Toman(plan.Amount)
+				q := findQuote(w.Commerce, p.QuoteID)
+				_, e = refundOriginalSources(w.Commerce, q, plan.Amount, false)
+				v.CanRefund = e == nil
+				_, e = refundOriginalSources(w.Commerce, q, plan.Amount, true)
+				v.CanBank = e == nil && plan.Amount > 0
+			}
+		}
 	}
 	return v
 }

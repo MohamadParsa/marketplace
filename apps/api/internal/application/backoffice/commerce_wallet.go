@@ -41,6 +41,8 @@ type WalletEntryView struct {
 	At          time.Time `json:"at"`
 }
 type RefundView struct {
+	PurchaseID   string    `json:"purchase_id,omitempty"`
+	RequestID    string    `json:"request_id,omitempty"`
 	ID           string    `json:"id"`
 	AmountToman  string    `json:"amount_toman"`
 	Instructions string    `json:"instructions"`
@@ -74,7 +76,7 @@ func depositView(d commerce.Deposit) DepositView {
 	return DepositView{ID: d.ID, PurchaseID: d.PurchaseID, MethodID: d.Method.ID, MethodName: d.Method.Name, AmountToman: commerce.Toman(d.Amount), Date: d.Date, Reference: d.Reference, Status: d.Status, Version: d.Version, ReceiptID: d.ReceiptID, Destination: d.Destination, Instructions: d.Method.Instructions, Reason: d.Reason, CreatedAt: d.CreatedAt}
 }
 func refundView(r commerce.RefundRequest) RefundView {
-	return RefundView{r.ID, commerce.Toman(r.Amount), r.Instructions, r.Status, r.Version, r.Reference, r.Date, r.Reason, r.CreatedAt}
+	return RefundView{PurchaseID: r.PurchaseID, RequestID: r.RequestID, ID: r.ID, AmountToman: commerce.Toman(r.Amount), Instructions: r.Instructions, Status: r.Status, Version: r.Version, Reference: r.Reference, Date: r.Date, Reason: r.Reason, CreatedAt: r.CreatedAt}
 }
 func walletView(c *commerce.State, user string) WalletView {
 	balance, held := walletAmounts(c, user)

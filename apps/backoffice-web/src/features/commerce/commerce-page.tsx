@@ -1007,6 +1007,7 @@ function RefundReview({
                 id: r.id,
                 version: r.version,
                 complete: true,
+                verified_amount_toman: r.amount_toman,
                 reference: ref,
                 date,
                 reason,

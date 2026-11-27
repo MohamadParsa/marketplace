@@ -175,7 +175,13 @@
         "ORDERREV-Q04",
         "ORDERREV-Q05",
         "ORDERREV-Q08"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "16c897eee3bd1f2fa47a21d4a22ed6f93af7f368",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/137#issuecomment-7228723891",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46071901333"
+      }
     },
     {
       "id": "CV-ORDER-REV-08",
@@ -184,7 +190,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/138",
       "title": "استرداد مرتبط با سفارش به کیف پول یا انتقال دستی",
       "file": "tasks/order-linked-refunds.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import type { OrderRequest, OrderRequests } from "./types";
+import { money, type OrderRequest, type OrderRequests } from "./types";
 
 type Transport = <T>(path:string,body?:unknown,key?:string) => Promise<T>;
 const names:Record<string,string> = {cancel:"کنسلی پیش از ارسال",return:"مرجوعی",requested:"در انتظار بررسی",approved:"تأیید شده",rejected:"رد شده",approve:"تأیید درخواست",reject:"رد درخواست",receive:"ثبت دریافت فیزیکی کالا",inspect:"ثبت نتیجه بازرسی"};
@@ -51,10 +51,23 @@ export function OrderRequestsPanel({id,prefix,request,onChanged}:{id:string;pref
         {row.items.map(item=><p key={item.item_id}>{item.name} · {item.store_name} · {fa(item.quantity)} عدد</p>)}
         {row.reason&&<p>دلیل: {row.reason}</p>}{row.review_reason&&<p>نتیجه رسیدگی: {row.review_reason}</p>}
         {row.kind==="return"&&<p>دریافت کالا: {row.goods_received?"ثبت شده":"ثبت نشده"} · بازرسی: {row.inspected?(row.healthy?"سالم":"ناسالم"):"انجام نشده"} · برگشت موجودی: {row.stock_applied?"انجام شده":"انجام نشده"}</p>}
+        {row.refund&&<div><p>بازگشت سفارش: {money(row.refund.amount_toman)} · {row.refund.status==="bank-pending"?"انتقال دستی در انتظار؛ مبلغ در کیف پول مسدود است":row.refund.status==="bank-completed"?"انتقال بانکی ثبت شده":"به کیف پول برگشته است"}</p><p>سهم ارسال: {money(row.refund.shipping_toman)}</p>{row.refund.withdrawal?.status==="rejected"&&<p>مسیر بانکی پایان یافته و مبلغ در کیف پول باقی مانده است؛ استرداد سفارش دوباره انجام نمی‌شود.</p>}{row.refund.settlement_status&&<p>تعدیل سهم فروشگاه/کمیسیون برای رسیدگی مالی ثبت شده است؛ تسویه خودکار نیست.</p>}</div>}
+        {row.can_refund&&<RefundForm row={row} busy={busy} submit={body=>void mutate(`/backoffice/order-requests/${encodeURIComponent(row.id)}/refund`,body)}/>}
         {!!row.allowed_actions.length&&<Review key={row.id+row.version} row={row} busy={busy} submit={(body)=>void mutate(`/backoffice/order-requests/${encodeURIComponent(row.id)}/review`,body)}/>}
       </article>)}
     </>}
   </section>;
+}
+
+function RefundForm({row,busy,submit}:{row:OrderRequest;busy:boolean;submit:(body:unknown)=>void}) {
+ const [method,setMethod]=useState("wallet"),[instructions,setInstructions]=useState(""),[reason,setReason]=useState(""),[checked,setChecked]=useState(false);
+ return <details><summary>استرداد مالی مستقل · {money(row.refundable_toman??"0")}</summary><form onSubmit={e=>{e.preventDefault();if(checked)submit({version:row.version,method,instructions,reason,accepted_amount_toman:row.refundable_toman});}}><fieldset disabled={busy}>
+  <label>روش استرداد<select value={method} onChange={e=>{setMethod(e.target.value);setChecked(false);}}><option value="wallet">بازگشت با حفظ محدودیت منابع به کیف پول</option>{row.can_bank&&<option value="bank">انتقال دستی از وجه قابل‌برداشت</option>}</select></label>
+  {method==="bank"&&<label>مشخصات خصوصی مقصد تأییدشده مشتری<textarea required maxLength={1000} value={instructions} onChange={e=>setInstructions(e.target.value)}/></label>}
+  <label>دلیل تأیید مالی<textarea required maxLength={1000} value={reason} onChange={e=>setReason(e.target.value)}/></label>
+  <label><input type="checkbox" checked={checked} onChange={e=>setChecked(e.target.checked)} required/>مبلغ {money(row.refundable_toman??"0")} را بررسی کردم؛ {method==="bank"?"مبلغ تا ثبت انتقال در کیف پول مسدود می‌ماند.":"بازگشت فقط یک‌بار ثبت می‌شود."}</label>
+  <button type="submit">{method==="bank"?"ثبت بازگشت و رزرو انتقال دستی":"تأیید بازگشت به کیف پول"}</button>
+ </fieldset></form></details>;
 }
 
 function Review({row,busy,submit}:{row:OrderRequest;busy:boolean;submit:(body:unknown)=>void}) {

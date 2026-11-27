@@ -26,12 +26,13 @@ type PurchaseAdminInput struct {
 	Reason  string `json:"reason"`
 }
 type RefundResolveInput struct {
-	ID        string `json:"id"`
-	Version   int    `json:"version"`
-	Complete  bool   `json:"complete"`
-	Reference string `json:"reference"`
-	Date      string `json:"date"`
-	Reason    string `json:"reason"`
+	VerifiedAmountToman string `json:"verified_amount_toman,omitempty"`
+	ID                  string `json:"id"`
+	Version             int    `json:"version"`
+	Complete            bool   `json:"complete"`
+	Reference           string `json:"reference"`
+	Date                string `json:"date"`
+	Reason              string `json:"reason"`
 }
 type AdminDepositView struct {
 	DepositView
@@ -367,7 +368,15 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 	})
 }
 func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in PurchaseAdminInput, key string) (json.RawMessage, error) {
-	return s.mutateCommerce(ctx, "purchase-admin-cancel:"+a.ID, key, in, func(w Workspace) error { return requireCommerceAdmin(w, a, CommerceOrdersConfirm) }, func(w *Workspace, op string, now time.Time) (any, error) {
+	return s.mutateCommerce(ctx, "purchase-admin-cancel:"+a.ID, key, in, func(w Workspace) error {
+		if e := requireCommerceAdmin(w, a, CommerceOrdersConfirm); e != nil {
+			return e
+		}
+		if p := findPurchase(commerceState(&w), in.ID); p != nil && p.ConfirmedAt != nil {
+			return requireCommerceAdmin(w, a, CommerceRefundsResolve)
+		}
+		return nil
+	}, func(w *Workspace, op string, now time.Time) (any, error) {
 		c := commerceState(w)
 		p := findPurchase(c, in.ID)
 		if p == nil {
@@ -449,6 +458,12 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			if err := ensureCreditState(c, r.UserID, now); err != nil {
 				return nil, err
 			}
+			if r.RequestID != "" && in.Complete {
+				amount, e := commerce.ParseToman(normalizeDigits(in.VerifiedAmountToman))
+				if e != nil || amount != r.Amount {
+					return nil, ErrInvalid
+				}
+			}
 			if r.Status == "completed" && in.Complete {
 				ref, e := normalizeReference(in.Reference)
 				if e == nil && r.Reference == ref && r.Date == in.Date {
@@ -488,6 +503,15 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			r.ResolvedAt = &now
 			r.ResolvedBy = a.ID
 			r.Version++
+			if r.PurchaseID != "" {
+				if p := findPurchase(c, r.PurchaseID); p != nil {
+					p.Version++
+					recordPurchaseEvent(p, a, "refund.bank-"+r.Status, now)
+					event := &p.Events[len(p.Events)-1]
+					event.ID = op
+					event.RequestID = r.RequestID
+				}
+			}
 			commerceAudit(w, op, a, "refund.resolve", r.ID, "", now)
 			return refundView(*r), nil
 		}

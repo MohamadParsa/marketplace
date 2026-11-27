@@ -6,11 +6,13 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, API-WALLET-CREDIT-POLICY-001, FEAT-BO-ORDER-REV-007]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
 # CV-ORDER-REV-08 — استرداد سفارش
+
+[شواهد محاسبه، منابع، hold بانکی، PG و مرورگر](../issue-138-verification.md).
 
 Issue: [#138](https://github.com/MohamadParsa/marketplace/issues/138) · مسئول @eliassarband · اجرای ترتیبی با دستور صریح مالک در ادامه همین گفتگو انتخاب شد؛ بستن پس از تست، مدارک و push.
 

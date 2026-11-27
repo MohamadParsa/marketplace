@@ -393,7 +393,7 @@ export const statuses: Record<string, string> = {
   "admin-credit": "شارژ مدیریتی",
   "deposit-credit": "شارژ کیف پول",
   "order-payment": "پرداخت سفارش",
-  "order-cancel-credit": "برگشت لغو سفارش",
+  "order-cancel-credit": "بازگشت وجه سفارش",
   "manual-refund": "بازپرداخت دستی",
   "order.accepted": "ثبت سفارش و رزرو",
   "order.paid": "پرداخت و تأیید نهایی",
@@ -456,10 +456,16 @@ export interface RequestItem {
   quantity: number; available_cancel: number; available_return: number;
 }
 export interface OrderRequest {
+	refund?: OrderRefundSummary; refundable_toman?: string; can_refund: boolean; can_bank: boolean;
   id: string; number: string; kind: string; status: string; version: number;
   reason?: string; review_reason?: string; created_at: string; reviewed_at?: string;
   goods_received: boolean; inspected: boolean; healthy: boolean; stock_applied: boolean;
   items: RequestItem[]; allowed_actions: string[];
+}
+export interface OrderRefundSummary {
+ method: string; amount_toman: string; shipping_toman: string; status: string; at: string;
+ settlement_status?: string;
+ withdrawal?: {id:string;version:number;status:string;amount_toman:string;instructions:string;reference?:string;date?:string;reason?:string};
 }
 export interface OrderRequests {
   purchase_id: string; purchase_number: string; version: number;
