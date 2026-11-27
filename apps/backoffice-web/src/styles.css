@@ -1047,9 +1047,16 @@ dd {
 .category-tree-selection {font-size:12px;color:#9c214b;overflow-wrap:anywhere}
 @media(max-width:600px){.data-pagination{justify-content:center}.home-admin-list article{flex-wrap:wrap}.home-admin-actions{flex-wrap:wrap}}
 
-.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline) { border:1px solid var(--border, #e5dbe0); border-radius:16px; padding:18px; display:flex; flex-wrap:wrap; gap:14px; margin-block:16px; min-width:0 }
-.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline) p { width:100%; color:var(--muted, #665b60); line-height:1.9 }
-.coupon-choices { display:flex;flex-wrap:wrap;gap:8px;width:100% }
+.coupon-dialog form {display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.coupon-dialog .MuiDialogActions-root {flex-shrink:0;border-block-start:1px solid #eee5e9;padding:12px 20px;background:#fff}
+.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline) { border:1px solid var(--border, #e5dbe0); border-radius:12px; padding:16px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:end; gap:14px; margin-block:12px; min-width:0 }
+.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline) p { grid-column:1/-1;margin:0;color:var(--muted, #665b60);line-height:1.8;font-size:12px }
+.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline)>* {min-width:0;max-width:100%}
+.coupon-form .coupon-scope>.MuiAutocomplete-root,.coupon-form fieldset>.MuiAlert-root {grid-column:1/-1}
+.coupon-form fieldset>label {display:flex;align-items:center;min-height:40px}
+.coupon-form .MuiFormControl-root {width:100%}
+.coupon-choices {display:flex;min-width:0;width:100%}
+@media(max-width:600px){.coupon-form fieldset:not(.MuiOutlinedInput-notchedOutline){grid-template-columns:minmax(0,1fr);padding:12px}.coupon-dialog .MuiDialog-paper{margin:12px;max-height:calc(100% - 24px);width:calc(100% - 24px)}.coupon-dialog .MuiDialogContent-root{padding:12px}}
 .coupon-category-list,.warranty-group-values {max-height:260px;overflow:auto;display:flex;flex-wrap:wrap;gap:8px;width:100%}
 .coupon-category-list label,.warranty-group-values label {display:flex;align-items:center}
 .attribute-form fieldset:not(.MuiOutlinedInput-notchedOutline) {min-width:0;max-width:100%;border:1px solid #eadde2;border-radius:12px;padding:12px}

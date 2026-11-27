@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DEL-ORDER-LIFECYCLE-REVIEW-20261127]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -32,3 +32,6 @@ Issue: [#132](https://github.com/MohamadParsa/marketplace/issues/132) · مسئ�
 ## وابستگی و وضعیت
 
 مستقل و UI؛ #67/#68 دوباره پیاده‌سازی نمی‌شوند. هیچ تصمیم مالی لازم ندارد. اکنون `todo` و بدون مجوز اجرا است.
+
+
+[شواهد اجرا و تصاویر](../issue-132-verification.md). اجرای این کار با دستور مالک انتخاب و تکمیل فنی شد؛ بستن پس از CI و ثبت کامنت نتیجه است.

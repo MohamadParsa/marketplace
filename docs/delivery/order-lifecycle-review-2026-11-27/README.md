@@ -77,4 +77,6 @@ execution_authorized: true
 
 ## پیشرفت اجرا
 
-- #131: [فهرست سراسری پرسش‌ها، آزمون API/PG و مرورگر](issue-131-verification.md) تکمیل فنی شد؛ بستن GitHub پس از موفقیت CI و ثبت شاهد انجام می‌شود.
+- #131: [فهرست سراسری پرسش‌ها، آزمون API/PG و مرورگر](issue-131-verification.md) با کامیت `21ebcd5` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095) بسته شد.
+
+- #132: [چیدمان دو ستونه تخفیف، اعتبارسنجی و تصاویر](issue-132-verification.md) تکمیل فنی شد؛ بستن پس از CI و ثبت کامنت شواهد است.

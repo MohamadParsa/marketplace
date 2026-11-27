@@ -286,8 +286,9 @@ export function CouponsPage({ token }: { token: string }) {
       {draft && (
         <Dialog
           open
-          maxWidth="xl"
+          maxWidth="md"
           fullWidth
+          className="coupon-dialog"
           onClose={() => {
             if (!busy) setDraft(undefined);
           }}
@@ -310,7 +311,7 @@ export function CouponsPage({ token }: { token: string }) {
                   inputProps={{
                     dir: "ltr",
                     maxLength: 64,
-                    pattern: "[A-Za-z0-9][A-Za-z0-9-]{2,63}",
+                    pattern: "[A-Za-z0-9][A-Za-z0-9\\-]{2,63}",
                   }}
                   onChange={(e) => change("code", e.target.value)}
                 />
@@ -323,7 +324,7 @@ export function CouponsPage({ token }: { token: string }) {
                 />
                 <div className="coupon-choices">
                   <OptionSelect
-                    label={"نوع محدودیت"}
+                    label="نوع تخفیف"
                     multiple={false}
                     options={(["percent", "fixed"] as const).map((k) => ({
                       id: String(k),
@@ -350,7 +351,7 @@ export function CouponsPage({ token }: { token: string }) {
                 />
                 <div className="coupon-choices">
                   <OptionSelect
-                    label={"نوع محدودیت"}
+                    label="هدف تخفیف"
                     multiple={false}
                     options={Object.entries(targets).map(([k, n]) => ({
                       id: String(k),
@@ -385,7 +386,7 @@ export function CouponsPage({ token }: { token: string }) {
                   می‌شود.
                 </p>
               </fieldset>
-              <fieldset disabled={!editable || busy}>
+              <fieldset disabled={!editable || busy} className="coupon-scope">
                 <legend>دسته‌ها و زیرشاخه‌ها</legend>
                 <label>
                   <Checkbox
@@ -491,23 +492,12 @@ export function CouponsPage({ token }: { token: string }) {
               </fieldset>
               <fieldset disabled={!editable || busy}>
                 <legend>تأمین هزینه</legend>
-                <div className="coupon-choices">
-                  {[
-                    [10000, "چریوا"],
-                    [0, "فروشنده"],
-                    [5000, "ترکیبی"],
-                  ].map(([n, label]) => (
-                    <Button
-                      key={n}
-                      variant={
-                        draft.platform_bps === n ? "contained" : "outlined"
-                      }
-                      onClick={() => change("platform_bps", Number(n))}
-                    >
-                      {label}
-                    </Button>
-                  ))}
-                </div>
+                <ChoiceField
+                  label="تأمین‌کننده هزینه"
+                  value={draft.platform_bps === 10000 ? "platform" : draft.platform_bps === 0 ? "seller" : "shared"}
+                  options={[{ id: "platform", name: "چریوا" }, { id: "seller", name: "فروشنده" }, { id: "shared", name: "ترکیبی" }]}
+                  onChange={(value) => change("platform_bps", value === "platform" ? 10000 : value === "seller" ? 0 : 5000)}
+                />
                 <TextField
                   label="سهم چریوا (درصد)"
                   type="number"

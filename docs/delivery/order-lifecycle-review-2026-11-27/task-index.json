@@ -19,7 +19,13 @@
       "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
-      "blocking_questions": []
+      "blocking_questions": [],
+      "delivery": {
+        "source_commit": "21ebcd5c406ca620e9cd36ae052af1b0921e5df1",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46060402872"
+      }
     },
     {
       "id": "CV-ORDER-REV-02",
@@ -28,7 +34,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/132",
       "title": "مودال تخفیف جمع‌وجور با دو کنترل در هر سطر",
       "file": "tasks/compact-coupon-modal.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": []
@@ -214,3 +220,4 @@
     140
   ]
 }
+
