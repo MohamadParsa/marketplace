@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { LoadingPlaceholder } from "./busy-region";
 import { call, CommerceError, operationKey, useCommerce } from "./commerce";
 import "./product-qa.css";
+import "./product-reviews.css";
+import "./product-feedback.css";
 
 type PublicQuestion = {
   id: string;
@@ -113,17 +115,42 @@ export function ProductQA({ productId }: { productId: string }) {
           {visible.questions.length === 0 && (
             <p>هنوز پرسش تأییدشده‌ای ثبت نشده است.</p>
           )}
-          {visible.questions.map((question) => (
-            <article key={question.id} className="product-qa-question">
-              <p dir="auto">{question.text}</p>
-              {question.answers.map((answer) => (
-                <div key={answer.id} className="product-qa-answer">
-                  <strong>پاسخ رسمی</strong>
-                  <p dir="auto">{answer.text}</p>
+          {visible.questions.length > 0 && (
+            <div
+              className="pdp-review-track"
+              role="region"
+              aria-label="کارت‌های پرسش و پاسخ"
+              tabIndex={0}
+            >
+              {Array.from(
+                { length: Math.ceil(visible.questions.length / 5) },
+                (_, index) => visible.questions.slice(index * 5, index * 5 + 5),
+              ).map((group) => (
+                <div className="pdp-review-group" key={group[0].id}>
+                  {group.map((question) => (
+                    <article
+                      key={question.id}
+                      className="pdp-review-card product-qa-question"
+                    >
+                      <header>
+                        <strong>پرسش کاربر</strong>
+                      </header>
+                      <p dir="auto">{question.text}</p>
+                      {question.answers.map((answer) => (
+                        <div
+                          key={answer.id}
+                          className="pdp-review-reply product-qa-answer"
+                        >
+                          <strong>پاسخ رسمی</strong>
+                          <p dir="auto">{answer.text}</p>
+                        </div>
+                      ))}
+                    </article>
+                  ))}
                 </div>
               ))}
-            </article>
-          ))}
+            </div>
+          )}
         </>
       )}
       {(cursors.length > 1 || visible?.next_cursor) && (
@@ -186,6 +213,7 @@ export function ProductQA({ productId }: { productId: string }) {
           />
           <button
             type="submit"
+            className="pdp-feedback-action"
             disabled={!page?.data.can_ask || sending || !text.trim()}
           >
             {sending ? "در حال ارسال…" : "ثبت پرسش"}

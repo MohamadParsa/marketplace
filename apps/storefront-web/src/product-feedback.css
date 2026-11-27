@@ -1,0 +1,22 @@
+.launch-home .pdp-feedback-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.launch-home .pdp-feedback-action:hover:not(:disabled) {
+  background: #fff5f8;
+  color: #b51f46;
+}
+.launch-home .pdp-feedback-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

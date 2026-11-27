@@ -120,10 +120,7 @@ export function CommerceShell({
       <main className="lh-wrap buy-page">
         <nav className="buy-breadcrumb" aria-label="مسیر صفحه">
           <a href="/">خانه</a>
-          <span className="breadcrumb-separator" dir="ltr" aria-hidden="true">
-            {" "}
-            &gt;{" "}
-          </span>
+          <span className="breadcrumb-separator" dir="ltr" aria-hidden="true" />
           <span>{title}</span>
         </nav>
         <h1>{title}</h1>
@@ -750,19 +747,23 @@ export function AddressBook({
               }
             >
               {onSelect && (
-                <label>
+                <label className="buy-address-choice">
                   <input
                     type="radio"
                     name="address"
                     value={a.id}
                     checked={selected === a.id}
+                    aria-describedby={"address-details-" + a.id}
                     disabled={
                       !destinationAvailable(a, geography) ||
                       a.detail_version !== 2
                     }
                     onChange={() => onSelect(a.id, a)}
-                  />{" "}
-                  انتخاب این آدرس
+                  />
+                  <span className="buy-address-radio" aria-hidden="true" />
+                  <span>
+                    {a.title || a.recipient} · {a.city}
+                  </span>
                 </label>
               )}
               {a.detail_version !== 2 && (
@@ -776,10 +777,12 @@ export function AddressBook({
                   مقصد این آدرس فعال نیست؛ استان و شهر را ویرایش کنید.
                 </p>
               )}
-              <h3>
-                {a.title || a.recipient} · {a.city}
-              </h3>
-              <p>
+              {!onSelect && (
+                <h3>
+                  {a.title || a.recipient} · {a.city}
+                </h3>
+              )}
+              <p id={"address-details-" + a.id}>
                 {a.full_address || `${a.province}، ${a.street}`}{" "}
                 {a.house_number && ` · پلاک ${a.house_number}`}{" "}
                 {a.unit && ` · واحد ${a.unit}`}
@@ -1434,22 +1437,29 @@ function OrderItems({ lines }: { lines: Quote["lines"] }) {
     <div className="buy-order-items">
       {lines.map((l) => (
         <article className="buy-order-item" key={l.offer_id}>
-          <CatalogImage
-            className="buy-order-thumbnail"
-            src={l.image_url ? apiBase + l.image_url : undefined}
-            alt=""
-            loading="lazy"
-          />
-          <div className="buy-order-item-info">
+          <div className="buy-order-item-heading">
+            <CatalogImage
+              className="buy-order-thumbnail"
+              src={l.image_url ? apiBase + l.image_url : undefined}
+              alt=""
+              loading="lazy"
+            />
             <b>{l.name}</b>
-            <small>
-              {l.variant_label} · تعداد {l.quantity}
-            </small>
-            <small>هر عدد {money(l.unit_price_toman)}</small>
           </div>
-          <strong className="buy-order-item-price">
-            {money(l.total_toman)}
-          </strong>
+          <dl className="buy-order-item-details">
+            <div>
+              <dt>تعداد</dt>
+              <dd>{l.quantity.toLocaleString("fa-IR")}</dd>
+            </div>
+            <div>
+              <dt>هر عدد</dt>
+              <dd><bdi>{money(l.unit_price_toman)}</bdi></dd>
+            </div>
+            <div>
+              <dt>جمع</dt>
+              <dd><bdi>{money(l.total_toman)}</bdi></dd>
+            </div>
+          </dl>
         </article>
       ))}
     </div>

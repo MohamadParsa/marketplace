@@ -8,6 +8,7 @@ import {
 } from "react";
 import { LoadingPlaceholder } from "./busy-region";
 import "./product-reviews.css";
+import "./product-feedback.css";
 
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 const number = new Intl.NumberFormat("fa-IR");
@@ -401,7 +402,7 @@ function ReviewForm({
             onChange={(event) => setText(event.target.value)}
           />
         </label>
-        <button type="submit" disabled={closed}>
+        <button type="submit" className="pdp-feedback-action" disabled={closed}>
           {sending ? "در حال ارسال…" : "ارسال برای بررسی"}
         </button>
       </fieldset>

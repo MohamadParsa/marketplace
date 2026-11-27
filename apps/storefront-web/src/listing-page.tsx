@@ -146,6 +146,11 @@ export function ListingPage({ url }: { url: string }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const desktop = useDesktop();
   const filterTrigger = useRef<HTMLButtonElement>(null);
+  const filterViewport = useRef<{
+    url: string;
+    anchor: HTMLElement | null;
+    top: number;
+  }>();
   useEffect(() => {
     if (!filtersOpen || desktop) return;
     const previous =
@@ -195,9 +200,24 @@ export function ListingPage({ url }: { url: string }) {
         const body = (await r.json()) as Listing;
         if (active && !c.signal.aborted) {
           setData(body);
-          requestAnimationFrame(() =>
-            scrollTo({ top: restore, behavior: "instant" }),
-          );
+          requestAnimationFrame(() => {
+            if (!active || c.signal.aborted) return;
+            const saved = filterViewport.current;
+            if (saved?.url === current.pathname + current.search) {
+              filterViewport.current = undefined;
+              if (saved.anchor?.isConnected) {
+                const adjustment =
+                  saved.anchor.getBoundingClientRect().top - saved.top;
+                const sheet =
+                  saved.anchor.closest<HTMLElement>(".plp-filter-sheet");
+                if (sheet) sheet.scrollTop += adjustment;
+                else
+                  scrollTo({ top: scrollY + adjustment, behavior: "instant" });
+                return;
+              }
+            }
+            scrollTo({ top: restore, behavior: "instant" });
+          });
         }
       })
       .catch(() => {
@@ -240,7 +260,18 @@ export function ListingPage({ url }: { url: string }) {
     const next = new URLSearchParams(current.search);
     edit(next);
     next.delete("page");
-    navigate(current.pathname + (next.size ? "?" + next.toString() : ""));
+    const url = current.pathname + (next.size ? "?" + next.toString() : "");
+    const focused = document.activeElement as HTMLElement | null;
+    const anchor =
+      focused?.closest<HTMLElement>(".plp-attribute-options label") ??
+      focused?.closest<HTMLElement>("[data-filter-id]") ??
+      null;
+    filterViewport.current = {
+      url,
+      anchor,
+      top: anchor?.getBoundingClientRect().top ?? 0,
+    };
+    navigate(url, { preserveScroll: true });
   };
   const categories = (data?.navigation ?? [])
     .filter((c) => !c.parent_id)
@@ -373,26 +404,6 @@ export function ListingPage({ url }: { url: string }) {
                       ).map((v) => ({ value: v, label: sortLabels[v] }))}
                       onChange={(v) => change((p) => p.set("sort", v))}
                     />
-                    {current.pathname === "/search" && data && (
-                      <ChoiceGroup
-                        label="دسته نتایج جست‌وجو"
-                        value={params.get("category") ?? ""}
-                        options={[
-                          { value: "", label: "همه دسته‌ها" },
-                          ...data.navigation.map((c) => ({
-                            value: c.id,
-                            label: c.name,
-                          })),
-                        ]}
-                        onChange={(v) =>
-                          change((p) => {
-                            v ? p.set("category", v) : p.delete("category");
-                            for (const k of [...p.keys()])
-                              if (k.startsWith("attr.")) p.delete(k);
-                          })
-                        }
-                      />
-                    )}
                   </div>
                   {!data && loading ? (
                     <div className="plp-grid" aria-hidden="true">

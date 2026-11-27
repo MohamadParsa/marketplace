@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[اصلاحات بازبینی سایت ۲۰۲۶-۱۱-۲۷ و شواهد مرورگر](delivery/storefront-followups/storefront-review-fixes-2026-11-27.md)
+
 [اصلاح فرم‌های پنل، کاتالوگ، کاربران/نقش، فروشگاه و روش فروش — ۱۱ تسک تازه و تکمیل #73/#81](delivery/backoffice-refinement-2026-11-25/README.md)
 
 [برنامه۳۰درخواست جدید؛ وضعیت اجرا و شواهد انتخاب‌های مالک](delivery/next-phase/README.md)

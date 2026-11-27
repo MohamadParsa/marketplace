@@ -75,7 +75,9 @@ export function SearchBox() {
   };
   return (
     <form
-      className="lh-search search-combobox"
+      className={
+        "lh-search search-combobox" + (open && query.trim() ? " is-open" : "")
+      }
       role="search"
       ref={wrap}
       onBlur={(e) => {
@@ -150,7 +152,19 @@ export function SearchBox() {
                 aria-selected={i === active}
                 href={item.url}
                 onMouseEnter={() => setActive(i)}
-                onClick={() => setOpen(false)}
+                onClick={(event) => {
+                  if (
+                    event.button !== 0 ||
+                    event.ctrlKey ||
+                    event.metaKey ||
+                    event.shiftKey ||
+                    event.altKey
+                  )
+                    return;
+                  event.preventDefault();
+                  setOpen(false);
+                  navigate(item.url);
+                }}
               >
                 <span>{item.name}</span>
                 <small>{item.kind === "category" ? "دسته‌بندی" : "کالا"}</small>

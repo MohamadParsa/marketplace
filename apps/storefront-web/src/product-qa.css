@@ -4,8 +4,7 @@
 }
 
 .product-qa-question {
-  border-block-start: 1px solid var(--line, #dedede);
-  padding-block: 12px;
+  min-inline-size: 0;
 }
 
 .product-qa-question p {
@@ -16,7 +15,7 @@
 .product-qa-answer {
   margin-block-start: 12px;
   padding-inline-start: 12px;
-  border-inline-start: 2px solid var(--line, #dedede);
+  border-inline-start: 2px solid #b51f46;
 }
 
 .product-qa-form {

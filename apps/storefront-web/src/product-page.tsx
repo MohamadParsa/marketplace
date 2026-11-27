@@ -798,13 +798,13 @@ export function ProductPage({ url }: { url: string }) {
                   </ExpandableContent>
                 </section>
                 <ProductReviews
-                  key={data.id}
+                  key={"reviews:" + data.id}
                   productId={data.id}
                   onSummary={(summary) =>
                     setReviewRating({ productId: data.id, summary })
                   }
                 />
-                <ProductQA key={data.id} productId={data.id} />
+                <ProductQA key={"questions:" + data.id} productId={data.id} />
               </div>
             </BusyRegion>
             {zoom && data.gallery[photo] && (

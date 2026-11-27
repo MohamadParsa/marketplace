@@ -3,6 +3,7 @@
   overflow: visible !important;
   z-index: 30;
 }
+.search-combobox.is-open { z-index: 40; }
 .search-popup {
   position: absolute;
   top: calc(100% + 9px);
@@ -69,11 +70,16 @@
   margin: 0 0 28px;
 }
 .plp-breadcrumb li + li:before {
-  content: ">";
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-left: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
   display: inline-block;
   direction: ltr;
   unicode-bidi: isolate;
-  margin-left: 8px;
+  margin-inline: 2px 10px;
   color: #b5a5ae;
 }
 .plp-breadcrumb a:hover {
