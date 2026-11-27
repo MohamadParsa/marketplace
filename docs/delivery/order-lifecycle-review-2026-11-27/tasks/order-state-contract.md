@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, FEAT-NEXT-009]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -33,3 +33,8 @@ Issue: [#133](https://github.com/MohamadParsa/marketplace/issues/133) · مسئ�
 ## وابستگی و مرز
 
 #70 مالک ممیزی اتمیک است؛ این تسک قرارداد محصول/مدل و نگاشت را تحویل می‌دهد و ادعای اثبات تراکنش نمی‌کند. #72 قرارداد مالی گسترده را نگه می‌دارد. برای کار مستقل UI لازم نیست تمام پرسش‌ها حل شوند؛ اجرای مسیر مؤثر باید منتظر پاسخ خودش بماند. بازبینی سند و سناریو طراحی، تست اجراشده محصول نیست.
+
+
+## خروجی قرارداد پس از پاسخ مالک
+
+[قرارداد اجرایی](../../../architecture/contracts/order-lifecycle.md)، [ممیزی مرز و failure matrix](../place-order-audit.md) و [شواهد #133](../issue-133-verification.md) آماده‌اند. موانع این برش با پاسخ‌های مالک و حفظ قواعد موجود رفع شدند؛ provider/capture خارجی و قواعد قانونی/تسویه کامل صریحاً خارج برش‌اند. وجود قرارداد به معنی تکمیل #134 تا #140 نیست.

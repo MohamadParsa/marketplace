@@ -79,4 +79,6 @@ execution_authorized: true
 
 - #131: [فهرست سراسری پرسش‌ها، آزمون API/PG و مرورگر](issue-131-verification.md) با کامیت `21ebcd5` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095) بسته شد.
 
-- #132: [چیدمان دو ستونه تخفیف، اعتبارسنجی و تصاویر](issue-132-verification.md) تکمیل فنی شد؛ بستن پس از CI و ثبت کامنت شواهد است.
+- #132: [چیدمان دو ستونه تخفیف، اعتبارسنجی و تصاویر](issue-132-verification.md) با کامیت `ace1d0d` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469) بسته شد.
+
+- #133: [قرارداد اجرایی](../../architecture/contracts/order-lifecycle.md)، [ممیزی مرز تراکنش](place-order-audit.md) و [شواهد بررسی سند](issue-133-verification.md) آماده و تکمیل فنی شدند؛ #134 تا #140 هنوز اجراشده محسوب نمی‌شوند.

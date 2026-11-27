@@ -25,7 +25,8 @@
         "issue_state": "closed",
         "comment": "https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095",
         "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46060402872"
-      }
+      },
+      "resolved_questions": []
     },
     {
       "id": "CV-ORDER-REV-02",
@@ -37,7 +38,14 @@
       "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
-      "blocking_questions": []
+      "blocking_questions": [],
+      "delivery": {
+        "source_commit": "ace1d0d",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46061686822"
+      },
+      "resolved_questions": []
     },
     {
       "id": "CV-ORDER-REV-03",
@@ -46,10 +54,11 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/133",
       "title": "قرارداد سه چرخه سفارش و نگاشت داده گذشته",
       "file": "tasks/order-state-contract.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q01",
         "ORDERREV-Q02",
         "ORDERREV-Q03",
@@ -75,7 +84,8 @@
         "CV-ORDER-REV-03",
         "#70"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q01",
         "ORDERREV-Q03",
         "ORDERREV-Q06"
@@ -94,7 +104,8 @@
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-04"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q01",
         "ORDERREV-Q02",
         "ORDERREV-Q06"
@@ -114,7 +125,8 @@
         "CV-ORDER-REV-04",
         "CV-ORDER-REV-05"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q01",
         "ORDERREV-Q03",
         "ORDERREV-Q07",
@@ -133,7 +145,8 @@
       "dependencies": [
         "CV-ORDER-REV-03"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q03",
         "ORDERREV-Q04",
         "ORDERREV-Q05",
@@ -154,7 +167,8 @@
         "CV-ORDER-REV-07",
         "#72 در بخش وابسته"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q04",
         "ORDERREV-Q08",
         "ORDERREV-Q09"
@@ -177,7 +191,8 @@
         "CV-ORDER-REV-07",
         "CV-ORDER-REV-08"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q03",
         "ORDERREV-Q07",
         "ORDERREV-Q10"
@@ -201,7 +216,8 @@
         "CV-ORDER-REV-08",
         "CV-ORDER-REV-09"
       ],
-      "blocking_questions": [
+      "blocking_questions": [],
+      "resolved_questions": [
         "ORDERREV-Q03",
         "ORDERREV-Q04"
       ]
@@ -218,6 +234,11 @@
     138,
     139,
     140
+  ],
+  "deferred_scope": [
+    "real gateway verification/capture and BNPL",
+    "automatic/legal return deadlines",
+    "live bank/carrier/notification services",
+    "complete commission/settlement redesign #72"
   ]
 }
-
