@@ -1,3 +1,4 @@
+import { EditorTabs } from "../../shared/editor-tabs";
 import { MultiChoiceField } from "../../shared/option-select";
 import {
   deliveryPromise,
@@ -158,6 +159,7 @@ export function CommercePage({
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [tab, setTab] = useState(0),
+    [settingsTab, setSettingsTab] = useState("geography"),
     [selected, setSelected] = useState<{
       kind: "deposit" | "purchase" | "refund";
       id: string;
@@ -247,7 +249,11 @@ export function CommercePage({
               ? "تنظیمات خرید، حمل و کسب‌وکار"
               : "سفارش‌ها و پرداخت‌های سایت"}
           </h1>
-          <p>تأیید واریز ← شارژ کیف پول؛ تأیید سفارش ← مصرف کیف پول</p>
+          <p>
+            {settingsOnly
+              ? "مدیریت مقصدها، روش‌های پرداخت، تقویم و اطلاعات کسب‌وکار"
+              : "تأیید واریز ← شارژ کیف پول؛ تأیید سفارش ← مصرف کیف پول"}
+          </p>
         </div>
         <Button
           variant="outlined"
@@ -272,10 +278,14 @@ export function CommercePage({
       ) : settingsOnly ? (
         settings ? (
           <>
-            <a href="/sales-methods">تنظیم روش‌های فروش و مارکاپ</a>
+            <Button component={Link} to="/sales-methods">
+              تنظیم روش‌های فروش و مارکاپ
+            </Button>
             <SettingsForm
               key={settings.version}
               settings={settings}
+              activeTab={settingsTab}
+              onTabChange={setSettingsTab}
               permissions={data.permissions}
               categories={state.categories ?? []}
               stores={state.stores ?? []}
@@ -1007,12 +1017,16 @@ function RefundReview({
 }
 function SettingsForm({
   settings: s,
+  activeTab,
+  onTabChange,
   permissions,
   categories,
   busy,
   save,
 }: {
   settings: Settings;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
   permissions: Record<string, boolean>;
   categories: { id: string; name: string }[];
   stores: { id: string; name: string }[];
@@ -1074,230 +1088,295 @@ function SettingsForm({
     </section>
   );
   return (
-    <>
-      <GeographyEditor
-        value={s.geography ?? []}
-        busy={busy}
-        allowed={can("geography.write")}
-        save={(geography) => save({ version: s.version, geography })}
+    <div className="commerce-settings-tabs">
+      <EditorTabs
+        label="بخش‌های تنظیمات خرید و حمل"
+        value={activeTab}
+        onChange={onTabChange}
+        disabled={busy}
+        panels={[
+          {
+            id: "geography",
+            label: "استان‌ها و شهرها",
+            content: (
+              <>
+                <GeographyEditor
+                  value={s.geography ?? []}
+                  busy={busy}
+                  allowed={can("geography.write")}
+                  save={(geography) => save({ version: s.version, geography })}
+                />
+              </>
+            ),
+          },
+          {
+            id: "payment",
+            label: "پرداخت و مقصد وجه",
+            content: (
+              <>
+                {section(
+                  "روش‌های پرداخت و مقصد وجه",
+                  <fieldset disabled={busy || !can("payment.settings.write")}>
+                    <Alert severity="info">
+                      تمام مبالغ تومان‌اند. سقف روی کل سفارش شامل ارسال سنجیده
+                      می‌شود. استثنای یک دسته، همه زیرشاخه‌ها را پوشش می‌دهد.
+                      برای پرداخت محلی، ریشه طلای واقعی را در مستثناها انتخاب
+                      کنید.
+                    </Alert>
+                    {methods.map((m, i) => (
+                      <article className="commerce-setting-card" key={m.id}>
+                        <h3>{m.name}</h3>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={m.active}
+                              onChange={(e) =>
+                                patchMethod(i, { active: e.target.checked })
+                              }
+                            />
+                          }
+                          label="فعال"
+                        />
+                        <div className="commerce-grid">
+                          <Field
+                            label="نام روش"
+                            value={m.name}
+                            onChange={(name) => patchMethod(i, { name })}
+                          />
+                          <Field
+                            label="حداقل کل سفارش (تومان)"
+                            value={m.min_toman}
+                            onChange={(min_toman) =>
+                              patchMethod(i, { min_toman })
+                            }
+                          />
+                          <Field
+                            label="حداکثر (خالی = بدون سقف)"
+                            value={m.max_toman}
+                            onChange={(max_toman) =>
+                              patchMethod(i, { max_toman })
+                            }
+                          />
+                        </div>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={m.all_categories}
+                              onChange={(e) =>
+                                patchMethod(i, {
+                                  all_categories: e.target.checked,
+                                })
+                              }
+                            />
+                          }
+                          label="همه دسته‌ها به جز موارد مستثنا"
+                        />
+                        {!m.all_categories && (
+                          <Multiple
+                            caption="دسته‌های مجاز"
+                            value={m.allowed_categories}
+                            options={categories}
+                            onChange={(allowed_categories) =>
+                              patchMethod(i, { allowed_categories })
+                            }
+                          />
+                        )}
+                        <Multiple
+                          caption="دسته‌های مستثنا"
+                          value={m.excluded_categories}
+                          options={categories}
+                          onChange={(excluded_categories) =>
+                            patchMethod(i, { excluded_categories })
+                          }
+                        />
+                        <Field
+                          label="راهنمای پرداخت"
+                          value={m.instructions}
+                          onChange={(instructions) =>
+                            patchMethod(i, { instructions })
+                          }
+                          multiline
+                        />
+                      </article>
+                    ))}
+                    <div className="commerce-grid">
+                      <Field
+                        label="شماره کارت مقصد"
+                        value={destination.card_number ?? ""}
+                        onChange={(card_number) =>
+                          setDestination({ ...destination, card_number })
+                        }
+                      />
+                      <Field
+                        label="نام صاحب حساب"
+                        value={destination.holder}
+                        onChange={(holder) =>
+                          setDestination({ ...destination, holder })
+                        }
+                      />
+                      <Field
+                        label="بانک"
+                        value={destination.bank}
+                        onChange={(bank) =>
+                          setDestination({ ...destination, bank })
+                        }
+                      />
+                    </div>
+                    <Button
+                      variant="contained"
+                      disabled={busy || !can("payment.settings.write")}
+                      onClick={() =>
+                        void save({
+                          version: s.version,
+                          payment: { methods, destination },
+                        })
+                      }
+                    >
+                      ذخیره روش‌های پرداخت و مقصد
+                    </Button>
+                  </fieldset>,
+                )}
+              </>
+            ),
+          },
+          {
+            id: "shipping",
+            label: "حمل و تقویم",
+            content: (
+              <>
+                {section(
+                  "روش‌های ارسال و تقویم کاری",
+                  <fieldset disabled={busy || !can("shipping.write")}>
+                    <p>
+                      روش‌های عمومی، پوشش شهر/دسته و دریافت هزینه از صفحهٔ
+                      روش‌های حمل مدیریت می‌شوند.
+                    </p>
+                    <Button component={Link} to="/shipping">
+                      مدیریت روش‌های حمل
+                    </Button>
+                    <h3>زمان آماده‌سازی و تحویل</h3>
+                    <div className="commerce-grid">
+                      <Field
+                        label="ساعت آماده‌سازی (تهران، HH:mm)"
+                        value={timing.ready_time}
+                        onChange={(ready_time) =>
+                          setTiming({ ...timing, ready_time })
+                        }
+                      />
+                      <Field
+                        label="مهلت شروع همان روز (HH:mm)"
+                        value={timing.cutoff_time}
+                        onChange={(cutoff_time) =>
+                          setTiming({ ...timing, cutoff_time })
+                        }
+                      />
+                      <Field
+                        label="حداقل فاصله تا اسلات (دقیقه)"
+                        type="number"
+                        value={String(timing.min_slot_lead_minutes)}
+                        onChange={(value) =>
+                          setTiming({
+                            ...timing,
+                            min_slot_lead_minutes: Number(value),
+                          })
+                        }
+                      />
+                    </div>
+                    <FormControlLabel
+                      label="اسلات همان روز با رعایت فرصت آماده‌سازی مجاز باشد"
+                      control={
+                        <Checkbox
+                          checked={timing.allow_same_day_slots}
+                          onChange={(event) =>
+                            setTiming({
+                              ...timing,
+                              allow_same_day_slots: event.target.checked,
+                            })
+                          }
+                        />
+                      }
+                    />
+                    <p>
+                      پایان وقفه در تعطیلی به اولین روز کاری منتقل می‌شود. روز
+                      شروع در وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به
+                      بعد، از اولین روز کاری بعد آغاز می‌شود.
+                    </p>
+                    <h3>روزهای تعطیل هفته</h3>
+                    <MultiChoiceField
+                      label="روزهای تعطیل هفته"
+                      value={days.map(String)}
+                      options={[
+                        "یکشنبه",
+                        "دوشنبه",
+                        "سه‌شنبه",
+                        "چهارشنبه",
+                        "پنج‌شنبه",
+                        "جمعه",
+                        "شنبه",
+                      ].map((name, i) => ({ id: String(i), name }))}
+                      disabled={busy || !can("shipping.write")}
+                      onChange={(ids) => setDays(ids.map(Number))}
+                    />
+                    <Field
+                      label="تعطیلات استثنایی؛ هر خط یک تاریخ YYYY-MM-DD"
+                      value={holidays}
+                      onChange={setHolidays}
+                      multiline
+                    />
+                    <Button
+                      variant="contained"
+                      disabled={busy || !can("shipping.write")}
+                      onClick={() =>
+                        void save({
+                          version: s.version,
+                          shipping: {
+                            timing,
+                            methods: shipping,
+                            closed_weekdays: days,
+                            holidays: holidays
+                              .split("\n")
+                              .map((v) => v.trim())
+                              .filter(Boolean),
+                          },
+                        })
+                      }
+                    >
+                      ذخیره ارسال و تقویم
+                    </Button>
+                  </fieldset>,
+                )}
+              </>
+            ),
+          },
+          {
+            id: "business",
+            label: "کسب‌وکار و قوانین",
+            content: (
+              <>
+                {section(
+                  "اطلاعات عمومی و قوانین کسب‌وکار",
+                  <fieldset disabled={busy || !can("business.write")}>
+                    <BusinessContentEditor
+                      value={business}
+                      onChange={setBusiness}
+                    />
+                    <Button
+                      variant="contained"
+                      disabled={busy || !can("business.write")}
+                      onClick={() =>
+                        void save({ version: s.version, business })
+                      }
+                    >
+                      ذخیره محتوای عمومی
+                    </Button>
+                  </fieldset>,
+                )}
+              </>
+            ),
+          },
+        ]}
       />
-      {section(
-        "روش‌های پرداخت و مقصد وجه",
-        <fieldset disabled={busy || !can("payment.settings.write")}>
-          <Alert severity="info">
-            تمام مبالغ تومان‌اند. سقف روی کل سفارش شامل ارسال سنجیده می‌شود.
-            استثنای یک دسته، همه زیرشاخه‌ها را پوشش می‌دهد. برای پرداخت محلی،
-            ریشه طلای واقعی را در مستثناها انتخاب کنید.
-          </Alert>
-          {methods.map((m, i) => (
-            <article className="commerce-setting-card" key={m.id}>
-              <h3>{m.name}</h3>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={m.active}
-                    onChange={(e) =>
-                      patchMethod(i, { active: e.target.checked })
-                    }
-                  />
-                }
-                label="فعال"
-              />
-              <div className="commerce-grid">
-                <Field
-                  label="نام روش"
-                  value={m.name}
-                  onChange={(name) => patchMethod(i, { name })}
-                />
-                <Field
-                  label="حداقل کل سفارش (تومان)"
-                  value={m.min_toman}
-                  onChange={(min_toman) => patchMethod(i, { min_toman })}
-                />
-                <Field
-                  label="حداکثر (خالی = بدون سقف)"
-                  value={m.max_toman}
-                  onChange={(max_toman) => patchMethod(i, { max_toman })}
-                />
-              </div>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={m.all_categories}
-                    onChange={(e) =>
-                      patchMethod(i, { all_categories: e.target.checked })
-                    }
-                  />
-                }
-                label="همه دسته‌ها به جز موارد مستثنا"
-              />
-              {!m.all_categories && (
-                <Multiple
-                  caption="دسته‌های مجاز"
-                  value={m.allowed_categories}
-                  options={categories}
-                  onChange={(allowed_categories) =>
-                    patchMethod(i, { allowed_categories })
-                  }
-                />
-              )}
-              <Multiple
-                caption="دسته‌های مستثنا"
-                value={m.excluded_categories}
-                options={categories}
-                onChange={(excluded_categories) =>
-                  patchMethod(i, { excluded_categories })
-                }
-              />
-              <Field
-                label="راهنمای پرداخت"
-                value={m.instructions}
-                onChange={(instructions) => patchMethod(i, { instructions })}
-                multiline
-              />
-            </article>
-          ))}
-          <div className="commerce-grid">
-            <Field
-              label="شماره کارت مقصد"
-              value={destination.card_number ?? ""}
-              onChange={(card_number) =>
-                setDestination({ ...destination, card_number })
-              }
-            />
-            <Field
-              label="نام صاحب حساب"
-              value={destination.holder}
-              onChange={(holder) => setDestination({ ...destination, holder })}
-            />
-            <Field
-              label="بانک"
-              value={destination.bank}
-              onChange={(bank) => setDestination({ ...destination, bank })}
-            />
-          </div>
-          <Button
-            variant="contained"
-            disabled={busy || !can("payment.settings.write")}
-            onClick={() =>
-              void save({
-                version: s.version,
-                payment: { methods, destination },
-              })
-            }
-          >
-            ذخیره روش‌های پرداخت و مقصد
-          </Button>
-        </fieldset>,
-      )}
-      {section(
-        "روش‌های ارسال و تقویم کاری",
-        <fieldset disabled={busy || !can("shipping.write")}>
-          <p>
-            روش‌های عمومی، پوشش شهر/دسته و دریافت هزینه از صفحهٔ روش‌های حمل
-            مدیریت می‌شوند.
-          </p>
-          <Button component={Link} to="/shipping">
-            مدیریت روش‌های حمل
-          </Button>
-          <h3>زمان آماده‌سازی و تحویل</h3>
-          <div className="commerce-grid">
-            <Field
-              label="ساعت آماده‌سازی (تهران، HH:mm)"
-              value={timing.ready_time}
-              onChange={(ready_time) => setTiming({ ...timing, ready_time })}
-            />
-            <Field
-              label="مهلت شروع همان روز (HH:mm)"
-              value={timing.cutoff_time}
-              onChange={(cutoff_time) => setTiming({ ...timing, cutoff_time })}
-            />
-            <Field
-              label="حداقل فاصله تا اسلات (دقیقه)"
-              type="number"
-              value={String(timing.min_slot_lead_minutes)}
-              onChange={(value) =>
-                setTiming({ ...timing, min_slot_lead_minutes: Number(value) })
-              }
-            />
-          </div>
-          <FormControlLabel
-            label="اسلات همان روز با رعایت فرصت آماده‌سازی مجاز باشد"
-            control={
-              <Checkbox
-                checked={timing.allow_same_day_slots}
-                onChange={(event) =>
-                  setTiming({
-                    ...timing,
-                    allow_same_day_slots: event.target.checked,
-                  })
-                }
-              />
-            }
-          />
-          <p>
-            پایان وقفه در تعطیلی به اولین روز کاری منتقل می‌شود. روز شروع در
-            وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به بعد، از اولین روز
-            کاری بعد آغاز می‌شود.
-          </p>
-          <h3>روزهای تعطیل هفته</h3>
-          <MultiChoiceField
-            label="روزهای تعطیل هفته"
-            value={days.map(String)}
-            options={[
-              "یکشنبه",
-              "دوشنبه",
-              "سه‌شنبه",
-              "چهارشنبه",
-              "پنج‌شنبه",
-              "جمعه",
-              "شنبه",
-            ].map((name, i) => ({ id: String(i), name }))}
-            disabled={busy || !can("shipping.write")}
-            onChange={(ids) => setDays(ids.map(Number))}
-          />
-          <Field
-            label="تعطیلات استثنایی؛ هر خط یک تاریخ YYYY-MM-DD"
-            value={holidays}
-            onChange={setHolidays}
-            multiline
-          />
-          <Button
-            variant="contained"
-            disabled={busy || !can("shipping.write")}
-            onClick={() =>
-              void save({
-                version: s.version,
-                shipping: {
-                  timing,
-                  methods: shipping,
-                  closed_weekdays: days,
-                  holidays: holidays
-                    .split("\n")
-                    .map((v) => v.trim())
-                    .filter(Boolean),
-                },
-              })
-            }
-          >
-            ذخیره ارسال و تقویم
-          </Button>
-        </fieldset>,
-      )}
-      {section(
-        "اطلاعات عمومی و قوانین کسب‌وکار",
-        <fieldset disabled={busy || !can("business.write")}>
-          <BusinessContentEditor value={business} onChange={setBusiness} />
-          <Button
-            variant="contained"
-            disabled={busy || !can("business.write")}
-            onClick={() => void save({ version: s.version, business })}
-          >
-            ذخیره محتوای عمومی
-          </Button>
-        </fieldset>,
-      )}
-    </>
+    </div>
   );
 }
 

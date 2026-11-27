@@ -1,6 +1,7 @@
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { OptionSelect } from "../../shared/option-select";
 import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Alert,
   Button,
@@ -71,8 +72,8 @@ function preparationLoadError(error: Error) {
 export function StorePreparationPage() {
   const { authToken, surface } = useWorkspace();
   const client = useQueryClient();
-  const [selected, setSelected] = useState("");
-  const [filter, setFilter] = useState("");
+  const [params, setParams] = useSearchParams();
+  const selected = params.get("store") ?? "";
   const [editing, setEditing] = useState(false);
   const [revision, setRevision] = useState(0);
   const [notice, setNotice] = useState("");
@@ -106,12 +107,19 @@ export function StorePreparationPage() {
     refetchOnWindowFocus: false,
   });
   const rows = query.data ?? [];
-  const store = rows.find((row) => row.id === selected) ?? rows[0];
+  const store = rows.find((row) => row.id === selected);
   return (
     <div className="store-preparation-page">
       <PageHeader
         title="وقفه تأمین و تقویم فروشگاه"
         description="روزهای کاری، واحد وقفه و زمان محاسبهٔ آماده‌سازی هر فروشگاه"
+        action={
+          surface === "backoffice" ? (
+            <Button component={Link} to="/stores">
+              بازگشت به فروشگاه‌ها
+            </Button>
+          ) : undefined
+        }
       />
       {query.isPending && <LinearProgress aria-label="دریافت تقویم فروشگاه" />}
       {query.error && (
@@ -129,34 +137,29 @@ export function StorePreparationPage() {
       )}
       {!!rows.length && (
         <section className="store-detail-box">
-          <TextField
-            label="جست‌وجوی فروشگاه"
-            size="small"
-            value={filter}
-            disabled={editing}
-            onChange={(event) => setFilter(event.target.value)}
+          <ChoiceField
+            label="فروشگاه موردنظر برای وقفه و تقویم"
+            value={store?.id ?? ""}
+            clearLabel="انتخاب فروشگاه"
+            disabled={editing || query.isFetching}
+            options={rows.map((row) => ({ id: row.id, name: row.name }))}
+            onChange={(id) => {
+              const next = new URLSearchParams(params);
+              if (id) next.set("store", id);
+              else next.delete("store");
+              setParams(next, { replace: true });
+              setNotice("");
+            }}
+            helperText="نام فروشگاه را در همین فهرست جست‌وجو کنید؛ فقط تنظیمات فروشگاه انتخاب‌شده باز می‌شود."
           />
-          <div
-            className="toolbar"
-            role="group"
-            aria-label="انتخاب فروشگاه"
-            style={{ flexWrap: "wrap", marginTop: 12 }}
-          >
-            <OptionSelect
-              label={"انتخاب فروشگاه"}
-              multiple={false}
-              options={rows
-                .filter((row) => row.name.includes(filter))
-                .map((row) => ({
-                  id: String(row.id),
-                  name: String("" + row.name + ""),
-                  selected: store?.id === row.id,
-                  disabled: editing,
-                  onSelect: () => setSelected(row.id),
-                }))}
-            />
-          </div>
         </section>
+      )}
+      {query.isSuccess && rows.length > 0 && !store && (
+        <Alert severity={selected ? "warning" : "info"}>
+          {selected
+            ? "فروشگاه انتخاب‌شده وجود ندارد یا مجوز مشاهدهٔ تقویم آن را ندارید؛ فروشگاه دیگری انتخاب کنید."
+            : "برای مشاهده یا تغییر وقفه و تقویم، فروشگاه موردنظر را انتخاب کنید. در فهرست فروشگاه‌ها نیز برای هر ردیف لینک مستقیم وجود دارد."}
+        </Alert>
       )}
       {store && (
         <PreparationEditor

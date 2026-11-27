@@ -127,5 +127,7 @@
 .admin-membership-chips .MuiChip-label {white-space:normal;overflow-wrap:anywhere;padding-block:6px;}
 .sales-method-editor {display:grid;gap:16px;}
 .sales-method-editor > p {margin:0;font-size:12px;line-height:1.9;color:#756370;}
+.commerce-settings-tabs .commerce-settings {margin-block:0;}
+.store-preparation-page > .store-detail-box {margin-block:18px;}
 @media(max-width:1000px) {.workspace-main .user-filter-form .user-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:600px) {.workspace-main .user-filter-form .user-form-grid{grid-template-columns:minmax(0,1fr);}.admin-membership-picker{align-items:stretch;flex-direction:column;}.admin-membership-picker>.MuiAutocomplete-root{flex-basis:auto;}.admin-editor-tabs .MuiTab-root{font-size:12px;min-width:100px;}}

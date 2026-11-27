@@ -361,9 +361,23 @@ export function StoresPage() {
                 {
                   title: "عملیات",
                   render: (s) => (
-                    <Button onClick={() => setEditing(s)}>
-                      مشاهده و ویرایش
-                    </Button>
+                    <>
+                      <Button onClick={() => setEditing(s)}>
+                        مشاهده و ویرایش
+                      </Button>
+                      {can("stores.preparation.read", "management") && (
+                        <Button
+                          component={Link}
+                          to={
+                            "/store-preparation?store=" +
+                            encodeURIComponent(s.id)
+                          }
+                          aria-label={"وقفه و تقویم " + s.name}
+                        >
+                          وقفه و تقویم
+                        </Button>
+                      )}
+                    </>
                   ),
                 },
               ]}
@@ -545,7 +559,10 @@ function StoreEditor({
               · مدل: {current.model === "independent" ? "مستقل" : "مشترک"}
             </p>
             <p>این اطلاعات با ویرایش پروفایل بازنویسی نمی‌شوند.</p>
-            <Button component={Link} to="/store-preparation">
+            <Button
+              component={Link}
+              to={"/store-preparation?store=" + encodeURIComponent(current.id)}
+            >
               تنظیم وقفه و تقویم فروشگاه
             </Button>
           </section>
