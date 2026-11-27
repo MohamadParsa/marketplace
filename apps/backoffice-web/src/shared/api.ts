@@ -164,6 +164,14 @@ export const api = {
       { method: "POST", body, headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  orderOperations: (token: string, id: string, surface = "backoffice") =>
+    request<import("../../../../packages/commerce-client/types").OrderOperations>(`/${surface}/orders/${encodeURIComponent(id)}/operations`, {
+      cache: "no-store", headers: { Authorization: `Bearer ${token}` },
+    }),
+  transitionOrder: (token: string, id: string, surface: string, input: import("../../../../packages/commerce-client/types").OrderOperationInput, key: string) =>
+    request<import("../../../../packages/commerce-client/types").OrderOperations>(`/${surface}/orders/${encodeURIComponent(id)}/operations`, {
+      method: "POST", body: JSON.stringify(input), headers: { Authorization: `Bearer ${token}`, "Idempotency-Key": key },
+    }),
   productQuestions: (token: string, product: string, status: string, after: number) => {
     const query = new URLSearchParams({ product, status });
     if (after) query.set("after", String(after));

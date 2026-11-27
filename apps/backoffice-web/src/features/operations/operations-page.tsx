@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import { FilterPanel } from "../../shared/filter-panel";
 import { useState } from "react";
 import { SupplyOverduePanel } from "./supply-overdue-panel";
+import { OrderOperationsPanel } from "./order-operations-panel";
 import {
   deliveryPromise,
   shippingCharge,
@@ -118,7 +119,7 @@ export function OperationsPage({
                   </p>
                 </section>
               )}
-              {selected.status === "shipped" && (
+              {selected.status === "shipped" && !selected.checkout_id && (
                 <Button
                   disabled={!can("order.deliver", "support")}
                   variant="contained"
@@ -155,6 +156,7 @@ export function OperationsPage({
               </Alert>
             </section>
           </div>
+          {selected.checkout_id && <OrderOperationsPanel id={selected.id} />}
         </>
       ) : (
         <section className="panel">

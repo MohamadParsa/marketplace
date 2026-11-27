@@ -80,6 +80,7 @@ const blank = (): Method => ({
   max_days: 0,
   day_basis: "working",
   collection_mode: "prepaid",
+  dispatch_identifier: "tracking",
   delivery_mode: "range",
   category_mode: "all",
   allowed_categories: [],
@@ -628,6 +629,15 @@ export function MethodEditor({
                 onChange={(event) => patch({ active: event.target.checked })}
               />
             }
+          />
+          <ChoiceField
+            label="شناسه لازم هنگام ارسال"
+            value={draft.dispatch_identifier ?? ""}
+            clearLabel="هنوز تعیین نشده"
+            disabled={custom}
+            helperText={custom ? "از روش عمومی ارث می‌رسد." : "نوع کد را صریح انتخاب کنید؛ نام روش تعیین‌کننده نیست."}
+            options={[{id:"tracking",name:"کد رهگیری"},{id:"delivery",name:"کد تحویل"},{id:"none",name:"بدون کد"}]}
+            onChange={value => patch({dispatch_identifier:value as Method["dispatch_identifier"]})}
           />
           <div className="toolbar" role="group" aria-label="شیوه دریافت هزینه">
             <OptionSelect

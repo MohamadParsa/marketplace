@@ -15,7 +15,19 @@ export const date = (value: string) =>
     dateStyle: "medium",
     timeZone: "Asia/Tehran",
   }).format(new Date(value));
+export const dateTime = (value: string) =>
+  new Intl.DateTimeFormat("fa-IR", {dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Tehran"}).format(new Date(value));
 export const labels: Record<string, string> = {
+  placed: "ثبت سفارش",
+  processing: "در حال پردازش",
+  completed: "تکمیل شده",
+  cancelled: "لغو شده",
+  supplied: "تأمین شده",
+  packing: "در حال آماده‌سازی",
+  "awaiting-supply": "در انتظار تأمین",
+  paid: "پرداخت شده",
+  unpaid: "پرداخت نشده",
+  "returned-to-wallet": "برگشت به کیف پول",
   success: "موفق",
   failure: "ناموفق",
   unknown: "نیازمند بررسی",

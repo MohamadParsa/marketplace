@@ -20,6 +20,21 @@ func httpShippingMethod() backoffice.ShippingMethodInput {
 	return backoffice.ShippingMethodInput{ID: "collect-test", Name: "پس‌کرایه آزمون", Active: true, CollectionMode: "collect", DeliveryMode: "range", DailyCapacity: &capacity, CategoryMode: "selected", AllowedCategories: []string{"regular"}, AllCities: false, CityIDs: []string{"tehran-city"}, FeeToman: "", MinDays: 2, MaxDays: 4, DayBasis: shipping.CalendarDays}
 }
 
+func TestDispatchIdentifierShippingMethodHTTPValidation(t *testing.T) {
+	repo := backofficememory.New(storeEligibilitySeed(t))
+	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
+	admin := login(t, h, "09000000001")
+	in := httpShippingMethod()
+	in.ID = "dispatch-test"
+	in.DispatchIdentifier = "guess-from-name"
+	commerceHTTP(t, h, admin, "", "POST", "/backoffice/shipping/methods", in, "invalid-dispatch-policy", 400)
+	in.DispatchIdentifier = "delivery"
+	result := readJSON[backoffice.ShippingMethodInput](t, commerceHTTP(t, h, admin, "", "POST", "/backoffice/shipping/methods", in, "valid-dispatch-policy", 200))
+	if result.DispatchIdentifier != "delivery" {
+		t.Fatal("dispatch policy not saved", result)
+	}
+}
+
 func TestShippingMethodHTTPPermissionsFieldsAndLegacySettingsCannotBypass(t *testing.T) {
 	ctx := context.Background()
 	seed := storeEligibilitySeed(t)

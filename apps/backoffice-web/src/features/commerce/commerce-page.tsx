@@ -1,4 +1,5 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { OrderOperationsPanel } from "../operations/order-operations-panel";
 import { displayRecord } from "../../shared/format";
 import { MultiChoiceField } from "../../shared/option-select";
 import {
@@ -1395,12 +1396,14 @@ function SettingsForm({
 }
 
 export function SellerCheckoutPage({ token }: { token: string }) {
+  const [selectedOrder,setSelectedOrder] = useState<string | null>(null);
   const [rows, setRows] = useState<
       | {
           id: string;
           store_id: string;
           city: string;
           status: string;
+          order_status: string;
           payment_status: string;
           shipping_method: string;
           collection_mode?: string;
@@ -1442,7 +1445,7 @@ export function SellerCheckoutPage({ token }: { token: string }) {
           <p>سفارشی در محدوده مجاز شما وجود ندارد.</p>
         ) : (
           rows.map((o) => (
-            <article key={o.id}>
+            <article key={o.id} className="seller-order-card">
               <div>
                 <b>
                   {o.city} · {o.shipping_method}
@@ -1463,15 +1466,17 @@ export function SellerCheckoutPage({ token }: { token: string }) {
                   </p>
                 )}
                 <p>
-                  وضعیت سفارش: {label(o.status)} · وضعیت پرداخت:{" "}
+                  وضعیت سفارش: {label(o.order_status)} · عملیات: {label(o.status)} · وضعیت پرداخت:{" "}
                   {label(o.payment_status)}
                 </p>
+                <Button onClick={() => setSelectedOrder(current => current === o.id ? null : o.id)}>{selectedOrder === o.id ? "بستن عملیات" : "مشاهده و عملیات سفارش"}</Button>
                 {o.items.map((i, index) => (
                   <p key={index}>
                     {i.name} · تعداد {i.quantity} · {money(i.unit_price_toman)}
                   </p>
                 ))}
               </div>
+              {selectedOrder === o.id && <OrderOperationsPanel id={o.id} onChanged={load} />}
             </article>
           ))
         )}

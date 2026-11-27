@@ -3,10 +3,10 @@ id: FEAT-BO-ORDER-REV-006
 title: پردازش دستی، تأمین و ارسال کددار تا تحویل
 status: in-review
 owner: eliassarband
-updated: 2026-11-27
+updated: 2026-11-28
 related: [DOM-ORDER-LIFECYCLE-001, DOM-SHIPPING-001, FEAT-BO-ORDER-REV-003]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -36,3 +36,6 @@ Issue: [#136](https://github.com/MohamadParsa/marketplace/issues/136) · مسئ�
 ## وابستگی و مانع
 
 REV-03/04/05 و ORDERREV-Q03/Q07/Q10؛ مبدأ ساعت تأمین/آماده‌سازی نیز Q01. اتصال واقعی حمل، ارسال پیام و تولید امن رمز تحویل تا تصمیم جدا فعال نشوند. #71 ممیزی کل سلر است و با این پذیرش بسته نمی‌شود.
+
+
+[شواهد API/PG، مجوز و رقابت ارسال/لغو و تصاویر فروشنده/ادمین](../issue-136-verification.md). اجرای واقعی حمل‌کننده و پیام در این برش فعال نشده است.

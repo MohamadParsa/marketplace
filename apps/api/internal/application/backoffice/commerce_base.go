@@ -303,6 +303,9 @@ func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, n
 		if a.Surface == identity.SurfaceCustomer {
 			kind = "customer"
 		}
+		if a.Surface == identity.SurfaceSeller {
+			kind = "seller"
+		}
 	}
 	p.Events = append(p.Events, commerce.OrderEvent{Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
 }

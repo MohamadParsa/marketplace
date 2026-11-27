@@ -65,6 +65,7 @@ export interface Method {
   instructions: string;
 }
 export interface Shipping {
+  dispatch_identifier?: "" | "none" | "tracking" | "delivery";
   schedule?: ShippingSchedule | null;
   version?: number;
   collection_mode?: "prepaid" | "collect";
@@ -358,6 +359,13 @@ export interface AdminView {
   audit: { id: string; action: string; target: string; created_at: string }[];
 }
 export const statuses: Record<string, string> = {
+  "fulfillment.start": "شروع پردازش",
+  "fulfillment.supply": "تأیید تأمین",
+  "fulfillment.pack": "شروع آماده‌سازی",
+  "fulfillment.ship": "ثبت ارسال",
+  "fulfillment.deliver": "تأیید تحویل",
+  "fulfillment.configure-dispatch": "تعیین شناسه ارسال مرسوله",
+  "fulfillment.correct": "اصلاح مشخصات با دلیل",
   requested: "درخواست پرداخت",
   "awaiting-result": "در انتظار نتیجه",
   failed: "ناموفق",
@@ -414,6 +422,33 @@ export interface PaymentAttempt {
   failure_code?: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface OrderOperations {
+  id: string;
+  purchase_id: string;
+  purchase_number: string;
+  store_name: string;
+  version: number;
+  order_status: string;
+  status: string;
+  payment_status: string;
+  shipping_name: string;
+  dispatch_identifier: string;
+  identifiers: string[] | null;
+  items: { id: string; name: string; quantity: number; cancelled_quantity?: number; returned_quantity?: number; status: string }[];
+  address?: Address;
+  allowed_actions: string[];
+  events: { id?: string; action: string; from: string; to: string; actor_kind: string; at: string; reason?: string }[];
+}
+
+export interface OrderOperationInput {
+  version: number;
+  action: string;
+  reason: string;
+  dispatch_identifier?: string;
+  identifiers?: string[];
+  all_items: boolean;
 }
 
 export interface WalletCreditInput {

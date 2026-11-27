@@ -106,6 +106,7 @@ func EffectiveStoreShipping(w Workspace, storeID string, base commerce.ShippingM
 		out.StoreRevision = b.Live.Number
 	}
 	out.BaseVersion = base.Version
+	out.DispatchIdentifier = base.DispatchIdentifier
 	out.CollectionMode = shippingMethodInput(base).CollectionMode
 	if out.CollectionMode == "collect" {
 		out.Fee = 0
@@ -166,6 +167,9 @@ func (s *Service) ReadStoreShipping(ctx context.Context, a identity.User) (Store
 }
 
 func normalizeStoreShipping(w Workspace, base commerce.ShippingMethod, in ShippingMethodInput) (commerce.ShippingMethod, error) {
+	if in.DispatchIdentifier != base.DispatchIdentifier {
+		return commerce.ShippingMethod{}, shippingInvalid("dispatch_identifier", "نوع شناسه ارسال از روش عمومی ارث می‌رسد.")
+	}
 	if in.ID != base.ID || strings.TrimSpace(in.Name) != strings.TrimSpace(base.Name) || in.CollectionMode != shippingMethodInput(base).CollectionMode || !in.Active || len(in.StoreIDs) > 0 {
 		return commerce.ShippingMethod{}, shippingInvalid("collection_mode", "نوع دریافت هزینه و هویت روش از عمومی ارث می‌رسند؛ تغییر آن‌ها مجاز نیست.")
 	}

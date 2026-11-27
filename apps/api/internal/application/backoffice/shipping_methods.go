@@ -43,7 +43,7 @@ func shippingMethodInput(m commerce.ShippingMethod) ShippingMethodInput {
 	if m.CollectionMode == "collect" {
 		fee = ""
 	}
-	return ShippingMethodInput{Schedule: m.Schedule, Version: m.Version, CollectionMode: m.CollectionMode, DeliveryMode: m.DeliveryMode, DailyCapacity: m.DailyCapacity, CategoryMode: m.CategoryMode, AllowedCategories: append([]string{}, m.AllowedCategories...), DeniedCategories: append([]string{}, m.DeniedCategories...), CityIDs: append([]string{}, m.CityIDs...), DayBasis: m.DayBasis, ID: m.ID, Name: m.Name, Active: m.Active, AllCities: m.AllCities, Cities: append([]string{}, m.Cities...), StoreIDs: append([]string{}, m.StoreIDs...), FeeToman: fee, MinDays: m.MinDays, MaxDays: m.MaxDays}
+	return ShippingMethodInput{DispatchIdentifier: m.DispatchIdentifier, Schedule: m.Schedule, Version: m.Version, CollectionMode: m.CollectionMode, DeliveryMode: m.DeliveryMode, DailyCapacity: m.DailyCapacity, CategoryMode: m.CategoryMode, AllowedCategories: append([]string{}, m.AllowedCategories...), DeniedCategories: append([]string{}, m.DeniedCategories...), CityIDs: append([]string{}, m.CityIDs...), DayBasis: m.DayBasis, ID: m.ID, Name: m.Name, Active: m.Active, AllCities: m.AllCities, Cities: append([]string{}, m.Cities...), StoreIDs: append([]string{}, m.StoreIDs...), FeeToman: fee, MinDays: m.MinDays, MaxDays: m.MaxDays}
 }
 
 func shippingCityIDs(geography []commerce.Province, legacy []string) (ids, unresolved []string) {
@@ -88,6 +88,9 @@ func activeShippingCity(geography []commerce.Province, id string) bool {
 func normalizeShippingMethod(w Workspace, in ShippingMethodInput, newMethod bool) (commerce.ShippingMethod, error) {
 	var out commerce.ShippingMethod
 	in.Name = strings.TrimSpace(in.Name)
+	if in.DispatchIdentifier != "" && in.DispatchIdentifier != "none" && in.DispatchIdentifier != "tracking" && in.DispatchIdentifier != "delivery" {
+		return out, shippingInvalid("dispatch_identifier", "نوع شناسه ارسال معتبر نیست.")
+	}
 	if in.ID == "" || len(in.ID) > 80 || in.Version < 0 {
 		return out, shippingInvalid("id", "شناسه یا نسخهٔ روش معتبر نیست.")
 	}
@@ -222,7 +225,7 @@ func normalizeShippingMethod(w Workspace, in ShippingMethodInput, newMethod bool
 		value := *in.DailyCapacity
 		capacity = &value
 	}
-	out = commerce.ShippingMethod{Schedule: schedule, Version: in.Version, ID: in.ID, Name: in.Name, Active: in.Active, CollectionMode: in.CollectionMode, DeliveryMode: in.DeliveryMode, DailyCapacity: capacity, CategoryMode: in.CategoryMode, AllowedCategories: allowed, DeniedCategories: denied, CityIDs: cities, Cities: []string{}, StoreIDs: stores, AllCities: in.AllCities, Fee: fee, MinDays: in.MinDays, MaxDays: in.MaxDays, DayBasis: in.DayBasis}
+	out = commerce.ShippingMethod{DispatchIdentifier: in.DispatchIdentifier, Schedule: schedule, Version: in.Version, ID: in.ID, Name: in.Name, Active: in.Active, CollectionMode: in.CollectionMode, DeliveryMode: in.DeliveryMode, DailyCapacity: capacity, CategoryMode: in.CategoryMode, AllowedCategories: allowed, DeniedCategories: denied, CityIDs: cities, Cities: []string{}, StoreIDs: stores, AllCities: in.AllCities, Fee: fee, MinDays: in.MinDays, MaxDays: in.MaxDays, DayBasis: in.DayBasis}
 	if in.Active && in.CategoryMode == "selected" {
 		covered := false
 		for _, category := range w.Categories {

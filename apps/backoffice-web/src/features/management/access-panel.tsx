@@ -41,6 +41,9 @@ const names: Record<string, string> = {
   "offers.create": "ایجاد عرضه",
   "offers.price.write": "ویرایش قیمت عرضه",
   "orders.read": "مشاهده سفارش فروشگاه",
+  "orders.operate": "پردازش، تأمین و ارسال سفارش",
+  "orders.receive": "ثبت دریافت توسط پشتیبانی",
+  "orders.correct": "اصلاح مشخصات ارسال با دلیل مدیریتی",
   "products.content.write": "ویرایش محتوای فروشگاه",
 };
 const words: Record<string, string> = {

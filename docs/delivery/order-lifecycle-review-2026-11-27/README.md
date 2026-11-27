@@ -92,3 +92,6 @@ execution_authorized: true
 ## تکمیل تازه مالک — ۲۰۲۶-۱۱-۲۸
 
 [#141 — همه کنترل‌های تاریخ شمسی در storefront و بک‌آفیس](tasks/persian-date-controls.md) پس از #140 به صف اجرا اضافه شد؛ todo و مجوز اجرا دارد. پذیرش یک‌جای مالک پس از این تکمیل است.
+
+- #135 با کامیت `26fdef0` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/135#issuecomment-7227893028) بسته شد.
+- #136: [پردازش تا ارسال کددار و دریافت مستقل، مجوز scoped و تست/تصاویر](issue-136-verification.md) تکمیل فنی و آماده CI/بستن است.

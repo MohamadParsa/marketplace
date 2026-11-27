@@ -69,27 +69,28 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
-	Schedule          *shipping.Schedule `json:"schedule,omitempty"`
-	BaseVersion       int                `json:"base_version,omitempty"`
-	StoreRevision     int                `json:"store_revision,omitempty"`
-	Version           int                `json:"version,omitempty"`
-	CollectionMode    string             `json:"collection_mode,omitempty"`
-	DeliveryMode      string             `json:"delivery_mode,omitempty"`
-	DailyCapacity     *int               `json:"daily_capacity,omitempty"`
-	CategoryMode      string             `json:"category_mode,omitempty"`
-	AllowedCategories []string           `json:"allowed_categories,omitempty"`
-	DeniedCategories  []string           `json:"denied_categories,omitempty"`
-	CityIDs           []string           `json:"city_ids,omitempty"`
-	DayBasis          shipping.DayBasis  `json:"day_basis,omitempty"`
-	ID                string             `json:"id"`
-	Name              string             `json:"name"`
-	Active            bool               `json:"active"`
-	AllCities         bool               `json:"all_cities"`
-	Cities            []string           `json:"cities"`
-	StoreIDs          []string           `json:"store_ids"`
-	Fee               Amount             `json:"fee"`
-	MinDays           int                `json:"min_days"`
-	MaxDays           int                `json:"max_days"`
+	DispatchIdentifier string             `json:"dispatch_identifier,omitempty"`
+	Schedule           *shipping.Schedule `json:"schedule,omitempty"`
+	BaseVersion        int                `json:"base_version,omitempty"`
+	StoreRevision      int                `json:"store_revision,omitempty"`
+	Version            int                `json:"version,omitempty"`
+	CollectionMode     string             `json:"collection_mode,omitempty"`
+	DeliveryMode       string             `json:"delivery_mode,omitempty"`
+	DailyCapacity      *int               `json:"daily_capacity,omitempty"`
+	CategoryMode       string             `json:"category_mode,omitempty"`
+	AllowedCategories  []string           `json:"allowed_categories,omitempty"`
+	DeniedCategories   []string           `json:"denied_categories,omitempty"`
+	CityIDs            []string           `json:"city_ids,omitempty"`
+	DayBasis           shipping.DayBasis  `json:"day_basis,omitempty"`
+	ID                 string             `json:"id"`
+	Name               string             `json:"name"`
+	Active             bool               `json:"active"`
+	AllCities          bool               `json:"all_cities"`
+	Cities             []string           `json:"cities"`
+	StoreIDs           []string           `json:"store_ids"`
+	Fee                Amount             `json:"fee"`
+	MinDays            int                `json:"min_days"`
+	MaxDays            int                `json:"max_days"`
 }
 type Destination struct {
 	ID         string `json:"id"`
@@ -288,13 +289,20 @@ type Operation struct {
 }
 
 type OrderEvent struct {
-	Action        string    `json:"action"`
-	FlowStatus    string    `json:"flow_status"`
-	OrderStatus   string    `json:"order_status"`
-	PaymentStatus string    `json:"payment_status"`
-	ActorID       string    `json:"actor_id"`
-	ActorKind     string    `json:"actor_kind"`
-	At            time.Time `json:"at"`
+	ID                  string    `json:"id,omitempty"`
+	OrderID             string    `json:"order_id,omitempty"`
+	FromStatus          string    `json:"from_status,omitempty"`
+	ToStatus            string    `json:"to_status,omitempty"`
+	Reason              string    `json:"reason,omitempty"`
+	PreviousIdentifiers []string  `json:"previous_identifiers,omitempty"`
+	Identifiers         []string  `json:"identifiers,omitempty"`
+	Action              string    `json:"action"`
+	FlowStatus          string    `json:"flow_status"`
+	OrderStatus         string    `json:"order_status"`
+	PaymentStatus       string    `json:"payment_status"`
+	ActorID             string    `json:"actor_id"`
+	ActorKind           string    `json:"actor_kind"`
+	At                  time.Time `json:"at"`
 }
 
 type PaymentAttempt struct {
