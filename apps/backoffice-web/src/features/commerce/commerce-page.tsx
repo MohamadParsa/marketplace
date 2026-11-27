@@ -151,9 +151,11 @@ function States({ p }: { p: Purchase }) {
 export function CommercePage({
   token,
   settingsOnly = false,
+  financialOnly = false,
 }: {
   token: string;
   settingsOnly?: boolean;
+  financialOnly?: boolean;
 }) {
   const { state } = useWorkspace(),
     [data, setData] = useState<AdminView | null>(null),
@@ -161,7 +163,7 @@ export function CommercePage({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [tab, setTab] = useState(0),
+    [tab, setTab] = useState(financialOnly ? 1 : 0),
     [settingsTab, setSettingsTab] = useState("geography"),
     [selected, setSelected] = useState<{
       kind: "deposit" | "purchase" | "refund";
@@ -250,7 +252,7 @@ export function CommercePage({
           <h1>
             {settingsOnly
               ? "تنظیمات خرید، حمل و کسب‌وکار"
-              : "سفارش‌ها و پرداخت‌های سایت"}
+              : financialOnly ? "واریز و برداشت کیف پول" : "سفارش‌ها و پرداخت‌های سایت"}
           </h1>
           <p>
             {settingsOnly
@@ -312,9 +314,9 @@ export function CommercePage({
             onChange={(_, v: number) => setTab(v)}
             variant="scrollable"
           >
-            <Tab label={"سفارش‌ها (" + data.purchases.length + ")"} />
-            <Tab label={"اعلام واریز (" + data.deposits.length + ")"} />
-            <Tab label={"بازپرداخت (" + data.refunds.length + ")"} />
+            {!financialOnly && <Tab value={0} label={"سفارش‌ها (" + data.purchases.length + ")"} />}
+            <Tab value={1} label={"اعلام واریز (" + data.deposits.length + ")"} />
+            <Tab value={2} label={"بازپرداخت (" + data.refunds.length + ")"} />
           </Tabs>
           <section className="panel commerce-list">
             {tab === 0 ? (
@@ -646,8 +648,9 @@ function DepositReview({
     </>
   );
 }
-function PurchaseReview({
+export function PurchaseReview({
   purchase: p,
+  mode = "all",
   token,
   canReadDeposits,
   busy,
@@ -655,6 +658,7 @@ function PurchaseReview({
   submit,
 }: {
   purchase: Purchase;
+  mode?: "all" | "payment";
   token: string;
   canReadDeposits: boolean;
   busy: boolean;
@@ -784,14 +788,11 @@ function PurchaseReview({
                   {a.title || "اعتبار کیف پول"} ·{" "}
                   {a.withdrawable ? "قابل برداشت" : "فقط قابل خرید"}
                 </p>
-                <small dir="ltr">
-                  {a.lot_id} · {a.source}
-                </small>
               </article>
             ))}
           </section>
         )}
-        <section className="commerce-order-box" aria-label="گیرنده و آدرس">
+        {mode === "all" && <><section className="commerce-order-box" aria-label="گیرنده و آدرس">
           <h3>گیرنده و آدرس</h3>
           <b>{p.quote.address.recipient}</b>
           <p dir="ltr" className="commerce-phone">
@@ -865,6 +866,7 @@ function PurchaseReview({
             ))}
           </div>
         </section>
+        </>}
         <section
           className="commerce-order-box commerce-order-wide"
           aria-label="واریزهای مرتبط"

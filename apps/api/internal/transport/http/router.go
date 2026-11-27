@@ -88,6 +88,8 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		}
 		mux.HandleFunc("POST /backoffice/order-requests/{request}/review", h.OrderRequestReview)
 		mux.HandleFunc("POST /backoffice/order-requests/{request}/refund", h.OrderRequestRefund)
+		mux.HandleFunc("GET /backoffice/order-workspace", h.OrderWorkspace)
+		mux.HandleFunc("GET /backoffice/order-workspace/{id}", h.OrderWorkspace)
 		mux.HandleFunc("GET /backoffice/shipping/methods", h.ShippingMethods)
 		mux.HandleFunc("POST /backoffice/shipping/methods", h.ShippingMethods)
 		mux.HandleFunc("PUT /backoffice/shipping/methods/{id}", h.ShippingMethods)

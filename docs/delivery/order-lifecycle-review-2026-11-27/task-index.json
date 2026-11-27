@@ -232,7 +232,13 @@
         "ORDERREV-Q03",
         "ORDERREV-Q07",
         "ORDERREV-Q10"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "5574af85d98a99326031180d69e58ad00227f1dc",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46074462303",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/139#issuecomment-7229126719",
+        "issue_state": "closed"
+      }
     },
     {
       "id": "CV-ORDER-REV-10",
@@ -241,7 +247,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/140",
       "title": "یکپارچه‌سازی منوی سفارش‌ها و جزئیات تب‌دار",
       "file": "tasks/unified-order-workspace.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",

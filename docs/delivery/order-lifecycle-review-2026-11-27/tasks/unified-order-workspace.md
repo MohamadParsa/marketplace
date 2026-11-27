@@ -6,11 +6,13 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, FEAT-BO-ORDER-REV-003]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
 # CV-ORDER-REV-10 — تجربه یکپارچه سفارش بک‌آفیس
+
+[شواهد query، مجوزها، تب‌ها و مرورگر](../issue-140-verification.md).
 
 Issue: [#140](https://github.com/MohamadParsa/marketplace/issues/140) · مسئول @eliassarband · اجرای ترتیبی با دستور صریح مالک در ادامه همین گفتگو انتخاب شد؛ بستن پس از تست، مدارک و push.
 
@@ -34,4 +36,4 @@ Issue: [#140](https://github.com/MohamadParsa/marketplace/issues/140) · مسئ�
 
 ## وابستگی و وضعیت
 
-طرح بر اساس REV-03؛ پذیرش عملیاتی به04 تا09 وابسته است. نمایش تب placeholder، تحویل کامل چرخه نیست. اکنون فقط شرح برنامه و بدون مجوز پیاده‌سازی است؛ [پرسش‌های مؤثر](../../../product/open-questions.md#order-lifecycle-review-20261127) پیش از قسمت وابسته پاسخ بگیرند.
+طرح بر اساس REV-03 و اجرای REV-04 تا09 تکمیل شد؛ پاسخ‌های مؤثر مالک در [دفتر پرسش‌ها](../../../product/open-questions.md#order-lifecycle-review-20261127) ثبت‌اند. تب‌ها به عملیات واقعی وصل‌اند؛ وضعیت تحویل و مرز اتصال واقعی در گزارش بالا آمده است.

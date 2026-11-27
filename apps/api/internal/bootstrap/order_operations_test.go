@@ -124,4 +124,14 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 		t.Fatal("history cursor", next)
 	}
 	commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/"+p.ID+"/history?limit=1000", nil, "", 400)
+	ops := login(t, h, "09000000002")
+	listing := readJSON[backoffice.OrderWorkspacePage](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/order-workspace?size=1&q="+p.Number, nil, "", 200))
+	if len(listing.Items) != 1 || listing.Items[0].ID != p.ID || listing.Items[0].Groups != 2 {
+		t.Fatal("workspace query", listing)
+	}
+	detail := readJSON[backoffice.OrderWorkspaceDetail](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/order-workspace/"+id, nil, "", 200))
+	if detail.Purchase == nil || detail.Purchase.ID != p.ID || detail.Permissions[backoffice.CommerceOrdersConfirm] || len(detail.Purchase.Deposits) > 0 || len(detail.Purchase.CreditSources) > 0 {
+		t.Fatal("workspace detail scope", detail)
+	}
+	commerceHTTP(t, h, buyer, "", "GET", "/backoffice/order-workspace", nil, "", 401)
 }

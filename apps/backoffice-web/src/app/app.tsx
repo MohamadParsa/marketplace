@@ -71,6 +71,7 @@ import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
+import { OrderWorkspaceList, OrderWorkspaceDetail } from "../features/operations/order-workspace";
 import { FinancePage } from "../features/finance/finance-page";
 import { LoginPage } from "./login-page";
 const queryClient = new QueryClient({
@@ -188,8 +189,8 @@ const menu = [
     heading: "عملیات و پشتیبانی",
     items: [
       {
-        path: "/commerce",
-        label: "سفارش و پرداخت سایت",
+        path: "/wallet-operations",
+        label: "واریز و برداشت کیف پول",
         icon: <ReceiptLongOutlined />,
       },
       {
@@ -306,8 +307,9 @@ function Workspace({
       ...group,
       items: group.items.filter((i) =>
         session.user.Surface === "seller"
-          ? ["/products", "/commerce", "/store-preparation", "/my-stores"].includes(i.path)
+          ? ["/products", "/orders", "/store-preparation", "/my-stores"].includes(i.path)
           : i.path === "/my-stores" ? false
+          : i.path === "/wallet-operations" ? role === "super-admin" || role === "finance" || permissions.some(p=>["commerce.deposits.read","commerce.refunds.resolve"].includes(p))
           : i.path === "/users"
             ? canCreditWallet || permissions.includes("users.read")
             : ["/stores", "/store-preparation"].includes(i.path)
@@ -530,11 +532,14 @@ function Workspace({
                 />
                 <Route
                   path="/commerce"
-                  element={
+                  element={<Navigate to="/orders" replace/>}
+                />
+                <Route path="/orders" element={session.user.Surface === "seller" ? <SellerCheckoutPage token={session.token}/> : <OrderWorkspaceList/>}/>
+                <Route path="/wallet-operations" element={
                     session.user.Surface === "seller" ? (
-                      <SellerCheckoutPage token={session.token} />
+                      <Navigate to="/orders" replace/>
                     ) : (
-                      <CommercePage token={session.token} />
+                      <CommercePage token={session.token} financialOnly />
                     )
                   }
                 />
@@ -678,7 +683,6 @@ function Workspace({
                 ))}
                 {(
                   [
-                    "orders",
                     "support",
                     "assignments",
                     "notifications",
@@ -693,7 +697,7 @@ function Workspace({
                 ))}
                 <Route
                   path="/orders/:id"
-                  element={<OperationsPage section="orders" />}
+                  element={session.user.Surface === "seller" ? <OperationsPage section="orders"/> : <OrderWorkspaceDetail/>}
                 />
                 <Route
                   path="/finance"
