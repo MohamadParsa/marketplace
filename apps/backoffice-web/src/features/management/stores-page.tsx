@@ -4,6 +4,7 @@ import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
 import { FilterPanel } from "../../shared/filter-panel";
 import { OptionSelect } from "../../shared/option-select";
 import { StoreEligibilityEditor } from "./store-eligibility-editor";
+import { StoreShippingPanel } from "../commerce/store-shipping-page";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import { StorefrontOutlined } from "@mui/icons-material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
 import { DataTable, PageHeader } from "../../shared/components";
@@ -147,25 +148,55 @@ function StorePhoto({ row, token }: { row: ManagedStore; token: string }) {
 export function StoresPage() {
   const { authToken, can } = useWorkspace(),
     cache = useQueryClient();
+  const [params, setParams] = useSearchParams();
+  const linkedStore = params.get("store");
+  const linkedOpened = useRef("");
   const [draft, setDraft] = useState(defaults),
     [filter, setFilter] = useState(defaults),
     [page, setPage] = useState(0),
     [size, setSize] = useState(20),
     [editing, setEditing] = useState<ManagedStore | "new">();
   const query = useQuery<Directory>({
-    queryKey: ["managed-stores", authToken, filter, page, size],
+    queryKey: ["managed-stores", authToken, filter, page, size, linkedStore],
     placeholderData: (old) => old,
     queryFn: ({ signal }) =>
       request<Directory>(
         authToken,
         "/query",
-        { filter: { ...filter, page, size } },
+        {
+          filter: {
+            ...filter,
+            id: linkedStore ?? undefined,
+            page: linkedStore ? 0 : page,
+            size,
+          },
+        },
         undefined,
         "POST",
         signal,
       ),
   });
   const data = query.data;
+  useEffect(() => {
+    if (!linkedStore) {
+      linkedOpened.current = "";
+      return;
+    }
+    const row = data?.rows.find((store) => store.id === linkedStore);
+    if (row && linkedOpened.current !== linkedStore) {
+      linkedOpened.current = linkedStore;
+      setEditing(row);
+    }
+  }, [linkedStore, data]);
+  const closeEditing = () => {
+    setEditing(undefined);
+    if (linkedStore) {
+      const next = new URLSearchParams(params);
+      next.delete("store");
+      next.delete("tab");
+      setParams(next, { replace: true });
+    }
+  };
   const refresh = () => {
     void cache.invalidateQueries({ queryKey: ["managed-stores"] });
     void cache.invalidateQueries({ queryKey: ["workspace"] });
@@ -190,12 +221,24 @@ export function StoresPage() {
           <CreateButton
             variant="contained"
             disabled={!data?.can_write}
-            onClick={() => setEditing("new")}
+            onClick={() => {
+              closeEditing();
+              setEditing("new");
+            }}
           >
             فروشگاه جدید
           </CreateButton>
         }
       />
+      {linkedStore &&
+        query.isSuccess &&
+        !query.isFetching &&
+        !data?.rows.some((store) => store.id === linkedStore) && (
+          <Alert severity="warning">
+            فروشگاه در دسترس نیست یا مجوز مشاهدهٔ آن را ندارید.
+            <Button onClick={closeEditing}>نمایش همهٔ فروشگاه‌ها</Button>
+          </Alert>
+        )}
       <section className="panel store-directory">
         <FilterPanel>
           <form
@@ -365,6 +408,19 @@ export function StoresPage() {
                       <Button onClick={() => setEditing(s)}>
                         مشاهده و ویرایش
                       </Button>
+                      {can("stores.shipping.read", "management") && (
+                        <Button
+                          component={Link}
+                          to={
+                            "/stores?store=" +
+                            encodeURIComponent(s.id) +
+                            "&tab=shipping"
+                          }
+                          aria-label={"روش‌های حمل " + s.name}
+                        >
+                          روش‌های حمل
+                        </Button>
+                      )}
                       {can("stores.preparation.read", "management") && (
                         <Button
                           component={Link}
@@ -385,17 +441,24 @@ export function StoresPage() {
           </fieldset>
         )}
       </section>
-      {editing && data && (
-        <StoreEditor
-          key={typeof editing === "string" ? "new" : editing.id}
-          row={editing === "new" ? undefined : editing}
-          directory={data}
-          token={authToken}
-          policyAllowed={can("store.content-policy.set", "management")}
-          close={() => setEditing(undefined)}
-          saved={refresh}
-        />
-      )}
+      {editing &&
+        data &&
+        (!linkedStore || editing === "new" || editing.id === linkedStore) && (
+          <StoreEditor
+            key={typeof editing === "string" ? "new" : editing.id}
+            row={editing === "new" ? undefined : editing}
+            directory={data}
+            token={authToken}
+            policyAllowed={can("store.content-policy.set", "management")}
+            initialTab={
+              linkedStore === (typeof editing === "string" ? "" : editing.id)
+                ? (params.get("tab") ?? undefined)
+                : undefined
+            }
+            close={closeEditing}
+            saved={refresh}
+          />
+        )}
     </>
   );
 }
@@ -404,6 +467,7 @@ function StoreEditor({
   directory,
   token,
   policyAllowed,
+  initialTab,
   close,
   saved,
 }: {
@@ -411,16 +475,19 @@ function StoreEditor({
   directory: Directory;
   token: string;
   policyAllowed: boolean;
+  initialTab?: string;
   close: () => void;
   saved: () => void;
 }) {
-  const { execute } = useWorkspace();
+  const { execute, can } = useWorkspace();
+  const shippingAllowed = can("stores.shipping.read", "management");
   const [current, setCurrent] = useState(row),
     [name, setName] = useState(row?.name ?? ""),
     [active, setActive] = useState(row?.active ?? true),
     [city, setCity] = useState(row?.city ?? ""),
     [profile, setProfile] = useState<StoreProfile>(row?.profile ?? {}),
-    [busy, setBusy] = useState(false),
+    [profileBusy, setBusy] = useState(false),
+    [shippingBusy, setShippingBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [key, setKey] = useState(crypto.randomUUID()),
@@ -428,7 +495,10 @@ function StoreEditor({
     [preview, setPreview] = useState(""),
     [imageKey, setImageKey] = useState(crypto.randomUUID()),
     [policy, setPolicy] = useState(row?.content_policy ?? "review"),
-    [tab, setTab] = useState("details");
+    [tab, setTab] = useState(
+      initialTab === "shipping" && shippingAllowed ? "shipping" : "details",
+    );
+  const busy = profileBusy || shippingBusy;
   const fileInput = useRef<HTMLInputElement>(null);
   const province = directory.geography?.find(
       (p) => p.name === profile.province,
@@ -853,7 +923,7 @@ function StoreEditor({
       <DialogContent className="store-editor">
         {error && <Alert severity="error">{error}</Alert>}
         {notice && <Alert severity="success">{notice}</Alert>}
-        {!directory.can_write && (
+        {!directory.can_write && (tab === "details" || tab === "contact") && (
           <Alert severity="info">
             مجوز ویرایش ندارید؛ اطلاعات فقط خواندنی است.
           </Alert>
@@ -869,6 +939,22 @@ function StoreEditor({
             ...(current
               ? [
                   { id: "image", label: "تصویر", content: imageContent },
+                  ...(shippingAllowed
+                    ? [
+                        {
+                          id: "shipping",
+                          label: "روش‌های حمل",
+                          content: (
+                            <StoreShippingPanel
+                              key={current.id}
+                              storeID={current.id}
+                              enabled={tab === "shipping"}
+                              onBusyChange={setShippingBusy}
+                            />
+                          ),
+                        },
+                      ]
+                    : []),
                   {
                     id: "eligibility",
                     label: "مجوزهای فروش",

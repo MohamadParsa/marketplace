@@ -28,7 +28,7 @@ type Policy = {
   calendar_mode: "inherit" | "override";
   working_weekdays: number[];
 };
-type StorePreparation = {
+export type StorePreparation = {
   id: string;
   name: string;
   version: number;
@@ -69,11 +69,21 @@ function preparationLoadError(error: Error) {
   return "دریافت تنظیمات انجام نشد. ارتباط با سرور را بررسی و دوباره تلاش کنید.";
 }
 
-export function StorePreparationPage() {
+export function StorePreparationPage({
+  storeID,
+  embedded = false,
+  enabled = true,
+  onBusyChange,
+}: {
+  storeID?: string;
+  embedded?: boolean;
+  enabled?: boolean;
+  onBusyChange?: (busy: boolean) => void;
+}) {
   const { authToken, surface } = useWorkspace();
   const client = useQueryClient();
   const [params, setParams] = useSearchParams();
-  const selected = params.get("store") ?? "";
+  const selected = storeID ?? params.get("store") ?? "";
   const [editing, setEditing] = useState(false);
   const [revision, setRevision] = useState(0);
   const [notice, setNotice] = useState("");
@@ -103,6 +113,7 @@ export function StorePreparationPage() {
   }
   const query = useQuery({
     queryKey,
+    enabled,
     queryFn: () => request<StorePreparation[]>("/preparation"),
     refetchOnWindowFocus: false,
   });
@@ -110,18 +121,22 @@ export function StorePreparationPage() {
   const store = rows.find((row) => row.id === selected);
   return (
     <div className="store-preparation-page">
-      <PageHeader
-        title="وقفه تأمین و تقویم فروشگاه"
-        description="روزهای کاری، واحد وقفه و زمان محاسبهٔ آماده‌سازی هر فروشگاه"
-        action={
-          surface === "backoffice" ? (
-            <Button component={Link} to="/stores">
-              بازگشت به فروشگاه‌ها
-            </Button>
-          ) : undefined
-        }
-      />
-      {query.isPending && <LinearProgress aria-label="دریافت تقویم فروشگاه" />}
+      {!embedded && (
+        <PageHeader
+          title="وقفه تأمین و تقویم فروشگاه"
+          description="روزهای کاری، واحد وقفه و زمان محاسبهٔ آماده‌سازی هر فروشگاه"
+          action={
+            surface === "backoffice" ? (
+              <Button component={Link} to="/stores">
+                بازگشت به فروشگاه‌ها
+              </Button>
+            ) : undefined
+          }
+        />
+      )}
+      {query.isPending && enabled && (
+        <LinearProgress aria-label="دریافت تقویم فروشگاه" />
+      )}
       {query.error && (
         <Alert severity="error">
           {preparationLoadError(query.error)}{" "}
@@ -135,7 +150,7 @@ export function StorePreparationPage() {
           مشاهده و ویرایش را در نقش فروشگاه تعیین کند.
         </Alert>
       )}
-      {!!rows.length && (
+      {!embedded && !!rows.length && (
         <section className="store-detail-box">
           <ChoiceField
             label="فروشگاه موردنظر برای وقفه و تقویم"
@@ -165,7 +180,10 @@ export function StorePreparationPage() {
         <PreparationEditor
           key={`${store.id}:${store.version}:${store.site_calendar.version}:${revision}`}
           store={store}
-          busyChanged={setEditing}
+          busyChanged={(value) => {
+            setEditing(value);
+            onBusyChange?.(value);
+          }}
           batch={
             surface === "backoffice" && rows.every((row) => row.can_write)
               ? {

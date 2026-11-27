@@ -1,6 +1,6 @@
 import { StoresPage } from "../features/management/stores-page";
 import { ShippingMethodsPage } from "../features/commerce/shipping-methods-page";
-import { StoreShippingPage } from "../features/commerce/store-shipping-page";
+import { SellerStoresPage, LegacyStoreShippingRoute } from "../features/management/seller-stores-page";
 import { StorePreparationPage } from "../features/management/store-preparation-page";
 import { PageErrorBoundary } from "../shared/page-error-boundary";
 import { UsersPage } from "../features/management/users-page";
@@ -125,13 +125,13 @@ const menu = [
         roles: ["super-admin"],
       },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
+      { path: "/my-stores", label: "فروشگاه‌های من", icon: <StorefrontOutlined /> },
     ],
   },
   {
     heading: "مدیریت بازارگاه",
     items: [
       { path: "/store-preparation", label: "وقفه و تقویم فروشگاه", icon: <LocalShippingOutlined /> },
-      { path: "/store-shipping", label: "حمل فروشگاه و تأیید نسخه", icon: <LocalShippingOutlined /> },
       {
         path: "/product-reviews",
         label: "نظرات محصولات",
@@ -306,10 +306,11 @@ function Workspace({
       ...group,
       items: group.items.filter((i) =>
         session.user.Surface === "seller"
-          ? ["/products", "/commerce", "/store-preparation", "/store-shipping"].includes(i.path)
+          ? ["/products", "/commerce", "/store-preparation", "/my-stores"].includes(i.path)
+          : i.path === "/my-stores" ? false
           : i.path === "/users"
             ? canCreditWallet || permissions.includes("users.read")
-            : ["/stores", "/store-preparation", "/store-shipping"].includes(i.path)
+            : ["/stores", "/store-preparation"].includes(i.path)
               ? role === "super-admin" ||
                 role === "operations" ||
                 permissions.includes("stores.read")
@@ -549,7 +550,8 @@ function Workspace({
                 />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/store-preparation" element={<StorePreparationPage />} />
-                <Route path="/store-shipping" element={<StoreShippingPage />} />
+                <Route path="/store-shipping" element={<LegacyStoreShippingRoute />} />
+                <Route path="/my-stores" element={session.user.Surface === "seller" ? <SellerStoresPage /> : <Navigate to="/stores" replace />} />
                 <Route
                   path="/stores"
                   element={
@@ -559,7 +561,7 @@ function Workspace({
                       permissions.includes("stores.read")) ? (
                       <StoresPage />
                     ) : (
-                      <Navigate to="/" replace />
+                      <Navigate to={session.user.Surface === "seller" ? "/my-stores" : "/"} replace />
                     )
                   }
                 />
@@ -655,7 +657,7 @@ function Workspace({
                     )
                   }
                 />
-                <Route path="/shipping" element={session.user.Surface === "seller" ? <Navigate to="/store-preparation" replace /> : <ShippingMethodsPage />} />
+                <Route path="/shipping" element={session.user.Surface === "seller" ? <Navigate to="/my-stores" replace /> : <ShippingMethodsPage />} />
                 {(["pricing"] as const).map((section) => (
                   <Route
                     key={section}
@@ -731,7 +733,7 @@ function SessionApp() {
   const location = useLocation(),
     navigate = useNavigate();
   const loginSurface =
-    location.pathname === "/seller-login" ? "seller" : "backoffice";
+    location.pathname === "/seller-login" || location.pathname === "/my-stores" ? "seller" : "backoffice";
   const [session, setSession] = useState<Session | null>(null);
   const logout = () => {
     if (session)
@@ -757,7 +759,7 @@ function SessionApp() {
       surface={loginSurface}
       onLogin={(s) => {
         setSession(s);
-        if (s.user.Surface === "seller")
+        if (s.user.Surface === "seller" && location.pathname === "/seller-login")
           navigate("/products", { replace: true });
       }}
     />

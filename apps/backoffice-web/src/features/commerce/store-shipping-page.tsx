@@ -1,7 +1,6 @@
-import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { ChoiceField } from "../../shared/option-select";
 import { FilterPanel } from "../../shared/filter-panel";
-import { OptionSelect } from "../../shared/option-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -15,7 +14,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWorkspace } from "../../shared/workspace";
 import { ShippingCapacityDialog } from "./shipping-capacity-dialog";
-import { DataTable, PageHeader } from "../../shared/components";
+import { DataTable } from "../../shared/components";
 import {
   MethodEditor,
   MethodError,
@@ -49,7 +48,10 @@ type StoreRow = {
   can_review: boolean;
   methods: Binding[];
 };
-type Directory = { stores: StoreRow[]; geography: Province[] };
+export type StoreShippingDirectory = {
+  stores: StoreRow[];
+  geography: Province[];
+};
 type Target = { id: string; version: number };
 type Command = {
   action: string;
@@ -61,11 +63,11 @@ type Command = {
   method?: Method;
 };
 const statuses: Record<string, string> = {
-  public: "عمومی",
-  draft: "پیش‌نویس",
+  public: "استفاده از عمومی",
+  draft: "پیش‌نویس اختصاصی",
   submitted: "در انتظار بررسی",
-  approved: "تأییدشده",
-  rejected: "ردشده",
+  approved: "اختصاصی تأییدشده",
+  rejected: "اصلاحات ردشده",
   disabled: "غیرفعال",
   withdrawn: "کنارگذاشته‌شده",
 };
@@ -73,49 +75,40 @@ const stateOf = (row: Binding) =>
   !row.enabled
     ? "disabled"
     : (row.draft?.status ?? (row.mode === "public" ? "public" : "approved"));
-const initialMethod = (row: Binding): Method => ({
-  ...(row.draft?.method ?? row.live?.method ?? row.base),
-  id: row.base.id,
-  name: row.base.name,
-  active: true,
-  collection_mode: row.base.collection_mode,
-  store_ids: [],
-  fee_toman:
-    row.base.collection_mode === "collect"
-      ? ""
-      : (row.draft?.method ?? row.live?.method ?? row.base).fee_toman,
-});
+const initialMethod = (row: Binding, bulk = false): Method => {
+  const method = bulk
+    ? row.base
+    : (row.draft?.method ?? row.live?.method ?? row.base);
+  return {
+    ...method,
+    id: row.base.id,
+    name: row.base.name,
+    active: true,
+    collection_mode: row.base.collection_mode,
+    store_ids: [],
+    fee_toman: row.base.collection_mode === "collect" ? "" : method.fee_toman,
+  };
+};
 
-export function StoreShippingPage() {
+export function useStoreShippingDirectory(enabled = true) {
   const { authToken, surface } = useWorkspace();
-  const client = useQueryClient();
   const queryKey = ["store-shipping", surface, authToken];
   const root =
-    (import.meta.env.VITE_API_BASE_URL ?? "") + `/${surface}/stores/shipping`;
-  const [selected, setSelected] = useState(""),
-    [search, setSearch] = useState(""),
-    [methodSearch, setMethodSearch] = useState(""),
-    [status, setStatus] = useState(""),
-    [all, setAll] = useState(false),
-    [notice, setNotice] = useState("");
-  const [draftMethodSearch, setDraftMethodSearch] = useState("");
-  const [draftStatus, setDraftStatus] = useState("");
-  const [editing, setEditing] = useState<{
-    row: Binding;
-    targets: Target[];
-    all: boolean;
-  }>();
-  const [decision, setDecision] = useState<{
-    row: Binding;
-    command: Command;
-  }>();
-  const [capacity, setCapacity] = useState<Binding>();
-  async function request(body?: Command, key?: string): Promise<Directory> {
+    (import.meta.env.VITE_API_BASE_URL ?? "") +
+    "/" +
+    surface +
+    "/stores/shipping";
+  async function request(
+    body?: Command,
+    key?: string,
+    signal?: AbortSignal,
+  ): Promise<StoreShippingDirectory> {
     const response = await fetch(root, {
       method: body ? "POST" : "GET",
+      signal,
       cache: "no-store",
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: "Bearer " + authToken,
         ...(body
           ? {
               "Content-Type": "application/json",
@@ -133,30 +126,81 @@ export function StoreShippingPage() {
   }
   const query = useQuery({
     queryKey,
-    queryFn: () => request(),
+    queryFn: ({ signal }) => request(undefined, undefined, signal),
+    enabled,
     refetchOnWindowFocus: false,
   });
+  return { query, request, queryKey };
+}
+
+export function StoreShippingPanel({
+  storeID,
+  methodID,
+  allowBulk = false,
+  enabled = true,
+  onBusyChange,
+}: {
+  storeID?: string;
+  methodID?: string;
+  allowBulk?: boolean;
+  enabled?: boolean;
+  onBusyChange?: (busy: boolean) => void;
+}) {
+  const { surface } = useWorkspace();
+  const client = useQueryClient();
+  const { query, request, queryKey } = useStoreShippingDirectory(enabled);
   const directory = query.data;
-  const store =
-    directory?.stores.find((s) => s.id === selected) ?? directory?.stores[0];
+  const [selected, setSelected] = useState(""),
+    [all, setAll] = useState(false),
+    [notice, setNotice] = useState("");
+  const [methodSearch, setMethodSearch] = useState(""),
+    [status, setStatus] = useState(""),
+    [draftMethodSearch, setDraftMethodSearch] = useState(""),
+    [draftStatus, setDraftStatus] = useState("");
+  const [editing, setEditing] = useState<{
+    row: Binding;
+    targets: Target[];
+    all: boolean;
+  }>();
+  const [decision, setDecision] = useState<{
+    row: Binding;
+    command: Command;
+    scopeLabel: string;
+  }>();
+  const [capacity, setCapacity] = useState<Binding>();
   const busy = !!editing || !!decision || !!capacity;
+  useEffect(() => {
+    onBusyChange?.(busy);
+    return () => onBusyChange?.(false);
+  }, [busy, onBusyChange]);
   const allAllowed =
+    allowBulk &&
+    !storeID &&
     surface === "backoffice" &&
     !!directory?.stores.length &&
     directory.stores.every((s) => s.can_write);
+  const bulk = all && allAllowed;
+  const store =
+    directory?.stores.find((s) => s.id === (storeID ?? selected)) ??
+    (bulk ? directory?.stores[0] : undefined);
+  const scopeLabel = bulk
+    ? "همهٔ " + directory!.stores.length.toLocaleString("fa-IR") + " فروشگاه"
+    : (store?.name ?? "");
   const targets = (): Target[] =>
-    (all && allAllowed ? (directory?.stores ?? []) : store ? [store] : []).map(
-      (s) => ({ id: s.id, version: s.version }),
-    );
+    (bulk ? directory!.stores : store ? [store] : []).map((s) => ({
+      id: s.id,
+      version: s.version,
+    }));
   function action(row: Binding, action: string) {
     const review = action === "approve" || action === "reject";
     setDecision({
       row,
+      scopeLabel,
       command: {
         action,
         method_id: row.base.id,
         base_version: row.base.version,
-        all: !review && all && allAllowed,
+        all: !review && bulk,
         stores:
           review && store
             ? [{ id: store.id, version: store.version }]
@@ -165,26 +209,29 @@ export function StoreShippingPage() {
       },
     });
   }
-  async function refresh(next: Directory) {
+  async function refresh(next: StoreShippingDirectory) {
     client.setQueryData(queryKey, next);
     await client.invalidateQueries({ queryKey: ["checkout-prepare"] });
   }
   return (
-    <div className="store-shipping-page">
-      <PageHeader
-        title="روش‌های حمل فروشگاه"
-        description="انتساب عمومی، پیش‌نویس اختصاصی و بررسی پلتفرم؛ فقط نسخهٔ تأییدشده در خرید استفاده می‌شود"
-      />
-      <Button
-        disabled={busy || query.isFetching}
-        onClick={() => void query.refetch()}
-      >
-        دریافت آخرین تنظیمات
-      </Button>
-      {query.isPending && <LinearProgress aria-label="دریافت حمل فروشگاه" />}
+    <section
+      className="store-shipping-panel"
+      aria-label="تنظیم روش‌های حمل فروشگاه"
+    >
+      <div className="toolbar">
+        <Button
+          disabled={busy || query.isFetching}
+          onClick={() => void query.refetch()}
+        >
+          به‌روزرسانی روش‌های حمل
+        </Button>
+      </div>
+      {query.isPending && enabled && (
+        <LinearProgress aria-label="دریافت روش‌های حمل فروشگاه" />
+      )}
       {query.error && (
         <Alert severity="error">
-          دریافت تنظیمات حمل انجام نشد. {query.error.message}{" "}
+          دریافت تنظیمات حمل انجام نشد. {query.error.message}
           <Button onClick={() => void query.refetch()}>تلاش دوباره</Button>
         </Alert>
       )}
@@ -194,142 +241,131 @@ export function StoreShippingPage() {
           فروشگاهی با مجوز مشاهدهٔ حمل در دسترس نیست.
         </Alert>
       )}
+      {!storeID && !!directory?.stores.length && (
+        <div className="admin-shipping-scope">
+          <ChoiceField
+            label="فروشگاه موردنظر"
+            value={selected}
+            clearLabel="انتخاب فروشگاه"
+            options={directory.stores.map((s) => ({ id: s.id, name: s.name }))}
+            disabled={busy || bulk}
+            onChange={(id) => {
+              setSelected(id);
+              setNotice("");
+            }}
+          />
+          {allAllowed && (
+            <ChoiceField
+              label="محدوده اعمال روش حمل"
+              value={bulk ? "all" : "one"}
+              options={[
+                { id: "one", name: "یک فروشگاه" },
+                { id: "all", name: "همه فروشگاه‌ها" },
+              ]}
+              disabled={busy}
+              onChange={(value) => {
+                setAll(value === "all");
+                setNotice("");
+              }}
+            />
+          )}
+        </div>
+      )}
+      {directory && !!directory.stores.length && !store && (
+        <Alert severity={storeID ? "warning" : "info"}>
+          {storeID
+            ? "مجوز مشاهدهٔ حمل این فروشگاه را ندارید یا فروشگاه در دسترس نیست."
+            : "یک فروشگاه یا محدودهٔ همهٔ فروشگاه‌ها را انتخاب کنید."}
+        </Alert>
+      )}
       {store && (
         <>
-          <FilterPanel
-            onSearch={() => {
-              setMethodSearch(draftMethodSearch);
-              setStatus(draftStatus);
-            }}
-          >
-            <section className="catalog-filters">
-              <h2 className="filter-panel-title">فروشگاه و فیلتر روش‌ها</h2>
-              <TextField
-                label="جست‌وجوی فروشگاه"
-                size="small"
-                value={search}
-                disabled={busy}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <TextField
-                label="جست‌وجوی روش حمل"
-                size="small"
-                value={draftMethodSearch}
-                onChange={(e) => setDraftMethodSearch(e.target.value)}
-              />
-              <div
-                role="group"
-                aria-label="انتخاب فروشگاه حمل"
-                className="store-shipping-stores"
-              >
-                <OptionSelect
-                  label={"انتخاب فروشگاه حمل"}
-                  multiple={false}
-                  options={directory?.stores
-                    .filter((s) => s.name.includes(search))
-                    .map((s) => ({
-                      id: String(s.id),
-                      name: String("" + s.name + ""),
-                      selected: store.id === s.id,
-                      disabled: busy,
-                      onSelect: () => setSelected(s.id),
-                    }))}
+          <Alert severity={bulk ? "warning" : "info"}>
+            {bulk
+              ? "تغییرات مشترک برای همهٔ فروشگاه‌ها اعمال می‌شوند؛ بررسی اصلاحات و ظرفیت روز برای هر فروشگاه جداست."
+              : "برای هر روش، تنظیمات عمومی را بپذیرید یا اصلاحات اختصاصی پیشنهاد دهید. اصلاحات پس از تأیید قابل استفاده می‌شوند."}
+          </Alert>
+          {!methodID && (
+            <FilterPanel
+              onSearch={() => {
+                setMethodSearch(draftMethodSearch);
+                setStatus(draftStatus);
+              }}
+            >
+              <div className="admin-shipping-filters">
+                <TextField
+                  label="جست‌وجوی روش حمل"
+                  value={draftMethodSearch}
+                  onChange={(e) => setDraftMethodSearch(e.target.value)}
                 />
-              </div>
-              {allAllowed && (
                 <ChoiceField
-                  label="محدوده تغییر حمل"
-                  value={all ? "all" : "one"}
-                  disabled={busy}
-                  options={[
-                    { id: "one", name: "همین فروشگاه" },
-                    { id: "all", name: "همه فروشگاه‌ها" },
-                  ]}
-                  onChange={(value) => setAll(value === "all")}
-                />
-              )}
-              {all && allAllowed && (
-                <Alert severity="warning">
-                  انتساب، غیرفعال‌سازی و ساخت/ارسال پیش‌نویس روی همهٔ فروشگاه‌ها
-                  اعمال می‌شود. بررسی و تأیید هر نسخه جداگانه انجام می‌شود.
-                </Alert>
-              )}
-              <div
-                role="group"
-                aria-label="وضعیت روش حمل فروشگاه"
-                className="toolbar"
-              >
-                <OptionSelect
-                  label={"وضعیت روش حمل فروشگاه"}
-                  multiple={false}
-                  options={[
-                    ["", "همه"],
-                    ...Object.entries(statuses).filter(
-                      ([key]) => key !== "withdrawn",
-                    ),
-                  ].map(([key, label]) => ({
-                    id: String(key),
-                    name: String("" + label + ""),
-                    selected: draftStatus === key,
-                    disabled: false,
-                    onSelect: () => setDraftStatus(key),
-                  }))}
+                  label="وضعیت روش حمل"
+                  value={draftStatus}
+                  clearLabel="همه وضعیت‌ها"
+                  options={Object.entries(statuses)
+                    .filter(([id]) => id !== "withdrawn")
+                    .map(([id, name]) => ({ id, name }))}
+                  onChange={setDraftStatus}
                 />
               </div>
-            </section>
-          </FilterPanel>
-          <h2>{store.name}</h2>
+            </FilterPanel>
+          )}
           <DataTable
-            key={`${store.id}:${status}:${methodSearch}`}
+            key={store.id + ":" + status + ":" + methodSearch + ":" + bulk}
             searchable={false}
             rows={store.methods
               .filter(
                 (row) =>
-                  (!status || stateOf(row) === status) &&
+                  (!methodID || row.base.id === methodID) &&
+                  (bulk || !status || stateOf(row) === status) &&
                   row.base.name.includes(methodSearch),
               )
               .map((row) => ({ ...row, id: row.base.id }))}
             columns={[
               {
-                title: "روش عمومی",
+                title: "روش حمل",
                 render: (row) => (
                   <>
                     <b>{row.base.name}</b>
                     <small>
-                      {row.base.active ? "فعال" : "عمومی غیرفعال"} · نسخه{" "}
-                      {row.base.version.toLocaleString("fa-IR")}
+                      {row.base.active ? "عمومی فعال" : "روش عمومی غیرفعال"}
                     </small>
                   </>
                 ),
               },
               {
-                title: "وضعیت فروشگاه",
-                render: (row) => (
-                  <>
-                    {statuses[stateOf(row)]}
-                    <small>
-                      {row.mode === "public"
-                        ? "ارث‌بری تنظیم عمومی جاری"
-                        : row.live
-                          ? `نسخهٔ منتشرشده ${row.live.number.toLocaleString("fa-IR")}`
-                          : "هنوز نسخهٔ منتشرشده ندارد"}
-                    </small>
-                    {row.base_changed && (
-                      <small>
-                        روش عمومی تغییر کرده؛ پیش‌نویس باید بازبینی شود.
-                      </small>
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "هزینه و مدت مؤثر",
+                title: "تنظیمات مورد استفاده",
                 render: (row) =>
-                  row.effective ? (
+                  bulk ? (
+                    "اعمال مشترک؛ وضعیت هر فروشگاه مستقل است"
+                  ) : (
+                    <>
+                      {statuses[stateOf(row)]}
+                      <small>
+                        {row.mode === "public"
+                          ? "ارث‌بری از تنظیمات عمومی جاری"
+                          : row.live
+                            ? "تنظیمات اختصاصی تأییدشده فعال است"
+                            : "تا تأیید، تنظیمات اختصاصی قابل استفاده نیست"}
+                      </small>
+                      {row.base_changed && (
+                        <small>
+                          روش عمومی تغییر کرده؛ اصلاحات نیاز به بازبینی دارد.
+                        </small>
+                      )}
+                    </>
+                  ),
+              },
+              {
+                title: "هزینه و زمان حمل",
+                render: (row) =>
+                  bulk ? (
+                    "برای مشاهده، یک فروشگاه انتخاب کنید"
+                  ) : row.effective ? (
                     <>
                       {row.effective.collection_mode === "collect"
-                        ? "پس‌کرایه؛ دریافت توسط حمل‌کننده"
-                        : `${row.effective.fee_toman} تومان پیش‌کرایه`}
+                        ? "پس‌کرایه؛ پرداخت به حمل‌کننده"
+                        : row.effective.fee_toman + " تومان پیش‌کرایه"}
                       <small>
                         {row.effective.min_days} تا {row.effective.max_days} روز{" "}
                         {row.effective.day_basis === "calendar"
@@ -338,76 +374,104 @@ export function StoreShippingPage() {
                       </small>
                     </>
                   ) : (
-                    "قابل ارائه در خرید نیست"
+                    "در خرید ارائه نمی‌شود"
                   ),
               },
               {
                 title: "عملیات",
-                render: (row) => (
-                  <div className="toolbar">
-                    {store.can_write && (
-                      <>
-                        <Button
-                          disabled={busy || !row.base.active}
-                          onClick={() => action(row, "public")}
-                        >
-                          پذیرش عمومی
-                        </Button>
-                        <Button
-                          disabled={busy || !row.enabled}
-                          onClick={() => action(row, "disable")}
-                        >
-                          غیرفعال در فروشگاه
-                        </Button>
-                        <Button
-                          disabled={busy || !row.base.active}
-                          onClick={() =>
-                            setEditing({
-                              row,
-                              targets: targets(),
-                              all: all && allAllowed,
-                            })
-                          }
-                        >
-                          تنظیم اختصاصی
-                        </Button>
-                        {row.draft?.status === "draft" && (
+                render: (row) => {
+                  const submitReady = bulk
+                    ? directory!.stores.every((s) => {
+                        const binding = s.methods.find(
+                          (m) => m.base.id === row.base.id,
+                        );
+                        return (
+                          binding?.draft?.status === "draft" &&
+                          !binding.base_changed
+                        );
+                      })
+                    : row.draft?.status === "draft";
+                  return (
+                    <div className="table-row-actions">
+                      {(bulk || store.can_write) && (
+                        <>
                           <Button
-                            disabled={busy || row.base_changed}
-                            onClick={() => action(row, "submit")}
+                            disabled={
+                              busy ||
+                              !row.base.active ||
+                              (!bulk &&
+                                row.enabled &&
+                                row.mode === "public" &&
+                                !row.draft)
+                            }
+                            onClick={() => action(row, "public")}
                           >
-                            ارسال برای بررسی
+                            استفاده از تنظیمات عمومی
                           </Button>
-                        )}
-                      </>
-                    )}
-                    <Button disabled={busy} onClick={() => action(row, "view")}>
-                      جزئیات و تفاوت‌ها
-                    </Button>
-                    <Button disabled={busy} onClick={() => setCapacity(row)}>
-                      ظرفیت روز
-                    </Button>
-                    {store.can_review && row.draft?.status === "submitted" && (
-                      <>
-                        <Button
-                          disabled={
-                            busy || row.base_changed || !row.base.active
-                          }
-                          onClick={() => action(row, "approve")}
-                        >
-                          تأیید نسخه
-                        </Button>
+                          <Button
+                            disabled={busy || (!bulk && !row.enabled)}
+                            onClick={() => action(row, "disable")}
+                          >
+                            غیرفعال‌کردن
+                          </Button>
+                          <Button
+                            disabled={busy || !row.base.active}
+                            onClick={() =>
+                              setEditing({ row, targets: targets(), all: bulk })
+                            }
+                          >
+                            اصلاح تنظیمات
+                          </Button>
+                          {submitReady && (
+                            <Button
+                              disabled={busy || (!bulk && row.base_changed)}
+                              onClick={() => action(row, "submit")}
+                            >
+                              ارسال اصلاحات برای بررسی
+                            </Button>
+                          )}
+                        </>
+                      )}
+                      {!bulk && (row.draft || row.live) && (
                         <Button
                           disabled={busy}
-                          color="error"
-                          onClick={() => action(row, "reject")}
+                          onClick={() => action(row, "view")}
                         >
-                          رد نسخه
+                          مشاهده اصلاحات
                         </Button>
-                      </>
-                    )}
-                  </div>
-                ),
+                      )}
+                      {!bulk && (
+                        <Button
+                          disabled={busy}
+                          onClick={() => setCapacity(row)}
+                        >
+                          ظرفیت روز
+                        </Button>
+                      )}
+                      {!bulk &&
+                        store.can_review &&
+                        row.draft?.status === "submitted" && (
+                          <>
+                            <Button
+                              disabled={
+                                busy || row.base_changed || !row.base.active
+                              }
+                              onClick={() => action(row, "approve")}
+                            >
+                              بررسی و تأیید
+                            </Button>
+                            <Button
+                              disabled={busy}
+                              color="error"
+                              onClick={() => action(row, "reject")}
+                            >
+                              بررسی و رد
+                            </Button>
+                          </>
+                        )}
+                    </div>
+                  );
+                },
               },
             ]}
           />
@@ -416,17 +480,13 @@ export function StoreShippingPage() {
       {editing && (
         <MethodEditor
           key={editing.row.base.id}
-          initial={initialMethod(editing.row)}
+          initial={initialMethod(editing.row, editing.all)}
           create={false}
           custom
           allowed={store?.can_write ?? false}
           geography={directory?.geography ?? []}
           bulk={editing.targets.length > 1}
-          scopeLabel={
-            editing.all
-              ? `همهٔ ${editing.targets.length.toLocaleString("fa-IR")} فروشگاه`
-              : store?.name
-          }
+          scopeLabel={scopeLabel}
           close={() => setEditing(undefined)}
           save={async (method, key) => {
             const next = await request(
@@ -444,7 +504,7 @@ export function StoreShippingPage() {
             await refresh(next);
             setEditing(undefined);
             setNotice(
-              "پیش‌نویس اختصاصی ذخیره شد؛ برای انتشار، درخواست بررسی بفرستید.",
+              "اصلاحات ذخیره شد؛ برای انتشار آن را برای بررسی ارسال کنید.",
             );
           }}
           reload={async () => {
@@ -454,7 +514,8 @@ export function StoreShippingPage() {
             const fresh = freshStore?.methods.find(
               (row) => row.base.id === editing.row.base.id,
             );
-            if (!fresh || !freshStore) throw Error();
+            if (!fresh || !freshStore)
+              throw Error("تنظیمات دیگر در دسترس نیست");
             setEditing({
               ...editing,
               row: fresh,
@@ -463,7 +524,7 @@ export function StoreShippingPage() {
                 version: s.version,
               })),
             });
-            return initialMethod(fresh);
+            return initialMethod(fresh, editing.all);
           }}
         />
       )}
@@ -472,12 +533,13 @@ export function StoreShippingPage() {
           geography={directory?.geography ?? []}
           row={decision.row}
           command={decision.command}
+          scopeLabel={decision.scopeLabel}
           close={() => setDecision(undefined)}
           save={async (command, key) => {
             const next = await request(command, key);
             await refresh(next);
             setDecision(undefined);
-            setNotice("عملیات حمل فروشگاه ثبت شد.");
+            setNotice("تنظیم روش حمل ثبت شد.");
           }}
         />
       )}
@@ -485,11 +547,11 @@ export function StoreShippingPage() {
         <ShippingCapacityDialog
           storeID={store.id}
           methodID={capacity.base.id}
-          name={`${store.name} / ${capacity.base.name}`}
+          name={store.name + " / " + capacity.base.name}
           close={() => setCapacity(undefined)}
         />
       )}
-    </div>
+    </section>
   );
 }
 
@@ -499,12 +561,14 @@ function ShippingDecision({
   save,
   close,
   geography,
+  scopeLabel,
 }: {
   row: Binding;
   command: Command;
   save: (command: Command, key: string) => Promise<void>;
   close: () => void;
   geography: Province[];
+  scopeLabel: string;
 }) {
   const [reason, setReason] = useState(""),
     [busy, setBusy] = useState(false),
@@ -512,6 +576,16 @@ function ShippingDecision({
   const [key, setKey] = useState(crypto.randomUUID());
   const review = command.action === "approve" || command.action === "reject";
   const view = command.action === "view";
+  const showDiff = view || review;
+  const actionLabel = (
+    {
+      public: "استفاده از تنظیمات عمومی",
+      disable: "غیرفعال‌کردن این روش",
+      submit: "ارسال اصلاحات برای بررسی",
+      approve: "تأیید و انتشار اصلاحات",
+      reject: "رد اصلاحات",
+    } as Record<string, string>
+  )[command.action];
   const fields: [keyof Method, string][] = [
     ["schedule", "برنامهٔ روزها و ساعت"],
     ["collection_mode", "دریافت هزینه"],
@@ -589,75 +663,89 @@ function ShippingDecision({
       : (names[String(value)] ?? String(value));
   };
   return (
-    <Dialog open fullWidth maxWidth="lg" onClose={() => !busy && close()}>
-      <DialogTitle>{row.base.name} — جزئیات و بررسی نسخه</DialogTitle>
+    <Dialog
+      open
+      fullWidth
+      maxWidth={showDiff ? "lg" : "sm"}
+      onClose={() => !busy && close()}
+    >
+      <DialogTitle>
+        {showDiff ? "بررسی اصلاحات " + row.base.name : actionLabel}
+      </DialogTitle>
       <DialogContent>
         {error && <Alert severity="error">{error}</Alert>}
-        {row.base_changed && (
+        <p>
+          <strong>{row.base.name}</strong> · {scopeLabel}
+        </p>
+        {showDiff && row.base_changed && (
           <Alert severity="warning">
-            روش عمومی از زمان ساخت درخواست تغییر کرده است؛ قبل از تأیید،
-            پیش‌نویس را با روش عمومی جاری بازبینی و دوباره ارسال کنید.
+            روش عمومی از زمان ساخت درخواست تغییر کرده است؛ پیش از تأیید باید
+            اصلاحات بازبینی و دوباره ارسال شوند.
           </Alert>
         )}
         {!view && (
-          <Alert severity="info">
-            عملیات «
-            {
-              (
-                {
-                  public: "پذیرش عمومی و کنارگذاشتن درخواست جاری",
-                  disable: "غیرفعال‌سازی در فروشگاه",
-                  submit: "ارسال برای بررسی",
-                  approve: "تأیید و انتشار",
-                  reject: "رد درخواست",
-                } as Record<string, string>
-              )[command.action]
-            }
-            » برای {command.stores.length.toLocaleString("fa-IR")} فروشگاه انجام
-            می‌شود.
+          <Alert severity={command.all ? "warning" : "info"}>
+            {command.action === "public"
+              ? "این روش با تنظیمات عمومی جاری استفاده می‌شود و درخواست اختصاصی جاری کنار گذاشته خواهد شد."
+              : command.action === "disable"
+                ? "این روش فقط در محدودهٔ انتخاب‌شده ارائه نمی‌شود؛ تعریف عمومی روش تغییر نمی‌کند."
+                : command.action === "submit"
+                  ? "اصلاحات برای بررسی ارسال می‌شوند؛ تنظیمات قابل استفادهٔ قبلی تا تأیید حفظ خواهند شد."
+                  : "تصمیم با دلیل ثبت می‌شود؛ سفارش‌های قبلی تغییر نمی‌کنند."}
+            {command.all && (
+              <p>
+                این عملیات برای همهٔ{" "}
+                {command.stores.length.toLocaleString("fa-IR")} فروشگاه اعمال
+                می‌شود.
+              </p>
+            )}
           </Alert>
         )}
-        <div className="store-shipping-diff">
-          <table>
-            <thead>
-              <tr>
-                <th>تنظیم</th>
-                <th>عمومی جاری</th>
-                <th>مبنای درخواست</th>
-                <th>نسخهٔ منتشرشده</th>
-                <th>درخواست جاری</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fields.map(([field, label]) => (
-                <tr key={field}>
-                  <th>{label}</th>
-                  {[
-                    row.base,
-                    row.draft?.base,
-                    row.live?.method,
-                    row.draft?.method,
-                  ].map((method, i) => (
-                    <td key={i}>{method ? display(method[field]) : "—"}</td>
+        {showDiff && (
+          <>
+            <div className="store-shipping-diff">
+              <table>
+                <thead>
+                  <tr>
+                    <th>تنظیم</th>
+                    <th>عمومی جاری</th>
+                    <th>مبنای درخواست</th>
+                    <th>نسخهٔ منتشرشده</th>
+                    <th>درخواست جاری</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map(([field, label]) => (
+                    <tr key={field}>
+                      <th>{label}</th>
+                      {[
+                        row.base,
+                        row.draft?.base,
+                        row.live?.method,
+                        row.draft?.method,
+                      ].map((method, i) => (
+                        <td key={i}>{method ? display(method[field]) : "—"}</td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
+                </tbody>
+              </table>
+            </div>
+            {row.draft?.reason && <p>دلیل تصمیم اخیر: {row.draft.reason}</p>}
+            <details>
+              <summary>
+                تاریخچه نسخه‌ها ({row.history.length.toLocaleString("fa-IR")})
+              </summary>
+              {row.history.map((r, i) => (
+                <p key={i}>
+                  نسخه {r.number.toLocaleString("fa-IR")} ·{" "}
+                  {statuses[r.status] ?? r.status} ·{" "}
+                  {new Date(r.at).toLocaleString("fa-IR")} · {r.reason}
+                </p>
               ))}
-            </tbody>
-          </table>
-        </div>
-        {row.draft?.reason && <p>دلیل تصمیم اخیر: {row.draft.reason}</p>}
-        <details>
-          <summary>
-            تاریخچه نسخه‌ها ({row.history.length.toLocaleString("fa-IR")})
-          </summary>
-          {row.history.map((r, i) => (
-            <p key={i}>
-              نسخه {r.number.toLocaleString("fa-IR")} ·{" "}
-              {statuses[r.status] ?? r.status} ·{" "}
-              {new Date(r.at).toLocaleString("fa-IR")} · {r.reason}
-            </p>
-          ))}
-        </details>
+            </details>
+          </>
+        )}
         {review && (
           <TextField
             fullWidth
@@ -696,7 +784,7 @@ function ShippingDecision({
                 .finally(() => setBusy(false));
             }}
           >
-            {busy ? "در حال ثبت…" : "تأیید عملیات"}
+            {busy ? "در حال ثبت…" : actionLabel}
           </Button>
         )}
       </DialogActions>

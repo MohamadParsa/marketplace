@@ -23,6 +23,7 @@ import { ApiError } from "../../shared/api";
 import { DataTable, PageHeader } from "../../shared/components";
 import { CategoryTree, categoryPath } from "../management/category-tree";
 import { WeeklyScheduleEditor, scheduleError } from "./weekly-schedule-editor";
+import { StoreShippingPanel } from "./store-shipping-page";
 import type {
   Shipping,
   Province,
@@ -86,7 +87,7 @@ const blank = (): Method => ({
 });
 
 export function ShippingMethodsPage() {
-  const { authToken, state } = useWorkspace();
+  const { authToken, state, can } = useWorkspace();
   const client = useQueryClient();
   const [filter, setFilter] = useState<Filters>(defaults),
     [page, setPage] = useState(0),
@@ -94,6 +95,8 @@ export function ShippingMethodsPage() {
     [editing, setEditing] = useState<{ method: Method; create: boolean }>(),
     [notice, setNotice] = useState("");
   const [draftFilter, setDraftFilter] = useState<Filters>(defaults);
+  const [storeMethod, setStoreMethod] = useState<Method>();
+  const [storeBusy, setStoreBusy] = useState(false);
   const root =
     (import.meta.env.VITE_API_BASE_URL ?? "") + "/backoffice/shipping/methods";
   async function request<T>(
@@ -354,11 +357,21 @@ export function ShippingMethodsPage() {
               {
                 title: "عملیات",
                 render: (row) => (
-                  <Button
-                    onClick={() => setEditing({ method: row, create: false })}
-                  >
-                    {directory.can_write ? "ویرایش" : "مشاهده"}
-                  </Button>
+                  <>
+                    <Button
+                      onClick={() => setEditing({ method: row, create: false })}
+                    >
+                      {directory.can_write ? "ویرایش" : "مشاهده"}
+                    </Button>
+                    {can("stores.shipping.read", "management") && (
+                      <Button
+                        onClick={() => setStoreMethod(row)}
+                        aria-label={"تنظیم فروشگاه‌ها برای " + row.name}
+                      >
+                        تنظیم فروشگاه‌ها
+                      </Button>
+                    )}
+                  </>
                 ),
               },
             ]}
@@ -367,6 +380,32 @@ export function ShippingMethodsPage() {
             <Alert severity="info">روشی با این فیلترها پیدا نشد.</Alert>
           )}
         </>
+      )}
+      {storeMethod && (
+        <Dialog
+          open
+          fullWidth
+          maxWidth="xl"
+          onClose={() => !storeBusy && setStoreMethod(undefined)}
+        >
+          <DialogTitle>{storeMethod.name} · تنظیم فروشگاه‌ها</DialogTitle>
+          <DialogContent>
+            <StoreShippingPanel
+              key={storeMethod.id}
+              methodID={storeMethod.id}
+              allowBulk
+              onBusyChange={setStoreBusy}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              disabled={storeBusy}
+              onClick={() => setStoreMethod(undefined)}
+            >
+              بستن
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
       {editing && (
         <MethodEditor
@@ -552,7 +591,9 @@ export function MethodEditor({
                   setFields({});
                 })
                 .catch(() =>
-                  setError("دریافت نسخهٔ تازه انجام نشد؛ پیش‌نویس حفظ شده است."),
+                  setError(
+                    "دریافت نسخهٔ تازه انجام نشد؛ پیش‌نویس حفظ شده است.",
+                  ),
                 )
                 .finally(() => setBusy(false));
             }}
