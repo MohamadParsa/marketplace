@@ -1,5 +1,7 @@
 # تطبیق کامیت سورس و مستندات چریوا
 
+آخرین بازبینی بک‌آفیس #124 تا #130: سورس [2ac2da5](https://github.com/MohamadParsa/marketplace/commit/2ac2da55a47d5cd444d251995734412c85f83ed7) روی شاخهٔ PR #106 پوش شد؛ [گزارش، تسک‌ها و تصاویر](backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md). مدارک این تحویل trailer `Source-Commit: 2ac2da55a47d5cd444d251995734412c85f83ed7` دارند.۵۰۰تست Go/۴skip، vet، TypeScript/build و مرورگر مستقل موفق‌اند؛ نسخهٔ لوکال با همین API و build تازه هماهنگ است. main و استقرار عمومی جدا هستند.
+
 مسیر کاری و سورس محلی: **D:\Cherriva**. سورس Go/React در `apps` و `packages` است؛ تمام dependencyها با lockfile ثبت‌اند و `node_modules` و خروجی build سورس محسوب نمی‌شوند.
 
 سورس کامل با [PR #38](https://github.com/MohamadParsa/marketplace/pull/38) در `main` ادغام شد: [کامیت 3163d17](https://github.com/MohamadParsa/marketplace/commit/3163d1702f2396d8d1818d12c7bf92bcab9a35bf). درخت کد اجرایی این کامیت با سورس تأییدشده `2cab27a` یکسان است. همگام‌سازی سورس، استقرار Liara ایجاد نکرد. [راهنمای اجرای محلی](../local-development.md).

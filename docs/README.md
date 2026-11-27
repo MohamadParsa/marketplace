@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[هفت اصلاح بازبینی بک‌آفیس #124 تا #130؛ تقویم، زون خصوصیات، منو و محصول — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md)
+
 [یکپارچه‌سازی حمل در تب فروشگاه، محدودهٔ یک/همه و تنظیمات فروشنده — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md)
 
 [تب‌های تنظیمات خرید/حمل، انتخاب روشن تقویم فروشگاه و بررسی صفحهٔ حمل — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/settings-preparation-review-2026-11-27.md)

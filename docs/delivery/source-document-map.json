@@ -540,6 +540,17 @@
   ],
   "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
   "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+  "backoffice_review_20261127": {
+    "issues": [124, 125, 126, 127, 128, 129, 130],
+    "source_commit": "2ac2da55a47d5cd444d251995734412c85f83ed7",
+    "source_ci_run": 46047411179,
+    "source_ci_successful_jobs": 5,
+    "verification": "docs/delivery/backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md",
+    "source_pushed": true,
+    "pull_request": 106,
+    "merged": false,
+    "deployed": false
+  },
   "store_shipping_ui_integration": {
     "source_commit": "b528fe5a5f4a489a7a00394a775518bfff0113c8",
     "verification": "docs/delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md",
