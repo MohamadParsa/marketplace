@@ -115,4 +115,13 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 			t.Fatal("delivery released consumed capacity", r)
 		}
 	}
+	page := readJSON[backoffice.OrderHistoryPage](t, commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/"+p.ID+"/history?limit=2", nil, "", 200))
+	if len(page.Events) != 2 || page.NextBefore == 0 || page.Events[0].ID == "" || page.Events[0].Reason != "" {
+		t.Fatal("history page after restart", page)
+	}
+	next := readJSON[backoffice.OrderHistoryPage](t, commerceHTTP(t, h, buyer, "", "GET", fmt.Sprintf("/storefront/account/orders/%s/history?limit=2&before=%d", p.ID, page.NextBefore), nil, "", 200))
+	if len(next.Events) != 2 || next.Events[0].ID == page.Events[0].ID {
+		t.Fatal("history cursor", next)
+	}
+	commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/"+p.ID+"/history?limit=1000", nil, "", 400)
 }

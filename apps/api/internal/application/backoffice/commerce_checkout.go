@@ -204,8 +204,8 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	v := PurchaseView{Number: strconv.FormatInt(p.Number, 10), OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
 	v.FulfillmentStatus = p.FulfillmentState
 	v.PaymentAttempts, v.PaymentStage = paymentAttemptViews(c, p)
-	for _, e := range p.Events {
-		v.Events = append(v.Events, OrderEventView{e.Action, e.FlowStatus, e.OrderStatus, e.PaymentStatus, e.ActorKind, e.At})
+	for i, e := range p.Events {
+		v.Events = append(v.Events, publicOrderEvent(p, e, i))
 	}
 	balance, held := walletAmounts(c, p.UserID)
 	v.WalletBalanceToman = commerce.Toman(balance)
@@ -744,7 +744,11 @@ func (s *Service) ReadPurchases(ctx context.Context, a identity.User, id string)
 	out := []PurchaseView{}
 	for _, p := range c.Purchases {
 		if p.UserID == a.ID && (id == "" || p.ID == id || strconv.FormatInt(p.Number, 10) == id) {
-			out = append(out, purchaseView(c, p))
+			view := purchaseView(c, p)
+			if p.ConfirmedAt != nil {
+				view.Reason = ""
+			}
+			out = append(out, view)
 		}
 	}
 	if id != "" && len(out) == 0 {

@@ -202,7 +202,13 @@
         "ORDERREV-Q04",
         "ORDERREV-Q08",
         "ORDERREV-Q09"
-      ]
+      ],
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/138#issuecomment-7228921949",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46073403149",
+        "source_commit": "24afbb89da6cd4ab0fdd0f0db06e4501ab62b9d0"
+      }
     },
     {
       "id": "CV-ORDER-REV-09",
@@ -211,7 +217,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/139",
       "title": "تاریخچه چرخه سفارش و نمایش وضعیت هر مرسوله به مشتری",
       "file": "tasks/order-history-customer-status.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",

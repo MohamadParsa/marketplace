@@ -6,7 +6,7 @@ import { useWorkspace } from "../../shared/workspace";
 import { ChoiceField } from "../../shared/option-select";
 import { dateTime } from "../../shared/format";
 import { label } from "../../../../../packages/commerce-client/types";
-import { PurchaseRequests } from "./order-requests-panel";
+import { PurchaseRequests, PurchaseHistory } from "./order-requests-panel";
 
 const actions: Record<string,string> = {
   start: "شروع پردازش سفارش", supply: "تأیید تأمین تمام اقلام", pack: "شروع آماده‌سازی",
@@ -76,6 +76,7 @@ export function OrderOperationsPanel({ id, onChanged }: { id: string; onChanged?
       {error && <Alert severity="error">{error}</Alert>}
       {!!data.events.length && <details><summary>تاریخچه عملیات مرسوله</summary>{data.events.map((event,index) => <p key={event.id ?? index}>{dateTime(event.at)} · {label(event.action)} · {label(event.from)} ← {label(event.to)}{event.reason ? " · " + event.reason : ""}</p>)}</details>}
       {surface === "seller" && <PurchaseRequests id={data.purchase_id}/>}
+      {surface === "seller" && <PurchaseHistory id={data.purchase_id} version={data.version}/>}
     </Stack>}
   </section>;
 }

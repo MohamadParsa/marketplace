@@ -211,6 +211,7 @@ export interface Quote {
   currency: string;
 }
 export interface OrderEvent {
+  id: string; order_id?:string; request_id?:string; from?:string; to?:string;
   action: string;
   flow_status: string;
   order_status: string;
@@ -366,6 +367,17 @@ export const statuses: Record<string, string> = {
   "fulfillment.deliver": "تأیید تحویل",
   "fulfillment.configure-dispatch": "تعیین شناسه ارسال مرسوله",
   "fulfillment.correct": "اصلاح مشخصات با دلیل",
+  "fulfillment.items-cancelled": "لغو اقلام تأیید شد",
+  "fulfillment.stock-returned": "کالای سالم به موجودی برگشت",
+  "request.created": "ثبت درخواست کنسلی یا مرجوعی",
+  "request.approve": "تأیید درخواست",
+  "request.reject": "رد درخواست",
+  "request.receive": "دریافت فیزیکی کالای برگشتی",
+  "request.inspect": "ثبت بازرسی کالای برگشتی",
+  "refund.wallet": "بازگشت وجه به کیف پول",
+  "refund.bank": "رزرو وجه برای انتقال دستی",
+  "refund.bank-completed": "ثبت نتیجه انتقال بانکی",
+  "refund.bank-rejected": "پایان مسیر بانکی؛ وجه در کیف پول",
   requested: "درخواست پرداخت",
   "awaiting-result": "در انتظار نتیجه",
   failed: "ناموفق",

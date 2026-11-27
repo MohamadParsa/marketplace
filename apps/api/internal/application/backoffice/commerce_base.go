@@ -271,6 +271,12 @@ func commerceAudit(w *Workspace, id string, a identity.User, action, target, rea
 }
 
 type OrderEventView struct {
+	Version       int       `json:"version,omitempty"`
+	ID            string    `json:"id"`
+	OrderID       string    `json:"order_id,omitempty"`
+	RequestID     string    `json:"request_id,omitempty"`
+	From          string    `json:"from,omitempty"`
+	To            string    `json:"to,omitempty"`
 	Action        string    `json:"action"`
 	FlowStatus    string    `json:"flow_status"`
 	OrderStatus   string    `json:"order_status"`
@@ -307,5 +313,6 @@ func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, n
 			kind = "seller"
 		}
 	}
-	p.Events = append(p.Events, commerce.OrderEvent{Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
+	id := hashToken(p.ID + ":" + strconv.Itoa(len(p.Events)) + ":" + action + ":" + now.Format(time.RFC3339Nano))
+	p.Events = append(p.Events, commerce.OrderEvent{Version: p.Version, ID: id, Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
 }

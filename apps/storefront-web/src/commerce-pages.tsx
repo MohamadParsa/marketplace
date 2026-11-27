@@ -1,4 +1,5 @@
 import { CustomerRequests } from "./order-requests";
+import { CustomerOrderHistory, CustomerShipments } from "./order-shipments";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
@@ -1559,7 +1560,6 @@ export function PurchaseStatus({ purchase: p }: { purchase: Purchase }) {
                     ? "رزرو"
                     : "آزادشده"}
               </p>
-              <small dir="ltr">{c.lot_id}</small>
             </article>
           ))}
         </section>
@@ -1576,22 +1576,8 @@ export function PurchaseStatus({ purchase: p }: { purchase: Purchase }) {
         </div>
       </div>
       <p className="buy-note">پیگیری خرید: {label(p.status)}</p>
+      {p.fulfillment_status&&<p className="buy-note">عملیات مرسوله‌ها: {label(p.fulfillment_status)}</p>}
       {p.reason && <p className="buy-alert">{p.reason}</p>}
-      <details className="buy-history">
-        <summary>تاریخچه سفارش و پرداخت</summary>
-        <ol>
-          {p.events.map((e, i) => (
-            <li key={i}>
-              <b>{label(e.action)}</b>
-              <time>{new Date(e.at).toLocaleString("fa-IR")}</time>
-              <small>
-                سفارش: {label(e.order_status)} · پرداخت:{" "}
-                {label(e.payment_status)}
-              </small>
-            </li>
-          ))}
-        </ol>
-      </details>
     </>
   );
 }
@@ -1669,6 +1655,8 @@ function OrderContent({ id }: { id?: string }) {
                   <div className="buy-layout">
                     <section>
                       <OrderSummary quote={p.quote} />
+                      <CustomerShipments id={p.id} orders={p.order_ids} version={p.version} onChanged={load}/>
+                      <CustomerOrderHistory id={p.id} version={p.version}/>
                       <h3>گیرنده و آدرس</h3>
                       <p>
                         {p.quote.address.recipient} · {p.quote.address.phone}

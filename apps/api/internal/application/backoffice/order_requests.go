@@ -541,11 +541,11 @@ func (s *Service) ReviewOrderRequest(ctx context.Context, a identity.User, in Or
 		default:
 			return nil, ErrInvalid
 		}
+		p.Version++
 		if e := applyRequestStock(w, p, r, a, op, now); e != nil {
 			return nil, e
 		}
 		r.Version++
-		p.Version++
 		p.CancellationRequested = false
 		for _, other := range c.OrderRequests {
 			if other.PurchaseID == p.ID && other.Status == "requested" {

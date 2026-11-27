@@ -234,7 +234,7 @@ func orderOperationsView(w Workspace, a identity.User, o orders.Order, p commerc
 	for _, e := range p.Events {
 		if e.OrderID == o.ID {
 			reason := e.Reason
-			if a.Surface == identity.SurfaceCustomer {
+			if a.Surface == identity.SurfaceCustomer || a.Surface == identity.SurfaceSeller && e.RequestID != "" {
 				reason = ""
 			}
 			v.Events = append(v.Events, OrderOperationEvent{ID: e.ID, Action: e.Action, From: e.FromStatus, To: e.ToStatus, ActorKind: e.ActorKind, At: e.At, Reason: reason})

@@ -4,6 +4,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -35,6 +36,39 @@ func (h *CommerceHandler) OrderRequests(w http.ResponseWriter, r *http.Request) 
 	}
 	in.PurchaseID = r.PathValue("id")
 	result, err := h.service.CreateOrderRequest(r.Context(), a, in, r.Header.Get("Idempotency-Key"))
+	commerceResult(w, r, result, err)
+}
+
+func (h *CommerceHandler) OrderHistory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	surface := identity.SurfaceBackoffice
+	if strings.HasPrefix(r.URL.Path, "/seller/") {
+		surface = identity.SurfaceSeller
+	}
+	if strings.HasPrefix(r.URL.Path, "/storefront/") {
+		surface = identity.SurfaceCustomer
+	}
+	a, ok := h.actor(w, r, surface)
+	if !ok {
+		return
+	}
+	before, limit := 0, 20
+	var e error
+	if raw := r.URL.Query().Get("before"); raw != "" {
+		before, e = strconv.Atoi(raw)
+		if e != nil {
+			commerceResult(w, r, nil, backoffice.ErrInvalid)
+			return
+		}
+	}
+	if raw := r.URL.Query().Get("limit"); raw != "" {
+		limit, e = strconv.Atoi(raw)
+		if e != nil {
+			commerceResult(w, r, nil, backoffice.ErrInvalid)
+			return
+		}
+	}
+	result, err := h.service.ReadOrderHistory(r.Context(), a, r.PathValue("id"), before, limit)
 	commerceResult(w, r, result, err)
 }
 

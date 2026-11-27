@@ -1,5 +1,5 @@
 import { EditorTabs } from "../../shared/editor-tabs";
-import { PurchaseRequests } from "../operations/order-requests-panel";
+import { PurchaseRequests, PurchaseHistory } from "../operations/order-requests-panel";
 import { OrderOperationsPanel } from "../operations/order-operations-panel";
 import { displayRecord } from "../../shared/format";
 import { MultiChoiceField } from "../../shared/option-select";
@@ -459,6 +459,7 @@ export function CommercePage({
             />
           )}{" "}
           {selectedPurchase && <PurchaseRequests id={selectedPurchase.id} onChanged={load}/>}
+          {selectedPurchase && <PurchaseHistory id={selectedPurchase.id} version={selectedPurchase.version}/>}
           {selectedPurchase && (
             <PurchaseReview
               key={selectedPurchase.id + ":" + selectedPurchase.version}
