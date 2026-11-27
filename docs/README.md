@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[تب‌های تنظیمات خرید/حمل، انتخاب روشن تقویم فروشگاه و بررسی صفحهٔ حمل — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/settings-preparation-review-2026-11-27.md)
+
 [بازبینی روش فروش، کاربران و فروشگاه‌ها؛ منو، تب‌ها و عضویت جست‌وجویی — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/users-stores-sales-review-2026-11-27.md)
 
 [فهرست کامل استان‌ها و شهرهای ایران؛ منبع، ورود محلی و آزمون‌ها — ۲۰۲۶-۱۱-۲۷](delivery/iran-geography-import-2026-11-27.md)
