@@ -18,6 +18,7 @@ const productQAPageSize = 20
 
 type ProductQARepository interface {
 	ListProductQA(context.Context, string, int64, int, bool) (Workspace, []catalog.ProductQuestion, error)
+	ListAdminProductQA(context.Context, string, catalog.QAStatus, int64, int) (Workspace, []AdminProductQuestion, error)
 	// The callback reads current catalog/identity state and Q&A under the same
 	// write lock as catalog settings. A nil question means an idempotent replay.
 	UpdateProductQA(context.Context, string, string, string, string, string, func(Workspace, string, *catalog.ProductQuestion) (*catalog.ProductQuestion, error)) error
@@ -47,6 +48,47 @@ type PublicProductQAPage struct {
 type AdminProductQAPage struct {
 	ProductQAPage[catalog.ProductQuestion]
 	CanReply bool `json:"can_reply"`
+}
+
+type AdminProductQuestion struct {
+	catalog.ProductQuestion
+	ProductID   string `json:"product_id"`
+	ProductName string `json:"product_name"`
+	CanReply    bool   `json:"can_reply"`
+}
+
+func (s *Service) ListAdminProductQuestions(ctx context.Context, actor identity.User, product string, status catalog.QAStatus, after int64) (ProductQAPage[AdminProductQuestion], error) {
+	result := ProductQAPage[AdminProductQuestion]{Questions: []AdminProductQuestion{}}
+	if !qaAdmin(actor) {
+		return result, ErrForbidden
+	}
+	if status != "" && status != catalog.QAPending && status != catalog.QAApproved && status != catalog.QARejected {
+		return result, ErrInvalid
+	}
+	if len(product) > 128 || after < 0 {
+		return result, ErrInvalid
+	}
+	store := s.qaRepository()
+	if store == nil {
+		return result, ErrNotFound
+	}
+	w, rows, err := store.ListAdminProductQA(ctx, product, status, after, productQAPageSize+1)
+	if err != nil {
+		return result, err
+	}
+	if len(rows) > productQAPageSize {
+		result.NextCursor = rows[productQAPageSize-1].Cursor
+		rows = rows[:productQAPageSize]
+	}
+	for _, row := range rows {
+		if p, err := findProduct(&w, row.ProductID); err == nil {
+			row.ProductName = p.Name
+			_, visibilityErr := publicProduct(w, row.ProductID)
+			row.CanReply = qaAccess(p.Content, visibilityErr == nil).TeamReplies
+		}
+		result.Questions = append(result.Questions, row)
+	}
+	return result, nil
 }
 
 func (s *Service) qaRepository() ProductQARepository {

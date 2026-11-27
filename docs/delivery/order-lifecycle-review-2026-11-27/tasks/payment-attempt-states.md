@@ -7,12 +7,12 @@ updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, ADR-007, FEAT-BO-ORDER-REV-003]
 approved_by: []
 implementation_status: todo
-execution_authorized: false
+execution_authorized: true
 ---
 
 # CV-ORDER-REV-05 — مسیر پرداخت و نتیجه
 
-Issue: [#135](https://github.com/MohamadParsa/marketplace/issues/135) · مسئول @eliassarband · فقط برنامه‌ریزی؛ اجرا انتخاب نشده است.
+Issue: [#135](https://github.com/MohamadParsa/marketplace/issues/135) · مسئول @eliassarband · اجرای ترتیبی با دستور صریح مالک در ادامه همین گفتگو انتخاب شد؛ بستن پس از تست، مدارک و push.
 
 ## مسئله و دامنه
 

@@ -90,7 +90,7 @@ type QAAction =
   | Omit<Extract<ProductQAMutation, { action: "reply" }>, "version">
   | Omit<Extract<ProductQAMutation, { action: "moderate" }>, "version">;
 
-function QuestionEditor({
+export function QuestionEditor({
   productId,
   question,
   canReply,

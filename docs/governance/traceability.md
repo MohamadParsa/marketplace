@@ -2,7 +2,7 @@
 
 ## الحاق بررسی چرخه سفارش — ۲۰۲۶-۱۱-۲۷
 
-[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ همه شرح‌های تازه todo و بدون مجوز اجرا هستند. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌ها](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند.
+[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ پس از برنامه اولیه، مالک اجرای ترتیبی #131 تا #140 را خواست. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌ها](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند. [شواهد #131](../delivery/order-lifecycle-review-2026-11-27/issue-131-verification.md) از سایر کارهای هنوز انجام‌نشده جداست.
 
 | نیاز مالک | شرح قابل ردیابی |
 | --- | --- |

@@ -164,6 +164,13 @@ export const api = {
       { method: "POST", body, headers: { Authorization: `Bearer ${token}` } },
     );
   },
+  productQuestions: (token: string, product: string, status: string, after: number) => {
+    const query = new URLSearchParams({ product, status });
+    if (after) query.set("after", String(after));
+    return request<ProductQAPage>(`/backoffice/product-questions?${query}`, {
+      cache: "no-store", headers: { Authorization: `Bearer ${token}` },
+    });
+  },
   productQA: (token: string, id: string, after: number) =>
     request<ProductQAPage>(
       `/backoffice/products/${encodeURIComponent(id)}/questions${after ? `?after=${after}` : ""}`,

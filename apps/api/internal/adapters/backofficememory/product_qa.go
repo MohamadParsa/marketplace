@@ -10,6 +10,44 @@ import (
 
 type qaReceiptKey struct{ actor, key string }
 
+func (r *Repository) ListAdminProductQA(ctx context.Context, product string, status catalog.QAStatus, after int64, limit int) (backoffice.Workspace, []backoffice.AdminProductQuestion, error) {
+	if err := ctx.Err(); err != nil {
+		return backoffice.Workspace{}, nil, err
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	w, err := clone(r.state)
+	if err != nil {
+		return w, nil, err
+	}
+	rows := []backoffice.AdminProductQuestion{}
+	for id, questions := range r.qaQuestions {
+		if product != "" && product != id {
+			continue
+		}
+		for _, q := range questions {
+			if status != "" && q.Status != status || after > 0 && q.Cursor >= after {
+				continue
+			}
+			q.Answers = slices.Clone(q.Answers)
+			rows = append(rows, backoffice.AdminProductQuestion{ProductQuestion: q, ProductID: id})
+		}
+	}
+	slices.SortFunc(rows, func(a, b backoffice.AdminProductQuestion) int {
+		if a.Cursor > b.Cursor {
+			return -1
+		}
+		if a.Cursor < b.Cursor {
+			return 1
+		}
+		return 0
+	})
+	if len(rows) > limit {
+		rows = rows[:limit]
+	}
+	return w, rows, nil
+}
+
 func (r *Repository) ListProductQA(ctx context.Context, product string, after int64, limit int, public bool) (backoffice.Workspace, []catalog.ProductQuestion, error) {
 	if err := ctx.Err(); err != nil {
 		return backoffice.Workspace{}, nil, err

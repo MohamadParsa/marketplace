@@ -463,6 +463,9 @@ interface ProductQAContent {
 }
 
 export interface ProductQAQuestion extends ProductQAContent {
+  product_id?: string;
+  product_name?: string;
+  can_reply?: boolean;
   answers: ProductQAContent[];
   version: number;
 }

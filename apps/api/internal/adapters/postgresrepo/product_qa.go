@@ -9,6 +9,46 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+func (r *Repository) ListAdminProductQA(ctx context.Context, product string, status catalog.QAStatus, after int64, limit int) (backoffice.Workspace, []backoffice.AdminProductQuestion, error) {
+	var workspace backoffice.Workspace
+	questions := []backoffice.AdminProductQuestion{}
+	err := pgx.BeginTxFunc(ctx, r.db, pgx.TxOptions{IsoLevel: pgx.RepeatableRead, AccessMode: pgx.ReadOnly}, func(tx pgx.Tx) error {
+		var err error
+		workspace, err = productQACatalog(ctx, tx, "")
+		if err != nil {
+			return err
+		}
+		rows, err := tx.Query(ctx, `SELECT q.product_id,q.payload,q.cursor,p.payload->'products'
+		 FROM product_qa_questions q LEFT JOIN catalog_public_products p ON p.id=q.product_id
+		 WHERE ($1='' OR q.product_id=$1) AND ($2='' OR q.status=$2)
+		 AND ($3=0 OR q.cursor<$3) ORDER BY q.cursor DESC LIMIT $4`, product, string(status), after, limit)
+		if err != nil {
+			return err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var q backoffice.AdminProductQuestion
+			var data, products []byte
+			if err := rows.Scan(&q.ProductID, &data, &q.Cursor, &products); err != nil {
+				return err
+			}
+			if err := json.Unmarshal(data, &q.ProductQuestion); err != nil {
+				return err
+			}
+			if len(products) > 0 {
+				var items []catalog.Product
+				if err := json.Unmarshal(products, &items); err != nil {
+					return err
+				}
+				workspace.Products = append(workspace.Products, items...)
+			}
+			questions = append(questions, q)
+		}
+		return rows.Err()
+	})
+	return workspace, questions, err
+}
+
 func (r *Repository) ListProductQA(ctx context.Context, product string, after int64, limit int, public bool) (backoffice.Workspace, []catalog.ProductQuestion, error) {
 	var workspace backoffice.Workspace
 	questions := []catalog.ProductQuestion{}

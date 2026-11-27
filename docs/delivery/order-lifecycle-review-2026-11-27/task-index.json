@@ -3,8 +3,8 @@
   "updated": "2026-11-27",
   "document_status": "in-review",
   "owner": "eliassarband",
-  "implementation_status": "todo",
-  "execution_authorized": false,
+  "implementation_status": "in-progress",
+  "execution_authorized": true,
   "source_commit": "2ac2da55a47d5cd444d251995734412c85f83ed7",
   "parent_issue": 95,
   "existing_audit_issue": 70,
@@ -16,8 +16,8 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/131",
       "title": "پرسش‌های همه محصولات با فیلتر بررسی؛ بدون انتخاب اولیه محصول",
       "file": "tasks/global-product-questions.md",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": []
     },
@@ -29,7 +29,7 @@
       "title": "مودال تخفیف جمع‌وجور با دو کنترل در هر سطر",
       "file": "tasks/compact-coupon-modal.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": []
     },
@@ -41,7 +41,7 @@
       "title": "قرارداد سه چرخه سفارش و نگاشت داده گذشته",
       "file": "tasks/order-state-contract.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": [
         "ORDERREV-Q01",
@@ -64,7 +64,7 @@
       "title": "مرز ثبت سفارش و مرسوله پیش از درخواست پرداخت",
       "file": "tasks/place-order-boundary.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "#70"
@@ -83,7 +83,7 @@
       "title": "تلاش‌های پرداخت و تفکیک شارژ کیف پول از پرداخت سفارش",
       "file": "tasks/payment-attempt-states.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-04"
@@ -102,7 +102,7 @@
       "title": "شروع پردازش، تأمین، ارسال با کد روش حمل و تحویل",
       "file": "tasks/order-fulfillment.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-04",
@@ -123,7 +123,7 @@
       "title": "پرونده کنسلی و مرجوعی روی سفارش، شامل پس از تکمیل",
       "file": "tasks/order-cancellation-returns.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03"
       ],
@@ -142,7 +142,7 @@
       "title": "استرداد مرتبط با سفارش به کیف پول یا انتقال دستی",
       "file": "tasks/order-linked-refunds.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-07",
@@ -162,7 +162,7 @@
       "title": "تاریخچه چرخه سفارش و نمایش وضعیت هر مرسوله به مشتری",
       "file": "tasks/order-history-customer-status.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-04",
@@ -185,7 +185,7 @@
       "title": "یکپارچه‌سازی منوی سفارش‌ها و جزئیات تب‌دار",
       "file": "tasks/unified-order-workspace.md",
       "implementation_status": "todo",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",
         "CV-ORDER-REV-04",
@@ -200,5 +200,17 @@
         "ORDERREV-Q04"
       ]
     }
+  ],
+  "execution_order": [
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140
   ]
 }

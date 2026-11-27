@@ -83,6 +83,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /seller/checkout/orders/{id}", h.Seller)
 	}
 	if h := cfg.ProductQA; h != nil {
+		mux.HandleFunc("GET /backoffice/product-questions", h.AdminList)
 		mux.HandleFunc("GET /storefront/products/{id}/questions", publicCatalogHandler("p", h.Public))
 		mux.HandleFunc("POST /storefront/products/{id}/questions", publicCatalogHandler("p", h.Ask))
 		mux.HandleFunc("GET /backoffice/products/{id}/questions", h.Admin)

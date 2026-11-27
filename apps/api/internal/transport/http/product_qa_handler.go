@@ -7,6 +7,7 @@ import (
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
 
@@ -82,6 +83,23 @@ func (h *ProductQAHandler) actor(w http.ResponseWriter, r *http.Request, surface
 		return identity.User{}, false
 	}
 	return session.User, true
+}
+
+func (h *ProductQAHandler) AdminList(w http.ResponseWriter, r *http.Request) {
+	actor, ok := h.actor(w, r, identity.SurfaceBackoffice)
+	if !ok {
+		return
+	}
+	after, ok := qaCursor(w, r)
+	if !ok {
+		return
+	}
+	page, err := h.service.ListAdminProductQuestions(r.Context(), actor, r.URL.Query().Get("product"), catalog.QAStatus(r.URL.Query().Get("status")), after)
+	if err != nil {
+		qaError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, page)
 }
 
 func qaCursor(w http.ResponseWriter, r *http.Request) (int64, bool) {

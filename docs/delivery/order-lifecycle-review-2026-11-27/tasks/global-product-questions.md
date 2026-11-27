@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DEL-ORDER-LIFECYCLE-REVIEW-20261127]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
 # CV-ORDER-REV-01 — پرسش‌های همه محصولات
 
-Issue: [#131](https://github.com/MohamadParsa/marketplace/issues/131) · مسئول @eliassarband · فقط برنامه‌ریزی؛ اجرا انتخاب نشده است.
+Issue: [#131](https://github.com/MohamadParsa/marketplace/issues/131) · مسئول @eliassarband · اجرای ترتیبی با دستور صریح مالک در ادامه همین گفتگو انتخاب شد؛ بستن پس از تست، مدارک و push.
 
 ## مسئله و نتیجه
 
