@@ -82,3 +82,6 @@ execution_authorized: true
 - #132: [چیدمان دو ستونه تخفیف، اعتبارسنجی و تصاویر](issue-132-verification.md) با کامیت `ace1d0d` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469) بسته شد.
 
 - #133: [قرارداد اجرایی](../../architecture/contracts/order-lifecycle.md)، [ممیزی مرز تراکنش](place-order-audit.md) و [شواهد بررسی سند](issue-133-verification.md) آماده و تکمیل فنی شدند؛ #134 تا #140 هنوز اجراشده محسوب نمی‌شوند.
+
+- #133 با کامیت `b73e752` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651) بسته شد.
+- #134: [ثبت پیش از تأمین وجه، وضعیت مستقل و replay پس از restart](issue-134-verification.md) تکمیل فنی و آماده CI/بستن است.

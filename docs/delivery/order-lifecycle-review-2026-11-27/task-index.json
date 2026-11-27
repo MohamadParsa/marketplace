@@ -69,7 +69,13 @@
         "ORDERREV-Q08",
         "ORDERREV-Q09",
         "ORDERREV-Q10"
-      ]
+      ],
+      "delivery": {
+        "source_commit": "b73e752",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46062531635"
+      }
     },
     {
       "id": "CV-ORDER-REV-04",
@@ -78,7 +84,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/134",
       "title": "مرز ثبت سفارش و مرسوله پیش از درخواست پرداخت",
       "file": "tasks/place-order-boundary.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORDER-REV-03",

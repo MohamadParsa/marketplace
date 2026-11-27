@@ -10,6 +10,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/orders"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -94,6 +95,7 @@ type PurchaseView struct {
 	CreditSources         []CreditSourceView `json:"credit_sources,omitempty"`
 	Number                string             `json:"number"`
 	OrderStatus           string             `json:"order_status"`
+	FulfillmentStatus     string             `json:"fulfillment_status,omitempty"`
 	PaymentStatus         string             `json:"payment_status"`
 	Events                []OrderEventView   `json:"events"`
 	CancellationRequested bool               `json:"cancellation_requested"`
@@ -198,6 +200,7 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	q := findQuote(c, p.QuoteID)
 	orderStatus, paymentStatus := purchaseStatuses(p)
 	v := PurchaseView{Number: strconv.FormatInt(p.Number, 10), OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
+	v.FulfillmentStatus = p.FulfillmentState
 	for _, e := range p.Events {
 		v.Events = append(v.Events, OrderEventView{e.Action, e.FlowStatus, e.OrderStatus, e.PaymentStatus, e.ActorKind, e.At})
 	}
@@ -580,6 +583,7 @@ func quoteAsInput(q commerce.Quote) QuoteInput {
 	return in
 }
 func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, now time.Time) {
+	previousOrders := append([]string{}, p.OrderIDs...)
 	p.OrderIDs = []string{}
 	for _, ship := range q.Shipments {
 		id := p.ID + ":" + ship.StoreID
@@ -605,6 +609,14 @@ func syncPurchaseOrders(w *Workspace, p *commerce.Purchase, q commerce.Quote, no
 		}
 		p.OrderIDs = append(p.OrderIDs, id)
 	}
+	for i := range w.Orders {
+		if slices.Contains(previousOrders, w.Orders[i].ID) && !slices.Contains(p.OrderIDs, w.Orders[i].ID) {
+			w.Orders[i].Status = "superseded"
+			w.Orders[i].OrderStatus = "cancelled"
+			w.Orders[i].Version++
+		}
+	}
+	refreshPurchaseOrderState(w, p)
 }
 func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuoteInput, key string) (json.RawMessage, error) {
 	return s.mutateCommerce(ctx, "purchase:"+a.ID, key, in, func(w Workspace) error { return customerActor(w, a) }, func(w *Workspace, id string, now time.Time) (any, error) {
@@ -776,6 +788,7 @@ func (s *Service) CancelPurchase(ctx context.Context, a identity.User, id, reaso
 				w.Orders[i].Version++
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 		recordPurchaseEvent(p, a, "order.cancelled", now)
 		commerceAudit(w, op, a, "purchase.cancel", p.ID, "", now)
 		return purchaseView(c, *p), nil

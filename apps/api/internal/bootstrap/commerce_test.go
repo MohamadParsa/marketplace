@@ -116,7 +116,7 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: "1"}, "tamper", 409)
 	var p backoffice.PurchaseView
 	json.Unmarshal(get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: quote.TotalToman}, "accept", 200), &p)
-	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" {
+	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "placed" {
 		t.Fatal(p)
 	}
 	get(other, "GET", "/storefront/account/orders/"+p.ID, nil, "", 404)
@@ -139,7 +139,7 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	}
 	get(admin, "POST", "/backoffice/commerce/orders/confirm", backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, "confirm", 200)
 	json.Unmarshal(get(customer, "GET", "/storefront/account/orders/"+p.ID, nil, "", 200), &p)
-	if p.PaymentStatus != "paid" || p.OrderStatus != "awaiting-supply" || p.WalletBalanceToman != "0" || len(p.Events) < 3 {
+	if p.PaymentStatus != "paid" || p.OrderStatus != "placed" || p.WalletBalanceToman != "0" || len(p.Events) < 3 {
 		t.Fatal(p)
 	}
 	get(admin, "POST", "/backoffice/commerce/orders/confirm", backoffice.PurchaseAdminInput{ID: p.ID, Version: 1}, "confirm-retry", 200)

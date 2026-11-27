@@ -357,6 +357,7 @@ func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in Purch
 				}
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 		recordPurchaseEvent(p, a, "order.paid", now)
 		commerceAudit(w, op, a, "purchase.confirm", p.ID, "", now)
 		return purchaseView(c, *p), nil
@@ -422,6 +423,7 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 				}
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 		recordPurchaseEvent(p, a, "order.cancelled", now)
 		commerceAudit(w, op, a, "purchase.admin-cancel", p.ID, "", now)
 		return purchaseView(c, *p), nil

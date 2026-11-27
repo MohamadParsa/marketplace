@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-27
 related: [DOM-ORDER-LIFECYCLE-001, FEAT-BO-ORDER-REV-003, FEAT-NEXT-009]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -33,3 +33,6 @@ Issue: [#134](https://github.com/MohamadParsa/marketplace/issues/134) · مسئ�
 ## وابستگی و مانع
 
 REV-03 و خروجی #70؛ ORDERREV-Q01/Q03/Q06. درگاه واقعی/سرویس تازه جزو این کار نیست. #70 با ثبت این شرح انجام‌شده اعلام نمی‌شود؛ شروع اصلاح مالی فقط بعد از انتخاب اجرا و پاسخ موانع است.
+
+
+[شواهد API/PG، replay پس از restart و وضعیت مستقل](../issue-134-verification.md). تغییر UI چرخه کامل با #140 جدا تحویل می‌شود.

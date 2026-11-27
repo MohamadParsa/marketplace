@@ -16,6 +16,7 @@ type SellerCheckoutLine struct {
 	UnitPriceToman string `json:"unit_price_toman"`
 }
 type SellerCheckoutOrder struct {
+	OrderStatus       string                 `json:"order_status"`
 	Delivery          *shipping.DeliveryPlan `json:"delivery,omitempty"`
 	CollectionMode    string                 `json:"collection_mode,omitempty"`
 	ShippingFeeToman  string                 `json:"shipping_fee_toman,omitempty"`
@@ -52,7 +53,7 @@ func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User,
 	}
 	out := []SellerCheckoutOrder{}
 	for _, o := range w.Orders {
-		if o.CheckoutID == "" || id != "" && o.ID != id {
+		if o.CheckoutID == "" || o.Status == "superseded" || id != "" && o.ID != id {
 			continue
 		}
 		if w.Access == nil || !identity.AllowsStore(w.StoreMemberships, w.Access.Roles, w.Access.Grants, a.ID, o.StoreID, "orders.read") {
@@ -60,6 +61,7 @@ func (s *Service) ReadSellerCheckoutOrders(ctx context.Context, a identity.User,
 		}
 		v := SellerCheckoutOrder{PurchaseNumber: o.PurchaseNumber, ID: o.ID, PurchaseID: o.PurchaseID, StoreID: o.StoreID, City: o.City, Status: o.Status, PaymentStatus: o.Payment, Items: []SellerCheckoutLine{}, ShippingMethod: o.ShippingMethod, DeliveryFrom: o.DeliveryFrom, DeliveryTo: o.DeliveryTo}
 		v.Delivery = o.Delivery
+		v.OrderStatus = o.OrderStatus
 		if o.ShippingTerms != nil {
 			terms := shippingMethodInput(*o.ShippingTerms)
 			v.CollectionMode, v.ShippingFeeToman, v.TransportDayBasis = terms.CollectionMode, terms.FeeToman, terms.DayBasis

@@ -227,7 +227,7 @@ func TestCommercePreviewHasNoReservationAndPurchaseHasTwoGroups(t *testing.T) {
 		t.Fatal("client amount trusted", e)
 	}
 	p := h.accept(t, h.buyer, q)
-	if len(p.OrderIDs) != 2 || p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" || len(p.Events) != 1 {
+	if len(p.OrderIDs) != 2 || p.PaymentStatus != "unpaid" || p.OrderStatus != "placed" || len(p.Events) != 1 {
 		t.Fatal("order status/groups")
 	}
 	w, _ = h.repo.Snapshot(context.Background())
@@ -283,7 +283,7 @@ func TestCommerceFundingFirstThenAtomicPaymentAndExcess(t *testing.T) {
 		t.Fatal("duplicate debit", wallet.BalanceToman, len(wallet.Entries))
 	}
 	ps, _ = h.s.ReadPurchases(context.Background(), h.buyer, p.ID)
-	if ps[0].PaymentStatus != "paid" || ps[0].OrderStatus != "awaiting-supply" || len(ps[0].Events) != 3 {
+	if ps[0].PaymentStatus != "paid" || ps[0].OrderStatus != "placed" || len(ps[0].Events) != 3 {
 		t.Fatal("paid status/history")
 	}
 	w, _ := h.repo.Snapshot(context.Background())

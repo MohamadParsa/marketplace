@@ -97,7 +97,7 @@ func TestStoreEligibilityAliasOnlyAfterSelectionAndHistoricalSnapshot(t *testing
 	h.approve(t, d)
 	b, e := h.s.ConfirmPurchase(ctx, h.admin, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
 	p = decodeCommerce[backoffice.PurchaseView](t, b, e)
-	if p.OrderStatus != "awaiting-supply" {
+	if p.OrderStatus != "placed" {
 		t.Fatal("confirmation", p.OrderStatus)
 	}
 	before, _ := h.repo.Snapshot(ctx)

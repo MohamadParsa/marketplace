@@ -210,6 +210,8 @@ type Quote struct {
 	PurchaseID         string             `json:"purchase_id,omitempty"`
 }
 type Purchase struct {
+	OrderState            string       `json:"order_state,omitempty"`
+	FulfillmentState      string       `json:"fulfillment_state,omitempty"`
 	Number                int64        `json:"number"`
 	Events                []OrderEvent `json:"events"`
 	CancellationRequested bool         `json:"cancellation_requested"`

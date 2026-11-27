@@ -27,12 +27,14 @@ func commerceState(w *Workspace) *commerce.State {
 		w.Commerce = &commerce.State{Settings: commerce.DefaultSettings()}
 	}
 	w.Commerce.EnsurePurchaseNumbers()
-	for _, p := range w.Commerce.Purchases {
+	for index := range w.Commerce.Purchases {
+		p := &w.Commerce.Purchases[index]
 		for i := range w.Orders {
 			if w.Orders[i].PurchaseID == p.ID {
 				w.Orders[i].PurchaseNumber = strconv.FormatInt(p.Number, 10)
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 	}
 	return w.Commerce
 }
@@ -277,6 +279,10 @@ type OrderEventView struct {
 }
 
 func purchaseStatuses(p commerce.Purchase) (string, string) {
+	order := p.OrderState
+	if order == "" {
+		order = "placed"
+	}
 	if p.Status == "cancelled" {
 		if p.ConfirmedAt != nil {
 			return "cancelled", "returned-to-wallet"
@@ -284,9 +290,9 @@ func purchaseStatuses(p commerce.Purchase) (string, string) {
 		return "cancelled", "unpaid"
 	}
 	if p.ConfirmedAt != nil {
-		return "awaiting-supply", "paid"
+		return order, "paid"
 	}
-	return "awaiting-payment", "unpaid"
+	return order, "unpaid"
 }
 func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, now time.Time) {
 	order, payment := purchaseStatuses(*p)

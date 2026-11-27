@@ -234,6 +234,7 @@ export interface Deposit {
   created_at: string;
 }
 export interface Purchase {
+  fulfillment_status?: string;
   discount_funding?: {
     platform_toman: string;
     seller_toman: string;
@@ -355,6 +356,13 @@ export interface AdminView {
   audit: { id: string; action: string; target: string; created_at: string }[];
 }
 export const statuses: Record<string, string> = {
+  placed: "ثبت سفارش",
+  processing: "در حال پردازش",
+  supplied: "تأمین شده",
+  packing: "در حال آماده‌سازی",
+  shipped: "ارسال شده",
+  delivered: "تحویل شده",
+  mixed: "مراحل متفاوت مرسوله‌ها",
   "awaiting-confirmation": "در انتظار تأیید تیم",
   "requires-reconfirmation": "نیازمند تأیید دوباره شما",
   confirmed: "تأیید شده",
