@@ -70,7 +70,7 @@ execution_authorized: true
 - #10 و #16 و #120 تا #123 تحویل‌های قبلی‌اند؛ فقط regression و اتصال تازه نیاز است. CHQ-01/#72 برای قیمت/تسویه و Q-005 برای بازگشت فیزیکی مرجع حفظ می‌شوند. Q-020 مرحله اول قبلاً حل‌شده است و دوباره پرسش باز اعلام نمی‌شود.
 - بستن هر task اجرایی بعد از انتخاب صریح اجرا، پاسخ موانع مؤثر، کد، تست متناسب، شواهد، مدارک، commit/push و کامنت نتیجه مجاز است. در تحویل اولیه برنامه‌ریزی، هیچ task اجرایی انجام‌شده یا بسته نبود؛ پیشرفت بعدی پایین آمده و #95 والد صف باز می‌ماند.
 
-## بررسی این تحویل
+## اعتبارسنجی تحویل برنامه‌ریزی اولیه
 
 اعتبارسنجی انجام‌شده: ۶۴۲ مسیر نسبی در۲۵فایل مرتبط بررسی شد و لینک ناموجود نداشت؛۱۲شناسه metadata جدید در کل اسناد یکتا هستند؛۱۰شرح با task-index و۱۰سناریوی طراحی BDD تطبیق دارند. وضعیت باز، مسئول eliassarband و عبارت عدم مجوز اجرا برای هر۱۰Issue از GitHub دوباره خوانده و تأیید شد. `git diff --check` نیز موفق بود.
 
@@ -79,32 +79,20 @@ execution_authorized: true
 
 ## پیشرفت اجرا
 
-- #131: [فهرست سراسری پرسش‌ها، آزمون API/PG و مرورگر](issue-131-verification.md) با کامیت `21ebcd5` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095) بسته شد.
+هر۱۱کار زیر پس از تست و پنج check موفق CI، با کامنت شواهد بسته شده است. [تحویل نهایی و اجرای محلی برای بررسی مالک](final-local-review.md). آزمون دستی مالک و استقرار سرور مستقل‌اند.
 
-- #132: [چیدمان دو ستونه تخفیف، اعتبارسنجی و تصاویر](issue-132-verification.md) با کامیت `ace1d0d` و هر۵بررسی CI موفق تکمیل و با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469) بسته شد.
+| Issue و شواهد | کامیت کد | کامنت بستن | CI |
+| --- | --- | --- | --- |
+| [#131 — پرسش‌های همه محصولات با فیلتر بررسی؛ بدون انتخاب اولیه محصول](issue-131-verification.md) | [21ebcd5](https://github.com/MohamadParsa/marketplace/commit/21ebcd5c406ca620e9cd36ae052af1b0921e5df1) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46060402872) |
+| [#132 — مودال تخفیف جمع‌وجور با دو کنترل در هر سطر](issue-132-verification.md) | [ace1d0d](https://github.com/MohamadParsa/marketplace/commit/ace1d0d) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46061686822) |
+| [#133 — قرارداد سه چرخه سفارش و نگاشت داده گذشته](issue-133-verification.md) | [b73e752](https://github.com/MohamadParsa/marketplace/commit/b73e752) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46062531635) |
+| [#134 — مرز ثبت سفارش و مرسوله پیش از درخواست پرداخت](issue-134-verification.md) | [cf46e0b](https://github.com/MohamadParsa/marketplace/commit/cf46e0b) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/134#issuecomment-7227527986) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46063441409) |
+| [#135 — تلاش‌های پرداخت و تفکیک شارژ کیف پول از پرداخت سفارش](issue-135-verification.md) | [26fdef0](https://github.com/MohamadParsa/marketplace/commit/26fdef0) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/135#issuecomment-7227893028) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46065324703) |
+| [#136 — شروع پردازش، تأمین، ارسال با کد روش حمل و تحویل](issue-136-verification.md) | [f813e5e](https://github.com/MohamadParsa/marketplace/commit/f813e5e4bf8fcb5d40d5f973d0070cf89af38b62) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/136#issuecomment-7228455403) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46069219490) |
+| [#137 — پرونده کنسلی و مرجوعی روی سفارش، شامل پس از تکمیل](issue-137-verification.md) | [16c897e](https://github.com/MohamadParsa/marketplace/commit/16c897eee3bd1f2fa47a21d4a22ed6f93af7f368) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/137#issuecomment-7228723891) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46071901333) |
+| [#138 — استرداد مرتبط با سفارش به کیف پول یا انتقال دستی](issue-138-verification.md) | [24afbb8](https://github.com/MohamadParsa/marketplace/commit/24afbb89da6cd4ab0fdd0f0db06e4501ab62b9d0) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/138#issuecomment-7228921949) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46073403149) |
+| [#139 — تاریخچه چرخه سفارش و نمایش وضعیت هر مرسوله به مشتری](issue-139-verification.md) | [5574af8](https://github.com/MohamadParsa/marketplace/commit/5574af85d98a99326031180d69e58ad00227f1dc) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/139#issuecomment-7229126719) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46074462303) |
+| [#140 — یکپارچه‌سازی منوی سفارش‌ها و جزئیات تب‌دار](issue-140-verification.md) | [9806e9b](https://github.com/MohamadParsa/marketplace/commit/9806e9b2419cf9b0a47b209fe567e82b19f459da) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/140#issuecomment-7229414122) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46076151715) |
+| [#141 — کنترل تاریخ شمسی در storefront و بک‌آفیس](issue-141-verification.md) | [fd3e1f2](https://github.com/MohamadParsa/marketplace/commit/fd3e1f2248deb187964177c9e8777cbcd9061685) | [شواهد](https://github.com/MohamadParsa/marketplace/issues/141#issuecomment-7229724013) | [موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46079100522) |
 
-- #133: [قرارداد اجرایی](../../architecture/contracts/order-lifecycle.md)، [ممیزی مرز تراکنش](place-order-audit.md) و [شواهد بررسی سند](issue-133-verification.md) آماده و تکمیل فنی شدند؛ #134 تا #140 هنوز اجراشده محسوب نمی‌شوند.
-
-- #133 با کامیت `b73e752` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651) بسته شد.
-- #134: [ثبت پیش از تأمین وجه، وضعیت مستقل و replay پس از restart](issue-134-verification.md) تکمیل فنی و آماده CI/بستن است.
-
-- #134 با کامیت `cf46e0b` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/134#issuecomment-7227527986) بسته شد. ممیزی #70 هم با [تعیین مرز تحلیل/childها](https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080) بسته شد.
-- #135: [تلاش‌های پرداخت، وجه دیررس و عدم قطعیت مجاز](issue-135-verification.md) تکمیل فنی شد؛ منتظر CI/ثبت کامنت بستن.
-
-## تکمیل تازه مالک — ۲۰۲۶-۱۱-۲۸
-
-[#141 — همه کنترل‌های تاریخ شمسی در storefront و بک‌آفیس](tasks/persian-date-controls.md) پس از #140 به صف اجرا اضافه شد؛ todo و مجوز اجرا دارد. پذیرش یک‌جای مالک پس از این تکمیل است.
-
-- #135 با کامیت `26fdef0` و هر۵بررسی CI موفق و [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/135#issuecomment-7227893028) بسته شد.
-- #136: [پردازش تا ارسال کددار و دریافت مستقل، مجوز scoped و تست/تصاویر](issue-136-verification.md) تکمیل فنی و آماده CI/بستن است.
-
-- #136: عملیات مستقل، کد ارسال و دریافت جدا با کامیت f813e5e و CI موفق بسته شد؛ [شواهد](issue-136-verification.md).
-- #137: پرونده کنسلی/مرجوعی، اقلام/تعداد، رسیدگی و برگشت موجودی مستقل از مالی؛ [شواهد تست و مرورگر](issue-137-verification.md). بستن پس از push و CI.
-
-- #138: استرداد جزئی/کامل با محدودیت منابع و انتقال دستی مسدودشده؛ [شواهد محاسبه و PG و مرورگر](issue-138-verification.md). بستن پس از push و CI.
-
-- #139: مرسوله‌ها، دریافت مشتری و تاریخچه مجاز صفحه‌بندی‌شده؛ [شواهد](issue-139-verification.md). بستن پس از push و CI.
-
-- #140: فهرست واحد با query سروری و صفحه مستقل پنج‌تب؛ [شواهد مجوز/API/PG/مرورگر](issue-140-verification.md). بستن پس از push و CI.
-
-- #141: همه ورودی‌های تاریخ/تاریخ‌وساعت، تعطیلات و ظرفیت با انتخابگر مشترک شمسی؛ [ممیزی و شواهد API/مرورگر](issue-141-verification.md). بستن پس از push و CI.
+ممیزی #70 با [کامنت تعیین مرز و شواهد](https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080) در تحویل #134 بسته شد. #95 والد سایر کارهای صف باز است. PR #106 باز و merge/deploy انجام نشده است.

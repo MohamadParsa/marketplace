@@ -282,7 +282,13 @@
       "dependencies": [
         "CV-ORDER-REV-10"
       ],
-      "blocking_questions": []
+      "blocking_questions": [],
+      "delivery": {
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46079100522",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/141#issuecomment-7229724013",
+        "source_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+        "issue_state": "closed"
+      }
     }
   ],
   "execution_order": [
@@ -309,5 +315,14 @@
     "issue_state": "closed",
     "comment": "https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080",
     "source_commit": "cf46e0b"
+  },
+  "implementation_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+  "user_acceptance": "pending-manual-review",
+  "local_review": {
+    "backoffice": "http://localhost:8098",
+    "storefront": "http://localhost:5197",
+    "data_preserved": true,
+    "source_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+    "report": "final-local-review.md"
   }
 }
