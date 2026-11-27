@@ -3,7 +3,7 @@ id: PLAN-BO-REFINEMENT-001
 title: برنامه اصلاح فرم‌های بک‌آفیس و کاتالوگ
 status: in-review
 owner: eliassarband
-updated: 2026-11-26
+updated: 2026-11-27
 related: [PLAN-BACKLOG-RECONCILIATION-001, FEAT-NEXT-012, FEAT-NEXT-020]
 approved_by: []
 implementation_status: in-progress
