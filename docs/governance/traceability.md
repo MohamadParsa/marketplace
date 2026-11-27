@@ -1,5 +1,22 @@
 # ردیابی قابلیت تا پذیرش
 
+## الحاق بررسی چرخه سفارش — ۲۰۲۶-۱۱-۲۷
+
+[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ همه شرح‌های تازه todo و بدون مجوز اجرا هستند. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌ها](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند.
+
+| نیاز مالک | شرح قابل ردیابی |
+| --- | --- |
+| پرسش‌های همه محصولات | [FEAT-BO-ORDER-REV-001](../delivery/order-lifecycle-review-2026-11-27/tasks/global-product-questions.md) |
+| تخفیف جمع‌وجور/دو ستون | [FEAT-BO-ORDER-REV-002](../delivery/order-lifecycle-review-2026-11-27/tasks/compact-coupon-modal.md) |
+| سه چرخه و نگاشت سابقه | [FEAT-BO-ORDER-REV-003](../delivery/order-lifecycle-review-2026-11-27/tasks/order-state-contract.md) |
+| ثبت پیش از پرداخت | [FEAT-BO-ORDER-REV-004](../delivery/order-lifecycle-review-2026-11-27/tasks/place-order-boundary.md) و ممیزی #70 |
+| تلاش/نتیجه پرداخت | [FEAT-BO-ORDER-REV-005](../delivery/order-lifecycle-review-2026-11-27/tasks/payment-attempt-states.md) |
+| پردازش و تأمین تا تحویل/کد ارسال | [FEAT-BO-ORDER-REV-006](../delivery/order-lifecycle-review-2026-11-27/tasks/order-fulfillment.md) |
+| کنسلی و مرجوعی پس از تکمیل | [FEAT-BO-ORDER-REV-007](../delivery/order-lifecycle-review-2026-11-27/tasks/order-cancellation-returns.md) |
+| استرداد کیف پول/انتقال دستی | [FEAT-BO-ORDER-REV-008](../delivery/order-lifecycle-review-2026-11-27/tasks/order-linked-refunds.md) |
+| تاریخچه و وضعیت مشتری | [FEAT-BO-ORDER-REV-009](../delivery/order-lifecycle-review-2026-11-27/tasks/order-history-customer-status.md) |
+| یکپارچگی منو/جزئیات سفارش | [FEAT-BO-ORDER-REV-010](../delivery/order-lifecycle-review-2026-11-27/tasks/unified-order-workspace.md) |
+
 پیگیری۲۰۲۶-۱۱-۲۳: [FEAT-SF-CACHE-001](../delivery/storefront-followups/cache-policy.md) و [FEAT-CATALOG-PUBLIC-URL-001](../delivery/storefront-followups/public-catalog-urls.md) ← [صف و مسئولیت](../delivery/storefront-followups/README.md). سیاست کش با تأیید مالک محلی اجرا شد؛ [شاهد #41، کنترل‌های حفاظت و تصاویر](../delivery/storefront-followups/issue-41-verification.md). مهاجرت URL در #42 پس از پایان #41 است و هنوز اجرا نشده است.
 
 برش فعال‌شده CV-R2-07: [ADR-006](../decisions/adr-006-responsive-banner-activation.md) ← [شرح](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) ← [قرارداد](../architecture/contracts/responsive-banners.md) ← [دو سناریو](../bdd/features/experiences/responsive-banners.feature) ← [گزارش و تصاویر](../delivery/review-v1-1/issue-7-verification.md). فعال‌شدن این برش، سایر CMS را فعال نمی‌کند.

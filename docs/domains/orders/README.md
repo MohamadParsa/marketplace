@@ -3,12 +3,14 @@ id: DOM-ORDERS-001
 title: سفارش، تأمین و عدم تأمین
 status: in-review
 owner: product-owner
-updated: 2026-11-20
+updated: 2026-11-27
 related: []
 approved_by: []
 ---
 
 # سفارش، تأمین و رسیدگی به عدم تأمین
+
+بازبینی تازه مالک در ۲۰۲۶-۱۱-۲۷، سه محور مستقل و درخواست مرجوعی پس از تکمیل را وارد [قواعد و طرح چرخه](lifecycle-review-2026-11-27.md) کرده است. این برش فقط بررسی/تسک‌بندی است؛ جزئیات سیاست و تعارض‌ها در [ORDERREV-Q01 تا Q10](../../product/open-questions.md#order-lifecycle-review-20261127) و [صف کار](../../delivery/order-lifecycle-review-2026-11-27/README.md) ثبت‌اند. قواعد مجوز/عدم تأمین/توقف این سند خودکار لغو نمی‌شوند.
 
 ## ساختار سفارش
 
