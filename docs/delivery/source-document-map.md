@@ -165,6 +165,10 @@
 
 سورس [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [گزارش مستقل فروشگاه](backoffice-refinement-2026-11-25/issue-113-verification.md) شامل CRUD، تصویر خصوصی، فیلتر/صفحه‌بندی و حفظ داده‌اند. #114 و #115 جدا تحویل می‌شوند.
 
+## فهرست استان‌ها و شهرهای ایران — ۲۰۲۶-۱۱-۲۷
+
+سورس و دادهٔ ثابت در [1883367](https://github.com/MohamadParsa/marketplace/commit/18833678e079a1367d3ea56c7646a606ef87d18a) ثبت شدند. [بسته و راهنمای ورود](../../data/iran-geography/README.md) و [گزارش واردسازی محلی، حفظ شناسه/تاریخچه و آزمون‌ها](iran-geography-import-2026-11-27.md) مرجع این تحویل‌اند.۳۱استان و۱۴۸۱شهر فعال در سایت در دسترس‌اند؛ رکورد آزمایشی غیرفعال قبلی حفظ است. ورود سرور و انتشار لیارا انجام نشده‌اند.
+
 ## مجوز و نام روش‌محور فروشگاه — #114
 
 سورس [47b798a](https://github.com/MohamadParsa/marketplace/commit/47b798a0b22a40f5f0309dd18978b25b9f6829f8) و [گزارش مستقل](backoffice-refinement-2026-11-25/issue-114-verification.md) شامل سیاست درختی/روش، snapshot نام و بازبینی خرید بدون مصرف وجه‌اند. توسعه PDP روش‌محور #118 فقط ثبت شده است.

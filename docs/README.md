@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[فهرست کامل استان‌ها و شهرهای ایران؛ منبع، ورود محلی و آزمون‌ها — ۲۰۲۶-۱۱-۲۷](delivery/iran-geography-import-2026-11-27.md)
+
 [یکدست‌سازی کنترل‌ها، فیلترها و فرم‌های بک‌آفیس — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/admin-controls-and-filters-2026-11-27.md)
 
 [خوانایی قیمت، فرم‌های بسته و کروسل‌های پنج‌تایی سایت — ۲۰۲۶-۱۱-۲۷](delivery/storefront-followups/storefront-readability-review-2026-11-27.md)
