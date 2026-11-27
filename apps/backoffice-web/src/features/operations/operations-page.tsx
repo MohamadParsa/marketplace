@@ -16,7 +16,7 @@ import {
   Status,
   type Field,
 } from "../../shared/components";
-import { date, money, number, labels } from "../../shared/format";
+import { date, money, number, labels, recordNumber, displayRecord } from "../../shared/format";
 import type { Command } from "../../shared/types";
 export function OperationsPage({
   section,
@@ -62,7 +62,7 @@ export function OperationsPage({
       <PageHeader
         title={
           selected
-            ? `جزئیات سفارش ${selected.purchase_number ?? selected.id}`
+            ? `جزئیات سفارش ${selected.purchase_number ?? recordNumber(state, "order", selected.id)}`
             : titles[section]
         }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
@@ -76,7 +76,7 @@ export function OperationsPage({
               <h2>اطلاعات سفارش</h2>
               <dl>
                 <dt>خرید چندفروشگاهی</dt>
-                <dd>{selected.purchase_number ?? selected.purchase_id}</dd>
+                <dd>{selected.purchase_number ?? recordNumber(state, "order", selected.id)}</dd>
                 <dt>فروشگاه</dt>
                 <dd>
                   {selected.store_display_name || seller(selected.store_id)}
@@ -177,7 +177,7 @@ export function OperationsPage({
                   render: (o) => (
                     <>
                       <Link to={"/orders/" + o.id}>
-                        <b>سفارش {o.purchase_number ?? o.id}</b>
+                        <b>سفارش {o.purchase_number ?? recordNumber(state, "order", o.id)}</b>
                       </Link>
                       <small>
                         {o.purchase_number
@@ -227,7 +227,7 @@ export function OperationsPage({
                   title: "پرونده",
                   render: (c) => (
                     <>
-                      <b>{c.id}</b>
+                      <b>{recordNumber(state, "case", c.id)}</b>
                       <small>{c.kind}</small>
                     </>
                   ),
@@ -235,7 +235,7 @@ export function OperationsPage({
                 {
                   title: "سفارش",
                   render: (c) => (
-                    <Link to={"/orders/" + c.order_id}>{c.order_id}</Link>
+                    <Link to={"/orders/" + c.order_id}>{state.orders?.find(o => o.id === c.order_id)?.purchase_number ?? recordNumber(state, "order", c.order_id)}</Link>
                   ),
                 },
                 {
@@ -352,7 +352,7 @@ export function OperationsPage({
                 rows={filter(state.assignments ?? [])}
                 empty="هنوز واگذاری ثبت نشده. از صفحه پشتیبانی، یک قلم را به فروشگاه جایگزین واگذار کنید."
                 columns={[
-                  { title: "واگذاری", render: (a) => a.id.slice(0, 12) },
+                  { title: "واگذاری", render: (a) => recordNumber(state, "assignment", a.id) },
                   { title: "پرونده", render: (a) => a.case_id },
                   { title: "تأمین‌کننده", render: (a) => seller(a.store_id) },
                   { title: "قلم", render: (a) => a.item_id },
@@ -416,8 +416,8 @@ export function OperationsPage({
                   title: "نوع عملیات",
                   render: (a) => <span className="code">{a.action}</span>,
                 },
-                { title: "عامل", render: (a) => a.actor },
-                { title: "هدف", render: (a) => a.target || "رکورد جدید" },
+                { title: "عامل", render: (a) => state.users?.find(u => u.id === a.actor)?.name ?? recordNumber(state, "user", a.actor) },
+                { title: "هدف", render: (a) => a.target ? displayRecord(state, a.target) : "رکورد جدید" },
                 { title: "دلیل", render: (a) => a.reason || "—" },
                 { title: "زمان", render: (a) => date(a.at) },
               ]}

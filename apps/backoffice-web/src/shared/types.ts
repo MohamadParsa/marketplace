@@ -166,6 +166,9 @@ export interface AttributeDefinition {
   version: number;
 }
 export interface AttributeBinding {
+    axis_position?: number;
+    card_position?: number;
+    filter_position?: number;
   attribute_id: string;
   axis: boolean;
   card: boolean;
@@ -199,6 +202,7 @@ export interface OfferView extends Offer {
   store_active: boolean;
 }
 export interface ProductWorkspace {
+  record_numbers?: Record<string, number>;
   product: Product;
   axes: AttributeDefinition[];
   variants: Variant[];
@@ -299,6 +303,7 @@ export interface CatalogInput {
   published: boolean;
 }
 export interface Workspace {
+  record_numbers?: Record<string, number>;
   variants?: Variant[];
   home_settings: HomeSettings;
   access?: {

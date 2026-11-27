@@ -161,7 +161,7 @@ func ValidateCatalogSeed(s *CatalogSeed) error {
 		axes := 0
 		for _, b := range c.Bindings {
 			a, ok := defs[b.AttributeID]
-			if !ok || seen[b.AttributeID] || b.Position < 0 || b.Position > 10000 || b.Axis && a.Kind != "enum" {
+			if !ok || seen[b.AttributeID] || !b.ValidPositions() || b.Axis && a.Kind != "enum" {
 				return bad("category binding " + c.ID)
 			}
 			seen[b.AttributeID] = true

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"regexp"
 	"sort"
-	"strings"
 
 	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
@@ -42,12 +41,13 @@ type OfferView struct {
 	StoreActive  bool   `json:"store_active"`
 }
 type ProductWorkspace struct {
-	Product     catalog.Product               `json:"product"`
-	Axes        []catalog.AttributeDefinition `json:"axes"`
-	Variants    []catalog.Variant             `json:"variants"`
-	Offers      []OfferView                   `json:"offers"`
-	Stores      []store.Store                 `json:"stores"`
-	Permissions ProductPermissions            `json:"permissions"`
+	RecordNumbers map[string]int64              `json:"record_numbers,omitempty"`
+	Product       catalog.Product               `json:"product"`
+	Axes          []catalog.AttributeDefinition `json:"axes"`
+	Variants      []catalog.Variant             `json:"variants"`
+	Offers        []OfferView                   `json:"offers"`
+	Stores        []store.Store                 `json:"stores"`
+	Permissions   ProductPermissions            `json:"permissions"`
 }
 type VariantResolution struct {
 	Variant catalog.Variant `json:"variant"`
@@ -55,7 +55,7 @@ type VariantResolution struct {
 }
 
 func isProductAction(action string) bool {
-	return action == "variant.create" || action == "offer.create" || action == "offer.price.update" || action == "offer.stock.update"
+	return action == "variant.create" || action == "offer.create" || action == "offer.update" || action == "offer.price.update" || action == "offer.stock.update"
 }
 
 func catalogActor(state Workspace, actor identity.User) (identity.User, error) {
@@ -100,10 +100,10 @@ func productAxes(state Workspace, p catalog.Product) []catalog.AttributeDefiniti
 		if c.ID == p.CategoryID {
 			bindings := append([]catalog.AttributeBinding{}, c.Bindings...)
 			sort.Slice(bindings, func(i, j int) bool {
-				if bindings[i].Position == bindings[j].Position {
+				if bindings[i].PositionFor("axis") == bindings[j].PositionFor("axis") {
 					return bindings[i].AttributeID < bindings[j].AttributeID
 				}
-				return bindings[i].Position < bindings[j].Position
+				return bindings[i].PositionFor("axis") < bindings[j].PositionFor("axis")
 			})
 			for _, b := range bindings {
 				if b.Axis {
@@ -176,6 +176,13 @@ func (s *Service) ReadProductWorkspace(ctx context.Context, actor identity.User,
 			}
 		}
 	}
+	result.RecordNumbers = map[string]int64{}
+	for _, v := range result.Variants {
+		result.RecordNumbers["variant|"+v.ID] = state.RecordNumbers["variant|"+v.ID]
+	}
+	for _, o := range result.Offers {
+		result.RecordNumbers["offer|"+o.ID] = state.RecordNumbers["offer|"+o.ID]
+	}
 	return result, nil
 }
 
@@ -239,6 +246,7 @@ func sellerWorkspace(state Workspace, actor identity.User) Workspace {
 		}
 	}
 	result.CardPreviews = BuildCardPreviews(result)
+	result.RecordNumbers = scopedRecordNumbers(result, state.RecordNumbers)
 	return result
 }
 
@@ -268,6 +276,9 @@ func (s *Service) ResolveVariant(ctx context.Context, actor identity.User, produ
 		}
 		sort.Slice(result.Offers, func(i, j int) bool {
 			if result.Offers[i].Price == result.Offers[j].Price {
+				if result.Offers[i].LeadDays != result.Offers[j].LeadDays {
+					return result.Offers[i].LeadDays < result.Offers[j].LeadDays
+				}
 				return result.Offers[i].ID < result.Offers[j].ID
 			}
 			return result.Offers[i].Price < result.Offers[j].Price
@@ -309,6 +320,18 @@ func authorizeProductCommand(state Workspace, actor identity.User, c Command) er
 		}
 	}
 	permission := "create"
+	if c.Action == "offer.update" {
+		if c.Offer == nil || (c.Offer.Price == nil && c.Offer.Stock == nil) {
+			return ErrInvalid
+		}
+		if (c.Offer.Price != nil || c.Offer.RegularPrice != nil) && !canStore(state, current, storeID, "price") {
+			return ErrForbidden
+		}
+		if c.Offer.Stock != nil && !canStore(state, current, storeID, "stock") {
+			return ErrForbidden
+		}
+		return nil
+	}
 	if c.Action == "offer.price.update" {
 		permission = "price"
 	}
@@ -328,7 +351,7 @@ const MaxOfferStock = 1000000000
 
 func applyProduct(state *Workspace, c Command, id string) error {
 	if c.Action == "variant.create" {
-		if c.Variant == nil || c.Variant.ProductID != c.Target || !skuPattern.MatchString(c.Variant.SKU) {
+		if c.Variant == nil || c.Variant.ProductID != c.Target || (c.Variant.SKU != "" && !skuPattern.MatchString(c.Variant.SKU)) {
 			return ErrInvalid
 		}
 		p, err := findProduct(state, c.Target)
@@ -349,9 +372,6 @@ func applyProduct(state *Workspace, c Command, id string) error {
 			return err
 		}
 		for _, v := range state.Variants {
-			if strings.EqualFold(v.SKU, c.Variant.SKU) {
-				return ErrConflict
-			}
 			if v.ProductID == p.ID {
 				existing, e := canonicalSelection(axes, v.Values)
 				if e == nil && existing == key {
@@ -359,7 +379,7 @@ func applyProduct(state *Workspace, c Command, id string) error {
 				}
 			}
 		}
-		state.Variants = append(state.Variants, catalog.Variant{ID: id, ProductID: p.ID, SKU: c.Variant.SKU, Values: append([]catalog.AttributeValue{}, c.Variant.Values...), Version: 1})
+		state.Variants = append(state.Variants, catalog.Variant{ID: id, ProductID: p.ID, SKU: variantCode(state, id), Values: append([]catalog.AttributeValue{}, c.Variant.Values...), Version: 1})
 		p.VariantVersion++
 		return nil
 	}
@@ -440,7 +460,32 @@ func applyProduct(state *Workspace, c Command, id string) error {
 		if !active {
 			return ErrConflict
 		}
-		if c.Action == "offer.price.update" {
+		if c.Action == "offer.update" {
+			if input.Price == nil && input.Stock == nil {
+				return ErrInvalid
+			}
+			price := o.Price
+			if input.Price != nil {
+				price = *input.Price
+			}
+			regular := o.RegularPrice
+			if input.RegularPrice != nil {
+				regular = *input.RegularPrice
+			}
+			if price <= 0 || price > MaxOfferPrice || regular < 0 || regular > MaxOfferPrice || (regular > 0 && regular <= price) {
+				return ErrInvalid
+			}
+			if input.Stock != nil && (*input.Stock < 0 || *input.Stock > MaxOfferStock) {
+				return ErrInvalid
+			}
+			if input.Stock != nil && *input.Stock < o.Reserved {
+				return ErrConflict
+			}
+			o.Price, o.RegularPrice = price, regular
+			if input.Stock != nil {
+				o.Stock = *input.Stock
+			}
+		} else if c.Action == "offer.price.update" {
 			if input.Price == nil || input.Stock != nil || *input.Price <= 0 || *input.Price > MaxOfferPrice {
 				return ErrInvalid
 			}

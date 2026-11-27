@@ -89,15 +89,17 @@ type Audit struct {
 	At           time.Time     `json:"at"`
 }
 type Workspace struct {
-	PublicBusiness *commerce.Business             `json:"public_business,omitempty"`
-	AxisPlans      []AxisPlan                     `json:"axis_plans,omitempty"`
-	StoreMutations []StoreMutation                `json:"store_mutations,omitempty"`
-	UserMutations  []UserMutation                 `json:"user_mutations,omitempty"`
-	SalesPayments  []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
-	Sales          *commerce.SalesSettings        `json:"sales,omitempty"`
-	RecentlyViewed []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
-	Wishlist       []customer.WishlistEntry       `json:"wishlist,omitempty"`
-	publicIndex    *publicCatalogIndex
+	RecordNumbers    map[string]int64               `json:"record_numbers,omitempty"`
+	LastRecordNumber int64                          `json:"last_record_number,omitempty"`
+	PublicBusiness   *commerce.Business             `json:"public_business,omitempty"`
+	AxisPlans        []AxisPlan                     `json:"axis_plans,omitempty"`
+	StoreMutations   []StoreMutation                `json:"store_mutations,omitempty"`
+	UserMutations    []UserMutation                 `json:"user_mutations,omitempty"`
+	SalesPayments    []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
+	Sales            *commerce.SalesSettings        `json:"sales,omitempty"`
+	RecentlyViewed   []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
+	Wishlist         []customer.WishlistEntry       `json:"wishlist,omitempty"`
+	publicIndex      *publicCatalogIndex
 
 	Commerce         *commerce.State               `json:"commerce,omitempty"`
 	HomeSettings     HomeSettings                  `json:"home_settings"`

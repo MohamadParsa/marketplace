@@ -353,7 +353,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			}
 			w.Products = append(w.Products, p)
 			if len(productAxes(*w, p)) == 0 {
-				w.Variants = append(w.Variants, catalog.Variant{ID: "base-" + id, ProductID: id, SKU: "BASE-" + id, Values: []catalog.AttributeValue{}, Version: 1})
+				w.Variants = append(w.Variants, catalog.Variant{ID: "base-" + id, ProductID: id, SKU: variantCode(w, "base-"+id), Values: []catalog.AttributeValue{}, Version: 1})
 			}
 			return nil
 		}

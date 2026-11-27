@@ -104,6 +104,7 @@ func load(ctx context.Context, tx pgx.Tx, write bool) (backoffice.Workspace, err
 	if err := loadIdentity(ctx, tx, &state); err != nil {
 		return state, err
 	}
+	backoffice.EnsureRecordNumbers(&state)
 	return state, nil
 }
 
@@ -158,6 +159,7 @@ func scan[T any](ctx context.Context, tx pgx.Tx, sql string, result *[]T, read f
 }
 
 func save(ctx context.Context, tx pgx.Tx, state backoffice.Workspace) error {
+	backoffice.EnsureRecordNumbers(&state)
 	if _, err := syncCatalogURLs(ctx, tx, &state); err != nil {
 		return err
 	}

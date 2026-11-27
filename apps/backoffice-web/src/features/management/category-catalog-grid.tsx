@@ -116,7 +116,7 @@ export function CategoryCatalogGrid({
   );
   return (
     <>
-      <div className="toolbar">
+      <div className="toolbar catalog-create-toolbar">
         <CreateButton
           variant="contained"
           disabled={busy || !can("catalog.category.create", "management")}
@@ -280,27 +280,6 @@ export function CategoryCatalogGrid({
                 <>
                   <span>{c.published ? "منتشرشده" : "پیش‌نویس"}</span>
                   <small>{c.archived ? "بایگانی‌شده" : "غیربایگانی"}</small>
-                </>
-              ),
-            },
-            {
-              title: "خصوصیات",
-              render: (c) => (
-                <>
-                  {(c.bindings ?? [])
-                    .map(
-                      (b) =>
-                        state.attributes?.find((a) => a.id === b.attribute_id)
-                          ?.name,
-                    )
-                    .filter(Boolean)
-                    .join("، ") || "بدون انتساب صریح"}
-                  <small>
-                    {(c.bindings ?? [])
-                      .filter((b) => b.axis)
-                      .length.toLocaleString("fa-IR")}{" "}
-                    محور تنوع
-                  </small>
                 </>
               ),
             },

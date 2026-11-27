@@ -129,10 +129,16 @@ func applyAttributes(state *Workspace, c Command, id string) error {
 		state.DisplaySettings.Version++
 		return nil
 	case "attribute.create", "attribute.update":
-		if c.Attribute == nil || !validateAttribute(*c.Attribute) {
+		if c.Attribute == nil {
 			return ErrInvalid
 		}
 		a := *c.Attribute
+		if c.Action == "attribute.create" && a.Code == "" {
+			a.Code = recordCode(state, "attribute", id)
+		}
+		if !validateAttribute(a) {
+			return ErrInvalid
+		}
 		for _, existing := range state.Attributes {
 			if (c.Action == "attribute.create" || existing.ID != c.Target) && (existing.Code == a.Code || strings.EqualFold(existing.Name, a.Name)) {
 				return ErrConflict
@@ -186,7 +192,7 @@ func applyAttributes(state *Workspace, c Command, id string) error {
 			}
 			seen := map[string]bool{}
 			for _, b := range c.Bindings {
-				if seen[b.AttributeID] || b.Position < 0 || b.Position > 10000 {
+				if seen[b.AttributeID] || !b.ValidPositions() {
 					return ErrInvalid
 				}
 				seen[b.AttributeID] = true
@@ -260,10 +266,10 @@ func BuildCardPreviews(state Workspace) []catalog.CardPreview {
 			}
 			bindings := append([]catalog.AttributeBinding{}, category.Bindings...)
 			sort.Slice(bindings, func(i, j int) bool {
-				if bindings[i].Position == bindings[j].Position {
+				if bindings[i].PositionFor("card") == bindings[j].PositionFor("card") {
 					return bindings[i].AttributeID < bindings[j].AttributeID
 				}
-				return bindings[i].Position < bindings[j].Position
+				return bindings[i].PositionFor("card") < bindings[j].PositionFor("card")
 			})
 			for _, b := range bindings {
 				if !b.Card || len(preview.Features) >= state.DisplaySettings.CardAttributeLimit {

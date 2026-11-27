@@ -213,15 +213,19 @@ func publicNavigation(w Workspace) []CatalogNav {
 	return result
 }
 
-func categoryBindings(w Workspace, id string) []catalog.AttributeBinding {
+func categoryBindings(w Workspace, id string, role ...string) []catalog.AttributeBinding {
+	order := ""
+	if len(role) > 0 {
+		order = role[0]
+	}
 	for _, c := range w.Categories {
 		if c.ID == id {
 			bs := append([]catalog.AttributeBinding{}, c.Bindings...)
 			sort.Slice(bs, func(i, j int) bool {
-				if bs[i].Position == bs[j].Position {
+				if bs[i].PositionFor(order) == bs[j].PositionFor(order) {
 					return bs[i].AttributeID < bs[j].AttributeID
 				}
-				return bs[i].Position < bs[j].Position
+				return bs[i].PositionFor(order) < bs[j].PositionFor(order)
 			})
 			return bs
 		}
@@ -298,7 +302,7 @@ func listingFeatures(w Workspace, p catalog.Product, v catalog.Variant) []catalo
 	result := []catalog.CardFeature{}
 	values := variantValues(w, p, v)
 	defs := definitions(w)
-	for _, b := range categoryBindings(w, p.CategoryID) {
+	for _, b := range categoryBindings(w, p.CategoryID, "card") {
 		if len(result) >= w.DisplaySettings.CardAttributeLimit {
 			break
 		}
@@ -400,7 +404,7 @@ func BuildListingWithSales(w Workspace, q ListingQuery, sales map[string]int64) 
 	defs := definitions(w)
 	allowed := map[string]bool{}
 	if result.Category != nil {
-		for _, b := range categoryBindings(w, q.CategoryID) {
+		for _, b := range categoryBindings(w, q.CategoryID, "filter") {
 			if b.Filter {
 				if a, ok := defs[b.AttributeID]; ok {
 					allowed[a.ID] = true

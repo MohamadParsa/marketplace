@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
+import { variantCode } from "../../shared/format";
 import type { Product, Variant } from "../../shared/types";
 function Photo({ id }: { id: string }) {
   const { loadCatalogMedia } = useWorkspace();
@@ -195,7 +196,7 @@ export function ProductMediaDialog({
             .filter((v) => v.product_id === id)
             .map((v) => (
               <label key={v.id}>
-                تصویر تنوع {v.values.map((x) => x.value).join(" / ") || v.sku}
+                تصویر تنوع {v.values.map((x) => x.value).join(" / ") || variantCode(state, v.id)}
                 <select
                   value={variants[v.id] ?? ""}
                   disabled={busy}

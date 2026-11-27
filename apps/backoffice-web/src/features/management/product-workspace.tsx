@@ -1,6 +1,6 @@
 import { CreateButton } from "../../shared/create-button";
 import { OptionSelect } from "../../shared/option-select";
-import { ProductQA } from "./product-qa";
+import { OfferEditor } from "./offer-editor";
 import { ProductContentReview } from "./product-content-review";
 import { ProductMediaDialog } from "./product-media-dialog";
 import { useState } from "react";
@@ -21,7 +21,7 @@ import {
   TextField,
 } from "@mui/material";
 import { DataTable, PageHeader } from "../../shared/components";
-import { money } from "../../shared/format";
+import { money, recordNumber, variantCode } from "../../shared/format";
 import { ApiError } from "../../shared/api";
 import { useWorkspace } from "../../shared/workspace";
 import type {
@@ -90,11 +90,10 @@ export function ProductDetailsPage() {
 
 function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
   const { loadProduct, surface, can, role } = useWorkspace();
-  const canManageQA = surface === "backoffice" && role === "super-admin";
   const [mediaOpen, setMediaOpen] = useState(false);
   const [tab, setTab] = useState(initialTab);
   const [editor, setEditor] = useState<
-    "variant" | "offer" | { offer: OfferView; field: "price" | "stock" }
+    "variant" | "offer" | { offer: OfferView }
   >();
   const query = useQuery({
     queryKey: ["product", surface, id],
@@ -164,7 +163,6 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
         <Tab label="تنوع‌ها" />
         <Tab label="قیمت و موجودی" />
         <Tab label="پیش‌نمایش انتخاب" />
-        {canManageQA && <Tab label="پرسش و پاسخ" />}
       </Tabs>
       {tab === 0 && (
         <section className="product-workspace-section">
@@ -187,11 +185,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
                 title: "ترکیب ویژگی‌ها",
                 render: (v) => <b>{variantName(v)}</b>,
               },
-              {
-                title: "شناسه تنوع",
-                render: (v) => <small dir="ltr">{v.id}</small>,
-              },
-              { title: "SKU", render: (v) => <span dir="ltr">{v.sku}</span> },
+              { title: "SKU", render: (v) => <span dir="ltr">{variantCode(w, v.id)}</span> },
               {
                 title: "عرضه‌های قابل مشاهده",
                 render: (v) =>
@@ -233,9 +227,9 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
                         ? variantName(
                             w.variants.find((v) => v.id === o.variant_id)!,
                           )
-                        : o.variant_id}
+                        : "تنوع در دسترس نیست"}
                     </small>
-                    <small dir="ltr">{o.id}</small>
+                    <small>عرضهٔ {recordNumber(w, "offer", o.id)}</small>
                   </>
                 ),
               },
@@ -260,24 +254,7 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
                 title: "عملیات",
                 render: (o) => (
                   <>
-                    <Button
-                      disabled={
-                        !o.store_active ||
-                        !w.permissions.price_stores.includes(o.store_id)
-                      }
-                      onClick={() => setEditor({ offer: o, field: "price" })}
-                    >
-                      ویرایش قیمت
-                    </Button>
-                    <Button
-                      disabled={
-                        !o.store_active ||
-                        !w.permissions.stock_stores.includes(o.store_id)
-                      }
-                      onClick={() => setEditor({ offer: o, field: "stock" })}
-                    >
-                      ویرایش موجودی
-                    </Button>
+                    <Button disabled={!o.store_active || (!w.permissions.price_stores.includes(o.store_id) && !w.permissions.stock_stores.includes(o.store_id))} onClick={() => setEditor({ offer: o })}>قیمت و موجودی</Button>
                   </>
                 ),
               },
@@ -286,7 +263,6 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
         </section>
       )}
       {tab === 2 && <VariantSelection key={id} workspace={w} />}
-      {tab === 3 && canManageQA && <ProductQA key={id} productId={id} />}
       {editor === "variant" && (
         <VariantEditor workspace={w} close={() => setEditor(undefined)} />
       )}
@@ -297,7 +273,6 @@ function ProductPanel({ id, initialTab }: { id: string; initialTab: number }) {
         <OfferEditor
           workspace={w}
           offer={editor.offer}
-          field={editor.field}
           close={() => setEditor(undefined)}
         />
       )}
@@ -314,7 +289,6 @@ function VariantEditor({
 }) {
   const { execute, loadProduct, surface } = useWorkspace();
   const cache = useQueryClient();
-  const [sku, setSKU] = useState("");
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [version, setVersion] = useState(w.product.variant_version);
   const [key, setKey] = useState(crypto.randomUUID());
@@ -344,7 +318,7 @@ function VariantEditor({
               idempotency_key: key,
               variant: {
                 product_id: w.product.id,
-                sku,
+                sku: "",
                 values: w.axes.map((a) => ({
                   attribute_id: a.id,
                   value: selected[a.id] ?? "",
@@ -362,7 +336,7 @@ function VariantEditor({
         <DialogContent className="product-form">
           <Alert severity="info">
             هر ترکیب برای محصول فقط یک بار ساخته می‌شود؛ قیمت در فرم عرضه
-            فروشنده ثبت می‌شود.
+            فروشنده ثبت می‌شود. کد SKU به‌صورت خودکار با قالب chr و عدد ساخته می‌شود.
           </Alert>
           {error && (
             <Alert severity="error">
@@ -393,20 +367,6 @@ function VariantEditor({
               </Button>
             </Alert>
           )}
-          <TextField
-            label="SKU تنوع"
-            required
-            value={sku}
-            disabled={pending}
-            inputProps={{
-              pattern: "[A-Za-z0-9][A-Za-z0-9._\\-]{0,63}",
-              dir: "ltr",
-            }}
-            onChange={(e) => {
-              setSKU(e.target.value);
-              setKey(crypto.randomUUID());
-            }}
-          />
           {w.axes.map((a) => (
             <TextField
               select
@@ -516,7 +476,7 @@ function OfferCreator({
           >
             {w.variants.map((v) => (
               <MenuItem key={v.id} value={v.id}>
-                {variantName(v)} · {v.sku}
+                {variantName(v)} · {variantCode(w, v.id)}
               </MenuItem>
             ))}
           </TextField>
@@ -572,203 +532,13 @@ function OfferCreator({
   );
 }
 
-function OfferEditor({
-  workspace: w,
-  offer,
-  field,
-  close,
-}: {
-  workspace: ProductWorkspace;
-  offer: OfferView;
-  field: "price" | "stock";
-  close: () => void;
-}) {
-  const { execute, loadProduct, surface } = useWorkspace();
-  const cache = useQueryClient();
-  const [current, setCurrent] = useState(offer),
-    [value, setValue] = useState(
-      String(field === "price" ? offer.price / 10 : offer.stock),
-    );
-  const [key, setKey] = useState(crypto.randomUUID()),
-    [pending, setPending] = useState(false),
-    [error, setError] = useState("");
-  const [conflict, setConflict] = useState(false);
-  const price = field === "price";
-  const label = price ? "قیمت نهایی نقدی (تومان)" : "موجودی کل";
-  const [regular, setRegular] = useState(
-    offer.regular_price ? String(offer.regular_price / 10) : "",
-  );
-  return (
-    <Dialog
-      open
-      fullWidth
-      maxWidth="xl"
-      onClose={() => {
-        if (!pending) close();
-      }}
-    >
-      <DialogTitle>
-        {price ? "ویرایش قیمت عرضه" : "ویرایش موجودی عرضه"}
-      </DialogTitle>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          if (pending || conflict) return;
-          const amount = price ? tomanToRial(value) : Number(value);
-          if (
-            amount === undefined ||
-            (!price &&
-              (!Number.isInteger(amount) ||
-                amount < current.reserved ||
-                amount > 1000000000))
-          ) {
-            setError(
-              price
-                ? "قیمت مثبت با حداکثر یک رقم اعشار تومان وارد کنید."
-                : `موجودی کل نمی‌تواند کمتر از رزرو (${current.reserved}) باشد.`,
-            );
-            return;
-          }
-          const beforeDiscount =
-            regular.trim() === "" ? 0 : tomanToRial(regular);
-          if (
-            price &&
-            (beforeDiscount === undefined ||
-              (beforeDiscount > 0 && beforeDiscount <= amount))
-          ) {
-            setError(
-              "قیمت قبل از تخفیف باید بیشتر از قیمت نهایی باشد؛ برای حذف تخفیف فیلد را خالی کنید.",
-            );
-            return;
-          }
-          const command: Command = {
-            action: price ? "offer.price.update" : "offer.stock.update",
-            target: offer.id,
-            version: current.version,
-            idempotency_key: key,
-            offer: price
-              ? { price: amount, regular_price: beforeDiscount }
-              : { stock: amount },
-          };
-          setError("");
-          setPending(true);
-          try {
-            await execute(command);
-            close();
-          } catch (e) {
-            setError(errorMessage(e));
-            if (e instanceof ApiError && e.status === 409) setConflict(true);
-          } finally {
-            setPending(false);
-          }
-        }}
-      >
-        <DialogContent className="product-form">
-          <p>
-            <b>{w.stores.find((s) => s.id === offer.store_id)?.name}</b> ·{" "}
-            {variantName(w.variants.find((v) => v.id === offer.variant_id)!)}
-            <small dir="ltr">{offer.id}</small>
-          </p>
-          <div className="offer-stock-summary">
-            <span>کل: {current.stock}</span>
-            <span>رزروشده: {current.reserved}</span>
-            <span>قابل تخصیص: {current.available}</span>
-          </div>
-          {error && <Alert severity="error">{error}</Alert>}
-          {conflict && (
-            <Button
-              disabled={pending}
-              onClick={async () => {
-                setPending(true);
-                try {
-                  const latest = await loadProduct(w.product.id);
-                  const next = latest.offers.find((o) => o.id === offer.id);
-                  if (!next) throw new Error("عرضه دیگر در دسترس نیست.");
-                  setCurrent(next);
-                  cache.setQueryData(
-                    ["product", surface, w.product.id],
-                    latest,
-                  );
-                  setKey(crypto.randomUUID());
-                  setConflict(false);
-                  setError(
-                    "نسخه تازه دریافت شد؛ ورودی شما حفظ شده است. مقدار جاری را بررسی و دوباره ثبت کنید.",
-                  );
-                } catch (e) {
-                  setError(errorMessage(e));
-                } finally {
-                  setPending(false);
-                }
-              }}
-            >
-              بازخوانی و بازبینی
-            </Button>
-          )}
-          {price && (
-            <TextField
-              label="قیمت قبل از تخفیف (تومان)"
-              type="number"
-              value={regular}
-              disabled={pending}
-              onChange={(e) => {
-                setRegular(e.target.value);
-                setKey(crypto.randomUUID());
-              }}
-              inputProps={{ min: 0.1, step: 0.1, max: 900000000000000 }}
-              helperText="اختیاری؛ قیمت نهایی همان مبلغ قابل پرداخت مشتری است. خالی یعنی بدون تخفیف."
-            />
-          )}
-          <TextField
-            label={label}
-            type="number"
-            required
-            value={value}
-            disabled={pending}
-            inputProps={{
-              min: price ? 0.1 : current.reserved,
-              max: price ? 900000000000000 : 1000000000,
-              step: price ? 0.1 : 1,
-            }}
-            onChange={(e) => {
-              setValue(e.target.value);
-              setKey(crypto.randomUUID());
-            }}
-            helperText={
-              price
-                ? `قیمت جاری: ${money(current.price)}`
-                : `رزرو قابل ویرایش نیست؛ موجودی باید حداقل ${current.reserved} باشد.`
-            }
-          />
-          <p className="muted">
-            وقفه تأمین: {current.lead_days} روز{" "}
-            {current.lead_day_basis === "calendar" ? "تقویمی" : "کاری"}؛ از
-            فروشنده، فقط خواندنی.
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button disabled={pending} onClick={close}>
-            انصراف
-          </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={pending || conflict}
-          >
-            ثبت تغییر عرضه
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
-  );
-}
-
 function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
   const { resolveVariant, surface } = useWorkspace();
-  const [selection, setSelection] = useState<Record<string, string>>(() =>
-    Object.fromEntries(
-      w.variants[0]?.values?.map((v) => [v.attribute_id, v.value]) ?? [],
-    ),
-  );
+  const [manual, setManual] = useState<Record<string, string>>();
+  const best = [...w.offers].filter(o => o.store_active && !o.sale_restricted && o.available > 0 && o.price > 0 && w.variants.some(v => v.id === o.variant_id)).sort((a, b) => a.price - b.price || a.lead_days - b.lead_days || a.id.localeCompare(b.id))[0];
+  const automatic = w.variants.find(v => v.id === best?.variant_id) ?? w.variants[0];
+  const selection = manual ?? Object.fromEntries(automatic?.values.map(v => [v.attribute_id, v.value]) ?? []);
+  const setSelection = setManual;
   const complete = w.axes.every((a) => !!selection[a.id]);
   const values = w.axes.map((a) => ({
     attribute_id: a.id,
@@ -783,8 +553,9 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
     <section className="product-workspace-section">
       <Alert severity="info">
         پیش‌نمایش انتخاب تنوع با داده جاری عرضه‌ها؛ این بخش ثبت سفارش یا محاسبه
-        قیمت نهایی خرید نیست.
+        قیمت نهایی خرید نیست. در حالت خودکار، ارزان‌ترین عرضهٔ موجود و سپس تأمین زودتر انتخاب می‌شود.
       </Alert>
+      <Button onClick={() => setManual(undefined)}>انتخاب خودکار بر اساس قیمت و تأمین</Button>
       {w.axes.map((a) => (
         <div className="variant-chip-group" key={a.id}>
           <div>
@@ -821,7 +592,7 @@ function VariantSelection({ workspace: w }: { workspace: ProductWorkspace }) {
         <div data-testid="resolved-variant">
           <p>
             تنوع انتخاب‌شده: <b>{variantName(query.data.variant)}</b>
-            <small dir="ltr">{query.data.variant.id}</small>
+            <small dir="ltr">{variantCode(w, query.data.variant.id)}</small>
           </p>
           <DataTable
             rows={query.data.offers}

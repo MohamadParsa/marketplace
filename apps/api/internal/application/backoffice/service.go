@@ -120,6 +120,8 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		state.HomeSettings = DefaultHomeSettings()
 	}
 	state.CardPreviews = BuildCardPreviews(state)
+	state.RecordNumbers = scopedRecordNumbers(state, state.RecordNumbers)
+	state.LastRecordNumber = 0
 	return state, nil
 }
 func (s *Service) Execute(ctx context.Context, actor identity.User, command Command) error {
@@ -243,7 +245,7 @@ func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, 
 		return removeIcon(state, c)
 	case "banner.create", "banner.save", "banner.publish", "banner.media.remove":
 		return applyBanner(state, c, id)
-	case "variant.create", "offer.create", "offer.price.update", "offer.stock.update":
+	case "variant.create", "offer.create", "offer.update", "offer.price.update", "offer.stock.update":
 		return applyProduct(state, c, id)
 	case "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window":
 		return applyAttributes(state, c, id)

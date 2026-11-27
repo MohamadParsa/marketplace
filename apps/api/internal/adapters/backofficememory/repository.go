@@ -19,6 +19,7 @@ type Repository struct {
 }
 
 func New(state backoffice.Workspace) *Repository {
+	backoffice.EnsureRecordNumbers(&state)
 	return &Repository{state: state, qaQuestions: map[string][]catalog.ProductQuestion{}, qaReceipts: map[qaReceiptKey]string{}}
 }
 func clone(state backoffice.Workspace) (backoffice.Workspace, error) {
@@ -54,6 +55,7 @@ func (r *Repository) Update(ctx context.Context, apply func(*backoffice.Workspac
 	if err := apply(&next); err != nil {
 		return err
 	}
+	backoffice.EnsureRecordNumbers(&next)
 	r.state = next
 	return nil
 }

@@ -181,12 +181,14 @@ func TestCatalogSeedCollisionRollsBackEverything(t *testing.T) {
 	w := backofficememory.Fixture()
 	w.Brands = append(w.Brands, catalog.Brand{ID: "gsp-brand-1", Name: "ویرایش محلی"})
 	repo := backofficememory.New(w)
+	// Constructor-assigned display numbers are part of the baseline, not an import change.
+	baseline, _ := repo.Snapshot(context.Background())
 	s, m := seedFixture()
 	if _, e := backoffice.ApplyCatalogSeed(context.Background(), repo, s, m, true, time.Now()); e == nil {
 		t.Fatal("collision overwrote local data")
 	}
 	after, _ := repo.Snapshot(context.Background())
-	before, _ := json.Marshal(w)
+	before, _ := json.Marshal(baseline)
 	actual, _ := json.Marshal(after)
 	if !bytes.Equal(before, actual) {
 		t.Fatal("partial import survived collision")

@@ -1,3 +1,4 @@
+import { recordNumber } from "../../shared/format";
 import { CreateButton } from "../../shared/create-button";
 import { FilterPanel } from "../../shared/filter-panel";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
@@ -127,16 +128,6 @@ export function SharedAttributesPage() {
             {
               title: "نوع / واحد",
               render: (a) => `${kinds[a.kind]}${a.unit ? " / " + a.unit : ""}`,
-            },
-            {
-              title: "دسته‌های مرتبط",
-              render: (a) =>
-                (state.categories ?? [])
-                  .filter((c) =>
-                    c.bindings?.some((b) => b.attribute_id === a.id),
-                  )
-                  .map((c) => c.name)
-                  .join("، ") || "بدون انتساب",
             },
             {
               title: "عملیات",
@@ -333,7 +324,7 @@ function AttributeEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="xl"
+      maxWidth="md"
       onClose={() => {
         if (!pending) close();
       }}
@@ -363,19 +354,7 @@ function AttributeEditor({
             disabled={!editable || pending}
             inputProps={{ maxLength: 80 }}
           />
-          <TextField
-            label={attribute.id ? "کد چریوا (ثابت)" : "کد یکتا"}
-            value={draft.code}
-            onChange={(e) => change("code", e.target.value)}
-            required
-            disabled={!editable || pending || !!attribute.id}
-            inputProps={{ pattern: "[a-z][a-z0-9\\-]{0,63}", dir: "ltr" }}
-            helperText={
-              attribute.id
-                ? "کد چریوا برای جست‌وجو و ارجاع؛ نام خصوصیت در فرم‌ها نمایش داده می‌شود."
-                : "با chr- شروع کنید؛ حروف کوچک انگلیسی، رقم و خط تیره. پس از ایجاد، کد ثابت چریوا نمایش داده می‌شود."
-            }
-          />
+          {attribute.id ? <TextField label="شمارهٔ خصوصیت" value={recordNumber(state, "attribute", attribute.id)} disabled /> : <p className="muted">شمارهٔ خصوصیت پس از ذخیره به‌صورت خودکار تعیین می‌شود.</p>}
           <div role="group" aria-label="نوع خصوصیت" className="toolbar">
             <OptionSelect
               label={"نوع خصوصیت"}
@@ -409,140 +388,11 @@ function AttributeEditor({
               disabled={!editable || pending || used}
             />
           )}
-          {draft.kind === "enum" && (
-            <section aria-label="گروه‌های نمایشی مقادیر">
-              <h3>گروه نمایشی گارانتی</h3>
-              <p>
-                عنوان گروه فقط نمایش را ساده می‌کند. نام واقعی، قیمت و موجودی هر
-                عرضه حفظ می‌شود؛ ذخیره روی همه محصولات مرتبط اثر دارد.
-              </p>
-              {(draft.groups ?? []).map((group, index) => (
-                <fieldset key={group.id} disabled={!groupEditable || pending}>
-                  <legend>{group.name || "گروه جدید"}</legend>
-                  <TextField
-                    label="عنوان گروه"
-                    value={group.name}
-                    inputProps={{ maxLength: 80 }}
-                    onChange={(e) => {
-                      setDraft({
-                        ...draft,
-                        groups: draft.groups!.map((g, i) =>
-                          i === index ? { ...g, name: e.target.value } : g,
-                        ),
-                      });
-                      setKey(crypto.randomUUID());
-                    }}
-                  />
-                  <label>
-                    <Checkbox
-                      checked={group.active}
-                      onChange={(e) => {
-                        setDraft({
-                          ...draft,
-                          groups: draft.groups!.map((g, i) =>
-                            i === index
-                              ? { ...g, active: e.target.checked }
-                              : g,
-                          ),
-                        });
-                        setKey(crypto.randomUUID());
-                      }}
-                    />
-                    فعال در نمایش
-                  </label>
-                  <MultiChoiceField
-                    label="مقادیر عضو گروه"
-                    value={group.values}
-                    options={options
-                      .split("\n")
-                      .filter(Boolean)
-                      .map((value) => ({ id: value, name: value }))}
-                    disabled={!groupEditable || pending}
-                    onChange={(values) => {
-                      setDraft({
-                        ...draft,
-                        groups: draft.groups!.map((g, i) =>
-                          i === index ? { ...g, values } : g,
-                        ),
-                      });
-                      setKey(crypto.randomUUID());
-                    }}
-                  />
-                  <Button
-                    color="error"
-                    onClick={() => {
-                      setDraft({
-                        ...draft,
-                        groups: draft.groups!.filter((_, i) => i !== index),
-                      });
-                      setKey(crypto.randomUUID());
-                    }}
-                  >
-                    حذف گروه نمایشی
-                  </Button>
-                </fieldset>
-              ))}
-              <CreateButton
-                disabled={
-                  !groupEditable ||
-                  pending ||
-                  (draft.groups?.length ?? 0) >= 100
-                }
-                onClick={() => {
-                  setDraft({
-                    ...draft,
-                    groups: [
-                      ...(draft.groups ?? []),
-                      {
-                        id: "group-" + crypto.randomUUID(),
-                        name: "",
-                        values: [],
-                        active: true,
-                      },
-                    ],
-                  });
-                  setKey(crypto.randomUUID());
-                }}
-              >
-                افزودن گروه نمایشی
-              </CreateButton>
-            </section>
-          )}
         </DialogContent>
         <DialogActions>
           <Button disabled={pending} onClick={close}>
             انصراف
           </Button>
-          {attribute.id && (
-            <Button
-              disabled={!groupEditable || pending}
-              onClick={async () => {
-                if (pending) return;
-                setPending(true);
-                setError("");
-                try {
-                  await execute({
-                    action: "attribute.groups.set",
-                    target: attribute.id,
-                    version: attribute.version,
-                    attribute: {
-                      ...attribute,
-                      options: [],
-                      groups: draft.groups ?? [],
-                    },
-                    idempotency_key: key,
-                  });
-                  close();
-                } catch (e) {
-                  setError(message(e));
-                } finally {
-                  setPending(false);
-                }
-              }}
-            >
-              ثبت فقط گروه‌های نمایشی
-            </Button>
-          )}
           {attribute.id && (
             <Button
               color="error"

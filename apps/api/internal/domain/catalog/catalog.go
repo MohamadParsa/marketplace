@@ -134,12 +134,45 @@ type AttributeValueGroup struct {
 	Active bool     `json:"active"`
 }
 type AttributeBinding struct {
-	AttributeID string `json:"attribute_id"`
-	Axis        bool   `json:"axis"`
-	Card        bool   `json:"card"`
-	Filter      bool   `json:"filter"`
-	Position    int    `json:"position"`
+	AttributeID    string `json:"attribute_id"`
+	Axis           bool   `json:"axis"`
+	Card           bool   `json:"card"`
+	Filter         bool   `json:"filter"`
+	Position       int    `json:"position"`
+	AxisPosition   *int   `json:"axis_position,omitempty"`
+	CardPosition   *int   `json:"card_position,omitempty"`
+	FilterPosition *int   `json:"filter_position,omitempty"`
 }
+
+// Missing role positions preserve the ordering of existing category bindings.
+func (b AttributeBinding) PositionFor(role string) int {
+	var value *int
+	switch role {
+	case "axis":
+		value = b.AxisPosition
+	case "card":
+		value = b.CardPosition
+	case "filter":
+		value = b.FilterPosition
+	}
+	if value != nil {
+		return *value
+	}
+	return b.Position
+}
+
+func (b AttributeBinding) ValidPositions() bool {
+	if b.Position < 0 || b.Position > 10000 {
+		return false
+	}
+	for _, position := range []*int{b.AxisPosition, b.CardPosition, b.FilterPosition} {
+		if position != nil && (*position < 0 || *position > 10000) {
+			return false
+		}
+	}
+	return true
+}
+
 type AttributeValue struct {
 	AttributeID string `json:"attribute_id"`
 	Value       string `json:"value"`

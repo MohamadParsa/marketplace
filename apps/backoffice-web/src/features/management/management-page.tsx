@@ -22,12 +22,13 @@ import {
   Status,
   type Field,
 } from "../../shared/components";
-import { labels, money } from "../../shared/format";
+import { labels, money, recordNumber } from "../../shared/format";
 import type { Command, Category, Product } from "../../shared/types";
 import { CategoryBindingsDialog } from "./shared-attributes";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { categoryPath } from "./category-tree";
 import { ProductQuickDialog } from "./product-workspace";
+import { ProductThumbnail } from "./product-thumbnail";
 import {
   CatalogIcon,
   CatalogIconDialog,
@@ -97,7 +98,7 @@ export function ManagementPage({
     categories: "دسته‌ها و خصوصیات",
     brands: "برندها",
     products: "محصولات و بررسی محتوا",
-    pricing: "قوانین کمیسیون",
+    pricing: "راهنمای قیمت و کمیسیون",
     shipping: "ارسال و تقویم کاری",
   };
   const create = () =>
@@ -128,7 +129,7 @@ export function ManagementPage({
     <>
       <PageHeader
         title={titles[section]}
-        description="مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"
+        description={section === "pricing" ? "مسیر تنظیم قیمت فروش، مارکاپ و وضعیت تعریف قواعد کمیسیون" : "مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"}
         action={
           ["users", "stores", "categories", "products"].includes(section) &&
           (section === "products"
@@ -156,7 +157,7 @@ export function ManagementPage({
       />
       {policyError && <Alert severity="error">{policyError}</Alert>}
       <section className="panel">
-        {section !== "products" && (
+        {section !== "products" && section !== "pricing" && (
           <FilterPanel onSearch={() => setSearch(searchDraft)}>
             <TextField
               label="جست‌وجو"
@@ -177,7 +178,7 @@ export function ManagementPage({
                 render: (u) => (
                   <>
                     <b>{u.name}</b>
-                    <small>{u.id}</small>
+                    <small>{recordNumber(state, "user", u.id)}</small>
                   </>
                 ),
               },
@@ -256,7 +257,7 @@ export function ManagementPage({
                 render: (s) => (
                   <>
                     <b>{s.name}</b>
-                    <small>{s.id}</small>
+                    <small>{recordNumber(state, "store", s.id)}</small>
                   </>
                 ),
               },
@@ -457,13 +458,12 @@ export function ManagementPage({
                   title: "محصول",
                   render: (p) => (
                     <>
-                      <b>{p.name}</b>
+                      <div className="product-grid-name">{surface === "backoffice" && <ProductThumbnail imageID={p.image_id || p.gallery_ids?.[0]} name={p.name} />}<b>{p.name}</b></div>
                       {p.content_revision?.state === "pending" && (
                         <small>
                           ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
                         </small>
                       )}
-                      <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
                       <small>
                         نسخه {p.version} · {p.public_code || "کد در حال تخصیص"}
                       </small>
@@ -491,6 +491,7 @@ export function ManagementPage({
                   title: "عملیات",
                   render: (p) => (
                     <>
+                      <Button component={Link} to={`/products/${p.id}`}>جزئیات محصول</Button>
                       <Button
                         onClick={() => onCatalogEdit?.(p)}
                         disabled={
@@ -558,38 +559,12 @@ export function ManagementPage({
             />
           </>
         )}
-        {section === "pricing" && (
-          <DataTable
-            searchable={false}
-            rows={filtered(state.rules ?? [])}
-            columns={[
-              { title: "قانون", render: (r) => <b>{r.name}</b> },
-              { title: "سطح", render: (r) => labels[r.level] },
-              { title: "شیوه", render: (r) => labels[r.kind] },
-              {
-                title: "مقدار",
-                render: (r) =>
-                  r.kind === "percent" ? `${r.value}٪` : money(r.value),
-              },
-              {
-                title: "فعال",
-                render: (r) => (
-                  <Switch
-                    checked={r.active}
-                    disabled={role !== "super-admin"}
-                    onChange={() =>
-                      open(
-                        "تغییر اعتبار قانون",
-                        { action: "rule.toggle", target: r.id },
-                        [{ name: "reason", label: "دلیل تغییر" }],
-                      )
-                    }
-                  />
-                ),
-              },
-            ]}
-          />
-        )}
+        {section === "pricing" && <section>
+          <h2>قیمت فروش و قرارداد فروشگاه</h2>
+          <p>قیمت پایه و موجودی برای عرضهٔ هر فروشگاه در «محصولات و محتوا ← قیمت و موجودی» تنظیم می‌شوند. مارکاپ هر روش فروش از تنظیمات همان دسته و روش فروش خوانده می‌شود.</p>
+          <Alert severity="info">این صفحه قرارداد فروشگاه نیست. تعریف و ویرایش قانون کمیسیون، پس از تعیین قواعد قرارداد و تسویه در دسترس قرار می‌گیرد.</Alert>
+          <div className="toolbar"><Button component={Link} to="/products">قیمت و موجودی محصولات</Button><Button component={Link} to="/categories">مارکاپ دسته‌ها</Button><Button component={Link} to="/sales-methods">روش‌های فروش</Button></div>
+        </section>}
         {section === "shipping" && (
           <>
             <div className="calendar-note">

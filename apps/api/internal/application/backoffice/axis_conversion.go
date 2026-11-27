@@ -25,10 +25,11 @@ type AxisMapping struct {
 	Values    []catalog.AttributeValue `json:"values"`
 }
 type AxisConversionInput struct {
-	CategoryID string        `json:"category_id"`
-	Version    int           `json:"version"`
-	AxisIDs    []string      `json:"axis_ids"`
-	Mapping    []AxisMapping `json:"mapping"`
+	Bindings   []catalog.AttributeBinding `json:"bindings"`
+	CategoryID string                     `json:"category_id"`
+	Version    int                        `json:"version"`
+	AxisIDs    []string                   `json:"axis_ids"`
+	Mapping    []AxisMapping              `json:"mapping"`
 }
 type AxisProduct struct {
 	ID   string `json:"id"`
@@ -89,13 +90,18 @@ type AxisPlanView struct {
 	Impact      AxisImpact `json:"impact"`
 }
 
-func axisActor(w Workspace, a identity.User) (identity.User, error) {
+func axisActor(w Workspace, a identity.User, inputs ...AxisConversionInput) (identity.User, error) {
 	if a.Surface != identity.SurfaceBackoffice {
 		return identity.User{}, ErrForbidden
 	}
 	current, e := currentActor(w, a)
 	if e != nil || !allowsAction(current, CategoryAxesConvert) {
 		return current, ErrForbidden
+	}
+	for _, input := range inputs {
+		if input.Bindings != nil && !allowsAction(current, "category.bindings.set") {
+			return current, ErrForbidden
+		}
 	}
 	return current, nil
 }
@@ -148,6 +154,19 @@ func (s *Service) ReadAxisSource(ctx context.Context, a identity.User, id string
 }
 func normalizeAxisInput(in AxisConversionInput) (AxisConversionInput, error) {
 	out := in
+	if in.Bindings != nil {
+		out.Bindings = append([]catalog.AttributeBinding{}, in.Bindings...)
+		if len(out.Bindings) > 100 {
+			return out, ErrInvalid
+		}
+		for i := range out.Bindings {
+			var e error
+			out.Bindings[i].AttributeID, e = ResolvePublicReference("a", out.Bindings[i].AttributeID)
+			if e != nil || !out.Bindings[i].ValidPositions() {
+				return out, ErrInvalid
+			}
+		}
+	}
 	out.AxisIDs = append([]string{}, in.AxisIDs...)
 	out.Mapping = append([]AxisMapping{}, in.Mapping...)
 	if len(out.AxisIDs) > 100 || len(out.Mapping) > MaxAxisVariants || out.Version < 0 {
@@ -214,6 +233,30 @@ func analyzeAxes(w Workspace, in AxisConversionInput) (AxisPreview, error) {
 		a, ok := definitions[id]
 		if !ok || a.Kind != "enum" {
 			return out, ErrInvalid
+		}
+	}
+	if in.Bindings != nil {
+		seen := map[string]bool{}
+		for _, b := range in.Bindings {
+			a, exists := definitions[b.AttributeID]
+			if !exists || seen[b.AttributeID] || !b.ValidPositions() || (b.Axis && a.Kind != "enum") || b.Axis != slices.Contains(in.AxisIDs, b.AttributeID) {
+				return out, ErrInvalid
+			}
+			seen[b.AttributeID] = true
+		}
+		for _, id := range in.AxisIDs {
+			if !seen[id] {
+				return out, ErrInvalid
+			}
+		}
+		for _, p := range w.Products {
+			if products[p.ID] {
+				for _, value := range p.Attributes {
+					if !seen[value.AttributeID] {
+						return out, ErrConflict
+					}
+				}
+			}
 		}
 	}
 	if len(axisBindings(source.Category.Bindings, in.AxisIDs)) > 100 {
@@ -365,7 +408,7 @@ func (s *Service) PreviewAxisConversion(ctx context.Context, a identity.User, in
 	if e != nil {
 		return AxisPreview{}, e
 	}
-	if _, e = axisActor(w, a); e != nil {
+	if _, e = axisActor(w, a, in); e != nil {
 		return AxisPreview{}, e
 	}
 	return analyzeAxes(w, in)
@@ -384,7 +427,7 @@ func (s *Service) PrepareAxisConversion(ctx context.Context, a identity.User, in
 		return out, e
 	}
 	e = s.repository.Update(ctx, func(w *Workspace) error {
-		if _, e := axisActor(*w, a); e != nil {
+		if _, e := axisActor(*w, a, in); e != nil {
 			return e
 		}
 		for _, p := range w.AxisPlans {
@@ -437,6 +480,9 @@ func (s *Service) ApplyAxisConversion(ctx context.Context, a identity.User, id, 
 			return ErrNotFound
 		}
 		plan := &w.AxisPlans[index]
+		if _, e := axisActor(*w, a, plan.Input); e != nil {
+			return e
+		}
 		if plan.Actor != a.ID {
 			return ErrForbidden
 		}
@@ -476,6 +522,9 @@ func (s *Service) ApplyAxisConversion(ctx context.Context, a identity.User, id, 
 			if c.ID == plan.Input.CategoryID {
 				plan.PreviousBindings = append([]catalog.AttributeBinding{}, c.Bindings...)
 				c.Bindings = axisBindings(c.Bindings, plan.Input.AxisIDs)
+				if plan.Input.Bindings != nil {
+					c.Bindings = append([]catalog.AttributeBinding{}, plan.Input.Bindings...)
+				}
 				c.Version++
 			}
 		}

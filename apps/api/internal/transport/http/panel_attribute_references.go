@@ -50,6 +50,16 @@ func panelVariants(values []catalog.Variant) []catalog.Variant {
 	return out
 }
 func panelWorkspace(state backoffice.Workspace) backoffice.Workspace {
+	if state.RecordNumbers != nil {
+		numbers := make(map[string]int64, len(state.RecordNumbers))
+		for key, number := range state.RecordNumbers {
+			if strings.HasPrefix(key, "attribute|") {
+				key = "attribute|" + backoffice.PublicReference("a", strings.TrimPrefix(key, "attribute|"))
+			}
+			numbers[key] = number
+		}
+		state.RecordNumbers = numbers
+	}
 	state.Attributes = panelDefinitions(state.Attributes)
 	state.Categories = slices.Clone(state.Categories)
 	for i := range state.Categories {

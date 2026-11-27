@@ -11,6 +11,7 @@ import {
   LinearProgress,
   TextField,
 } from "@mui/material";
+import { recordNumber } from "../../shared/format";
 import { useWorkspace } from "../../shared/workspace";
 import { ApiError } from "../../shared/api";
 import type { User } from "../../shared/types";
@@ -30,7 +31,7 @@ export function WalletCreditDialog({
   close: () => void;
   onCredited: (result: WalletCreditResult) => void;
 }) {
-  const { actorID, readCustomerWallet, creditCustomerWallet } = useWorkspace();
+  const { state, actorID, readCustomerWallet, creditCustomerWallet } = useWorkspace();
   const storageKey = `cherriva:pending-admin-credit:${actorID}:${user.id}`;
   const [recovered] = useState<
     { key: string; input: WalletCreditInput } | undefined
@@ -152,7 +153,7 @@ export function WalletCreditDialog({
             className="muted"
             style={{ display: "block", overflowWrap: "anywhere" }}
           >
-            {user.id}
+            {recordNumber(state, "user", user.id)}
           </small>
         </p>
         {wallet && (
@@ -182,9 +183,6 @@ export function WalletCreditDialog({
                 : "این اعتبار فقط در سایت قابل خرج است."}
             </p>
             <p>موجودی پس از ثبت: {money(result.balance_toman)}</p>
-            <small dir="ltr" style={{ overflowWrap: "anywhere" }}>
-              {result.id}
-            </small>
           </Alert>
         ) : (
           <form

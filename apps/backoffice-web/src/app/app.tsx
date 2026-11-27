@@ -7,7 +7,7 @@ import { UsersPage } from "../features/management/users-page";
 import { RolesPage } from "../features/management/access-panel";
 import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
 import { CouponsPage } from "../features/commerce/coupons-page";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BrowserRouter,
   Link,
@@ -63,6 +63,7 @@ import { SalesMethodsPage } from "../features/commerce/sales-methods-page";
 import { CatalogPage } from "../features/management/catalog-pages";
 import { LegacyCatalogRoute } from "../features/management/legacy-catalog-route";
 import { ProductReviewsPage } from "../features/management/product-reviews-page";
+import { ProductQuestionsPage } from "../features/management/product-questions-page";
 import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
@@ -133,14 +134,8 @@ const menu = [
     items: [
       { path: "/store-preparation", label: "وقفه و تقویم فروشگاه", icon: <LocalShippingOutlined /> },
       {
-        path: "/product-reviews",
-        label: "نظرات محصولات",
-        icon: <RateReviewOutlined />,
-        roles: ["super-admin"],
-      },
-      {
         path: "/pricing",
-        label: "قیمت و کمیسیون",
+        label: "وضعیت قوانین کمیسیون",
         icon: <PercentOutlined />,
         roles: ["super-admin", "finance"],
       },
@@ -170,6 +165,8 @@ const menu = [
         label: "محصولات و محتوا",
         icon: <Inventory2Outlined />,
       },
+      { path: "/product-reviews", label: "نظرات محصولات", icon: <RateReviewOutlined />, roles: ["super-admin"] },
+      { path: "/product-questions", label: "پرسش و پاسخ محصولات", icon: <RateReviewOutlined />, roles: ["super-admin"] },
     ],
   },
   {
@@ -278,9 +275,12 @@ function Workspace({
     if (query.error instanceof ApiError && query.error.status === 401) logout();
   }, [query.error, logout]);
   const [expandedPanels, setExpandedPanels] = useState<Record<string,boolean>>(
-    Object.fromEntries(menu.map(group => [group.heading,group.heading!=="کاتالوگ"]))
+    Object.fromEntries(menu.map(group => [group.heading, false]))
   );
+  const previousMenuPath = useRef(location.pathname);
   useEffect(() => {
+    if (previousMenuPath.current === location.pathname) return;
+    previousMenuPath.current = location.pathname;
     const active=menu.find(group=>group.items.some(item=>location.pathname===item.path||item.path!=="/"&&location.pathname.startsWith(item.path+"/")));
     if(active)setExpandedPanels(previous=>({...previous,[active.heading]:true}));
   }, [location.pathname]);
@@ -613,6 +613,10 @@ function Workspace({
                       <BannersPage />
                     )
                   }
+                />
+                <Route
+                  path="/product-questions"
+                  element={session.user.Surface === "backoffice" && role === "super-admin" ? <ProductQuestionsPage /> : <Navigate to="/" replace />}
                 />
                 <Route
                   path="/product-reviews"

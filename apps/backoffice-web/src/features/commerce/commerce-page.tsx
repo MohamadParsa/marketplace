@@ -1,4 +1,5 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { displayRecord } from "../../shared/format";
 import { MultiChoiceField } from "../../shared/option-select";
 import {
   deliveryPromise,
@@ -418,7 +419,7 @@ export function CommercePage({
               .reverse()
               .map((a, i) => (
                 <p key={a.id ?? i}>
-                  {a.action} · {a.target}
+                  {a.action} · {data.purchases.find(p => p.id === a.target)?.number ?? data.deposits.find(d => d.id === a.target)?.customer_name ?? data.refunds.find(r => r.id === a.target)?.customer_name ?? displayRecord(state, a.target)}
                 </p>
               ))}
           </section>
@@ -1254,24 +1255,25 @@ function SettingsForm({
                     <Button component={Link} to="/shipping">
                       مدیریت روش‌های حمل
                     </Button>
-                    <h3>زمان آماده‌سازی و تحویل</h3>
+                    <h3>قواعد محاسبهٔ موعد آماده‌شدن و تحویل</h3>
+                    <p>این ساعت‌ها برای محاسبهٔ موعد سفارش‌اند؛ ساعت کاری یا بازهٔ حمل نیستند. روزهای کاری سایت در پایین تعریف می‌شوند و هر فروشگاه می‌تواند روزهای کاری خودش را تنظیم کند.</p>
                     <div className="commerce-grid">
                       <Field
-                        label="ساعت آماده‌سازی (تهران، HH:mm)"
+                        label="ساعت آماده‌شدن در روز پایان وقفه (تهران)"
                         value={timing.ready_time}
                         onChange={(ready_time) =>
                           setTiming({ ...timing, ready_time })
                         }
                       />
                       <Field
-                        label="مهلت شروع همان روز (HH:mm)"
+                        label="مهلت پرداخت برای شروع محاسبه از همان روز"
                         value={timing.cutoff_time}
                         onChange={(cutoff_time) =>
                           setTiming({ ...timing, cutoff_time })
                         }
                       />
                       <Field
-                        label="حداقل فاصله تا اسلات (دقیقه)"
+                        label="حداقل فرصت از آماده‌شدن تا شروع بازهٔ تحویل (دقیقه)"
                         type="number"
                         value={String(timing.min_slot_lead_minutes)}
                         onChange={(value) =>
@@ -1301,10 +1303,11 @@ function SettingsForm({
                       شروع در وقفهٔ مثبت شمرده نمی‌شود. محاسبه از ساعت مهلت به
                       بعد، از اولین روز کاری بعد آغاز می‌شود.
                     </p>
-                    <h3>روزهای تعطیل هفته</h3>
+                    <p>مثال: با مهلت ۱۲:۰۰، پرداخت ساعت ۱۳:۰۰ از اولین روز کاری بعد محاسبه می‌شود. اگر پایان وقفه دوشنبه باشد و ساعت آماده‌شدن ۰۹:۰۰، بازهٔ تحویل باید حداقل به‌اندازهٔ فرصت تعیین‌شده پس از آن شروع شود.</p>
+                    <h3>روزهای کاری سایت</h3>
                     <MultiChoiceField
-                      label="روزهای تعطیل هفته"
-                      value={days.map(String)}
+                      label="روزهای کاری سایت"
+                      value={[0, 1, 2, 3, 4, 5, 6].filter((day) => !days.includes(day)).map(String)}
                       options={[
                         "یکشنبه",
                         "دوشنبه",
@@ -1315,8 +1318,9 @@ function SettingsForm({
                         "شنبه",
                       ].map((name, i) => ({ id: String(i), name }))}
                       disabled={busy || !can("shipping.write")}
-                      onChange={(ids) => setDays(ids.map(Number))}
+                      onChange={(ids) => setDays([0, 1, 2, 3, 4, 5, 6].filter((day) => !ids.includes(String(day))))}
                     />
+                    <p>فروشگاه‌ها به‌صورت پیش‌فرض از این روزها استفاده می‌کنند؛ تغییر روزهای کاری هر فروشگاه از «وقفه و تقویم فروشگاه» است. تعطیلات تاریخ‌دار سایت در هر دو حالت اعمال می‌شوند.</p>
                     <Field
                       label="تعطیلات استثنایی؛ هر خط یک تاریخ YYYY-MM-DD"
                       value={holidays}

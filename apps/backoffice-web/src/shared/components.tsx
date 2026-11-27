@@ -330,12 +330,12 @@ export function DataTable<T extends { id: string }>({
             </tr>
           </thead>
           <tbody>
-            {(remote ? rows : paged.rows).map((row) => (
+            {(remote ? rows : paged.rows).map((row, rowIndex) => (
               <tr key={row.id}>
                 <td>
                   <input
                     type="checkbox"
-                    aria-label={`انتخاب ردیف ${row.id}`}
+                    aria-label={`انتخاب ردیف ${(rowIndex + 1).toLocaleString("fa-IR")}`}
                     checked={selected.includes(row.id)}
                     onChange={(e) =>
                       setSelected(

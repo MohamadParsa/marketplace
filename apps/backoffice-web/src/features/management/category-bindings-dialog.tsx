@@ -1,27 +1,44 @@
-import { CreateButton } from "../../shared/create-button";
-import { AxisConversionDialog } from "./axis-conversion-dialog";
-import { useMemo, useState } from "react";
+import { useState, type DragEvent } from "react";
 import {
   Alert,
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useWorkspace } from "../../shared/workspace";
 import { PaginationControls, usePagedRows } from "../../shared/pagination";
-import type { AttributeDefinition, Category } from "../../shared/types";
+import type { AttributeBinding, Category } from "../../shared/types";
+import { AxisConversionDialog } from "./axis-conversion-dialog";
 
-const kinds = { enum: "انتخابی", text: "متن", number: "عدد" };
-const roleTitles = {
-  axis: "محور تنوع",
-  card: "نمایش کارت",
-  filter: "فیلتر PLP",
-};
+type Role = "axis" | "card" | "filter";
+const roles: { id: Role; title: string; note: string }[] = [
+  {
+    id: "axis",
+    title: "محور تنوع",
+    note: "انتخاب مشتری و ترکیب‌های قابل خرید",
+  },
+  { id: "card", title: "نمایش کارت", note: "ویژگی‌های روی کارت محصول" },
+  { id: "filter", title: "فیلتر PLP", note: "فیلترهای فهرست محصولات" },
+];
+const order = (b: AttributeBinding, role: Role) =>
+  b[`${role}_position`] ?? b.position;
+const sameAxes = (a: AttributeBinding[], b: AttributeBinding[]) =>
+  JSON.stringify(
+    a
+      .filter((x) => x.axis)
+      .map((x) => x.attribute_id)
+      .sort(),
+  ) ===
+  JSON.stringify(
+    b
+      .filter((x) => x.axis)
+      .map((x) => x.attribute_id)
+      .sort(),
+  );
+
 export function CategoryBindingsDialog({
   category,
   close,
@@ -30,116 +47,136 @@ export function CategoryBindingsDialog({
   close: () => void;
 }) {
   const { state, execute, can } = useWorkspace();
+  const [original, setOriginal] = useState(category);
+  const [bindings, setBindings] = useState(category.bindings ?? []);
+  const [search, setSearch] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   const [conversion, setConversion] = useState(false);
-
-  const [original, setOriginal] = useState(category),
-    [bindings, setBindings] = useState(category.bindings ?? []),
-    [search, setSearch] = useState(""),
-    [error, setError] = useState(""),
-    [pending, setPending] = useState(false),
-    [key, setKey] = useState(crypto.randomUUID());
-  const attributes = state.attributes ?? [],
-    editable = can("category.bindings.set", "management") && !original.archived;
-  const products = useMemo(
-    () => (state.products ?? []).filter((p) => p.category_id === original.id),
-    [state.products, original.id],
+  const [key, setKey] = useState(crypto.randomUUID());
+  const [dragged, setDragged] = useState<{ id: string; source?: Role }>();
+  const [activeZone, setActiveZone] = useState<Role>();
+  const editable =
+    can("category.bindings.set", "management") && !original.archived;
+  const attributes = state.attributes ?? [];
+  const latest = state.categories?.find((c) => c.id === original.id);
+  const stale = !!latest && latest.version !== original.version;
+  const products = (state.products ?? []).filter(
+    (p) => p.category_id === original.id,
   );
-  const impacts = useMemo(() => {
-    const map = new Map<string, typeof products>();
-    for (const product of products)
-      for (const value of product.attributes ?? [])
-        map.set(value.attribute_id, [
-          ...(map.get(value.attribute_id) ?? []),
-          product,
-        ]);
-    return map;
-  }, [products]);
-  const latest = state.categories?.find((c) => c.id === original.id),
-    stale = latest && latest.version !== original.version;
-  const matches = (a: AttributeDefinition) =>
-    (a.name + " " + a.code + " " + kinds[a.kind])
-      .toLocaleLowerCase()
-      .includes(search.trim().toLocaleLowerCase());
-  const assigned = bindings
-    .map((b) => ({
-      binding: b,
-      attribute: attributes.find((a) => a.id === b.attribute_id),
-    }))
-    .filter(
-      (
-        v,
-      ): v is {
-        binding: (typeof bindings)[number];
-        attribute: AttributeDefinition;
-      } => !!v.attribute,
-    )
-    .sort(
-      (a, b) =>
-        a.binding.position - b.binding.position ||
-        a.attribute.name.localeCompare(b.attribute.name, "fa"),
-    );
   const available = usePagedRows(
-    attributes.filter(
-      (a) => !bindings.some((b) => b.attribute_id === a.id) && matches(a),
+    attributes.filter((a) =>
+      (a.name + " " + a.code)
+        .toLocaleLowerCase()
+        .includes(search.trim().toLocaleLowerCase()),
     ),
   );
-  const change = (
-    id: string,
-    field: "axis" | "card" | "filter" | "position",
-    value: boolean | number,
-  ) => {
-    setBindings((old) =>
-      old.map((b) => (b.attribute_id === id ? { ...b, [field]: value } : b)),
+  const members = (role: Role) =>
+    bindings
+      .filter((b) => b[role])
+      .sort(
+        (a, b) =>
+          order(a, role) - order(b, role) ||
+          a.attribute_id.localeCompare(b.attribute_id),
+      );
+  function change(next: AttributeBinding[]) {
+    setBindings(next);
+    setKey(crypto.randomUUID());
+    setError("");
+  }
+  function insert(id: string, role: Role, before?: string) {
+    if (!editable || pending) return;
+    const attribute = attributes.find((a) => a.id === id);
+    if (!attribute) return;
+    if (role === "axis" && attribute.kind !== "enum") {
+      setError("محور تنوع باید از نوع انتخابی باشد.");
+      return;
+    }
+    if (
+      !bindings.some((b) => b.attribute_id === id) &&
+      bindings.length >= 100
+    ) {
+      setError("حداکثر ۱۰۰ خصوصیت به هر دسته متصل می‌شود.");
+      return;
+    }
+    const ids = members(role)
+      .map((b) => b.attribute_id)
+      .filter((value) => value !== id);
+    const at = before ? ids.indexOf(before) : -1;
+    ids.splice(at < 0 ? ids.length : at, 0, id);
+    const next = bindings.some((b) => b.attribute_id === id)
+      ? bindings
+      : [
+          ...bindings,
+          {
+            attribute_id: id,
+            axis: false,
+            card: false,
+            filter: false,
+            position: bindings.length,
+          },
+        ];
+    change(
+      next.map((b) =>
+        ids.includes(b.attribute_id)
+          ? {
+              ...b,
+              [role]: true,
+              [`${role}_position`]: ids.indexOf(b.attribute_id),
+            }
+          : b,
+      ),
     );
-    setKey(crypto.randomUUID());
-  };
-  const add = (a: AttributeDefinition) => {
-    setBindings((old) => [
-      ...old,
-      {
-        attribute_id: a.id,
-        axis: false,
-        card: false,
-        filter: false,
-        position: Math.min(
-          10000,
-          Math.max(-1, ...old.map((b) => b.position)) + 1,
-        ),
-      },
-    ]);
-    setKey(crypto.randomUUID());
+  }
+  function drop(event: DragEvent, role: Role, before?: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    const id =
+      event.dataTransfer.getData("application/x-cherriva-attribute") ||
+      dragged?.id;
+    if (id && before !== id) insert(id, role, before);
+    setDragged(undefined);
+    setActiveZone(undefined);
+  }
+  function move(id: string, role: Role, direction: number) {
+    const ids = members(role).map((b) => b.attribute_id),
+      index = ids.indexOf(id),
+      target = index + direction;
+    if (target < 0 || target >= ids.length) return;
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    change(
+      bindings.map((b) =>
+        ids.includes(b.attribute_id)
+          ? { ...b, [`${role}_position`]: ids.indexOf(b.attribute_id) }
+          : b,
+      ),
+    );
+  }
+  const drag = (event: DragEvent, id: string, source?: Role) => {
+    event.dataTransfer.setData("application/x-cherriva-attribute", id);
+    event.dataTransfer.effectAllowed = "copyMove";
+    setDragged({ id, source });
   };
   if (conversion)
     return (
       <AxisConversionDialog
-        category={category}
+        category={original}
+        proposedBindings={bindings}
         close={() => setConversion(false)}
         completed={close}
       />
     );
   return (
-    <Dialog
-      open
-      fullWidth
-      maxWidth="xl"
-      onClose={() => {
-        if (!pending) close();
-      }}
-    >
-      <DialogTitle>خصوصیات دسته {original.name}</DialogTitle>
-      <DialogContent className="category-bindings-editor">
-        <Alert severity="info">
-          خصوصیت یک تعریف مشترک در کتابخانه دارد؛ نقش و ترتیب آن فقط برای همین
-          دسته است و از والد به ارث نمی‌رسد. ترتیب عددی کوچک‌تر جلوتر است؛ یک
-          ترتیب مشترک در هر سه نقش اعمال می‌شود.
-        </Alert>
-        {!editable && (
-          <Alert severity="warning">
-            {original.archived
-              ? "دسته بایگانی شده است؛ فقط می‌توانید تنظیمات را ببینید."
-              : "مجوز تغییر خصوصیات این دسته را ندارید؛ فرم فقط خواندنی است."}
-          </Alert>
-        )}
+    <Dialog open fullWidth maxWidth="xl" onClose={() => !pending && close()}>
+      <DialogTitle>خصوصیات دسته · {original.name}</DialogTitle>
+      <DialogContent className="category-zone-editor">
+        <p className="muted">
+          خصوصیت را از کتابخانه به هر بخش بکشید؛ یک خصوصیت می‌تواند در چند بخش
+          باشد. داخل هر بخش، ترتیب مستقل است. دکمه‌های افزودن و بالا/پایین برای
+          کار با صفحه‌کلید هم در دسترس‌اند.
+        </p>
+        {!editable && <Alert severity="info">این دسته فقط خواندنی است.</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
         {stale && (
           <Alert
             severity="warning"
@@ -147,249 +184,177 @@ export function CategoryBindingsDialog({
               <Button
                 disabled={pending}
                 onClick={() => {
-                  if (latest) {
-                    setOriginal(latest);
-                    setBindings(latest.bindings ?? []);
-                    setKey(crypto.randomUUID());
-                    setError("");
-                  }
+                  setOriginal(latest!);
+                  change(latest!.bindings ?? []);
                 }}
               >
-                بارگیری نسخه تازه
+                دریافت نسخهٔ تازه
               </Button>
             }
           >
-            تنظیمات دسته در جای دیگری تغییر کرده است؛ پیش از ثبت، نسخه تازه را
-            بازبینی کنید. بارگیری، پیش‌نویس فعلی را جایگزین می‌کند.
+            دسته تغییر کرده است؛ نسخهٔ تازه را دریافت کنید. پیش‌نویس فعلی جایگزین
+            می‌شود.
           </Alert>
         )}
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField
-          size="small"
-          label="جست‌وجوی خصوصیات دسته"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <section className="binding-assigned" aria-label="خصوصیات منتسب">
-          <h3>خصوصیات منتسب ({bindings.length.toLocaleString("fa-IR")})</h3>
-          {assigned
-            .filter((x) => matches(x.attribute))
-            .map(({ attribute: a, binding: b }) => {
-              const originalBinding = original.bindings?.find(
-                (v) => v.attribute_id === a.id,
-              );
-              const valueUsers = impacts.get(a.id) ?? [];
-              const axisLocked = products.length > 0;
-              const removalLocked =
-                valueUsers.length > 0 ||
-                (axisLocked && !!originalBinding?.axis);
-              const removeReason = !editable
-                ? "مجوز حذف انتساب ندارید."
-                : valueUsers.length
-                  ? `${valueUsers.length.toLocaleString("fa-IR")} محصول مقدار این خصوصیت را دارد؛ حذف بدون تبدیل داده مجاز نیست.`
-                  : axisLocked && originalBinding?.axis
-                    ? `این محور در دسته دارای ${products.length.toLocaleString("fa-IR")} محصول استفاده شده؛ تغییر آن نیازمند تبدیل کنترل‌شده است.`
-                    : "حذف انتساب آزاد است؛ تعریف مشترک در کتابخانه باقی می‌ماند.";
-              const axisReason = !editable
-                ? "مجوز تغییر محور ندارید."
-                : a.kind !== "enum"
-                  ? "محور تنوع فقط برای خصوصیت انتخابی قابل استفاده است."
-                  : axisLocked
-                    ? "این دسته محصول دارد؛ افزودن یا حذف محور از مسیر تبدیل کنترل‌شده انجام می‌شود."
-                    : "این محور انتخاب مشتری در PDP و ساخت تنوع را مشخص می‌کند.";
-              const dependent = originalBinding?.axis ? products : valueUsers;
-              return (
-                <article
-                  className="binding-assigned-row"
-                  key={a.id}
-                  data-testid={`binding-${a.id}`}
-                >
-                  <div className="binding-row-heading">
-                    <div>
-                      <b>{a.name}</b>
-                      <small>
-                        {kinds[a.kind]}
-                        {a.unit ? ` · ${a.unit}` : ""}
-                      </small>
-                    </div>
-                    <Button
-                      color="error"
-                      disabled={!editable || pending || removalLocked}
-                      aria-label={`حذف انتساب ${a.name}`}
-                      onClick={() => {
-                        setBindings((old) =>
-                          old.filter((v) => v.attribute_id !== a.id),
-                        );
-                        setKey(crypto.randomUUID());
-                      }}
-                    >
-                      حذف انتساب
-                    </Button>
-                  </div>
-                  <p
-                    className={removalLocked ? "binding-lock-reason" : "muted"}
-                  >
-                    {removeReason}
-                  </p>
-                  <div className="binding-role-controls">
-                    {(["axis", "card", "filter"] as const).map((flag) => (
-                      <label key={flag}>
-                        <Checkbox
-                          checked={b[flag]}
-                          disabled={
-                            !editable ||
-                            pending ||
-                            (flag === "axis" &&
-                              (axisLocked || a.kind !== "enum"))
-                          }
-                          inputProps={{
-                            "aria-label": `${roleTitles[flag]} ${a.name}`,
-                            "aria-describedby":
-                              flag === "axis" ? `axis-note-${a.id}` : undefined,
-                          }}
-                          onChange={(_, checked) => change(a.id, flag, checked)}
-                        />
-                        {roleTitles[flag]}
-                      </label>
-                    ))}
-                    <TextField
-                      size="small"
-                      type="number"
-                      label={`ترتیب ${a.name}`}
-                      value={b.position}
-                      inputProps={{ min: 0, max: 10000, step: 1 }}
-                      disabled={!editable || pending}
-                      onChange={(e) =>
-                        change(a.id, "position", Number(e.target.value))
-                      }
-                    />
-                  </div>
-                  <p className="binding-axis-note" id={`axis-note-${a.id}`}>
-                    {axisReason}
-                  </p>
-                  {!!dependent.length && (
-                    <details className="binding-dependencies">
-                      <summary>
-                        {dependent.length.toLocaleString("fa-IR")} کالای وابسته
-                        و بررسی اثر
-                      </summary>
-                      <ul>
-                        {dependent.slice(0, 10).map((p) => (
-                          <li key={p.id}>
-                            <Link
-                              to={`/products/${encodeURIComponent(p.id)}`}
-                              onClick={close}
-                            >
-                              {p.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      <Link
-                        to={`/products?category=${encodeURIComponent(original.id)}`}
-                        onClick={close}
-                      >
-                        مشاهده همه محصولات این دسته
-                      </Link>
-                      {axisLocked && (
-                        <p>
-                          تبدیل محور مصرف‌شده در{" "}
-                          <a
-                            href="https://github.com/MohamadParsa/marketplace/issues/109"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            تسک ۱۰۹
-                          </a>{" "}
-                          مستند است؛ از «تبدیل کنترل‌شده محورها» در پایین این
-                          فرم استفاده کنید.
-                        </p>
-                      )}
-                    </details>
-                  )}
-                </article>
-              );
-            })}
-          {!assigned.filter((x) => matches(x.attribute)).length && (
-            <p>خصوصیت منتسبی با این جست‌وجو پیدا نشد.</p>
-          )}
-        </section>
-        <section className="store-detail-box">
-          <h3>تبدیل محورهای تنوع</h3>
-          <p>
-            برای افزودن، حذف یا تغییر محورهای مصرف‌شده، نگاشت صریح و پیش‌نمایش
-            اثر لازم است.
-          </p>
-          <Button
-            disabled={
-              !can("category.axes.convert") || original.archived || pending
-            }
-            onClick={() => setConversion(true)}
+        <div className="attribute-zones">
+          <section
+            className="attribute-zone attribute-library-zone"
+            aria-label="کتابخانه خصوصیات"
           >
-            تبدیل کنترل‌شده محورها
-          </Button>
-          {!can("category.axes.convert") && (
-            <p>مجوز مستقل تبدیل محور لازم است.</p>
-          )}
-        </section>
-        <section
-          className="binding-role-previews"
-          aria-label="پیش‌نمایش نقش خصوصیات"
-        >
-          {(["axis", "card", "filter"] as const).map((flag) => (
-            <div key={flag}>
-              <h4>{roleTitles[flag]}</h4>
-              <p className="muted">
-                {flag === "axis"
-                  ? "انتخاب تنوع در PDP"
-                  : flag === "card"
-                    ? `تا ${state.display_settings.card_attribute_limit.toLocaleString("fa-IR")} ویژگی دارای مقدار روی کارت`
-                    : "فیلترهای PLP همین دسته"}
-              </p>
-              <div className="binding-preview-chips">
-                {assigned
-                  .filter((x) => x.binding[flag])
-                  .map((x) => (
-                    <span key={x.attribute.id}>{x.attribute.name}</span>
-                  ))}
-                {!assigned.some((x) => x.binding[flag]) && (
-                  <small>هیچ خصوصیتی انتخاب نشده است.</small>
-                )}
-              </div>
-            </div>
-          ))}
-        </section>
-        <section className="binding-available" aria-label="خصوصیات قابل افزودن">
-          <h3>خصوصیات قابل افزودن</h3>
-          <p>
-            از همین کتابخانه انتخاب کنید؛ تعریف جدید یا تکراری برای فرزند ساخته
-            نمی‌شود.
-          </p>
-          <div className="binding-available-list">
-            {available.rows.map((a) => (
-              <div key={a.id}>
-                <div>
+            <h3>۰ · کتابخانه خصوصیات</h3>
+            <TextField
+              label="جست‌وجوی خصوصیت"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div className="attribute-zone-items">
+              {available.rows.map((a) => (
+                <article
+                  key={a.id}
+                  className="attribute-zone-item"
+                  draggable={editable && !pending}
+                  onDragStart={(e) => drag(e, a.id)}
+                  onDragEnd={() => setDragged(undefined)}
+                  data-attribute-id={a.id}
+                >
                   <b>{a.name}</b>
                   <small>
-                    {kinds[a.kind]}
-                    {a.unit ? ` · ${a.unit}` : ""}
+                    {a.kind === "enum"
+                      ? "انتخابی"
+                      : a.kind === "number"
+                        ? "عدد"
+                        : "متن"}
+                    {a.unit ? " · " + a.unit : ""}
                   </small>
-                </div>
-                <CreateButton
-                  disabled={!editable || pending || bindings.length >= 100}
-                  aria-label={`افزودن خصوصیت ${a.name}`}
-                  onClick={() => add(a)}
-                >
-                  افزودن
-                </CreateButton>
+                  <div className="attribute-zone-add-actions">
+                    {roles.map((r) => (
+                      <Button
+                        key={r.id}
+                        size="small"
+                        disabled={
+                          !editable ||
+                          pending ||
+                          (r.id === "axis" && a.kind !== "enum") ||
+                          bindings.some(
+                            (b) => b.attribute_id === a.id && b[r.id],
+                          )
+                        }
+                        aria-label={`افزودن ${a.name} به ${r.title}`}
+                        onClick={() => insert(a.id, r.id)}
+                      >
+                        + {r.title}
+                      </Button>
+                    ))}
+                  </div>
+                </article>
+              ))}
+              {!available.controls.total && <p>خصوصیتی پیدا نشد.</p>}
+            </div>
+            <PaginationControls {...available.controls} />
+          </section>
+          {roles.map((role, index) => (
+            <section
+              key={role.id}
+              aria-label={role.title}
+              data-zone={role.id}
+              className={
+                "attribute-zone" +
+                (activeZone === role.id ? " drop-active" : "")
+              }
+              onDragOver={(e) => {
+                if (editable && !pending) {
+                  e.preventDefault();
+                  setActiveZone(role.id);
+                }
+              }}
+              onDrop={(e) => drop(e, role.id)}
+            >
+              <h3>
+                {(index + 1).toLocaleString("fa-IR")} · {role.title}{" "}
+                <small>
+                  ({members(role.id).length.toLocaleString("fa-IR")})
+                </small>
+              </h3>
+              <p className="muted">{role.note}</p>
+              <div className="attribute-zone-items">
+                {members(role.id).map((binding, position, rows) => {
+                  const attribute = attributes.find(
+                    (a) => a.id === binding.attribute_id,
+                  );
+                  return (
+                    <article
+                      key={binding.attribute_id}
+                      data-attribute-id={binding.attribute_id}
+                      className="attribute-zone-item"
+                      draggable={editable && !pending}
+                      onDragStart={(e) =>
+                        drag(e, binding.attribute_id, role.id)
+                      }
+                      onDragEnd={() => {
+                        setDragged(undefined);
+                        setActiveZone(undefined);
+                      }}
+                      onDragOver={(e) =>
+                        editable && !pending && e.preventDefault()
+                      }
+                      onDrop={(e) => drop(e, role.id, binding.attribute_id)}
+                    >
+                      <div className="attribute-zone-item-heading">
+                        <span aria-hidden="true">⠿</span>
+                        <b>{attribute?.name ?? "خصوصیت حذف‌شده"}</b>
+                        <small>{(position + 1).toLocaleString("fa-IR")}</small>
+                      </div>
+                      <div className="attribute-zone-item-actions">
+                        <Button
+                          size="small"
+                          disabled={!editable || pending || position === 0}
+                          aria-label={`بالا بردن ${attribute?.name} در ${role.title}`}
+                          onClick={() =>
+                            move(binding.attribute_id, role.id, -1)
+                          }
+                        >
+                          ↑
+                        </Button>
+                        <Button
+                          size="small"
+                          disabled={
+                            !editable || pending || position === rows.length - 1
+                          }
+                          aria-label={`پایین بردن ${attribute?.name} در ${role.title}`}
+                          onClick={() => move(binding.attribute_id, role.id, 1)}
+                        >
+                          ↓
+                        </Button>
+                        <Button
+                          size="small"
+                          color="error"
+                          disabled={!editable || pending}
+                          aria-label={`حذف ${attribute?.name} از ${role.title}`}
+                          onClick={() =>
+                            change(
+                              bindings.map((b) =>
+                                b.attribute_id === binding.attribute_id
+                                  ? { ...b, [role.id]: false }
+                                  : b,
+                              ),
+                            )
+                          }
+                        >
+                          حذف
+                        </Button>
+                      </div>
+                    </article>
+                  );
+                })}
+                {!members(role.id).length && (
+                  <div className="attribute-zone-empty">
+                    خصوصیت را اینجا رها کنید
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-          {!available.controls.total && (
-            <p>خصوصیت قابل افزودنی با این جست‌وجو پیدا نشد.</p>
-          )}
-          <PaginationControls {...available.controls} />
-        </section>
+            </section>
+          ))}
+        </div>
       </DialogContent>
       <DialogActions>
         <Button disabled={pending} onClick={close}>
@@ -397,18 +362,22 @@ export function CategoryBindingsDialog({
         </Button>
         <Button
           variant="contained"
-          disabled={
-            !editable ||
-            pending ||
-            bindings.some(
-              (b) =>
-                !Number.isInteger(b.position) ||
-                b.position < 0 ||
-                b.position > 10000,
-            )
-          }
+          disabled={!editable || pending || stale}
           onClick={async () => {
             if (pending) return;
+            if (
+              !sameAxes(original.bindings ?? [], bindings) &&
+              products.length > 0
+            ) {
+              if (!can("category.axes.convert")) {
+                setError(
+                  "برای تغییر محور تنوعِ دارای محصول، مجوز تبدیل محور لازم است.",
+                );
+                return;
+              }
+              setConversion(true);
+              return;
+            }
             setPending(true);
             setError("");
             try {
@@ -420,18 +389,16 @@ export function CategoryBindingsDialog({
                 idempotency_key: key,
               });
               close();
-            } catch (e) {
+            } catch (cause) {
               setError(
-                e instanceof Error
-                  ? e.message
-                  : "ثبت انجام نشد؛ دوباره تلاش کنید.",
+                cause instanceof Error ? cause.message : "ذخیره انجام نشد.",
               );
             } finally {
               setPending(false);
             }
           }}
         >
-          ثبت انتساب‌ها
+          {pending ? "در حال ذخیره…" : "ذخیرهٔ خصوصیات"}
         </Button>
       </DialogActions>
     </Dialog>

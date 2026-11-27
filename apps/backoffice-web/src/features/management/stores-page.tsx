@@ -1,3 +1,4 @@
+import { recordNumber } from "../../shared/format";
 import { CreateButton } from "../../shared/create-button";
 import { EditorTabs } from "../../shared/editor-tabs";
 import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
@@ -479,7 +480,7 @@ function StoreEditor({
   close: () => void;
   saved: () => void;
 }) {
-  const { execute, can } = useWorkspace();
+  const { execute, can, state } = useWorkspace();
   const shippingAllowed = can("stores.shipping.read", "management");
   const [current, setCurrent] = useState(row),
     [name, setName] = useState(row?.name ?? ""),
@@ -619,7 +620,7 @@ function StoreEditor({
         <>
           <section className="store-detail-box">
             <h3>اطلاعات موجود</h3>
-            <p>شناسه ثابت · {current.id}</p>
+            <p>شناسه ثابت · {recordNumber(state, "store", current.id)}</p>
             <p>
               مالک ثبت‌شده: {current.owner || "ثبت نشده"} · وقفه تأمین:{" "}
               {current.lead_days} روز{" "}

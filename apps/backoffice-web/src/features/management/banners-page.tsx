@@ -71,7 +71,6 @@ export function BannersPage() {
               render: (b) => (
                 <>
                   <b>{b.name}</b>
-                  <small dir="ltr">{b.id}</small>
                 </>
               ),
             },
