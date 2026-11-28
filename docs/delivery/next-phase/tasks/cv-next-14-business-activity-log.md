@@ -6,10 +6,10 @@ owner: eliassarband
 updated: 2026-11-28
 related: [DEL-NEXT-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 priority: P1
 wave: W0
-execution_authorized: false
+execution_authorized: true
 ---
 
 # CV-NEXT-14 — ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل
@@ -62,3 +62,7 @@ ACهای همین قابلیت به تست مناسب API/دامنه/مرورگ�
 ## تکمیل دامنه با درخواست لاگ محلی — ۲۰۲۶-۱۱-۲۸
 
 مالکیت audit کسب‌وکار همین #75 باقی می‌ماند. [قرارداد مشترک](../../../architecture/contracts/operation-logging.md) و [برنامه](../../logging-gateway-plan-2026-11-28/README.md) برای actor/action/entity/store/version/result و operation_id استفاده شوند؛ اتصال به مقصد محلی با diff مجاز و حفظ سابقه معتبر موجود بررسی شود. audit/ledger با لاگ فنی فایل جایگزین نشود. زیرساخت #155/#156 پیش‌نیاز اتصال مشترک‌اند؛ اجرای تکراریِ audit در #77/#157 ساخته نمی‌شود. NEXT-Q09 فقط مقصد را محلی تعیین کرده؛ نقش مشاهده، جزئیات و شکست/ماندگاری باقی‌اند. وضعیت todo و execution_authorized=false حفظ می‌شود.
+
+## اجرای انتخاب‌شده و شاهد #75
+
+مالک اجرای این بخش و سیاست NEXT-Q09 را تأیید کرد. audit در تراکنش repository با request/operation/result/version و diff بسته و مجاز غنی می‌شود؛ تغییرات مهم فاقد audit قبلی نیز سابقه می‌گیرند. تاریخچه قبلی غیرقابل بازنویسی در عملیات مشاهده‌شده است، پاکسازی خودکار ندارد و telemetry فقط پس از commit منتشر می‌شود. گزارش/فیلتر و لاگ محلی فقط ادمین است؛ اپراتور/مالی و فروشنده به خروجی لاگ دسترسی ندارند. متن آزاد reason/credential از خروجی لاگ حذف و سابقه اصلی DB حفظ می‌شود. تست rollback/commit failure/PG restart، حریم و مجوز و مرورگر دسکتاپ/موبایل موفق‌اند. [گزارش اجرا](../../logging-gateway-plan-2026-11-28/execution.md).

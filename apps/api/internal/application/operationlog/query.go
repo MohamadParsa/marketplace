@@ -88,6 +88,21 @@ type cursor struct {
 	ID string    `json:"id"`
 }
 
+func CursorFor(at time.Time, id string) string {
+	b, _ := json.Marshal(cursor{at, id})
+	return base64.RawURLEncoding.EncodeToString(b)
+}
+func BeforeCursor(at time.Time, id, value string) (bool, error) {
+	if value == "" {
+		return true, nil
+	}
+	c, err := decodeCursor(value)
+	if err != nil {
+		return false, err
+	}
+	return at.Before(c.At) || at.Equal(c.At) && id < c.ID, nil
+}
+
 func decodeCursor(value string) (cursor, error) {
 	var c cursor
 	b, err := base64.RawURLEncoding.DecodeString(value)

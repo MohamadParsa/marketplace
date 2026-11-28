@@ -156,7 +156,7 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 			v.Refunds = append(v.Refunds, AdminRefundView{refundView(r), r.UserID, n, phone})
 		}
 	}
-	if v.Permissions[CommerceDepositsRead] || v.Permissions[CommerceOrdersConfirm] || v.Permissions[CommerceRefundsResolve] {
+	if a.Role == identity.RoleSuperAdmin {
 		for _, a := range w.Audit {
 			if strings.HasPrefix(a.Action, "commerce.") {
 				v.Audit = append(v.Audit, a)

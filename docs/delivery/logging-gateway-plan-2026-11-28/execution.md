@@ -26,9 +26,13 @@ execution_authorized: true
 | --- | --- | --- |
 | #155 | تکمیل و بسته؛ سورس1c1d19d و هر۵CI موفق | allowlist پیش از sink، context هم‌روند، adapter slog، خطای sink بدون نشت؛ race محلی نیازمند CGO است و در CI لینوکس اجرا می‌شود. |
 | #156 | تکمیل و بسته؛ سورس316f2f8 و هر۵CI موفق | JSON Lines، صف محدود، قفل بین پردازه‌ای، rotation/retention/سقف مشترک و CLI فقط‌خواندنی |
-| #157 | پیاده و تست محلی؛ CI در انتظار | runtime/lifecycle، HTTP/actor، commerce/preview/command و adapter پیامک/نشان |
-| #75 | در صف | audit اتمیک و گزارش ادمین |
+| #157 | تکمیل و بسته؛ سورسcd183ee و هر۵CI موفق | runtime/lifecycle، HTTP/actor، commerce/preview/command و adapter پیامک/نشان |
+| #75 | پیاده و تست محلی؛ CI در انتظار | audit اتمیک/غیرقابل بازنویسی، diff مجاز و گزارش فقط ادمین |
 | #76 | در صف | رویدادهای سروری و گزارش قیف |
 | #77 | در صف | پذیرش یکپارچه و راهنمای محلی |
 
 تکمیل هر مرحله با commit/push، بررسی CI و کامنت شواهد همان Issue ثبت می‌شود. هیچ تماس زرین‌پال یا احراز پذیرنده در این دامنه ساخته نمی‌شود؛ callback زمان پرداخت/دامنه سایت به تسک معوق خودش تعلق دارد.
+
+## شاهد گزارش و حریم #75
+
+تست شکست commit و بازنویسی audit هیچ تغییر/رویداد موفق باقی نمی‌گذارد؛ PostgreSQL پس از بازگشایی metadata و موجودی درست را حفظ می‌کند. فقط ادمین می‌تواند audit/رویداد/وضعیت مقصد را بخواند؛ readback شامل reason آزاد، fingerprint یا credential نیست. ارقام/تاریخ فارسی و فیلترها در شروع بسته‌اند. [audit دسکتاپ](assets/audit-report-desktop.png) · [لاگ دسکتاپ](assets/operation-logs-desktop.png) · [موبایل](assets/operation-logs-mobile.png). تصاویر fixture هستند؛ اسکرول افقی جدول در ظرف خودش است.

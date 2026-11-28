@@ -139,6 +139,9 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	state.CardPreviews = BuildCardPreviews(state)
 	state.RecordNumbers = scopedRecordNumbers(state, state.RecordNumbers)
 	state.LastRecordNumber = 0
+	if actor.Role != identity.RoleSuperAdmin {
+		state.Audit = nil
+	}
 	return state, nil
 }
 func (s *Service) Execute(ctx context.Context, actor identity.User, command Command) error {

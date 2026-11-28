@@ -10,6 +10,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
 	"github.com/cherriva/marketplace/apps/api/internal/application/customer"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/application/seller"
 	"github.com/cherriva/marketplace/apps/api/internal/config"
 	httptransport "github.com/cherriva/marketplace/apps/api/internal/transport/http"
@@ -57,7 +58,11 @@ func newCatalogHandlerRuntime(cfg config.Config, repository backoffice.Repositor
 		clock = clocks[0]
 	}
 	workspace := backoffice.NewService(repository, clock, authmemory.Random{})
-	workspace.UseOperationLogs(logs.Recorder, logs.Store, func() any {
+	var logScanner operationlog.Scanner
+	if logs.Store != nil {
+		logScanner = logs.Store
+	}
+	workspace.UseOperationLogs(logs.Recorder, logScanner, func() any {
 		if logs.Store != nil {
 			return map[string]any{"status": logs.Status, "recorder": logs.Recorder.Stats(), "storage": logs.Store.Stats()}
 		}

@@ -76,6 +76,9 @@ func (r *Repository) Snapshot(ctx context.Context) (backoffice.Workspace, error)
 }
 
 func (r *Repository) Update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
+	return backoffice.ObserveWorkspaceUpdate(ctx, func(fn func(*backoffice.Workspace) error) error { return r.update(ctx, fn) }, apply)
+}
+func (r *Repository) update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
 	return pgx.BeginFunc(ctx, r.db, func(tx pgx.Tx) error {
 		state, err := load(ctx, tx, true)
 		if err != nil {
@@ -243,6 +246,9 @@ func (r *Repository) ReadCatalogMedia(ctx context.Context, id string) ([]byte, e
 
 // UpdateCatalogWithFiles streams bounded-size media into the same workspace transaction.
 func (r *Repository) UpdateCatalogWithFiles(ctx context.Context, files []backoffice.CatalogSeedFile, apply func(*backoffice.Workspace) error) error {
+	return backoffice.ObserveWorkspaceUpdate(ctx, func(fn func(*backoffice.Workspace) error) error { return r.updateCatalogWithFiles(ctx, files, fn) }, apply)
+}
+func (r *Repository) updateCatalogWithFiles(ctx context.Context, files []backoffice.CatalogSeedFile, apply func(*backoffice.Workspace) error) error {
 	return pgx.BeginFunc(ctx, r.db, func(tx pgx.Tx) error {
 		state, e := load(ctx, tx, true)
 		if e != nil {

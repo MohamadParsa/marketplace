@@ -34,6 +34,9 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("POST /storefront/account/address-map/reverse", h.Handle)
 	}
 	if h := cfg.Commerce; h != nil {
+		mux.HandleFunc("POST /backoffice/observability/events/query", h.OperationReports)
+		mux.HandleFunc("POST /backoffice/observability/audit/query", h.OperationReports)
+		mux.HandleFunc("GET /backoffice/observability/stats", h.OperationReports)
 		mux.HandleFunc("GET /backoffice/commerce/gateways", h.GatewaySettings)
 		mux.HandleFunc("POST /backoffice/commerce/gateways", h.GatewaySettings)
 		for _, route := range []string{"GET /backoffice/categories/{id}/axis-conversion", "POST /backoffice/axis-conversions/preview", "POST /backoffice/axis-conversions/prepare", "POST /backoffice/axis-conversions/apply"} {

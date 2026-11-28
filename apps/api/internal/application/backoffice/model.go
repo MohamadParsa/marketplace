@@ -74,19 +74,25 @@ type Notification struct {
 	Retries   int    `json:"retries"`
 }
 type Audit struct {
-	PreviousRole identity.Role `json:"previous_role,omitempty"`
-	Role         identity.Role `json:"role,omitempty"`
-	RoleID       string        `json:"role_id,omitempty"`
-	StoreID      string        `json:"store_id,omitempty"`
-	Permissions  []string      `json:"permissions,omitempty"`
-	ResultID     string        `json:"result_id,omitempty"`
-	Fingerprint  string        `json:"fingerprint"`
-	ID           string        `json:"id"`
-	Actor        string        `json:"actor"`
-	Action       string        `json:"action"`
-	Target       string        `json:"target"`
-	Reason       string        `json:"reason"`
-	At           time.Time     `json:"at"`
+	OperationID  string            `json:"operation_id,omitempty"`
+	RequestID    string            `json:"request_id,omitempty"`
+	Outcome      string            `json:"outcome,omitempty"`
+	Version      int               `json:"version,omitempty"`
+	Before       map[string]string `json:"before,omitempty"`
+	After        map[string]string `json:"after,omitempty"`
+	PreviousRole identity.Role     `json:"previous_role,omitempty"`
+	Role         identity.Role     `json:"role,omitempty"`
+	RoleID       string            `json:"role_id,omitempty"`
+	StoreID      string            `json:"store_id,omitempty"`
+	Permissions  []string          `json:"permissions,omitempty"`
+	ResultID     string            `json:"result_id,omitempty"`
+	Fingerprint  string            `json:"fingerprint"`
+	ID           string            `json:"id"`
+	Actor        string            `json:"actor"`
+	Action       string            `json:"action"`
+	Target       string            `json:"target"`
+	Reason       string            `json:"reason"`
+	At           time.Time         `json:"at"`
 }
 type Workspace struct {
 	RecordNumbers    map[string]int64               `json:"record_numbers,omitempty"`

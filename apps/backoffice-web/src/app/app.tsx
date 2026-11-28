@@ -71,6 +71,7 @@ import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
+import { OperationReportsPage } from "../features/operations/operation-reports-page";
 import { OrderWorkspaceList, OrderWorkspaceDetail } from "../features/operations/order-workspace";
 import { ShipmentWorkspace, ShipmentWorkspaceDetail } from "../features/operations/shipment-workspace";
 import { FinancePage } from "../features/finance/finance-page";
@@ -232,6 +233,7 @@ const menu = [
         path: "/reports",
         label: "گزارش فعالیت‌ها",
         icon: <AssessmentOutlined />,
+        roles:["super-admin"],
       },
     ],
   },
@@ -697,7 +699,7 @@ function Workspace({
                   <Route
                     key={section}
                     path={"/" + section}
-                    element={<OperationsPage key={section} section={section} />}
+                    element={section==="reports"?<OperationReportsPage/>:<OperationsPage key={section} section={section} />}
                   />
                 ))}
                 <Route

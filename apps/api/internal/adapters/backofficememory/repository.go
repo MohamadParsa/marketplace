@@ -43,6 +43,9 @@ func (r *Repository) Snapshot(ctx context.Context) (backoffice.Workspace, error)
 	return clone(r.state)
 }
 func (r *Repository) Update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
+	return backoffice.ObserveWorkspaceUpdate(ctx, func(fn func(*backoffice.Workspace) error) error { return r.update(ctx, fn) }, apply)
+}
+func (r *Repository) update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}
