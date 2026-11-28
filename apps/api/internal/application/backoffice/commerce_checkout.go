@@ -724,6 +724,16 @@ func (s *Service) AcceptQuote(ctx context.Context, a identity.User, in AcceptQuo
 		requestOrderPayment(c, p, q, now)
 		recordPurchaseEvent(p, a, "order.accepted", now)
 		commerceAudit(w, id+":audit", a, "purchase.accept", p.ID, "", now)
+		if q.Total == 0 || q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested == q.Total {
+			result, err := finalizePurchase(w, a, PurchaseAdminInput{ID: p.ID, Version: p.Version}, id+":auto-paid", now)
+			if err != nil {
+				return nil, err
+			}
+			if p.Status != "confirmed" {
+				return nil, ErrCheckoutChanged
+			}
+			return result, nil
+		}
 		return purchaseView(c, *p), nil
 	})
 }

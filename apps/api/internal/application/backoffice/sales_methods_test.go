@@ -167,7 +167,6 @@ func TestSalesFullWalletCannotBypassRevokedSelectedMethod(t *testing.T) {
 			input.PaymentMethodID = "local"
 			input.WalletToman = "124000"
 			q := h.v2Quote(t, h.buyer, input)
-			p := h.v2Accept(t, h.buyer, q)
 			if q.FundingToman != "0" {
 				t.Fatal("fixture must be fully funded")
 			}
@@ -190,10 +189,9 @@ func TestSalesFullWalletCannotBypassRevokedSelectedMethod(t *testing.T) {
 					t.Fatal(e)
 				}
 			}
-			raw, e := h.s.ConfirmPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
-			result := decodeCommerce[backoffice.PurchaseView](t, raw, e)
-			if result.Status != "requires-reconfirmation" {
-				t.Fatal("selected method bypassed by full wallet", result.Status)
+			_, e := h.s.AcceptQuote(ctx, h.buyer, backoffice.AcceptQuoteInput{QuoteID: q.ID, AcceptedTotalToman: q.TotalToman, TermsDigest: q.TermsDigest}, h.key())
+			if e != backoffice.ErrCheckoutChanged && e != backoffice.ErrInvalidMethod {
+				t.Fatal("selected method bypassed by full wallet", e)
 			}
 			if h.wallet(t, h.buyer).AvailableToman != "124000" {
 				t.Fatal("reserved credit was not released")

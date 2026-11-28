@@ -150,17 +150,14 @@ func TestStoreEligibilityWalletOnlyAlsoRequiresPolicyReconfirmation(t *testing.T
 	in := backoffice.QuoteInput{ContractVersion: 2, CartVersion: h.cart(t, h.buyer).Version, AddressID: address.ID, Shipping: map[string]string{"store1": "post"}, WalletToman: "120000"}
 	b, e := h.s.CreateQuote(ctx, h.buyer, in, h.key())
 	q := decodeCommerce[backoffice.QuoteView](t, b, e)
-	b, e = h.s.AcceptQuote(ctx, h.buyer, backoffice.AcceptQuoteInput{QuoteID: q.ID, AcceptedTotalToman: q.TotalToman, TermsDigest: q.TermsDigest}, h.key())
-	p := decodeCommerce[backoffice.PurchaseView](t, b, e)
 	changed := policyInput()
 	changed.Version = 1
 	changed.Methods[0].DisplayName = "نام نقدی تازه"
 	savePolicy(t, h, "store1", changed)
-	b, e = h.s.ConfirmPurchase(ctx, h.admin, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
-	result := decodeCommerce[backoffice.PurchaseView](t, b, e)
+	_, e = h.s.AcceptQuote(ctx, h.buyer, backoffice.AcceptQuoteInput{QuoteID: q.ID, AcceptedTotalToman: q.TotalToman, TermsDigest: q.TermsDigest}, h.key())
 	wallet := h.wallet(t, h.buyer)
-	if result.Status != "requires-reconfirmation" || wallet.BalanceToman != "120000" || wallet.HeldToman != "0" {
-		t.Fatal("wallet-only policy bypass", result.OrderStatus, wallet)
+	if e != backoffice.ErrCheckoutChanged || wallet.BalanceToman != "120000" || wallet.HeldToman != "0" {
+		t.Fatal("wallet-only policy bypass", e, wallet)
 	}
 }
 func TestStoreEligibilityMixedCartMethodsAndDirectOfferGuards(t *testing.T) {

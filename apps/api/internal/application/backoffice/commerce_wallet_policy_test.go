@@ -224,8 +224,7 @@ func TestWalletCreditLegacyBalanceHoldsAndExpiry(t *testing.T) {
 	}
 	h.add(t, h.buyer, "offer1", 1)
 	in := h.v2Input(t, h.buyer)
-	in.PaymentMethodID = ""
-	in.WalletToman = "120000"
+	in.WalletToman = "110000"
 	q := h.v2Quote(t, h.buyer, in)
 	h.v2Accept(t, h.buyer, q)
 	h.clock.now = h.clock.now.Add(31 * time.Minute)

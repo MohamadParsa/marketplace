@@ -305,7 +305,7 @@ func TestWalletCoverageLimitsExpiryAndFreeOrder(t *testing.T) {
 			t.Fatal(w)
 		}
 	})
-	t.Run("free-manual-confirm-consumes-quota", func(t *testing.T) {
+	t.Run("free-auto-confirm-consumes-quota", func(t *testing.T) {
 		h := newCommerceHarness(t)
 		rule := couponDraft()
 		rule.Kind = "fixed"
@@ -320,8 +320,8 @@ func TestWalletCoverageLimitsExpiryAndFreeOrder(t *testing.T) {
 		in.PaymentMethodID = ""
 		q := h.v2Quote(t, h.buyer, in)
 		p := h.v2Accept(t, h.buyer, q)
-		if p.Status == "confirmed" {
-			t.Fatal("automatic confirmation")
+		if p.Status != "confirmed" || p.PaymentStatus != "paid" || p.OrderStatus != "placed" {
+			t.Fatal("free order must auto-pay without starting processing")
 		}
 		b, e := h.s.ConfirmPurchase(context.Background(), h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
 		p = decodeCommerce[backoffice.PurchaseView](t, b, e)
@@ -412,8 +412,7 @@ func TestWalletConcurrentHoldAndRefundCannotStealCredit(t *testing.T) {
 	h.approve(t, h.deposit(t, h.buyer, "", "card-transfer", "200000", "42345001"))
 	h.add(t, h.buyer, "offer1", 1)
 	in := h.v2Input(t, h.buyer)
-	in.WalletToman = "120000"
-	in.PaymentMethodID = ""
+	in.WalletToman = "110000"
 	a := h.v2Quote(t, h.buyer, in)
 	b := h.v2Quote(t, h.buyer, in)
 	var wg sync.WaitGroup
@@ -439,7 +438,7 @@ func TestWalletConcurrentHoldAndRefundCannotStealCredit(t *testing.T) {
 	if success != 1 {
 		t.Fatal(success)
 	}
-	if h.wallet(t, h.buyer).HeldToman != "120000" {
+	if h.wallet(t, h.buyer).HeldToman != "110000" {
 		t.Fatal("hold duplicated")
 	}
 	// Existing legacy full-wallet writer also must not spend this reserved amount.

@@ -173,8 +173,7 @@ func TestOrderRefundRestrictedBankAndUnpaidBlocked(t *testing.T) {
 	h.credit(t, "120000", false)
 	h.add(t, h.buyer, "offer1", 1)
 	in := h.v2Input(t, h.buyer)
-	in.WalletToman = "120000"
-	in.PaymentMethodID = ""
+	in.WalletToman = "110000"
 	p := h.v2Accept(t, h.buyer, h.v2Quote(t, h.buyer, in))
 	if _, e := h.s.RefundOrderRequest(ctx, h.finance, backoffice.OrderRefundInput{ID: "missing", Method: "wallet"}, h.key()); e != backoffice.ErrNotFound {
 		t.Fatal(e)
@@ -184,6 +183,7 @@ func TestOrderRefundRestrictedBankAndUnpaidBlocked(t *testing.T) {
 	if _, e := h.s.CreateOrderRequest(ctx, h.buyer, backoffice.OrderRequestInput{PurchaseID: p.ID, Version: p.Version, Kind: "cancel", Reason: "ساختگی", Items: []backoffice.RequestedItemInput{{OrderID: line.OrderID, ItemID: line.ItemID, Quantity: 1}}}, h.key()); e != backoffice.ErrConflict {
 		t.Fatal("unpaid case", e)
 	}
+	h.approve(t, h.deposit(t, h.buyer, p.ID, "card-transfer", "10000", "UNPAID-THEN-FUNDED"))
 	b, e := h.s.ConfirmPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, h.key())
 	p = decodeCommerce[backoffice.PurchaseView](t, b, e)
 	r := reviewCase(t, h, createCase(t, h, p, "cancel", 0, 1), "approve", nil)

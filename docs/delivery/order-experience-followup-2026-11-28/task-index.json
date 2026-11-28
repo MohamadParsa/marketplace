@@ -71,13 +71,14 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/146",
       "title": "ثبت خودکار پرداخت سفارش با مانده پرداخت صفر",
       "file": "tasks/automatic-covered-order-payment.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [
         "CV-ORD-FOLLOW-04"
       ],
       "blocking_questions": [],
-      "integration_verification_dependencies": []
+      "integration_verification_dependencies": [],
+      "evidence": "issue-146-verification.md"
     },
     {
       "id": "CV-ORD-FOLLOW-06",

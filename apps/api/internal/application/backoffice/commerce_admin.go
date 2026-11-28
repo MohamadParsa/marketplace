@@ -227,148 +227,153 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 }
 func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in PurchaseAdminInput, key string) (json.RawMessage, error) {
 	return s.mutateCommerce(ctx, "purchase-confirm:"+a.ID, key, in, func(w Workspace) error { return requireCommerceAdmin(w, a, CommerceOrdersConfirm) }, func(w *Workspace, op string, now time.Time) (any, error) {
-		c := commerceState(w)
-		p := findPurchase(c, in.ID)
-		if p == nil {
-			return nil, ErrNotFound
-		}
-		if p.Status == "confirmed" {
-			return purchaseView(c, *p), nil
-		}
-		if p.Version != in.Version {
-			return nil, ErrConflict
-		}
-		if p.Status == "cancelled" {
-			return nil, ErrConflict
-		}
-		q := findQuote(c, p.QuoteID)
-		if q == nil {
-			return nil, ErrConflict
-		}
-		if q.Status != "reserved" || !now.Before(q.ReservedUntil) {
-			p.Status = "requires-reconfirmation"
-			p.Version++
-			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-			return purchaseView(c, *p), nil
-		}
-		eligible := q.PaymentMethod.ID == "" && q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
-		for _, m := range c.Settings.Methods {
-			if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) && salesPaymentStillAllowed(*w, *q) {
-				eligible = true
-			}
-		}
-		eligible = eligible && storePoliciesStillAllowed(*w, *q) && shippingStillAllowed(*w, *q)
-		if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
-			eligible = false
-		}
-		if !eligible {
-			releaseQuote(w, q, now)
-			q.Status = "invalidated"
-			p.Status = "requires-reconfirmation"
-			p.Reason = "روش پرداخت، ارسال یا محدودیت آن تغییر کرده است."
-			p.Version++
-			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-			return purchaseView(c, *p), nil
-		}
-		for _, l := range q.Lines {
-			o, e := findOffer(*w, l.OfferID)
-			copyWorkspace := *w
-			copyWorkspace.Offers = append([]catalog.Offer{}, w.Offers...)
-			for i := range copyWorkspace.Offers {
-				if copyWorkspace.Offers[i].ID == l.OfferID {
-					copyWorkspace.Offers[i].Reserved -= l.Quantity
-				}
-			}
-			item, itemError := cartItem(copyWorkspace, commerce.CartLine{OfferID: l.OfferID, Quantity: l.Quantity})
-			if e != nil || itemError != nil || !item.Available || o.ProductID != l.ProductID || o.VariantID != l.VariantID || o.Stock < l.Quantity || o.Reserved < l.Quantity {
-				releaseQuote(w, q, now)
-				q.Status = "invalidated"
-				p.Status = "requires-reconfirmation"
-				p.Reason = "موجودی نیاز به بررسی دوباره دارد."
-				p.Version++
-				recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-				return purchaseView(c, *p), nil
-			}
-		}
-		finalized := *q
-		finalized.Shipments = append([]commerce.ShipmentSnapshot{}, q.Shipments...)
-		shippingError := finalizeShipmentCalendars(&finalized, now)
-		if shippingError == nil {
-			shippingError = commitShipping(w, finalized, now)
-		}
-		if shippingError != nil {
-			releaseQuote(w, q, now)
-			q.Status = "invalidated"
-			p.Status = "requires-reconfirmation"
-			p.Reason = "فرصت آماده‌سازی یا رزرو ظرفیت تغییر کرده؛ روش و موعد تحویل باید دوباره انتخاب و تأیید شوند."
-			p.Version++
-			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-			return purchaseView(c, *p), nil
-		}
-		q.Shipments = finalized.Shipments
-		if q.ContractVersion == 2 {
-			if q.Credit == nil || q.Credit.Status != "held" {
-				return nil, ErrConflict
-			}
-			allocations := combinedCredit(q)
-			if creditSum(allocations) != q.Total {
-				return nil, ErrInsufficientWallet
-			}
-			q.Credit.Status = "posted"
-			if q.Total > 0 {
-				if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); e != nil {
-					return nil, e
-				}
-			}
-		} else if q.Total > 0 {
-			if err := ensureCreditState(c, p.UserID, now); err != nil {
-				return nil, err
-			}
-			allocations, err := allocateCredit(c, p.UserID, q.Total, "")
-			if err != nil {
-				return nil, err
-			}
-			q.Credit = &commerce.CreditUsage{Requested: q.Total, Existing: allocations, Funding: []commerce.CreditAllocation{}, Status: "posted"}
-			if err = appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); err != nil {
-				return nil, err
-			}
-		}
-		for _, l := range q.Lines {
-			for i := range w.Offers {
-				if w.Offers[i].ID == l.OfferID {
-					w.Offers[i].Stock -= l.Quantity
-					w.Offers[i].Reserved -= l.Quantity
-					w.Offers[i].Version++
-				}
-			}
-		}
-		q.Status = "consumed"
-		p.Status = "confirmed"
-		p.ConfirmedAt = &now
-		updateOrderPayment(c, q.ID, "paid", "", now)
-		p.Version++
-		for i := range w.Orders {
-			if w.Orders[i].CheckoutID == p.ID {
-				w.Orders[i].Payment = "paid"
-				for _, ship := range q.Shipments {
-					if ship.StoreID == w.Orders[i].StoreID {
-						w.Orders[i].Preparation = ship.Preparation
-						w.Orders[i].Delivery = ship.Delivery
-						w.Orders[i].DeliveryFrom, w.Orders[i].DeliveryTo = ship.DeliveryFrom, ship.DeliveryTo
-					}
-				}
-				w.Orders[i].Status = "awaiting-supply"
-				w.Orders[i].Version++
-				for j := range w.Orders[i].Items {
-					w.Orders[i].Items[j].Status = "awaiting-supply"
-				}
-			}
-		}
-		refreshPurchaseOrderState(w, p)
-		recordPurchaseEvent(p, a, "order.paid", now)
-		commerceAudit(w, op, a, "purchase.confirm", p.ID, "", now)
-		return purchaseView(c, *p), nil
+		return finalizePurchase(w, a, in, op, now)
 	})
+}
+
+// Called inside the placement/confirmation transaction, after the caller's authority is checked.
+func finalizePurchase(w *Workspace, a identity.User, in PurchaseAdminInput, op string, now time.Time) (any, error) {
+	c := commerceState(w)
+	p := findPurchase(c, in.ID)
+	if p == nil {
+		return nil, ErrNotFound
+	}
+	if p.Status == "confirmed" {
+		return purchaseView(c, *p), nil
+	}
+	if p.Version != in.Version {
+		return nil, ErrConflict
+	}
+	if p.Status == "cancelled" {
+		return nil, ErrConflict
+	}
+	q := findQuote(c, p.QuoteID)
+	if q == nil {
+		return nil, ErrConflict
+	}
+	if q.Status != "reserved" || !now.Before(q.ReservedUntil) {
+		p.Status = "requires-reconfirmation"
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	eligible := q.Total == 0 || q.PaymentMethod.ID == "" && q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
+	for _, m := range c.Settings.Methods {
+		if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) && salesPaymentStillAllowed(*w, *q) {
+			eligible = true
+		}
+	}
+	eligible = eligible && storePoliciesStillAllowed(*w, *q) && shippingStillAllowed(*w, *q)
+	if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
+		eligible = false
+	}
+	if !eligible {
+		releaseQuote(w, q, now)
+		q.Status = "invalidated"
+		p.Status = "requires-reconfirmation"
+		p.Reason = "روش پرداخت، ارسال یا محدودیت آن تغییر کرده است."
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	for _, l := range q.Lines {
+		o, e := findOffer(*w, l.OfferID)
+		copyWorkspace := *w
+		copyWorkspace.Offers = append([]catalog.Offer{}, w.Offers...)
+		for i := range copyWorkspace.Offers {
+			if copyWorkspace.Offers[i].ID == l.OfferID {
+				copyWorkspace.Offers[i].Reserved -= l.Quantity
+			}
+		}
+		item, itemError := cartItem(copyWorkspace, commerce.CartLine{OfferID: l.OfferID, Quantity: l.Quantity})
+		if e != nil || itemError != nil || !item.Available || o.ProductID != l.ProductID || o.VariantID != l.VariantID || o.Stock < l.Quantity || o.Reserved < l.Quantity {
+			releaseQuote(w, q, now)
+			q.Status = "invalidated"
+			p.Status = "requires-reconfirmation"
+			p.Reason = "موجودی نیاز به بررسی دوباره دارد."
+			p.Version++
+			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+			return purchaseView(c, *p), nil
+		}
+	}
+	finalized := *q
+	finalized.Shipments = append([]commerce.ShipmentSnapshot{}, q.Shipments...)
+	shippingError := finalizeShipmentCalendars(&finalized, now)
+	if shippingError == nil {
+		shippingError = commitShipping(w, finalized, now)
+	}
+	if shippingError != nil {
+		releaseQuote(w, q, now)
+		q.Status = "invalidated"
+		p.Status = "requires-reconfirmation"
+		p.Reason = "فرصت آماده‌سازی یا رزرو ظرفیت تغییر کرده؛ روش و موعد تحویل باید دوباره انتخاب و تأیید شوند."
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	q.Shipments = finalized.Shipments
+	if q.ContractVersion == 2 {
+		if q.Credit == nil || q.Credit.Status != "held" {
+			return nil, ErrConflict
+		}
+		allocations := combinedCredit(q)
+		if creditSum(allocations) != q.Total {
+			return nil, ErrInsufficientWallet
+		}
+		q.Credit.Status = "posted"
+		if q.Total > 0 {
+			if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); e != nil {
+				return nil, e
+			}
+		}
+	} else if q.Total > 0 {
+		if err := ensureCreditState(c, p.UserID, now); err != nil {
+			return nil, err
+		}
+		allocations, err := allocateCredit(c, p.UserID, q.Total, "")
+		if err != nil {
+			return nil, err
+		}
+		q.Credit = &commerce.CreditUsage{Requested: q.Total, Existing: allocations, Funding: []commerce.CreditAllocation{}, Status: "posted"}
+		if err = appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); err != nil {
+			return nil, err
+		}
+	}
+	for _, l := range q.Lines {
+		for i := range w.Offers {
+			if w.Offers[i].ID == l.OfferID {
+				w.Offers[i].Stock -= l.Quantity
+				w.Offers[i].Reserved -= l.Quantity
+				w.Offers[i].Version++
+			}
+		}
+	}
+	q.Status = "consumed"
+	p.Status = "confirmed"
+	p.ConfirmedAt = &now
+	updateOrderPayment(c, q.ID, "paid", "", now)
+	p.Version++
+	for i := range w.Orders {
+		if w.Orders[i].CheckoutID == p.ID {
+			w.Orders[i].Payment = "paid"
+			for _, ship := range q.Shipments {
+				if ship.StoreID == w.Orders[i].StoreID {
+					w.Orders[i].Preparation = ship.Preparation
+					w.Orders[i].Delivery = ship.Delivery
+					w.Orders[i].DeliveryFrom, w.Orders[i].DeliveryTo = ship.DeliveryFrom, ship.DeliveryTo
+				}
+			}
+			w.Orders[i].Status = "awaiting-supply"
+			w.Orders[i].Version++
+			for j := range w.Orders[i].Items {
+				w.Orders[i].Items[j].Status = "awaiting-supply"
+			}
+		}
+	}
+	refreshPurchaseOrderState(w, p)
+	recordPurchaseEvent(p, a, "order.paid", now)
+	commerceAudit(w, op, a, "purchase.confirm", p.ID, "", now)
+	return purchaseView(c, *p), nil
 }
 func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in PurchaseAdminInput, key string) (json.RawMessage, error) {
 	return s.mutateCommerce(ctx, "purchase-admin-cancel:"+a.ID, key, in, func(w Workspace) error {

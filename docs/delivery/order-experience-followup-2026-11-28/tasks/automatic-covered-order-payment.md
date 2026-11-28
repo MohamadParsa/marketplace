@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-28
 related: [DOM-ORDER-FOLLOW-001, API-ORDER-LIFECYCLE-001]
 approved_by: []
-implementation_status: todo
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -60,3 +60,5 @@ RTL، کنترل‌های هم‌ارتفاع با label یکسان و دستر�
 ## پرسش‌ها و تصمیم‌ها
 
 پرسش محصول مسدودکننده تازه در دامنه روشن بالا ثبت نشده است؛ پیشنهادهای طراحی با تصمیم محصول تأییدشده یکسان نیستند.
+
+[شواهد تحویل #146](../issue-146-verification.md).
