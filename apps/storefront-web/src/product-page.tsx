@@ -15,7 +15,7 @@ import { CatalogImage } from "./catalog-image";
 import { ProductSkeleton } from "./catalog-loading";
 import { setPageCanonical } from "./page-canonical";
 import { PurchaseControl } from "./purchase-control";
-import { useCommerce, apiBase } from "./commerce";
+import { useCommerce, apiBase, catalogActivityHeaders } from "./commerce";
 import { Modal } from "./components";
 import { money as tomanMoney } from "../../../packages/commerce-client/types";
 import { useEffect, useRef, useState } from "react";
@@ -210,7 +210,7 @@ export function ProductPage({ url }: { url: string }) {
     }
     void fetch(
       api + "/storefront/products/" + encodeURIComponent(id) + current.search,
-      { signal: abort.signal },
+      { signal: abort.signal,headers:catalogActivityHeaders(),cache:"no-store" },
     )
       .then(async (r) => {
         if (!r.ok) {

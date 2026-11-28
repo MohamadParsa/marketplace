@@ -24,6 +24,11 @@ func (h *CommerceHandler) OperationReports(w http.ResponseWriter, r *http.Reques
 	if !commerceBody(w, r, &in) {
 		return
 	}
+	if r.URL.Path == "/backoffice/observability/funnel/query" {
+		out, err := h.service.ReadActivityFunnel(r.Context(), a, in.Query)
+		commerceResult(w, r, out, err)
+		return
+	}
 	if r.URL.Path == "/backoffice/observability/audit/query" {
 		out, err := h.service.ReadAuditReport(r.Context(), a, in.Query, in.StoreID)
 		commerceResult(w, r, out, err)

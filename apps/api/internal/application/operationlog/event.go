@@ -33,6 +33,7 @@ type Event struct {
 	ParentOperationID string         `json:"parent_operation_id,omitempty"`
 	ActorKind         string         `json:"actor_kind,omitempty"`
 	ActorID           string         `json:"actor_id,omitempty"`
+	SubjectID         string         `json:"subject_id,omitempty"`
 	StoreID           string         `json:"store_id,omitempty"`
 	SessionRef        string         `json:"session_ref,omitempty"`
 	EntityType        string         `json:"entity_type,omitempty"`
@@ -57,6 +58,7 @@ func (f SinkFunc) Write(e Event) error { return f(e) }
 type ContextData struct {
 	RequestID, OperationID, ParentOperationID string
 	ActorKind, ActorID, StoreID, SessionRef   string
+	Device                                    string
 }
 type trace struct {
 	mu   sync.Mutex
@@ -137,6 +139,7 @@ type Stats struct {
 	WriteFailures uint64 `json:"write_failures"`
 }
 type Recorder struct {
+	behaviorDays                            int
 	sink                                    Sink
 	service, environment, surface, instance string
 	recorded, rejected, failures            atomic.Uint64
@@ -144,6 +147,23 @@ type Recorder struct {
 
 func New(sink Sink, service, environment, surface string) *Recorder {
 	return &Recorder{sink: sink, service: safeCode(service), environment: safeCode(environment), surface: safeCode(surface), instance: ID()}
+}
+func (r *Recorder) ConfigureBehaviorRetention(days int) {
+	if days > 0 {
+		r.behaviorDays = days
+	}
+}
+func (r *Recorder) BehaviorRetention() int {
+	if r == nil || r.behaviorDays < 1 {
+		return 30
+	}
+	return r.behaviorDays
+}
+func (r *Recorder) Environment() string {
+	if r == nil {
+		return ""
+	}
+	return r.environment
 }
 func (r *Recorder) Stats() Stats {
 	if r == nil {
@@ -164,6 +184,18 @@ func (r *Recorder) Record(ctx context.Context, e Event) {
 	e.SchemaVersion, e.EventID = 1, ID()
 	e.Service, e.Environment, e.Surface, e.InstanceID = r.service, r.environment, r.surface, r.instance
 	e.RecordedAt = time.Now().UTC()
+	if e.Type == "behavior" {
+		if e.Attributes == nil {
+			e.Attributes = map[string]any{}
+		}
+		if _, provided := e.Attributes["device"]; !provided {
+			device := d.Device
+			if device == "" {
+				device = "unknown"
+			}
+			e.Attributes["device"] = device
+		}
+	}
 	if e.OccurredAt.IsZero() {
 		e.OccurredAt = e.RecordedAt
 	} else {
@@ -217,7 +249,7 @@ func Sanitize(e Event) (Event, error) {
 	}
 	e.Stage, e.EntityType, e.Provider, e.ProviderOperation, e.ErrorCode = safeCode(e.Stage), safeCode(e.EntityType), safeCode(e.Provider), safeCode(e.ProviderOperation), safeCode(e.ErrorCode)
 	e.ActorKind = safeCode(e.ActorKind)
-	for _, p := range []*string{&e.EventID, &e.InstanceID, &e.RequestID, &e.OperationID, &e.ParentOperationID, &e.ActorID, &e.StoreID, &e.SessionRef, &e.EntityID, &e.PurchaseID, &e.OrderID, &e.PaymentAttemptID} {
+	for _, p := range []*string{&e.EventID, &e.InstanceID, &e.RequestID, &e.OperationID, &e.ParentOperationID, &e.ActorID, &e.SubjectID, &e.StoreID, &e.SessionRef, &e.EntityID, &e.PurchaseID, &e.OrderID, &e.PaymentAttemptID} {
 		*p = safeID(*p)
 	}
 	if e.DurationMS < 0 {
@@ -250,6 +282,27 @@ func Sanitize(e Event) (Event, error) {
 		case "device":
 			if s, ok := v.(string); ok && member(s, "desktop", "mobile", "tablet", "unknown") {
 				out[k] = s
+			}
+		case "category_ids":
+			values := []string{}
+			switch list := v.(type) {
+			case []string:
+				values = list
+			case []any:
+				for _, item := range list {
+					if str, ok := item.(string); ok {
+						values = append(values, str)
+					}
+				}
+			}
+			if len(values) <= 100 {
+				clean := []string{}
+				for _, value := range values {
+					if validID(value) {
+						clean = append(clean, value)
+					}
+				}
+				out[k] = clean
 			}
 		case "method":
 			if s, ok := v.(string); ok && member(s, "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS") {

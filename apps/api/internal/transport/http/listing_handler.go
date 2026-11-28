@@ -104,6 +104,9 @@ func (h *ListingHandler) Read(w http.ResponseWriter, r *http.Request) {
 		listingError(w, e)
 		return
 	}
+	if q.Q != "" {
+		h.service.RecordCustomerActivity(r.Context(), "search.completed", "", map[string]any{"category_id": q.CategoryID, "result_count": data.Total})
+	}
 	writeCatalogJSON(w, r, data)
 }
 func (h *ListingHandler) Suggest(w http.ResponseWriter, r *http.Request) {

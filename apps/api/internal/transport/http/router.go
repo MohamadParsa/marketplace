@@ -36,6 +36,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	if h := cfg.Commerce; h != nil {
 		mux.HandleFunc("POST /backoffice/observability/events/query", h.OperationReports)
 		mux.HandleFunc("POST /backoffice/observability/audit/query", h.OperationReports)
+		mux.HandleFunc("POST /backoffice/observability/funnel/query", h.OperationReports)
 		mux.HandleFunc("GET /backoffice/observability/stats", h.OperationReports)
 		mux.HandleFunc("GET /backoffice/commerce/gateways", h.GatewaySettings)
 		mux.HandleFunc("POST /backoffice/commerce/gateways", h.GatewaySettings)

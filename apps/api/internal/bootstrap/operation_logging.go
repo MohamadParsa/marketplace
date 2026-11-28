@@ -59,6 +59,7 @@ func buildOperationLogging(cfg config.Config) (*OperationLogging, error) {
 	}
 	runtime.Store, runtime.Status = store, "ready"
 	runtime.Recorder = operationlog.New(store, "api", cfg.Environment, cfg.WebSurface)
+	runtime.Recorder.ConfigureBehaviorRetention(opts.BehaviorDays)
 	return runtime, nil
 }
 func NewOperationLogging(cfg config.Config, lifecycle fx.Lifecycle) (*OperationLogging, error) {
@@ -83,6 +84,12 @@ type loggedHandler struct {
 func (h *loggedHandler) Close(ctx context.Context) error {
 	if h.logs.Store != nil {
 		return h.logs.Store.Close(ctx)
+	}
+	return nil
+}
+func (h *loggedHandler) FlushLogs(ctx context.Context) error {
+	if h.logs.Store != nil {
+		return h.logs.Store.Flush(ctx)
 	}
 	return nil
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/application/seller"
 	"github.com/cherriva/marketplace/apps/api/internal/config"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	httptransport "github.com/cherriva/marketplace/apps/api/internal/transport/http"
 	"net/http"
 	"strings"
@@ -96,6 +97,12 @@ func newCatalogHandlerRuntime(cfg config.Config, repository backoffice.Repositor
 	var expiryMu sync.Mutex
 	var lastExpiry time.Time
 	root := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" && (strings.HasPrefix(r.URL.Path, "/storefront/products/") || r.URL.Path == "/storefront/catalog") {
+			if header := r.Header.Get("Authorization"); strings.HasPrefix(header, "Bearer ") {
+				_, _ = service.Authenticate(r.Context(), strings.TrimPrefix(header, "Bearer "), identity.SurfaceCustomer)
+			}
+			workspace.AttachBehaviorSession(r.Context(), r.Header.Get("X-Cart-Token"))
+		}
 		if r.Method == "GET" && (r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/storefront/")) {
 			expiryMu.Lock()
 			if time.Since(lastExpiry) > time.Second {

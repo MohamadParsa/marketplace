@@ -14,6 +14,7 @@ import {
   type Card,
 } from "./home-page";
 import { navigate } from "./navigation";
+import { catalogActivityHeaders } from "./commerce";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Filter = {
@@ -191,7 +192,7 @@ export function ListingPage({ url }: { url: string }) {
     setLoading(true);
     setError(0);
     const restore = history.state?.cherrivaScroll ?? 0;
-    void fetch(api + "/storefront/catalog?" + query, { signal: c.signal })
+    void fetch(api + "/storefront/catalog?" + query, { signal: c.signal,headers:catalogActivityHeaders(),cache:"no-store" })
       .then(async (r) => {
         if (!r.ok) {
           if (active && !c.signal.aborted) setError(r.status);

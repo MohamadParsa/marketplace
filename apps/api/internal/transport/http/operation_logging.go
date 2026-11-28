@@ -42,7 +42,7 @@ func OperationMiddleware(recorder *operationlog.Recorder, next http.Handler) htt
 		if !operationHeader.MatchString(op) {
 			op = operationlog.ID()
 		}
-		ctx := operationlog.WithRecorder(operationlog.WithContext(r.Context(), operationlog.ContextData{RequestID: operationlog.ID(), OperationID: op}), recorder)
+		ctx := operationlog.WithRecorder(operationlog.WithContext(r.Context(), operationlog.ContextData{RequestID: operationlog.ID(), OperationID: op, Device: requestDevice(r)}), recorder)
 		r = r.WithContext(ctx)
 		trace := operationlog.Context(ctx)
 		w.Header().Set("X-Request-ID", trace.RequestID)

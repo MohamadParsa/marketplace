@@ -95,6 +95,7 @@ type Audit struct {
 	At           time.Time         `json:"at"`
 }
 type Workspace struct {
+	ActivityOrigins  map[string]ActivityOrigin      `json:"activity_origins,omitempty"`
 	RecordNumbers    map[string]int64               `json:"record_numbers,omitempty"`
 	LastRecordNumber int64                          `json:"last_record_number,omitempty"`
 	PublicBusiness   *commerce.Business             `json:"public_business,omitempty"`

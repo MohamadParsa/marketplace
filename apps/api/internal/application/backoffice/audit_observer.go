@@ -23,8 +23,10 @@ func ObserveWorkspaceUpdate(ctx context.Context, update func(func(*Workspace) er
 		return update(apply)
 	}
 	var committed []Audit
+	var behavior []committedBehavior
 	err := update(func(w *Workspace) error {
 		committed = nil
+		behavior = nil
 		before := auditSnapshot(*w)
 		count := len(w.Audit)
 		original, _ := json.Marshal(w.Audit)
@@ -64,6 +66,7 @@ func ObserveWorkspaceUpdate(ctx context.Context, update func(func(*Workspace) er
 			a.Version, _ = strconv.Atoi(a.After["version"])
 			committed = append(committed, *a)
 		}
+		behavior = collectBehavior(ctx, before, w)
 		return nil
 	})
 	if err != nil {
@@ -81,6 +84,9 @@ func ObserveWorkspaceUpdate(ctx context.Context, update func(func(*Workspace) er
 			target = a.ResultID
 		}
 		operationlog.Record(eventCtx, operationlog.Event{EventName: a.Action, Type: "business", Severity: "info", Outcome: "succeeded", EntityID: target, EntityType: "audit", Attributes: map[string]any{"audit_id": auditPublicID(a.ID), "version": a.Version, "changed_fields": auditChangeCount(a.Before, a.After)}})
+	}
+	for _, b := range behavior {
+		publishBehavior(ctx, b)
 	}
 	return nil
 }
@@ -127,6 +133,11 @@ func auditSnapshot(w Workspace) Workspace {
 		c.Coupons = slices.Clone(c.Coupons)
 		c.GatewaySettings = slices.Clone(c.GatewaySettings)
 		c.Purchases = slices.Clone(c.Purchases)
+		c.Quotes = slices.Clone(c.Quotes)
+		c.Carts = slices.Clone(c.Carts)
+		for i := range c.Carts {
+			c.Carts[i].Lines = slices.Clone(c.Carts[i].Lines)
+		}
 		c.Entries = slices.Clone(c.Entries)
 		w.Commerce = &c
 	}

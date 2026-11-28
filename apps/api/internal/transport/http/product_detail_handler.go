@@ -74,6 +74,7 @@ func (h *ProductDetailHandler) Read(w http.ResponseWriter, r *http.Request) {
 		productError(w, e)
 		return
 	}
+	h.service.RecordCustomerActivity(r.Context(), "product.viewed", d.ID, map[string]any{"product_id": d.ID, "category_id": d.Category.ID})
 	writeCatalogJSON(w, r, struct {
 		backoffice.ProductDetail
 		Robots string `json:"robots"`

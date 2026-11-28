@@ -6,6 +6,7 @@ import { FilterPanel } from "../../shared/filter-panel";
 import { EditorTabs } from "../../shared/editor-tabs";
 import { dateTime, number, displayRecord, labels } from "../../shared/format";
 import { PersianDateField } from "../../../../../packages/date-controls/persian-date-field";
+import { ActivityFunnelPanel } from "./activity-funnel";
 
 type LogEvent = { event_id: string; event_name: string; log_type: string; severity: string; outcome: string; recorded_at: string; operation_id: string; actor_id?: string; provider?: string; provider_operation?: string; error_code?: string; duration_ms?: number; http_status?: number; attributes?: Record<string, unknown> };
 type AuditRow = { id: string; actor: string; action: string; target: string; store_id?: string; operation_id?: string; outcome: string; version?: number; before: Record<string,string>; after: Record<string,string>; reason_present: boolean; at: string };
@@ -23,6 +24,7 @@ export function OperationReportsPage(){
   const [audit,setAudit]=useState<AuditRow[]>([]),[events,setEvents]=useState<LogEvent[]>([]),[next,setNext]=useState(""),[stats,setStats]=useState<Stats|null>(null),[error,setError]=useState(""),[busy,setBusy]=useState(false);
   const generation=useRef(0);
   const load=useCallback(async(cursor="",selected=filters)=>{
+    if(tab==="funnel")return;
     const current=++generation.current;setBusy(true);setError("");
     try{
       const payload={...selected,from:selected.from?selected.from+"T00:00:00+03:30":undefined,to:selected.to?selected.to+"T23:59:59.999+03:30":undefined,limit:50,cursor};
@@ -59,7 +61,8 @@ export function OperationReportsPage(){
       {id:"events",label:"لاگ اجرا و سرویس‌ها",content:<>{tab==="events"&&filter}<DataTable searchable={false} rows={events.map(e=>({...e,id:e.event_id}))} empty={busy?"در حال دریافت…":"رویدادی با این فیلتر ثبت نشده است."} columns={[
         {title:"رویداد",render:e=><span className="code">{e.event_name}</span>},{title:"نوع / سطح",render:e=><>{types[e.log_type]??e.log_type} · {e.severity}</>},{title:"نتیجه",render:e=>outcomes[e.outcome]??e.outcome},{title:"زمان",render:e=>dateTime(e.recorded_at)},
         {title:"جزئیات",render:e=><details><summary>مشاهده پیگیری</summary><p className="log-reference">عملیات: <bdi>{e.operation_id}</bdi></p>{e.provider&&<p>سرویس: {e.provider} · {e.provider_operation}</p>}<p>مدت: {number(e.duration_ms??0)} میلی‌ثانیه · پاسخ: {e.http_status??"—"}</p>{e.error_code&&<p>کد خطا: {e.error_code}</p>}</details>}
-      ]}/></>}
+      ]}/></>},
+      {id:"funnel",label:"رفتار مشتری و مسیر خرید",content:tab==="funnel"?<ActivityFunnelPanel/>:null}
     ]}/><div className="page-toolbar"><Button disabled={busy} onClick={()=>void load()}>به‌روزرسانی گزارش</Button>{next&&<Button variant="outlined" disabled={busy} onClick={()=>void load(next)}>نمایش بیشتر</Button>}</div></section>
   </>;
 }

@@ -73,8 +73,21 @@ func (q Query) Match(e Event) bool {
 	if q.Type != "" && e.Type != q.Type || q.Severity != "" && e.Severity != q.Severity || q.Outcome != "" && e.Outcome != q.Outcome || q.EventName != "" && e.EventName != q.EventName || q.OperationID != "" && e.OperationID != q.OperationID || q.ActorID != "" && e.ActorID != q.ActorID || q.EntityID != "" && e.EntityID != q.EntityID || q.Environment != "" && e.Environment != q.Environment {
 		return false
 	}
-	if q.Device != "" && e.Attributes["device"] != q.Device || q.CategoryID != "" && e.Attributes["category_id"] != q.CategoryID {
+	if q.Device != "" && e.Attributes["device"] != q.Device {
 		return false
+	}
+	if q.CategoryID != "" && e.Attributes["category_id"] != q.CategoryID {
+		found := false
+		if ids, ok := e.Attributes["category_ids"].([]string); ok {
+			for _, id := range ids {
+				if id == q.CategoryID {
+					found = true
+				}
+			}
+		}
+		if !found {
+			return false
+		}
 	}
 	return true
 }

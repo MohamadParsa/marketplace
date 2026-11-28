@@ -75,6 +75,7 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		return Workspace{}, err
 	}
 	state.UserMutations = nil
+	state.ActivityOrigins = nil
 	state.StoreMutations = nil
 	state.AxisPlans = nil
 	state.Wishlist = nil

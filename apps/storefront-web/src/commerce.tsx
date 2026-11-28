@@ -127,6 +127,9 @@ export function useCommerce() {
 }
 const guestKey = "cherriva:guest-cart",
   tokenKey = "cherriva:customer-token";
+// Reuse only existing first-party credentials. Reading a public page never
+// creates a tracking identifier or guest cart.
+export function catalogActivityHeaders():Record<string,string>{try{const token=sessionStorage.getItem(tokenKey),guest=localStorage.getItem(guestKey);return {...(token?{Authorization:"Bearer "+token}:{}),...(!token&&guest?{"X-Cart-Token":guest}:{})};}catch{return {};}}
 export function CommerceProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(
     () => sessionStorage.getItem(tokenKey) ?? "",
