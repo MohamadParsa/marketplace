@@ -87,6 +87,7 @@ jobs:
       - run: npm run lint
       - run: npm run test:display-numbers
       - run: npm run test:order-progress
+      - run: npm run test:shipping-presentation
       - run: npm run test:persian-dates
       - run: npm run build
 

@@ -32,7 +32,8 @@ func TestCoveredOrderPostgresAtomicPaymentRollbackAndRestartReplay(t *testing.T)
 			ctx := context.Background()
 			repo, db := cachePostgres(t)
 			seed := commerceSeed()
-			seed.Offers = append(seed.Offers, catalog.Offer{ID: "second-offer", ProductID: "product", VariantID: "variant", StoreID: "s2", Price: 1200000, Stock: 10, Version: 1})
+			seed.Offers[0].RegularPrice = 1200000
+			seed.Offers = append(seed.Offers, catalog.Offer{ID: "second-offer", ProductID: "product", VariantID: "variant", StoreID: "s2", Price: 1200000, RegularPrice: 1500000, Stock: 10, Version: 1})
 			if e := repo.Update(ctx, func(w *backoffice.Workspace) error { *w = seed; return nil }); e != nil {
 				t.Fatal(e)
 			}
@@ -52,6 +53,9 @@ func TestCoveredOrderPostgresAtomicPaymentRollbackAndRestartReplay(t *testing.T)
 				in.CouponCode = coupon.Code
 			}
 			q := readJSON[backoffice.QuoteView](t, commerceHTTP(t, h, buyer, "", "POST", "/storefront/checkout/quotes", in, "quote", 200))
+			if q.ReferenceSubtotalToman != "270000" || q.DirectDiscountToman != "50000" {
+				t.Fatal("reference subtotal must precede item discounts", q)
+			}
 			placement := backoffice.AcceptQuoteInput{QuoteID: q.ID, AcceptedTotalToman: q.TotalToman, TermsDigest: q.TermsDigest}
 			before, _ := repo.Snapshot(ctx)
 			failed := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, rejectCoveredPaymentCommit{repo})
@@ -72,6 +76,10 @@ func TestCoveredOrderPostgresAtomicPaymentRollbackAndRestartReplay(t *testing.T)
 			}
 			h = bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, reopened)
 			buyer = loginAt(t, h, "storefront", "09000000005")["token"].(string)
+			detail := readJSON[backoffice.PurchaseView](t, commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/"+p.ID, nil, "", 200))
+			if detail.Quote.ReferenceSubtotalToman != q.ReferenceSubtotalToman {
+				t.Fatal("snapshot gross changed across restart")
+			}
 			replay := commerceHTTP(t, h, buyer, "", "POST", "/storefront/checkout/purchases", placement, "place-covered", 200)
 			if !bytes.Equal(first, replay) {
 				t.Fatal("lost response replay changed")

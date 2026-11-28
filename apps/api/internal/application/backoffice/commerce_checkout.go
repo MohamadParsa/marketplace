@@ -67,29 +67,30 @@ type ShipmentView struct {
 	DeliveryTo        string                 `json:"delivery_to"`
 }
 type QuoteView struct {
-	SalesMethod         *commerce.SalesMethod `json:"sales_method,omitempty"`
-	MarkupToman         string                `json:"markup_toman"`
-	CashSubtotalToman   string                `json:"cash_subtotal_toman"`
-	DirectDiscountToman string                `json:"direct_discount_toman,omitempty"`
-	TermsDigest         string                `json:"terms_digest,omitempty"`
-	ContractVersion     int                   `json:"contract_version,omitempty"`
-	CouponCode          string                `json:"coupon_code,omitempty"`
-	DiscountToman       string                `json:"discount_toman"`
-	WalletSelectedToman string                `json:"wallet_selected_toman"`
-	FundingToman        string                `json:"funding_toman"`
-	Destination         commerce.Destination  `json:"destination"`
-	ID                  string                `json:"id"`
-	Status              string                `json:"status"`
-	Address             commerce.Address      `json:"address"`
-	Lines               []QuoteLineView       `json:"lines"`
-	Shipments           []ShipmentView        `json:"shipments"`
-	PaymentMethod       PaymentMethodInput    `json:"payment_method"`
-	SubtotalToman       string                `json:"subtotal_toman"`
-	ShippingToman       string                `json:"shipping_toman"`
-	TotalToman          string                `json:"total_toman"`
-	ExpiresAt           time.Time             `json:"expires_at"`
-	ReservedUntil       time.Time             `json:"reserved_until"`
-	Currency            string                `json:"currency"`
+	ReferenceSubtotalToman string                `json:"reference_subtotal_toman,omitempty"`
+	SalesMethod            *commerce.SalesMethod `json:"sales_method,omitempty"`
+	MarkupToman            string                `json:"markup_toman"`
+	CashSubtotalToman      string                `json:"cash_subtotal_toman"`
+	DirectDiscountToman    string                `json:"direct_discount_toman,omitempty"`
+	TermsDigest            string                `json:"terms_digest,omitempty"`
+	ContractVersion        int                   `json:"contract_version,omitempty"`
+	CouponCode             string                `json:"coupon_code,omitempty"`
+	DiscountToman          string                `json:"discount_toman"`
+	WalletSelectedToman    string                `json:"wallet_selected_toman"`
+	FundingToman           string                `json:"funding_toman"`
+	Destination            commerce.Destination  `json:"destination"`
+	ID                     string                `json:"id"`
+	Status                 string                `json:"status"`
+	Address                commerce.Address      `json:"address"`
+	Lines                  []QuoteLineView       `json:"lines"`
+	Shipments              []ShipmentView        `json:"shipments"`
+	PaymentMethod          PaymentMethodInput    `json:"payment_method"`
+	SubtotalToman          string                `json:"subtotal_toman"`
+	ShippingToman          string                `json:"shipping_toman"`
+	TotalToman             string                `json:"total_toman"`
+	ExpiresAt              time.Time             `json:"expires_at"`
+	ReservedUntil          time.Time             `json:"reserved_until"`
+	Currency               string                `json:"currency"`
 }
 type PurchaseView struct {
 	WalletConsumedToman   string               `json:"wallet_consumed_toman"`
@@ -167,6 +168,15 @@ func quoteView(q commerce.Quote) QuoteView {
 	}
 	if directValid && directTotal > 0 {
 		v.DirectDiscountToman = commerce.Toman(directTotal)
+	}
+	if directValid {
+		base := q.CashSubtotal
+		if base == 0 && q.MarkupTotal == 0 {
+			base = q.Subtotal
+		}
+		// Both components are bounded by MaxAmount; their display-only sum fits int64.
+		// The pre-discount reference may exceed the payment limit without changing that limit.
+		v.ReferenceSubtotalToman = commerce.Toman(base + directTotal)
 	}
 	for _, l := range q.Lines {
 		total, _ := commerce.Multiply(l.UnitPrice, l.Quantity)

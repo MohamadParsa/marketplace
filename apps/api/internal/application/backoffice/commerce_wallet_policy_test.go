@@ -323,7 +323,7 @@ func TestOrderSavingsSeparateFromCouponAndImmutableAfterConfirmation(t *testing.
 	in.WalletToman = "380000"
 	in.PaymentMethodID = ""
 	q := h.v2Quote(t, h.buyer, in)
-	if q.DirectDiscountToman != "140000" || q.DiscountToman != "40000" || q.TotalToman != "380000" {
+	if q.ReferenceSubtotalToman != "540000" || q.CashSubtotalToman != "400000" || q.DirectDiscountToman != "140000" || q.DiscountToman != "40000" || q.TotalToman != "380000" {
 		t.Fatal(q)
 	}
 	p := h.v2Accept(t, h.buyer, q)

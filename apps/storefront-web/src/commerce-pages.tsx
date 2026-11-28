@@ -3,6 +3,7 @@ import { PersianDateField } from "../../../packages/date-controls/persian-date-f
 import { tehranCapacityDate, persianCapacityDate, persianDigits } from "../../../packages/date-controls/calendar";
 import { CustomerOrderHistory, CustomerShipments } from "./order-shipments";
 import { CustomerPurchaseProgress, CustomerOrderFinance } from "./customer-order-details";
+import { OrderItems } from "./order-items";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
@@ -1437,39 +1438,6 @@ function CheckoutForm() {
     </BusyRegion>
   );
 }
-function OrderItems({ lines }: { lines: Quote["lines"] }) {
-  return (
-    <div className="buy-order-items">
-      {lines.map((l) => (
-        <article className="buy-order-item" key={l.offer_id}>
-          <div className="buy-order-item-heading">
-            <CatalogImage
-              className="buy-order-thumbnail"
-              src={l.image_url ? apiBase + l.image_url : undefined}
-              alt=""
-              loading="lazy"
-            />
-            <b>{l.name}</b>
-          </div>
-          <dl className="buy-order-item-details">
-            <div>
-              <dt>تعداد</dt>
-              <dd>{l.quantity.toLocaleString("fa-IR")}</dd>
-            </div>
-            <div>
-              <dt>هر عدد</dt>
-              <dd><bdi>{money(l.unit_price_toman)}</bdi></dd>
-            </div>
-            <div>
-              <dt>جمع</dt>
-              <dd><bdi>{money(l.total_toman)}</bdi></dd>
-            </div>
-          </dl>
-        </article>
-      ))}
-    </div>
-  );
-}
 export function OrderSummary({ quote, showTotals = true }: { quote: Quote; showTotals?:boolean }) {
   return (
     <div className="buy-order-summary">
@@ -1538,10 +1506,10 @@ export function OrderSummary({ quote, showTotals = true }: { quote: Quote; showT
     </div>
   );
 }
-export function PurchaseStatus({ purchase: p }: { purchase: Purchase }) {
+export function PurchaseStatus({ purchase: p, showCreditSources = true }: { purchase: Purchase; showCreditSources?:boolean }) {
   return (
     <>
-      {!!p.credit_sources?.length && (
+      {showCreditSources && !!p.credit_sources?.length && (
         <section
           className="buy-panel buy-credit-sources"
           aria-label="منابع اعتبار این سفارش"
@@ -1652,16 +1620,15 @@ function OrderContent({ id }: { id?: string }) {
                 <p className="buy-order-number">
                   شماره سفارش: <b>{p.number.replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}</b>
                 </p>
-                <PurchaseStatus purchase={p} />
+                <PurchaseStatus purchase={p} showCreditSources={false} />
                 {!id ? (
                   <strong>{money(p.quote.total_toman)}</strong>
                 ) : (
                   <div className="buy-layout">
                     <section>
                       <CustomerPurchaseProgress purchase={p}/>
-                      <OrderSummary quote={p.quote} showTotals={false} />
                       <CustomerOrderFinance purchase={p}/>
-                      <CustomerShipments id={p.id} orders={p.order_ids} version={p.version} onChanged={load}/>
+                      <CustomerShipments id={p.id} orders={p.order_ids} quote={p.quote} version={p.version} onChanged={load}/>
                       <CustomerOrderHistory id={p.id} version={p.version}/>
                       <h3>گیرنده و آدرس</h3>
                       <p>

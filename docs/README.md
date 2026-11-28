@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[اصلاح نمایش تاریخ و جزئیات مرسوله/مالی مشتری و بررسی سه منوی قدیمی — #150](delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md)
+
 [تحویل۸اصلاح ورود، سفارش، کیف پول و مرسوله؛ شواهد و اجرای محلی — ۲۰۲۶-۱۱-۲۸](delivery/order-experience-followup-2026-11-28/final-local-review.md)
 
 [ممیزی و شواهد همه کنترل‌های تاریخ شمسی سایت و بک‌آفیس](delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md).

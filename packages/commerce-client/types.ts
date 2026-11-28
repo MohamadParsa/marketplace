@@ -186,6 +186,7 @@ export interface Shipment {
   delivery_to: string;
 }
 export interface Quote {
+  reference_subtotal_toman?: string;
   cash_subtotal_toman?: string;
   markup_toman?: string;
   sales_method?: { id: string; name: string; markup_bps: number };
@@ -439,6 +440,7 @@ export interface PaymentAttempt {
 }
 
 export interface OrderOperations {
+  store_id: string;
   id: string;
   purchase_id: string;
   purchase_number: string;

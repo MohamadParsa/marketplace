@@ -180,5 +180,16 @@
     }
   ],
   "implementation_commit": "ec759db393118c78fc4af356b14115633b70eb00",
-  "local_review": "final-local-review.md"
+  "local_review": "final-local-review.md",
+  "followups": [
+    {
+      "scope": "storefront-fixes-and-read-only-menu-review",
+      "implementation_status": "done",
+      "id": "CV-ORD-UI-01",
+      "spec_id": "FEAT-SF-ORDER-PRESENTATION-001",
+      "execution_authorized": true,
+      "issue": 150,
+      "file": "storefront-presentation-and-legacy-menu-review.md"
+    }
+  ]
 }

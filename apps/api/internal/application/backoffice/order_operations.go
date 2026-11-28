@@ -41,6 +41,7 @@ type OrderOperationEvent struct {
 }
 
 type OrderOperationsView struct {
+	StoreID            string                `json:"store_id"`
 	ID                 string                `json:"id"`
 	PurchaseID         string                `json:"purchase_id"`
 	PurchaseNumber     string                `json:"purchase_number"`
@@ -212,7 +213,7 @@ func operationActions(w Workspace, a identity.User, o orders.Order) []string {
 }
 
 func orderOperationsView(w Workspace, a identity.User, o orders.Order, p commerce.Purchase) OrderOperationsView {
-	v := OrderOperationsView{ID: o.ID, PurchaseID: p.ID, PurchaseNumber: o.PurchaseNumber, StoreName: o.StoreDisplayName, Version: o.Version, OrderStatus: o.OrderStatus, Status: o.Status, PaymentStatus: o.Payment, ShippingName: o.ShippingMethod, DispatchIdentifier: orderDispatchPolicy(o), Identifiers: slices.Clone(o.DispatchIdentifiers), Items: slices.Clone(o.Items), AllowedActions: operationActions(w, a, o), Events: []OrderOperationEvent{}}
+	v := OrderOperationsView{StoreID: o.StoreID, ID: o.ID, PurchaseID: p.ID, PurchaseNumber: o.PurchaseNumber, StoreName: o.StoreDisplayName, Version: o.Version, OrderStatus: o.OrderStatus, Status: o.Status, PaymentStatus: o.Payment, ShippingName: o.ShippingMethod, DispatchIdentifier: orderDispatchPolicy(o), Identifiers: slices.Clone(o.DispatchIdentifiers), Items: slices.Clone(o.Items), AllowedActions: operationActions(w, a, o), Events: []OrderOperationEvent{}}
 	for _, s := range w.Stores {
 		if s.ID == o.StoreID && v.StoreName == "" {
 			v.StoreName = s.Name

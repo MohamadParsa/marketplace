@@ -61,7 +61,7 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 		return readJSON[backoffice.OrderOperationsView](t, commerceHTTP(t, h, token, "", "GET", path, nil, "", 200))
 	}
 	v := get(seller, path)
-	if v.Address != nil || len(v.AllowedActions) != 0 {
+	if v.StoreID != "s1" || v.Address != nil || len(v.AllowedActions) != 0 {
 		t.Fatal("prepayment privacy/actions", v)
 	}
 	commerceHTTP(t, h, seller, "", "GET", "/seller/orders/"+p.OrderIDs[1]+"/operations", nil, "", 404)

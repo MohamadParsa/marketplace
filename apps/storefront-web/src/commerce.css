@@ -887,6 +887,7 @@
   overflow-wrap: anywhere;
   line-height: 1.9;
 }
+.buy-order-product-name{min-width:0;font-size:12px;line-height:1.9;overflow-wrap:anywhere}.buy-order-product-name small{display:block;color:#7a6975}.customer-shipment-promise p{margin-block:6px;unicode-bidi:plaintext}
 .buy-order-item-details {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);

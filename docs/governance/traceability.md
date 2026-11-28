@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+FEAT-SF-ORDER-PRESENTATION-001-AC01..04 → [اصلاح و بررسی #150](../delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md) → [BDD طراحی](../bdd/features/experiences/order-presentation-refinement.feature). تاریخ صریح، اتصال اقلام/وعده با store_id و جمع مرجع/خلاصه کیف پول اجرا شدند؛ بررسی منوهای قدیمی مجوز حذف یا بازنویسی آن‌ها نیست.
+
 <a id="order-experience-followup-20261128"></a>
 ## بازخورد ورود و سفارش و مرسوله — ۲۰۲۶-۱۱-۲۸
 
