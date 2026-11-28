@@ -92,6 +92,7 @@ type QuoteView struct {
 	Currency            string                `json:"currency"`
 }
 type PurchaseView struct {
+	WalletConsumedToman   string               `json:"wallet_consumed_toman"`
 	PaymentAttempts       []PaymentAttemptView `json:"payment_attempts,omitempty"`
 	PaymentStage          string               `json:"payment_stage"`
 	CreditSources         []CreditSourceView   `json:"credit_sources,omitempty"`
@@ -202,6 +203,13 @@ func purchaseView(c *commerce.State, p commerce.Purchase) PurchaseView {
 	q := findQuote(c, p.QuoteID)
 	orderStatus, paymentStatus := purchaseStatuses(p)
 	v := PurchaseView{Number: strconv.FormatInt(p.Number, 10), OrderStatus: orderStatus, PaymentStatus: paymentStatus, Events: []OrderEventView{}, CancellationRequested: p.CancellationRequested, CancellationReason: p.CancellationReason, ID: p.ID, Status: p.Status, Version: p.Version, OrderIDs: p.OrderIDs, CreatedAt: p.CreatedAt, ConfirmedAt: p.ConfirmedAt, Deposits: []DepositView{}, Reason: p.Reason}
+	var consumed commerce.Amount
+	for _, entry := range c.Entries {
+		if entry.UserID == p.UserID && entry.Kind == "order-payment" && entry.Source == "order:"+p.ID && entry.Amount < 0 {
+			consumed -= entry.Amount
+		}
+	}
+	v.WalletConsumedToman = commerce.Toman(consumed)
 	v.FulfillmentStatus = p.FulfillmentState
 	v.PaymentAttempts, v.PaymentStage = paymentAttemptViews(c, p)
 	for i, e := range p.Events {

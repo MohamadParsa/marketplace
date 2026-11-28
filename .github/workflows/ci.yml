@@ -86,6 +86,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run lint
       - run: npm run test:display-numbers
+      - run: npm run test:order-progress
       - run: npm run test:persian-dates
       - run: npm run build
 

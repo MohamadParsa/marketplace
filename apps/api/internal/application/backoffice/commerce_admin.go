@@ -121,6 +121,7 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 			}
 			if !v.Permissions[CommerceOrdersConfirm] {
 				view.WalletBalanceToman = ""
+				view.WalletConsumedToman = ""
 				view.WalletAvailableToman = ""
 				view.ShortfallToman = ""
 				view.CreditSources = nil

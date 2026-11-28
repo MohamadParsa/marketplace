@@ -119,7 +119,7 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/149",
       "title": "جزئیات سفارش مشتری با تفکیک مالی و روند گرافیکی مرسوله‌ها",
       "file": "tasks/customer-order-detail-progress.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": [],
@@ -127,7 +127,8 @@
         "CV-ORD-FOLLOW-05",
         "CV-ORD-FOLLOW-06",
         "CV-ORD-FOLLOW-07"
-      ]
+      ],
+      "evidence": "issue-149-verification.md"
     }
   ]
 }

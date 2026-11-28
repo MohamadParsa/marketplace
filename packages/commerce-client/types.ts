@@ -237,6 +237,7 @@ export interface Deposit {
   created_at: string;
 }
 export interface Purchase {
+  wallet_consumed_toman?: string;
   payment_stage?: string;
   payment_attempts?: PaymentAttempt[];
   fulfillment_status?: string;

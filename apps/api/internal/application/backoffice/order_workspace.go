@@ -166,6 +166,7 @@ func workspacePurchase(w *Workspace, a identity.User, p commerce.Purchase) Admin
 	}
 	if !allowsAction(a, CommerceOrdersConfirm) {
 		v.WalletBalanceToman = ""
+		v.WalletConsumedToman = ""
 		v.WalletAvailableToman = ""
 		v.ShortfallToman = ""
 		v.CreditSources = nil

@@ -2,6 +2,7 @@ import { CustomerRequests } from "./order-requests";
 import { PersianDateField } from "../../../packages/date-controls/persian-date-field";
 import { tehranCapacityDate, persianCapacityDate, persianDigits } from "../../../packages/date-controls/calendar";
 import { CustomerOrderHistory, CustomerShipments } from "./order-shipments";
+import { CustomerPurchaseProgress, CustomerOrderFinance } from "./customer-order-details";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
@@ -1469,7 +1470,7 @@ function OrderItems({ lines }: { lines: Quote["lines"] }) {
     </div>
   );
 }
-export function OrderSummary({ quote }: { quote: Quote }) {
+export function OrderSummary({ quote, showTotals = true }: { quote: Quote; showTotals?:boolean }) {
   return (
     <div className="buy-order-summary">
       <OrderItems lines={quote.lines} />
@@ -1483,7 +1484,7 @@ export function OrderSummary({ quote }: { quote: Quote }) {
           <small>{dispatchTime(s.lead_days,s.lead_day_basis)}</small>
         </div>
       ))}
-      <div className="buy-total">
+      {showTotals && <><div className="buy-total">
         <span>جمع کالاها</span>
         <b>{money(quote.cash_subtotal_toman ?? quote.subtotal_toman)}</b>
       </div>
@@ -1533,6 +1534,7 @@ export function OrderSummary({ quote }: { quote: Quote }) {
             </div>
           </>
         )}
+      </>}
     </div>
   );
 }
@@ -1648,7 +1650,7 @@ function OrderContent({ id }: { id?: string }) {
                   )}
                 </h2>
                 <p className="buy-order-number">
-                  شماره سفارش: <b>{p.number}</b>
+                  شماره سفارش: <b>{p.number.replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}</b>
                 </p>
                 <PurchaseStatus purchase={p} />
                 {!id ? (
@@ -1656,7 +1658,9 @@ function OrderContent({ id }: { id?: string }) {
                 ) : (
                   <div className="buy-layout">
                     <section>
-                      <OrderSummary quote={p.quote} />
+                      <CustomerPurchaseProgress purchase={p}/>
+                      <OrderSummary quote={p.quote} showTotals={false} />
+                      <CustomerOrderFinance purchase={p}/>
                       <CustomerShipments id={p.id} orders={p.order_ids} version={p.version} onChanged={load}/>
                       <CustomerOrderHistory id={p.id} version={p.version}/>
                       <h3>گیرنده و آدرس</h3>
@@ -1743,7 +1747,7 @@ function OrderContent({ id }: { id?: string }) {
                           </p>
                         </>
                       )}
-                      {p.status === "confirmed" && <CustomerRequests id={p.id} token={token} onChanged={load}/>}
+                      {p.confirmed_at && <CustomerRequests id={p.id} token={token} onChanged={load}/>}
                       {p.status !== "cancelled" && p.status !== "confirmed" && (
                         <form
                           onSubmit={(e) => {
