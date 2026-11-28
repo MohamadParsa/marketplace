@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[تحویل قدم اول تنظیمات درگاه‌ها؛ retry، اجازه شارژ، credential و مسیر بازگشت محیطی — #152](delivery/payment-gateway-settings-2026-11-28.md)
+
 [بررسی تنظیمات چنددرگاهی و نخستین اتصال زرین‌پال؛ پیش از کدنویسی](delivery/zarinpal-gateway-review-2026-11-28.md)
 
 [لینک روشن سفارش، گردش کیف پول و فرم ثبت نتیجه انتقال بانکی — #151](delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md)

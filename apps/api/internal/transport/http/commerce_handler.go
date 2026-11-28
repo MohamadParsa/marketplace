@@ -34,6 +34,11 @@ func NewCommerceHandler(s *backoffice.Service, a *auth.Service) *CommerceHandler
 	return &CommerceHandler{service: s, auth: a, guestLimits: map[string]guestLimit{}}
 }
 func commerceError(w http.ResponseWriter, e error) {
+	var gatewayFields *backoffice.GatewayFieldError
+	if errors.As(e, &gatewayFields) {
+		writeJSON(w, 400, map[string]any{"code": "invalid_gateway_settings", "fields": gatewayFields.Fields})
+		return
+	}
 	var field *backoffice.ShippingFieldError
 	if errors.As(e, &field) {
 		writeJSON(w, 400, map[string]any{"code": "invalid_shipping_method", "fields": map[string]string{field.Field: field.Message}})
@@ -41,6 +46,8 @@ func commerceError(w http.ResponseWriter, e error) {
 	}
 	status, code := 503, "commerce_unavailable"
 	switch {
+	case errors.Is(e, backoffice.ErrGatewayKeyUnavailable):
+		status, code = 503, "gateway_key_unavailable"
 	case errors.Is(e, backoffice.ErrShippingUnavailable):
 		status, code = 409, "shipping_unavailable"
 	case errors.Is(e, backoffice.ErrShippingFull):

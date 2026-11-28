@@ -1,5 +1,7 @@
 # مستندات BDD بازارگاه
 
+[۴سناریوی تنظیمات درگاه #152](features/experiences/payment-gateway-settings.feature) به [تحویل و شواهد قدم تنظیمات](../delivery/payment-gateway-settings-2026-11-28.md) متصل‌اند؛ اجرای پرداخت از آن نتیجه نمی‌شود.
+
 [۴سناریوی طراحی تنظیمات چنددرگاهی و زرین‌پال](features/experiences/zarinpal-gateway-review.feature) به [بررسی پیش از اجرا](../delivery/zarinpal-gateway-review-2026-11-28.md) متصل‌اند؛ هنوز پیاده‌سازی یا آزمون اتصال انجام نشده است.
 
 [۴سناریوی گردش کیف پول و ثبت نتیجه انتقال بانکی #151](features/experiences/wallet-history-and-transfer-review.feature) به [پذیرش و شواهد اجرا](../delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md) وصل‌اند؛ اجرای مستقل runner Gherkin ادعا نمی‌شود.

@@ -8,6 +8,8 @@ import (
 )
 
 type Config struct {
+	PaymentGatewayKey                                                   string
+	PaymentPublicBaseURL                                                string
 	NeshanWebKey                                                        string
 	NeshanServiceKey                                                    string
 	AddressMapDailyLimit                                                int
@@ -46,7 +48,7 @@ func Load() Config {
 	if dailyLimit < 1 || dailyLimit > 100000 {
 		dailyLimit = 1000
 	}
-	return Config{NeshanWebKey: os.Getenv("NESHAN_WEB_KEY"), NeshanServiceKey: os.Getenv("NESHAN_SERVICE_KEY"), AddressMapDailyLimit: dailyLimit, CacheHomeTTL: cacheTTL("CACHE_HOME_TTL_SECONDS", 300), CacheProductTTL: cacheTTL("CACHE_PRODUCT_TTL_SECONDS", 600), CacheListingTTL: cacheTTL("CACHE_LISTING_TTL_SECONDS", 60), CacheSuggestionsTTL: cacheTTL("CACHE_SUGGESTIONS_TTL_SECONDS", 30), RedisURL: os.Getenv("REDIS_URL"), PublicCacheEnabled: os.Getenv("PUBLIC_CACHE_ENABLED") == "true", CacheWarmupEnabled: os.Getenv("CACHE_WARMUP_ENABLED") != "false", DatabaseURL: os.Getenv("DATABASE_URL"), WebRoot: os.Getenv("WEB_ROOT"), WebSurface: os.Getenv("WEB_SURFACE"), Address: address, Environment: env, ReviewDatabaseURL: os.Getenv("REVIEW_DATABASE_URL"), KavenegarAPIKey: os.Getenv("KAVENEGAR_API_KEY"), KavenegarTemplate: os.Getenv("KAVENEGAR_TEMPLATE"), KavenegarBaseURL: baseURL}
+	return Config{PaymentPublicBaseURL: os.Getenv("PAYMENT_PUBLIC_BASE_URL"), PaymentGatewayKey: os.Getenv("PAYMENT_GATEWAY_ENCRYPTION_KEY"), NeshanWebKey: os.Getenv("NESHAN_WEB_KEY"), NeshanServiceKey: os.Getenv("NESHAN_SERVICE_KEY"), AddressMapDailyLimit: dailyLimit, CacheHomeTTL: cacheTTL("CACHE_HOME_TTL_SECONDS", 300), CacheProductTTL: cacheTTL("CACHE_PRODUCT_TTL_SECONDS", 600), CacheListingTTL: cacheTTL("CACHE_LISTING_TTL_SECONDS", 60), CacheSuggestionsTTL: cacheTTL("CACHE_SUGGESTIONS_TTL_SECONDS", 30), RedisURL: os.Getenv("REDIS_URL"), PublicCacheEnabled: os.Getenv("PUBLIC_CACHE_ENABLED") == "true", CacheWarmupEnabled: os.Getenv("CACHE_WARMUP_ENABLED") != "false", DatabaseURL: os.Getenv("DATABASE_URL"), WebRoot: os.Getenv("WEB_ROOT"), WebSurface: os.Getenv("WEB_SURFACE"), Address: address, Environment: env, ReviewDatabaseURL: os.Getenv("REVIEW_DATABASE_URL"), KavenegarAPIKey: os.Getenv("KAVENEGAR_API_KEY"), KavenegarTemplate: os.Getenv("KAVENEGAR_TEMPLATE"), KavenegarBaseURL: baseURL}
 }
 
 func cacheTTL(key string, maximum int) time.Duration {

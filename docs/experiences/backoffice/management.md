@@ -3,12 +3,14 @@ id: FEAT-BO-001
 title: مدیریت فروشگاه و سیاست‌ها
 status: in-review
 owner: product-owner
-updated: 2026-11-21
+updated: 2026-11-28
 related: [DOM-CATALOG-001, DOM-PRICING-001]
 approved_by: []
 ---
 
 # مدیریت فروشگاه، کاتالوگ و سیاست‌ها
+
+[تنظیمات اختصاصی درگاه‌ها در تب پرداخت #152](../../delivery/payment-gateway-settings-2026-11-28.md): عمومی/اتصال در دو تب، retry و اجازه شارژ مستقل و credential متناسب؛ مسیر بازگشت فیلد فرم نیست. این تحویل فقط تنظیمات است و درگاه را برای مشتری فعال نمی‌کند.
 
 استثنای محدود CMS در۲۰۲۶-۱۱-۲۱: طبق [ADR-006](../../decisions/adr-006-responsive-banner-activation.md) فقط فرم بنر دو اندازه #7 فعال شد؛ `/banners` پیش‌نویس/دو تصویر/انتشار مستقل دارد. [قرارداد](../../architecture/contracts/responsive-banners.md) و [گزارش](../../delivery/review-v1-1/issue-7-verification.md). متن کلی «CMS معوق» در بخش‌های پایین با همین استثنا خوانده شود؛ #8/#9 معوق‌اند.
 

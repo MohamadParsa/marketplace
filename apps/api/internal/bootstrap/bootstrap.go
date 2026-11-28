@@ -47,6 +47,12 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 		clock = clocks[0]
 	}
 	workspace := backoffice.NewService(repository, clock, authmemory.Random{})
+	if err := workspace.ConfigureGatewaySettingsKey(cfg.PaymentGatewayKey); err != nil {
+		panic("PAYMENT_GATEWAY_ENCRYPTION_KEY must be a base64-encoded 32-byte key")
+	}
+	if err := workspace.ConfigureGatewayCallbackBase(cfg.PaymentPublicBaseURL, testData); err != nil {
+		panic("PAYMENT_PUBLIC_BASE_URL must be a valid public HTTPS origin (local HTTP only in local/test)")
+	}
 	workspace.UsePublicCache(c)
 	storefrontRoot := ""
 	if cfg.WebSurface == "storefront" {

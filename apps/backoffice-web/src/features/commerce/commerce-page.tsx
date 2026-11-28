@@ -1,4 +1,5 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { PaymentGatewaySettings } from "./payment-gateway-settings";
 import { normalizeTransferReference, transferReferenceError } from "../../../../../packages/commerce-client/transfer-reference";
 import { PersianDateField, PersianDatesField } from "../../../../../packages/date-controls/persian-date-field";
 import { tehranCapacityDate, persianCapacityDate, persianDigits, validISODate } from "../../../../../packages/date-controls/calendar";
@@ -296,6 +297,7 @@ export function CommercePage({
               تنظیم روش‌های فروش و مارکاپ
             </Button>
             <SettingsForm
+              token={token}
               key={settings.version}
               settings={settings}
               activeTab={settingsTab}
@@ -1045,6 +1047,7 @@ function RefundReview({
   );
 }
 function SettingsForm({
+  token,
   settings: s,
   activeTab,
   onTabChange,
@@ -1053,6 +1056,7 @@ function SettingsForm({
   busy,
   save,
 }: {
+  token: string;
   settings: Settings;
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -1143,6 +1147,7 @@ function SettingsForm({
             label: "پرداخت و مقصد وجه",
             content: (
               <>
+                <PaymentGatewaySettings token={token} categories={categories} />
                 {section(
                   "روش‌های پرداخت و مقصد وجه",
                   <fieldset disabled={busy || !can("payment.settings.write")}>

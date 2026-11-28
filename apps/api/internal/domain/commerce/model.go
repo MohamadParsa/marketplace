@@ -14,6 +14,7 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
+	GatewaySettings      []GatewaySettings     `json:"gateway_settings,omitempty"`
 	OrderRefunds         []OrderRefund         `json:"order_refunds,omitempty"`
 	OrderRequests        []OrderRequest        `json:"order_requests,omitempty"`
 	NextRequestNumber    int64                 `json:"next_request_number,omitempty"`

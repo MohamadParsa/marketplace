@@ -2,6 +2,7 @@ package backoffice
 
 import (
 	"context"
+	"crypto/cipher"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -11,10 +12,13 @@ import (
 )
 
 type Service struct {
-	repository  Repository
-	clock       Clock
-	identifiers Identifier
-	publicCache *PublicCache
+	repository           Repository
+	clock                Clock
+	identifiers          Identifier
+	publicCache          *PublicCache
+	gatewayCipher        cipher.AEAD
+	gatewayPublicBaseURL string
+	gatewayLocalCallback bool
 }
 
 func NewService(repository Repository, clock Clock, identifiers Identifier) *Service {
