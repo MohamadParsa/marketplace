@@ -36,6 +36,8 @@ Issue: [#150](https://github.com/MohamadParsa/marketplace/issues/150) · مال�
 
 [نمای موبایل](assets/order-presentation-mobile.png). [سناریوهای طراحی](../../bdd/features/experiences/order-presentation-refinement.feature) با پذیرش‌ها ردیابی می‌شوند؛ وجود فایل feature ادعای اجرای runner نیست.
 
+کامیت [7aca65d](https://github.com/MohamadParsa/marketplace/commit/7aca65d85bef7a5db0dc173e3e8a1c55515971a8) پوش شد؛ هر۵بررسی [CI](https://github.com/MohamadParsa/marketplace/actions/runs/46125739727) موفق و #150 با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/150#issuecomment-7236602828) بسته شد. نسخه محلی سایت۵۱۹۷ و بک‌آفیس۸۰۹۸ به‌روز است؛ health/ready و HTML/JS هر دو200 بودند. شمار۱۵خرید،۲۲سفارش،۳۵۳۴محصول و۱۳ورودی دفتر مالی و fingerprint دفتر مالی قبل/بعد از جایگزینی API یکسان بودند. fixtureهای مرورگر پس از آزمون جمع شدند؛ سرویس اصلی روشن است. پذیرش دستی مالک و انتشار عمومی مستقل‌اند.
+
 ## بررسی پشتیبانی و پرونده‌ها — نتیجه قطعی سورس
 
 این صفحه از `state.cases` و مدل قدیمی `support.Case` می‌خواند؛ درخواست‌های فعلی کنسلی/مرجوعی از `Commerce.OrderRequests` در جزئیات خرید و APIهای requests مدیریت می‌شوند. پس اضافه‌شدن درخواست جدید لزوماً ردیف این منو نمی‌سازد. در مسیر فعلی ایجاد سفارش جدید، تولید Case برای این صفحه پیدا نشد؛ دو Case نمونه در fixture قدیمی وجود دارند.

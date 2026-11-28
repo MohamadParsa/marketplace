@@ -189,7 +189,13 @@
       "spec_id": "FEAT-SF-ORDER-PRESENTATION-001",
       "execution_authorized": true,
       "issue": 150,
-      "file": "storefront-presentation-and-legacy-menu-review.md"
+      "file": "storefront-presentation-and-legacy-menu-review.md",
+      "delivery": {
+        "source_commit": "7aca65d85bef7a5db0dc173e3e8a1c55515971a8",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46125739727",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/150#issuecomment-7236602828",
+        "issue_state": "closed"
+      }
     }
   ]
 }
