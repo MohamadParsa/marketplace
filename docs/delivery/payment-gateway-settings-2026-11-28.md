@@ -12,6 +12,8 @@ execution_scope: settings-only
 
 # تحویل قدم تنظیمات درگاه — #152
 
+**اصلاح بعدی مالک در #153:** این گزارش شاهد تحویل اولیه است؛ [وضعیت فعلی فرم](payment-settings-revision-2026-11-28.md) شامل درگاه‌های ثابت بدون افزودن، سوییچ، بخش‌های بسته اولیه، OAuth اختصاصی، Merchant اختیاری و شرح عملیاتی است. دستورهای افزودن/active اولیه و تصاویر پایین سابقه همان نسخه‌اند و مرجع رابط فعلی نیستند.
+
 Issue: [#152](https://github.com/MohamadParsa/marketplace/issues/152) · والد: [#95](https://github.com/MohamadParsa/marketplace/issues/95) · شاخه PR [#106](https://github.com/MohamadParsa/marketplace/pull/106).
 
 ## مسئله و دامنه انتخاب‌شده

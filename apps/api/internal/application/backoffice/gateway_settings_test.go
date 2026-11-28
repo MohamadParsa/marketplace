@@ -110,7 +110,6 @@ func TestGatewaySettingsValidationAndAuthorization(t *testing.T) {
 		{"negative retries", func(v *backoffice.GatewaySettingsInput) { v.MaxAutomaticRetries = -1 }},
 		{"too many retries", func(v *backoffice.GatewaySettingsInput) { v.MaxAutomaticRetries = 11 }},
 		{"unsupported provider", func(v *backoffice.GatewaySettingsInput) { v.Provider = "other" }},
-		{"activation not implemented", func(v *backoffice.GatewaySettingsInput) { v.Active = true }},
 		{"bad credential", func(v *backoffice.GatewaySettingsInput) {
 			v.Credentials = map[string]string{"merchant_id": "مدیر سایت"}
 		}},
@@ -125,6 +124,19 @@ func TestGatewaySettingsValidationAndAuthorization(t *testing.T) {
 		{"unknown currency", func(v *backoffice.GatewaySettingsInput) { v.Values = map[string]string{"currency": "USD"} }},
 		{"invalid category", func(v *backoffice.GatewaySettingsInput) { v.AllowedCategories = []string{"missing"} }},
 		{"wrong max", func(v *backoffice.GatewaySettingsInput) { v.MaxToman = "1" }},
+		{"invalid OAuth client ID", func(v *backoffice.GatewaySettingsInput) {
+			v.Credentials = map[string]string{"client_id": "not-an-integer"}
+		}},
+		{"oversized client secret", func(v *backoffice.GatewaySettingsInput) {
+			v.Credentials = map[string]string{"client_secret": strings.Repeat("A", 4097)}
+		}},
+		{"OAuth credential in plain values", func(v *backoffice.GatewaySettingsInput) {
+			v.Values = map[string]string{"client_secret": "never-store-in-values"}
+		}},
+		{"foreign OAuth API URL", func(v *backoffice.GatewaySettingsInput) {
+			v.Values = map[string]string{"api_base_url": "https://foreign.invalid/api"}
+		}},
+		{"unknown OTP channel", func(v *backoffice.GatewaySettingsInput) { v.Values = map[string]string{"channel": "other"} }},
 		{"callback cannot be overridden by administrator", func(v *backoffice.GatewaySettingsInput) {
 			v.Values = map[string]string{"callback_url": "https://example.test/return"}
 		}},

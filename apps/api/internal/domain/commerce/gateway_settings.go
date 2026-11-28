@@ -4,6 +4,7 @@ package commerce
 // PaymentMethod, which is included in customer responses and order snapshots.
 // These drafts cannot initiate a payment until a provider adapter is implemented.
 type GatewaySettings struct {
+	Active               bool              `json:"active"`
 	ID                   string            `json:"id"`
 	Version              int               `json:"version"`
 	Provider             string            `json:"provider"`

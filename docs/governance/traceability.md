@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+DOM-PAYMENTS-001-R22..27 → [اصلاح تنظیمات #153 و پذیرش FEAT-BO-GATEWAY-SETTINGS-REVISION-001-AC01..04](../delivery/payment-settings-revision-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-settings-revision.feature). فقط تنظیمات اجرا شده‌اند.
+
 DOM-PAYMENTS-001-R19..21 → [تنظیمات درگاه #152 و پذیرش FEAT-BO-PAYMENT-GATEWAY-SETTINGS-001-AC01..04](../delivery/payment-gateway-settings-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-gateway-settings.feature). فقط قدم تنظیمات done است؛ adapter و اجرای مالی درگاه شروع نشده‌اند.
 
 FEAT-PAYMENT-GATEWAY-REVIEW-001-AC01..04 → [بررسی چنددرگاهی و زرین‌پال](../delivery/zarinpal-gateway-review-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/zarinpal-gateway-review.feature) → [GATEWAY-Q01 تا03](../product/open-questions.md#zarinpal-gateway-review-20261128). فقط بررسی؛ اجرای adapter یا تأیید اتصال واقعی ادعا نمی‌شود.

@@ -28,6 +28,7 @@ import {
   Alert,
   Button,
   Checkbox,
+  Switch,
   Dialog,
   DialogContent,
   DialogActions,
@@ -1158,11 +1159,11 @@ function SettingsForm({
                       کنید.
                     </Alert>
                     {methods.map((m, i) => (
-                      <article className="commerce-setting-card" key={m.id}>
-                        <h3>{m.name}</h3>
+                      <details className="commerce-setting-card" key={m.id}>
+                        <summary>{m.name}</summary>
                         <FormControlLabel
                           control={
-                            <Checkbox
+                            <Switch
                               checked={m.active}
                               onChange={(e) =>
                                 patchMethod(i, { active: e.target.checked })
@@ -1231,9 +1232,9 @@ function SettingsForm({
                           }
                           multiline
                         />
-                      </article>
+                      </details>
                     ))}
-                    <div className="commerce-grid">
+                    <details className="commerce-setting-card"><summary>اطلاعات حساب مقصد کارت‌به‌کارت</summary><div className="commerce-grid">
                       <Field
                         label="شماره کارت مقصد"
                         value={destination.card_number ?? ""}
@@ -1255,7 +1256,7 @@ function SettingsForm({
                           setDestination({ ...destination, bank })
                         }
                       />
-                    </div>
+                    </div></details>
                     <Button
                       variant="contained"
                       disabled={busy || !can("payment.settings.write")}

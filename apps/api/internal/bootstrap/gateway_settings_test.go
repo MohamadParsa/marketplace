@@ -68,7 +68,7 @@ func TestGatewaySettingsHTTPPermissionsFieldErrorsAndPublicIsolation(t *testing.
 	commerceHTTP(t, h, admin, "", "POST", "/backoffice/commerce/gateways", stale, "stale", 409)
 	bad = saved.GatewaySettingsInput
 	bad.Active = true
-	commerceHTTP(t, h, admin, "", "POST", "/backoffice/commerce/gateways", bad, "activate", 400)
+	json.Unmarshal(commerceHTTP(t, h, admin, "", "POST", "/backoffice/commerce/gateways", bad, "activate-settings", 200), &saved)
 	hNoKey := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
 	adminNoKey := login(t, hNoKey, "09000000001")
 	commerceHTTP(t, hNoKey, adminNoKey, "", "POST", "/backoffice/commerce/gateways", saved.GatewaySettingsInput, "missing-key", 503)

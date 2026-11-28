@@ -1,5 +1,7 @@
 # مستندات BDD بازارگاه
 
+[۴سناریوی بازبینی تنظیمات #153](features/experiences/payment-settings-revision.feature) به [پذیرش و شواهد](../delivery/payment-settings-revision-2026-11-28.md) وصل‌اند؛ آزمون بانکی واقعی از آن نتیجه نمی‌شود.
+
 [۴سناریوی تنظیمات درگاه #152](features/experiences/payment-gateway-settings.feature) به [تحویل و شواهد قدم تنظیمات](../delivery/payment-gateway-settings-2026-11-28.md) متصل‌اند؛ اجرای پرداخت از آن نتیجه نمی‌شود.
 
 [۴سناریوی طراحی تنظیمات چنددرگاهی و زرین‌پال](features/experiences/zarinpal-gateway-review.feature) به [بررسی پیش از اجرا](../delivery/zarinpal-gateway-review-2026-11-28.md) متصل‌اند؛ هنوز پیاده‌سازی یا آزمون اتصال انجام نشده است.

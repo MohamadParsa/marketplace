@@ -31,29 +31,58 @@ type GatewayField struct {
 	Key                   string          `json:"key"`
 	Label                 string          `json:"label"`
 	Kind                  string          `json:"kind"`
+	Section               string          `json:"section"`
+	Format                string          `json:"format,omitempty"`
+	MaxLength             int             `json:"max_length"`
 	Default               string          `json:"default"`
 	RequiredForActivation bool            `json:"required_for_activation"`
 	ReadOnly              bool            `json:"read_only"`
 	Helper                string          `json:"helper"`
 	Options               []GatewayOption `json:"options,omitempty"`
 }
+type GatewaySection struct {
+	ID          string `json:"id"`
+	Label       string `json:"label"`
+	Description string `json:"description"`
+	Expanded    bool   `json:"expanded"`
+}
 type GatewayProvider struct {
-	ID             string         `json:"id"`
-	Name           string         `json:"name"`
-	ExecutionReady bool           `json:"execution_ready"`
-	Fields         []GatewayField `json:"fields"`
+	ID             string           `json:"id"`
+	Name           string           `json:"name"`
+	ExecutionReady bool             `json:"execution_ready"`
+	Fields         []GatewayField   `json:"fields"`
+	Sections       []GatewaySection `json:"sections"`
 }
 
 func GatewayProviders() []GatewayProvider {
-	return []GatewayProvider{{ID: "zarinpal", Name: "زرین‌پال", ExecutionReady: false, Fields: []GatewayField{
-		{Key: "merchant_id", Label: "شناسه پذیرنده (Merchant ID)", Kind: "secret", RequiredForActivation: true, Helper: "شناسه ۳۶ نویسه‌ای پذیرنده؛ برای محیط آزمایشی UUID ساختگی. مقدار ذخیره‌شده دوباره نمایش داده نمی‌شود."},
-		{Key: "environment", Label: "محیط درگاه", Kind: "select", Default: "sandbox", Options: []GatewayOption{{"sandbox", "آزمایشی (Sandbox)"}, {"production", "واقعی"}}},
-		{Key: "base_url", Label: "آدرس پایه سرویس", Kind: "url", Default: "https://sandbox.zarinpal.com/pg/v4/payment", Helper: "آدرس رسمی متناسب با محیط؛ مقصد دلخواه پذیرفته نمی‌شود."},
-		{Key: "currency", Label: "واحد مبلغ ارسالی", Kind: "text", Default: "IRR", ReadOnly: true, Helper: "ریال؛ نمایش و ورود مبلغ در سایت و پنل همچنان تومان است."},
-		{Key: "description", Label: "شرح تراکنش", Kind: "text", Default: "شارژ کیف پول چریوا", Helper: "حداکثر ۵۰۰ نویسه."},
-		{Key: "auto_verify", Label: "اعتبارسنجی نزد بانک", Kind: "select", Default: "false", Options: []GatewayOption{{"false", "با درخواست سرور چریوا"}, {"true", "خودکار توسط زرین‌پال"}}, Helper: "این گزینه جای تأیید نتیجه در سرور چریوا را نمی‌گیرد."},
-	}}}
+	return []GatewayProvider{{ID: "zarinpal", Name: "زرین‌پال", ExecutionReady: false,
+		Sections: []GatewaySection{
+			{ID: "api", Label: "احراز هویت API زرین‌پال", Description: "مشخصات کلاینت و حساب پذیرنده برای دسترسی API؛ اطلاعات مشتری نیست. رمز یک‌بارمصرف در تنظیمات ذخیره نمی‌شود."},
+			{ID: "payment", Label: "تنظیمات پرداخت", Description: "تنظیمات پرداخت V4؛ شناسه پذیرنده در این فرم اختیاری است و به‌عنوان credential مشترک همه درگاه‌ها الزام نمی‌شود."},
+			{ID: "advanced", Label: "تنظیمات پیشرفته تأیید پرداخت", Description: "تأیید نهایی تراکنش نزد بانک از احراز هویت API جداست. در هر دو حالت کارها روی سرور انجام می‌شود و مشتری مرحله اضافی ندارد."},
+		}, Fields: []GatewayField{
+			{Key: "client_id", Label: "شناسه کلاینت (Client ID)", Kind: "credential", Section: "api", Format: "positive-integer", MaxLength: 20, Helper: "شناسه عددی کلاینت دریافتی از زرین‌پال؛ برای پیش‌نویس می‌تواند خالی باشد."},
+			{Key: "client_secret", Label: "کلید محرمانه کلاینت (Client Secret)", Kind: "secret", Section: "api", MaxLength: 4096, Helper: "کلید دریافتی از زرین‌پال؛ حساس به حروف است و رمزنگاری‌شده ذخیره می‌شود."},
+			{Key: "username", Label: "حساب پذیرنده زرین‌پال", Kind: "credential", Section: "api", MaxLength: 254, Helper: "شماره همراه یا ایمیل حساب پذیرنده برای احراز هویت API؛ در پیش‌نویس اختیاری است."},
+			{Key: "channel", Label: "روش دریافت کد حساب پذیرنده", Kind: "select", Section: "api", Default: "ussd", Options: []GatewayOption{{"ussd", "USSD"}, {"sms", "پیامک"}}, Helper: "برای راه‌اندازی اولیه حساب پذیرنده؛ در روال پرداخت مشتری نمایش داده نمی‌شود."},
+			{Key: "api_base_url", Label: "آدرس پایه API زرین‌پال", Kind: "url", Section: "api", Default: "https://next.zarinpal.com/api", MaxLength: 2048, Helper: "آدرس رسمی احراز هویت و API؛ از آدرس سرویس پرداخت جداست."},
+			{Key: "merchant_id", Label: "شناسه پذیرنده (Merchant ID) — اختیاری", Kind: "credential", Section: "payment", Format: "uuid", MaxLength: 36, Helper: "اختیاری در تنظیمات؛ فقط برای عملیات پرداخت V4 کاربرد دارد. با Client ID یکسان نیست."},
+			{Key: "environment", Label: "محیط پرداخت", Kind: "select", Section: "payment", Default: "sandbox", Options: []GatewayOption{{"sandbox", "آزمایشی (Sandbox)"}, {"production", "واقعی"}}},
+			{Key: "base_url", Label: "آدرس پایه سرویس پرداخت", Kind: "url", Section: "payment", Default: "https://sandbox.zarinpal.com/pg/v4/payment", MaxLength: 2048, Helper: "آدرس رسمی متناسب با محیط پرداخت؛ مقصد دلخواه پذیرفته نمی‌شود."},
+			{Key: "currency", Label: "واحد مبلغ ارسالی", Kind: "text", Section: "payment", Default: "IRR", ReadOnly: true, Helper: "ریال؛ نمایش و ورود مبلغ در سایت و پنل همچنان تومان است."},
+			{Key: "auto_verify", Label: "تأیید نهایی تراکنش", Kind: "select", Section: "advanced", Default: "false", Options: []GatewayOption{{"false", "با درخواست سرور چریوا پس از پرداخت"}, {"true", "خودکار توسط زرین‌پال"}}, Helper: "این گزینه تعیین می‌کند چه کسی تأیید نهایی پرداخت را نزد بانک آغاز کند؛ ورود به API یا OTP نیست. ثبت موفقیت در چریوا در هر حالت نیازمند بررسی نتیجه در سرور است."},
+		}}}
 }
+
+func gatewayProviderDefinition(id string) (GatewayProvider, bool) {
+	for _, p := range GatewayProviders() {
+		if p.ID == id {
+			return p, true
+		}
+	}
+	return GatewayProvider{}, false
+}
+func gatewayCredentialField(f GatewayField) bool { return f.Kind == "secret" || f.Kind == "credential" }
 
 type GatewaySettingsInput struct {
 	ID                  string            `json:"id"`
@@ -107,7 +136,8 @@ func gatewaySettingsView(g commerce.GatewaySettings) GatewaySettingsView {
 	if g.Max > 0 {
 		maxValue = commerce.Toman(g.Max)
 	}
-	return GatewaySettingsView{GatewaySettingsInput: GatewaySettingsInput{ID: g.ID, Version: g.Version, Provider: g.Provider, Name: g.Name, MinToman: commerce.Toman(g.Min), MaxToman: maxValue, AllCategories: g.AllCategories, AllowedCategories: append([]string{}, g.AllowedCategories...), ExcludedCategories: append([]string{}, g.ExcludedCategories...), Instructions: g.Instructions, MaxAutomaticRetries: g.MaxAutomaticRetries, AllowWalletTopup: g.AllowWalletTopup, Values: g.Values}, ConfiguredCredentials: append([]string{}, g.CredentialNames...)}
+	provider, _ := gatewayProviderDefinition(g.Provider)
+	return GatewaySettingsView{GatewaySettingsInput: GatewaySettingsInput{ID: g.ID, Version: g.Version, Provider: g.Provider, Name: g.Name, Active: g.Active, MinToman: commerce.Toman(g.Min), MaxToman: maxValue, AllCategories: g.AllCategories, AllowedCategories: append([]string{}, g.AllowedCategories...), ExcludedCategories: append([]string{}, g.ExcludedCategories...), Instructions: g.Instructions, MaxAutomaticRetries: g.MaxAutomaticRetries, AllowWalletTopup: g.AllowWalletTopup, Values: gatewayNonCredentialValues(provider, g.Values)}, ConfiguredCredentials: append([]string{}, g.CredentialNames...)}
 }
 func (s *Service) ReadGatewaySettings(ctx context.Context, a identity.User) (GatewaySettingsDirectory, error) {
 	w, err := s.repository.Snapshot(ctx)
@@ -121,6 +151,18 @@ func (s *Service) ReadGatewaySettings(ctx context.Context, a identity.User) (Gat
 	out := GatewaySettingsDirectory{Providers: GatewayProviders(), Items: []GatewaySettingsView{}, CanWrite: canWrite, CredentialsWritable: canWrite && s.gatewayCipher != nil}
 	for _, g := range commerceState(&w).GatewaySettings {
 		out.Items = append(out.Items, gatewaySettingsView(g))
+	}
+	for _, p := range out.Providers {
+		found := false
+		for _, g := range out.Items {
+			if g.Provider == p.ID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			out.Items = append(out.Items, gatewaySettingsView(commerce.GatewaySettings{Provider: p.ID, Name: p.Name, AllCategories: true}))
+		}
 	}
 	return out, nil
 }
@@ -172,16 +214,91 @@ func (s *Service) sealGatewayCredentials(g *commerce.GatewaySettings, values map
 }
 
 var merchantUUID = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
+var gatewayPositiveID = regexp.MustCompile(`^[1-9][0-9]{0,19}$`)
 
-func validateGatewayValues(in GatewaySettingsInput) (map[string]string, map[string]string) {
+func gatewayNonCredentialValues(provider GatewayProvider, stored map[string]string) map[string]string {
+	values := map[string]string{}
+	for _, f := range provider.Fields {
+		if !gatewayCredentialField(f) {
+			values[f.Key] = f.Default
+			if v, ok := stored[f.Key]; ok {
+				values[f.Key] = v
+			}
+		}
+	}
+	return values
+}
+
+// Credential formats belong to a provider's field schema. Opaque secrets must
+// preserve case, spaces and length; the UUID rule is never applied globally.
+func validateGatewayCredentials(provider GatewayProvider, in GatewaySettingsInput) (map[string]string, map[string]string) {
+	definitions := map[string]GatewayField{}
+	for _, f := range provider.Fields {
+		if gatewayCredentialField(f) {
+			definitions[f.Key] = f
+		}
+	}
+	updates := map[string]string{}
+	fields := map[string]string{}
+	for k, v := range in.Credentials {
+		f, ok := definitions[k]
+		if !ok {
+			fields["credentials."+k] = "این credential برای درگاه انتخاب‌شده تعریف نشده است."
+			continue
+		}
+		if v == "" {
+			continue
+		}
+		limit := f.MaxLength
+		if limit == 0 {
+			limit = 4096
+		}
+		if !textBound(v, limit) || strings.TrimSpace(v) == "" {
+			fields["credentials."+k] = "مقدار اطلاعات اتصال معتبر نیست یا از طول مجاز بیشتر است."
+			continue
+		}
+		if f.Kind != "secret" {
+			v = strings.TrimSpace(v)
+		}
+		switch f.Format {
+		case "uuid":
+			if !merchantUUID.MatchString(v) {
+				fields["credentials."+k] = "شناسه پذیرنده باید UUID با ۳۶ نویسه باشد."
+			}
+			v = strings.ToLower(v)
+		case "positive-integer":
+			v = normalizeDigits(v)
+			if !gatewayPositiveID.MatchString(v) {
+				fields["credentials."+k] = "شناسه کلاینت باید عدد صحیح مثبت باشد."
+			}
+		}
+		updates[k] = v
+	}
+	seen := map[string]bool{}
+	for _, k := range in.ClearCredentials {
+		_, known := definitions[k]
+		if !known || seen[k] || in.Credentials[k] != "" {
+			fields["credentials."+k] = "حذف و جایگزینی هم‌زمان یا حذف اطلاعات نامرتبط معتبر نیست."
+		}
+		seen[k] = true
+	}
+	return updates, fields
+}
+
+func validateGatewayValues(provider GatewayProvider, in GatewaySettingsInput) (map[string]string, map[string]string) {
 	fields := map[string]string{}
 	values := map[string]string{}
-	for _, f := range GatewayProviders()[0].Fields {
-		if f.Kind != "secret" {
+	for _, f := range provider.Fields {
+		if !gatewayCredentialField(f) {
 			values[f.Key] = f.Default
 		}
 	}
 	for k, v := range in.Values {
+		// Accept an old form submission without letting a historical global
+		// description become the description of any future payment operation.
+		if k == "description" {
+			continue
+		}
 		if _, ok := values[k]; !ok {
 			fields["values."+k] = "این فیلد برای درگاه انتخاب‌شده تعریف نشده است."
 			continue
@@ -201,8 +318,12 @@ func validateGatewayValues(in GatewaySettingsInput) (map[string]string, map[stri
 	if values["currency"] != "IRR" {
 		fields["values.currency"] = "واحد ارسال در این نسخه ریال است."
 	}
-	if !textBound(values["description"], 500) || values["description"] == "" {
-		fields["values.description"] = "شرح تراکنش را با حداکثر ۵۰۰ نویسه وارد کنید."
+	if strings.TrimRight(values["api_base_url"], "/") != "https://next.zarinpal.com/api" {
+		fields["values.api_base_url"] = "آدرس رسمی API زرین‌پال معتبر نیست."
+	}
+	values["api_base_url"] = "https://next.zarinpal.com/api"
+	if values["channel"] != "ussd" && values["channel"] != "sms" {
+		fields["values.channel"] = "روش دریافت کد حساب پذیرنده معتبر نیست."
 	}
 	if values["auto_verify"] != "true" && values["auto_verify"] != "false" {
 		fields["values.auto_verify"] = "روش اعتبارسنجی معتبر نیست."
@@ -232,16 +353,21 @@ func (s *Service) SaveGatewaySettings(ctx context.Context, a identity.User, in G
 			if g.Provider != in.Provider {
 				return nil, ErrInvalid
 			}
-		} else if in.Version != 0 || len(c.GatewaySettings) >= 20 {
+		} else if in.Version != 0 {
 			return nil, ErrInvalid
 		}
-		if in.Provider != "zarinpal" {
+		if index < 0 {
+			for _, saved := range c.GatewaySettings {
+				if saved.Provider == in.Provider {
+					return nil, ErrConflict
+				}
+			}
+		}
+		provider, knownProvider := gatewayProviderDefinition(in.Provider)
+		if !knownProvider {
 			return nil, &GatewayFieldError{map[string]string{"provider": "ارائه‌دهنده درگاه پشتیبانی نمی‌شود."}}
 		}
-		values, fields := validateGatewayValues(in)
-		if in.Active {
-			fields["active"] = "اتصال پرداخت هنوز پیاده‌سازی نشده است؛ فقط ذخیره تنظیمات مجاز است."
-		}
+		values, fields := validateGatewayValues(provider, in)
 		if in.MaxAutomaticRetries < 0 || in.MaxAutomaticRetries > 10 {
 			fields["max_automatic_retries"] = "تعداد تلاش مجدد باید از صفر تا ۱۰ باشد."
 		}
@@ -265,17 +391,9 @@ func (s *Service) SaveGatewaySettings(ctx context.Context, a identity.User, in G
 				fields["max_toman"] = "حداکثر باید مثبت و حداقل برابر کف مبلغ باشد."
 			}
 		}
-		for k, v := range in.Credentials {
-			if k != "merchant_id" {
-				fields["credentials"] = "اطلاعات اتصال نامرتبط با درگاه ارسال شده است."
-			} else if strings.TrimSpace(v) != "" && !merchantUUID.MatchString(strings.TrimSpace(v)) {
-				fields["credentials.merchant_id"] = "شناسه پذیرنده باید UUID با ۳۶ نویسه باشد."
-			}
-		}
-		for _, k := range in.ClearCredentials {
-			if k != "merchant_id" || strings.TrimSpace(in.Credentials[k]) != "" {
-				fields["credentials"] = "حذف و جایگزینی هم‌زمان اطلاعات اتصال معتبر نیست."
-			}
+		updates, credentialErrors := validateGatewayCredentials(provider, in)
+		for k, v := range credentialErrors {
+			fields[k] = v
 		}
 		if len(fields) > 0 {
 			return nil, &GatewayFieldError{fields}
@@ -287,15 +405,14 @@ func (s *Service) SaveGatewaySettings(ctx context.Context, a identity.User, in G
 		for _, k := range in.ClearCredentials {
 			delete(credentials, k)
 		}
-		for k, v := range in.Credentials {
-			if v = strings.TrimSpace(v); v != "" {
-				credentials[k] = strings.ToLower(v)
-			}
+		for k, v := range updates {
+			credentials[k] = v
 		}
 		if err = s.sealGatewayCredentials(&g, credentials); err != nil {
 			return nil, err
 		}
 		g.Version++
+		g.Active = in.Active
 		g.Name = strings.TrimSpace(in.Name)
 		g.Min = minValue
 		g.Max = maxValue
