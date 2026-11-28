@@ -1,0 +1,128 @@
+{
+  "id": "DEL-ORDER-EXPERIENCE-FOLLOWUP-20261128",
+  "updated": "2026-11-28",
+  "document_status": "in-review",
+  "owner": "eliassarband",
+  "implementation_status": "todo",
+  "execution_authorized": false,
+  "source_commit": "a8d0d998b730db02900a3493fecc2c2e8b104cf6",
+  "parent_issue": 95,
+  "tasks": [
+    {
+      "id": "CV-ORD-FOLLOW-01",
+      "spec_id": "FEAT-ORDER-FOLLOW-001",
+      "issue": 142,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/142",
+      "title": "ورود مستقیم با رمز یا OTP پس از شماره موبایل",
+      "file": "tasks/direct-login-methods.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": []
+    },
+    {
+      "id": "CV-ORD-FOLLOW-02",
+      "spec_id": "FEAT-ORDER-FOLLOW-002",
+      "issue": 143,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/143",
+      "title": "حفظ نشست معتبر بک‌آفیس پس از رفرش و F5",
+      "file": "tasks/restore-valid-backoffice-session.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": []
+    },
+    {
+      "id": "CV-ORD-FOLLOW-03",
+      "spec_id": "FEAT-ORDER-FOLLOW-003",
+      "issue": 144,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/144",
+      "title": "فیلتر موبایل مشتری و دکمه مشاهده در انتهای ردیف سفارش",
+      "file": "tasks/orders-mobile-filter-view-action.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": []
+    },
+    {
+      "id": "CV-ORD-FOLLOW-04",
+      "spec_id": "FEAT-ORDER-FOLLOW-004",
+      "issue": 145,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/145",
+      "title": "اعمال خودکار کیف پول فقط تا مبلغ لازم سفارش",
+      "file": "tasks/cap-applied-wallet-credit.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": []
+    },
+    {
+      "id": "CV-ORD-FOLLOW-05",
+      "spec_id": "FEAT-ORDER-FOLLOW-005",
+      "issue": 146,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/146",
+      "title": "ثبت خودکار پرداخت سفارش با مانده پرداخت صفر",
+      "file": "tasks/automatic-covered-order-payment.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        "CV-ORD-FOLLOW-04"
+      ],
+      "blocking_questions": [],
+      "integration_verification_dependencies": []
+    },
+    {
+      "id": "CV-ORD-FOLLOW-06",
+      "spec_id": "FEAT-ORDER-FOLLOW-006",
+      "issue": 147,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/147",
+      "title": "منوی مرسوله‌ها با صف پردازش و دسترسی ادمین و فروشگاه",
+      "file": "tasks/scoped-shipments-workspace.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [
+        "ORDERFOLLOW-Q01"
+      ],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-05"
+      ]
+    },
+    {
+      "id": "CV-ORD-FOLLOW-07",
+      "spec_id": "FEAT-ORDER-FOLLOW-007",
+      "issue": 148,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/148",
+      "title": "ارتفاع یکدست توضیح عملیات و راهنمای کوتاه مراحل مرسوله",
+      "file": "tasks/shipment-operation-form-guidance.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-06"
+      ]
+    },
+    {
+      "id": "CV-ORD-FOLLOW-08",
+      "spec_id": "FEAT-ORDER-FOLLOW-008",
+      "issue": 149,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/149",
+      "title": "جزئیات سفارش مشتری با تفکیک مالی و روند گرافیکی مرسوله‌ها",
+      "file": "tasks/customer-order-detail-progress.md",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-05",
+        "CV-ORD-FOLLOW-06",
+        "CV-ORD-FOLLOW-07"
+      ]
+    }
+  ]
+}

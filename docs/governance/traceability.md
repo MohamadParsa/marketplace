@@ -1,5 +1,23 @@
 # ردیابی قابلیت تا پذیرش
 
+<a id="order-experience-followup-20261128"></a>
+## بازخورد ورود و سفارش و مرسوله — ۲۰۲۶-۱۱-۲۸
+
+[قواعد مشترک](../domains/orders/experience-followup-2026-11-28.md) → [شرح‌ها و Issueهای واقعی](../delivery/order-experience-followup-2026-11-28/README.md) → [فهرست ماشین‌خوان](../delivery/order-experience-followup-2026-11-28/task-index.json) → [BDD طراحی](../bdd/features/experiences/order-experience-followup.feature). وضعیت همه todo و execution_authorized=false است؛ سناریوها شاهد تست اجراشده نیستند. پرسش محدود صف لغوشده در [ORDERFOLLOW-Q01](../product/open-questions.md#order-experience-followup-20261128) ثبت است.
+
+| قاعده | تسک / شناسه پذیرش |
+| --- | --- |
+| R01 — دو روش ورود مستقیم | CV-ORD-FOLLOW-01؛ FEAT-ORDER-FOLLOW-001-AC01..03 |
+| R02 — نشست در رفرش | CV-ORD-FOLLOW-02؛ FEAT-ORDER-FOLLOW-002-AC01..03 |
+| R03 — موبایل/مشاهده سفارش | CV-ORD-FOLLOW-03؛ FEAT-ORDER-FOLLOW-003-AC01..03 |
+| R04 — سقف کیف پول | CV-ORD-FOLLOW-04؛ FEAT-ORDER-FOLLOW-004-AC01..03 |
+| R05/R06 — پرداخت خودکار و حفظ شروع دستی | CV-ORD-FOLLOW-05؛ FEAT-ORDER-FOLLOW-005-AC01..03 |
+| R06/R07 — صف مرسوله و محدوده فروشگاه | CV-ORD-FOLLOW-06؛ FEAT-ORDER-FOLLOW-006-AC01..04 |
+| R08 — فرم عملیات و راهنمای مراحل | CV-ORD-FOLLOW-07؛ FEAT-ORDER-FOLLOW-007-AC01..03 |
+| R09 — جزئیات و روند مشتری | CV-ORD-FOLLOW-08؛ FEAT-ORDER-FOLLOW-008-AC01..04 |
+
+قرارداد قبلی پرداخت صفر/تأیید تیم با اعلان تغییر نیازمندی به این صف پیوند خورده است؛ رفتار اجراشده قبلی، وضعیت جاری سورس و نیازمندی جدید از هم جدا گزارش می‌شوند.
+
 ## الحاق بررسی چرخه سفارش — ۲۰۲۶-۱۱-۲۷
 
 [گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ پس از برنامه اولیه، مالک اجرای ترتیبی #131 تا #140 و تکمیل تاریخ شمسی #141 را خواست. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌های پاسخ‌گرفته](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند. گزارش مستقل هر۱۱برش در فهرست تحویل ثبت شده است؛ پذیرش دستی مالک و اتصال واقعی/انتشار سرور از تکمیل فنی جدا هستند.

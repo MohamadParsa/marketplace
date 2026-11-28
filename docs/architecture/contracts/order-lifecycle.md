@@ -3,12 +3,14 @@ id: API-ORDER-LIFECYCLE-001
 title: قرارداد اجرایی سفارش، عملیات و استرداد دستی
 status: in-review
 owner: eliassarband
-updated: 2026-11-27
+updated: 2026-11-28
 related: [DOM-ORDER-LIFECYCLE-001, ADR-007, API-WALLET-CREDIT-POLICY-001]
 approved_by: []
 ---
 
 # قرارداد برش انتخاب‌شده #133 تا #140
+
+**اصلاح نیازمندی پس از بازبینی ۲۰۲۶-۱۱-۲۸:** [قاعده R05 و مرز تغییر](../../domains/orders/experience-followup-2026-11-28.md) الزام تأیید دستی تیم را برای سفارش بدون مانده پرداخت هنگام ثبت اصلاح می‌کند. متن پایین رفتار برش تحویل‌شده است؛ مسیر جدید در [CV-ORD-FOLLOW-05](../../delivery/order-experience-followup-2026-11-28/tasks/automatic-covered-order-payment.md) هنوز todo و بدون مجوز اجراست. اصل مصرف قطعی کیف پول و شروع جداگانه پردازش تغییر نکرده است.
 
 منبع محصول: [قواعد صریح](../../domains/orders/lifecycle-review-2026-11-27.md) و دو مجموعه پاسخ صریح مالک در شروع اجرا، ثبت‌شده در [دفتر پرسش‌ها](../../product/open-questions.md#order-lifecycle-review-20261127). شرح زیر مدل اجرایی همین برش است؛ پرداخت/حمل واقعی، مهلت قانونی خودکار، capture خارجی و تسویه کامل #72 را فعال نمی‌کند.
 
