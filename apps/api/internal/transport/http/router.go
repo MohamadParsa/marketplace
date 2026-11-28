@@ -68,6 +68,8 @@ func NewRouter(cfg RouterConfig) http.Handler {
 		mux.HandleFunc("GET /seller/checkout/orders", h.Seller)
 		mux.HandleFunc("GET /storefront/checkout/shipping-options", h.ShippingChoices)
 		for _, surface := range []string{"backoffice", "seller"} {
+			mux.HandleFunc("GET /"+surface+"/shipments", h.Shipments)
+			mux.HandleFunc("GET /"+surface+"/shipments/{id}", h.Shipments)
 			mux.HandleFunc("GET /"+surface+"/orders/{id}/operations", h.OrderOperations)
 			mux.HandleFunc("POST /"+surface+"/orders/{id}/operations", h.OrderOperations)
 			mux.HandleFunc("GET /"+surface+"/orders/supply-overdue", h.SupplyOverdue)

@@ -51,6 +51,10 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 	admin := login(t, h, "09000000001")
 	seller := loginAt(t, h, "seller", "09000000002")["token"].(string)
 	p, q := placeHTTPTestPurchase(t, h, buyer, []string{"offer", "offer-two"})
+	initialQueue := readJSON[backoffice.ShipmentPage](t, commerceHTTP(t, h, admin, "", "GET", "/backoffice/shipments", nil, "", 200))
+	if initialQueue.Total != 0 {
+		t.Fatal("unpaid shipment entered queue")
+	}
 	id := p.OrderIDs[0]
 	path := "/seller/orders/" + id + "/operations"
 	get := func(token, path string) backoffice.OrderOperationsView {
@@ -75,6 +79,12 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 		v = get(seller, path)
 		v = readJSON[backoffice.OrderOperationsView](t, commerceHTTP(t, h, seller, "", "POST", path, backoffice.OrderOperationInput{Version: v.Version, Action: action}, "ops-"+action, 200))
 	}
+	queue := readJSON[backoffice.ShipmentPage](t, commerceHTTP(t, h, seller, "", "GET", "/seller/shipments?size=1", nil, "", 200))
+	if queue.Total != 1 || len(queue.Items) != 1 || queue.Items[0].ID != id {
+		t.Fatal("seller shipment scope", queue)
+	}
+	commerceHTTP(t, h, seller, "", "GET", "/seller/shipments/"+p.OrderIDs[1], nil, "", 404)
+	commerceHTTP(t, h, buyer, "", "GET", "/backoffice/shipments", nil, "", 401)
 	if v.Address == nil || v.Address.RecipientNationalID != "" || v.DispatchIdentifier != "delivery" {
 		t.Fatal("address/policy snapshot", v)
 	}
@@ -125,6 +135,18 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 	}
 	commerceHTTP(t, h, buyer, "", "GET", "/storefront/account/orders/"+p.ID+"/history?limit=1000", nil, "", 400)
 	ops := login(t, h, "09000000002")
+	active := readJSON[backoffice.ShipmentPage](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/shipments", nil, "", 200))
+	if active.Total != 0 {
+		t.Fatal("delivered in active queue")
+	}
+	history := readJSON[backoffice.ShipmentPage](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/shipments?status=all", nil, "", 200))
+	if history.Total != 1 || history.Items[0].Status != "delivered" {
+		t.Fatal("delivered history lost", history)
+	}
+	shipment := readJSON[backoffice.ShipmentDetail](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/shipments/"+id, nil, "", 200))
+	if shipment.Operations.ID != id || shipment.Number == "" {
+		t.Fatal(shipment)
+	}
 	listing := readJSON[backoffice.OrderWorkspacePage](t, commerceHTTP(t, h, ops, "", "GET", "/backoffice/order-workspace?size=1&q="+p.Number, nil, "", 200))
 	if len(listing.Items) != 1 || listing.Items[0].ID != p.ID || listing.Items[0].Groups != 2 {
 		t.Fatal("workspace query", listing)
