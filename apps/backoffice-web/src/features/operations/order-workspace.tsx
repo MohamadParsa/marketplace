@@ -24,7 +24,7 @@ const fa=(value:string)=>value.replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)
 
 export function OrderWorkspaceList(){
  const {authToken,can}=useWorkspace();const [params,setParams]=useSearchParams();
- const [draft,setDraft]=useState({q:params.get("q")??"",store:params.get("store")??"",order:params.get("order")??"",payment:params.get("payment")??"",fulfillment:params.get("fulfillment")??""});
+ const [draft,setDraft]=useState({q:params.get("q")??"",mobile:params.get("mobile")??"",store:params.get("store")??"",order:params.get("order")??"",payment:params.get("payment")??"",fulfillment:params.get("fulfillment")??""});
  const page=Math.max(0,Number(params.get("page"))||0),size=[10,20,50,100].includes(Number(params.get("size")))?Number(params.get("size")):20;
  const query=new URLSearchParams(params);query.set("page",String(page));query.set("size",String(size));
  const url="/backoffice/order-workspace?"+query;
@@ -35,6 +35,7 @@ export function OrderWorkspaceList(){
   <details className="panel"><summary>صف مهلت‌های تأمین</summary><SupplyOverduePanel/></details>
   <FilterPanel onSearch={()=>update({...draft,page:"0"})}><div className="admin-filter-grid">
    <TextField label="شماره سفارش یا نام مشتری" value={draft.q} onChange={e=>setDraft({...draft,q:e.target.value})}/>
+   <TextField label="موبایل مشتری" placeholder="شماره کامل موبایل" value={draft.mobile} inputProps={{dir:"ltr",inputMode:"tel",maxLength:30}} onChange={e=>setDraft({...draft,mobile:e.target.value})}/>
    <ChoiceField label="فروشگاه" value={draft.store} clearLabel="همه فروشگاه‌ها" options={data.data?.stores??[]} onChange={store=>setDraft({...draft,store})}/>
    <ChoiceField label="وضعیت سفارش" value={draft.order} clearLabel="همه وضعیت‌ها" options={choices(["placed","processing","completed","cancelled"])} onChange={order=>setDraft({...draft,order})}/>
    <ChoiceField label="وضعیت پرداخت" value={draft.payment} clearLabel="همه وضعیت‌ها" options={choices(["unpaid","paid","returned-to-wallet","authorized","failed"])} onChange={payment=>setDraft({...draft,payment})}/>
@@ -46,6 +47,7 @@ export function OrderWorkspaceList(){
    {title:"شماره سفارش",render:r=><Link to={`/orders/${encodeURIComponent(r.id)}`}>{fa(r.number)}{r.legacy?" · سابقه قدیمی":""}</Link>},
    {title:"مشتری",render:r=>r.customer},{title:"فروشگاه / مرسوله",render:r=>r.stores.join("، ")+" · "+r.groups.toLocaleString("fa-IR")},
    {title:"مبلغ",render:r=>money(r.total_toman)},{title:"سفارش",render:r=>label(r.order_status)},{title:"پرداخت",render:r=>label(r.payment_status)},{title:"عملیات",render:r=>label(r.fulfillment_status)},
+   {title:"مشاهده",render:r=><Button component={Link} variant="outlined" size="small" to={`/orders/${encodeURIComponent(r.id)}`}>مشاهده</Button>},
   ]} remote={{filterKey:url,controls:{page,pages:Math.max(1,Math.ceil((data.data?.total??0)/size)),size,total:data.data?.total??0,setPage:n=>update({page:String(n)}),setSize:n=>update({size:String(n),page:"0"})},exportRows:async(ids,signal)=>{let all:Row[]=[];let index=0;while(true){if(signal?.aborted)throw new Error("دریافت خروجی لغو شد.");const next=new URLSearchParams(query);next.set("page",String(index++));next.set("size","100");const result=await apiRequest<Page>("/backoffice/order-workspace?"+next,authToken);all.push(...result.items);if(all.length>=result.total||!result.items.length)break;}return ids?all.filter(row=>ids.includes(row.id)):all;}}}/>
  </>;
 }

@@ -55,3 +55,39 @@ func TestOrderWorkspaceServerFiltersBoundedRowsAliasesAndPrivacy(t *testing.T) {
 		t.Fatal("legacy/pagination", page, e)
 	}
 }
+
+func TestOrderWorkspaceExactMobileFilterNormalizesBeforePagination(t *testing.T) {
+	h, p := paidOperationsHarness(t)
+	ctx := context.Background()
+	if e := h.repo.Update(ctx, func(w *backoffice.Workspace) error {
+		for i := range w.Users {
+			if w.Users[i].ID == h.buyer.ID {
+				w.Users[i].Phone = "09000000111"
+			}
+		}
+		return nil
+	}); e != nil {
+		t.Fatal(e)
+	}
+	for _, mobile := range []string{"09000000111", "۰۹۰۰۰۰۰۰۱۱۱", "٠٩٠٠٠٠٠٠١١١", "+989000000111"} {
+		page, e := h.s.QueryOrderWorkspace(ctx, h.admin, backoffice.OrderWorkspaceQuery{Mobile: mobile, Payment: "paid", Store: "store1", Size: 1})
+		if e != nil || page.Total != 1 || len(page.Items) != 1 || page.Items[0].ID != p.ID {
+			t.Fatal(mobile, page, e)
+		}
+	}
+	page, e := h.s.QueryOrderWorkspace(ctx, h.admin, backoffice.OrderWorkspaceQuery{Mobile: "09000000112", Size: 1})
+	if e != nil || page.Total != 0 {
+		t.Fatal("foreign mobile", page, e)
+	}
+	if _, e = h.s.QueryOrderWorkspace(ctx, h.admin, backoffice.OrderWorkspaceQuery{Mobile: "111", Size: 20}); e != backoffice.ErrInvalid {
+		t.Fatal(e)
+	}
+	if _, e = h.s.QueryOrderWorkspace(ctx, h.buyer, backoffice.OrderWorkspaceQuery{Mobile: "09000000111", Size: 20}); e != backoffice.ErrForbidden {
+		t.Fatal(e)
+	}
+	seller := h.buyer
+	seller.Surface = "seller"
+	if _, e = h.s.QueryOrderWorkspace(ctx, seller, backoffice.OrderWorkspaceQuery{Mobile: "09000000111", Size: 20}); e != backoffice.ErrForbidden {
+		t.Fatal(e)
+	}
+}

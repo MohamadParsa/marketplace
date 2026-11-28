@@ -35,6 +35,6 @@ func (h *CommerceHandler) OrderWorkspace(w http.ResponseWriter, r *http.Request)
 			return
 		}
 	}
-	result, err := h.service.QueryOrderWorkspace(r.Context(), a, backoffice.OrderWorkspaceQuery{Search: q.Get("q"), Store: q.Get("store"), Order: q.Get("order"), Payment: q.Get("payment"), Fulfillment: q.Get("fulfillment"), Page: page, Size: size})
+	result, err := h.service.QueryOrderWorkspace(r.Context(), a, backoffice.OrderWorkspaceQuery{Search: q.Get("q"), Mobile: q.Get("mobile"), Store: q.Get("store"), Order: q.Get("order"), Payment: q.Get("payment"), Fulfillment: q.Get("fulfillment"), Page: page, Size: size})
 	commerceResult(w, r, result, err)
 }

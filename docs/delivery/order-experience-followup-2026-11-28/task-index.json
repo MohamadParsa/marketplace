@@ -43,11 +43,12 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/144",
       "title": "فیلتر موبایل مشتری و دکمه مشاهده در انتهای ردیف سفارش",
       "file": "tasks/orders-mobile-filter-view-action.md",
-      "implementation_status": "todo",
+      "implementation_status": "done",
       "execution_authorized": true,
       "dependencies": [],
       "blocking_questions": [],
-      "integration_verification_dependencies": []
+      "integration_verification_dependencies": [],
+      "evidence": "issue-144-verification.md"
     },
     {
       "id": "CV-ORD-FOLLOW-04",

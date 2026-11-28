@@ -11,8 +11,8 @@ import (
 )
 
 type OrderWorkspaceQuery struct {
-	Search, Store, Order, Payment, Fulfillment string
-	Page, Size                                 int
+	Search, Store, Order, Payment, Fulfillment, Mobile string
+	Page, Size                                         int
 }
 type OrderWorkspaceRow struct {
 	ID                string   `json:"id"`
@@ -58,6 +58,12 @@ func orderWorkspaceActor(w Workspace, a identity.User) (identity.User, error) {
 }
 func (s *Service) QueryOrderWorkspace(ctx context.Context, a identity.User, q OrderWorkspaceQuery) (OrderWorkspacePage, error) {
 	result := OrderWorkspacePage{Items: []OrderWorkspaceRow{}, Stores: []OrderStoreOption{}, Page: q.Page, Size: q.Size}
+	if q.Mobile != "" {
+		q.Mobile = identity.NormalizePhone(q.Mobile)
+		if len(q.Mobile) != 11 || !strings.HasPrefix(q.Mobile, "09") || strings.IndexFunc(q.Mobile, func(r rune) bool { return r < '0' || r > '9' }) >= 0 {
+			return result, ErrInvalid
+		}
+	}
 	if q.Page < 0 || q.Page > 1000000 || q.Size < 1 || q.Size > 100 || !textBound(q.Search, 150) || !textBound(q.Store, 128) {
 		return result, ErrInvalid
 	}
@@ -85,7 +91,10 @@ func (s *Service) QueryOrderWorkspace(ctx context.Context, a identity.User, q Or
 		}
 		return "فروشگاه سابق"
 	}
-	matches := func(row OrderWorkspaceRow, storeIDs []string) bool {
+	matches := func(row OrderWorkspaceRow, storeIDs []string, mobile string) bool {
+		if q.Mobile != "" && q.Mobile != identity.NormalizePhone(mobile) {
+			return false
+		}
 		if q.Store != "" && !slices.Contains(storeIDs, q.Store) {
 			return false
 		}
@@ -98,11 +107,13 @@ func (s *Service) QueryOrderWorkspace(ctx context.Context, a identity.User, q Or
 	rows := []OrderWorkspaceRow{}
 	c := commerceState(&w)
 	for _, p := range c.Purchases {
+		mobile := ""
 		order, payment := purchaseStatuses(p)
 		row := OrderWorkspaceRow{ID: p.ID, Number: strconv.FormatInt(p.Number, 10), OrderStatus: order, PaymentStatus: payment, FulfillmentStatus: p.FulfillmentState, Groups: len(p.OrderIDs), Stores: []string{}}
 		for _, user := range w.Users {
 			if user.ID == p.UserID {
 				row.Customer = user.Name
+				mobile = user.Phone
 			}
 		}
 		ids := []string{}
@@ -116,7 +127,7 @@ func (s *Service) QueryOrderWorkspace(ctx context.Context, a identity.User, q Or
 		if quote := findQuote(c, p.QuoteID); quote != nil {
 			row.TotalToman = commerce.Toman(quote.Total)
 		}
-		if matches(row, ids) {
+		if matches(row, ids, mobile) {
 			rows = append(rows, row)
 		}
 	}
@@ -125,7 +136,7 @@ func (s *Service) QueryOrderWorkspace(ctx context.Context, a identity.User, q Or
 			continue
 		}
 		row := OrderWorkspaceRow{ID: o.ID, Number: strconv.FormatInt(recordNumber(&w, "order", o.ID), 10), Customer: "سابقه قدیمی", Stores: []string{storeName(o.StoreID)}, TotalToman: commerce.Toman(commerce.Amount(o.Total() + o.ShippingFee)), OrderStatus: orderLifecycle(o), PaymentStatus: o.Payment, FulfillmentStatus: o.Status, Groups: 1, Legacy: true}
-		if matches(row, []string{o.StoreID}) {
+		if matches(row, []string{o.StoreID}, "") {
 			rows = append(rows, row)
 		}
 	}
