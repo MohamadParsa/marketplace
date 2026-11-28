@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[بررسی تنظیمات چنددرگاهی و نخستین اتصال زرین‌پال؛ پیش از کدنویسی](delivery/zarinpal-gateway-review-2026-11-28.md)
+
 [لینک روشن سفارش، گردش کیف پول و فرم ثبت نتیجه انتقال بانکی — #151](delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md)
 
 [اصلاح نمایش تاریخ و جزئیات مرسوله/مالی مشتری و بررسی سه منوی قدیمی — #150](delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md)
