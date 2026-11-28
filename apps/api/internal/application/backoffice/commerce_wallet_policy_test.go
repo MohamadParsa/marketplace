@@ -197,8 +197,22 @@ func TestWalletCreditConcurrentPurchaseAndWithdrawal(t *testing.T) {
 		t.Fatal("one balance reserved twice", wins.Load())
 	}
 	w, e := h.s.ReadWallet(ctx, h.buyer)
-	if e != nil || w.AvailableToman != "0" || w.HeldToman != "120000" {
+	if e != nil || w.AvailableToman != "0" {
 		t.Fatal(w, e)
+	}
+	state, _ := h.repo.Snapshot(ctx)
+	debits := 0
+	for _, entry := range state.Commerce.Entries {
+		if entry.Kind == "order-payment" {
+			debits++
+		}
+	}
+	if len(state.Commerce.Purchases) == 1 {
+		if w.BalanceToman != "0" || w.HeldToman != "0" || debits != 1 || len(state.Commerce.Refunds) != 0 {
+			t.Fatal("purchase winner did not exclusively consume credit", w)
+		}
+	} else if len(state.Commerce.Purchases) != 0 || w.BalanceToman != "120000" || w.HeldToman != "120000" || debits != 0 || len(state.Commerce.Refunds) != 1 {
+		t.Fatal("withdrawal winner did not exclusively hold credit", w)
 	}
 }
 
