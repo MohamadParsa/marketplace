@@ -434,9 +434,7 @@ func buildQuote(w Workspace, a identity.User, in QuoteInput, id string, now time
 		if err != nil {
 			return q, ErrInvalid
 		}
-		if selected > q.Total {
-			return q, ErrWalletExceedsTotal
-		}
+		selected = min(selected, q.Total)
 		balance, held := walletAmounts(c, a.ID)
 		if selected > balance-held+ownCredit {
 			return q, ErrInsufficientWallet
