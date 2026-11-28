@@ -6,8 +6,8 @@ owner: eliassarband
 updated: 2026-11-28
 related: [API-OPERATION-LOGGING-001, FEAT-NEXT-016, DOM-PAYMENTS-001]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
 # CV-LOG-01 — قرارداد مشترک لاگ، شناسه پیگیری و حذف داده حساس
@@ -50,3 +50,7 @@ unit قرارداد/پالایش/اعتبارسنجی، HTTP context و worker؛
 NEXT-Q09 برای جزئیات مجاز و نقش مشاهده؛ تصمیم‌های مستقل روشن قبل از اجرا قابل پیشبردند.
 
 مرجع: [دفتر پرسش‌ها](../../../product/open-questions.md) · [برنامه و ترتیب](../README.md) · [BDD طراحی](../../../bdd/features/experiences/logging-gateway-plan.feature). BDD در این نوبت اجرا نشده و همه داده‌های تست آینده باید ساختگی و ایزوله باشند.
+
+## شاهد اجرا
+
+قرارداد و Recorder مشترک، پالایش allowlist پیش از sink، context هم‌روند برای HTTP/worker و adapter استاندارد slog پیاده شد. تست‌های قرارداد/حریم/خطای sink/context و هم‌روندی محلی موفق‌اند؛ اتصال به برنامه و ذخیره فایل در #156/#157 تکمیل می‌شود. race محلی به‌دلیل نبود CGO اجرا نشد و در CI لینوکس بررسی می‌شود. [گزارش اجرا](../execution.md).
