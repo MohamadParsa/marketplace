@@ -74,6 +74,7 @@ import { OperationsPage } from "../features/operations/operations-page";
 import { OrderWorkspaceList, OrderWorkspaceDetail } from "../features/operations/order-workspace";
 import { FinancePage } from "../features/finance/finance-page";
 import { LoginPage } from "./login-page";
+import { readStaffSession, saveStaffSession } from "../shared/staff-session";
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
 });
@@ -743,20 +744,58 @@ function SessionApp() {
   const loginSurface =
     location.pathname === "/seller-login" || location.pathname === "/my-stores" ? "seller" : "backoffice";
   const [session, setSession] = useState<Session | null>(null);
+  const [candidate, setCandidate] = useState(() => {
+    const saved = readStaffSession();
+    return location.pathname === "/seller-login" && saved?.surface !== "seller" ? null : saved;
+  });
+  const [restoreError, setRestoreError] = useState("");
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  useEffect(() => {
+    if (!candidate || session) return;
+    let active = true;
+    setRestoreError("");
+    void api.resumeSession(candidate.token, candidate.surface).then(result => {
+      if (!active) return;
+      queryClient.clear();
+      saveStaffSession(result);
+      setSession(result);
+    }).catch(error => {
+      if (!active) return;
+      if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
+        saveStaffSession(null);
+        setCandidate(null);
+        queryClient.clear();
+      } else setRestoreError("بررسی نشست انجام نشد. اتصال را بررسی و دوباره تلاش کنید.");
+    });
+    return () => { active = false; };
+  }, [candidate, session, restoreAttempt]);
+  const acceptSession = (next: Session) => {
+    queryClient.clear();
+    saveStaffSession(next);
+    setSession(next);
+  };
   const logout = () => {
-    if (session)
+    const token = session?.token ?? candidate?.token;
+    const surface = session?.user.Surface ?? candidate?.surface;
+    if (token && surface)
       void api
-        .logout(session.token, session.user.Surface)
+        .logout(token, surface)
         .catch(() => undefined);
     setSession(null);
+    setCandidate(null);
+    saveStaffSession(null);
     queryClient.clear();
   };
+  if (candidate && !session) return <main className="login-form" aria-busy={!restoreError}>
+    {restoreError ? <Alert severity="error" action={<Button onClick={() => setRestoreAttempt(value => value + 1)}>تلاش مجدد</Button>}>{restoreError}</Alert> : <p role="status">در حال بررسی نشست…</p>}
+    {restoreError && <Button onClick={logout}>بازگشت به ورود</Button>}
+  </main>;
   return session?.user.PasswordChangeRequired ? (
     <TemporaryPassword<Session>
       token={session.token}
       surface={session.user.Surface}
       base={import.meta.env.VITE_API_BASE_URL ?? ""}
-      onComplete={setSession}
+      onComplete={acceptSession}
       onCancel={logout}
     />
   ) : session ? (
@@ -766,7 +805,7 @@ function SessionApp() {
       key={loginSurface}
       surface={loginSurface}
       onLogin={(s) => {
-        setSession(s);
+        acceptSession(s);
         if (s.user.Surface === "seller" && location.pathname === "/seller-login")
           navigate("/products", { replace: true });
       }}

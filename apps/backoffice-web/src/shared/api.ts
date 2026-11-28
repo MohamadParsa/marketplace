@@ -64,6 +64,8 @@ export function apiRequest<T>(path:string, token:string, body?:unknown, key?:str
   return request<T>(path,{method:body===undefined?"GET":"POST",cache:"no-store",body:body===undefined?undefined:JSON.stringify(body),headers:{Authorization:`Bearer ${token}`,...(key?{"Idempotency-Key":key}:{})}});
 }
 export const api = {
+  resumeSession: (token: string, surface: "backoffice" | "seller") =>
+    request<Session>(`/${surface}/auth/session`, { cache: "no-store", headers: { Authorization: `Bearer ${token}` } }),
   readCustomerWallet: (token: string, user: string, key: string) =>
     request<CustomerCreditWallet>(
       "/backoffice/commerce/wallet/credits?" +

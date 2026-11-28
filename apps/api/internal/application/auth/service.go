@@ -365,6 +365,11 @@ func (s *Service) Logout(ctx context.Context, token string) error {
 func (s *Service) Authenticate(ctx context.Context, token string, surface identity.Surface) (identity.Session, error) {
 	return s.authenticate(ctx, token, surface, false)
 }
+
+// ResumeSession restores identity only; restricted sessions still cannot access protected operations.
+func (s *Service) ResumeSession(ctx context.Context, token string, surface identity.Surface) (identity.Session, error) {
+	return s.authenticate(ctx, token, surface, true)
+}
 func (s *Service) authenticate(ctx context.Context, token string, surface identity.Surface, restricted bool) (identity.Session, error) {
 	session, err := s.sessions.Get(ctx, token)
 	if err != nil || session.User.Surface != surface || !s.clock.Now().Before(session.Expires) {

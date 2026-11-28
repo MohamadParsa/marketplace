@@ -199,6 +199,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("POST /backoffice/auth/admin-password-reset", cfg.Auth.AdminResetPassword)
 	mux.HandleFunc("POST /backoffice/auth/request-admin-otp", cfg.Auth.RequestAdminOTP)
 	mux.HandleFunc("POST /backoffice/auth/logout", cfg.Auth.Logout)
+	mux.HandleFunc("GET /backoffice/auth/session", cfg.Auth.Session(identity.SurfaceBackoffice))
 	mux.HandleFunc("POST /seller/auth/request-otp", cfg.Auth.RequestOTP(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/verify-otp", cfg.Auth.VerifyOTP(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/complete-password", cfg.Auth.CompleteTemporaryPassword(identity.SurfaceSeller))
@@ -208,6 +209,7 @@ func NewRouter(cfg RouterConfig) http.Handler {
 	mux.HandleFunc("POST /seller/auth/password-recovery/request-otp", cfg.Auth.RequestRecoveryOTP(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/password-recovery/reset", cfg.Auth.RecoverPassword(identity.SurfaceSeller))
 	mux.HandleFunc("POST /seller/auth/logout", cfg.Auth.Logout)
+	mux.HandleFunc("GET /seller/auth/session", cfg.Auth.Session(identity.SurfaceSeller))
 	return securityHeaders(mux)
 }
 func health(status string) http.HandlerFunc {

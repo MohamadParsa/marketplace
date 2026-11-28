@@ -96,6 +96,17 @@ func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, profileJSON(session.User))
 	}
 }
+func (h *AuthHandler) Session(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
+		session, err := h.service.ResumeSession(r.Context(), bearer(r.Header.Get("Authorization")), surface)
+		if err != nil {
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
+}
 func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "private, no-store")
