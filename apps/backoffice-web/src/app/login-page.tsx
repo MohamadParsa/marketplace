@@ -5,7 +5,6 @@ import {
   LockOutlined,
   PersonOutline,
   StorefrontOutlined,
-  ArrowBack,
 } from "@mui/icons-material";
 import { api } from "../shared/api";
 import type { Session } from "../shared/types";
@@ -17,7 +16,7 @@ const normalize = (value: string) =>
 export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Session) => void; surface?:"backoffice"|"seller" }) {
   const [identifier, setIdentifier] = useState("");
   const [stage, setStage] = useState<
-    "identifier" | "method" | "password" | "otp"
+    "identifier" | "password" | "otp"
   >("identifier");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
@@ -45,6 +44,33 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
     setChallenge("");
     setError("");
     setTestCode("");
+  }
+  function choose(method: "password" | "otp") {
+    if (busy) return;
+    const value = normalize(identifier);
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    if (!/^09\d{9}$/.test(value) && !email) {
+      setError("شماره موبایل یا ایمیل معتبر وارد کنید.");
+      return;
+    }
+    if (method === "otp" && email) {
+      setError("برای ورود با ایمیل از رمز عبور استفاده کنید.");
+      return;
+    }
+    const normalized = email ? value.toLowerCase() : value;
+    setIdentifier(normalized);
+    setError("");
+    setPassword("");
+    setCode("");
+    setChallenge("");
+    setTestCode("");
+    if (method === "password") setStage("password");
+    else void run(async () => {
+      const result = await api.requestCode(normalized, surface);
+      setChallenge(result.request_id);
+      setTestCode(result.test_code ?? "");
+      setStage("otp");
+    });
   }
   return (
     <div className="login-layout design-a-login">
@@ -105,9 +131,7 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
           <h2>
             {stage === "identifier"
               ? "ورود به فضای مدیریت"
-              : stage === "method"
-                ? "روش ورود را انتخاب کنید"
-                : stage === "password"
+              : stage === "password"
                   ? "ورود با رمز عبور"
                   : "کد یک‌بارمصرف را وارد کنید"}
           </h2>
@@ -135,15 +159,7 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                setError("");
-                const v = normalize(identifier);
-                const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-                if (!/^09\d{9}$/.test(v) && !email) {
-                  setError("شماره موبایل یا ایمیل معتبر وارد کنید.");
-                  return;
-                }
-                setIdentifier(email ? v.toLowerCase() : v);
-                setStage(email ? "password" : "method");
+                choose("password");
               }}
             >
               <TextField
@@ -151,7 +167,8 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
                 label="شماره موبایل یا ایمیل"
                 autoComplete="username"
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                disabled={busy}
+                onChange={(e) => { setIdentifier(e.target.value); setError(""); }}
                 inputProps={{ dir: "ltr", maxLength: 254 }}
                 required
               />
@@ -160,43 +177,21 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
                 fullWidth
                 variant="contained"
                 size="large"
-                endIcon={<ArrowBack />}
-              >
-                ادامه
-              </Button>
-            </form>
-          )}
-          {stage === "method" && (
-            <div className="login-methods">
-              <Button
-                fullWidth
-                variant="contained"
-                size="large"
                 disabled={busy}
-                onClick={() => {
-                  setError("");
-                  setStage("password");
-                }}
               >
                 ورود با رمز عبور
               </Button>
               <Button
+                type="button"
                 fullWidth
                 variant="outlined"
                 size="large"
-                disabled={busy}
-                onClick={() =>
-                  void run(async () => {
-                    const r = await api.requestCode(identifier,surface);
-                    setChallenge(r.request_id);
-                    setTestCode(r.test_code ?? "");
-                    setStage("otp");
-                  })
-                }
+                disabled={busy || isEmail}
+                onClick={() => choose("otp")}
               >
                 دریافت کد یک‌بارمصرف
               </Button>
-            </div>
+            </form>
           )}
           {stage === "password" && (
             <form
@@ -231,9 +226,7 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
                   fullWidth
                   disabled={busy}
                   onClick={() => {
-                    setPassword("");
-                    setError("");
-                    setStage("method");
+                    reset();
                   }}
                 >
                   انتخاب روش دیگر
@@ -282,9 +275,7 @@ export function LoginPage({ onLogin, surface="backoffice" }: { onLogin: (s: Sess
                 fullWidth
                 disabled={busy}
                 onClick={() => {
-                  setCode("");
-                  setError("");
-                  setStage("method");
+                  reset();
                 }}
               >
                 انتخاب روش دیگر

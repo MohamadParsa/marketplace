@@ -7,12 +7,12 @@ updated: 2026-11-28
 related: [DOM-ORDER-FOLLOW-001, API-ORDER-LIFECYCLE-001]
 approved_by: []
 implementation_status: todo
-execution_authorized: false
+execution_authorized: true
 ---
 
 # CV-ORD-FOLLOW-06 — منوی مرسوله‌ها با صف پردازش و دسترسی ادمین و فروشگاه
 
-Issue: [#147](https://github.com/MohamadParsa/marketplace/issues/147) · مسئول @eliassarband · وضعیت todo؛ درخواست این نوبت فقط تسک‌بندی است.
+Issue: [#147](https://github.com/MohamadParsa/marketplace/issues/147) · مسئول @eliassarband · وضعیت اجرا در فهرست ماشین‌خوان؛ مالک اجرای هر۸تسک را در ادامه گفتگو صریحاً انتخاب کرد.
 
 ## مسئله و نتیجه
 

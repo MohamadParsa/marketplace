@@ -6,13 +6,13 @@ owner: eliassarband
 updated: 2026-11-28
 related: [DOM-ORDER-FOLLOW-001, API-ORDER-LIFECYCLE-001]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
 # CV-ORD-FOLLOW-01 — ورود مستقیم با رمز یا OTP پس از شماره موبایل
 
-Issue: [#142](https://github.com/MohamadParsa/marketplace/issues/142) · مسئول @eliassarband · وضعیت todo؛ درخواست این نوبت فقط تسک‌بندی است.
+Issue: [#142](https://github.com/MohamadParsa/marketplace/issues/142) · مسئول @eliassarband · وضعیت اجرا در فهرست ماشین‌خوان؛ مالک اجرای هر۸تسک را در ادامه گفتگو صریحاً انتخاب کرد.
 
 ## مسئله و نتیجه
 
@@ -60,3 +60,5 @@ RTL، کنترل‌های هم‌ارتفاع با label یکسان و دستر�
 ## پرسش‌ها و تصمیم‌ها
 
 پرسش محصول مسدودکننده تازه در دامنه روشن بالا ثبت نشده است؛ پیشنهادهای طراحی با تصمیم محصول تأییدشده یکسان نیستند.
+
+[شواهد تحویل #142](../issue-142-verification.md).
