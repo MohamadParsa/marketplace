@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"io"
 	"net/http"
 	"net/url"
@@ -36,7 +37,17 @@ func NewWithEndpoint(key, endpoint string, client *http.Client) *Reverse {
 	}
 	return &Reverse{key: key, endpoint: endpoint, client: client}
 }
-func (r *Reverse) Lookup(ctx context.Context, lat, lng float64) (Result, error) {
+func (r *Reverse) Lookup(ctx context.Context, lat, lng float64) (result Result, retErr error) {
+	finish := operationlog.BeginExternal(ctx, "neshan", "address.reverse", 1)
+	status := 0
+	var transportErr error
+	defer func() {
+		e := retErr
+		if transportErr != nil {
+			e = transportErr
+		}
+		finish(status, "", e)
+	}()
 	u, e := url.Parse(r.endpoint)
 	if e != nil {
 		return Result{}, ErrUnavailable
@@ -53,9 +64,11 @@ func (r *Reverse) Lookup(ctx context.Context, lat, lng float64) (Result, error) 
 	request.Header.Set("Accept", "application/json")
 	response, e := r.client.Do(request)
 	if e != nil {
+		transportErr = e
 		return Result{}, ErrUnavailable
 	}
 	defer response.Body.Close()
+	status = response.StatusCode
 	if response.StatusCode != 200 {
 		return Result{}, ErrUnavailable
 	}
@@ -63,7 +76,6 @@ func (r *Reverse) Lookup(ctx context.Context, lat, lng float64) (Result, error) 
 	if e != nil || len(body) > 32768 {
 		return Result{}, ErrUnavailable
 	}
-	var result Result
 	if json.Unmarshal(body, &result) != nil || result.Status != "OK" || strings.TrimSpace(result.Address) == "" || len(result.Address) > 6000 || len(result.Province) > 400 || len(result.City) > 400 {
 		return Result{}, ErrUnavailable
 	}

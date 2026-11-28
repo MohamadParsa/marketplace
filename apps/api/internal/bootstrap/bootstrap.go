@@ -32,6 +32,16 @@ func NewHTTPHandlerWithPublicCache(cfg config.Config, repository backoffice.Repo
 	return h
 }
 func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache, clocks ...backoffice.Clock) (http.Handler, *backoffice.Service) {
+	return newCatalogHandlerRuntime(cfg, repository, c, nil, clocks...)
+}
+func newCatalogHandlerRuntime(cfg config.Config, repository backoffice.Repository, c *backoffice.PublicCache, logs *OperationLogging, clocks ...backoffice.Clock) (http.Handler, *backoffice.Service) {
+	if logs == nil {
+		var err error
+		logs, err = buildOperationLogging(cfg)
+		if err != nil {
+			panic("operation log directory must be private")
+		}
+	}
 	store := authmemory.NewStore(nil)
 	users := backofficeidentity.New(repository)
 	notifier := authmemory.NewNotifier()
@@ -47,6 +57,12 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 		clock = clocks[0]
 	}
 	workspace := backoffice.NewService(repository, clock, authmemory.Random{})
+	workspace.UseOperationLogs(logs.Recorder, logs.Store, func() any {
+		if logs.Store != nil {
+			return map[string]any{"status": logs.Status, "recorder": logs.Recorder.Stats(), "storage": logs.Store.Stats()}
+		}
+		return map[string]any{"status": logs.Status, "recorder": logs.Recorder.Stats()}
+	})
 	if err := workspace.ConfigureGatewaySettingsKey(cfg.PaymentGatewayKey); err != nil {
 		panic("PAYMENT_GATEWAY_ENCRYPTION_KEY must be a base64-encoded 32-byte key")
 	}
@@ -74,7 +90,7 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 	next := httptransport.NewRouter(router)
 	var expiryMu sync.Mutex
 	var lastExpiry time.Time
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	root := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" && (r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/storefront/")) {
 			expiryMu.Lock()
 			if time.Since(lastExpiry) > time.Second {
@@ -91,5 +107,6 @@ func newCatalogHandler(cfg config.Config, repository backoffice.Repository, c *b
 			expiryMu.Unlock()
 		}
 		next.ServeHTTP(w, r)
-	}), workspace
+	})
+	return &loggedHandler{Handler: httptransport.OperationMiddleware(logs.Recorder, root), logs: logs}, workspace
 }

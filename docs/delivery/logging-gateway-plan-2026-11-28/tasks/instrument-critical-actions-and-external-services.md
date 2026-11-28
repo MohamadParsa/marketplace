@@ -6,8 +6,8 @@ owner: eliassarband
 updated: 2026-11-28
 related: [API-OPERATION-LOGGING-001, FEAT-NEXT-016, DOM-PAYMENTS-001]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
 # CV-LOG-03 — پوشش مسیر خرید، عملیات حساس و تماس سرویس‌های بیرونی
@@ -50,3 +50,7 @@ HTTP ساختگی بیرونی و integration خرید/مجوز، پیش‌نو�
 NEXT-Q09؛ مسئول لاگ فنی #77 است و این تسک اجرای پوشش فنی آن است.
 
 مرجع: [دفتر پرسش‌ها](../../../product/open-questions.md) · [برنامه و ترتیب](../README.md) · [BDD طراحی](../../../bdd/features/experiences/logging-gateway-plan.feature). BDD در این نوبت اجرا نشده و همه داده‌های تست آینده باید ساختگی و ایزوله باشند.
+
+## شاهد اجرا
+
+ثبت runtime/logger مشترک به lifecycle برنامه، context HTTP، actor معتبر احراز، عملیات commerce/preview/command و تماس واقعی adapterهای پیامک/نشان وصل شد. metadata و نتیجه سرویس ثبت و body/URL/توکن خصوصی ذخیره نمی‌شوند. تست HTTP correlation/replay/حریم، خطای فایل بدون توقف سبد، provider با HTTP200 ولی نتیجه ناموفق و همه Go/PG/Redis و vet موفق‌اند؛ درگاه جدیدی ساخته نشد. [ماتریس پوشش](../coverage.md).

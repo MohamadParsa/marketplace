@@ -63,6 +63,23 @@ type trace struct {
 	data ContextData
 }
 type contextKey struct{}
+type recorderKey struct{}
+
+func WithRecorder(ctx context.Context, r *Recorder) context.Context {
+	return context.WithValue(ctx, recorderKey{}, r)
+}
+func FromContext(ctx context.Context) *Recorder {
+	r, _ := ctx.Value(recorderKey{}).(*Recorder)
+	return r
+}
+func Record(ctx context.Context, e Event) { FromContext(ctx).Record(ctx, e) }
+
+// Child keeps the operation while giving a background task an explicit parent.
+func Child(ctx context.Context) context.Context {
+	d := Context(ctx)
+	d.ParentOperationID = d.OperationID
+	return WithRecorder(WithContext(context.Background(), d), FromContext(ctx))
+}
 
 func ID() string {
 	var b [16]byte
@@ -166,6 +183,7 @@ func (r *Recorder) Record(ctx context.Context, e Event) {
 
 var codePattern = regexp.MustCompile(`^[a-z][a-z0-9._-]{0,95}$`)
 var idPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$`)
+var routePattern = regexp.MustCompile(`^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) /[A-Za-z0-9/{}._-]*$`)
 
 func validID(v string) bool { return idPattern.MatchString(v) }
 func safeID(v string) string {
@@ -231,6 +249,14 @@ func Sanitize(e Event) (Event, error) {
 			}
 		case "device":
 			if s, ok := v.(string); ok && member(s, "desktop", "mobile", "tablet", "unknown") {
+				out[k] = s
+			}
+		case "method":
+			if s, ok := v.(string); ok && member(s, "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS") {
+				out[k] = s
+			}
+		case "route":
+			if s, ok := v.(string); ok && len(s) <= 200 && routePattern.MatchString(s) {
 				out[k] = s
 			}
 		case "currency":

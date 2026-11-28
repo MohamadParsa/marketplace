@@ -6,12 +6,17 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"slices"
 	"strings"
+	"time"
 )
 
 type Service struct {
+	operationLogs        *operationlog.Recorder
+	operationScanner     operationlog.Scanner
+	operationStats       func() any
 	repository           Repository
 	clock                Clock
 	identifiers          Identifier
@@ -140,7 +145,10 @@ func (s *Service) Execute(ctx context.Context, actor identity.User, command Comm
 	return s.ExecuteWithReauthentication(ctx, actor, command, nil)
 }
 
-func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identity.User, command Command, confirm func() error) error {
+func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identity.User, command Command, confirm func() error) (resultErr error) {
+	ctx = s.observeContext(ctx)
+	started := time.Now()
+	defer func() { s.operationFinish(ctx, "backoffice.command", started, resultErr, false) }()
 	if command.Action != "product.content.submit" && command.Action != "product.content.approve" && command.Action != "product.content.reject" && !isProductAction(command.Action) && !allowsAction(actor, command.Action) {
 		return ErrForbidden
 	}

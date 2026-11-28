@@ -11,6 +11,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
@@ -71,7 +72,13 @@ func normalizeDigits(s string) string {
 	}, strings.TrimSpace(s))
 }
 
-func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input any, authorize func(Workspace) error, apply func(*Workspace, string, time.Time) (any, error)) (json.RawMessage, error) {
+func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input any, authorize func(Workspace) error, apply func(*Workspace, string, time.Time) (any, error)) (result json.RawMessage, err error) {
+	ctx = s.observeContext(ctx)
+	started := time.Now()
+	replayed := false
+	name := "commerce." + strings.Split(scope, ":")[0]
+	operationlog.Record(ctx, operationlog.Event{EventName: name, Type: "technical", Severity: "info", Outcome: "started"})
+	defer func() { s.operationFinish(ctx, name, started, err, replayed, mutationReferences(name, result)) }()
 	if key == "" || len(key) > 128 || scope == "" {
 		return nil, ErrInvalid
 	}
@@ -84,7 +91,6 @@ func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input a
 	if e != nil {
 		return nil, e
 	}
-	var result json.RawMessage
 	e = s.repository.Update(ctx, func(w *Workspace) error {
 		if e := authorize(*w); e != nil {
 			return e
@@ -97,6 +103,7 @@ func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input a
 					return ErrConflict
 				}
 				result = append(json.RawMessage{}, op.Result...)
+				replayed = true
 				return nil
 			}
 		}

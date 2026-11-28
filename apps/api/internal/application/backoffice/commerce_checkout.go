@@ -832,7 +832,10 @@ type CheckoutPreview struct {
 	Methods []MethodEligibility `json:"methods"`
 }
 
-func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in QuoteInput) (CheckoutPreview, error) {
+func (s *Service) PreviewCheckout(ctx context.Context, a identity.User, in QuoteInput) (result CheckoutPreview, resultErr error) {
+	ctx = s.observeContext(ctx)
+	started := time.Now()
+	defer func() { s.operationFinish(ctx, "checkout.preview", started, resultErr, false) }()
 	if e := s.ReleaseExpiredCommerce(ctx); e != nil {
 		return CheckoutPreview{}, e
 	}

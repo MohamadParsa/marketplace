@@ -6,6 +6,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"errors"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"golang.org/x/crypto/bcrypt"
 	"net/mail"
@@ -325,6 +326,7 @@ func (s *Service) createSession(ctx context.Context, user identity.User) (identi
 	if err := s.sessions.Put(ctx, session); err != nil {
 		return identity.Session{}, err
 	}
+	operationlog.SetActor(ctx, string(user.Surface), user.ID, "")
 	return session, nil
 }
 
@@ -383,6 +385,7 @@ func (s *Service) authenticate(ctx context.Context, token string, surface identi
 		return identity.Session{}, identity.ErrPasswordChangeRequired
 	}
 	session.User = user
+	operationlog.SetActor(ctx, string(user.Surface), user.ID, "")
 	return session, nil
 }
 func challengeKey(surface identity.Surface, phone string) string {
