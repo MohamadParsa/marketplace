@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[اصلاح سوییچ‌های درگاه و ضریب تبدیل تومان/ریال — #154](delivery/gateway-currency-and-switches-2026-11-28.md)
+
 [تنظیمات ثابت و کشویی پرداخت، OAuth زرین‌پال و شرح عملیاتی — #153](delivery/payment-settings-revision-2026-11-28.md)
 
 [تحویل قدم اول تنظیمات درگاه‌ها؛ retry، اجازه شارژ، credential و مسیر بازگشت محیطی — #152](delivery/payment-gateway-settings-2026-11-28.md)

@@ -76,10 +76,10 @@ export function PaymentGatewaySettings({ token, categories }: { token: string; c
     } catch (e) { if (current === generation.current) setError(e instanceof Error ? e.message : "ذخیره تنظیمات انجام نشد."); }
     finally { saving.current = false; setBusy(false); }
   }
-  async function toggleActive(item: Gateway, active: boolean) {
+  async function toggleSetting(item: Gateway, changes: Partial<Pick<Gateway, "active" | "allow_wallet_topup">>) {
     if (saving.current || !directory?.can_write) return;
     const { configured_credentials: _configured, execution_ready: _ready, ...input } = item;
-    input.active = active;
+    Object.assign(input, changes);
     const fingerprint = JSON.stringify(input);
     if (pending.current?.fingerprint !== fingerprint) pending.current = { fingerprint, key: crypto.randomUUID() };
     saving.current = true; setBusy(true); setError(""); setNotice("");
@@ -91,7 +91,7 @@ export function PaymentGatewaySettings({ token, categories }: { token: string; c
       if (!response.ok) throw Error(response.status === 409 ? "تنظیمات تغییر کرده است؛ فهرست را به‌روزرسانی کنید." : result.code === "gateway_key_unavailable" ? "کلید امن اطلاعات اتصال در سرور در دسترس نیست." : "تغییر وضعیت ذخیره نشد؛ می‌توانید دوباره تلاش کنید.");
       const saved = result as Gateway;
       setDirectory(data => data ? { ...data, items: data.items.map(g => g.provider === saved.provider ? saved : g) } : data);
-      pending.current = null; setNotice("وضعیت درگاه در تنظیمات ذخیره شد.");
+      pending.current = null; setNotice("تنظیمات درگاه ذخیره شد.");
     } catch (e) { if (current === generation.current) setError(e instanceof Error ? e.message : "ذخیره وضعیت انجام نشد."); }
     finally { saving.current = false; setBusy(false); }
   }
@@ -101,11 +101,14 @@ export function PaymentGatewaySettings({ token, categories }: { token: string; c
     const path = (credential ? "credentials." : "values.") + field.key;
     const configured = draft.configured_credentials.includes(field.key) && !draft.clear_credentials.includes(field.key);
     const value = credential ? draft.credentials[field.key] ?? "" : draft.values[field.key] ?? field.default;
+    const label = field.key === "exchange_rate" ? "ضریب تبدیل تومان به " + (draft.values.currency === "IRR" ? "ریال" : "تومان") : field.label;
     return <div key={field.key} className={field.kind === "url" ? "gateway-settings-wide" : undefined}>
-      <TextField label={field.label} select={field.kind === "select"} type={secret ? "password" : "text"} fullWidth size="small" value={value} error={!!fields[path]} disabled={credential && !directory?.credentials_writable} autoComplete={credential ? "new-password" : "off"} helperText={fields[path] || (credential ? (configured ? "مقدار ذخیره شده است؛ برای حفظ آن این فیلد را خالی بگذارید. " : "") + field.helper : field.helper)} inputProps={{ readOnly: field.read_only, dir: credential || field.kind === "url" || field.key === "currency" ? "ltr" : undefined, inputMode: field.format === "positive-integer" ? "numeric" : undefined, maxLength: field.max_length || 2048 }} onChange={e => {
+      <TextField label={label} select={field.kind === "select"} type={secret ? "password" : "text"} fullWidth size="small" value={value} error={!!fields[path]} disabled={credential && !directory?.credentials_writable} autoComplete={credential ? "new-password" : "off"} helperText={fields[path] || (credential ? (configured ? "مقدار ذخیره شده است؛ برای حفظ آن این فیلد را خالی بگذارید. " : "") + field.helper : field.helper)} inputProps={{ readOnly: field.read_only, dir: credential || field.kind === "url" || field.kind === "decimal" ? "ltr" : undefined, inputMode: field.kind === "decimal" ? "decimal" : field.format === "positive-integer" ? "numeric" : undefined, maxLength: field.max_length || 2048 }} onChange={e => {
         if (credential) { patch({ credentials: { ...draft.credentials, [field.key]: e.target.value }, clear_credentials: draft.clear_credentials.filter(k => k !== field.key) }); return; }
         const values = { ...draft.values, [field.key]: e.target.value };
         if (field.key === "environment") values.base_url = e.target.value === "production" ? "https://payment.zarinpal.com/pg/v4/payment" : "https://sandbox.zarinpal.com/pg/v4/payment";
+        if (field.key === "currency") values.exchange_rate = e.target.value === "IRR" ? "10" : "1";
+        if (field.kind === "decimal") values[field.key] = digits(e.target.value).replace(/٫/g, ".");
         patch({ values });
       }}>{field.options?.map(option => <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>)}</TextField>
       {credential && configured && <Button disabled={!directory?.credentials_writable} onClick={() => patch({ credentials: { ...draft.credentials, [field.key]: "" }, clear_credentials: [...draft.clear_credentials, field.key] })}>پاک‌کردن {field.label}</Button>}
@@ -118,7 +121,19 @@ export function PaymentGatewaySettings({ token, categories }: { token: string; c
     {!draft && error && <Alert severity="error">{error}</Alert>}{notice && <Alert severity="success">{notice}</Alert>}
     {loading && !directory && <p role="status">دریافت تنظیمات درگاه‌ها…</p>}
     <Button disabled={loading || busy} onClick={() => void load()}>به‌روزرسانی درگاه‌ها</Button>
-    {directory?.items.map(item => <details className="gateway-provider-section" key={item.provider}><summary><strong>{item.name}</strong><span>{item.active ? "فعال در تنظیمات" : "غیرفعال"}</span></summary><div className="gateway-setting-summary"><div><p>{directory.providers.find(p => p.id === item.provider)?.name} · {item.values.environment === "production" ? "محیط واقعی" : "محیط آزمایشی"}</p><p>تلاش مجدد: {item.max_automatic_retries.toLocaleString("fa-IR")} · شارژ مستقل کیف پول: {item.allow_wallet_topup ? "مجاز" : "غیرمجاز"}</p><p>حداقل: {money(item.min_toman)} · حداکثر: {item.max_toman ? money(item.max_toman) : "بدون سقف"}</p></div><div><FormControlLabel control={<Switch checked={item.active} disabled={!directory.can_write || loading || busy} onChange={event => void toggleActive(item, event.target.checked)} inputProps={{ "aria-label": "فعال بودن درگاه " + item.name }} />} label={item.active ? "فعال در تنظیمات" : "غیرفعال"} /><Button variant="outlined" disabled={loading || busy} onClick={() => open(item)}>{directory.can_write ? "ویرایش تنظیمات" : "مشاهده تنظیمات"}</Button></div></div></details>)}
+    {directory?.items.map(item => <details className="gateway-provider-section" key={item.provider}>
+      <summary><strong>{item.name}</strong><span>{item.active ? "فعال در تنظیمات" : "غیرفعال"}</span></summary>
+      <div className="gateway-setting-summary">
+        <div><p>{directory.providers.find(p => p.id === item.provider)?.name} · {item.values.environment === "production" ? "محیط واقعی" : "محیط آزمایشی"}</p><p>تلاش مجدد: {item.max_automatic_retries.toLocaleString("fa-IR")} · شارژ مستقل کیف پول: {item.allow_wallet_topup ? "مجاز" : "غیرمجاز"}</p><p>حداقل: {money(item.min_toman)} · حداکثر: {item.max_toman ? money(item.max_toman) : "بدون سقف"}</p></div>
+        <div className="gateway-setting-actions">
+          <div className="gateway-switches">
+            <FormControlLabel control={<Switch checked={item.active} disabled={!directory.can_write || loading || busy} onChange={event => void toggleSetting(item, { active: event.target.checked })} inputProps={{ "aria-label": "فعال بودن درگاه " + item.name }} />} label="فعال بودن درگاه" />
+            <FormControlLabel control={<Switch checked={item.allow_wallet_topup} disabled={!directory.can_write || loading || busy} onChange={event => void toggleSetting(item, { allow_wallet_topup: event.target.checked })} inputProps={{ "aria-label": "امکان شارژ کیف پول با " + item.name }} />} label="امکان شارژ کیف پول" />
+          </div>
+          <Button variant="outlined" disabled={loading || busy} onClick={() => open(item)}>{directory.can_write ? "ویرایش تنظیمات" : "مشاهده تنظیمات"}</Button>
+        </div>
+      </div>
+    </details>)}
     <Dialog open={!!draft} onClose={close} fullWidth maxWidth="md" PaperProps={{ component: "form", onSubmit: (event: FormEvent) => void save(event), noValidate: true }}>
       <DialogTitle>{draft ? "تنظیمات درگاه «" + draft.name + "»" : "تنظیمات درگاه"}</DialogTitle>
       <DialogContent>{draft && provider && <>
@@ -132,8 +147,10 @@ export function PaymentGatewaySettings({ token, categories }: { token: string; c
               <TextField label="حداقل کل سفارش (تومان)" fullWidth size="small" value={draft.min_toman} error={!!fields.min_toman} helperText={fields.min_toman} onChange={e => patch({ min_toman: e.target.value })} inputProps={{ inputMode: "decimal" }} />
               <TextField label="حداکثر (خالی = بدون سقف)" fullWidth size="small" value={draft.max_toman} error={!!fields.max_toman} helperText={fields.max_toman} onChange={e => patch({ max_toman: e.target.value })} inputProps={{ inputMode: "decimal" }} />
               <TextField label="آستانه تحمل خطا سفارشات" fullWidth size="small" value={draft.retryText} error={!!fields.max_automatic_retries} helperText={fields.max_automatic_retries || "تعداد retry اضافی خودکار: صفر تا ۱۰؛ صفر = خاموش. پیگیری همان تراکنش، بدون برداشت مجدد."} onChange={e => patch({ retryText: e.target.value })} inputProps={{ inputMode: "numeric", maxLength: 2 }} />
-              <div><FormControlLabel control={<Checkbox checked={draft.allow_wallet_topup} onChange={e => patch({ allow_wallet_topup: e.target.checked })} />} label="امکان شارژ کیف پول" /><p className="gateway-field-help">اجازه شارژ مستقل کیف پول؛ این سیاست پس از پیاده‌سازی اتصال اعمال می‌شود.</p></div>
-              <div className="gateway-settings-wide"><FormControlLabel control={<Switch checked={draft.active} onChange={event => patch({ active: event.target.checked })} />} label="فعال بودن درگاه در تنظیمات" /></div>
+              <div className="gateway-settings-wide"><div className="gateway-switches">
+                <FormControlLabel control={<Switch checked={draft.active} onChange={event => patch({ active: event.target.checked })} />} label="فعال بودن درگاه در تنظیمات" />
+                <FormControlLabel control={<Switch checked={draft.allow_wallet_topup} onChange={event => patch({ allow_wallet_topup: event.target.checked })} />} label="امکان شارژ کیف پول" />
+              </div><p className="gateway-field-help">فعال‌سازی و اجازه شارژ مستقل کیف پول پس از پیاده‌سازی اتصال در پرداخت مشتری اعمال می‌شود.</p></div>
               <div className="gateway-settings-wide"><FormControlLabel control={<Checkbox checked={draft.all_categories} onChange={e => patch({ all_categories: e.target.checked })} />} label="همه دسته‌ها به جز موارد مستثنا" /></div>
               {!draft.all_categories && <MultiChoiceField label="دسته‌های مجاز" value={draft.allowed_categories} options={categories} onChange={v => patch({ allowed_categories: v })} />}
               <MultiChoiceField label="دسته‌های مستثنا" value={draft.excluded_categories} options={categories} onChange={v => patch({ excluded_categories: v })} />

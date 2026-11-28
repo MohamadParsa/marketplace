@@ -57,20 +57,21 @@ type GatewayProvider struct {
 func GatewayProviders() []GatewayProvider {
 	return []GatewayProvider{{ID: "zarinpal", Name: "زرین‌پال", ExecutionReady: false,
 		Sections: []GatewaySection{
-			{ID: "api", Label: "احراز هویت API زرین‌پال", Description: "مشخصات کلاینت و حساب پذیرنده برای دسترسی API؛ اطلاعات مشتری نیست. رمز یک‌بارمصرف در تنظیمات ذخیره نمی‌شود."},
+			{ID: "api", Label: "احراز هویت API زرین‌پال", Description: "راه‌اندازی حساب پذیرنده پیش از فعال‌سازی و توسط ادمین انجام می‌شود، نه در اولین پرداخت مشتری. در مرحله اتصال، دریافت کد و تأیید حساب در همین بخش اضافه می‌شود؛ فعلاً فقط مشخصات ذخیره می‌شوند. کد یک‌بارمصرف در تنظیمات ذخیره نمی‌شود."},
 			{ID: "payment", Label: "تنظیمات پرداخت", Description: "تنظیمات پرداخت V4؛ شناسه پذیرنده در این فرم اختیاری است و به‌عنوان credential مشترک همه درگاه‌ها الزام نمی‌شود."},
-			{ID: "advanced", Label: "تنظیمات پیشرفته تأیید پرداخت", Description: "تأیید نهایی تراکنش نزد بانک از احراز هویت API جداست. در هر دو حالت کارها روی سرور انجام می‌شود و مشتری مرحله اضافی ندارد."},
+			{ID: "advanced", Label: "تنظیمات پیشرفته تأیید پرداخت", Description: "پس از بازگشت مشتری به callback، سرور نتیجه را با verify بررسی می‌کند؛ صرف بازگشت به سایت یا Status=OK پرداخت قطعی نیست. احراز هویت API مربوط به دسترسی حساب پذیرنده است."},
 		}, Fields: []GatewayField{
 			{Key: "client_id", Label: "شناسه کلاینت (Client ID)", Kind: "credential", Section: "api", Format: "positive-integer", MaxLength: 20, Helper: "شناسه عددی کلاینت دریافتی از زرین‌پال؛ برای پیش‌نویس می‌تواند خالی باشد."},
 			{Key: "client_secret", Label: "کلید محرمانه کلاینت (Client Secret)", Kind: "secret", Section: "api", MaxLength: 4096, Helper: "کلید دریافتی از زرین‌پال؛ حساس به حروف است و رمزنگاری‌شده ذخیره می‌شود."},
 			{Key: "username", Label: "حساب پذیرنده زرین‌پال", Kind: "credential", Section: "api", MaxLength: 254, Helper: "شماره همراه یا ایمیل حساب پذیرنده برای احراز هویت API؛ در پیش‌نویس اختیاری است."},
-			{Key: "channel", Label: "روش دریافت کد حساب پذیرنده", Kind: "select", Section: "api", Default: "ussd", Options: []GatewayOption{{"ussd", "USSD"}, {"sms", "پیامک"}}, Helper: "برای راه‌اندازی اولیه حساب پذیرنده؛ در روال پرداخت مشتری نمایش داده نمی‌شود."},
-			{Key: "api_base_url", Label: "آدرس پایه API زرین‌پال", Kind: "url", Section: "api", Default: "https://next.zarinpal.com/api", MaxLength: 2048, Helper: "آدرس رسمی احراز هویت و API؛ از آدرس سرویس پرداخت جداست."},
+			{Key: "channel", Label: "روش دریافت کد حساب پذیرنده", Kind: "select", Section: "api", Default: "ussd", Options: []GatewayOption{{"ussd", "USSD"}, {"sms", "پیامک"}}, Helper: "کد متعلق به حساب پذیرنده و مرحله راه‌اندازی ادمین است؛ مشتری کدی برای ورود به حساب پذیرنده وارد نمی‌کند."},
+			{Key: "api_base_url", Label: "آدرس پایه احراز هویت و API حساب", Kind: "url", Section: "api", Default: "https://next.zarinpal.com/api", MaxLength: 2048, Helper: "برای oauth/initialize و oauth/token؛ این آدرس سرویس درخواست و تأیید پرداخت نیست."},
 			{Key: "merchant_id", Label: "شناسه پذیرنده (Merchant ID) — اختیاری", Kind: "credential", Section: "payment", Format: "uuid", MaxLength: 36, Helper: "اختیاری در تنظیمات؛ فقط برای عملیات پرداخت V4 کاربرد دارد. با Client ID یکسان نیست."},
 			{Key: "environment", Label: "محیط پرداخت", Kind: "select", Section: "payment", Default: "sandbox", Options: []GatewayOption{{"sandbox", "آزمایشی (Sandbox)"}, {"production", "واقعی"}}},
-			{Key: "base_url", Label: "آدرس پایه سرویس پرداخت", Kind: "url", Section: "payment", Default: "https://sandbox.zarinpal.com/pg/v4/payment", MaxLength: 2048, Helper: "آدرس رسمی متناسب با محیط پرداخت؛ مقصد دلخواه پذیرفته نمی‌شود."},
-			{Key: "currency", Label: "واحد مبلغ ارسالی", Kind: "text", Section: "payment", Default: "IRR", ReadOnly: true, Helper: "ریال؛ نمایش و ورود مبلغ در سایت و پنل همچنان تومان است."},
-			{Key: "auto_verify", Label: "تأیید نهایی تراکنش", Kind: "select", Section: "advanced", Default: "false", Options: []GatewayOption{{"false", "با درخواست سرور چریوا پس از پرداخت"}, {"true", "خودکار توسط زرین‌پال"}}, Helper: "این گزینه تعیین می‌کند چه کسی تأیید نهایی پرداخت را نزد بانک آغاز کند؛ ورود به API یا OTP نیست. ثبت موفقیت در چریوا در هر حالت نیازمند بررسی نتیجه در سرور است."},
+			{Key: "base_url", Label: "آدرس پایه سرویس پرداخت", Kind: "url", Section: "payment", Default: "https://sandbox.zarinpal.com/pg/v4/payment", MaxLength: 2048, Helper: "برای request.json و verify.json؛ با آدرس API حساب فرق دارد و باید متناسب با محیط پرداخت باشد."},
+			{Key: "currency", Label: "واحد مبلغ ارسالی به درگاه", Kind: "select", Section: "payment", Default: string(commerce.SiteCurrency), Options: []GatewayOption{{string(commerce.CurrencyToman), "تومان (IRT)"}, {string(commerce.CurrencyRial), "ریال (IRR)"}}, Helper: "واحد پیش‌فرض سایت تومان است؛ واحد ارسالی به این درگاه را انتخاب کنید."},
+			{Key: "exchange_rate", Label: "ضریب تبدیل مبلغ سایت به مبلغ درگاه", Kind: "decimal", Section: "payment", Default: commerce.SiteCurrency.DefaultGatewayRate(), MaxLength: 14, Helper: "مبلغ سایت به تومان × ضریب تبدیل = مبلغ ارسالی به درگاه؛ تومان به ریال ×۱۰ و تومان به تومان ×۱. تا ۶ رقم اعشار؛ بدون گردکردن پنهان."},
+			{Key: "auto_verify", Label: "آغاز تأیید تراکنش نزد بانک", Kind: "select", Section: "advanced", Default: "false", Options: []GatewayOption{{"false", "با verify سرور چریوا پس از callback (پیش‌فرض)"}, {"true", "خودکار توسط زرین‌پال"}}, Helper: "در حالت پیش‌فرض، verify چریوا تأیید نزد بانک را آغاز می‌کند. حالت خودکار فقط آغاز این کار را به زرین‌پال می‌سپارد؛ نتیجه در چریوا همچنان باید سروری بررسی و یک‌بار ثبت شود."},
 		}}}
 }
 
@@ -226,6 +227,9 @@ func gatewayNonCredentialValues(provider GatewayProvider, stored map[string]stri
 			}
 		}
 	}
+	if _, exists := values["exchange_rate"]; exists && stored["exchange_rate"] == "" {
+		values["exchange_rate"] = commerce.Currency(values["currency"]).DefaultGatewayRate()
+	}
 	return values
 }
 
@@ -315,8 +319,18 @@ func validateGatewayValues(provider GatewayProvider, in GatewaySettingsInput) (m
 		fields["values.base_url"] = "آدرس رسمی درگاه باید با محیط انتخاب‌شده یکسان باشد."
 	}
 	values["base_url"] = base
-	if values["currency"] != "IRR" {
-		fields["values.currency"] = "واحد ارسال در این نسخه ریال است."
+	currency := commerce.Currency(values["currency"])
+	if !currency.Valid() {
+		fields["values.currency"] = "واحد ارسالی باید تومان یا ریال باشد."
+	}
+	if _, supplied := in.Values["exchange_rate"]; !supplied {
+		values["exchange_rate"] = currency.DefaultGatewayRate()
+	}
+	rate, rateErr := commerce.NormalizeGatewayRate(normalizeDigits(values["exchange_rate"]))
+	if rateErr != nil {
+		fields["values.exchange_rate"] = "نرخ باید عددی مثبت، حداکثر ۱۰۰۰۰۰۰ و با حداکثر ۶ رقم اعشار باشد."
+	} else {
+		values["exchange_rate"] = rate
 	}
 	if strings.TrimRight(values["api_base_url"], "/") != "https://next.zarinpal.com/api" {
 		fields["values.api_base_url"] = "آدرس رسمی API زرین‌پال معتبر نیست."

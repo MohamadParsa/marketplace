@@ -23,6 +23,7 @@ func TestGatewayOAuthPostgresRestartEditWithoutMerchantAndPrivateResponses(t *te
 	secret := "OAuth-MiXeD-fixture-" + strings.Repeat("Qz9+/_=", 70)
 	in := gatewaySettingsFixture()
 	in.Credentials = map[string]string{"client_id": "۱۲۳۴", "client_secret": secret}
+	in.Values = map[string]string{"currency": "IRR", "exchange_rate": "۱۰.۲۵"}
 	raw := commerceHTTP(t, h, admin, "", "POST", "/backoffice/commerce/gateways", in, "oauth-only", 200)
 	var saved backoffice.GatewaySettingsView
 	if err := json.Unmarshal(raw, &saved); err != nil {
@@ -49,6 +50,9 @@ func TestGatewayOAuthPostgresRestartEditWithoutMerchantAndPrivateResponses(t *te
 	json.Unmarshal(read, &directory)
 	if len(directory.Items) != 1 || len(directory.Items[0].ConfiguredCredentials) != 2 || strings.Contains(string(read), secret) {
 		t.Fatal("restart lost or exposed OAuth settings")
+	}
+	if directory.Items[0].Values["currency"] != "IRR" || directory.Items[0].Values["exchange_rate"] != "10.25" {
+		t.Fatal("restart lost gateway currency/rate")
 	}
 	edit := directory.Items[0].GatewaySettingsInput
 	edit.Name = "اصلاح زنده تنظیمات بدون build"

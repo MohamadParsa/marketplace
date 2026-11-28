@@ -12,6 +12,8 @@ execution_scope: settings-only
 
 # اصلاح بازبینی تنظیمات — #153
 
+بازبینی بعدی سوییچ‌ها و انتخاب واحد/ضریب در [تحویل #154](gateway-currency-and-switches-2026-11-28.md) ثبت شده است؛ شرح IRR در جدول این گزارش، شاهد نسخه قبلی است.
+
 Issue: [#153](https://github.com/MohamadParsa/marketplace/issues/153) · والد [#95](https://github.com/MohamadParsa/marketplace/issues/95) · PR [#106](https://github.com/MohamadParsa/marketplace/pull/106). این تحویل ادامه [قدم تنظیمات #152](payment-gateway-settings-2026-11-28.md) است؛ مالک همچنان بررسی فرم را پیش از اجرای خود درگاه انتخاب کرده است.
 
 ## قواعد صریح و نتیجه اجرا

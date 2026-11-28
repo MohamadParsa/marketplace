@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+DOM-PAYMENTS-001-R28..29 → [اصلاح سوییچ/ضریب #154 و FEAT-BO-GATEWAY-CURRENCY-001-AC01..04](../delivery/gateway-currency-and-switches-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/gateway-currency-and-switches.feature). اتصال بانکی خارج این تحویل است.
+
 DOM-PAYMENTS-001-R22..27 → [اصلاح تنظیمات #153 و پذیرش FEAT-BO-GATEWAY-SETTINGS-REVISION-001-AC01..04](../delivery/payment-settings-revision-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-settings-revision.feature). فقط تنظیمات اجرا شده‌اند.
 
 DOM-PAYMENTS-001-R19..21 → [تنظیمات درگاه #152 و پذیرش FEAT-BO-PAYMENT-GATEWAY-SETTINGS-001-AC01..04](../delivery/payment-gateway-settings-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-gateway-settings.feature). فقط قدم تنظیمات done است؛ adapter و اجرای مالی درگاه شروع نشده‌اند.
