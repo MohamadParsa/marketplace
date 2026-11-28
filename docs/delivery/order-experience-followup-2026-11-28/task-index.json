@@ -242,7 +242,7 @@
       "title": "CV-ORD-UI-04 — چیدمان منظم خلاصه سفارش و گیرنده بالای اقلام در بک‌آفیس",
       "file": "tasks/backoffice-order-summary-layout.md",
       "owner": "eliassarband",
-      "state": "open",
+      "state": "closed",
       "implementation_status": "done",
       "execution_authorized": true,
       "related_closed_issues": [
@@ -251,7 +251,13 @@
       ],
       "dependencies": [],
       "blocking_questions": [],
-      "evidence": "issue-165-verification.md"
+      "evidence": "issue-165-verification.md",
+      "delivery": {
+        "source_commit": "3900b8fb595d8decb95e6656cdc17182e1ad16e4",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46154712609",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/165#issuecomment-7240713891",
+        "issue_state": "closed"
+      }
     }
   ]
 }

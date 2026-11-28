@@ -29,4 +29,4 @@ execution_authorized: true
 
 [پیش از اصلاح](assets/order-summary-before.png) · [پس از اصلاح — دسکتاپ](assets/order-summary-desktop.png) · [پس از اصلاح — موبایل](assets/order-summary-mobile.png).
 
-سناریوهای BDD مرتبط طراحی هستند و runner آن‌ها اجرا نشده است. کامیت سورس، CI و کامنت بستن پس از پوش در همین گزارش ثبت می‌شوند؛ در زمان این ثبت، بررسی CI در انتظار است. ادغام PR و انتشار سرور جدا از این تحویل‌اند. build تازه در اجرای محلی بک‌آفیس۸۰۹۸قابل مشاهده است.
+سناریوهای BDD مرتبط طراحی هستند و runner آن‌ها اجرا نشده است. سورس [3900b8f](https://github.com/MohamadParsa/marketplace/commit/3900b8fb595d8decb95e6656cdc17182e1ad16e4) پوش شد و [هر۵CI](https://github.com/MohamadParsa/marketplace/actions/runs/46154712609) شامل Go race/PG/Redis و رابط‌ها موفق‌اند. [کامنت شواهد و بستن #165](https://github.com/MohamadParsa/marketplace/issues/165#issuecomment-7240713891) ثبت شد. ادغام PR و انتشار سرور جدا از این تحویل‌اند. build تازه در اجرای محلی بک‌آفیس۸۰۹۸قابل مشاهده است.

@@ -1,5 +1,8 @@
 # تطبیق کامیت سورس و مستندات چریوا
 
+خلاصه و اقلام سفارش بک‌آفیس #165: سورس [3900b8f](https://github.com/MohamadParsa/marketplace/commit/3900b8fb595d8decb95e6656cdc17182e1ad16e4)، [گزارش و تصاویر قبل/بعد](order-experience-followup-2026-11-28/issue-165-verification.md) و هر۵CI موفق؛ Issue با کامنت شواهد بسته شد. فایل‌های اجرایی مدارک نهایی با همین سورس یکسان‌اند. #164 در صف باقی است.
+
+
 لاگ محلی و گزارش ادمین #155/#156/#157/#75/#76/#77: سورس نهایی [4f76041](https://github.com/MohamadParsa/marketplace/commit/4f7604115b6d10e300c6b4e32dd4ec01c948806f) روی PR #106، هر۵CI موفق و هر شش Issue با شاهد بسته‌اند. [گزارش، ماتریس و تصاویر](logging-gateway-plan-2026-11-28/execution.md) · [راهنمای محلی](logging-gateway-plan-2026-11-28/local-logging-guide.md). فایل‌های اجرایی کامیت مدارک نهایی با همین سورس یکسان‌اند؛ درگاه #158..163 معوق و استقرار/ادغام انجام نشده است.
 
 بازبینی بک‌آفیس #124 تا #130: سورس [2ac2da5](https://github.com/MohamadParsa/marketplace/commit/2ac2da55a47d5cd444d251995734412c85f83ed7) روی شاخهٔ PR #106 پوش شد؛ [گزارش، تسک‌ها و تصاویر](backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md). مدارک این تحویل trailer `Source-Commit: 2ac2da55a47d5cd444d251995734412c85f83ed7` دارند.۵۰۰تست Go/۴skip، vet، TypeScript/build و مرورگر مستقل موفق‌اند؛ نسخهٔ لوکال با همین API و build تازه هماهنگ است. main و استقرار عمومی جدا هستند.

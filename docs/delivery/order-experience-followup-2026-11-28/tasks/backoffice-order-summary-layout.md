@@ -12,7 +12,7 @@ execution_authorized: true
 
 # CV-ORD-UI-04 — بازطراحی خلاصه و اقلام سفارش بک‌آفیس
 
-Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئول: @eliassarband · وضعیت اجرا: تکمیل و تست محلی؛ CI و بستن در انتظار.
+Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئول: @eliassarband · وضعیت اجرا: تکمیل/پوش و با هر۵CI موفق بسته‌شده.
 
 والد: [#95](https://github.com/MohamadParsa/marketplace/issues/95). درخواست اولیه ثبت تسک بود؛ مالک سپس اجرای مستقل #165 را انتخاب کرد.
 
@@ -20,7 +20,7 @@ Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئ�
 
 به گزارش مالک، تب «خلاصه و اقلام» در مشاهده سفارش بک‌آفیس اطلاعات سفارش و گیرنده را بدون استایل مناسب نمایش می‌دهد. اطلاعات کلی سفارش باید بالای اقلام قرار بگیرد و صفحه چیدمان منظم و خوانا داشته باشد.
 
-بررسی سورس: `apps/backoffice-web/src/features/operations/order-workspace.tsx` اکنون ابتدا اقلام، سپس مبلغ و متن گیرنده/نشانی/مرسوله‌ها را نمایش می‌دهد. این بررسی سورس است؛ بازتولید خطای runtime یا پذیرش طرح نهایی ادعا نمی‌شود.
+بررسی سورس پیش از اصلاح: `apps/backoffice-web/src/features/operations/order-workspace.tsx` در نسخه پیشین ابتدا اقلام، سپس مبلغ و متن گیرنده/نشانی/مرسوله‌ها را نمایش می‌داد. این مشاهده مبنای برنامه‌ریزی بود؛ شاهد اجرای اصلاح در گزارش زیر ثبت است.
 
 ## دامنه و منابع قواعد
 
