@@ -30,13 +30,14 @@ type OrderOperationInput struct {
 }
 
 type OrderOperationEvent struct {
-	ID        string    `json:"id,omitempty"`
-	Action    string    `json:"action"`
-	From      string    `json:"from"`
-	To        string    `json:"to"`
-	ActorKind string    `json:"actor_kind"`
-	At        time.Time `json:"at"`
-	Reason    string    `json:"reason,omitempty"`
+	CustomerDescription string    `json:"customer_description,omitempty"`
+	ID                  string    `json:"id,omitempty"`
+	Action              string    `json:"action"`
+	From                string    `json:"from"`
+	To                  string    `json:"to"`
+	ActorKind           string    `json:"actor_kind"`
+	At                  time.Time `json:"at"`
+	Reason              string    `json:"reason,omitempty"`
 }
 
 type OrderOperationsView struct {
@@ -237,7 +238,11 @@ func orderOperationsView(w Workspace, a identity.User, o orders.Order, p commerc
 			if a.Surface == identity.SurfaceCustomer || a.Surface == identity.SurfaceSeller && e.RequestID != "" {
 				reason = ""
 			}
-			v.Events = append(v.Events, OrderOperationEvent{ID: e.ID, Action: e.Action, From: e.FromStatus, To: e.ToStatus, ActorKind: e.ActorKind, At: e.At, Reason: reason})
+			description := e.CustomerDescription
+			if description == "" {
+				description = orderCustomerDescription(e.Action)
+			}
+			v.Events = append(v.Events, OrderOperationEvent{CustomerDescription: description, ID: e.ID, Action: e.Action, From: e.FromStatus, To: e.ToStatus, ActorKind: e.ActorKind, At: e.At, Reason: reason})
 		}
 	}
 	return v

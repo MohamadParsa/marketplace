@@ -271,18 +271,19 @@ func commerceAudit(w *Workspace, id string, a identity.User, action, target, rea
 }
 
 type OrderEventView struct {
-	Version       int       `json:"version,omitempty"`
-	ID            string    `json:"id"`
-	OrderID       string    `json:"order_id,omitempty"`
-	RequestID     string    `json:"request_id,omitempty"`
-	From          string    `json:"from,omitempty"`
-	To            string    `json:"to,omitempty"`
-	Action        string    `json:"action"`
-	FlowStatus    string    `json:"flow_status"`
-	OrderStatus   string    `json:"order_status"`
-	PaymentStatus string    `json:"payment_status"`
-	ActorKind     string    `json:"actor_kind"`
-	At            time.Time `json:"at"`
+	CustomerDescription string    `json:"customer_description,omitempty"`
+	Version             int       `json:"version,omitempty"`
+	ID                  string    `json:"id"`
+	OrderID             string    `json:"order_id,omitempty"`
+	RequestID           string    `json:"request_id,omitempty"`
+	From                string    `json:"from,omitempty"`
+	To                  string    `json:"to,omitempty"`
+	Action              string    `json:"action"`
+	FlowStatus          string    `json:"flow_status"`
+	OrderStatus         string    `json:"order_status"`
+	PaymentStatus       string    `json:"payment_status"`
+	ActorKind           string    `json:"actor_kind"`
+	At                  time.Time `json:"at"`
 }
 
 func purchaseStatuses(p commerce.Purchase) (string, string) {
@@ -314,5 +315,44 @@ func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, n
 		}
 	}
 	id := hashToken(p.ID + ":" + strconv.Itoa(len(p.Events)) + ":" + action + ":" + now.Format(time.RFC3339Nano))
-	p.Events = append(p.Events, commerce.OrderEvent{Version: p.Version, ID: id, Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
+	p.Events = append(p.Events, commerce.OrderEvent{CustomerDescription: orderCustomerDescription(action), Version: p.Version, ID: id, Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
+}
+
+func orderCustomerDescription(action string) string {
+	switch action {
+	case "order.accepted":
+		return "سفارش شما ثبت شد؛ وضعیت پرداخت و هر مرسوله جداگانه قابل پیگیری است."
+	case "order.paid":
+		return "پرداخت سفارش قطعی شد؛ فروشگاه می‌تواند پردازش مرسوله را آغاز کند."
+	case "fulfillment.start":
+		return "فروشگاه پردازش این مرسوله را آغاز کرد."
+	case "fulfillment.supply":
+		return "تأمین تمام اقلام باقی‌مانده این مرسوله تأیید شد."
+	case "fulfillment.pack":
+		return "اقلام این مرسوله در حال آماده‌سازی و بسته‌بندی هستند."
+	case "fulfillment.ship":
+		return "مرسوله به حمل‌کننده تحویل شد؛ ارسال به معنی تأیید دریافت شما نیست."
+	case "fulfillment.deliver":
+		return "دریافت تمام اقلام این مرسوله تأیید شد."
+	case "fulfillment.correct", "fulfillment.configure-dispatch":
+		return "مشخصات ارسال این مرسوله به‌روزرسانی شد."
+	case "order.cancelled":
+		return "سفارش لغو شد؛ نتیجه بازگشت وجه را در بخش مالی پیگیری کنید."
+	case "order.reconfirmation-required":
+		return "برای ادامه خرید، شرایط تازه سفارش باید دوباره بررسی و تأیید شوند."
+	case "request.created":
+		return "درخواست شما ثبت شد و برای رسیدگی در انتظار بررسی است."
+	case "request.approve":
+		return "درخواست تأیید شد؛ نتیجه مالی و دریافت کالای برگشتی جداگانه پیگیری می‌شوند."
+	case "request.reject":
+		return "بررسی درخواست به پایان رسید؛ نتیجه آن در بخش درخواست‌ها قابل مشاهده است."
+	case "request.receive":
+		return "دریافت کالای برگشتی و نتیجه بررسی آن ثبت شد."
+	case "refund.wallet":
+		return "مبلغ تأییدشده به کیف پول بازگردانده شد؛ محدودیت منابع اولیه اعتبار حفظ می‌شود."
+	case "refund.bank":
+		return "بازگشت وجه برای انتقال دستی در مسیر رسیدگی مالی ثبت شد."
+	default:
+		return "تغییری در روند رسیدگی سفارش ثبت شد؛ وضعیت فعلی در جزئیات قابل مشاهده است."
+	}
 }

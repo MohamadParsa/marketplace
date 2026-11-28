@@ -211,6 +211,7 @@ export interface Quote {
   currency: string;
 }
 export interface OrderEvent {
+  customer_description?: string;
   id: string; order_id?:string; request_id?:string; from?:string; to?:string;
   action: string;
   flow_status: string;
@@ -451,7 +452,7 @@ export interface OrderOperations {
   items: { id: string; name: string; quantity: number; cancelled_quantity?: number; returned_quantity?: number; status: string }[];
   address?: Address;
   allowed_actions: string[];
-  events: { id?: string; action: string; from: string; to: string; actor_kind: string; at: string; reason?: string }[];
+  events: { id?: string; action: string; from: string; to: string; actor_kind: string; at: string; reason?: string; customer_description?:string }[];
 }
 
 export interface OrderOperationInput {

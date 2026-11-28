@@ -80,6 +80,9 @@ func TestOrderOperationsScopesPrivacyDispatchAndCompletion(t *testing.T) {
 	if v.OrderStatus != "processing" || v.Address != nil || len(v.Events) != 1 || v.Events[0].ActorKind != "seller" {
 		t.Fatal("start state/privacy/history", v)
 	}
+	if v.Events[0].CustomerDescription == "" {
+		t.Fatal("missing customer-safe step description")
+	}
 	if _, e = h.s.TransitionOrder(ctx, seller, start, "start-stale-version"); e != backoffice.ErrConflict {
 		t.Fatal("stale order version", e)
 	}

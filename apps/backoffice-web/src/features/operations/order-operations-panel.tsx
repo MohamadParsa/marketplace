@@ -7,6 +7,7 @@ import { ChoiceField } from "../../shared/option-select";
 import { dateTime } from "../../shared/format";
 import { label } from "../../../../../packages/commerce-client/types";
 import { PurchaseRequests, PurchaseHistory } from "./order-requests-panel";
+import { orderStageHelp } from "../../../../../packages/commerce-client/order-stage-help";
 
 const actions: Record<string,string> = {
   start: "شروع پردازش سفارش", supply: "تأیید تأمین تمام اقلام", pack: "شروع آماده‌سازی",
@@ -62,6 +63,7 @@ export function OrderOperationsPanel({ id, onChanged }: { id: string; onChanged?
     {data && <Stack spacing={2}>
       <p>{data.store_name} · سفارش {data.purchase_number.replace(/\d/g,d => "۰۱۲۳۴۵۶۷۸۹"[Number(d)])} · {data.shipping_name}</p>
       <div className="order-stage-summary"><span>سفارش: <strong>{label(data.order_status)}</strong></span><span>پرداخت: <strong>{label(data.payment_status)}</strong></span><span>عملیات: <strong>{label(data.status)}</strong></span></div>
+      {orderStageHelp[data.status] && <p className="order-stage-help">{orderStageHelp[data.status]}</p>}
       {!!data.identifiers?.length && <p>{data.dispatch_identifier === "delivery" ? "کد تحویل" : "کد رهگیری"}: <span dir="ltr">{data.identifiers.join("، ")}</span></p>}
       {data.address ? <section><h3>اطلاعات لازم برای تحویل</h3><p>{data.address.recipient} · {data.address.phone}</p><p>{data.address.province}، {data.address.city}، {data.address.street} · پلاک {data.address.house_number} · {data.address.postal_code}</p></section> : surface === "seller" && <Alert severity="info">اطلاعات گیرنده پس از تأیید تأمین تمام اقلام این مرسوله نمایش داده می‌شود.</Alert>}
       {!data.dispatch_identifier && data.payment_status === "paid" && <Alert severity="info">مدیر باید نوع شناسه ارسال این مرسوله قدیمی را پیش از ارسال تعیین کند.</Alert>}
@@ -69,12 +71,13 @@ export function OrderOperationsPanel({ id, onChanged }: { id: string; onChanged?
         <ChoiceField label="اقدام عملیاتی" value={action} disabled={busy} options={data.allowed_actions.map(id => ({ id,name:actions[id] ?? id }))} onChange={value => { setChosen(value);setAllItems(false); }} />
         {action === "configure-dispatch" && <ChoiceField label="نوع شناسه ارسال" required clearLabel="انتخاب کنید" value={policy} disabled={busy} options={[{id:"tracking",name:"کد رهگیری"},{id:"delivery",name:"کد تحویل"},{id:"none",name:"بدون کد"}]} onChange={setPolicy} />}
         {requiresCodes && <TextField label={data.dispatch_identifier === "delivery" ? "کدهای تحویل؛ هر کد در یک سطر" : "کدهای رهگیری؛ هر کد در یک سطر"} required value={identifiers} onChange={e => setCodes(e.target.value)} multiline minRows={2} disabled={busy} inputProps={{dir:"ltr",maxLength:3200}} />}
-        <TextField label={requiresReason ? "دلیل ثبت / اصلاح" : "توضیح عملیات"} required={requiresReason} value={reason} onChange={e => setReason(e.target.value)} disabled={busy} multiline minRows={2} inputProps={{maxLength:1000}} />
+        <TextField label={requiresReason ? "دلیل ثبت / اصلاح" : "توضیح عملیات"} required={requiresReason} value={reason} onChange={e => setReason(e.target.value)} disabled={busy} multiline minRows={1} maxRows={4} inputProps={{maxLength:1000}} />
+        <p className="order-operation-help">{action === "start" ? "پردازش همین مرسوله آغاز می‌شود؛ سایر فروشگاه‌ها مستقل هستند." : action === "supply" ? "تأیید کنید تمام اقلام باقی‌مانده تأمین شده‌اند؛ پس از ثبت، آماده‌سازی قابل انجام است." : action === "pack" ? "با ثبت این مرحله، آماده‌سازی اقلام آغاز می‌شود." : action === "ship" ? "پس از تحویل تمام اقلام به حمل‌کننده ثبت کنید؛ کدهای الزامی روش حمل را وارد کنید." : action === "deliver" ? "فقط پس از تأیید واقعی دریافت تمام اقلام ثبت کنید؛ کد تحویل به‌تنهایی اثبات دریافت نیست." : "مشخصات ارسال با حفظ سابقه و دلیل شما اصلاح می‌شود."}</p>
         {["ship","deliver"].includes(action) && <FormControlLabel control={<Checkbox checked={allItems} disabled={busy} onChange={e => setAllItems(e.target.checked)} />} label={action === "ship" ? "تمام اقلام باقی‌مانده این مرسوله به حمل‌کننده تحویل شده‌اند." : "دریافت تمام اقلام این مرسوله توسط مشتری تأیید شده است."} />}
         <Button type="submit" variant="contained" disabled={busy || requiresReason && !reason.trim() || requiresCodes && !identifiers.trim() || ["ship","deliver"].includes(action) && !allItems || action === "configure-dispatch" && !policy}>{actions[action]}</Button>
       </form> : <p>اقدام بعدی در این مرحله یا در محدوده دسترسی شما وجود ندارد.</p>}
       {error && <Alert severity="error">{error}</Alert>}
-      {!!data.events.length && <details><summary>تاریخچه عملیات مرسوله</summary>{data.events.map((event,index) => <p key={event.id ?? index}>{dateTime(event.at)} · {label(event.action)} · {label(event.from)} ← {label(event.to)}{event.reason ? " · " + event.reason : ""}</p>)}</details>}
+      {!!data.events.length && <details><summary>تاریخچه عملیات مرسوله</summary>{data.events.map((event,index) => <div key={event.id ?? index}><p>{dateTime(event.at)} · {label(event.action)} · {label(event.from)} ← {label(event.to)}{event.reason ? " · " + event.reason : ""}</p>{event.customer_description&&<p>{event.customer_description}</p>}</div>)}</details>}
       {surface === "seller" && <PurchaseRequests id={data.purchase_id}/>}
       {surface === "seller" && <PurchaseHistory id={data.purchase_id} version={data.version}/>}
     </Stack>}

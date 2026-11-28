@@ -115,6 +115,9 @@ func TestOrderOperationsHTTPPostgresScopedDeliveryAndRestart(t *testing.T) {
 		if event.Reason != "" {
 			t.Fatal("internal operational reason leaked to customer")
 		}
+		if event.CustomerDescription == "" {
+			t.Fatal("customer step description did not survive restart")
+		}
 	}
 	w, _ := reopened.Snapshot(ctx)
 	if w.Commerce.Purchases[0].OrderState != "processing" || w.Orders[1].Status != "awaiting-supply" {

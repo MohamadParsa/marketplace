@@ -12,7 +12,11 @@ func publicOrderEvent(p commerce.Purchase, e commerce.OrderEvent, index int) Ord
 	if id == "" {
 		id = "legacy:" + hashToken(p.ID+":"+strconv.Itoa(index))
 	}
-	return OrderEventView{Version: e.Version, ID: id, OrderID: e.OrderID, RequestID: e.RequestID, From: e.FromStatus, To: e.ToStatus, Action: e.Action, FlowStatus: e.FlowStatus, OrderStatus: e.OrderStatus, PaymentStatus: e.PaymentStatus, ActorKind: e.ActorKind, At: e.At}
+	description := e.CustomerDescription
+	if description == "" {
+		description = orderCustomerDescription(e.Action)
+	}
+	return OrderEventView{CustomerDescription: description, Version: e.Version, ID: id, OrderID: e.OrderID, RequestID: e.RequestID, From: e.FromStatus, To: e.ToStatus, Action: e.Action, FlowStatus: e.FlowStatus, OrderStatus: e.OrderStatus, PaymentStatus: e.PaymentStatus, ActorKind: e.ActorKind, At: e.At}
 }
 
 type OrderHistoryEvent struct {

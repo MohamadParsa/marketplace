@@ -294,6 +294,7 @@ type Operation struct {
 }
 
 type OrderEvent struct {
+	CustomerDescription string    `json:"customer_description,omitempty"`
 	Version             int       `json:"version,omitempty"`
 	RequestID           string    `json:"request_id,omitempty"`
 	ID                  string    `json:"id,omitempty"`
