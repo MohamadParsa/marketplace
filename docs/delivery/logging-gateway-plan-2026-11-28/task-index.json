@@ -1,0 +1,151 @@
+{
+  "planning_status": "done",
+  "execution_authorized": false,
+  "date": "2026-11-28",
+  "existing_issues_updated": [
+    75,
+    76,
+    77
+  ],
+  "parent_issue": 95,
+  "new_issues": [
+    {
+      "code": "CV-LOG-01",
+      "spec_id": "FEAT-LOG-FOUNDATION-001",
+      "issue": 155,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/155",
+      "title": "CV-LOG-01 — قرارداد مشترک لاگ، شناسه پیگیری و حذف داده حساس",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [],
+      "spec": "tasks/logging-contract-correlation-redaction.md"
+    },
+    {
+      "code": "CV-LOG-02",
+      "spec_id": "FEAT-LOG-LOCAL-SINK-001",
+      "issue": 156,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/156",
+      "title": "CV-LOG-02 — ذخیره محلی لاگ، چرخش فایل و امکان تغییر مقصد",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        155
+      ],
+      "spec": "tasks/local-log-storage-and-sink-boundary.md"
+    },
+    {
+      "code": "CV-LOG-03",
+      "spec_id": "FEAT-LOG-OPERATIONS-001",
+      "issue": 157,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/157",
+      "title": "CV-LOG-03 — پوشش مسیر خرید، عملیات حساس و تماس سرویس‌های بیرونی",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "dependencies": [
+        155,
+        156
+      ],
+      "spec": "tasks/instrument-critical-actions-and-external-services.md"
+    },
+    {
+      "code": "CV-PAY-GW-04",
+      "spec_id": "FEAT-PAY-GATEWAY-CALLBACK-001",
+      "issue": 158,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/158",
+      "title": "CV-PAY-GW-04 — ساخت callback هنگام پرداخت با دامنه اصلی سایت",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        157
+      ],
+      "spec": "tasks/storefront-domain-callback-at-payment-time.md"
+    },
+    {
+      "code": "CV-PAY-GW-05",
+      "spec_id": "FEAT-PAY-GATEWAY-AUTH-001",
+      "issue": 159,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/159",
+      "title": "CV-PAY-GW-05 — احراز حساب پذیرنده و چرخه فعال‌سازی زرین‌پال",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        157
+      ],
+      "spec": "tasks/merchant-authentication-and-activation.md"
+    },
+    {
+      "code": "CV-PAY-GW-06",
+      "spec_id": "FEAT-PAY-GATEWAY-ADAPTER-001",
+      "issue": 160,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/160",
+      "title": "CV-PAY-GW-06 — اتصال request و verify زرین‌پال با تلاش نسخه‌دار",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        157,
+        158
+      ],
+      "spec": "tasks/zarinpal-request-verify-adapter.md"
+    },
+    {
+      "code": "CV-PAY-GW-07",
+      "spec_id": "FEAT-PAY-GATEWAY-CHECKOUT-001",
+      "issue": 161,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/161",
+      "title": "CV-PAY-GW-07 — هماهنگ‌سازی پرداخت درگاه با کیف پول و سفارش مشتری",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        160
+      ],
+      "spec": "tasks/verified-funding-and-order-payment.md"
+    },
+    {
+      "code": "CV-PAY-GW-08",
+      "spec_id": "FEAT-PAY-GATEWAY-RECOVERY-001",
+      "issue": 162,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/162",
+      "title": "CV-PAY-GW-08 — بازیابی نتیجه نامشخص و retry امن پرداخت",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        160,
+        161
+      ],
+      "spec": "tasks/gateway-recovery-inquiry-and-safe-retries.md"
+    },
+    {
+      "code": "CV-PAY-GW-09",
+      "spec_id": "FEAT-PAY-GATEWAY-ACCEPTANCE-001",
+      "issue": 163,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/163",
+      "title": "CV-PAY-GW-09 — پذیرش یکپارچه زرین‌پال و راهنمای فعال‌سازی",
+      "state": "open",
+      "owner": "eliassarband",
+      "implementation_status": "deferred",
+      "execution_authorized": false,
+      "dependencies": [
+        159,
+        161,
+        162
+      ],
+      "spec": "tasks/gateway-end-to-end-and-activation-review.md"
+    }
+  ]
+}

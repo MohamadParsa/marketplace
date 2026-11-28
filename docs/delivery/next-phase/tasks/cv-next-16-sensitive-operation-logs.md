@@ -3,7 +3,7 @@ id: FEAT-NEXT-016
 title: لاگ فنی عملیات حساس، خطا و شکست با correlation
 status: in-review
 owner: eliassarband
-updated: 2026-11-23
+updated: 2026-11-28
 related: [DEL-NEXT-001]
 approved_by: []
 implementation_status: todo
@@ -58,3 +58,7 @@ NEXT-Q09: نگهداری، مقصد و مسئول مشاهده؛ سرویس خا
 ## شواهد پایان در مرحله اجرا
 
 ACهای همین قابلیت به تست مناسب API/دامنه/مرورگر وصل شوند؛ fixture، اتصال محلی و provider واقعی جدا گزارش شوند. تکمیل سند، build یا اسکرین‌شات به‌تنهایی اثبات عملیات مالی/مجوز نیست. پس از اجرای انتخاب‌شده: سورس و گزارش/تصاویر کامیت و پوش، بررسی‌های لازم، کامنت شواهد و سپس بستن Issue. انتشار لیارا همچنان با پارساست؛ در این مرحله هیچ Issue پیاده‌سازی بسته نمی‌شود.
+
+## تفکیک اجرای لاگ محلی پیش از درگاه — ۲۰۲۶-۱۱-۲۸
+
+#77 مالک فنی/ردیابی و پذیرش یکپارچه باقی می‌ماند. اجرای مشترک به [#155 قرارداد/correlation/پالایش](../../logging-gateway-plan-2026-11-28/tasks/logging-contract-correlation-redaction.md)، [#156 مقصد محلی و rotation](../../logging-gateway-plan-2026-11-28/tasks/local-log-storage-and-sink-boundary.md) و [#157 نقاط حساس و تماس‌های بیرونی](../../logging-gateway-plan-2026-11-28/tasks/instrument-critical-actions-and-external-services.md) شکسته شد؛ در این والد همان کد دوباره ساخته نشود. همه اکشن‌های درگاه آینده پیش از پذیرش نیازمند پوشش لاگ‌اند. logger JSON/stdout فعلی ممیزی و تکمیل شود؛ لاگ فنی، audit #75 و رفتار #76 با مالکیت جدا از [قرارداد مشترک](../../../architecture/contracts/operation-logging.md) استفاده کنند. مقصد فعلاً محلی و تغییر به ابزار دیگر آینده است. NEXT-Q09 برای نگهداری/مجوز/شکست باز می‌ماند. [برنامه](../../logging-gateway-plan-2026-11-28/README.md) فقط تسک‌بندی است؛ شروع اجرا انتخاب نشده است.

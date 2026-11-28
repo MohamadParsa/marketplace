@@ -1,5 +1,7 @@
 # مستندات BDD بازارگاه
 
+[۹سناریوی طراحی لاگ و درگاه](features/experiences/logging-gateway-plan.feature) به [۳۶معیار پذیرش تسک‌های آینده](../delivery/logging-gateway-plan-2026-11-28/README.md) وصل‌اند؛ تست اجرایی نیستند.
+
 [۴سناریوی سوییچ و ضریب تبدیل #154](features/experiences/gateway-currency-and-switches.feature) به [معیارهای پذیرش](../delivery/gateway-currency-and-switches-2026-11-28.md) متصل‌اند؛ اجرای بانکی ندارند.
 
 [۴سناریوی بازبینی تنظیمات #153](features/experiences/payment-settings-revision.feature) به [پذیرش و شواهد](../delivery/payment-settings-revision-2026-11-28.md) وصل‌اند؛ آزمون بانکی واقعی از آن نتیجه نمی‌شود.

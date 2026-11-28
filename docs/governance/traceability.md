@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+[API-OPERATION-LOGGING-001](../architecture/contracts/operation-logging.md) → [#75/#76/#77 و زیرتسک‌های لاگ #155..157، درگاه معوق #158..163](../delivery/logging-gateway-plan-2026-11-28/README.md) → [BDD طراحی](../bdd/features/experiences/logging-gateway-plan.feature). فقط برنامه‌ریزی؛ execution_authorized=false.
+
 DOM-PAYMENTS-001-R28..29 → [اصلاح سوییچ/ضریب #154 و FEAT-BO-GATEWAY-CURRENCY-001-AC01..04](../delivery/gateway-currency-and-switches-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/gateway-currency-and-switches.feature). اتصال بانکی خارج این تحویل است.
 
 DOM-PAYMENTS-001-R22..27 → [اصلاح تنظیمات #153 و پذیرش FEAT-BO-GATEWAY-SETTINGS-REVISION-001-AC01..04](../delivery/payment-settings-revision-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-settings-revision.feature). فقط تنظیمات اجرا شده‌اند.

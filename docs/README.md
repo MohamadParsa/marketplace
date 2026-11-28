@@ -1,5 +1,7 @@
 # نقشه مستندات
 
+[برنامه لاگ محلی و تسک‌های معوق درگاه؛ فقط تسک‌بندی](delivery/logging-gateway-plan-2026-11-28/README.md)
+
 [اصلاح سوییچ‌های درگاه و ضریب تبدیل تومان/ریال — #154](delivery/gateway-currency-and-switches-2026-11-28.md)
 
 [تنظیمات ثابت و کشویی پرداخت، OAuth زرین‌پال و شرح عملیاتی — #153](delivery/payment-settings-revision-2026-11-28.md)
