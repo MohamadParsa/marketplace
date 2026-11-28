@@ -15,6 +15,7 @@ import { PurchaseRequests, PurchaseHistory } from "./order-requests-panel";
 import { PurchaseReview } from "../commerce/commerce-page";
 import { OperationsPage } from "./operations-page";
 import { SupplyOverduePanel } from "./supply-overdue-panel";
+import { OrderSummary } from "./order-summary";
 
 interface Row {id:string;number:string;customer:string;stores:string[];total_toman:string;order_status:string;payment_status:string;fulfillment_status:string;groups:number;legacy:boolean}
 interface Page {items:Row[];stores:{id:string;name:string}[];total:number;page:number;size:number}
@@ -65,10 +66,10 @@ export function OrderWorkspaceDetail(){
  if(!p)return <Alert severity="warning">سفارش پیدا نشد.</Alert>;
  const chosen=params.get("tab")??(id!==p.id&&id!==p.number?"operations":"summary");
  const tab=["summary","payment","operations","requests","history"].includes(chosen)?chosen:"summary";
- return <><PageHeader title={`سفارش ${fa(p.number)}`} description={`${p.customer_name??"مشتری"} · ${dateTime(p.created_at)}`}/><Stack direction="row" spacing={1} mb={2}><Button component={Link} to="/orders">بازگشت به سفارش‌ها</Button><Button onClick={()=>void refresh()}>به‌روزرسانی وضعیت</Button></Stack>{error&&<Alert severity="error">{error}</Alert>}
+ return <><PageHeader title={`سفارش ${fa(p.number)}`} description={`${p.customer_name??"مشتری"} · ${p.created_at && Number.isFinite(Date.parse(p.created_at)) ? dateTime(p.created_at) : "تاریخ ثبت نشده"}`}/><Stack direction="row" spacing={1} mb={2}><Button component={Link} to="/orders">بازگشت به سفارش‌ها</Button><Button onClick={()=>void refresh()}>به‌روزرسانی وضعیت</Button></Stack>{error&&<Alert severity="error">{error}</Alert>}
  <div className="order-stage-summary"><span>سفارش: <b>{label(p.order_status)}</b></span><span>پرداخت: <b>{label(p.payment_status)}</b></span><span>عملیات: <b>{label(p.fulfillment_status??"")}</b></span></div>
  <EditorTabs label="جزئیات سفارش" value={tab} onChange={value=>{const next=new URLSearchParams(params);next.set("tab",value);setParams(next);}} panels={[
-  {id:"summary",label:"خلاصه و اقلام",content:<section className="panel"><h2>اقلام سفارش</h2>{p.quote.lines.map(line=><article key={line.offer_id} className="commerce-order-item"><img src={(import.meta.env.VITE_API_BASE_URL??"")+line.image_url} alt={line.name}/><div><b>{line.name}</b><p>{line.quantity.toLocaleString("fa-IR")} عدد · هر عدد {money(line.unit_price_toman)}</p></div><strong>{money(line.total_toman)}</strong></article>)}<p>مبلغ خرید: {money(p.quote.total_toman)}</p><h3>گیرنده</h3><p>{p.quote.address.recipient} · {p.quote.address.phone}</p><p>{p.quote.address.full_address||p.quote.address.street}</p><h3>مرسوله‌های فروشگاه‌ها</h3>{p.quote.shipments.map(shipment=><p key={shipment.store_id}>{shipment.store_name} · {shipment.method_name}</p>)}</section>},
+  {id:"summary",label:"خلاصه و اقلام",content:<OrderSummary purchase={p}/>},
   {id:"payment",label:"پرداخت‌ها",content:<PurchaseReview mode="payment" purchase={p} token={authToken} canReadDeposits={!!query.data?.permissions["commerce.deposits.read"]} allowed={!!query.data?.permissions["commerce.orders.confirm"]} busy={busy} submit={(cancel,reason)=>void submit(cancel,reason)}/>},
   {id:"operations",label:"عملیات و مرسوله‌ها",content:<Stack spacing={2}>{p.order_ids.map(order=><OrderOperationsPanel key={order} id={order} onChanged={refresh}/>)}</Stack>},
   {id:"requests",label:"درخواست‌ها و استرداد",content:<><PurchaseRequests id={p.id} onChanged={refresh}/>{query.data?.permissions["commerce.refunds.resolve"]&&<Button component={Link} to="/wallet-operations">رسیدگی انتقال‌های بانکی در صف مالی</Button>}</>},

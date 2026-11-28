@@ -6,15 +6,15 @@ owner: eliassarband
 updated: 2026-11-28
 related: [DOM-ORDER-FOLLOW-001, FEAT-BO-ORDER-REV-010, FEAT-ORDER-FOLLOW-003]
 approved_by: []
-implementation_status: todo
-execution_authorized: false
+implementation_status: done
+execution_authorized: true
 ---
 
 # CV-ORD-UI-04 — بازطراحی خلاصه و اقلام سفارش بک‌آفیس
 
-Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئول: @eliassarband · وضعیت: open/todo.
+Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئول: @eliassarband · وضعیت اجرا: تکمیل و تست محلی؛ CI و بستن در انتظار.
 
-والد: [#95](https://github.com/MohamadParsa/marketplace/issues/95). درخواست فعلی فقط ثبت تسک است؛ پیاده‌سازی هنوز انتخاب نشده است.
+والد: [#95](https://github.com/MohamadParsa/marketplace/issues/95). درخواست اولیه ثبت تسک بود؛ مالک سپس اجرای مستقل #165 را انتخاب کرد.
 
 ## مسئله و نتیجه
 
@@ -58,3 +58,8 @@ Issue: [#165](https://github.com/MohamadParsa/marketplace/issues/165) · مسئ�
 این تسک مستقل از استرداد قابل اجراست؛ در زمان شروع، فیلدهای موجود و مجوز API دوباره بررسی شوند. پس از انتخاب اجرا: build و کنترل مناسب داده/مجوز، آزمون مرورگر و تصاویر قبل/بعد، تکمیل مدارک و commit/push؛ سپس کامنت شواهد و بستن Issue.
 
 [فهرست برنامه](../README.md) · [سناریوهای طراحی](../../../bdd/features/experiences/order-refund-summary-planning.feature).
+
+
+## شاهد اجرا
+
+[گزارش پذیرش، تست‌ها و تصاویر قبل/بعد](../issue-165-verification.md). اطلاعات سفارش/گیرنده پیش از اقلام، خوانایی چهار عرض و حالت‌های خالی/خطا/مجوز بررسی شده‌اند؛ وضعیت in-review سند از done اجرا جداست.

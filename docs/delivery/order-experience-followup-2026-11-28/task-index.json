@@ -243,14 +243,15 @@
       "file": "tasks/backoffice-order-summary-layout.md",
       "owner": "eliassarband",
       "state": "open",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "related_closed_issues": [
         140,
         144
       ],
       "dependencies": [],
-      "blocking_questions": []
+      "blocking_questions": [],
+      "evidence": "issue-165-verification.md"
     }
   ]
 }
