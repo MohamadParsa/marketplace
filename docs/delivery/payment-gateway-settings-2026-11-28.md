@@ -90,4 +90,6 @@ HTTP فقط برای loopback در local/test پذیرفته می‌شود؛ ori
 
 API و build محلی به‌روزند. health/ready و HTML هر دو پورت۸۰۹۸/۵۱۹۷ پاسخ200 داشتند. پیش/پس از جایگزینی API،۱۵خرید،۲۲سفارش،۳۵۳۴محصول،۴۸فروشگاه و۱۴ورودی دفتر مالی حفظ شدند؛ fingerprint دفتر مالی `4eef5db469592d7c060f730f49e8ce7e5fdf417c01667707ac12f6dd9768862b` یکسان بود. هیچ رکورد درگاه ساختگی به دیتابیس اصلی اضافه نشد.
 
-پس از بررسی فرم توسط مالک، اتصال واقعی، پیگیری امن retry و اعمال سیاست شارژ مستقل در مرحله بعد ساخته می‌شوند؛ [GATEWAY-Q01 تا03](../product/open-questions.md#zarinpal-gateway-review-20261128) برای همان مرحله باقی‌اند. لینک کامیت و CI/کامنت بستن #152 پس از push در شواهد GitHub ثبت می‌شود.
+پس از بررسی فرم توسط مالک، اتصال واقعی، پیگیری امن retry و اعمال سیاست شارژ مستقل در مرحله بعد ساخته می‌شوند؛ [GATEWAY-Q01 تا03](../product/open-questions.md#zarinpal-gateway-review-20261128) برای همان مرحله باقی‌اند.
+
+سورس و شواهد با کامیت [c21c76d](https://github.com/MohamadParsa/marketplace/commit/c21c76d0c8121f7c47602f0dd18f0a8a94c327b5) پوش شدند؛ هر۵بررسی [CI](https://github.com/MohamadParsa/marketplace/actions/runs/46137004269)، شامل تست race و vet سرور، موفق‌اند و #152 با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/152#issuecomment-7238178495) بسته شد. fixture پس از تست بسته و سرویس اصلی روشن است؛ PR #106 باز و merge/deploy انجام نشده است.
