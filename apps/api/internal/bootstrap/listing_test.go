@@ -68,7 +68,7 @@ func TestListingHierarchyVisibilityAndNoInheritance(t *testing.T) {
 		t.Fatal("leaf inherited mobile attribute", leaf)
 	}
 	mobile, _ := listingRequest(t, h, "?category=mobile", 200)
-	if len(mobile.Breadcrumbs) != 2 || mobile.Breadcrumbs[0].ID != "digital" || mobile.Breadcrumbs[1].ID != "mobile" {
+	if len(mobile.Breadcrumbs) != 2 || mobile.Breadcrumbs[0].ID != backoffice.PublicReference("c", "digital") || mobile.Breadcrumbs[1].ID != backoffice.PublicReference("c", "mobile") {
 		t.Fatal("breadcrumb", mobile.Breadcrumbs)
 	}
 	admin := login(t, h, "09000000001")
@@ -117,7 +117,7 @@ func TestListingFiltersVariantsCashSortAndUnavailable(t *testing.T) {
 	}
 	desc, _ := listingRequest(t, h, "?sort=price-desc&page_size=2", 200)
 	asc, _ := listingRequest(t, h, "?sort=price-asc&page_size=2", 200)
-	if *desc.Products[0].Price < *desc.Products[1].Price || asc.Products[0].ID != "charger" {
+	if *desc.Products[0].Price < *desc.Products[1].Price || asc.Products[0].ID != backoffice.PublicReference("p", "charger") {
 		t.Fatal("sort")
 	}
 	second, _ := listingRequest(t, h, "?sort=price-asc&page_size=2&page=2", 200)
@@ -132,7 +132,7 @@ func TestListingQueryValidationSearchAndSuggestions(t *testing.T) {
 	}
 	for _, q := range []string{"گوشي یک", "PHONE one"} {
 		d, _ := listingRequest(t, h, "?q="+url.QueryEscape(q), 200)
-		if d.Total != 1 || d.Products[0].ID != "mobile" {
+		if d.Total != 1 || d.Products[0].ID != backoffice.PublicReference("p", "mobile") {
 			t.Fatal("normalization", q, d.Products)
 		}
 	}
@@ -262,7 +262,7 @@ func TestListingPublishedUnavailableContentCanBeEditedWithoutRepublishing(t *tes
 	d, _ := listingRequest(t, h, "?category=mobile", 200)
 	found := false
 	for _, p := range d.Products {
-		if p.ID == "unavailable" {
+		if p.ID == backoffice.PublicReference("p", "unavailable") {
 			found = true
 			if p.Available || p.Price != nil || len(p.Features) != 1 {
 				t.Fatal("content edit changed purchasability", p)

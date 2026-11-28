@@ -57,6 +57,7 @@ func (h *ProductWorkspaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 			iconError(w, err)
 			return
 		}
+		result.Variant.Values = panelValues(result.Variant.Values)
 		writeJSON(w, 200, result)
 		return
 	}
@@ -65,5 +66,5 @@ func (h *ProductWorkspaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 		iconError(w, err)
 		return
 	}
-	writeJSON(w, 200, result)
+	writeJSON(w, 200, panelProductWorkspace(result))
 }

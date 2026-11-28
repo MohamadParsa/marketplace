@@ -1,116 +1,321 @@
-import { useState } from "react";
-import { Alert, Button, Checkbox, FormControlLabel, MenuItem, Stack, TextField } from "@mui/material";
-import type { Command, CustomRole, RoleScope } from "../../shared/types";
+import { CreateButton } from "../../shared/create-button";
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
+import { useRef, useState } from "react";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
+import type { CustomRole, RoleScope } from "../../shared/types";
 import { useWorkspace } from "../../shared/workspace";
-
-const permissionNames: Record<string, string> = {
-  "workspace.read": "مشاهده بک‌آفیس", "finance.read": "مشاهده داده مالی",
-  "store.create": "ایجاد فروشگاه", "store.toggle": "تغییر وضعیت فروشگاه",
-  "category.create": "ایجاد دسته", "category.archive": "بایگانی دسته",
-  "product.publish": "انتشار محصول", "product.reject": "رد محصول", "shipping.update": "ویرایش تعرفه ارسال",
-  "case.start": "آغاز رسیدگی", "case.close": "بستن پرونده", "case.refund": "درخواست بازپرداخت",
-  "case.assign": "ارجاع تأمین جایگزین", "order.deliver": "ثبت تحویل", "transfer.resolve": "تعیین نتیجه انتقال",
-  "rule.toggle": "تغییر وضعیت قانون کمیسیون", "notification.retry": "ارسال دوباره اعلان",
-  "offers.read": "مشاهده عرضه‌ها", "stock.write": "ویرایش موجودی",
+import { DataTable, PageHeader } from "../../shared/components";
+const names: Record<string, string> = {
+  "stores.shipping.read": "مشاهدهٔ روش‌ها و نسخه‌های حمل فروشگاه",
+  "stores.shipping.write": "انتساب و درخواست نسخهٔ اختصاصی حمل فروشگاه",
+  "stores.shipping.review": "بررسی و انتشار نسخهٔ اختصاصی حمل فروشگاه",
+  "category.axes.convert": "تبدیل کنترل‌شده محورهای تنوع",
+  "stores.eligibility.write": "مدیریت مجوز دسته و روش فروش فروشگاه",
+  "stores.preparation.read": "مشاهدهٔ وقفه و تقویم همین فروشگاه",
+  "stores.preparation.write": "ویرایش وقفه و تقویم فروشگاه",
+  "stores.read": "مشاهده پروفایل خصوصی فروشگاه‌ها",
+  "stores.write": "ایجاد و ویرایش پروفایل فروشگاه",
+  "stores.members.read": "مشاهده اعضای متصل به فروشگاه",
+  "stores.media.write": "بارگذاری و حذف تصویر فروشگاه",
+  "users.read": "مشاهده فهرست کاربران",
+  "users.write": "ایجاد و ویرایش کاربران",
+  "users.password.reset": "تعیین و بازنشانی رمز موقت",
+  "grid.export": "خروجی Excel گرید",
+  "workspace.read": "مشاهده بک‌آفیس",
+  "finance.read": "مشاهده مالی",
+  "commerce.sales.read": "مشاهده روش فروش",
+  "commerce.sales.write": "تنظیم روش فروش",
+  "offers.read": "مشاهده عرضه‌ها",
+  "stock.write": "ویرایش موجودی",
+  "offers.create": "ایجاد عرضه",
+  "offers.price.write": "ویرایش قیمت عرضه",
+  "orders.read": "مشاهده سفارش فروشگاه",
+  "orders.operate": "پردازش، تأمین و ارسال سفارش",
+  "orders.requests.write": "ثبت درخواست کنسلی یا مرجوعی از طرف مشتری",
+  "orders.requests.review": "رسیدگی کنسلی، دریافت و بازرسی مرجوعی",
+  "orders.receive": "ثبت دریافت توسط پشتیبانی",
+  "orders.correct": "اصلاح مشخصات ارسال با دلیل مدیریتی",
+  "products.content.write": "ویرایش محتوای فروشگاه",
 };
-const scopeName = (scope: RoleScope) => scope === "global" ? "بک‌آفیس" : "فروشگاه";
-
-export function AccessPanel() {
-  const { state, execute, busy } = useWorkspace();
+const words: Record<string, string> = {
+  commerce: "خرید و مالی",
+  wallet: "کیف پول",
+  credit: "شارژ اعتبار",
+  coupons: "کد تخفیف",
+  activate: "فعال‌سازی",
+  create: "ایجاد",
+  edit: "ویرایش",
+  settings: "تنظیمات",
+  payment: "پرداخت",
+  shipping: "ارسال",
+  geography: "استان و شهر",
+  business: "تقویم کسب‌وکار",
+  orders: "سفارش‌ها",
+  confirm: "تأیید",
+  deposits: "واریزها",
+  review: "بررسی و تأیید",
+  refunds: "بازپرداخت‌ها",
+  resolve: "رسیدگی",
+  store: "فروشگاه",
+  content: "محتوا",
+  policy: "سیاست",
+  set: "تنظیم",
+  product: "محصول",
+  category: "دسته‌بندی",
+  publish: "انتشار",
+  banner: "بنر",
+  save: "ذخیره",
+  media: "رسانه",
+  remove: "حذف",
+  icon: "تصویر آیکن",
+  brand: "برند",
+  attribute: "خصوصیت",
+  groups: "گروه‌ها",
+  update: "ویرایش",
+  delete: "حذف",
+  bindings: "انتساب خصوصیات",
+  card: "کارت",
+  limit: "حداکثر",
+  sales: "فروش",
+  window: "بازه آمار",
+  variant: "تنوع",
+  offer: "عرضه",
+  price: "قیمت",
+  stock: "موجودی",
+  homepage: "صفحه اصلی",
+  catalog: "کاتالوگ",
+  toggle: "تغییر وضعیت",
+  archive: "بایگانی",
+  reject: "رد",
+  case: "پرونده پشتیبانی",
+  start: "شروع رسیدگی",
+  close: "بستن",
+  refund: "بازپرداخت",
+  assign: "ارجاع",
+  order: "سفارش",
+  deliver: "ثبت تحویل",
+  transfer: "انتقال مالی",
+  rule: "قانون قیمت",
+  notification: "اعلان",
+  retry: "تلاش مجدد",
+  read: "مشاهده",
+  write: "ویرایش",
+};
+export const permissionName = (key: string) =>
+  names[key] ??
+  key
+    .split(/[.-]/)
+    .map((part) => words[part] ?? part)
+    .join(" / ");
+export function RolesPage() {
+  const { state, role, execute } = useWorkspace();
   const access = state.access;
-  const [error, setError] = useState("");
-  const [draft, setDraft] = useState<CustomRole | null>(null);
-  const [userID, setUserID] = useState("");
-  const [roleID, setRoleID] = useState("");
-  const [storeID, setStoreID] = useState("");
-  if (!access) return null;
-  const roles = access.roles ?? [];
-  const stores = state.stores ?? [];
-  const memberships = (access.memberships ?? []).filter((member) => member.user_id === userID);
-  const grants = (access.grants ?? []).filter((grant) => grant.user_id === userID);
-  const selectedRole = roles.find((role) => role.id === roleID);
-  const isMember = memberships.some((member) => member.store_id === storeID);
-  const storeName = (id: string) => stores.find((store) => store.id === id)?.name ?? id;
-
-  async function run(command: Command, onSuccess?: () => void) {
+  const [draft, setDraft] = useState<CustomRole>(),
+    [search, setSearch] = useState(""),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false);
+  const keys = useRef(new Map<string, string>());
+  if (role !== "super-admin" || !access)
+    return (
+      <Alert severity="warning">مدیریت نقش‌ها فقط برای ادمین مجاز است.</Alert>
+    );
+  async function run(action: string, value: CustomRole) {
+    if (busy) return;
     setError("");
+    setBusy(true);
+    const body = {
+      action,
+      target: value.id,
+      version: value.version,
+      name: value.name,
+      scope: value.scope,
+      permissions: value.permissions,
+    };
+    const signature = JSON.stringify(body);
+    let key = keys.current.get(signature);
+    if (!key) {
+      key = crypto.randomUUID();
+      keys.current.set(signature, key);
+    }
     try {
-      await execute(command);
-      onSuccess?.();
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "ثبت تغییر ناموفق بود.");
+      await execute({ ...body, idempotency_key: key });
+      keys.current.delete(signature);
+      setDraft(undefined);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
     }
   }
-
-  return <section className="panel detail">
-    {error && <Alert severity="error">{error}</Alert>}
-    <Stack spacing={2} component="section" aria-label="نقش‌های سفارشی">
-      <h2>نقش‌های سفارشی</h2>
-      <ul>{roles.map((role) => <li key={role.id}>
-        <b>{role.name}</b> · {scopeName(role.scope)} · {role.permissions.map((key) => permissionNames[key] ?? key).join("، ")}
-        <Button disabled={busy} onClick={() => setDraft(role)}>ویرایش نقش</Button>
-      </li>)}</ul>
-      {draft ? <Stack component="form" spacing={1} onSubmit={(event) => {
-        event.preventDefault();
-        void run({
-          action: draft.id ? "role.update" : "role.create",
-          target: draft.id, version: draft.version, name: draft.name,
-          scope: draft.scope, permissions: draft.permissions,
-        }, () => setDraft(null));
-      }}>
-        <TextField label="نام نقش سفارشی" required value={draft.name}
-          onChange={(event) => setDraft({ ...draft, name: event.target.value })} />
-        <TextField select label="محدوده نقش" value={draft.scope} disabled={!!draft.id}
-          onChange={(event) => setDraft({ ...draft, scope: event.target.value as RoleScope, permissions: [] })}>
-          <MenuItem value="global">بک‌آفیس</MenuItem><MenuItem value="store">فروشگاه</MenuItem>
-        </TextField>
-        <div>{access.registry[draft.scope].map((key) => <FormControlLabel key={key}
-          label={permissionNames[key] ?? key}
-          control={<Checkbox checked={draft.permissions.includes(key)} onChange={(_, checked) => {
-            setDraft({ ...draft, permissions: checked ? [...draft.permissions, key] : draft.permissions.filter((value) => value !== key) });
-          }} />} />)}</div>
-        <Stack direction="row" spacing={1}>
-          <Button type="submit" variant="contained" disabled={busy || draft.permissions.length === 0}>ذخیره نقش</Button>
-          <Button type="button" disabled={busy} onClick={() => setDraft(null)}>انصراف</Button>
-          {draft.id && <Button type="button" color="error" disabled={busy} onClick={() => void run({
-            action: "role.delete", target: draft.id, version: draft.version,
-          }, () => setDraft(null))}>حذف نقش</Button>}
-        </Stack>
-      </Stack> : <Button onClick={() => setDraft({ id: "", name: "", scope: "global", permissions: [], version: 0 })}>تعریف نقش</Button>}
-    </Stack>
-    <Stack spacing={2} component="section" aria-label="عضویت و انتساب">
-      <h2>عضویت و انتساب</h2>
-      <TextField select label="حساب کاربر" value={userID} onChange={(event) => { setUserID(event.target.value); setRoleID(""); setStoreID(""); }}>
-        {(state.users ?? []).map((user) => <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>)}
-      </TextField>
-      {userID && <>
-        <ul>{memberships.map((member) => <li key={member.store_id}>
-          {storeName(member.store_id)}
-          <Button disabled={busy} onClick={() => void run({ action: "membership.remove", target: userID, store_id: member.store_id }, () => setStoreID(""))}>
-            لغو عضویت و نقش‌های فروشگاه
-          </Button>
-        </li>)}</ul>
-        <ul>{grants.map((grant) => <li key={grant.role_id + ":" + (grant.store_id ?? "")}>
-          {roles.find((role) => role.id === grant.role_id)?.name} · {grant.store_id ? storeName(grant.store_id) : "بک‌آفیس"}
-          <Button disabled={busy} onClick={() => void run({
-            action: "user.role-revoke", target: userID, value: grant.role_id, store_id: grant.store_id,
-          })}>لغو نقش</Button>
-        </li>)}</ul>
-        <TextField select label="نقش برای انتساب" value={roleID} onChange={(event) => setRoleID(event.target.value)}>
-          <MenuItem value="">انتخاب نشده</MenuItem>
-          {roles.map((role) => <MenuItem key={role.id} value={role.id}>{role.name} · {scopeName(role.scope)}</MenuItem>)}
-        </TextField>
-        <TextField select label="فروشگاه برای عضویت یا نقش" value={storeID} onChange={(event) => setStoreID(event.target.value)}>
-          <MenuItem value="">انتخاب نشده</MenuItem>
-          {stores.map((store) => <MenuItem key={store.id} value={store.id}>{store.name}</MenuItem>)}
-        </TextField>
-        <Stack direction="row" spacing={1}>
-          <Button disabled={busy || !storeID || isMember}
-            onClick={() => void run({ action: "membership.add", target: userID, store_id: storeID })}>افزودن عضویت</Button>
-          <Button variant="contained" disabled={busy || !selectedRole || (selectedRole.scope === "store" && !isMember)}
-            onClick={() => void run({ action: "user.role-grant", target: userID, value: roleID, store_id: selectedRole?.scope === "store" ? storeID : undefined })}>انتساب نقش</Button>
-        </Stack>
-      </>}
-    </Stack>
-  </section>;
+  const roles = access.roles ?? [];
+  const used = (id: string) =>
+    (access.grants ?? []).filter((g) => g.role_id === id).length;
+  const scopes: { id: RoleScope; name: string }[] = [
+    { id: "global", name: "بک‌آفیس" },
+    { id: "store", name: "فروشگاه" },
+  ];
+  const registry = draft ? (access.registry[draft.scope] ?? []) : [];
+  const visible = registry.filter((p) =>
+    (p + " " + permissionName(p))
+      .toLocaleLowerCase()
+      .includes(search.toLocaleLowerCase()),
+  );
+  return (
+    <>
+      <PageHeader
+        title="نقش‌ها و مجوزها"
+        description="تعریف نقش مستقل از انتساب است؛ برای اختصاص نقش به یک حساب، فرم کاربران را باز کنید."
+        action={
+          <CreateButton
+            variant="contained"
+            onClick={() => {
+              setDraft({
+                id: "",
+                name: "",
+                scope: "global",
+                permissions: [],
+                version: 0,
+              });
+              setError("");
+              setSearch("");
+            }}
+          >
+            نقش جدید
+          </CreateButton>
+        }
+      />
+      <Alert severity="info">
+        ادمین و نقش‌های پایه سیستم از فرم کاربر انتخاب می‌شوند. نقش‌های این
+        صفحه، مجموعه مجوزهای سفارشی در بک‌آفیس یا یک فروشگاه هستند.
+      </Alert>
+      <section className="panel">
+        <DataTable
+          rows={roles}
+          columns={[
+            { title: "نام نقش", render: (r) => <b>{r.name}</b> },
+            {
+              title: "محدوده",
+              render: (r) => (r.scope === "global" ? "بک‌آفیس" : "فروشگاه"),
+            },
+            { title: "تعداد مجوز", render: (r) => r.permissions.length },
+            { title: "انتساب فعال", render: (r) => used(r.id) },
+            {
+              title: "مجوزها",
+              render: (r) =>
+                r.permissions.map((p) => permissionName(p)).join("، "),
+            },
+            {
+              title: "عملیات",
+              render: (r) => (
+                <Button
+                  onClick={() => {
+                    setDraft({ ...r, permissions: [...r.permissions] });
+                    setError("");
+                    setSearch("");
+                  }}
+                >
+                  مشاهده و ویرایش نقش
+                </Button>
+              ),
+            },
+          ]}
+        />
+      </section>
+      {draft && (
+        <Dialog
+          open
+          fullWidth
+          maxWidth="md"
+          onClose={() => {
+            if (!busy) setDraft(undefined);
+          }}
+        >
+          <DialogTitle>{draft.id ? "ویرایش نقش" : "تعریف نقش"}</DialogTitle>
+          <DialogContent className="user-editor">
+            {error && <Alert severity="error">{error}</Alert>}
+            <TextField
+              fullWidth
+              label="نام نقش"
+              value={draft.name}
+              disabled={busy}
+              inputProps={{ maxLength: 160 }}
+              onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+            />
+            <ChoiceField
+              label="محدوده نقش"
+              value={draft.scope}
+              options={scopes}
+              disabled={busy || !!draft.id}
+              onChange={(scope) =>
+                setDraft({
+                  ...draft,
+                  scope: scope as RoleScope,
+                  permissions: [],
+                })
+              }
+            />
+            <p>
+              مجوز فروشگاه فقط هنگام انتساب به همان فروشگاه اثر دارد؛ به
+              فروشگاه‌های دیگر تعمیم داده نمی‌شود.
+            </p>
+            <></>
+            <p>
+              {draft.permissions.length.toLocaleString("fa-IR")} مجوز انتخاب‌شده
+            </p>
+            <MultiChoiceField
+              label="مجوزهای نقش"
+              value={draft.permissions}
+              options={registry.map((p) => ({
+                id: p,
+                name: permissionName(p),
+              }))}
+              disabled={busy}
+              onChange={(permissions) => setDraft({ ...draft, permissions })}
+            />
+            {!visible.length && <p>مجوزی مطابق جست‌وجو وجود ندارد.</p>}
+            {draft.id && (
+              <p>
+                این نقش {used(draft.id).toLocaleString("fa-IR")} انتساب دارد؛
+                نقش در حال استفاده حذف نمی‌شود.
+              </p>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button disabled={busy} onClick={() => setDraft(undefined)}>
+              انصراف
+            </Button>
+            {draft.id && (
+              <Button
+                color="error"
+                disabled={busy || used(draft.id) > 0}
+                onClick={() => void run("role.delete", draft)}
+              >
+                حذف نقش بدون انتساب
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              disabled={busy || !draft.name.trim() || !draft.permissions.length}
+              onClick={() =>
+                void run(draft.id ? "role.update" : "role.create", draft)
+              }
+            >
+              ذخیره نقش
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </>
+  );
 }

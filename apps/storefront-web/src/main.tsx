@@ -21,6 +21,7 @@ import { ListingPage } from "./listing-page";
 import { installNavigation } from "./navigation";
 import "./home.css";
 import "./listing.css";
+import "./catalog-density.css";
 function App() {
   const [url, setURL] = useState(location.pathname + location.search);
   useEffect(() => {

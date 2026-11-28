@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -86,6 +87,7 @@ func (h *AuthHandler) PasswordLogin(surface identity.Surface) http.HandlerFunc {
 }
 func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
 		session, err := h.service.Authenticate(r.Context(), bearer(r.Header.Get("Authorization")), surface)
 		if err != nil {
 			writeError(w, http.StatusUnauthorized, "unauthorized")
@@ -94,12 +96,25 @@ func (h *AuthHandler) Profile(surface identity.Surface) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, profileJSON(session.User))
 	}
 }
+func (h *AuthHandler) Session(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
+		session, err := h.service.ResumeSession(r.Context(), bearer(r.Header.Get("Authorization")), surface)
+		if err != nil {
+			writeError(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
+}
 func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "private, no-store")
 		var in struct {
-			Name     string `json:"name"`
-			Email    string `json:"email"`
-			Password string `json:"password"`
+			NationalID *string `json:"national_id"`
+			Name       string  `json:"name"`
+			Email      string  `json:"email"`
+			Password   string  `json:"password"`
 		}
 		if json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&in) != nil {
 			writeError(w, http.StatusBadRequest, "invalid_request")
@@ -117,7 +132,11 @@ func (h *AuthHandler) UpdateProfile(surface identity.Surface) http.HandlerFunc {
 		if in.Email == "" {
 			in.Email = current.User.Email
 		}
-		user, err := h.service.UpdateProfile(r.Context(), surface, token, in.Name, in.Email, in.Password)
+		var nationalID []string
+		if in.NationalID != nil {
+			nationalID = []string{*in.NationalID}
+		}
+		user, err := h.service.UpdateProfile(r.Context(), surface, token, in.Name, in.Email, in.Password, nationalID...)
 		if err != nil {
 			writeProfileError(w, err)
 			return
@@ -201,7 +220,7 @@ func (h *AuthHandler) RequestAdminOTP(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case errors.Is(err, identity.ErrNotAdmin):
 		writeError(w, http.StatusForbidden, "forbidden")
-	case errors.Is(err, identity.ErrInactive) || errors.Is(err, identity.ErrInvalidOTP):
+	case errors.Is(err, identity.ErrPasswordChangeRequired), errors.Is(err, identity.ErrInactive), errors.Is(err, identity.ErrInvalidOTP):
 		writeError(w, http.StatusUnauthorized, "unauthorized")
 	case errors.Is(err, identity.ErrResendSoon) || errors.Is(err, identity.ErrRateLimit):
 		writeError(w, http.StatusTooManyRequests, "otp_rate_limit")
@@ -250,7 +269,7 @@ func writeAuthError(w http.ResponseWriter, err error) {
 	writeError(w, status, code)
 }
 func profileJSON(user identity.User) map[string]any {
-	return map[string]any{"user_id": user.ID, "name": user.Name, "phone": user.Phone, "email": user.Email, "password_available": user.PasswordHash != ""}
+	return map[string]any{"user_id": user.ID, "name": user.Name, "phone": user.Phone, "email": user.Email, "national_id": user.NationalID, "password_available": user.PasswordHash != ""}
 }
 func writeProfileError(w http.ResponseWriter, err error) {
 	switch {
@@ -281,4 +300,29 @@ func writeJSON(w http.ResponseWriter, status int, body any) {
 }
 func writeError(w http.ResponseWriter, status int, code string) {
 	writeJSON(w, status, map[string]string{"code": code})
+}
+
+func (h *AuthHandler) CompleteTemporaryPassword(surface identity.Surface) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store")
+		var in struct {
+			Password string `json:"password"`
+		}
+		d := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096))
+		d.DisallowUnknownFields()
+		if d.Decode(&in) != nil || d.Decode(new(any)) != io.EOF {
+			writeError(w, 400, "invalid_request")
+			return
+		}
+		session, e := h.service.CompleteTemporaryPassword(r.Context(), bearer(r.Header.Get("Authorization")), surface, in.Password)
+		if e != nil {
+			if errors.Is(e, identity.ErrInvalidProfile) {
+				writeError(w, 400, "new_password_required")
+			} else {
+				writeError(w, 401, "unauthorized")
+			}
+			return
+		}
+		writeJSON(w, 200, map[string]any{"token": session.Token, "expires_at": session.Expires, "user": session.User})
+	}
 }

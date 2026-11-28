@@ -21,19 +21,24 @@ const (
 )
 
 type User struct {
-	ID               string
-	Name             string
-	Phone            string
-	Email            string
-	Surface          Surface
-	Role             Role
-	StoreID          string
-	StoreIDs         []string            `json:",omitempty"`
-	Permissions      []string            `json:",omitempty"`
-	StorePermissions map[string][]string `json:",omitempty"`
-	Active           bool
-	AccessVersion    int    `json:"-"`
-	PasswordHash     string `json:"-"`
+	FirstName              string
+	LastName               string
+	Gender                 string
+	PasswordChangeRequired bool
+	ID                     string
+	Name                   string
+	Phone                  string
+	Email                  string
+	Surface                Surface
+	Role                   Role
+	StoreID                string
+	StoreIDs               []string            `json:",omitempty"`
+	Permissions            []string            `json:",omitempty"`
+	StorePermissions       map[string][]string `json:",omitempty"`
+	Active                 bool
+	AccessVersion          int    `json:"-"`
+	PasswordHash           string `json:"-"`
+	NationalID             string `json:"-"`
 }
 
 type StoreMembership struct {

@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -34,7 +36,11 @@ type response struct {
 	} `json:"return"`
 }
 
-func (n *Notifier) Send(ctx context.Context, _ identity.Surface, phone, code string) error {
+func (n *Notifier) Send(ctx context.Context, _ identity.Surface, phone, code string) (err error) {
+	finish := operationlog.BeginExternal(ctx, "kavenegar", "otp.send", 1)
+	status := 0
+	providerCode := ""
+	defer func() { finish(status, providerCode, err) }()
 	if n.apiKey == "" || n.template == "" || n.baseURL == "" {
 		return ErrProvider
 	}
@@ -50,6 +56,7 @@ func (n *Notifier) Send(ctx context.Context, _ identity.Surface, phone, code str
 		return err
 	}
 	defer res.Body.Close()
+	status = res.StatusCode
 	body, err := io.ReadAll(io.LimitReader(res.Body, 1<<20))
 	if err != nil {
 		return err
@@ -62,6 +69,7 @@ func (n *Notifier) Send(ctx context.Context, _ identity.Surface, phone, code str
 		return fmt.Errorf("%w: invalid response", ErrProvider)
 	}
 	if out.Return.Status != 200 {
+		providerCode = "provider." + strconv.Itoa(out.Return.Status)
 		return fmt.Errorf("%w: provider status %d", ErrProvider, out.Return.Status)
 	}
 	return nil

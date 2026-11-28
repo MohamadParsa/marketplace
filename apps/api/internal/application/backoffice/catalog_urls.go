@@ -26,6 +26,9 @@ func ProductURL(p catalog.Product) string {
 	token := p.PublicCode
 	if token == "" {
 		token = p.ID
+		if strings.HasPrefix(token, "gsp-") {
+			token = PublicReference("p", token)
+		}
 	}
 	return "/product/" + url.PathEscape(token)
 }
@@ -33,6 +36,9 @@ func CategoryURL(c catalog.Category) string {
 	token := c.Slug
 	if token == "" {
 		token = c.ID
+		if strings.HasPrefix(token, "gsp-") {
+			token = PublicReference("c", token)
+		}
 	}
 	return "/category/" + url.PathEscape(token)
 }

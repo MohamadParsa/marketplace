@@ -105,7 +105,7 @@ func TestCatalogURLHTTPRedirectSEOAndHiddenAliases(t *testing.T) {
 	}
 	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test", WebRoot: root, WebSurface: "storefront"}, repo)
 	r := cacheRequest(h, "/product/mobile?variant=mobile&offer=mobile", "")
-	if r.Code != 301 || r.Header().Get("Location") != "/product/"+p.PublicCode+"?offer=mobile&variant=mobile" {
+	if r.Code != 301 || r.Header().Get("Location") != "/product/"+p.PublicCode+"?offer="+backoffice.PublicReference("o", "mobile")+"&variant="+backoffice.PublicReference("v", "mobile") {
 		t.Fatal(r.Code, r.Header())
 	}
 	r = cacheRequest(h, r.Header().Get("Location"), "")
@@ -118,8 +118,8 @@ func TestCatalogURLHTTPRedirectSEOAndHiddenAliases(t *testing.T) {
 	}
 	var d backoffice.ProductDetail
 	json.Unmarshal(r.Body.Bytes(), &d)
-	if d.ID != p.ID {
-		t.Fatal("internal id renamed")
+	if d.ID != backoffice.PublicReference("p", p.ID) {
+		t.Fatal("public product reference mismatch")
 	}
 	productCall(t, h, "POST", "/storefront/products/"+p.PublicCode+"/selection", "", backoffice.ProductSelectionInput{VariantID: "mobile", OfferID: "mobile", Quantity: 1}, 200)
 	if e := repo.Update(ctx, func(w *backoffice.Workspace) error { w.Categories[0].Slug = "phones"; return nil }); e != nil {

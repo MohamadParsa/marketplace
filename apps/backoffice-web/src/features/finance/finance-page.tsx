@@ -7,7 +7,7 @@ import {
   PageHeader,
   Status,
 } from "../../shared/components";
-import { labels, money, number } from "../../shared/format";
+import { labels, money, number, recordNumber } from "../../shared/format";
 import type { Transfer } from "../../shared/types";
 export function FinancePage() {
   const { state, can, execute } = useWorkspace();
@@ -72,7 +72,7 @@ export function FinancePage() {
               title: "مرجع",
               render: (t) => (
                 <>
-                  <b>{t.id.slice(0, 12)}</b>
+                  <b>{recordNumber(state, "transfer", t.id)}</b>
                   <small>{t.order_id || "کیف پول"}</small>
                 </>
               ),
@@ -124,7 +124,7 @@ export function FinancePage() {
         <DataTable
           rows={state.ledger ?? []}
           columns={[
-            { title: "شناسه انتقال", render: (e) => e.transfer_id },
+            { title: "شناسه انتقال", render: (e) => recordNumber(state, "transfer", e.transfer_id) },
             { title: "نوع", render: (e) => labels[e.kind] },
             { title: "مبلغ", render: (e) => money(e.amount) },
             { title: "منشأ", render: (e) => e.source },

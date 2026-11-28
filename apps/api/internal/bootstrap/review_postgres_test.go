@@ -131,7 +131,19 @@ func TestPostgresReviewIdentitySurvivesRestart(t *testing.T) {
 	if len(purchases) != 1 || purchases[0].ID != "BUY-501" || len(purchases[0].Orders) != 2 {
 		t.Fatalf("purchase ownership reset: %+v", purchases)
 	}
+	userManagementDown, err := os.ReadFile(filepath.Join(migrations, "000012-user-management.down.sql"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	addressDown, err := os.ReadFile(filepath.Join(migrations, "000011-address-recipient-profile.down.sql"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	commerceDown, err := os.ReadFile(filepath.Join(migrations, "000003-commerce-ledger.down.sql"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	creditPolicyDown, err := os.ReadFile(filepath.Join(migrations, "000010-wallet-credit-policy.down.sql"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -144,6 +156,15 @@ func TestPostgresReviewIdentitySurvivesRestart(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := pgx.BeginFunc(ctx, pool, func(tx pgx.Tx) error {
+		if _, err := tx.Exec(ctx, string(userManagementDown)); err != nil {
+			return err
+		}
+		if _, err := tx.Exec(ctx, string(addressDown)); err != nil {
+			return err
+		}
+		if _, err := tx.Exec(ctx, string(creditPolicyDown)); err != nil {
+			return err
+		}
 		if _, err := tx.Exec(ctx, string(commerceDown)); err != nil {
 			return err
 		}
@@ -153,7 +174,7 @@ func TestPostgresReviewIdentitySurvivesRestart(t *testing.T) {
 		if _, err := tx.Exec(ctx, string(down)); err != nil {
 			return err
 		}
-		_, err := tx.Exec(ctx, "DELETE FROM review_schema_migrations WHERE name IN ('000001-review-identity.up.sql','000002-review-credentials.up.sql','000003-commerce-ledger.up.sql')")
+		_, err := tx.Exec(ctx, "DELETE FROM review_schema_migrations WHERE name IN ('000001-review-identity.up.sql','000002-review-credentials.up.sql','000003-commerce-ledger.up.sql','000010-wallet-credit-policy.up.sql','000011-address-recipient-profile.up.sql','000012-user-management.up.sql')")
 		return err
 	}); err != nil {
 		t.Fatal(err)

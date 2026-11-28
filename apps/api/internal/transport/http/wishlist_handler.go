@@ -35,12 +35,12 @@ func (h *CommerceHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		result, e := h.service.ReadWishlist(r.Context(), actor, page, size)
-		commerceResult(w, result, e)
+		commerceResult(w, r, result, e)
 		return
 	}
 	if r.Method == "GET" {
 		result, e := h.service.ReadWishlistMembership(r.Context(), actor, id)
-		commerceResult(w, result, e)
+		commerceResult(w, r, result, e)
 		return
 	}
 	body, e := io.ReadAll(http.MaxBytesReader(w, r.Body, 1024))
@@ -49,5 +49,5 @@ func (h *CommerceHandler) Wishlist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result, e := h.service.SetWishlist(r.Context(), actor, id, r.Method == "PUT")
-	commerceResult(w, result, e)
+	commerceResult(w, r, result, e)
 }

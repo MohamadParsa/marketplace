@@ -6,6 +6,7 @@ import (
 	"html"
 	"net/url"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -22,10 +23,13 @@ type PublicProductVariant struct {
 	ImageURL  string                   `json:"image_url,omitempty"`
 }
 type PublicProductOffer struct {
+	Restricted   bool   `json:"restricted,omitempty"`
+	VariantLabel string `json:"variant_label"`
 	ID           string `json:"id"`
 	VariantID    string `json:"variant_id"`
 	StoreID      string `json:"store_id"`
 	StoreName    string `json:"store_name"`
+	LeadDayBasis string `json:"lead_day_basis"`
 	LeadDays     int    `json:"lead_days"`
 	Available    bool   `json:"available"`
 	Price        *int64 `json:"price"`
@@ -33,6 +37,7 @@ type PublicProductOffer struct {
 	Version      int    `json:"version"`
 }
 type ProductDetail struct {
+	Active            bool                          `json:"active"`
 	PublicCode        string                        `json:"public_code"`
 	ID                string                        `json:"id"`
 	Name              string                        `json:"name"`
@@ -107,18 +112,19 @@ func productPhotoURL(w Workspace, id string) string {
 	return ""
 }
 
-func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDetail, error) {
+func BuildProductDetail(w Workspace, id, variantID, offerID string, resolveGroup ...bool) (ProductDetail, error) {
 	w = indexedCatalog(w)
 	result := ProductDetail{CheckoutEnabled: true, Gallery: []string{}, Features: []catalog.CardFeature{}, Variants: []PublicProductVariant{}, Offers: []PublicProductOffer{}, Breadcrumbs: []CatalogNav{}, Specifications: []catalog.CardFeature{}, Navigation: publicNavigation(w)}
 	p, err := publicProduct(w, id)
 	if err != nil {
 		return result, err
 	}
+	result.Active = p.IsActive()
 	result.PublicCode = p.PublicCode
 	result.ID, result.Name, result.EnglishName, result.URL, result.Version = p.ID, p.Name, p.EnglishName, ProductURL(p), p.Version
 	result.Content = productContent(p)
-	// Full interaction services remain deferred (CV-WEB-15/16); toggles alone do not enable them.
-	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{})
+	// Review submission follows its flag; the Q&A repository capability is applied below.
+	policy := catalog.ProductInteractions(p.Content, true, catalog.InteractionCapabilities{Reviews: true})
 	result.Interactions.Reviews = policy.Reviews.NewSubmissions
 	result.Interactions.QA = policy.QA.NewSubmissions
 	category := publicCategory(w, p.CategoryID)
@@ -160,6 +166,23 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 			}
 		}
 		a.Options = options
+		groups := []catalog.AttributeValueGroup{}
+		for _, g := range a.Groups {
+			if !g.Active {
+				continue
+			}
+			members := []string{}
+			for _, v := range g.Values {
+				if used[v] {
+					members = append(members, v)
+				}
+			}
+			if len(members) > 0 {
+				g.Values = members
+				groups = append(groups, g)
+			}
+		}
+		a.Groups = groups
 	}
 	if variantID == "" {
 		offers := publicOffers(w, p)
@@ -186,7 +209,7 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	}
 	result.SelectedVariantID = variantID
 	for _, o := range w.Offers {
-		if o.ProductID != p.ID || o.VariantID != variantID || o.Price <= 0 {
+		if o.ProductID != p.ID || !equivalentVariant(result.Axes, vs, variantID, o.VariantID) || o.Price <= 0 {
 			continue
 		}
 		if p.Model == "independent" && p.OwnerStoreID != o.StoreID {
@@ -194,8 +217,9 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 		}
 		for _, st := range w.Stores {
 			if st.ID == o.StoreID && st.Active {
-				a := o.Stock-o.Reserved > 0
-				view := PublicProductOffer{ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDays: st.LeadDays, Available: a, Version: o.Version}
+				restricted := !StoreAllowsCategory(w, st, p.CategoryID) || !StoreAllowsMethod(st, "cash")
+				a := p.IsActive() && o.Stock-o.Reserved > 0 && !restricted
+				view := PublicProductOffer{Restricted: restricted, VariantLabel: realVariantLabel(w, vs, o.VariantID), ID: o.ID, VariantID: o.VariantID, StoreID: st.ID, StoreName: st.Name, LeadDayBasis: string(preparationPolicy(st).DayBasis), LeadDays: st.LeadDays, Available: a, Version: o.Version}
 				if a {
 					price := o.Price
 					view.Price = &price
@@ -233,7 +257,27 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 		}
 		result.SelectedOfferID = offerID
 	} else if len(result.Offers) > 0 {
-		result.SelectedOfferID = result.Offers[0].ID
+		for _, o := range result.Offers {
+			if o.VariantID == variantID {
+				result.SelectedOfferID = o.ID
+				break
+			}
+		}
+		if len(resolveGroup) > 0 && resolveGroup[0] {
+			result.SelectedOfferID = result.Offers[0].ID
+		}
+	}
+	for _, o := range result.Offers {
+		if o.ID == result.SelectedOfferID {
+			result.SelectedVariantID = o.VariantID
+			for i := range vs {
+				if vs[i].ID == o.VariantID {
+					selected = &vs[i]
+					break
+				}
+			}
+			break
+		}
 	}
 	images := []string{}
 	if selected != nil {
@@ -261,7 +305,7 @@ func BuildProductDetail(w Workspace, id, variantID, offerID string) (ProductDeta
 	}
 	return result, nil
 }
-func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) (ProductDetail, error) {
+func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string, resolveGroup ...bool) (ProductDetail, error) {
 	if id == "" || len(id) > 128 || len(variant) > 128 || len(offer) > 128 {
 		return ProductDetail{}, ErrInvalid
 	}
@@ -270,13 +314,17 @@ func (s *Service) PublicProduct(ctx context.Context, id, variant, offer string) 
 		return ProductDetail{}, e
 	}
 	id = resolved
-	return cachedPublic(ctx, s, "product", id, []string{variant, offer}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
+	result, err := cachedPublic(ctx, s, "product", id, []string{variant, offer, strconv.FormatBool(len(resolveGroup) > 0 && resolveGroup[0]), "reviews", "qa"}, 10*time.Minute, func(ctx context.Context) (ProductDetail, error) {
 		w, e := s.publicSnapshot(ctx, id)
 		if e != nil {
 			return ProductDetail{}, e
 		}
-		return BuildProductDetail(w, id, variant, offer)
+		return BuildProductDetail(w, id, variant, offer, resolveGroup...)
 	})
+	if err == nil {
+		result.Interactions.QA = catalog.ProductInteractions(&result.Content, true, catalog.InteractionCapabilities{QA: s.qaRepository() != nil}).QA.NewSubmissions
+	}
+	return result, err
 }
 
 type ProductSelectionInput struct {
@@ -319,11 +367,79 @@ func (s *Service) ValidateSelection(ctx context.Context, id string, in ProductSe
 	for _, v := range d.Offers {
 		if v.ID == in.OfferID && v.Available {
 			for _, o := range w.Offers {
-				if o.ID == v.ID && o.Stock-o.Reserved >= in.Quantity {
+				if o.ID == v.ID && o.VariantID == in.VariantID && o.Stock-o.Reserved >= in.Quantity {
 					return ProductSelection{p.ID, in.VariantID, o.ID, in.Quantity, o.Price, o.Version}, nil
 				}
 			}
 		}
 	}
 	return result, ErrConflict
+}
+
+func equivalentVariant(axes []catalog.AttributeDefinition, variants []catalog.Variant, left, right string) bool {
+	if left == right {
+		return true
+	}
+	var a, b *catalog.Variant
+	for i := range variants {
+		if variants[i].ID == left {
+			a = &variants[i]
+		}
+		if variants[i].ID == right {
+			b = &variants[i]
+		}
+	}
+	if a == nil || b == nil {
+		return false
+	}
+	value := func(v *catalog.Variant, id string) string {
+		for _, x := range v.Values {
+			if x.AttributeID == id {
+				return x.Value
+			}
+		}
+		return ""
+	}
+	aliased := false
+	for _, axis := range axes {
+		x, y := value(a, axis.ID), value(b, axis.ID)
+		if x == y {
+			continue
+		}
+		same := false
+		for _, g := range axis.Groups {
+			if !g.Active {
+				continue
+			}
+			hasX, hasY := false, false
+			for _, v := range g.Values {
+				hasX = hasX || v == x
+				hasY = hasY || v == y
+			}
+			same = same || (hasX && hasY)
+		}
+		if !same {
+			return false
+		}
+		aliased = true
+	}
+	return aliased
+}
+func realVariantLabel(w Workspace, variants []catalog.Variant, id string) string {
+	parts := []string{}
+	for _, v := range variants {
+		if v.ID != id {
+			continue
+		}
+		for _, x := range v.Values {
+			for _, a := range w.Attributes {
+				if a.ID == x.AttributeID {
+					parts = append(parts, a.Name+": "+x.Value)
+					break
+				}
+			}
+		}
+		break
+	}
+	return strings.Join(parts, " · ")
 }

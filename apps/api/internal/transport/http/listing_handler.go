@@ -3,7 +3,6 @@ package httptransport
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"html"
 	"net/http"
@@ -40,7 +39,31 @@ func listingQuery(r *http.Request) (backoffice.ListingQuery, error) {
 	if r.URL.Path == "/offers" {
 		v.Set("special", "1")
 	}
-	return backoffice.ParseListingQuery(v)
+	clean := url.Values{}
+	for key, values := range v {
+		k := key
+		if strings.HasPrefix(k, "attr.") {
+			id, err := backoffice.ResolvePublicReference("a", strings.TrimPrefix(k, "attr."))
+			if err != nil {
+				return backoffice.ListingQuery{}, backoffice.ErrListingQuery
+			}
+			k = "attr." + id
+		}
+		if _, exists := clean[k]; exists {
+			return backoffice.ListingQuery{}, backoffice.ErrListingQuery
+		}
+		if key == "category" {
+			for i, value := range values {
+				id, err := backoffice.ResolvePublicReference("c", value)
+				if err != nil {
+					return backoffice.ListingQuery{}, backoffice.ErrListingQuery
+				}
+				values[i] = id
+			}
+		}
+		clean[k] = values
+	}
+	return backoffice.ParseListingQuery(clean)
 }
 func listingError(w http.ResponseWriter, e error) {
 	switch {
@@ -53,7 +76,7 @@ func listingError(w http.ResponseWriter, e error) {
 	}
 }
 func writeCatalogJSON(w http.ResponseWriter, r *http.Request, data any) {
-	b, e := json.Marshal(data)
+	b, e := publicCatalogJSON(data)
 	if e != nil {
 		writeError(w, 500, "internal_error")
 		return
@@ -80,6 +103,9 @@ func (h *ListingHandler) Read(w http.ResponseWriter, r *http.Request) {
 	if e != nil {
 		listingError(w, e)
 		return
+	}
+	if q.Q != "" {
+		h.service.RecordCustomerActivity(r.Context(), "search.completed", "", map[string]any{"category_id": q.CategoryID, "result_count": data.Total})
 	}
 	writeCatalogJSON(w, r, data)
 }

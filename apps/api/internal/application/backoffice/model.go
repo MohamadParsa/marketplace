@@ -25,15 +25,21 @@ var (
 )
 
 type User struct {
-	ID            string        `json:"id"`
-	Name          string        `json:"name"`
-	Phone         string        `json:"phone"`
-	Role          identity.Role `json:"role"`
-	Active        bool          `json:"active"`
-	Email         string        `json:"email,omitempty"`
-	AccessVersion int           `json:"-"`
-	PasswordHash  string        `json:"-"`
-	SellerOnly    bool          `json:"seller_only,omitempty"`
+	FirstName              string        `json:"first_name"`
+	LastName               string        `json:"last_name"`
+	Gender                 string        `json:"gender"`
+	Version                int           `json:"version"`
+	PasswordChangeRequired bool          `json:"password_change_required"`
+	ID                     string        `json:"id"`
+	Name                   string        `json:"name"`
+	Phone                  string        `json:"phone"`
+	Role                   identity.Role `json:"role"`
+	Active                 bool          `json:"active"`
+	Email                  string        `json:"email,omitempty"`
+	NationalID             string        `json:"national_id,omitempty"`
+	AccessVersion          int           `json:"-"`
+	PasswordHash           string        `json:"-"`
+	SellerOnly             bool          `json:"seller_only,omitempty"`
 }
 
 // Minimal test-scope membership permissions; custom role management remains Issue #1.
@@ -68,24 +74,39 @@ type Notification struct {
 	Retries   int    `json:"retries"`
 }
 type Audit struct {
-	PreviousRole identity.Role `json:"previous_role,omitempty"`
-	Role         identity.Role `json:"role,omitempty"`
-	RoleID       string        `json:"role_id,omitempty"`
-	StoreID      string        `json:"store_id,omitempty"`
-	Permissions  []string      `json:"permissions,omitempty"`
-	ResultID     string        `json:"result_id,omitempty"`
-	Fingerprint  string        `json:"fingerprint"`
-	ID           string        `json:"id"`
-	Actor        string        `json:"actor"`
-	Action       string        `json:"action"`
-	Target       string        `json:"target"`
-	Reason       string        `json:"reason"`
-	At           time.Time     `json:"at"`
+	OperationID  string            `json:"operation_id,omitempty"`
+	RequestID    string            `json:"request_id,omitempty"`
+	Outcome      string            `json:"outcome,omitempty"`
+	Version      int               `json:"version,omitempty"`
+	Before       map[string]string `json:"before,omitempty"`
+	After        map[string]string `json:"after,omitempty"`
+	PreviousRole identity.Role     `json:"previous_role,omitempty"`
+	Role         identity.Role     `json:"role,omitempty"`
+	RoleID       string            `json:"role_id,omitempty"`
+	StoreID      string            `json:"store_id,omitempty"`
+	Permissions  []string          `json:"permissions,omitempty"`
+	ResultID     string            `json:"result_id,omitempty"`
+	Fingerprint  string            `json:"fingerprint"`
+	ID           string            `json:"id"`
+	Actor        string            `json:"actor"`
+	Action       string            `json:"action"`
+	Target       string            `json:"target"`
+	Reason       string            `json:"reason"`
+	At           time.Time         `json:"at"`
 }
 type Workspace struct {
-	RecentlyViewed []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
-	Wishlist       []customer.WishlistEntry       `json:"wishlist,omitempty"`
-	publicIndex    *publicCatalogIndex
+	ActivityOrigins  map[string]ActivityOrigin      `json:"activity_origins,omitempty"`
+	RecordNumbers    map[string]int64               `json:"record_numbers,omitempty"`
+	LastRecordNumber int64                          `json:"last_record_number,omitempty"`
+	PublicBusiness   *commerce.Business             `json:"public_business,omitempty"`
+	AxisPlans        []AxisPlan                     `json:"axis_plans,omitempty"`
+	StoreMutations   []StoreMutation                `json:"store_mutations,omitempty"`
+	UserMutations    []UserMutation                 `json:"user_mutations,omitempty"`
+	SalesPayments    []commerce.PaymentMethod       `json:"sales_payments,omitempty"`
+	Sales            *commerce.SalesSettings        `json:"sales,omitempty"`
+	RecentlyViewed   []customer.RecentlyViewedEntry `json:"recently_viewed,omitempty"`
+	Wishlist         []customer.WishlistEntry       `json:"wishlist,omitempty"`
+	publicIndex      *publicCatalogIndex
 
 	Commerce         *commerce.State               `json:"commerce,omitempty"`
 	HomeSettings     HomeSettings                  `json:"home_settings"`
@@ -104,6 +125,7 @@ type Workspace struct {
 	IconMedia        []catalog.IconMedia           `json:"icon_media,omitempty"`
 	IconPolicy       *IconPolicy                   `json:"icon_policy,omitempty"`
 	Products         []catalog.Product             `json:"products,omitempty"`
+	ProductReviews   []ProductReview               `json:"product_reviews,omitempty"`
 	Offers           []catalog.Offer               `json:"offers,omitempty"`
 	Variants         []catalog.Variant             `json:"variants,omitempty"`
 	Memberships      []StoreMembership             `json:"memberships,omitempty"`
@@ -128,6 +150,8 @@ type PurchaseOwner struct {
 	UserID     string
 }
 type Command struct {
+	RoleVersion    *int                         `json:"role_version,omitempty"`
+	UserVersion    *int                         `json:"user_version,omitempty"`
 	ProductMedia   *ProductMediaInput           `json:"product_media,omitempty"`
 	Catalog        *CatalogInput                `json:"catalog,omitempty"`
 	Home           *HomeSettings                `json:"home,omitempty"`

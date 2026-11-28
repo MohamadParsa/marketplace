@@ -28,7 +28,32 @@ export interface User {
   role: Role;
   active: boolean;
 }
+export interface StoreProfile {
+  description?: string;
+  email?: string;
+  province?: string;
+  address?: string;
+  postal_code?: string;
+  phone?: string;
+  mobile?: string;
+  image_id?: string;
+}
+export interface StoreEligibility {
+  version: number;
+  category_mode: "all" | "selected";
+  allowed_categories: string[];
+  denied_categories: string[];
+  methods: { method_id: string; display_name?: string }[];
+}
+export interface StoreSaleMethodChoice {
+  id: string;
+  name: string;
+  active: boolean;
+}
 export interface Store {
+  eligibility?: StoreEligibility;
+  version?: number;
+  profile?: StoreProfile;
   content_policy?: "review" | "direct";
   content_policy_version?: number;
   id: string;
@@ -37,7 +62,9 @@ export interface Store {
   city: string;
   model: string;
   active: boolean;
+  preparation?: { day_basis: "working" | "calendar"; };
   lead_days: number;
+  lead_day_basis?: string;
 }
 export interface CategorySEO {
   meta_title: string;
@@ -60,6 +87,8 @@ export interface Category {
   version: number;
 }
 export interface Brand {
+  english_name?: string;
+  description?: string;
   id: string;
   name: string;
   active: boolean;
@@ -107,6 +136,7 @@ export interface ProductContentRevision {
   attributes: { attribute_id: string; value: string }[];
 }
 export interface Product {
+  active?: boolean;
   public_code?: string;
   content_revision?: ProductContentRevision;
   content?: ProductContent;
@@ -126,6 +156,7 @@ export interface Product {
   variant_version: number;
 }
 export interface AttributeDefinition {
+  groups?: { id: string; name: string; values: string[]; active: boolean }[];
   id: string;
   code: string;
   name: string;
@@ -135,6 +166,9 @@ export interface AttributeDefinition {
   version: number;
 }
 export interface AttributeBinding {
+    axis_position?: number;
+    card_position?: number;
+    filter_position?: number;
   attribute_id: string;
   axis: boolean;
   card: boolean;
@@ -161,11 +195,14 @@ export interface Variant {
   version: number;
 }
 export interface OfferView extends Offer {
+  sale_restricted?: boolean;
   available: number;
   lead_days: number;
+  lead_day_basis?: string;
   store_active: boolean;
 }
 export interface ProductWorkspace {
+  record_numbers?: Record<string, number>;
   product: Product;
   axes: AttributeDefinition[];
   variants: Variant[];
@@ -192,6 +229,14 @@ export interface OrderItem {
   status: string;
 }
 export interface Order {
+  checkout_id?: string;
+  order_status?: string;
+  delivery?: import("../../../../packages/commerce-client/types").DeliveryPlan;
+  shipping_terms?: {collection_mode?:string;fee:number;name:string;version?:number;store_revision?:number};
+  shipping_method?: string;
+  delivery_from?: string;
+  delivery_to?: string;
+  store_display_name?: string;
   purchase_number?: string;
   id: string;
   purchase_id: string;
@@ -241,6 +286,7 @@ export interface HomeSettings {
   rails: { key: string; category_id: string; limit: number }[];
 }
 export interface CatalogInput {
+  active?: boolean;
   display_priority?: number;
   clear_display_priority?: boolean;
   slug?: string;
@@ -259,6 +305,7 @@ export interface CatalogInput {
   published: boolean;
 }
 export interface Workspace {
+  record_numbers?: Record<string, number>;
   variants?: Variant[];
   home_settings: HomeSettings;
   access?: {
@@ -336,12 +383,15 @@ export interface Session {
   expires_at: string;
   user: {
     ID: string;
+    PasswordChangeRequired?: boolean;
     Role: Role;
     Surface: "backoffice" | "seller";
     Permissions?: string[];
   };
 }
 export interface Command {
+  user_version?: number;
+  role_version?: number;
   product_media?: {
     gallery_ids: string[];
     variant_images: Record<string, string>;
@@ -405,3 +455,51 @@ export interface BannerList {
     content_types: string[];
   };
 }
+
+export type ProductQAStatus = "pending" | "approved" | "rejected";
+
+interface ProductQAContent {
+  id: string;
+  text: string;
+  status: ProductQAStatus;
+}
+
+export interface ProductQAQuestion extends ProductQAContent {
+  product_id?: string;
+  product_name?: string;
+  can_reply?: boolean;
+  answers: ProductQAContent[];
+  version: number;
+}
+
+export interface ProductQAPage {
+  questions: ProductQAQuestion[];
+  next_cursor?: number;
+  can_reply: boolean;
+}
+
+export type ProductQAMutation =
+  | { action: "reply"; text: string; version: number }
+  | {
+      action: "moderate";
+      answer_id?: string;
+      status: "approved" | "rejected";
+      version: number;
+    };
+
+export type ProductReviewStatus = "pending" | "approved" | "rejected";
+export type ReviewAction = "approve" | "reject" | "publish_reply";
+export type AdminProductReview = {
+  id: string;
+  product_id: string;
+  product_name: string;
+  status: ProductReviewStatus;
+  name?: string;
+  anonymous: boolean;
+  text: string;
+  rating: number;
+  created_at: string;
+  version: number;
+  rejection_reason?: string;
+  reply?: string;
+};

@@ -1,0 +1,130 @@
+{
+  "id": "CHECKS-STORE-ELIGIBILITY-20261126",
+  "issues": [
+    114
+  ],
+  "source_commit": "47b798a0b22a40f5f0309dd18978b25b9f6829f8",
+  "go": {
+    "passed_tests_and_subtests": 368,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "legacy-store-policy-explicit-not-implicit",
+        "pass": true
+      },
+      {
+        "id": "category-policy-preview-deny",
+        "pass": true
+      },
+      {
+        "id": "name-preview-original-before-method",
+        "pass": true
+      },
+      {
+        "id": "name-preview-alias-after-method",
+        "pass": true
+      },
+      {
+        "id": "saved-policy-preserves-store-identity",
+        "pass": true
+      },
+      {
+        "id": "policy-conflict-keeps-draft",
+        "pass": true
+      },
+      {
+        "id": "policy-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "pdp-restricted-offer-not-hidden-or-buyable",
+        "pass": true
+      },
+      {
+        "id": "checkout-original-name-before-payment",
+        "pass": true
+      },
+      {
+        "id": "checkout-alias-switches-with-method",
+        "pass": true
+      },
+      {
+        "id": "registered-order-preserves-alias",
+        "pass": true
+      },
+      {
+        "id": "store-reader-cannot-save-policy",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 13,
+    "errors": [],
+    "isolated_memory": true
+  },
+  "frontend": {
+    "backoffice_build": "passed",
+    "storefront_build": "passed",
+    "new_dependencies": false,
+    "existing_chunk_warning": true
+  },
+  "local_restart": {
+    "preserved_sections": 28,
+    "changed_sections": [],
+    "source": "D:\\Cherriva"
+  },
+  "future_pdp_issue": 118,
+  "future_pdp_implemented": false,
+  "source_pushed": true,
+  "deployed": false,
+  "artifacts": [
+    "output/playwright/issue-114/checkout-method-alias.png",
+    "output/playwright/issue-114/order-alias.png",
+    "output/playwright/issue-114/restricted-pdp.png",
+    "output/playwright/issue-114/store-policy-mobile.png",
+    "output/playwright/issue-114/store-policy.png"
+  ],
+  "ci": {
+    "tested_revision": "eb4105889fcbded38a70206e2ea3697eaa0a3520",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945",
+    "jobs": [
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881900684"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901221"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901316"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901346"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45811990945/job/139881901608"
+      }
+    ]
+  }
+}

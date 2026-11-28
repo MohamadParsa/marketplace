@@ -25,11 +25,13 @@ type Category struct {
 }
 
 type Brand struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Active  bool   `json:"active"`
-	IconID  string `json:"icon_id,omitempty"`
-	Version int    `json:"version"`
+	EnglishName string `json:"english_name,omitempty"`
+	Description string `json:"description,omitempty"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Active      bool   `json:"active"`
+	IconID      string `json:"icon_id,omitempty"`
+	Version     int    `json:"version"`
 }
 
 // IconMedia keeps inline bytes in memory; PostgreSQL stores bytes separately and returns a stored reference.
@@ -79,6 +81,8 @@ type ProductContentRevision struct {
 }
 
 type Product struct {
+	// Missing legacy flag preserves the existing ability to offer the product.
+	Active          *bool                   `json:"active,omitempty"`
 	PublicCode      string                  `json:"public_code,omitempty"`
 	ContentRevision *ProductContentRevision `json:"content_revision,omitempty"`
 	Content         *ProductContent         `json:"content,omitempty"`
@@ -99,6 +103,8 @@ type Product struct {
 	VariantVersion  int                     `json:"variant_version"`
 }
 
+func (p Product) IsActive() bool { return p.Active == nil || *p.Active }
+
 type Variant struct {
 	ImageID   string           `json:"image_id,omitempty"`
 	ID        string           `json:"id"`
@@ -110,21 +116,63 @@ type Variant struct {
 
 // Definitions are shared; usage and ordering belong to an explicit category binding.
 type AttributeDefinition struct {
-	ID      string   `json:"id"`
-	Code    string   `json:"code"`
-	Name    string   `json:"name"`
-	Kind    string   `json:"kind"`
-	Unit    string   `json:"unit,omitempty"`
-	Options []string `json:"options"`
-	Version int      `json:"version"`
+	Groups  []AttributeValueGroup `json:"groups,omitempty"`
+	ID      string                `json:"id"`
+	Code    string                `json:"code"`
+	Name    string                `json:"name"`
+	Kind    string                `json:"kind"`
+	Unit    string                `json:"unit,omitempty"`
+	Options []string              `json:"options"`
+	Version int                   `json:"version"`
+}
+
+// Display aliases never replace a real variant value or merge its inventory.
+type AttributeValueGroup struct {
+	ID     string   `json:"id"`
+	Name   string   `json:"name"`
+	Values []string `json:"values"`
+	Active bool     `json:"active"`
 }
 type AttributeBinding struct {
-	AttributeID string `json:"attribute_id"`
-	Axis        bool   `json:"axis"`
-	Card        bool   `json:"card"`
-	Filter      bool   `json:"filter"`
-	Position    int    `json:"position"`
+	AttributeID    string `json:"attribute_id"`
+	Axis           bool   `json:"axis"`
+	Card           bool   `json:"card"`
+	Filter         bool   `json:"filter"`
+	Position       int    `json:"position"`
+	AxisPosition   *int   `json:"axis_position,omitempty"`
+	CardPosition   *int   `json:"card_position,omitempty"`
+	FilterPosition *int   `json:"filter_position,omitempty"`
 }
+
+// Missing role positions preserve the ordering of existing category bindings.
+func (b AttributeBinding) PositionFor(role string) int {
+	var value *int
+	switch role {
+	case "axis":
+		value = b.AxisPosition
+	case "card":
+		value = b.CardPosition
+	case "filter":
+		value = b.FilterPosition
+	}
+	if value != nil {
+		return *value
+	}
+	return b.Position
+}
+
+func (b AttributeBinding) ValidPositions() bool {
+	if b.Position < 0 || b.Position > 10000 {
+		return false
+	}
+	for _, position := range []*int{b.AxisPosition, b.CardPosition, b.FilterPosition} {
+		if position != nil && (*position < 0 || *position > 10000) {
+			return false
+		}
+	}
+	return true
+}
+
 type AttributeValue struct {
 	AttributeID string `json:"attribute_id"`
 	Value       string `json:"value"`

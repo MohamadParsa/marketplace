@@ -11,26 +11,34 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
 
 var ErrCheckoutChanged = errors.New("checkout_changed")
+var ErrWithdrawalUnavailable = errors.New("withdrawal_credit_unavailable")
+var ErrWalletExceedsTotal = errors.New("wallet_exceeds_total")
 var ErrInsufficientWallet = errors.New("insufficient_wallet")
 var ErrInvalidMethod = errors.New("payment_method_not_eligible")
 var ErrStock = errors.New("insufficient_stock")
+var ErrTransferReference = errors.New("invalid_transfer_reference")
+var ErrTransferDate = errors.New("invalid_transfer_date")
+var ErrRefundReason = errors.New("refund_reason_required")
 
 func commerceState(w *Workspace) *commerce.State {
 	if w.Commerce == nil {
 		w.Commerce = &commerce.State{Settings: commerce.DefaultSettings()}
 	}
 	w.Commerce.EnsurePurchaseNumbers()
-	for _, p := range w.Commerce.Purchases {
+	for index := range w.Commerce.Purchases {
+		p := &w.Commerce.Purchases[index]
 		for i := range w.Orders {
 			if w.Orders[i].PurchaseID == p.ID {
 				w.Orders[i].PurchaseNumber = strconv.FormatInt(p.Number, 10)
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 	}
 	return w.Commerce
 }
@@ -64,7 +72,13 @@ func normalizeDigits(s string) string {
 	}, strings.TrimSpace(s))
 }
 
-func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input any, authorize func(Workspace) error, apply func(*Workspace, string, time.Time) (any, error)) (json.RawMessage, error) {
+func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input any, authorize func(Workspace) error, apply func(*Workspace, string, time.Time) (any, error)) (result json.RawMessage, err error) {
+	ctx = s.observeContext(ctx)
+	started := time.Now()
+	replayed := false
+	name := "commerce." + strings.Split(scope, ":")[0]
+	operationlog.Record(ctx, operationlog.Event{EventName: name, Type: "technical", Severity: "info", Outcome: "started"})
+	defer func() { s.operationFinish(ctx, name, started, err, replayed, mutationReferences(name, result)) }()
 	if key == "" || len(key) > 128 || scope == "" {
 		return nil, ErrInvalid
 	}
@@ -77,7 +91,6 @@ func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input a
 	if e != nil {
 		return nil, e
 	}
-	var result json.RawMessage
 	e = s.repository.Update(ctx, func(w *Workspace) error {
 		if e := authorize(*w); e != nil {
 			return e
@@ -90,6 +103,7 @@ func (s *Service) mutateCommerce(ctx context.Context, scope, key string, input a
 					return ErrConflict
 				}
 				result = append(json.RawMessage{}, op.Result...)
+				replayed = true
 				return nil
 			}
 		}
@@ -125,9 +139,13 @@ func findPurchase(c *commerce.State, id string) *commerce.Purchase {
 	}
 	return nil
 }
-func releaseQuote(w *Workspace, q *commerce.Quote) {
+func releaseQuote(w *Workspace, q *commerce.Quote, now time.Time) {
 	if q.Status != "reserved" {
 		return
+	}
+	releaseShipping(w, q.ID, false, now)
+	if q.Credit != nil && q.Credit.Status == "held" {
+		q.Credit.Status = "released"
 	}
 	for _, line := range q.Lines {
 		for i := range w.Offers {
@@ -149,10 +167,11 @@ func expireCommerce(w *Workspace, now time.Time) bool {
 	for i := range w.Commerce.Quotes {
 		q := &w.Commerce.Quotes[i]
 		if q.Status == "reserved" && !now.Before(q.ReservedUntil) {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "expired"
 			if p := findPurchase(w.Commerce, q.PurchaseID); p != nil && p.Status != "confirmed" && p.Status != "cancelled" {
 				p.Status = "requires-reconfirmation"
+				updateOrderPayment(w.Commerce, q.ID, "failed", "reservation_expired", now)
 				p.Version++
 				recordPurchaseEvent(p, identity.User{}, "reservation.expired", now)
 			}
@@ -194,9 +213,14 @@ func walletAmounts(c *commerce.State, user string) (balance, held commerce.Amoun
 			held += r.Amount
 		}
 	}
+	for _, q := range c.Quotes {
+		if q.UserID == user && q.Status == "reserved" && q.Credit != nil && q.Credit.Status == "held" {
+			held += creditSum(q.Credit.Existing) + creditSum(q.Credit.Funding)
+		}
+	}
 	return
 }
-func appendWallet(c *commerce.State, id, user, source, kind string, amount commerce.Amount, now time.Time) error {
+func appendWallet(c *commerce.State, id, user, source, kind string, amount commerce.Amount, now time.Time, exact ...[]commerce.CreditAllocation) error {
 	if amount == 0 || amount > commerce.MaxAmount || amount < -commerce.MaxAmount {
 		return ErrInvalid
 	}
@@ -205,6 +229,9 @@ func appendWallet(c *commerce.State, id, user, source, kind string, amount comme
 			return ErrConflict
 		}
 	}
+	if err := ensureCreditState(c, user, now); err != nil {
+		return err
+	}
 	balance, held := walletAmounts(c, user)
 	if amount > 0 && balance > commerce.MaxAmount-amount {
 		return ErrInvalid
@@ -212,7 +239,41 @@ func appendWallet(c *commerce.State, id, user, source, kind string, amount comme
 	if amount < 0 && balance-held < -amount {
 		return ErrInsufficientWallet
 	}
+	if amount < 0 {
+		var allocations []commerce.CreditAllocation
+		if len(exact) > 0 {
+			allocations = exact[0]
+		}
+		if kind == "manual-refund" {
+			if allocations == nil {
+				var err error
+				allocations, err = allocateCreditMode(c, user, -amount, "", true)
+				if err != nil {
+					return err
+				}
+			}
+			for _, allocation := range allocations {
+				found := false
+				for _, lot := range c.CreditLots {
+					if lot.ID == allocation.LotID && lot.UserID == user && lot.CanWithdraw() {
+						found = true
+						break
+					}
+				}
+				if !found {
+					return ErrWithdrawalUnavailable
+				}
+			}
+		}
+		if e := spendCredit(c, user, -amount, allocations); e != nil {
+			return e
+		}
+	}
 	c.Entries = append(c.Entries, commerce.WalletEntry{ID: id, UserID: user, Source: source, Kind: kind, Amount: amount, At: now})
+	if amount > 0 && hasCreditAccount(c, user) {
+		withdrawable := true
+		c.CreditLots = append(c.CreditLots, commerce.CreditLot{ID: id, EntryID: id, UserID: user, Source: source, Amount: amount, At: now, Withdrawable: &withdrawable})
+	}
 	return nil
 }
 func commerceAudit(w *Workspace, id string, a identity.User, action, target, reason string, now time.Time) {
@@ -220,15 +281,26 @@ func commerceAudit(w *Workspace, id string, a identity.User, action, target, rea
 }
 
 type OrderEventView struct {
-	Action        string    `json:"action"`
-	FlowStatus    string    `json:"flow_status"`
-	OrderStatus   string    `json:"order_status"`
-	PaymentStatus string    `json:"payment_status"`
-	ActorKind     string    `json:"actor_kind"`
-	At            time.Time `json:"at"`
+	CustomerDescription string    `json:"customer_description,omitempty"`
+	Version             int       `json:"version,omitempty"`
+	ID                  string    `json:"id"`
+	OrderID             string    `json:"order_id,omitempty"`
+	RequestID           string    `json:"request_id,omitempty"`
+	From                string    `json:"from,omitempty"`
+	To                  string    `json:"to,omitempty"`
+	Action              string    `json:"action"`
+	FlowStatus          string    `json:"flow_status"`
+	OrderStatus         string    `json:"order_status"`
+	PaymentStatus       string    `json:"payment_status"`
+	ActorKind           string    `json:"actor_kind"`
+	At                  time.Time `json:"at"`
 }
 
 func purchaseStatuses(p commerce.Purchase) (string, string) {
+	order := p.OrderState
+	if order == "" {
+		order = "placed"
+	}
 	if p.Status == "cancelled" {
 		if p.ConfirmedAt != nil {
 			return "cancelled", "returned-to-wallet"
@@ -236,9 +308,9 @@ func purchaseStatuses(p commerce.Purchase) (string, string) {
 		return "cancelled", "unpaid"
 	}
 	if p.ConfirmedAt != nil {
-		return "awaiting-supply", "paid"
+		return order, "paid"
 	}
-	return "awaiting-payment", "unpaid"
+	return order, "unpaid"
 }
 func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, now time.Time) {
 	order, payment := purchaseStatuses(*p)
@@ -248,6 +320,49 @@ func recordPurchaseEvent(p *commerce.Purchase, a identity.User, action string, n
 		if a.Surface == identity.SurfaceCustomer {
 			kind = "customer"
 		}
+		if a.Surface == identity.SurfaceSeller {
+			kind = "seller"
+		}
 	}
-	p.Events = append(p.Events, commerce.OrderEvent{Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
+	id := hashToken(p.ID + ":" + strconv.Itoa(len(p.Events)) + ":" + action + ":" + now.Format(time.RFC3339Nano))
+	p.Events = append(p.Events, commerce.OrderEvent{CustomerDescription: orderCustomerDescription(action), Version: p.Version, ID: id, Action: action, FlowStatus: p.Status, OrderStatus: order, PaymentStatus: payment, ActorID: a.ID, ActorKind: kind, At: now})
+}
+
+func orderCustomerDescription(action string) string {
+	switch action {
+	case "order.accepted":
+		return "سفارش شما ثبت شد؛ وضعیت پرداخت و هر مرسوله جداگانه قابل پیگیری است."
+	case "order.paid":
+		return "پرداخت سفارش قطعی شد؛ فروشگاه می‌تواند پردازش مرسوله را آغاز کند."
+	case "fulfillment.start":
+		return "فروشگاه پردازش این مرسوله را آغاز کرد."
+	case "fulfillment.supply":
+		return "تأمین تمام اقلام باقی‌مانده این مرسوله تأیید شد."
+	case "fulfillment.pack":
+		return "اقلام این مرسوله در حال آماده‌سازی و بسته‌بندی هستند."
+	case "fulfillment.ship":
+		return "مرسوله به حمل‌کننده تحویل شد؛ ارسال به معنی تأیید دریافت شما نیست."
+	case "fulfillment.deliver":
+		return "دریافت تمام اقلام این مرسوله تأیید شد."
+	case "fulfillment.correct", "fulfillment.configure-dispatch":
+		return "مشخصات ارسال این مرسوله به‌روزرسانی شد."
+	case "order.cancelled":
+		return "سفارش لغو شد؛ نتیجه بازگشت وجه را در بخش مالی پیگیری کنید."
+	case "order.reconfirmation-required":
+		return "برای ادامه خرید، شرایط تازه سفارش باید دوباره بررسی و تأیید شوند."
+	case "request.created":
+		return "درخواست شما ثبت شد و برای رسیدگی در انتظار بررسی است."
+	case "request.approve":
+		return "درخواست تأیید شد؛ نتیجه مالی و دریافت کالای برگشتی جداگانه پیگیری می‌شوند."
+	case "request.reject":
+		return "بررسی درخواست به پایان رسید؛ نتیجه آن در بخش درخواست‌ها قابل مشاهده است."
+	case "request.receive":
+		return "دریافت کالای برگشتی و نتیجه بررسی آن ثبت شد."
+	case "refund.wallet":
+		return "مبلغ تأییدشده به کیف پول بازگردانده شد؛ محدودیت منابع اولیه اعتبار حفظ می‌شود."
+	case "refund.bank":
+		return "بازگشت وجه برای انتقال دستی در مسیر رسیدگی مالی ثبت شد."
+	default:
+		return "تغییری در روند رسیدگی سفارش ثبت شد؛ وضعیت فعلی در جزئیات قابل مشاهده است."
+	}
 }

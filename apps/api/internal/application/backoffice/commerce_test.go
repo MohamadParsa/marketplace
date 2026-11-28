@@ -66,7 +66,8 @@ func newCommerceHarness(t *testing.T) *commerceHarness {
 			settings.Methods[i].Instructions = "داده آزمون؛ پرداخت حضوری با بررسی تیم"
 		}
 	}
-	settings.Shipping = []commerce.ShippingMethod{{ID: "post", Name: "پست نمونه", Active: true, AllCities: true, Fee: 200000, MinDays: 1, MaxDays: 3}}
+	capacity := 1000 // Explicit fixture quota; production has no assumed capacity.
+	settings.Shipping = []commerce.ShippingMethod{{DailyCapacity: &capacity, ID: "post", Name: "پست نمونه", Active: true, AllCities: true, Fee: 200000, MinDays: 1, MaxDays: 3}}
 	w.Commerce = &commerce.State{Settings: settings}
 	h := &commerceHarness{clock: &commerceClock{now: time.Date(2026, 11, 22, 9, 0, 0, 0, time.UTC)}}
 	for _, u := range w.Users {
@@ -121,7 +122,7 @@ func (h *commerceHarness) add(t *testing.T, a identity.User, offer string, qty i
 }
 func (h *commerceHarness) address(t *testing.T, a identity.User) commerce.Address {
 	t.Helper()
-	b, e := h.s.SaveAddress(context.Background(), a, backoffice.AddressInput{Recipient: "گیرنده نمونه", Phone: "09000000111", Province: "تهران", City: "تهران", Street: "نشانی ساختگی برای آزمون", PostalCode: "1234567890"}, h.key())
+	b, e := h.s.SaveAddress(context.Background(), a, backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده نمونه", Phone: "09000000111", Province: "تهران", City: "تهران", Street: "نشانی ساختگی برای آزمون", PostalCode: "1234567890"}, h.key())
 	return decodeCommerce[commerce.Address](t, b, e)
 }
 func (h *commerceHarness) quote(t *testing.T, a identity.User, method string) backoffice.QuoteView {
@@ -226,7 +227,7 @@ func TestCommercePreviewHasNoReservationAndPurchaseHasTwoGroups(t *testing.T) {
 		t.Fatal("client amount trusted", e)
 	}
 	p := h.accept(t, h.buyer, q)
-	if len(p.OrderIDs) != 2 || p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" || len(p.Events) != 1 {
+	if len(p.OrderIDs) != 2 || p.PaymentStatus != "unpaid" || p.OrderStatus != "placed" || len(p.Events) != 1 {
 		t.Fatal("order status/groups")
 	}
 	w, _ = h.repo.Snapshot(context.Background())
@@ -282,7 +283,7 @@ func TestCommerceFundingFirstThenAtomicPaymentAndExcess(t *testing.T) {
 		t.Fatal("duplicate debit", wallet.BalanceToman, len(wallet.Entries))
 	}
 	ps, _ = h.s.ReadPurchases(context.Background(), h.buyer, p.ID)
-	if ps[0].PaymentStatus != "paid" || ps[0].OrderStatus != "awaiting-supply" || len(ps[0].Events) != 3 {
+	if ps[0].PaymentStatus != "paid" || ps[0].OrderStatus != "placed" || len(ps[0].Events) != 3 {
 		t.Fatal("paid status/history")
 	}
 	w, _ := h.repo.Snapshot(context.Background())
@@ -478,7 +479,7 @@ func TestCommerceReviewPermissionsAndVerifiedReferenceUniqueness(t *testing.T) {
 	}
 }
 
-func TestCommercePaidCancellationReturnsWalletOnce(t *testing.T) {
+func TestCommercePaidCancellationCreatesCaseWithoutWalletEffect(t *testing.T) {
 	h := newCommerceHarness(t)
 	ctx := context.Background()
 	h.add(t, h.buyer, "offer1", 1)
@@ -493,16 +494,20 @@ func TestCommercePaidCancellationReturnsWalletOnce(t *testing.T) {
 	if !requested.CancellationRequested || requested.PaymentStatus != "paid" {
 		t.Fatal("customer bypassed staff cancellation")
 	}
-	b, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
-	cancelled := decodeCommerce[backoffice.PurchaseView](t, b, e)
-	if cancelled.PaymentStatus != "returned-to-wallet" || cancelled.OrderStatus != "cancelled" || cancelled.WalletBalanceToman != q.TotalToman {
-		t.Fatal(cancelled)
+	_, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
+	if e != backoffice.ErrConflict {
+		t.Fatal("legacy path bypassed case", e)
 	}
-	b, e = h.s.AdminCancelPurchase(ctx, h.finance, backoffice.PurchaseAdminInput{ID: p.ID, Version: requested.Version, Reason: "لغو پیش از تأمین"}, h.key())
-	decodeCommerce[backoffice.PurchaseView](t, b, e)
+	directory, e := h.s.ReadOrderRequests(ctx, h.admin, p.ID)
+	if e != nil || len(directory.Requests) != 1 {
+		t.Fatal(directory, e)
+	}
+	r := directory.Requests[0]
+	b, e = h.s.ReviewOrderRequest(ctx, h.admin, backoffice.OrderRequestReview{ID: r.ID, Version: r.Version, Action: "approve", Reason: "تأیید لغو قبل ارسال"}, h.key())
+	decodeCommerce[backoffice.OrderRequestView](t, b, e)
 	state, _ := h.repo.Snapshot(ctx)
-	if len(state.Commerce.Entries) != 3 || state.Offers[0].Stock != 5 {
-		t.Fatal("duplicate cancellation credit/restock")
+	if len(state.Commerce.Entries) != 2 || state.Offers[0].Stock != 5 {
+		t.Fatal("case changed money or failed restock")
 	}
 }
 func TestCommerceMethodRestrictionRecheckedWithoutRepricingFrozenOrder(t *testing.T) {

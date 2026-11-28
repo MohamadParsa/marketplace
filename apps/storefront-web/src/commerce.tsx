@@ -14,6 +14,9 @@ import type {
 } from "../../../packages/commerce-client/types";
 export const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
 const errors: Record<string, string> = {
+  shipping_unavailable: "روش یا موعد حمل دیگر در دسترس نیست؛ گزینه‌های تازه را بررسی کنید.",
+  slot_full: "ظرفیت موعد انتخاب‌شده تکمیل شده؛ روز و ساعت را دوباره انتخاب کنید.",
+  slot_expired: "مهلت رزرو حمل پایان یافته؛ موعد تحویل را دوباره انتخاب کنید.",
   unauthorized: "نشست شما منقضی شده؛ دوباره وارد شوید.",
   forbidden: "اجازه این عملیات را ندارید.",
   not_found: "اطلاعات پیدا نشد.",
@@ -23,8 +26,25 @@ const errors: Record<string, string> = {
     "قیمت یا شرایط سفارش تغییر کرده؛ مبلغ تازه را دوباره بررسی کنید.",
   insufficient_wallet: "موجودی قابل استفاده کیف پول کافی نیست.",
   payment_method_not_eligible: "این روش برای مبلغ یا دسته‌های سفارش مجاز نیست.",
+  recipient_profile_incomplete:
+    "نام و نام خانوادگی و کد ملی معتبر را در پروفایل تکمیل کنید.",
+  address_incomplete: "آدرس را ویرایش و پلاک و اطلاعات گیرنده را تکمیل کنید.",
+  invalid_profile: "نام، ایمیل یا کد ملی واردشده معتبر نیست.",
   address_unavailable:
     "استان و شهر این آدرس فعال یا معتبر نیست؛ آدرس را ویرایش کنید.",
+  withdrawal_credit_unavailable:
+    "موجودی قابل برداشت کافی نیست؛ اعتبار فقط‌خرید قابل برداشت نیست.",
+  wallet_exceeds_total:
+    "اعتبار انتخابی از مبلغ فعلی سفارش بیشتر است؛ مبلغ اعتبار را ویرایش کنید.",
+  coupon_invalid: "کد تخفیف نادرست یا غیرفعال است.",
+  coupon_expired: "مهلت استفاده از این کد تخفیف پایان یافته است.",
+  coupon_not_started: "زمان استفاده از این کد تخفیف هنوز شروع نشده است.",
+  coupon_user_limit_reached:
+    "سهمیه شما برای استفاده از این کد تخفیف مصرف یا در خرید دیگری رزرو شده است.",
+  coupon_quota_reached: "ظرفیت استفاده از این کد تخفیف تکمیل شده است.",
+  coupon_no_discount: "این کد برای خرید فعلی مبلغ تخفیفی ایجاد نمی‌کند.",
+  coupon_not_eligible:
+    "این کد تخفیف برای مبلغ، کالاها، تاریخ یا سهمیه این خرید معتبر نیست.",
   invalid_request: "اطلاعات واردشده معتبر نیست.",
   invalid_receipt: "تصویر رسید معتبر نیست؛ PNG، JPEG یا WebP انتخاب کنید.",
   receipt_too_large: "حجم رسید باید حداکثر ۲ مگابایت باشد.",
@@ -93,9 +113,11 @@ interface Context {
     quantity: number;
     version: number;
     new_offer_id?: string;
+    review_variant_version?: number;
   }) => Promise<Cart>;
   login: (token: string) => Promise<void>;
   logout: () => void;
+  refreshProfile: () => Promise<CustomerInfo>;
 }
 const CommerceContext = createContext<Context | null>(null);
 export function useCommerce() {
@@ -105,6 +127,9 @@ export function useCommerce() {
 }
 const guestKey = "cherriva:guest-cart",
   tokenKey = "cherriva:customer-token";
+// Reuse only existing first-party credentials. Reading a public page never
+// creates a tracking identifier or guest cart.
+export function catalogActivityHeaders():Record<string,string>{try{const token=sessionStorage.getItem(tokenKey),guest=localStorage.getItem(guestKey);return {...(token?{Authorization:"Bearer "+token}:{}),...(!token&&guest?{"X-Cart-Token":guest}:{})};}catch{return {};}}
 export function CommerceProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(
     () => sessionStorage.getItem(tokenKey) ?? "",
@@ -175,6 +200,14 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
       .then(setConfig)
       .catch(() => {});
   }, [token, refreshCart]);
+  const refreshProfile = async () => {
+    const next = await call<CustomerInfo>(
+      "/storefront/account/me",
+      tokenRef.current,
+    );
+    setProfile(next);
+    return next;
+  };
   const login = async (next: string) => {
     sessionStorage.setItem(tokenKey, next);
     tokenRef.current = next;
@@ -236,6 +269,7 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
         profile,
         cartError,
         refreshCart,
+        refreshProfile,
         mutate,
         login,
         logout,

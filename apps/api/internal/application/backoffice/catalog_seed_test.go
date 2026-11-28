@@ -117,6 +117,61 @@ func TestCatalogSeedConcurrentRetriesPreserveAccountsAndMoney(t *testing.T) {
 	if !reflect.DeepEqual(before.Users, after.Users) || !reflect.DeepEqual(before.Access, after.Access) || !reflect.DeepEqual(before.Commerce, after.Commerce) || !reflect.DeepEqual(before.Ledger, after.Ledger) {
 		t.Fatal("non-catalog data changed")
 	}
+	// The panel uses Cherriva aliases; reading it must not alter imported IDs or retry evidence.
+	seed, media := seedFixture()
+	if e := backoffice.ValidateCatalogSeed(&seed); e != nil {
+		t.Fatal(e)
+	}
+	seedBytes, _ := json.Marshal(seed)
+	inputHash := sha256.Sum256(seedBytes)
+	h := bootstrap.NewHTTPHandlerWithRepository(config.Config{Environment: "test"}, repo)
+	call := func(path string, data any, token string) []byte {
+		b, _ := json.Marshal(data)
+		method := "POST"
+		if data == nil {
+			method = "GET"
+		}
+		r := httptest.NewRequest(method, path, bytes.NewReader(b))
+		r.Header.Set("Authorization", "Bearer "+token)
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if w.Code != 200 && w.Code != 202 {
+			t.Fatalf("panel: %d %s", w.Code, w.Body.String())
+		}
+		return w.Body.Bytes()
+	}
+	var challenge struct {
+		RequestID string `json:"request_id"`
+		TestCode  string `json:"test_code"`
+	}
+	json.Unmarshal(call("/backoffice/auth/request-otp", map[string]string{"phone": "09000000001"}, ""), &challenge)
+	var session struct {
+		Token string `json:"token"`
+	}
+	json.Unmarshal(call("/backoffice/auth/verify-otp", map[string]string{"request_id": challenge.RequestID, "code": challenge.TestCode}, ""), &session)
+	var panel backoffice.Workspace
+	json.Unmarshal(call("/backoffice/workspace", nil, session.Token), &panel)
+	found := false
+	for _, a := range panel.Attributes {
+		if a.ID == backoffice.PublicReference("a", "gsp-axis-color") {
+			found = a.Code == backoffice.PublicReference("a", "gsp-color")
+		}
+	}
+	if !found {
+		t.Fatal("imported attribute not projected")
+	}
+	retry, e := backoffice.ApplyCatalogSeed(ctx, repo, seed, media, true, time.Now())
+	if e != nil || !retry.AlreadyApplied {
+		t.Fatal("panel broke import retry", e)
+	}
+	private, _ := repo.Snapshot(ctx)
+	if !reflect.DeepEqual(after, private) {
+		t.Fatal("panel/retry rewrote imported or protected data")
+	}
+	seedBytes, _ = json.Marshal(seed)
+	if inputHash != sha256.Sum256(seedBytes) {
+		t.Fatal("snapshot input mutated")
+	}
 	p := after.Products[len(after.Products)-1]
 	if strings.Contains(p.Content.FullDescription, "script") || strings.Contains(p.Content.FullDescription, "alert") || !strings.Contains(p.Content.FullDescription, "<strong>") {
 		t.Fatal("unsafe HTML or formatting lost")
@@ -126,12 +181,14 @@ func TestCatalogSeedCollisionRollsBackEverything(t *testing.T) {
 	w := backofficememory.Fixture()
 	w.Brands = append(w.Brands, catalog.Brand{ID: "gsp-brand-1", Name: "ویرایش محلی"})
 	repo := backofficememory.New(w)
+	// Constructor-assigned display numbers are part of the baseline, not an import change.
+	baseline, _ := repo.Snapshot(context.Background())
 	s, m := seedFixture()
 	if _, e := backoffice.ApplyCatalogSeed(context.Background(), repo, s, m, true, time.Now()); e == nil {
 		t.Fatal("collision overwrote local data")
 	}
 	after, _ := repo.Snapshot(context.Background())
-	before, _ := json.Marshal(w)
+	before, _ := json.Marshal(baseline)
 	actual, _ := json.Marshal(after)
 	if !bytes.Equal(before, actual) {
 		t.Fatal("partial import survived collision")

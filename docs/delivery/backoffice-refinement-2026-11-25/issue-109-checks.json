@@ -1,0 +1,141 @@
+{
+  "id": "CHECKS-AXIS-CONVERSION-20261126",
+  "issues": [
+    109
+  ],
+  "go": {
+    "passed_tests_and_subtests": 350,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "issue": 109,
+        "id": "missing-target-values-block-plan",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "collision-blocks-plan",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "apply-requires-explicit-checkbox",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "concurrent-stock-write-succeeds",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "stale-plan-keeps-mapping-and-does-not-apply",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "mobile-plan-no-overflow",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "explicit-plan-applied",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "old-cart-displays-before-and-after",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "customer-explicit-review-unblocks-cart",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "operations-cannot-convert-without-grant",
+        "pass": true
+      },
+      {
+        "issue": 109,
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 11,
+    "runtime_pageerrors": 0,
+    "isolated_memory": true
+  },
+  "frontend": {
+    "backoffice_build": "passed",
+    "storefront_build": "passed",
+    "new_dependencies": false,
+    "existing_chunk_warning": true
+  },
+  "local_restart": {
+    "backoffice_http": 200,
+    "storefront_http": 200,
+    "preserved_sections": 24,
+    "changed_sections": [],
+    "warmup_products": 100,
+    "warmup_listings": 4,
+    "warmup_failures": 0,
+    "redis_ping": "PONG",
+    "startup_cache_fallback_observed": true
+  },
+  "snapshot_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "snapshot_manifest_match": true,
+  "historical_bundle_changed_this_delivery": false,
+  "historical_preexisting_manifest_mismatches": 4,
+  "source_pushed": true,
+  "deployed": false,
+  "artifacts": [
+    "output/playwright/issue-109/cart-requires-consent.png",
+    "output/playwright/issue-109/cart-reviewed.png",
+    "output/playwright/issue-109/mapping-collision.png",
+    "output/playwright/issue-109/plan-mobile.png",
+    "output/playwright/issue-109/prepared-plan.png"
+  ],
+  "source_commit": "a029b88f6d78d9745311cf4afbdeb8dd3f4538d9",
+  "ci": {
+    "tested_revision": "d317123a39504fd2c190b4ed69c6d0a61a673534",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989",
+    "jobs": [
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989/job/139851680030"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989/job/139851680378"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989/job/139851680446"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989/job/139851680583"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45803253989/job/139851680757"
+      }
+    ]
+  }
+}

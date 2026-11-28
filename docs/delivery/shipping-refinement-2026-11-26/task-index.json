@@ -1,0 +1,120 @@
+{
+  "id": "DEL-SHIPPING-REFINEMENT-20261126",
+  "updated": "2026-11-27",
+  "document_status": "in-review",
+  "owner": "eliassarband",
+  "scope": "sequential-implementation-authorized",
+  "execution_authorized": true,
+  "source_reviewed_commit": "69aee5e970a99a55267198e641bd8b7e9b87dfeb",
+  "source_changes": true,
+  "parent_issue": 95,
+  "proposed_execution_order": [
+    120,
+    121,
+    122,
+    16,
+    123,
+    10
+  ],
+  "items": [
+    {
+      "id": "FEAT-SHIP-001",
+      "number": 120,
+      "title": "تقویم سایت/فروشگاه و واحد وقفه تأمین و حمل",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/store-preparation-calendars.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-120-verification.md"
+    },
+    {
+      "id": "FEAT-SHIP-002",
+      "number": 121,
+      "title": "روش‌های عمومی حمل، دریافت هزینه و محدودیت شهر/دسته",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/system-shipping-methods.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        120
+      ],
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-121-verification.md"
+    },
+    {
+      "id": "FEAT-SHIP-003",
+      "number": 122,
+      "title": "انتساب حمل و نسخه اختصاصی فروشگاه با تأیید پلتفرم",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/store-shipping-approval.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        120,
+        121
+      ],
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-122-verification.md"
+    },
+    {
+      "id": "FEAT-SHIP-004",
+      "number": 123,
+      "title": "انتخاب ارسال هر مرسوله، وعده تحویل و هزینه در سفارش",
+      "path": "docs/delivery/shipping-refinement-2026-11-26/tasks/checkout-shipping-terms.md",
+      "assignee": "eliassarband",
+      "priority": "P1",
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        120,
+        121,
+        122,
+        16
+      ],
+      "conditional_dependencies": [],
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-123-verification.md"
+    }
+  ],
+  "reused_issues": [
+    {
+      "number": 16,
+      "owner": "daily-method-capacity-and-slot-schedule-with-atomic-reservation",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-16-verification.md",
+      "state": "closed"
+    },
+    {
+      "number": 10,
+      "owner": "overdue-supply-monitoring-only",
+      "implementation_status": "done",
+      "calendar_dependency": 120,
+      "execution_authorized": true,
+      "state": "closed",
+      "verification": "docs/delivery/shipping-refinement-2026-11-26/issue-10-verification.md"
+    }
+  ],
+  "open_questions": [],
+  "deployment": false,
+  "confirmed_capacity": {
+    "unit": "shipment",
+    "scope": "store-and-method",
+    "daily_method_limit": true,
+    "slot_limit": true,
+    "non_slot_capacity_day": "planned-dispatch-day",
+    "slot_display_start": "first-deliverable-day-with-free-slot",
+    "slot_display_end_offset_calendar_days": 5,
+    "slot_display_inclusive_dates": 6,
+    "skip_full_and_closed_choices": true,
+    "extend_window_to_collect_free_days": false
+  }
+}

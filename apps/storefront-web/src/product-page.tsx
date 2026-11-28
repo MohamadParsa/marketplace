@@ -1,12 +1,21 @@
+import { SalesPrices } from "./sales-prices";
 import { useRecordRecentlyViewed } from "./recently-viewed";
 import { WishlistButton } from "./wishlist";
+import { ProductQA } from "./product-qa";
+import {
+  ProductReviews,
+  ProductRatingLink,
+  type RatingSummary,
+} from "./product-reviews";
 import { VariantAxis, type Axis } from "./variant-axis";
 import { dispatchTime } from "./dispatch-time";
 import { ExpandableContent } from "./expandable-content";
-import { BusyRegion, LoadingPlaceholder } from "./busy-region";
+import { BusyRegion } from "./busy-region";
+import { CatalogImage } from "./catalog-image";
+import { ProductSkeleton } from "./catalog-loading";
 import { setPageCanonical } from "./page-canonical";
 import { PurchaseControl } from "./purchase-control";
-import { useCommerce, apiBase } from "./commerce";
+import { useCommerce, apiBase, catalogActivityHeaders } from "./commerce";
 import { Modal } from "./components";
 import { money as tomanMoney } from "../../../packages/commerce-client/types";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +23,7 @@ import { SiteHeader, SiteFooter, Icon } from "./home-page";
 import { navigate } from "./navigation";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 // Keep the PDP add button visible while new additions are paused.
-const pdpAddPaused = import.meta.env.VITE_PDP_ADD_TO_CART !== "true";
+const pdpAddPaused = import.meta.env.VITE_PDP_ADD_TO_CART === "false";
 type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Feature = {
   attribute_id: string;
@@ -42,17 +51,21 @@ type Content = {
   nofollow: boolean;
 };
 type Offer = {
+ restricted?: boolean;
+  variant_label: string;
   id: string;
   variant_id: string;
   store_id: string;
   store_name: string;
   lead_days: number;
+  lead_day_basis?: string;
   available: boolean;
   price: number | null;
   regular_price?: number;
   version: number;
 };
 type Detail = {
+  active: boolean;
   id: string;
   url: string;
   name: string;
@@ -91,17 +104,12 @@ function Photo({
   name: string;
   className?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [src]);
-  return src && !failed ? (
-    <img
+  return (
+    <CatalogImage
       className={className}
-      src={api + src}
+      src={src ? api + src : undefined}
       alt={name}
-      onError={() => setFailed(true)}
     />
-  ) : (
-    <span className="pdp-photo-fallback">تصویر در دسترس نیست</span>
   );
 }
 function Lightbox({
@@ -174,6 +182,10 @@ export function ProductPage({ url }: { url: string }) {
     [attempt, setAttempt] = useState(0),
     [photo, setPhoto] = useState(0),
     [zoom, setZoom] = useState(false);
+  const [reviewRating, setReviewRating] = useState<{
+    productId: string;
+    summary?: RatingSummary;
+  }>();
   const quantity = 1;
   useRecordRecentlyViewed(!loading && !status && data ? data.id : "");
   const initialPosition = useRef(true);
@@ -198,7 +210,7 @@ export function ProductPage({ url }: { url: string }) {
     }
     void fetch(
       api + "/storefront/products/" + encodeURIComponent(id) + current.search,
-      { signal: abort.signal },
+      { signal: abort.signal,headers:catalogActivityHeaders(),cache:"no-store" },
     )
       .then(async (r) => {
         if (!r.ok) {
@@ -208,6 +220,23 @@ export function ProductPage({ url }: { url: string }) {
         const d = (await r.json()) as Detail;
         if (abort.signal.aborted) return;
         setData(d);
+        const canonicalSelection = new URL(d.url, location.origin);
+        if (current.searchParams.has("variant"))
+          canonicalSelection.searchParams.set("variant", d.selected_variant_id);
+        if (current.searchParams.has("offer"))
+          canonicalSelection.searchParams.set("offer", d.selected_offer_id);
+        if (current.searchParams.has("group"))
+          canonicalSelection.searchParams.set("group", "1");
+        canonicalSelection.hash = location.hash;
+        const canonicalAddress =
+          canonicalSelection.pathname +
+          canonicalSelection.search +
+          canonicalSelection.hash;
+        if (
+          location.pathname + location.search + location.hash !==
+          canonicalAddress
+        )
+          history.replaceState(history.state, "", canonicalAddress);
         if (initialPosition.current) {
           initialPosition.current = false;
           const top = history.state?.cherrivaScroll ?? 0;
@@ -264,11 +293,12 @@ export function ProductPage({ url }: { url: string }) {
       setPageCanonical("");
     };
   }, [url, attempt]);
-  const choose = (variant: string, offer?: string) => {
-    const u = new URL(url, location.origin);
+  const choose = (variant: string, offer?: string, group = false) => {
+    const u = new URL(data?.url ?? url, location.origin);
     u.search = "";
     if (variant) u.searchParams.set("variant", variant);
     if (offer) u.searchParams.set("offer", offer);
+    if (group) u.searchParams.set("group", "1");
     navigate(u.pathname + u.search);
   };
   const selected = data?.variants.find(
@@ -327,35 +357,49 @@ export function ProductPage({ url }: { url: string }) {
     attempt,
   ]);
   const content = data?.content;
+  const groupFor = (axis: Axis, value?: string) =>
+    axis.groups?.find((g) => g.active && g.values.includes(value ?? ""));
+  const matchesChoice = (axis: Axis, real: string, choice: string) =>
+    choice.startsWith("@group:")
+      ? !!axis.groups?.some(
+          (g) =>
+            g.active && "@group:" + g.id === choice && g.values.includes(real),
+        )
+      : real === choice;
   const selectAxis = (axis: string, value: string) => {
     if (!data || !selected) return;
-    const next = {
-      ...Object.fromEntries(
-        selected.values.map((v) => [v.attribute_id, v.value]),
-      ),
-      [axis]: value,
-    };
-    const exact = data.variants.find((v) =>
-      data.axes.every((a) =>
-        v.values.some((x) => x.attribute_id === a.id && x.value === next[a.id]),
-      ),
+    const next = Object.fromEntries(
+      data.axes.map((a) => {
+        const real =
+          selected.values.find((v) => v.attribute_id === a.id)?.value ?? "";
+        const g = groupFor(a, real);
+        return [a.id, g ? "@group:" + g.id : real];
+      }),
     );
+    next[axis] = value;
     const candidates = data.variants.filter((v) =>
-      v.values.some((x) => x.attribute_id === axis && x.value === value),
+      data.axes.every((a) =>
+        v.values.some(
+          (x) =>
+            x.attribute_id === a.id && matchesChoice(a, x.value, next[a.id]),
+        ),
+      ),
     );
-    const target =
-      exact ?? candidates.find((v) => v.available) ?? candidates[0];
-    if (target) choose(target.id);
+    const target = candidates.find((v) => v.available) ?? candidates[0];
+    if (target) choose(target.id, undefined, true);
   };
   return (
-    <div className={`launch-home product-page${data && !status ? " has-purchase-bar" : ""}`} dir="rtl">
+    <div
+      className={`launch-home product-page${data && !status ? " has-purchase-bar" : ""}`}
+      dir="rtl"
+    >
       <a className="lh-skip" href="#main">
         رفتن به محتوا
       </a>
       <SiteHeader />
       <main className="lh-wrap" id="main">
         {loading && !data ? (
-          <LoadingPlaceholder label="دریافت محصول" />
+          <ProductSkeleton />
         ) : status ? (
           <section className="pdp-state" role="alert">
             <h1>
@@ -429,41 +473,91 @@ export function ProductPage({ url }: { url: string }) {
                     {data.brand?.name ?? data.category.name}
                   </span>
                   <h1>{data.name}</h1>
-                  {data.public_code && (
-                    <p className="pdp-public-code" dir="ltr">
-                      {data.public_code}
-                    </p>
-                  )}
                   {data.english_name && (
                     <p className="pdp-english" dir="auto">
                       {data.english_name}
                     </p>
                   )}
+                  <div className="pdp-product-meta">
+                    <ProductRatingLink
+                      summary={
+                        reviewRating?.productId === data.id
+                          ? reviewRating.summary
+                          : undefined
+                      }
+                    />
+                    {data.public_code && (
+                      <span className="pdp-public-code" dir="ltr">
+                        {data.public_code}
+                      </span>
+                    )}
+                  </div>
                   {content.short_description && (
                     <p className="pdp-short">{content.short_description}</p>
                   )}
                   <div className="pdp-axes">
-                    {data.axes.map((a) => (
-                      <VariantAxis
-                        key={a.id}
-                        axis={a}
-                        selected={
-                          selected?.values.find((v) => v.attribute_id === a.id)
-                            ?.value
-                        }
-                        disabled={loading}
-                        isDefined={(value) =>
-                          data.variants.some((v) =>
-                            v.values.some(
-                              (x) =>
-                                x.attribute_id === a.id && x.value === value,
-                            ),
-                          )
-                        }
-                        onSelect={(value) => selectAxis(a.id, value)}
-                      />
-                    ))}
+                    {data.axes.map((a) => {
+                      const groups = (a.groups ?? []).filter((g) => g.active),
+                        labels = Object.fromEntries(
+                          groups.map((g) => ["@group:" + g.id, g.name]),
+                        );
+                      const real = selected?.values.find(
+                          (v) => v.attribute_id === a.id,
+                        )?.value,
+                        group = groupFor(a, real);
+                      const values = a.options.map((v) => {
+                        const g = groupFor(a, v);
+                        return g ? "@group:" + g.id : v;
+                      });
+                      return (
+                        <VariantAxis
+                          key={a.id}
+                          axis={{ ...a, options: [...new Set(values)], labels }}
+                          selected={group ? "@group:" + group.id : real}
+                          disabled={loading}
+                          isDefined={(choice) =>
+                            data.variants.some((v) =>
+                              data.axes.every((other) =>
+                                v.values.some((x) => {
+                                  if (x.attribute_id !== other.id) return false;
+                                  const selectedValue =
+                                    selected?.values.find(
+                                      (s) => s.attribute_id === other.id,
+                                    )?.value ?? "";
+                                  const g = groupFor(other, selectedValue);
+                                  return matchesChoice(
+                                    other,
+                                    x.value,
+                                    other.id === a.id
+                                      ? choice
+                                      : g
+                                        ? "@group:" + g.id
+                                        : selectedValue,
+                                  );
+                                }),
+                              ),
+                            )
+                          }
+                          onSelect={(value) => selectAxis(a.id, value)}
+                        />
+                      );
+                    })}
                   </div>
+                  {data.axes.some((a) => a.groups?.some((g) => g.active)) &&
+                    selected && (
+                      <p
+                        className="pdp-real-warranty"
+                        data-testid="real-variant-label"
+                      >
+                        گزینه واقعی خرید:{" "}
+                        {selected.values
+                          .map(
+                            (v) =>
+                              `${data.axes.find((a) => a.id === v.attribute_id)?.name ?? ""}: ${v.value}`,
+                          )
+                          .join(" · ")}
+                      </p>
+                    )}
                   {!!data.features.length && (
                     <div className="pdp-key-features">
                       <h2>ویژگی‌های کلیدی</h2>
@@ -482,38 +576,32 @@ export function ProductPage({ url }: { url: string }) {
                   )}
                 </div>
               </section>
-              <aside
-                className="pdp-buybox"
-                aria-label="انتخاب فروشنده و خرید"
-              >
+              <aside className="pdp-buybox" aria-label="انتخاب فروشنده و خرید">
                 <span className="pdp-buybox-tag">
-                  {available
-                    ? "قیمت نقدی این انتخاب"
-                    : "این انتخاب موجود نیست"}
+                  {!data.active ? "محصول غیرفعال؛ غیرقابل خرید" : available ? "قیمت نقدی این انتخاب" : offer?.restricted ? "عرضه فعلاً قابل خرید نیست" : "این انتخاب موجود نیست"}
                 </span>
                 <h2>{offer?.store_name ?? "فروشنده فعالی ندارد"}</h2>
                 {offer && (
                   <p>
                     <Icon name="bag" />
-                    {dispatchTime(offer.lead_days)}
+                    {dispatchTime(offer.lead_days, offer.lead_day_basis)}
                   </p>
                 )}
                 <small>
-                  هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص
-                  می‌شود.
+                  هزینه و بازه تحویل پس از انتخاب نشانی و روش ارسال مشخص می‌شود.
                 </small>
                 <div className="pdp-buy-actions">
                   {available && offer?.price != null ? (
                     <div className="pdp-price">
                       {offer.regular_price &&
                       offer.regular_price > offer.price ? (
-                        <div>
+                        <div className="pdp-price-discount-row">
                           <del>{money(offer.regular_price)}</del>
                           <b className="pdp-discount">
                             {Math.floor(
                               ((offer.regular_price - offer.price) * 100) /
                                 offer.regular_price,
-                            )}
+                            ).toLocaleString("fa-IR")}
                             ٪
                           </b>
                         </div>
@@ -522,9 +610,14 @@ export function ProductPage({ url }: { url: string }) {
                         {money(offer.price)} <small>تومان</small>
                       </strong>
                       <span>قیمت نهایی نقدی، بدون هزینه ارسال</span>
+                      <SalesPrices
+                        product={data.id}
+                        offer={data.selected_offer_id}
+                        variant={data.selected_variant_id}
+                      />
                     </div>
                   ) : (
-                    <p className="pdp-unavailable">ناموجود</p>
+                    <p className="pdp-unavailable">{!data.active ? "غیرقابل خرید" : offer?.restricted ? "فروش این عرضه برای خرید نقدی مجاز نیست" : "ناموجود"}</p>
                   )}
                   <div
                     className="pdp-purchase"
@@ -532,6 +625,7 @@ export function ProductPage({ url }: { url: string }) {
                     data-variant-id={data.selected_variant_id}
                     aria-describedby="pdp-purchase-note"
                   >
+                    {data.active ? (
                     <PurchaseControl
                       name={data.name}
                       quantity={
@@ -544,12 +638,11 @@ export function ProductPage({ url }: { url: string }) {
                       canIncrease={canPurchase && !selectionError}
                       onChange={(next) => void changeCartQuantity(next)}
                     />
+                    ) : <p role="status">خرید این محصول فعال نیست.</p>}
                   </div>
                 </div>
                 <div className="pdp-selection-status" aria-live="polite">
-                  {selectionError ? (
-                    <p role="alert">{selectionError}</p>
-                  ) : null}
+                  {selectionError ? <p role="alert">{selectionError}</p> : null}
                 </div>
                 {addError && <p role="alert">{addError}</p>}
                 <p id="pdp-purchase-note" className="pdp-purchase-note">
@@ -565,7 +658,9 @@ export function ProductPage({ url }: { url: string }) {
                 >
                   <h2 id="pdp-sellers-title">
                     فروشنده‌های این انتخاب{" "}
-                    <small>({data.offers.length.toLocaleString("fa-IR")})</small>
+                    <small>
+                      ({data.offers.length.toLocaleString("fa-IR")})
+                    </small>
                   </h2>
                   {!data.offers.length ? (
                     <p>برای این تنوع عرضه فعالی ثبت نشده است.</p>
@@ -577,6 +672,7 @@ export function ProductPage({ url }: { url: string }) {
                       >
                         <div>
                           <h3>{o.store_name}</h3>
+                          <small>{o.variant_label}</small>
                           <span>
                             {o.id === offer?.id
                               ? "فروشنده انتخاب‌شده"
@@ -585,15 +681,17 @@ export function ProductPage({ url }: { url: string }) {
                                 : "ناموجود"}
                           </span>
                         </div>
-                        <p>{dispatchTime(o.lead_days)}</p>
+                        <p>{dispatchTime(o.lead_days, o.lead_day_basis)}</p>
                         <b>
-                          {o.available && o.price != null
+                          {!data.active ? "غیرقابل خرید" : o.restricted ? "فروش نقدی مجاز نیست" : o.available && o.price != null
                             ? money(o.price) + " تومان"
                             : "ناموجود"}
                         </b>
                         <button
-                          disabled={loading || o.id === offer?.id || !o.available}
-                          onClick={() => choose(data.selected_variant_id, o.id)}
+                          disabled={
+                            loading || o.id === offer?.id || !o.available
+                          }
+                          onClick={() => choose(o.variant_id, o.id)}
                         >
                           {o.id === offer?.id ? "انتخاب‌شده" : "انتخاب فروشنده"}
                         </button>
@@ -699,22 +797,14 @@ export function ProductPage({ url }: { url: string }) {
                       )}
                   </ExpandableContent>
                 </section>
-                <section className="pdp-section" id="reviews">
-                  <h2>نظرات کاربران</h2>
-                  <p>
-                    {content.reviews_enabled
-                      ? "امکان ثبت و نمایش نظر هنوز فعال نشده است."
-                      : "ثبت نظر برای این محصول غیرفعال است."}
-                  </p>
-                </section>
-                <section className="pdp-section" id="questions">
-                  <h2>پرسش و پاسخ</h2>
-                  <p>
-                    {content.qa_enabled
-                      ? "امکان ثبت و نمایش پرسش هنوز فعال نشده است."
-                      : "ثبت پرسش برای این محصول غیرفعال است."}
-                  </p>
-                </section>
+                <ProductReviews
+                  key={"reviews:" + data.id}
+                  productId={data.id}
+                  onSummary={(summary) =>
+                    setReviewRating({ productId: data.id, summary })
+                  }
+                />
+                <ProductQA key={"questions:" + data.id} productId={data.id} />
               </div>
             </BusyRegion>
             {zoom && data.gallery[photo] && (

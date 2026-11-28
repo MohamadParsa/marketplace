@@ -2,6 +2,7 @@ package commerce
 
 import (
 	"encoding/json"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
 	"time"
 )
 
@@ -13,17 +14,28 @@ const MaxAmount Amount = 9000000000000000
 const ReservationMinutes = 30
 
 type State struct {
-	NextPurchaseNumber int64           `json:"next_purchase_number"`
-	Settings           Settings        `json:"settings"`
-	Carts              []Cart          `json:"carts"`
-	Addresses          []Address       `json:"addresses"`
-	Quotes             []Quote         `json:"quotes"`
-	Purchases          []Purchase      `json:"purchases"`
-	Deposits           []Deposit       `json:"deposits"`
-	Receipts           []Receipt       `json:"receipts"`
-	Entries            []WalletEntry   `json:"entries"`
-	Refunds            []RefundRequest `json:"refunds"`
-	Operations         []Operation     `json:"operations"`
+	GatewaySettings      []GatewaySettings     `json:"gateway_settings,omitempty"`
+	OrderRefunds         []OrderRefund         `json:"order_refunds,omitempty"`
+	OrderRequests        []OrderRequest        `json:"order_requests,omitempty"`
+	NextRequestNumber    int64                 `json:"next_request_number,omitempty"`
+	PaymentAttempts      []PaymentAttempt      `json:"payment_attempts,omitempty"`
+	ShippingReservations []ShippingReservation `json:"shipping_reservations,omitempty"`
+	StoreShipping        []StoreShippingPolicy `json:"store_shipping,omitempty"`
+	Sales                *SalesSettings        `json:"sales,omitempty"`
+	Coupons              []Coupon              `json:"coupons,omitempty"`
+	CreditLots           []CreditLot           `json:"credit_lots,omitempty"`
+	CreditAccounts       []CreditAccount       `json:"credit_accounts,omitempty"`
+	NextPurchaseNumber   int64                 `json:"next_purchase_number"`
+	Settings             Settings              `json:"settings"`
+	Carts                []Cart                `json:"carts"`
+	Addresses            []Address             `json:"addresses"`
+	Quotes               []Quote               `json:"quotes"`
+	Purchases            []Purchase            `json:"purchases"`
+	Deposits             []Deposit             `json:"deposits"`
+	Receipts             []Receipt             `json:"receipts"`
+	Entries              []WalletEntry         `json:"entries"`
+	Refunds              []RefundRequest       `json:"refunds"`
+	Operations           []Operation           `json:"operations"`
 }
 type City struct {
 	ID     string `json:"id"`
@@ -37,15 +49,16 @@ type Province struct {
 	Cities []City `json:"cities"`
 }
 type Settings struct {
-	Geography          []Province       `json:"geography"`
-	DestinationHistory []Destination    `json:"destination_history,omitempty"`
-	Version            int              `json:"version"`
-	Methods            []PaymentMethod  `json:"methods"`
-	Shipping           []ShippingMethod `json:"shipping"`
-	ClosedWeekdays     []int            `json:"closed_weekdays"`
-	Holidays           []string         `json:"holidays"`
-	Destination        Destination      `json:"destination"`
-	Business           Business         `json:"business"`
+	ShippingTiming     *shipping.TimingPolicy `json:"shipping_timing,omitempty"`
+	Geography          []Province             `json:"geography"`
+	DestinationHistory []Destination          `json:"destination_history,omitempty"`
+	Version            int                    `json:"version"`
+	Methods            []PaymentMethod        `json:"methods"`
+	Shipping           []ShippingMethod       `json:"shipping"`
+	ClosedWeekdays     []int                  `json:"closed_weekdays"`
+	Holidays           []string               `json:"holidays"`
+	Destination        Destination            `json:"destination"`
+	Business           Business               `json:"business"`
 }
 type PaymentMethod struct {
 	ID                 string   `json:"id"`
@@ -60,15 +73,28 @@ type PaymentMethod struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethod struct {
-	ID        string   `json:"id"`
-	Name      string   `json:"name"`
-	Active    bool     `json:"active"`
-	AllCities bool     `json:"all_cities"`
-	Cities    []string `json:"cities"`
-	StoreIDs  []string `json:"store_ids"`
-	Fee       Amount   `json:"fee"`
-	MinDays   int      `json:"min_days"`
-	MaxDays   int      `json:"max_days"`
+	DispatchIdentifier string             `json:"dispatch_identifier,omitempty"`
+	Schedule           *shipping.Schedule `json:"schedule,omitempty"`
+	BaseVersion        int                `json:"base_version,omitempty"`
+	StoreRevision      int                `json:"store_revision,omitempty"`
+	Version            int                `json:"version,omitempty"`
+	CollectionMode     string             `json:"collection_mode,omitempty"`
+	DeliveryMode       string             `json:"delivery_mode,omitempty"`
+	DailyCapacity      *int               `json:"daily_capacity,omitempty"`
+	CategoryMode       string             `json:"category_mode,omitempty"`
+	AllowedCategories  []string           `json:"allowed_categories,omitempty"`
+	DeniedCategories   []string           `json:"denied_categories,omitempty"`
+	CityIDs            []string           `json:"city_ids,omitempty"`
+	DayBasis           shipping.DayBasis  `json:"day_basis,omitempty"`
+	ID                 string             `json:"id"`
+	Name               string             `json:"name"`
+	Active             bool               `json:"active"`
+	AllCities          bool               `json:"all_cities"`
+	Cities             []string           `json:"cities"`
+	StoreIDs           []string           `json:"store_ids"`
+	Fee                Amount             `json:"fee"`
+	MinDays            int                `json:"min_days"`
+	MaxDays            int                `json:"max_days"`
 }
 type Destination struct {
 	ID         string `json:"id"`
@@ -76,16 +102,26 @@ type Destination struct {
 	Holder     string `json:"holder"`
 	Bank       string `json:"bank"`
 }
+type SocialLink struct {
+	ID       string `json:"id"`
+	Title    string `json:"title"`
+	Kind     string `json:"kind"`
+	URL      string `json:"url"`
+	Position int    `json:"position"`
+	Active   bool   `json:"active"`
+}
 type Business struct {
-	Name           string `json:"name"`
-	SupportPhone   string `json:"support_phone"`
-	SupportEmail   string `json:"support_email"`
-	About          string `json:"about"`
-	Contact        string `json:"contact"`
-	ShippingPolicy string `json:"shipping_policy"`
-	ReturnPolicy   string `json:"return_policy"`
-	Privacy        string `json:"privacy"`
-	Terms          string `json:"terms"`
+	PublishedPages map[string]bool `json:"published_pages,omitempty"`
+	SocialLinks    []SocialLink    `json:"social_links,omitempty"`
+	Name           string          `json:"name"`
+	SupportPhone   string          `json:"support_phone"`
+	SupportEmail   string          `json:"support_email"`
+	About          string          `json:"about"`
+	Contact        string          `json:"contact"`
+	ShippingPolicy string          `json:"shipping_policy"`
+	ReturnPolicy   string          `json:"return_policy"`
+	Privacy        string          `json:"privacy"`
+	Terms          string          `json:"terms"`
 }
 type Cart struct {
 	ID         string     `json:"id"`
@@ -97,11 +133,23 @@ type Cart struct {
 	UpdatedAt  time.Time  `json:"updated_at"`
 }
 type CartLine struct {
-	OfferID   string `json:"offer_id"`
-	Quantity  int    `json:"quantity"`
-	SeenPrice Amount `json:"seen_price"`
+	ReviewRequired       bool   `json:"review_required,omitempty"`
+	PreviousVariantLabel string `json:"previous_variant_label,omitempty"`
+	OfferID              string `json:"offer_id"`
+	Quantity             int    `json:"quantity"`
+	SeenPrice            Amount `json:"seen_price"`
 }
 type Address struct {
+	DetailVersion       int      `json:"detail_version,omitempty"`
+	Title               string   `json:"title,omitempty"`
+	FullAddress         string   `json:"full_address,omitempty"`
+	HouseNumber         string   `json:"house_number,omitempty"`
+	Unit                string   `json:"unit,omitempty"`
+	RecipientSelf       *bool    `json:"recipient_self,omitempty"`
+	RecipientNationalID string   `json:"recipient_national_id,omitempty"`
+	Latitude            *float64 `json:"latitude,omitempty"`
+	Longitude           *float64 `json:"longitude,omitempty"`
+
 	ID         string `json:"id"`
 	UserID     string `json:"user_id"`
 	Version    int    `json:"version"`
@@ -113,26 +161,40 @@ type Address struct {
 	PostalCode string `json:"postal_code"`
 }
 type LineSnapshot struct {
-	OfferID      string `json:"offer_id"`
-	ProductID    string `json:"product_id"`
-	VariantID    string `json:"variant_id"`
-	StoreID      string `json:"store_id"`
-	Name         string `json:"name"`
-	VariantLabel string `json:"variant_label"`
-	ImageURL     string `json:"image_url"`
-	UnitPrice    Amount `json:"unit_price"`
-	Quantity     int    `json:"quantity"`
-	OfferVersion int    `json:"offer_version"`
+	StorePolicyVersion int             `json:"store_policy_version,omitempty"`
+	CashUnitPrice      *Amount         `json:"cash_unit_price,omitempty"`
+	Markup             *MarkupSnapshot `json:"markup,omitempty"`
+	ReferenceUnitPrice *Amount         `json:"reference_unit_price,omitempty"`
+	DirectDiscount     *Amount         `json:"direct_discount,omitempty"`
+	OfferID            string          `json:"offer_id"`
+	ProductID          string          `json:"product_id"`
+	VariantID          string          `json:"variant_id"`
+	StoreID            string          `json:"store_id"`
+	Name               string          `json:"name"`
+	VariantLabel       string          `json:"variant_label"`
+	ImageURL           string          `json:"image_url"`
+	UnitPrice          Amount          `json:"unit_price"`
+	Quantity           int             `json:"quantity"`
+	OfferVersion       int             `json:"offer_version"`
 }
 type ShipmentSnapshot struct {
-	StoreID      string         `json:"store_id"`
-	StoreName    string         `json:"store_name"`
-	Method       ShippingMethod `json:"method"`
-	LeadDays     int            `json:"lead_days"`
-	DeliveryFrom string         `json:"delivery_from"`
-	DeliveryTo   string         `json:"delivery_to"`
+	Delivery     *shipping.DeliveryPlan        `json:"delivery,omitempty"`
+	Preparation  *shipping.PreparationSnapshot `json:"preparation,omitempty"`
+	StoreID      string                        `json:"store_id"`
+	StoreName    string                        `json:"store_name"`
+	Method       ShippingMethod                `json:"method"`
+	LeadDays     int                           `json:"lead_days"`
+	DeliveryFrom string                        `json:"delivery_from"`
+	DeliveryTo   string                        `json:"delivery_to"`
 }
 type Quote struct {
+	SalesMethod        *SalesMethod       `json:"sales_method,omitempty"`
+	MarkupTotal        Amount             `json:"markup_total,omitempty"`
+	CashSubtotal       Amount             `json:"cash_subtotal,omitempty"`
+	ContractVersion    int                `json:"contract_version,omitempty"`
+	CouponCode         string             `json:"coupon_code,omitempty"`
+	Discount           *DiscountUsage     `json:"discount,omitempty"`
+	Credit             *CreditUsage       `json:"credit,omitempty"`
 	Destination        Destination        `json:"destination"`
 	AcceptedAt         *time.Time         `json:"accepted_at,omitempty"`
 	ID                 string             `json:"id"`
@@ -154,6 +216,8 @@ type Quote struct {
 	PurchaseID         string             `json:"purchase_id,omitempty"`
 }
 type Purchase struct {
+	OrderState            string       `json:"order_state,omitempty"`
+	FulfillmentState      string       `json:"fulfillment_state,omitempty"`
 	Number                int64        `json:"number"`
 	Events                []OrderEvent `json:"events"`
 	CancellationRequested bool         `json:"cancellation_requested"`
@@ -206,18 +270,21 @@ type WalletEntry struct {
 	At     time.Time `json:"at"`
 }
 type RefundRequest struct {
-	ID           string     `json:"id"`
-	UserID       string     `json:"user_id"`
-	Amount       Amount     `json:"amount"`
-	Instructions string     `json:"instructions"`
-	Status       string     `json:"status"`
-	Version      int        `json:"version"`
-	CreatedAt    time.Time  `json:"created_at"`
-	ResolvedAt   *time.Time `json:"resolved_at,omitempty"`
-	ResolvedBy   string     `json:"resolved_by,omitempty"`
-	Reference    string     `json:"reference,omitempty"`
-	Date         string     `json:"date,omitempty"`
-	Reason       string     `json:"reason,omitempty"`
+	PurchaseID   string             `json:"purchase_id,omitempty"`
+	RequestID    string             `json:"request_id,omitempty"`
+	Allocations  []CreditAllocation `json:"credit_allocations,omitempty"`
+	ID           string             `json:"id"`
+	UserID       string             `json:"user_id"`
+	Amount       Amount             `json:"amount"`
+	Instructions string             `json:"instructions"`
+	Status       string             `json:"status"`
+	Version      int                `json:"version"`
+	CreatedAt    time.Time          `json:"created_at"`
+	ResolvedAt   *time.Time         `json:"resolved_at,omitempty"`
+	ResolvedBy   string             `json:"resolved_by,omitempty"`
+	Reference    string             `json:"reference,omitempty"`
+	Date         string             `json:"date,omitempty"`
+	Reason       string             `json:"reason,omitempty"`
 }
 type Operation struct {
 	Scope       string          `json:"scope"`
@@ -228,11 +295,35 @@ type Operation struct {
 }
 
 type OrderEvent struct {
-	Action        string    `json:"action"`
-	FlowStatus    string    `json:"flow_status"`
-	OrderStatus   string    `json:"order_status"`
-	PaymentStatus string    `json:"payment_status"`
-	ActorID       string    `json:"actor_id"`
-	ActorKind     string    `json:"actor_kind"`
-	At            time.Time `json:"at"`
+	CustomerDescription string    `json:"customer_description,omitempty"`
+	Version             int       `json:"version,omitempty"`
+	RequestID           string    `json:"request_id,omitempty"`
+	ID                  string    `json:"id,omitempty"`
+	OrderID             string    `json:"order_id,omitempty"`
+	FromStatus          string    `json:"from_status,omitempty"`
+	ToStatus            string    `json:"to_status,omitempty"`
+	Reason              string    `json:"reason,omitempty"`
+	PreviousIdentifiers []string  `json:"previous_identifiers,omitempty"`
+	Identifiers         []string  `json:"identifiers,omitempty"`
+	Action              string    `json:"action"`
+	FlowStatus          string    `json:"flow_status"`
+	OrderStatus         string    `json:"order_status"`
+	PaymentStatus       string    `json:"payment_status"`
+	ActorID             string    `json:"actor_id"`
+	ActorKind           string    `json:"actor_kind"`
+	At                  time.Time `json:"at"`
+}
+
+type PaymentAttempt struct {
+	ID          string    `json:"id"`
+	PurchaseID  string    `json:"purchase_id,omitempty"`
+	QuoteID     string    `json:"quote_id,omitempty"`
+	Purpose     string    `json:"purpose"`
+	MethodName  string    `json:"method_name"`
+	SourceID    string    `json:"source_id"`
+	Amount      Amount    `json:"amount"`
+	Status      string    `json:"status"`
+	FailureCode string    `json:"failure_code,omitempty"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

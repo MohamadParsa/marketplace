@@ -1,5 +1,45 @@
 # نقشه مستندات
 
+[استرداد کل سفارش #164 در صف؛ اجرای چیدمان خلاصه/گیرنده بالای اقلام بک‌آفیس #165](delivery/order-experience-followup-2026-11-28/README.md)
+
+[اجرای لاگ محلی، گزارش ادمین و تسک‌های معوق درگاه](delivery/logging-gateway-plan-2026-11-28/README.md)
+
+[اصلاح سوییچ‌های درگاه و ضریب تبدیل تومان/ریال — #154](delivery/gateway-currency-and-switches-2026-11-28.md)
+
+[تنظیمات ثابت و کشویی پرداخت، OAuth زرین‌پال و شرح عملیاتی — #153](delivery/payment-settings-revision-2026-11-28.md)
+
+[تحویل قدم اول تنظیمات درگاه‌ها؛ retry، اجازه شارژ، credential و مسیر بازگشت محیطی — #152](delivery/payment-gateway-settings-2026-11-28.md)
+
+[بررسی تنظیمات چنددرگاهی و نخستین اتصال زرین‌پال؛ پیش از کدنویسی](delivery/zarinpal-gateway-review-2026-11-28.md)
+
+[لینک روشن سفارش، گردش کیف پول و فرم ثبت نتیجه انتقال بانکی — #151](delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md)
+
+[اصلاح نمایش تاریخ و جزئیات مرسوله/مالی مشتری و بررسی سه منوی قدیمی — #150](delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md)
+
+[تحویل۸اصلاح ورود، سفارش، کیف پول و مرسوله؛ شواهد و اجرای محلی — ۲۰۲۶-۱۱-۲۸](delivery/order-experience-followup-2026-11-28/final-local-review.md)
+
+[ممیزی و شواهد همه کنترل‌های تاریخ شمسی سایت و بک‌آفیس](delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md).
+
+[بررسی و اجرای ترتیبی چرخه سفارش، Q&A سراسری و مودال تخفیف — ۲۰۲۶-۱۱-۲۷](delivery/order-lifecycle-review-2026-11-27/README.md)
+
+[هفت اصلاح بازبینی بک‌آفیس #124 تا #130؛ تقویم، زون خصوصیات، منو و محصول — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md)
+
+[یکپارچه‌سازی حمل در تب فروشگاه، محدودهٔ یک/همه و تنظیمات فروشنده — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md)
+
+[تب‌های تنظیمات خرید/حمل، انتخاب روشن تقویم فروشگاه و بررسی صفحهٔ حمل — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/settings-preparation-review-2026-11-27.md)
+
+[بازبینی روش فروش، کاربران و فروشگاه‌ها؛ منو، تب‌ها و عضویت جست‌وجویی — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/users-stores-sales-review-2026-11-27.md)
+
+[فهرست کامل استان‌ها و شهرهای ایران؛ منبع، ورود محلی و آزمون‌ها — ۲۰۲۶-۱۱-۲۷](delivery/iran-geography-import-2026-11-27.md)
+
+[یکدست‌سازی کنترل‌ها، فیلترها و فرم‌های بک‌آفیس — ۲۰۲۶-۱۱-۲۷](delivery/backoffice-refinement-2026-11-25/admin-controls-and-filters-2026-11-27.md)
+
+[خوانایی قیمت، فرم‌های بسته و کروسل‌های پنج‌تایی سایت — ۲۰۲۶-۱۱-۲۷](delivery/storefront-followups/storefront-readability-review-2026-11-27.md)
+
+[اصلاحات بازبینی سایت ۲۰۲۶-۱۱-۲۷ و شواهد مرورگر](delivery/storefront-followups/storefront-review-fixes-2026-11-27.md)
+
+[اصلاح فرم‌های پنل، کاتالوگ، کاربران/نقش، فروشگاه و روش فروش — ۱۱ تسک تازه و تکمیل #73/#81](delivery/backoffice-refinement-2026-11-25/README.md)
+
 [برنامه۳۰درخواست جدید؛ وضعیت اجرا و شواهد انتخاب‌های مالک](delivery/next-phase/README.md)
 
 [صف۱۰تسک تجربه فروشگاه؛ وضعیت و شواهد اجرای انتخاب‌های مالک](delivery/storefront-followups/ux-followups.md)
@@ -50,3 +90,17 @@
 مرجع اصلاح مهم قیمت‌گذاری، [ADR-001](decisions/adr-001-pricing-and-payment-boundaries.md) است؛ از تصمیم قدیمی حفظ اجباری قانون روی قیمت پایه جدید استفاده نکنید.
 
 [گزارش خرید و کیف پول #30](delivery/initial-launch/issue-30-verification.md) · [تحویل انتشار به پارسا](delivery/initial-launch/production-handoff.md)
+
+[اجرای محلی کوپن، اعتبار انتخابی کیف پول و گروه گارانتی #67/#68/#69/#78](delivery/next-phase/issues-67-68-69-78-verification.md)
+
+[فعال‌سازی محلی افزودن به سبد PDP پس از پوش PR #94](delivery/storefront-followups/pdp-add-enabled-verification.md).
+
+[ممیزی کل تسک‌ها، درخواست‌های تازه و دریافت کار پارسا](delivery/backlog-review-2026-11-24/README.md) · [صف یکتای GitHub #95](https://github.com/MohamadParsa/marketplace/issues/95).
+
+[تحویل محلی #103/#104/#102؛ فاصله‌ها، Skeleton و شناسه عمومی chr](delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md).
+
+[تکمیل چهار کار #96–#99، گزارش تست و تصاویر](delivery/backlog-review-2026-11-24/issues-96-99-verification.md) · [قرارداد اعتبار و شارژ ادمین](architecture/contracts/wallet-credit-policy.md).
+
+[روش‌های ارسال، تقویم و وقفه تأمین — اجرای ترتیبی #120، #121، #122، #16، #123 و #10](delivery/shipping-refinement-2026-11-26/README.md) · [شواهد تقویم و وقفه #120](delivery/shipping-refinement-2026-11-26/issue-120-verification.md)
+
+[روش عمومی و هزینه/پوشش حمل #121](delivery/shipping-refinement-2026-11-26/issue-121-verification.md) · [هماهنگی فیلتر/گرید و panelbar کاتالوگ](delivery/shipping-refinement-2026-11-26/backoffice-ui-consistency.md)

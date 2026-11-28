@@ -93,9 +93,6 @@ func iconReference(state *Workspace, kind, target string) (*string, *int, error)
 		for i := range state.Brands {
 			x := &state.Brands[i]
 			if x.ID == target {
-				if !x.Active {
-					return nil, nil, ErrConflict
-				}
 				return &x.IconID, &x.Version, nil
 			}
 		}
@@ -123,6 +120,11 @@ func collectUnusedIcons(state *Workspace) {
 	}
 	for _, x := range state.Brands {
 		used[x.IconID] = true
+	}
+	for _, st := range state.Stores {
+		if st.Profile != nil {
+			used[st.Profile.ImageID] = true
+		}
 	}
 	kept := make([]catalog.IconMedia, 0, len(state.IconMedia))
 	for _, x := range state.IconMedia {

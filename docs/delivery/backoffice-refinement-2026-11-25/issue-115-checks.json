@@ -1,0 +1,129 @@
+{
+  "id": "CHECKS-BRAND-MANAGEMENT-20261126",
+  "issues": [
+    115
+  ],
+  "source_commit": "4ec243011c3c37ddb2fbbc6da9976037e084915e",
+  "source_pushed": true,
+  "go": {
+    "passed_tests_and_subtests": 370,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "brand-pagination-first-20",
+        "pass": true
+      },
+      {
+        "id": "brand-pagination-next",
+        "pass": true
+      },
+      {
+        "id": "brand-english-filter-and-page-reset",
+        "pass": true
+      },
+      {
+        "id": "brand-combined-empty-filter",
+        "pass": true
+      },
+      {
+        "id": "brand-create-all-metadata",
+        "pass": true
+      },
+      {
+        "id": "brand-conflict-keeps-input",
+        "pass": true
+      },
+      {
+        "id": "brand-valid-image",
+        "pass": true
+      },
+      {
+        "id": "brand-invalid-image-retains-old",
+        "pass": true
+      },
+      {
+        "id": "brand-image-filter",
+        "pass": true
+      },
+      {
+        "id": "brand-remove-fallback",
+        "pass": true
+      },
+      {
+        "id": "brand-inactive-effect-preview",
+        "pass": true
+      },
+      {
+        "id": "brand-mobile-form-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-mobile-grid-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "brand-viewer-cannot-create-or-edit",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 15,
+    "errors": [],
+    "isolated_memory": true
+  },
+  "backoffice_build": "passed",
+  "primary_preservation": {
+    "sections": 28,
+    "unchanged": true,
+    "changes": []
+  },
+  "primary_http": {
+    "backoffice": 200,
+    "storefront": 200
+  },
+  "merged": false,
+  "deployed": false,
+  "ci": {
+    "tested_revision": "9ff99146b273d49b23d9f3e8ba37897e7a8ea91d",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876",
+    "jobs": [
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876/job/139904608932"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876/job/139904609243"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876/job/139904609461"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876/job/139904609482"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45818578876/job/139904609569"
+      }
+    ]
+  }
+}

@@ -50,7 +50,8 @@ func commerceSeed() backoffice.Workspace {
 			settings.Methods[i].ExcludedCategories = []string{"gold"}
 		}
 	}
-	settings.Shipping = []commerce.ShippingMethod{{ID: "post", Name: "پست", Active: true, AllCities: true, Fee: 100000, MinDays: 1, MaxDays: 3}}
+	capacity := 1000 // Test fixture configuration, never a product default.
+	settings.Shipping = []commerce.ShippingMethod{{DailyCapacity: &capacity, ID: "post", Name: "پست", Active: true, AllCities: true, Fee: 100000, MinDays: 1, MaxDays: 3}}
 	w.Commerce = &commerce.State{Settings: settings}
 	return w
 }
@@ -102,11 +103,11 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	var cart backoffice.CartView
 	json.Unmarshal(get(customer, "GET", "/storefront/cart", nil, "", 200), &cart)
 	var address commerce.Address
-	mismatch := get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "قم", Street: "نشانی آزمون", PostalCode: "1234567890"}, "wrong-province-city", 400)
+	mismatch := get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "قم", Street: "نشانی آزمون", PostalCode: "1234567890"}, "wrong-province-city", 400)
 	if !strings.Contains(string(mismatch), "address_unavailable") {
 		t.Fatal("missing actionable geography error")
 	}
-	json.Unmarshal(get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمون", PostalCode: "1234567890"}, "address", 200), &address)
+	json.Unmarshal(get(customer, "POST", "/storefront/account/addresses", backoffice.AddressInput{HouseNumber: "12", RecipientSelf: new(bool), RecipientNationalID: "0013547895", Recipient: "گیرنده ساختگی", Phone: "09000000003", Province: "تهران", City: "تهران", Street: "نشانی آزمون", PostalCode: "1234567890"}, "address", 200), &address)
 	get(other, "POST", "/storefront/account/addresses", backoffice.AddressInput{ID: address.ID, Version: 1, Delete: true}, "foreign", 404)
 	in := backoffice.QuoteInput{CartVersion: cart.Version, AddressID: address.ID, Shipping: map[string]string{"s1": "post"}, PaymentMethodID: "card-transfer"}
 	get(customer, "POST", "/storefront/checkout/preview", in, "", 200)
@@ -115,9 +116,13 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: "1"}, "tamper", 409)
 	var p backoffice.PurchaseView
 	json.Unmarshal(get(customer, "POST", "/storefront/checkout/purchases", backoffice.AcceptQuoteInput{QuoteID: quote.ID, AcceptedTotalToman: quote.TotalToman}, "accept", 200), &p)
-	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "awaiting-payment" {
+	if p.Number != "1000" || p.PaymentStatus != "unpaid" || p.OrderStatus != "placed" {
 		t.Fatal(p)
 	}
+	if p.PaymentStage != "requested" || len(p.PaymentAttempts) != 1 {
+		t.Fatal("missing order request attempt", p)
+	}
+	get(customer, "POST", "/storefront/wallet/deposits", map[string]any{"method_id": "card-transfer", "status": "paid"}, "spoof-payment-status", 400)
 	get(other, "GET", "/storefront/account/orders/"+p.ID, nil, "", 404)
 	get(other, "GET", "/storefront/account/orders/"+p.Number, nil, "", 404)
 	get(customer, "GET", "/storefront/account/orders/"+p.Number, nil, "", 200)
@@ -136,9 +141,12 @@ func commerceRegistration(t *testing.T, repo backoffice.Repository) {
 	if p.PaymentStatus != "unpaid" || p.WalletBalanceToman != quote.TotalToman {
 		t.Fatal("credit conflated payment")
 	}
+	if p.PaymentStage != "pending" || len(p.PaymentAttempts) != 2 {
+		t.Fatal("funding confused with order payment", p)
+	}
 	get(admin, "POST", "/backoffice/commerce/orders/confirm", backoffice.PurchaseAdminInput{ID: p.ID, Version: p.Version}, "confirm", 200)
 	json.Unmarshal(get(customer, "GET", "/storefront/account/orders/"+p.ID, nil, "", 200), &p)
-	if p.PaymentStatus != "paid" || p.OrderStatus != "awaiting-supply" || p.WalletBalanceToman != "0" || len(p.Events) < 3 {
+	if p.PaymentStatus != "paid" || p.OrderStatus != "placed" || p.WalletBalanceToman != "0" || len(p.Events) < 3 {
 		t.Fatal(p)
 	}
 	get(admin, "POST", "/backoffice/commerce/orders/confirm", backoffice.PurchaseAdminInput{ID: p.ID, Version: 1}, "confirm-retry", 200)

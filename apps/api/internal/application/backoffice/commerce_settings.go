@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/shipping"
+	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -35,24 +37,36 @@ type PaymentMethodInput struct {
 	Instructions       string   `json:"instructions"`
 }
 type ShippingMethodInput struct {
-	ID        string   `json:"id"`
-	Name      string   `json:"name"`
-	Active    bool     `json:"active"`
-	AllCities bool     `json:"all_cities"`
-	Cities    []string `json:"cities"`
-	StoreIDs  []string `json:"store_ids"`
-	FeeToman  string   `json:"fee_toman"`
-	MinDays   int      `json:"min_days"`
-	MaxDays   int      `json:"max_days"`
+	DispatchIdentifier string             `json:"dispatch_identifier,omitempty"`
+	Schedule           *shipping.Schedule `json:"schedule,omitempty"`
+	Version            int                `json:"version"`
+	CollectionMode     string             `json:"collection_mode,omitempty"`
+	DeliveryMode       string             `json:"delivery_mode,omitempty"`
+	DailyCapacity      *int               `json:"daily_capacity,omitempty"`
+	CategoryMode       string             `json:"category_mode,omitempty"`
+	AllowedCategories  []string           `json:"allowed_categories,omitempty"`
+	DeniedCategories   []string           `json:"denied_categories,omitempty"`
+	CityIDs            []string           `json:"city_ids,omitempty"`
+	DayBasis           shipping.DayBasis  `json:"day_basis,omitempty"`
+	ID                 string             `json:"id"`
+	Name               string             `json:"name"`
+	Active             bool               `json:"active"`
+	AllCities          bool               `json:"all_cities"`
+	Cities             []string           `json:"cities"`
+	StoreIDs           []string           `json:"store_ids"`
+	FeeToman           string             `json:"fee_toman"`
+	MinDays            int                `json:"min_days"`
+	MaxDays            int                `json:"max_days"`
 }
 type PaymentSettingsInput struct {
 	Methods     []PaymentMethodInput `json:"methods"`
 	Destination commerce.Destination `json:"destination"`
 }
 type ShippingSettingsInput struct {
-	Methods        []ShippingMethodInput `json:"methods"`
-	ClosedWeekdays []int                 `json:"closed_weekdays"`
-	Holidays       []string              `json:"holidays"`
+	Timing         *shipping.TimingPolicy `json:"timing,omitempty"`
+	Methods        []ShippingMethodInput  `json:"methods"`
+	ClosedWeekdays []int                  `json:"closed_weekdays"`
+	Holidays       []string               `json:"holidays"`
 }
 type CommerceSettingsInput struct {
 	Geography *[]commerce.Province   `json:"geography,omitempty"`
@@ -62,6 +76,7 @@ type CommerceSettingsInput struct {
 	Business  *commerce.Business     `json:"business,omitempty"`
 }
 type CommerceSettingsView struct {
+	ShippingTiming     shipping.TimingPolicy `json:"shipping_timing"`
 	Geography          []commerce.Province   `json:"geography"`
 	Version            int                   `json:"version"`
 	Methods            []PaymentMethodInput  `json:"methods"`
@@ -82,12 +97,12 @@ func methodInput(m commerce.PaymentMethod) PaymentMethodInput {
 	return PaymentMethodInput{m.ID, m.Name, m.Kind, m.Active, commerce.Toman(m.Min), max, m.AllCategories, append([]string{}, m.AllowedCategories...), append([]string{}, m.ExcludedCategories...), m.Instructions}
 }
 func settingsView(s commerce.Settings) CommerceSettingsView {
-	v := CommerceSettingsView{Geography: append([]commerce.Province{}, s.Geography...), Version: s.Version, Methods: []PaymentMethodInput{}, Shipping: []ShippingMethodInput{}, ClosedWeekdays: s.ClosedWeekdays, Holidays: s.Holidays, Destination: s.Destination, Business: s.Business, Currency: "toman", ReservationMinutes: commerce.ReservationMinutes}
+	v := CommerceSettingsView{ShippingTiming: shippingTiming(s), Geography: append([]commerce.Province{}, s.Geography...), Version: s.Version, Methods: []PaymentMethodInput{}, Shipping: []ShippingMethodInput{}, ClosedWeekdays: s.ClosedWeekdays, Holidays: s.Holidays, Destination: s.Destination, Business: s.Business, Currency: "toman", ReservationMinutes: commerce.ReservationMinutes}
 	for _, m := range s.Methods {
 		v.Methods = append(v.Methods, methodInput(m))
 	}
 	for _, m := range s.Shipping {
-		v.Shipping = append(v.Shipping, ShippingMethodInput{m.ID, m.Name, m.Active, m.AllCities, m.Cities, m.StoreIDs, commerce.Toman(m.Fee), m.MinDays, m.MaxDays})
+		v.Shipping = append(v.Shipping, shippingMethodInput(m))
 	}
 	return v
 }
@@ -281,11 +296,25 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 				d.ID = id
 			}
 			c.Settings.Destination = d
+			oldMethods := c.Settings.Methods
 			c.Settings.Methods = methods
+			if c.Sales != nil {
+				if err := validateSales(*w, *c.Sales); err != nil {
+					c.Settings.Methods = oldMethods
+					return nil, err
+				}
+			}
 		}
 		if in.Shipping != nil {
 			v := in.Shipping
-			if len(v.Methods) > 30 || len(v.ClosedWeekdays) > 6 || len(v.Holidays) > 366 {
+			if v.Timing != nil {
+				timing, err := shipping.NormalizeTiming(*v.Timing)
+				if err != nil {
+					return nil, ErrInvalid
+				}
+				c.Settings.ShippingTiming = &timing
+			}
+			if len(v.Methods) > 1000 || len(v.ClosedWeekdays) > 6 || len(v.Holidays) > 366 {
 				return nil, ErrInvalid
 			}
 			days := map[int]bool{}
@@ -295,41 +324,61 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 				}
 				days[d] = true
 			}
-			for _, d := range v.Holidays {
-				if _, e := time.Parse("2006-01-02", d); e != nil {
-					return nil, ErrInvalid
-				}
+			calendarSettings := c.Settings
+			calendarSettings.ClosedWeekdays = v.ClosedWeekdays
+			calendarSettings.Holidays = v.Holidays
+			calendar, err := siteShippingCalendar(calendarSettings)
+			if err != nil {
+				return nil, ErrInvalid
 			}
 			methods := []commerce.ShippingMethod{}
 			seen := map[string]bool{}
 			for _, m := range v.Methods {
-				fee, e := commerce.ParseToman(m.FeeToman)
-				if e != nil || m.ID == "" || len(m.ID) > 80 || seen[m.ID] || strings.TrimSpace(m.Name) == "" || !textBound(m.Name, 100) || m.MinDays < 0 || m.MaxDays < m.MinDays || m.MaxDays > 60 || len(m.Cities) > 100 || len(m.StoreIDs) > 100 || m.Active && !m.AllCities && len(m.Cities) == 0 {
+				if seen[m.ID] {
 					return nil, ErrInvalid
 				}
 				seen[m.ID] = true
-				for _, city := range m.Cities {
-					if strings.TrimSpace(city) == "" || !textBound(city, 100) {
-						return nil, ErrInvalid
+				var previous *commerce.ShippingMethod
+				for index := range c.Settings.Shipping {
+					if c.Settings.Shipping[index].ID == m.ID {
+						previous = &c.Settings.Shipping[index]
+						break
 					}
 				}
-				for _, id := range m.StoreIDs {
-					found := false
-					for _, st := range w.Stores {
-						found = found || st.ID == id
-					}
-					if !found {
-						return nil, ErrInvalid
-					}
+				method, err := normalizeShippingMethod(*w, m, previous == nil)
+				if err != nil {
+					return nil, err
 				}
-				methods = append(methods, commerce.ShippingMethod{ID: m.ID, Name: m.Name, Active: m.Active, AllCities: m.AllCities, Cities: m.Cities, StoreIDs: m.StoreIDs, Fee: fee, MinDays: m.MinDays, MaxDays: m.MaxDays})
+				if previous != nil {
+					if previous.Version != m.Version {
+						return nil, ErrConflict
+					}
+					old, err := normalizeShippingMethod(*w, shippingMethodInput(*previous), false)
+					if err != nil {
+						return nil, err
+					}
+					if !reflect.DeepEqual(old, method) {
+						method.Version++
+					}
+				} else {
+					method.Version = 1
+				}
+				methods = append(methods, method)
+			}
+			for _, existing := range c.Settings.Shipping {
+				if !seen[existing.ID] {
+					return nil, shippingInvalid("methods", "روش موجود حذف نمی‌شود؛ برای توقف، آن را غیرفعال کنید.")
+				}
 			}
 			c.Settings.Shipping = methods
 			c.Settings.ClosedWeekdays = v.ClosedWeekdays
-			c.Settings.Holidays = v.Holidays
+			c.Settings.Holidays = calendar.Holidays
 		}
 		if in.Business != nil {
-			b := *in.Business
+			b, validationError := normalizeBusiness(*in.Business)
+			if validationError != nil {
+				return nil, validationError
+			}
 			for _, s := range []string{b.Name, b.SupportPhone, b.SupportEmail} {
 				if !textBound(s, 160) {
 					return nil, ErrInvalid
@@ -346,64 +395,6 @@ func (s *Service) SaveCommerceSettings(ctx context.Context, a identity.User, in 
 		commerceAudit(w, id, a, "settings.update", "settings", "", now)
 		return settingsView(c.Settings), nil
 	})
-}
-func shippingEligible(m commerce.ShippingMethod, city, store string) bool {
-	if !m.Active {
-		return false
-	}
-	if len(m.StoreIDs) > 0 {
-		found := false
-		for _, id := range m.StoreIDs {
-			found = found || id == store
-		}
-		if !found {
-			return false
-		}
-	}
-	if m.AllCities {
-		return true
-	}
-	for _, c := range m.Cities {
-		if NormalizeSearch(c) == NormalizeSearch(city) {
-			return true
-		}
-	}
-	return false
-}
-func deliveryDate(now time.Time, days int, s commerce.Settings) string {
-	loc, e := time.LoadLocation("Asia/Tehran")
-	if e != nil {
-		loc = time.FixedZone("Tehran", 12600)
-	}
-	d := now.In(loc)
-	closed := map[int]bool{}
-	for _, v := range s.ClosedWeekdays {
-		closed[v] = true
-	}
-	holidays := map[string]bool{}
-	for _, v := range s.Holidays {
-		holidays[v] = true
-	}
-	working := func(d time.Time) bool { return !closed[int(d.Weekday())] && !holidays[d.Format("2006-01-02")] }
-	if days == 0 {
-		for i := 0; i < 600; i++ {
-			if working(d) {
-				return d.Format("2006-01-02")
-			}
-			d = d.AddDate(0, 0, 1)
-		}
-	} else {
-		for i := 0; i < 600; i++ {
-			d = d.AddDate(0, 0, 1)
-			if working(d) {
-				days--
-				if days == 0 {
-					return d.Format("2006-01-02")
-				}
-			}
-		}
-	}
-	return d.Format("2006-01-02")
 }
 func sortedStoreIDs(lines []commerce.LineSnapshot) []string {
 	m := map[string]bool{}

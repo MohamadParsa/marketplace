@@ -1,0 +1,188 @@
+{
+  "id": "CHECKS-USERS-ROLES-20261125",
+  "issues": [
+    111,
+    112
+  ],
+  "browser": {
+    "checks": [
+      {
+        "id": "user-page-no-role-definition-form",
+        "pass": true
+      },
+      {
+        "id": "dedicated-role-page",
+        "pass": true
+      },
+      {
+        "id": "permission-search-in-persian",
+        "pass": true
+      },
+      {
+        "id": "global-role-multiple-permissions",
+        "pass": true
+      },
+      {
+        "id": "store-role-separate-scope",
+        "pass": true
+      },
+      {
+        "id": "create-unified-user",
+        "pass": true
+      },
+      {
+        "id": "phone-readonly-after-create",
+        "pass": true
+      },
+      {
+        "id": "same-user-multiple-store-memberships",
+        "pass": true
+      },
+      {
+        "id": "effective-access-separated-by-scope",
+        "pass": true
+      },
+      {
+        "id": "combined-filters-server-side",
+        "pass": true
+      },
+      {
+        "id": "server-paging-twenty-rows",
+        "pass": true
+      },
+      {
+        "id": "two-distinct-rows-selected-across-server-pages",
+        "pass": true
+      },
+      {
+        "id": "remote-export-selection-across-pages",
+        "pass": true
+      },
+      {
+        "id": "remote-export-all-filtered-pages",
+        "pass": true
+      },
+      {
+        "id": "invalid-input-keeps-draft",
+        "pass": true
+      },
+      {
+        "id": "email-login-password-only",
+        "pass": true
+      },
+      {
+        "id": "temporary-password-gates-backoffice",
+        "pass": true
+      },
+      {
+        "id": "restricted-session-cannot-read-workspace",
+        "pass": true
+      },
+      {
+        "id": "temporary-password-cannot-be-reused",
+        "pass": true
+      },
+      {
+        "id": "personal-password-opens-delegated-user-page",
+        "pass": true
+      },
+      {
+        "id": "role-management-not-visible-to-non-admin",
+        "pass": true
+      },
+      {
+        "id": "admin-reset-revokes-existing-session",
+        "pass": true
+      },
+      {
+        "id": "storefront-shares-temporary-password-gate",
+        "pass": true
+      },
+      {
+        "id": "storefront-continues-after-password-change",
+        "pass": true
+      },
+      {
+        "id": "users-mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "used-role-deletion-disabled",
+        "pass": true
+      },
+      {
+        "id": "role-dialog-mobile-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "inactive-admin-status-cannot-bypass-otp",
+        "pass": true
+      },
+      {
+        "id": "admin-reactivation-via-own-otp-refreshes-field",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 30,
+    "errors": [],
+    "export_total": 160,
+    "isolated_memory": true
+  },
+  "xlsx": [
+    {
+      "path": "output/playwright/issues-111-112/users-selected.xlsx",
+      "rows": 2,
+      "valid_zip_xml_crc": true,
+      "formulas": 0,
+      "sha256": "b7693503c6883298f2bbcaa5422159c56bbaa6a204dbae68b30f1fcfae963710"
+    },
+    {
+      "path": "output/playwright/issues-111-112/users-filtered-all.xlsx",
+      "rows": 160,
+      "valid_zip_xml_crc": true,
+      "formulas": 0,
+      "sha256": "d1586e8fa3da6ca5363e7772c20de93e58324929d54cf41418e8aa441e89583c"
+    }
+  ],
+  "local_restart": {
+    "preserved_sections": 17,
+    "all_equal": true,
+    "new_columns_excluded_from_legacy_identity_hash": true,
+    "main_smoke": {
+      "query_status": 200,
+      "bounded_page": true,
+      "roster_omitted_from_shell": true,
+      "existing_admin_password_gate_unchanged": true,
+      "can_assign": true,
+      "all_store_ids_arrays": true
+    }
+  },
+  "source_pushed": false,
+  "deployed": false,
+  "limitations": [
+    "identity-snapshot-is-still-loaded-internally;no-indexed-SQL-paging",
+    "legacy-workspace-API-kept-for-compatibility;new-shell-omits-roster",
+    "general-seller-scope-audit-owned-by-71",
+    "no-real-email-OTP-or-provider-activation"
+  ],
+  "go": {
+    "passed_tests_and_subtests": 325,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "frontend": {
+    "backoffice": "lint-build-and-typescript-passed",
+    "storefront": "lint-build-and-typescript-passed",
+    "existing_chunk_warning": true,
+    "new_dependencies": false
+  },
+  "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077"
+}

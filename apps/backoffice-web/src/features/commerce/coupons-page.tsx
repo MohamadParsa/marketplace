@@ -1,0 +1,576 @@
+import { PersianDateField } from "../../../../../packages/date-controls/persian-date-field";
+import { validISOInstant } from "../../../../../packages/date-controls/calendar";
+import { CreateButton } from "../../shared/create-button";
+import { FilterPanel } from "../../shared/filter-panel";
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import { useWorkspace } from "../../shared/workspace";
+import { DataTable, PageHeader } from "../../shared/components";
+import { money } from "../../../../../packages/commerce-client/types";
+
+type Coupon = {
+  id: string;
+  version: number;
+  code: string;
+  name: string;
+  active: boolean;
+  kind: "fixed" | "percent";
+  value: string;
+  target: "items" | "order" | "shipping";
+  all_categories: boolean;
+  categories: string[];
+  min_toman: string;
+  max_toman: string;
+  cap_toman: string;
+  starts_at: string | null;
+  ends_at: string | null;
+  global_limit: number;
+  user_limit: number;
+  global_unlimited: boolean;
+  user_unlimited: boolean;
+  platform_bps: number;
+  reserved?: number;
+  consumed?: number;
+};
+type Directory = { items: Coupon[]; permissions: Record<string, boolean> };
+const targets = {
+  items: "کالاهای واجد شرایط",
+  order: "کالاها و ارسال واجد شرایط",
+  shipping: "فقط ارسال واجد شرایط",
+};
+const empty = (): Coupon => ({
+  id: "",
+  version: 0,
+  code: "",
+  name: "",
+  active: false,
+  kind: "percent",
+  value: "10",
+  target: "items",
+  all_categories: true,
+  categories: [],
+  min_toman: "0",
+  max_toman: "0",
+  cap_toman: "0",
+  starts_at: null,
+  ends_at: null,
+  global_limit: 0,
+  user_limit: 0,
+  global_unlimited: true,
+  user_unlimited: true,
+  platform_bps: 10000,
+});
+const base = import.meta.env.VITE_API_BASE_URL ?? "";
+async function api<T>(
+  token: string,
+  path: string,
+  body?: unknown,
+  key?: string,
+): Promise<T> {
+  const r = await fetch(base + "/backoffice/commerce/coupons" + path, {
+    method: body ? "POST" : "GET",
+    cache: "no-store",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+      ...(key ? { "Idempotency-Key": key } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({}));
+    throw Error(
+      (
+        {
+          forbidden: "دسترسی این عملیات را ندارید.",
+          state_conflict:
+            "نسخه یا کد تکراری است؛ فهرست را تازه کنید. ورودی شما حفظ شد.",
+          coupon_not_eligible:
+            "شرایط دسته، تاریخ، مبلغ یا سهمیه این کوپن برقرار نیست.",
+          invalid_request:
+            "اطلاعات کوپن معتبر نیست؛ مبلغ، بازه، سهم هزینه و سهمیه‌ها را بررسی کنید.",
+          session_required: "نشست معتبر نیست؛ دوباره وارد شوید.",
+        } as Record<string, string>
+      )[e.code] ?? "ارتباط برقرار نشد؛ ورودی حفظ شد، دوباره تلاش کنید.",
+    );
+  }
+  return r.json();
+}
+export function CouponsPage({ token }: { token: string }) {
+  const { state, surface } = useWorkspace();
+  const [data, setData] = useState<Directory>(),
+    [draft, setDraft] = useState<Coupon>(),
+    [search, setSearch] = useState(""),
+    [error, setError] = useState(""),
+    [busy, setBusy] = useState(false),
+    [key, setKey] = useState(crypto.randomUUID());
+  const [preview, setPreview] = useState(""),
+    [offer, setOffer] = useState(""),
+    [shipping, setShipping] = useState("0");
+  const load = useCallback(async () => {
+    setBusy(true);
+    setError("");
+    try {
+      setData(await api<Directory>(token, ""));
+    } catch (e) {
+      setError(String((e as Error).message));
+    } finally {
+      setBusy(false);
+    }
+  }, [token]);
+  useEffect(() => {
+    if (surface !== "seller") void load();
+  }, [load, surface]);
+  if (surface === "seller")
+    return <Alert severity="error">مدیریت کوپن مختص بک‌آفیس است.</Alert>;
+  const permitted = (action: string) =>
+    !!data?.permissions["commerce.coupons." + action];
+  const change = <K extends keyof Coupon>(field: K, value: Coupon[K]) => {
+    setDraft((d) => (d ? { ...d, [field]: value } : d));
+    setKey(crypto.randomUUID());
+    setPreview("");
+  };
+  const editable = !!draft && permitted(draft.id ? "edit" : "create");
+  const save = async () => {
+    if (!draft || busy || !editable) return;
+    if([draft.starts_at,draft.ends_at].some(value=>!!value&&!validISOInstant(value))){setError("تاریخ و ساعت شروع یا پایان معتبر نیست؛ ورودی شمسی را اصلاح کنید.");return;}
+    setBusy(true);
+    setError("");
+    try {
+      const { reserved: _, consumed: __, ...input } = draft;
+      void _;
+      void __;
+      await api(token, "", input, key);
+      setDraft(undefined);
+      await load();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const [searchDraft, setSearchDraft] = useState(search);
+  return (
+    <>
+      <PageHeader
+        title="کدهای تخفیف"
+        description="قانون نسخه‌دار؛ رزرو سهمیه همراه سفارش و ثبت سهم هزینه چریوا و فروشنده"
+        action={
+          <CreateButton
+            variant="contained"
+            disabled={busy || !permitted("create")}
+            onClick={() => {
+              setDraft(empty());
+              setKey(crypto.randomUUID());
+              setPreview("");
+              setError("");
+            }}
+          >
+            کوپن جدید
+          </CreateButton>
+        }
+      />
+      {!draft && error && <Alert severity="error">{error}</Alert>}
+      <section className="panel">
+        <FilterPanel onSearch={() => setSearch(searchDraft)}>
+          <TextField
+            label="جست‌وجوی کوپن"
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
+          />
+        </FilterPanel>
+        {!data ? (
+          <p role="status">
+            {busy ? "در حال دریافت کوپن‌ها…" : "فهرست دریافت نشد."}
+          </p>
+        ) : (
+          <DataTable
+            searchable={false}
+            rows={data.items.filter((c) =>
+              (c.name + " " + c.code)
+                .toLowerCase()
+                .includes(search.toLowerCase()),
+            )}
+            columns={[
+              {
+                title: "کد / عنوان",
+                render: (c) => (
+                  <>
+                    <b dir="ltr">{c.code}</b>
+                    <small>{c.name}</small>
+                  </>
+                ),
+              },
+              {
+                title: "تخفیف",
+                render: (c) =>
+                  c.kind === "percent" ? c.value + "٪" : money(c.value),
+              },
+              {
+                title: "هدف / وضعیت",
+                render: (c) => (
+                  <>
+                    {targets[c.target]}
+                    <small>{c.active ? "فعال" : "غیرفعال"}</small>
+                  </>
+                ),
+              },
+              {
+                title: "سهمیه",
+                render: (c) => (
+                  <>
+                    {c.reserved} رزرو · {c.consumed} مصرف
+                    <small>
+                      {c.global_unlimited
+                        ? "کل نامحدود"
+                        : "کل " + c.global_limit}{" "}
+                      ·{" "}
+                      {c.user_unlimited
+                        ? "هر مشتری نامحدود"
+                        : "هر مشتری " + c.user_limit}
+                    </small>
+                  </>
+                ),
+              },
+              {
+                title: "عملیات",
+                render: (c) => (
+                  <>
+                    <Button
+                      disabled={busy || !permitted("activate")}
+                      onClick={async () => {
+                        setBusy(true);
+                        setError("");
+                        try {
+                          await api(
+                            token,
+                            "/activate",
+                            { id: c.id, version: c.version, active: !c.active },
+                            crypto.randomUUID(),
+                          );
+                          await load();
+                        } catch (e) {
+                          setError((e as Error).message);
+                        } finally {
+                          setBusy(false);
+                        }
+                      }}
+                    >
+                      {c.active ? "غیرفعال‌کردن" : "فعال‌کردن"}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setDraft({ ...c, categories: [...c.categories] });
+                        setPreview("");
+                        setError("");
+                        setKey(crypto.randomUUID());
+                      }}
+                    >
+                      مشاهده و ویرایش
+                    </Button>
+                  </>
+                ),
+              },
+            ]}
+          />
+        )}
+      </section>
+      {draft && (
+        <Dialog
+          open
+          maxWidth="md"
+          fullWidth
+          className="coupon-dialog"
+          onClose={() => {
+            if (!busy) setDraft(undefined);
+          }}
+        >
+          <DialogTitle>{draft.id ? "ویرایش کوپن" : "کوپن جدید"}</DialogTitle>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void save();
+            }}
+          >
+            <DialogContent className="coupon-form">
+              {error && <Alert severity="error">{error}</Alert>}
+              <fieldset disabled={!editable || busy}>
+                <legend>تعریف قانون</legend>
+                <TextField
+                  label="کد کوپن"
+                  value={draft.code}
+                  required
+                  inputProps={{
+                    dir: "ltr",
+                    maxLength: 64,
+                    pattern: "[A-Za-z0-9][A-Za-z0-9\\-]{2,63}",
+                  }}
+                  onChange={(e) => change("code", e.target.value)}
+                />
+                <TextField
+                  label="عنوان کوپن"
+                  value={draft.name}
+                  required
+                  inputProps={{ maxLength: 120 }}
+                  onChange={(e) => change("name", e.target.value)}
+                />
+                <div className="coupon-choices">
+                  <OptionSelect
+                    label="نوع تخفیف"
+                    multiple={false}
+                    options={(["percent", "fixed"] as const).map((k) => ({
+                      id: String(k),
+                      name: k === "percent" ? "درصدی" : "مبلغ ثابت تومان",
+                      selected: draft.kind === k,
+                      disabled: false,
+                      onSelect: () => {
+                        change("kind", k);
+                        change("cap_toman", "0");
+                      },
+                    }))}
+                  />
+                </div>
+                <TextField
+                  label={
+                    draft.kind === "percent"
+                      ? "درصد تخفیف"
+                      : "مبلغ ثابت (تومان)"
+                  }
+                  value={draft.value}
+                  required
+                  inputProps={{ inputMode: "decimal" }}
+                  onChange={(e) => change("value", e.target.value)}
+                />
+                <div className="coupon-choices">
+                  <OptionSelect
+                    label="هدف تخفیف"
+                    multiple={false}
+                    options={Object.entries(targets).map(([k, n]) => ({
+                      id: String(k),
+                      name: String("" + n + ""),
+                      selected: draft.target === k,
+                      disabled: false,
+                      onSelect: () => change("target", k as Coupon["target"]),
+                    }))}
+                  />
+                </div>
+                <TextField
+                  label="حداقل مبلغ مبنا (تومان)"
+                  value={draft.min_toman}
+                  onChange={(e) => change("min_toman", e.target.value)}
+                />
+                <TextField
+                  label="حداکثر مبلغ مبنا (۰ = نامحدود)"
+                  value={draft.max_toman}
+                  onChange={(e) => change("max_toman", e.target.value)}
+                />
+                {draft.kind === "percent" && (
+                  <TextField
+                    label="سقف تخفیف تومان (۰ = بدون سقف)"
+                    value={draft.cap_toman}
+                    onChange={(e) => change("cap_toman", e.target.value)}
+                  />
+                )}
+                <p>
+                  مبنای درصد و بازه: مبلغ واجد شرایط پس از تخفیف مستقیم و
+                  مارکاپ، پیش از خود کوپن. روش‌های نقدی فعلی مارکاپ ندارند.
+                  ارسال فقط برای فروشگاه‌های دارای کالای واجد شرایط پوشش داده
+                  می‌شود.
+                </p>
+              </fieldset>
+              <fieldset disabled={!editable || busy} className="coupon-scope">
+                <legend>دسته‌ها و زیرشاخه‌ها</legend>
+                <label>
+                  <Checkbox
+                    checked={draft.all_categories}
+                    onChange={(e) => {
+                      change("all_categories", e.target.checked);
+                      change("categories", []);
+                    }}
+                  />
+                  همه دسته‌ها
+                </label>
+                {!draft.all_categories && (
+                  <MultiChoiceField
+                    label="دسته‌های مشمول"
+                    value={draft.categories}
+                    options={(state.categories ?? [])
+                      .filter((c) => !c.archived)
+                      .map((c) => ({ id: c.id, name: c.name }))}
+                    disabled={!editable || busy}
+                    onChange={(ids) => change("categories", ids)}
+                  />
+                )}
+              </fieldset>
+              <fieldset disabled={!editable || busy}>
+                <legend>زمان و سهمیه</legend>
+                <p>
+                  تاریخ‌ها شمسی و ساعت‌ها به وقت تهران هستند؛ بدون زمان یعنی
+                  بدون محدودیت همان طرف بازه.
+                </p>
+                {(["starts_at", "ends_at"] as const).map((field) => (
+                  <PersianDateField
+                    key={field}
+                    label={
+                      field === "starts_at"
+                        ? "شروع اعتبار"
+                        : "پایان اعتبار"
+                    }
+                    dateTime
+                    value={draft[field] ?? ""}
+                    onChange={value=>change(field,value||null)}
+                  />
+                ))}
+                <label>
+                  <Checkbox
+                    checked={draft.global_unlimited}
+                    onChange={(e) => {
+                      change("global_unlimited", e.target.checked);
+                      change("global_limit", e.target.checked ? 0 : 1);
+                    }}
+                  />
+                  سهمیه کل نامحدود
+                </label>
+                {!draft.global_unlimited && (
+                  <TextField
+                    label="سهمیه کل"
+                    type="number"
+                    value={draft.global_limit}
+                    inputProps={{ min: 1, step: 1, max: 1000000000 }}
+                    onChange={(e) =>
+                      change("global_limit", Number(e.target.value))
+                    }
+                  />
+                )}
+                <label>
+                  <Checkbox
+                    checked={draft.user_unlimited}
+                    onChange={(e) => {
+                      change("user_unlimited", e.target.checked);
+                      change("user_limit", e.target.checked ? 0 : 1);
+                    }}
+                  />
+                  سهمیه هر مشتری نامحدود
+                </label>
+                {!draft.user_unlimited && (
+                  <TextField
+                    label="سهمیه هر مشتری"
+                    type="number"
+                    value={draft.user_limit}
+                    inputProps={{ min: 1, step: 1, max: 1000000000 }}
+                    onChange={(e) =>
+                      change("user_limit", Number(e.target.value))
+                    }
+                  />
+                )}
+              </fieldset>
+              <fieldset disabled={!editable || busy}>
+                <legend>تأمین هزینه</legend>
+                <ChoiceField
+                  label="تأمین‌کننده هزینه"
+                  value={draft.platform_bps === 10000 ? "platform" : draft.platform_bps === 0 ? "seller" : "shared"}
+                  options={[{ id: "platform", name: "چریوا" }, { id: "seller", name: "فروشنده" }, { id: "shared", name: "ترکیبی" }]}
+                  onChange={(value) => change("platform_bps", value === "platform" ? 10000 : value === "seller" ? 0 : 5000)}
+                />
+                <TextField
+                  label="سهم چریوا (درصد)"
+                  type="number"
+                  value={draft.platform_bps / 100}
+                  inputProps={{ min: 0, max: 100, step: 0.01 }}
+                  onChange={(e) =>
+                    change(
+                      "platform_bps",
+                      Math.round(Number(e.target.value) * 100),
+                    )
+                  }
+                />
+                <p>
+                  باقی سهم فروشنده است؛ جمع سهم‌ها در snapshot خرید ثبت می‌شود.
+                </p>
+              </fieldset>
+              <label>
+                <Checkbox
+                  disabled={!editable || busy || !permitted("activate")}
+                  checked={draft.active}
+                  onChange={(e) => change("active", e.target.checked)}
+                />
+                کوپن فعال باشد
+              </label>
+              {draft.id && (
+                <fieldset disabled={busy}>
+                  <legend>پیش‌نمایش قانون ذخیره‌شده</legend>
+                  <p>
+                    تغییرات فرم ابتدا ذخیره شوند. این محاسبه سهمیه رزرو نمی‌کند
+                    و فعال بودن را نادیده می‌گیرد.
+                  </p>
+                  <TextField
+                    label="شناسه عرضه برای آزمون"
+                    value={offer}
+                    onChange={(e) => setOffer(e.target.value)}
+                  />
+                  <TextField
+                    label="هزینه ارسال آزمون (تومان)"
+                    value={shipping}
+                    onChange={(e) => setShipping(e.target.value)}
+                  />
+                  <Button
+                    disabled={!offer}
+                    onClick={async () => {
+                      setBusy(true);
+                      setError("");
+                      try {
+                        const v = await api<Record<string, string>>(
+                          token,
+                          "/preview",
+                          {
+                            coupon_id: draft.id,
+                            offer_id: offer,
+                            quantity: 1,
+                            shipping_toman: shipping,
+                          },
+                        );
+                        setPreview(
+                          `تخفیف ${money(v.discount_toman)}؛ نهایی ${money(v.total_toman)}`,
+                        );
+                      } catch (e) {
+                        setError((e as Error).message);
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    محاسبه پیش‌نمایش
+                  </Button>
+                  {preview && <Alert severity="success">{preview}</Alert>}
+                </fieldset>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button disabled={busy} onClick={() => setDraft(undefined)}>
+                بستن
+              </Button>
+              <Button
+                disabled={busy || !editable}
+                type="submit"
+                variant="contained"
+              >
+                ذخیره کوپن
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      )}
+    </>
+  );
+}

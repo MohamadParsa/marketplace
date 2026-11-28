@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  displayPriceInput,
+  numericInput,
+  persianDigits,
+  tomanInputMinor,
+} from "./display-numbers";
 import "./price-range-filter.css";
 export type PriceRange = { min: number | null; max: number | null };
 export function PriceRangeFilter({
@@ -16,6 +22,9 @@ export function PriceRangeFilter({
     params.has("max_price") ? String(Number(params.get("max_price")) / 10) : "",
   ];
   const [draft, setDraft] = useState(initial);
+  const [displayDraft, setDisplayDraft] = useState(() =>
+    initial().map((v) => displayPriceInput(v)),
+  );
   const current = useRef(draft);
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const [error, setError] = useState("");
@@ -28,25 +37,35 @@ export function PriceRangeFilter({
     const v = initial();
     current.current = v;
     setDraft(v);
+    setDisplayDraft(v.map((value) => displayPriceInput(value)));
     setError("");
     return cancel;
   }, [query]);
-  const update = (v: string[]) => {
+  const update = (v: string[], edited?: { index: number; value: string }) => {
     current.current = v;
     setDraft(v);
+    setDisplayDraft(
+      v.map((value, index) =>
+        edited?.index === index
+          ? persianDigits(edited.value.replace(/\./g, "٫"))
+          : displayPriceInput(value),
+      ),
+    );
     setError("");
   };
   const apply = () => {
     cancel();
     const [min, max] = current.current;
-    const low = min === "" ? null : Math.round(Number(min) * 10),
-      high = max === "" ? null : Math.round(Number(max) * 10);
+    const low = min === "" ? null : tomanInputMinor(min),
+      high = max === "" ? null : tomanInputMinor(max);
     if (
-      (low !== null && (!Number.isSafeInteger(low) || low < 0)) ||
-      (high !== null && (!Number.isSafeInteger(high) || high < 0)) ||
+      (min !== "" && low === null) ||
+      (max !== "" && high === null) ||
       (low !== null && high !== null && low > high)
     ) {
-      setError("بازه قیمت معتبر وارد کنید.");
+      setError(
+        "بازه معتبر وارد کنید؛ حداقل نباید از حداکثر بیشتر باشد. قیمت با حداکثر یک رقم اعشار پذیرفته می‌شود.",
+      );
       return;
     }
     const before = params.get("min_price") ?? "",
@@ -70,8 +89,8 @@ export function PriceRangeFilter({
     available = range?.min != null && range?.max != null,
     enabled = available && ceiling > floor;
   const clamp = (n: number) => Math.min(ceiling, Math.max(floor, n));
-  const low = clamp(draft[0] === "" ? floor : Number(draft[0]) * 10),
-    high = clamp(draft[1] === "" ? ceiling : Number(draft[1]) * 10);
+  const low = clamp(tomanInputMinor(draft[0]) ?? floor),
+    high = clamp(tomanInputMinor(draft[1]) ?? ceiling);
   const minValue = Number.isFinite(low) ? Math.min(low, high) : floor,
     maxValue = Number.isFinite(high) ? Math.max(low, high) : ceiling;
   const slide = (index: number, value: number) => {
@@ -98,6 +117,16 @@ export function PriceRangeFilter({
       <h3>
         محدوده قیمت <small>تومان</small>
       </h3>
+      {available && (
+        <div className="price-slider-values" aria-live="polite">
+          <span>
+            از <bdi>{money(minValue)}</bdi>
+          </span>
+          <span>
+            تا <bdi>{money(maxValue)}</bdi>
+          </span>
+        </div>
+      )}
       <div
         className="price-slider"
         dir="ltr"
@@ -142,30 +171,45 @@ export function PriceRangeFilter({
       <div className="price-slider-inputs">
         {["از", "تا"].map((label, i) => (
           <label key={i}>
-            {label}
+            <span>{label}</span>
             <input
-              type="number"
-              min="0"
-              step="0.1"
+              type="text"
+              inputMode="decimal"
               dir="ltr"
               aria-label={
                 i === 0 ? "حداقل قیمت (تومان)" : "حداکثر قیمت (تومان)"
               }
-              value={draft[i]}
+              value={displayDraft[i]}
+              aria-invalid={!!error}
+              aria-describedby={error ? "price-range-error" : undefined}
+              onBlur={() =>
+                setDisplayDraft((values) =>
+                  values.map((value, index) =>
+                    index === i ? displayPriceInput(current.current[i]) : value,
+                  ),
+                )
+              }
               placeholder={
-                available ? String((i === 0 ? floor : ceiling) / 10) : ""
+                available
+                  ? displayPriceInput(String((i === 0 ? floor : ceiling) / 10))
+                  : ""
               }
               onChange={(e) => {
                 cancel();
                 const next = [...current.current];
-                next[i] = e.target.value;
-                update(next);
+                next[i] = numericInput(e.target.value);
+                update(next, { index: i, value: e.target.value });
               }}
             />
+            <small>تومان</small>
           </label>
         ))}
       </div>
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p role="alert" id="price-range-error">
+          {error}
+        </p>
+      )}
       <button type="submit">اعمال محدوده قیمت</button>
     </form>
   );

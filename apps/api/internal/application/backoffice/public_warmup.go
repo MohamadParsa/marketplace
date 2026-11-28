@@ -27,6 +27,9 @@ func (s *Service) WarmPublicCache(ctx context.Context, limit int) WarmupResult {
 		result.Failures++
 		return result
 	}
+	if _, e := s.PublicBusinessContent(ctx); e != nil {
+		result.Failures++
+	}
 	home, e := s.PublicHome(ctx)
 	if e != nil {
 		result.Failures++

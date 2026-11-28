@@ -1,0 +1,263 @@
+{
+  "id": "DEL-ORDER-EXPERIENCE-FOLLOWUP-20261128",
+  "updated": "2026-11-28",
+  "document_status": "in-review",
+  "owner": "eliassarband",
+  "implementation_status": "done",
+  "execution_authorized": true,
+  "source_commit": "a8d0d998b730db02900a3493fecc2c2e8b104cf6",
+  "parent_issue": 95,
+  "tasks": [
+    {
+      "id": "CV-ORD-FOLLOW-01",
+      "spec_id": "FEAT-ORDER-FOLLOW-001",
+      "issue": 142,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/142",
+      "title": "ورود مستقیم با رمز یا OTP پس از شماره موبایل",
+      "file": "tasks/direct-login-methods.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [],
+      "evidence": "issue-142-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/142#issuecomment-7235847266",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46120293895/job/140903109206",
+        "issue_state": "closed",
+        "source_commit": "4049af9ab74e32a0dd741336d1e25a168776d7fe"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-02",
+      "spec_id": "FEAT-ORDER-FOLLOW-002",
+      "issue": 143,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/143",
+      "title": "حفظ نشست معتبر بک‌آفیس پس از رفرش و F5",
+      "file": "tasks/restore-valid-backoffice-session.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [],
+      "evidence": "issue-143-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/143#issuecomment-7235895777",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46120618838/job/140904088124",
+        "issue_state": "closed",
+        "source_commit": "c1e5f9ec9b45581ac5effab2d7d2b418432a3c1b"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-03",
+      "spec_id": "FEAT-ORDER-FOLLOW-003",
+      "issue": 144,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/144",
+      "title": "فیلتر موبایل مشتری و دکمه مشاهده در انتهای ردیف سفارش",
+      "file": "tasks/orders-mobile-filter-view-action.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [],
+      "evidence": "issue-144-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/144#issuecomment-7235967160",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46120916826/job/140905001954",
+        "issue_state": "closed",
+        "source_commit": "c321435d746e41a17add984ca07045e3f02bb021"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-04",
+      "spec_id": "FEAT-ORDER-FOLLOW-004",
+      "issue": 145,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/145",
+      "title": "اعمال خودکار کیف پول فقط تا مبلغ لازم سفارش",
+      "file": "tasks/cap-applied-wallet-credit.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [],
+      "evidence": "issue-145-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/145#issuecomment-7235967780",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46121071170/job/140905477576",
+        "issue_state": "closed",
+        "source_commit": "ac5ec92fa14d5098121386bdbd4b4436e5c1c18e"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-05",
+      "spec_id": "FEAT-ORDER-FOLLOW-005",
+      "issue": 146,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/146",
+      "title": "ثبت خودکار پرداخت سفارش با مانده پرداخت صفر",
+      "file": "tasks/automatic-covered-order-payment.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORD-FOLLOW-04"
+      ],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [],
+      "evidence": "issue-146-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/146#issuecomment-7236082941",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46121979106/job/140908260258",
+        "issue_state": "closed",
+        "source_commit": "7aee4ed4455ca2aee9900cea95ee79036afdebb3"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-06",
+      "spec_id": "FEAT-ORDER-FOLLOW-006",
+      "issue": 147,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/147",
+      "title": "منوی مرسوله‌ها با صف پردازش و دسترسی ادمین و فروشگاه",
+      "file": "tasks/scoped-shipments-workspace.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-05"
+      ],
+      "evidence": "issue-147-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/147#issuecomment-7236100818",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46122064767/job/140908518379",
+        "issue_state": "closed",
+        "source_commit": "d277959ea49d22a3a4276b31a0dac6ddedbd686d"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-07",
+      "spec_id": "FEAT-ORDER-FOLLOW-007",
+      "issue": 148,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/148",
+      "title": "ارتفاع یکدست توضیح عملیات و راهنمای کوتاه مراحل مرسوله",
+      "file": "tasks/shipment-operation-form-guidance.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-06"
+      ],
+      "evidence": "issue-148-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/148#issuecomment-7236158092",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46122361727/job/140909427173",
+        "issue_state": "closed",
+        "source_commit": "c5d5ba26fc4a8a7522ec7bd1e8e163c8bcf41396"
+      }
+    },
+    {
+      "id": "CV-ORD-FOLLOW-08",
+      "spec_id": "FEAT-ORDER-FOLLOW-008",
+      "issue": 149,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/149",
+      "title": "جزئیات سفارش مشتری با تفکیک مالی و روند گرافیکی مرسوله‌ها",
+      "file": "tasks/customer-order-detail-progress.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "integration_verification_dependencies": [
+        "CV-ORD-FOLLOW-05",
+        "CV-ORD-FOLLOW-06",
+        "CV-ORD-FOLLOW-07"
+      ],
+      "evidence": "issue-149-verification.md",
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/149#issuecomment-7236252808",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46123223630/job/140912028637",
+        "issue_state": "closed",
+        "source_commit": "ec759db393118c78fc4af356b14115633b70eb00"
+      }
+    }
+  ],
+  "implementation_commit": "ec759db393118c78fc4af356b14115633b70eb00",
+  "local_review": "final-local-review.md",
+  "followups": [
+    {
+      "scope": "storefront-fixes-and-read-only-menu-review",
+      "implementation_status": "done",
+      "id": "CV-ORD-UI-01",
+      "spec_id": "FEAT-SF-ORDER-PRESENTATION-001",
+      "execution_authorized": true,
+      "issue": 150,
+      "file": "storefront-presentation-and-legacy-menu-review.md",
+      "delivery": {
+        "source_commit": "7aca65d85bef7a5db0dc173e3e8a1c55515971a8",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46125739727",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/150#issuecomment-7236602828",
+        "issue_state": "closed"
+      }
+    },
+    {
+      "id": "CV-ORD-UI-02",
+      "spec_id": "FEAT-WALLET-REVIEW-001",
+      "scope": "wallet-history-and-transfer-review",
+      "issue": 151,
+      "file": "wallet-history-and-transfer-review.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "delivery": {
+        "issue_state": "closed",
+        "source_commit": "153655c30fa3b376c92305d049ebc629aeec45df",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46130026327",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/151#issuecomment-7237211101"
+      }
+    }
+  ],
+  "implementation_scope": "original-eight-tasks",
+  "additional_planned_tasks": [
+    {
+      "id": "CV-ORD-UI-03",
+      "spec_id": "FEAT-BO-ORDER-REFUND-FULL-001",
+      "issue": 164,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/164",
+      "title": "CV-ORD-UI-03 — استرداد کل سفارش با اقدام مستقل روی سفارش",
+      "file": "tasks/full-order-refund.md",
+      "owner": "eliassarband",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "related_closed_issues": [
+        137,
+        138,
+        140
+      ],
+      "dependencies": [],
+      "blocking_questions": []
+    },
+    {
+      "id": "CV-ORD-UI-04",
+      "spec_id": "FEAT-BO-ORDER-SUMMARY-001",
+      "issue": 165,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/165",
+      "title": "CV-ORD-UI-04 — چیدمان منظم خلاصه سفارش و گیرنده بالای اقلام در بک‌آفیس",
+      "file": "tasks/backoffice-order-summary-layout.md",
+      "owner": "eliassarband",
+      "state": "closed",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "related_closed_issues": [
+        140,
+        144
+      ],
+      "dependencies": [],
+      "blocking_questions": [],
+      "evidence": "issue-165-verification.md",
+      "delivery": {
+        "source_commit": "3900b8fb595d8decb95e6656cdc17182e1ad16e4",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46154712609",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/165#issuecomment-7240713891",
+        "issue_state": "closed"
+      }
+    }
+  ]
+}

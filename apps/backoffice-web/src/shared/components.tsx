@@ -1,4 +1,16 @@
-import { useState, type ReactNode } from "react";
+import { PersianDateInput } from "../../../../packages/date-controls/persian-date-field";
+import { useWorkspace } from "./workspace";
+import { FilterPanel } from "./filter-panel";
+import { xlsxBlob } from "./xlsx";
+import {
+  useRef,
+  useEffect,
+  useDeferredValue,
+  useMemo,
+  isValidElement,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   Alert,
   Box,
@@ -32,63 +44,317 @@ export function Status({ value }: { value: string }) {
   );
 }
 export interface Column<T> {
+  exportValue?: (row: T) => string | number;
+  exportable?: boolean;
   title: string;
   render: (row: T) => ReactNode;
 }
+function cellText(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(cellText).join(" ");
+  if (
+    isValidElement<{ children?: ReactNode; value?: string; label?: ReactNode }>(
+      node,
+    )
+  ) {
+    if (node.type === Status && node.props.value)
+      return labels[node.props.value] ?? node.props.value;
+    return cellText(node.props.children ?? node.props.label);
+  }
+  return "";
+}
+const actionColumn = (title: string) =>
+  ["عملیات", "جزئیات", "رسیدگی", "تلاش مجدد"].includes(title);
+const forbiddenExport =
+  /(عملیات|رمز|گذرواژه|کد.?ملی|بانک|شماره.?کارت|شبا|password|national.?id|iban)/i;
 export function DataTable<T extends { id: string }>({
   rows,
   columns,
   empty = "موردی برای نمایش وجود ندارد.",
+  searchable = true,
+  remote,
 }: {
   rows: T[];
   columns: Column<T>[];
   empty?: string;
+  searchable?: boolean;
+  remote?: {
+    controls: Parameters<typeof PaginationControls>[0];
+    filterKey: string;
+    exportRows: (ids?: string[], signal?: AbortSignal) => Promise<T[]>;
+  };
 }) {
-  const paged = usePagedRows(rows);
+  const { authToken, surface } = useWorkspace();
+  const exportAbort = useRef<AbortController>();
+  useEffect(() => () => exportAbort.current?.abort(), []);
+  const [search, setSearch] = useState(""),
+    [searchDraft, setSearchDraft] = useState(""),
+    [sort, setSort] = useState<{ column: number; desc: boolean }>(),
+    [selected, setSelected] = useState<string[]>([]),
+    [exporting, setExporting] = useState(false),
+    [error, setError] = useState("");
+  useEffect(() => {
+    if (remote) setSelected([]);
+  }, [remote?.filterKey]);
+  const deferred = useDeferredValue(searchable ? search : "");
+  const cells = useMemo(
+    () =>
+      rows.map((row) => ({
+        row,
+        text: columns.map((c) => cellText(c.render(row))),
+      })),
+    [rows, columns],
+  );
+  const norm = (value: string) =>
+    value.trim().replace(/ي/g, "ی").replace(/ك/g, "ک").toLocaleLowerCase();
+  const filtered = useMemo(() => {
+    const out = cells.filter(
+      (x) => !deferred || norm(x.text.join(" ")).includes(norm(deferred)),
+    );
+    if (sort)
+      out.sort((a, b) => {
+        const n = a.text[sort.column].localeCompare(b.text[sort.column], "fa", {
+          numeric: true,
+        });
+        return (sort.desc ? -n : n) || a.row.id.localeCompare(b.row.id);
+      });
+    return out;
+  }, [cells, deferred, sort]);
+  const paged = usePagedRows(filtered.map((x) => x.row));
+  const selectedVisible = filtered.filter((x) => selected.includes(x.row.id));
+  const exportRows = async (onlySelected: boolean) => {
+    if (exporting) return;
+    const controller = new AbortController();
+    exportAbort.current = controller;
+    setExporting(true);
+    setError("");
+    try {
+      const exportColumns = columns
+        .map((c, i) => ({ c, i }))
+        .filter(
+          ({ c }) =>
+            c.exportable !== false &&
+            !actionColumn(c.title) &&
+            !forbiddenExport.test(c.title),
+        );
+      let target = onlySelected ? selectedVisible : filtered;
+      if (remote) {
+        const records = await remote.exportRows(
+          onlySelected ? selected : undefined,
+          controller.signal,
+        );
+        target = records.map((row) => ({
+          row,
+          text: columns.map((c) => cellText(c.render(row))),
+        }));
+      }
+      if (!target.length) throw Error("ردیفی برای خروجی انتخاب نشده است.");
+      if (target.length > 10000)
+        throw Error(
+          "حداکثر ۱۰هزار ردیف در هر خروجی مجاز است؛ فیلتر را محدودتر کنید.",
+        );
+      const auth = await fetch(
+        (import.meta.env.VITE_API_BASE_URL ?? "") +
+          `/${surface}/grids/export-authorize`,
+        {
+          method: "POST",
+          signal: controller.signal,
+          cache: "no-store",
+          headers: { Authorization: `Bearer ${authToken}` },
+        },
+      );
+      if (!auth.ok)
+        throw Error(
+          auth.status === 403
+            ? "مجوز خروجی گرید ندارید؛ از ادمین درخواست دسترسی کنید."
+            : "نشست یا ارتباط معتبر نیست؛ دوباره تلاش کنید.",
+        );
+      const blob = await xlsxBlob(
+        exportColumns.map(({ c }) => c.title),
+        target.map((x) =>
+          exportColumns.map(({ c, i }) =>
+            String(c.exportValue ? c.exportValue(x.row) : x.text[i]),
+          ),
+        ),
+        controller.signal,
+      );
+      const url = URL.createObjectURL(blob),
+        link = document.createElement("a");
+      link.href = url;
+      link.download = "cherriva-grid.xlsx";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      setError(
+        controller.signal.aborted ? "خروجی لغو شد." : (e as Error).message,
+      );
+    } finally {
+      setExporting(false);
+    }
+  };
   return (
-    <>
+    <section className="data-grid" aria-label="نتایج جدول">
+      {!remote && searchable && (
+        <FilterPanel>
+          <form
+            className="admin-search-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearch(searchDraft);
+            }}
+          >
+            <TextField
+              label="جست‌وجو در نتایج"
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+            />
+            <Button type="submit" variant="contained">
+              جست‌وجو
+            </Button>
+            <Button
+              onClick={() => {
+                setSearchDraft("");
+                setSearch("");
+                setSort(undefined);
+                setSelected([]);
+              }}
+            >
+              پاک‌کردن
+            </Button>
+          </form>
+        </FilterPanel>
+      )}
+      <div className="grid-tools">
+        <span aria-live="polite">
+          {(remote?.controls.total ?? filtered.length).toLocaleString("fa-IR")}{" "}
+          نتیجه ·{" "}
+          {(remote ? selected.length : selectedVisible.length).toLocaleString(
+            "fa-IR",
+          )}{" "}
+          انتخاب
+        </span>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={exporting || !(remote?.controls.total ?? filtered.length)}
+          onClick={() => void exportRows(false)}
+        >
+          خروجی Excel نتایج
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={
+            exporting || !(remote ? selected.length : selectedVisible.length)
+          }
+          onClick={() => void exportRows(true)}
+        >
+          خروجی Excel انتخاب‌ها
+        </Button>
+        {exporting && (
+          <Button onClick={() => exportAbort.current?.abort()}>
+            لغو خروجی
+          </Button>
+        )}
+      </div>
+      {error && (
+        <Alert severity="error" role="alert">
+          {error}
+        </Alert>
+      )}
       <div className="table-scroll" tabIndex={0} aria-label="جدول اطلاعات">
         <table className="data-table">
-          <colgroup>
-            {columns.map((c, i) => (
-              <col
-                key={c.title}
-                style={{
-                  width:
-                    c.title === "عملیات"
-                      ? "290px"
-                      : i === 0
-                        ? "32%"
-                        : undefined,
-                }}
-              />
-            ))}
-          </colgroup>
           <thead>
             <tr>
-              {columns.map((c) => (
+              <th className="grid-selection">
+                <input
+                  type="checkbox"
+                  aria-label="انتخاب ردیف‌های این صفحه"
+                  checked={
+                    (remote ? rows : paged.rows).length > 0 &&
+                    (remote ? rows : paged.rows).every((r) =>
+                      selected.includes(r.id),
+                    )
+                  }
+                  onChange={(e) =>
+                    setSelected(
+                      e.target.checked
+                        ? [
+                            ...new Set([
+                              ...selected,
+                              ...(remote ? rows : paged.rows).map((r) => r.id),
+                            ]),
+                          ]
+                        : selected.filter(
+                            (id) =>
+                              !(remote ? rows : paged.rows).some(
+                                (r) => r.id === id,
+                              ),
+                          ),
+                    )
+                  }
+                />
+              </th>
+              {columns.map((c, i) => (
                 <th
                   key={c.title}
                   className={
-                    c.title === "عملیات" ? "table-actions-cell" : undefined
+                    actionColumn(c.title) ? "table-actions-cell" : undefined
+                  }
+                  aria-sort={
+                    sort?.column === i
+                      ? sort.desc
+                        ? "descending"
+                        : "ascending"
+                      : undefined
                   }
                 >
-                  {c.title}
+                  {actionColumn(c.title) || remote ? (
+                    c.title
+                  ) : (
+                    <button
+                      className="grid-sort"
+                      onClick={() =>
+                        setSort({
+                          column: i,
+                          desc: sort?.column === i ? !sort.desc : false,
+                        })
+                      }
+                    >
+                      {c.title}
+                      {sort?.column === i ? (sort.desc ? " ↓" : " ↑") : ""}
+                    </button>
+                  )}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {paged.rows.map((row) => (
+            {(remote ? rows : paged.rows).map((row, rowIndex) => (
               <tr key={row.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    aria-label={`انتخاب ردیف ${(rowIndex + 1).toLocaleString("fa-IR")}`}
+                    checked={selected.includes(row.id)}
+                    onChange={(e) =>
+                      setSelected(
+                        e.target.checked
+                          ? [...selected, row.id]
+                          : selected.filter((id) => id !== row.id),
+                      )
+                    }
+                  />
+                </td>
                 {columns.map((c) => (
                   <td
                     key={c.title}
                     className={
-                      c.title === "عملیات" ? "table-actions-cell" : undefined
+                      actionColumn(c.title) ? "table-actions-cell" : undefined
                     }
                   >
-                    {c.title === "عملیات" ? (
+                    {actionColumn(c.title) ? (
                       <div className="table-row-actions">{c.render(row)}</div>
                     ) : (
                       c.render(row)
@@ -99,10 +365,10 @@ export function DataTable<T extends { id: string }>({
             ))}
           </tbody>
         </table>
-        {rows.length === 0 && <div className="empty">{empty}</div>}
+        {!filtered.length && <div className="empty">{empty}</div>}
       </div>
-      <PaginationControls {...paged.controls} />
-    </>
+      <PaginationControls {...(remote?.controls ?? paged.controls)} />
+    </section>
   );
 }
 export function PageHeader({
@@ -179,7 +445,7 @@ export function ActionDialog({
       open={open}
       onClose={busy ? undefined : onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth={fields.length > 3 ? "lg" : "md"}
     >
       <Box
         component="form"
@@ -220,7 +486,7 @@ export function ActionDialog({
             این عملیات روی داده آزمون اجرا و در سابقه فعالیت ثبت می‌شود.
           </Alert>
           {fields.map((field) => (
-            <TextField
+            field.type === "date" || field.type === "datetime-local" ? <PersianDateInput key={field.name} name={field.name} label={field.label} dateTime={field.type === "datetime-local"} defaultValue={field.default ?? ""} required disabled={!!pendingValues || busy}/> : <TextField
               key={field.name}
               name={field.name}
               label={field.label}

@@ -76,7 +76,7 @@ func TestBannerHTTPPublicationResponsiveHTMLAndPrivateAssets(t *testing.T) {
 	}
 	attributeCommand(t, h, admin, backoffice.Command{Action: "banner.publish", Target: b.ID, Version: 4, IdempotencyKey: "publish"}, 204)
 	view := productCall(t, h, "GET", "/content/banners/"+b.ID+"/view", "", nil, 200)
-	if !strings.Contains(view.Body.String(), `<picture>`) || !strings.Contains(view.Body.String(), "max-width: 767px") || !strings.Contains(view.Body.String(), mobile.AssetID) || !strings.Contains(view.Body.String(), desktop.AssetID) {
+	if !strings.Contains(view.Body.String(), `<picture>`) || !strings.Contains(view.Body.String(), "max-width: 767px") || !strings.Contains(view.Body.String(), backoffice.PublicReference("m", mobile.AssetID)) || !strings.Contains(view.Body.String(), backoffice.PublicReference("m", desktop.AssetID)) {
 		t.Fatal(view.Body.String())
 	}
 	asset := productCall(t, h, "GET", "/content/banner-media/"+desktop.AssetID, "", nil, 200)

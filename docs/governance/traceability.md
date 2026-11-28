@@ -1,5 +1,57 @@
 # ردیابی قابلیت تا پذیرش
 
+DOM-ORDER-FOLLOW-001-R10/R11 → [استرداد کل سفارش #164](../delivery/order-experience-followup-2026-11-28/tasks/full-order-refund.md) و [خلاصه سفارش بک‌آفیس #165](../delivery/order-experience-followup-2026-11-28/tasks/backoffice-order-summary-layout.md) → [۸معیار و۸سناریوی طراحی](../bdd/features/experiences/order-refund-summary-planning.feature). #164 هنوز todo و execution_authorized=false؛ #165 با انتخاب مستقل مالک اجرا و [پذیرش مرورگر/API](../delivery/order-experience-followup-2026-11-28/issue-165-verification.md) دارد. runner BDD اجرا نشده است.
+
+[API-OPERATION-LOGGING-001](../architecture/contracts/operation-logging.md) → [#75/#76/#77 و زیرتسک‌های لاگ #155..157، درگاه معوق #158..163](../delivery/logging-gateway-plan-2026-11-28/README.md) → [BDD طراحی](../bdd/features/experiences/logging-gateway-plan.feature). اجرای غیر درگاه با دستور صریح مالک: [شواهد API/مرورگر/CI](../delivery/logging-gateway-plan-2026-11-28/execution.md) و [راهنمای محلی](../delivery/logging-gateway-plan-2026-11-28/local-logging-guide.md). BDD طرح مستند است و runner اجرا نشده؛ درگاه #158..163 معوق است.
+
+DOM-PAYMENTS-001-R28..29 → [اصلاح سوییچ/ضریب #154 و FEAT-BO-GATEWAY-CURRENCY-001-AC01..04](../delivery/gateway-currency-and-switches-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/gateway-currency-and-switches.feature). اتصال بانکی خارج این تحویل است.
+
+DOM-PAYMENTS-001-R22..27 → [اصلاح تنظیمات #153 و پذیرش FEAT-BO-GATEWAY-SETTINGS-REVISION-001-AC01..04](../delivery/payment-settings-revision-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-settings-revision.feature). فقط تنظیمات اجرا شده‌اند.
+
+DOM-PAYMENTS-001-R19..21 → [تنظیمات درگاه #152 و پذیرش FEAT-BO-PAYMENT-GATEWAY-SETTINGS-001-AC01..04](../delivery/payment-gateway-settings-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/payment-gateway-settings.feature). فقط قدم تنظیمات done است؛ adapter و اجرای مالی درگاه شروع نشده‌اند.
+
+FEAT-PAYMENT-GATEWAY-REVIEW-001-AC01..04 → [بررسی چنددرگاهی و زرین‌پال](../delivery/zarinpal-gateway-review-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/zarinpal-gateway-review.feature) → [GATEWAY-Q01 تا03](../product/open-questions.md#zarinpal-gateway-review-20261128). فقط بررسی؛ اجرای adapter یا تأیید اتصال واقعی ادعا نمی‌شود.
+
+FEAT-WALLET-REVIEW-001-AC01..04 → [گردش کیف پول و اصلاح ثبت انتقال #151](../delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md) → [BDD طراحی](../bdd/features/experiences/wallet-history-and-transfer-review.feature). شاهد API/مرورگر با داده ساختگی از سناریوی طراحی و انتقال بانکی واقعی جداست.
+
+FEAT-SF-ORDER-PRESENTATION-001-AC01..04 → [اصلاح و بررسی #150](../delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md) → [BDD طراحی](../bdd/features/experiences/order-presentation-refinement.feature). تاریخ صریح، اتصال اقلام/وعده با store_id و جمع مرجع/خلاصه کیف پول اجرا شدند؛ بررسی منوهای قدیمی مجوز حذف یا بازنویسی آن‌ها نیست.
+
+<a id="order-experience-followup-20261128"></a>
+## بازخورد ورود و سفارش و مرسوله — ۲۰۲۶-۱۱-۲۸
+
+[قواعد مشترک](../domains/orders/experience-followup-2026-11-28.md) → [شرح‌ها و Issueهای واقعی](../delivery/order-experience-followup-2026-11-28/README.md) → [فهرست ماشین‌خوان](../delivery/order-experience-followup-2026-11-28/task-index.json) → [BDD طراحی](../bdd/features/experiences/order-experience-followup.feature). مالک اجرای هر۸کار را انتخاب کرد؛ وضعیت اجرا و شواهد تست مستقل هر Issue در فهرست تحویل ثبت‌اند. خود فایل سناریوهای طراحی شاهد اجرای runner نیست. پاسخ صریح پرسش محدود صف لغوشده در [ORDERFOLLOW-Q01](../product/open-questions.md#order-experience-followup-20261128) ثبت است.
+
+| قاعده | تسک / شناسه پذیرش |
+| --- | --- |
+| R01 — دو روش ورود مستقیم | CV-ORD-FOLLOW-01؛ FEAT-ORDER-FOLLOW-001-AC01..03 |
+| R02 — نشست در رفرش | CV-ORD-FOLLOW-02؛ FEAT-ORDER-FOLLOW-002-AC01..03 |
+| R03 — موبایل/مشاهده سفارش | CV-ORD-FOLLOW-03؛ FEAT-ORDER-FOLLOW-003-AC01..03 |
+| R04 — سقف کیف پول | CV-ORD-FOLLOW-04؛ FEAT-ORDER-FOLLOW-004-AC01..03 |
+| R05/R06 — پرداخت خودکار و حفظ شروع دستی | CV-ORD-FOLLOW-05؛ FEAT-ORDER-FOLLOW-005-AC01..03 |
+| R06/R07 — صف مرسوله و محدوده فروشگاه | CV-ORD-FOLLOW-06؛ FEAT-ORDER-FOLLOW-006-AC01..04 |
+| R08 — فرم عملیات و راهنمای مراحل | CV-ORD-FOLLOW-07؛ FEAT-ORDER-FOLLOW-007-AC01..03 |
+| R09 — جزئیات و روند مشتری | CV-ORD-FOLLOW-08؛ FEAT-ORDER-FOLLOW-008-AC01..04 |
+
+قرارداد قبلی پرداخت صفر/تأیید تیم با اعلان تغییر نیازمندی به این صف پیوند خورده است؛ رفتار اجراشده قبلی، وضعیت جاری سورس و نیازمندی جدید از هم جدا گزارش می‌شوند.
+
+## الحاق بررسی چرخه سفارش — ۲۰۲۶-۱۱-۲۷
+
+[گزارش تطبیق سورس و صف](../delivery/order-lifecycle-review-2026-11-27/README.md) مرجع Issue و وضعیت هر کار است؛ پس از برنامه اولیه، مالک اجرای ترتیبی #131 تا #140 و تکمیل تاریخ شمسی #141 را خواست. [قواعد مشترک](../domains/orders/lifecycle-review-2026-11-27.md)، [پرسش‌های پاسخ‌گرفته](../product/open-questions.md#order-lifecycle-review-20261127) و [سناریوهای طراحی](../bdd/features/experiences/order-lifecycle-review.feature) به هم وصل‌اند. گزارش مستقل هر۱۱برش در فهرست تحویل ثبت شده است؛ پذیرش دستی مالک و اتصال واقعی/انتشار سرور از تکمیل فنی جدا هستند.
+
+| نیاز مالک | شرح قابل ردیابی |
+| --- | --- |
+| پرسش‌های همه محصولات | [FEAT-BO-ORDER-REV-001](../delivery/order-lifecycle-review-2026-11-27/tasks/global-product-questions.md) |
+| تخفیف جمع‌وجور/دو ستون | [FEAT-BO-ORDER-REV-002](../delivery/order-lifecycle-review-2026-11-27/tasks/compact-coupon-modal.md) |
+| تمام کنترل‌های تاریخ شمسی سایت و بک‌آفیس | [FEAT-BO-ORDER-REV-011](../delivery/order-lifecycle-review-2026-11-27/tasks/persian-date-controls.md) و [ممیزی/شواهد #141](../delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md) |
+| سه چرخه و نگاشت سابقه | [FEAT-BO-ORDER-REV-003](../delivery/order-lifecycle-review-2026-11-27/tasks/order-state-contract.md) |
+| ثبت پیش از پرداخت | [FEAT-BO-ORDER-REV-004](../delivery/order-lifecycle-review-2026-11-27/tasks/place-order-boundary.md) و ممیزی #70 |
+| تلاش/نتیجه پرداخت | [FEAT-BO-ORDER-REV-005](../delivery/order-lifecycle-review-2026-11-27/tasks/payment-attempt-states.md) |
+| پردازش و تأمین تا تحویل/کد ارسال | [FEAT-BO-ORDER-REV-006](../delivery/order-lifecycle-review-2026-11-27/tasks/order-fulfillment.md) |
+| کنسلی و مرجوعی پس از تکمیل | [FEAT-BO-ORDER-REV-007](../delivery/order-lifecycle-review-2026-11-27/tasks/order-cancellation-returns.md) |
+| استرداد کیف پول/انتقال دستی | [FEAT-BO-ORDER-REV-008](../delivery/order-lifecycle-review-2026-11-27/tasks/order-linked-refunds.md) |
+| تاریخچه و وضعیت مشتری | [FEAT-BO-ORDER-REV-009](../delivery/order-lifecycle-review-2026-11-27/tasks/order-history-customer-status.md) |
+| یکپارچگی منو/جزئیات سفارش | [FEAT-BO-ORDER-REV-010](../delivery/order-lifecycle-review-2026-11-27/tasks/unified-order-workspace.md) |
+
 پیگیری۲۰۲۶-۱۱-۲۳: [FEAT-SF-CACHE-001](../delivery/storefront-followups/cache-policy.md) و [FEAT-CATALOG-PUBLIC-URL-001](../delivery/storefront-followups/public-catalog-urls.md) ← [صف و مسئولیت](../delivery/storefront-followups/README.md). سیاست کش با تأیید مالک محلی اجرا شد؛ [شاهد #41، کنترل‌های حفاظت و تصاویر](../delivery/storefront-followups/issue-41-verification.md). مهاجرت URL در #42 پس از پایان #41 است و هنوز اجرا نشده است.
 
 برش فعال‌شده CV-R2-07: [ADR-006](../decisions/adr-006-responsive-banner-activation.md) ← [شرح](../delivery/review-v1-1/tasks/cv-r2-07-responsive-banner.md) ← [قرارداد](../architecture/contracts/responsive-banners.md) ← [دو سناریو](../bdd/features/experiences/responsive-banners.feature) ← [گزارش و تصاویر](../delivery/review-v1-1/issue-7-verification.md). فعال‌شدن این برش، سایر CMS را فعال نمی‌کند.
@@ -191,7 +243,7 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 
 ## انتخاب‌های #80/#83/#84/#85/#86
 
-[فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. فقط پنج کار مجاز شدند؛ سایر۲۵کار اجرا نشده‌اند.
+[فهرست جاری](../delivery/next-phase/README.md) به پنج گزارش و تست‌های checkbox/chip، مزایا/معایب، hover/scroll و priority متصل است. معیار دسته و داده شخصی با API/PG و مرورگر جدا بررسی شد؛ گزارش ثبت برنامه تاریخچه است، نه وضعیت اجرای کنونی. پنج کار در این انتخاب پیشین اجرا شدند.
 
 تحویل این پنج انتخاب در [PR #92](https://github.com/MohamadParsa/marketplace/pull/92) پس از هر۵ job موفق CI ادغام شد؛ پنج Issue با کامنت شواهد closed و implementation_status آن‌ها done است. سایر۲۵کار این برنامه todo/open باقی‌اند؛ اسناد همچنان in-review و انتشار لیارا جداست.
 
@@ -211,3 +263,79 @@ SFUX-Q01 با پاسخ مالک حل شد؛ [شرح](../delivery/storefront-foll
 ## انتشار دسته مشتری در۲۰۲۶-۱۱-۲۴
 
 تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند. #63/#64 قابلیت اجرایی و #66 خروجی تحلیل هستند؛ هیچ کار انتخاب‌نشده‌ای done نشده است.
+
+## اجرای محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
+
+FEAT-NEXT-006/007/008/017 با [قرارداد اجرایی](../architecture/contracts/checkout-adjustments.md)، [گزارش AC و تست‌ها](../delivery/next-phase/issues-67-68-69-78-verification.md) و [صف ماشین‌خوان](../delivery/next-phase/task-index.json) مرتبط‌اند. وضعیت پیاده‌سازی done و Issueهای #67/#68/#69/#78 به دستور تازه مالک completed/closed هستند؛ سورس در PR #94 پوش شده، ادغام/استقرار انجام نشده و اسناد in-review باقی‌اند. [کامنت‌های تحویل](../delivery/backlog-review-2026-11-24/completed-closures.json).
+
+## پرسش و پاسخ محصول
+
+[FEAT-NEXT-029 / CV-NEXT-29](../delivery/next-phase/tasks/cv-next-29-product-qa-service.md) ادامهٔ CV-WEB-16 است. [تصمیم‌های CHQ-10](../product/open-questions.md) به دسترسی ثبت و ادارهٔ انتشار، [سناریوهای پذیرش](../bdd/features/experiences/next-phase-planning.feature) به رفتار و [شواهد تسک ۹۰](../delivery/next-phase/issue-90-verification.md) به آزمون‌های API، داده پایدار و مرورگر پیوند دارند.
+
+[FEAT-NEXT-028 — نظرات محصول](../delivery/next-phase/tasks/cv-next-28-product-reviews-service.md) ← [گیت مشترک کاتالوگ](../architecture/contracts/catalog-content-review.md#اجرای-کنترل-مشترک) ← [تصمیم CHQ-10](../product/open-questions.md) ← [پذیرش BDD](../bdd/features/experiences/next-phase-planning.feature) و [گردش مرورگر](../../tests/e2e/product-reviews.py).
+
+## تطبیق کامل صف و درخواست‌های تازه۲۰۲۶-۱۱-۲۴
+
+[PLAN-BACKLOG-RECONCILIATION-001](../delivery/backlog-review-2026-11-24/README.md) و [ماتریس کامل](../delivery/backlog-review-2026-11-24/audit-matrix.json)، مالک هر نیاز قدیمی/جدید و۱۱PR superseded را ثبت می‌کنند. FEAT-REV-001تا010 در #96تا#105 و شبکه اجتماعی در #87 پیگیری می‌شوند؛ این مرحله برنامه‌ریزی است، نه مجوز کدنویسی. دریافت/ادغام مجاز سه شاخه پارسا و مرز لوکال/انتشار در گزارش جدا ثبت است.
+
+## تحویل منتخب #103/#104/#102
+
+FEAT-REV-008/009/007 ← [گزارش AC، تصاویر و نتایج](../delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md) ← [قرارداد توکن عمومی](../architecture/contracts/public-catalog-references.md). اجرای این سه قابلیت به دستور مالک محلی تکمیل شد؛ سایر تسک‌های تازه شروع نشده و انتشار این commit مجاز نشده است. وضعیت سند in-review باقی است.
+
+## تکمیل #96 تا #99 — ۲۰۲۶-۱۱-۲۵
+
+[چهار شرح کار](../delivery/backlog-review-2026-11-24/README.md) ← [قرارداد](../architecture/contracts/wallet-credit-policy.md) ← [۱۶ سناریوی BDD](../bdd/features/experiences/checkout-wallet-policy.feature) ← [گزارش و تصاویر](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). وضعیت اجرای این چهار برش done است؛ ادغام و انتشار از بستن Issue نتیجه نمی‌شود.
+
+
+## اجرای محلی آدرس و نقشه #100/#101
+
+FEAT-REV-005 و FEAT-REV-006 ← [قرارداد](../architecture/contracts/customer-address-map.md) ← [شواهد/تصاویر](../delivery/backlog-review-2026-11-24/issues-100-101-verification.md). پاسخ مالک در ۲۰۲۶-۱۱-۲۵ نام/کد ملی پروفایل برای self و نام/کد ملی/موبایل گیرنده دیگر را الزامی کرد. نشانی کامل بالاترین ردیف تمام‌عرض شد؛ اطلاعات تاریخی ثابت می‌مانند. نقشه طبق انتخاب مالک اتصال آماده دارد؛ کلید/دامنه/آزمون واقعی و انتشار Git/لیارا جدا هستند.
+
+
+## اصلاحات پنل و کاتالوگ — ۲۰۲۶-۱۱-۲۵
+
+درخواست مالک و چهار پاسخ تکمیلی ← [پوشش بندبه‌بند](../delivery/backoffice-refinement-2026-11-25/request-coverage.md) ← FEAT-BO-REFINEMENT-001 تا011 در #107 تا#117؛ [برنامه/وابستگی و سؤال‌ها](../delivery/backoffice-refinement-2026-11-25/README.md). #73 مالک روش فروش/مارکاپ و #81 مالک الگوی مشترک گرید/Excel باقی‌اند؛ شرح/مرز آن‌ها اصلاح شد و #15/#71 هماهنگی می‌کنند. اجرا todo و مجوز کد/پوش صادر نشده است.
+
+## اجرای محلی #73 و #81 —۲۰۲۶-۱۱-۲۵
+
+[مشخصات #73](../delivery/next-phase/tasks/cv-next-12-sales-method-markup.md) و [#81](../delivery/next-phase/tasks/cv-next-20-backoffice-grid-capabilities.md) ← [قرارداد روش فروش](../architecture/contracts/sales-methods.md) و [گرید](../architecture/contracts/backoffice-grids.md) ← [BDD](../bdd/features/experiences/sales-methods-and-grid-export.feature) ← [گزارش و شواهد](../delivery/next-phase/issues-73-81-verification.md). [ممیزی۲۷گرید و مالکان شکاف‌ها](../delivery/next-phase/backoffice-grid-audit.md). تحویل محلی با پوش/استقرار و تکمیل فرم‌های #108تا#117 یکسان نیست.
+
+## اجرای محلی #111 و #112
+
+[شرح کاربر](../delivery/backoffice-refinement-2026-11-25/tasks/unified-user-editing-and-filters.md) و [نقش](../delivery/backoffice-refinement-2026-11-25/tasks/dedicated-role-management-and-user-grants.md) ← [قرارداد](../architecture/contracts/user-management.md) ← [BDD](../bdd/features/experiences/user-management-and-roles.feature) ← [آزمون و تصاویر](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md). مجوز اجرا محدود همین دو و تغییرها محلی است؛ ممیزی عمومی scope در #71 باقی می‌ماند.
+
+
+## مرز خصوصیات پنل — #110 و اصلاح آدرس
+
+[تسک FEAT-BO-REFINEMENT-004](../delivery/backoffice-refinement-2026-11-25/tasks/cherriva-attribute-codes-and-labels.md) → [قرارداد خصوصیات](../architecture/contracts/catalog-attributes.md) → [گزارش API/مرورگر/حفظ داده و چیدمان آدرس](../delivery/backoffice-refinement-2026-11-25/issue-110-verification.md). گرید/دیالوگ/انتساب عنوان خوانا دارند و alias سازگار با ورودی قدیمی است؛ بازنویسی داده واردشده و تبدیل محور در این کار نیست.
+
+
+## کاتالوگ مستقل و خصوصیات دسته — #107/#108
+
+FEAT-BO-REFINEMENT-001/002 → [گزارش ناوبری و دسته](../delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md) → [قرارداد خصوصیات و سطح نشست](../architecture/contracts/catalog-attributes.md). تست API، cache/عدم ارث، صفحه‌بندی/فیلتر و مرورگر به همان گزارش متصل‌اند؛ تغییر محور مصرف‌شده #109 و تکمیل فیلدهای برند/محصول #115/#116 جداست.
+
+FEAT-BO-REFINEMENT-003 → [گزارش #109](../delivery/backoffice-refinement-2026-11-25/issue-109-verification.md) → [قرارداد تبدیل](../architecture/contracts/category-axis-conversion.md) → [BDD](../bdd/features/experiences/category-axis-conversion.feature).
+
+FEAT-BO-REFINEMENT-007 → [گزارش #113](../delivery/backoffice-refinement-2026-11-25/issue-113-verification.md) → [قرارداد فروشگاه](../architecture/contracts/store-management.md) → [BDD](../bdd/features/experiences/store-management.feature).
+
+FEAT-BO-REFINEMENT-008 → [گزارش #114](../delivery/backoffice-refinement-2026-11-25/issue-114-verification.md) → [قرارداد](../architecture/contracts/store-sales-eligibility.md) → [BDD](../bdd/features/experiences/store-sales-policy.feature). FEAT-BO-REFINEMENT-012 فقط ادامه PDP در #118 و todo است.
+
+## تکمیل مستقل برند — #115
+
+FEAT-BO-REFINEMENT-009-AC01..03 → [قرارداد](../architecture/contracts/brand-management.md) → [سناریو](../bdd/features/experiences/brand-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-115-verification.md). تکمیل پیاده‌سازی به معنی approved شدن سند یا استقرار نیست.
+
+FEAT-NEXT-031-AC01..04 → [تسک #119](../delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md) → [قرارداد](../architecture/contracts/product-review-rating.md) → [سناریو](../bdd/features/experiences/product-review-rating.feature) → [شواهد](../delivery/next-phase/issue-119-verification.md). میانگین هدر و نظرات مستقل از صفحه و فقط approved است؛ تکمیل پیاده‌سازی از تأیید سند و استقرار جداست.
+
+## تکمیل مستقل محصول — #116
+
+FEAT-BO-REFINEMENT-010-AC01..04 → [قرارداد](../architecture/contracts/product-management.md) → [سناریو](../bdd/features/experiences/product-management.feature) → [شواهد](../delivery/backoffice-refinement-2026-11-25/issue-116-verification.md). نمایش محصول غیرفعال به پاسخ مالک متصل است؛ وضعیت سند از اجرای محصول و انتشار جداست.
+
+## تکمیل فوتر و شبکه‌ها — #87
+
+FEAT-NEXT-026-AC01..04 → [قرارداد](../architecture/contracts/business-content.md) → [شواهد](../delivery/next-phase/issue-87-verification.md). متن پیشنهادی از انتشار واقعی مالک جداست.
+
+## تقویم، وقفه و روش حمل — اجرای ترتیبی انتخاب‌شده
+
+FEAT-SHIP-002-AC01..04 → [قرارداد روش عمومی](../architecture/contracts/shipping-methods-plan.md) → [شواهد #121](../delivery/shipping-refinement-2026-11-26/issue-121-verification.md). اصلاح مستقیم مالک برای فیلتر/گرید و panelbar نیز در [گزارش رابط](../delivery/shipping-refinement-2026-11-26/backoffice-ui-consistency.md) و قرارداد جاری گرید ثبت شد.
+
+DOM-SHIPPING-POLICY-001 → [قواعد](../domains/shipping/method-policies.md) → [قرارداد](../architecture/contracts/shipping-methods-plan.md) → [صف اجرا](../delivery/shipping-refinement-2026-11-26/README.md) → [سناریوها](../bdd/features/experiences/shipping-method-policies.feature). FEAT-SHIP-001-AC01..04 → [شواهد تست #120](../delivery/shipping-refinement-2026-11-26/issue-120-verification.md). پاسخ‌های Q04..Q07 ثبت شده‌اند؛ وضعیت اجرا و شاهد هر برش مستقل است.

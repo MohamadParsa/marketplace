@@ -1,5 +1,12 @@
 # تطبیق کامیت سورس و مستندات چریوا
 
+خلاصه و اقلام سفارش بک‌آفیس #165: سورس [3900b8f](https://github.com/MohamadParsa/marketplace/commit/3900b8fb595d8decb95e6656cdc17182e1ad16e4)، [گزارش و تصاویر قبل/بعد](order-experience-followup-2026-11-28/issue-165-verification.md) و هر۵CI موفق؛ Issue با کامنت شواهد بسته شد. فایل‌های اجرایی مدارک نهایی با همین سورس یکسان‌اند. #164 در صف باقی است.
+
+
+لاگ محلی و گزارش ادمین #155/#156/#157/#75/#76/#77: سورس نهایی [4f76041](https://github.com/MohamadParsa/marketplace/commit/4f7604115b6d10e300c6b4e32dd4ec01c948806f) روی PR #106، هر۵CI موفق و هر شش Issue با شاهد بسته‌اند. [گزارش، ماتریس و تصاویر](logging-gateway-plan-2026-11-28/execution.md) · [راهنمای محلی](logging-gateway-plan-2026-11-28/local-logging-guide.md). فایل‌های اجرایی کامیت مدارک نهایی با همین سورس یکسان‌اند؛ درگاه #158..163 معوق و استقرار/ادغام انجام نشده است.
+
+بازبینی بک‌آفیس #124 تا #130: سورس [2ac2da5](https://github.com/MohamadParsa/marketplace/commit/2ac2da55a47d5cd444d251995734412c85f83ed7) روی شاخهٔ PR #106 پوش شد؛ [گزارش، تسک‌ها و تصاویر](backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md). مدارک این تحویل trailer `Source-Commit: 2ac2da55a47d5cd444d251995734412c85f83ed7` دارند.۵۰۰تست Go/۴skip، vet، TypeScript/build و مرورگر مستقل موفق‌اند؛ نسخهٔ لوکال با همین API و build تازه هماهنگ است. main و استقرار عمومی جدا هستند.
+
 مسیر کاری و سورس محلی: **D:\Cherriva**. سورس Go/React در `apps` و `packages` است؛ تمام dependencyها با lockfile ثبت‌اند و `node_modules` و خروجی build سورس محسوب نمی‌شوند.
 
 سورس کامل با [PR #38](https://github.com/MohamadParsa/marketplace/pull/38) در `main` ادغام شد: [کامیت 3163d17](https://github.com/MohamadParsa/marketplace/commit/3163d1702f2396d8d1818d12c7bf92bcab9a35bf). درخت کد اجرایی این کامیت با سورس تأییدشده `2cab27a` یکسان است. همگام‌سازی سورس، استقرار Liara ایجاد نکرد. [راهنمای اجرای محلی](../local-development.md).
@@ -121,3 +128,66 @@
 تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند.
 
 نسخه سورس ترکیبی `9e72faf5a1c9b5ce73e3628e539c8cd082f29b02` و نسخه مدرک اولیه `fec70e82d1cd332d2673a470737baac1fae91df8` از نظر درخت apps/packages یکسان‌اند؛ PR #93 همه تغییرات تا این مرحله را روی main دارد. #66 فقط مدرک تحلیلی است و source_commit مستقل ندارد.
+
+## چهار قابلیت محلی #67/#68/#69/#78 — ۲۰۲۶-۱۱-۲۴
+
+[گزارش و فایل‌های سورس/تست](next-phase/issues-67-68-69-78-verification.md) روی پایه `52a8a09155fbcedae981eaf18a27ecea76120375` در working tree مسیر `D:\Cherriva` است؛ کامیت سورس یا سند تازه‌ای ساخته/پوش نشده و شماره کامیت برای این تحویل ادعا نمی‌شود. انتشار آینده باید کامیت واقعی را به این مدرک وصل کند.
+
+### انتشار بسته چهار قابلیت
+
+به دستور تازه مالک، سورس و اسناد در [کامیت 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) روی شاخه `codex/checkout-coupons-credit-warranty` و [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) پوش شدند؛ اصلاح اسناد انتشار همین بخش با `Source-Commit: 1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d` به آن متصل است. main/لیارا هنوز ادغام/منتشر نشده‌اند. تغییر بعدی فعال‌کردن PDP از این پوش جدا و لوکال است.
+
+## ادغام محلی پارسا و تفکیک از سورس منتشرشده
+
+سه شاخهٔ نظر/پرسش/طرح با دستور مالک دریافت و تا `cffbf4f4125d73338d2af12972b08c41769901e3` محلی ادغام شدند؛ اصلاح دکمه و اسناد برنامه بعدی هنوز لوکال‌اند. [شواهد](backlog-review-2026-11-24/parsa-integration.md) · [تسک انتشار #105](https://github.com/MohamadParsa/marketplace/issues/105). این commit هنوز به origin پوش نشده و جای source منتشرشده `1dd7ccd` در PR #94 را نمی‌گیرد.
+
+تحویل محلی #102/#103/#104 در سورس `ce417c5e42a1d3639332a5829e0572e14d1afb4a`؛ [گزارش و تصاویر و نتیجه ماشین‌خوان](backlog-review-2026-11-24/issues-102-103-104-verification.md). این commit پوش نشده و فعال‌سازی قبلی PDP همچنان تغییر جدا و کامیت‌نشده در لوکال است؛ مرجع نسخه پوش‌شده/main تغییر نکرد.
+
+
+## کاربران واحد و نقش‌های مستقل — #111/#112
+
+سورس، migration افزایشی۰۰۰۰۱۲، فرم‌ها و تست‌ها در کامیت محلی `37ec82c31408d69736a4f7826fa5ae07ec905077` در `D:\Cherriva` ثبت شدند. [گزارش و تصاویر](backoffice-refinement-2026-11-25/issues-111-112-verification.md) · [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issues-111-112-checks.json) · [رسید کامنت و بستن Issueها](backoffice-refinement-2026-11-25/issues-111-112-delivery.json).
+
+هر دو Issue با کامنت شواهد completed بسته شدند؛۳۲۵تست Go و۳۰کنترل مرورگر موفق،۱۷بخش داده بعد از restart محفوظ. مدارک این تحویل با trailer `Source-Commit: 37ec82c31408d69736a4f7826fa5ae07ec905077` به سورس وصل‌اند و tree فایل‌های اجرایی همان است. این کامیت **طبق دستور مالک پوش نشده**؛ last-published source و main/لیارا تغییری نکرده‌اند. خواندن داخلی snapshot هویت هنوز کامل است؛ paging ایندکس‌دار SQL و ممیزی جامع #71 در این تحویل ادعا نشده‌اند.
+
+
+## خصوصیات چریوا در پنل و ساده‌سازی آدرس — #110
+
+سورس و تست‌ها در `2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` در D:\Cherriva ثبت شدند؛ [گزارش و تصاویر](backoffice-refinement-2026-11-25/issue-110-verification.md) و [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issue-110-checks.json). دستور جدید مالک پوش پس از تکمیل را مجاز کرده و این نسخه همراه کامیت‌های قبلی محلی #100/#101/#73/#81/#111/#112 روی همان شاخه تحویل می‌شود؛ main و لیارا جدا هستند. کامیت مدارک trailer `Source-Commit: 2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950` دارد و درخت اجرایی آن با همین سورس برابر است.
+
+پوش این دسته تأیید شد: [سورس](https://github.com/MohamadParsa/marketplace/commit/2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950) و [مدارک](https://github.com/MohamadParsa/marketplace/commit/c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b) در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) موجودند؛ #110 با [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/110#issuecomment-7183781436) بسته شد. کامیت‌های قبلی محلی نیز در همان شاخه منتشر شدند؛ source اصلی و مدارک از نظر درخت اجرایی یکسان‌اند. main و لیارا مستقل باقی‌اند.
+
+
+## منوی کاتالوگ و خصوصیات دسته — #107/#108
+
+سورس `1ba3964142e43364e2fd4e0b9767389cca974cda` در D:\Cherriva، [گزارش و تصاویر](backoffice-refinement-2026-11-25/issues-107-108-verification.md) و [نتیجه ماشین‌خوان](backoffice-refinement-2026-11-25/issues-107-108-checks.json). فرم‌های پایه به مسیر مستقل منتقل شدند؛ #109/#115/#116 از این انتقال done نمی‌شوند.۳۳۲تست Go و۳۷کنترل مرورگر، vet و lint/build موفق و۲۴بخش داده پس از restart یکسان‌اند. کامیت مدارک trailer `Source-Commit: 1ba3964142e43364e2fd4e0b9767389cca974cda` دارد و درخت اجرایی برابر کنترل می‌شود. پوش و CI/بستن در رسید نهایی ثبت خواهند شد؛ main و لیارا جدا هستند.
+
+پوش این دو تسک تأیید شد: [سورس](https://github.com/MohamadParsa/marketplace/commit/1ba3964142e43364e2fd4e0b9767389cca974cda) و [مدارک](https://github.com/MohamadParsa/marketplace/commit/a0d739b5062b5f337c8b25e9c6a87493f715c301) در [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) هستند. #107/#108 با کامنت و completed بسته شدند؛ [رسید](backoffice-refinement-2026-11-25/issues-107-108-delivery.json). ادغام/لیارا جداست.
+
+## تبدیل کنترل‌شده محور — #109
+
+سورس [a029b88](https://github.com/MohamadParsa/marketplace/commit/a029b88f6d78d9745311cf4afbdeb8dd3f4538d9) و [گزارش مستقل](backoffice-refinement-2026-11-25/issue-109-verification.md) مرجع این تحویل‌اند. #113 مستقل تحویل می‌شود؛ main و Liara تغییر نکرده‌اند.
+
+## پروفایل مستقل فروشگاه — #113
+
+سورس [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [گزارش مستقل فروشگاه](backoffice-refinement-2026-11-25/issue-113-verification.md) شامل CRUD، تصویر خصوصی، فیلتر/صفحه‌بندی و حفظ داده‌اند. #114 و #115 جدا تحویل می‌شوند.
+
+## فهرست استان‌ها و شهرهای ایران — ۲۰۲۶-۱۱-۲۷
+
+سورس و دادهٔ ثابت در [1883367](https://github.com/MohamadParsa/marketplace/commit/18833678e079a1367d3ea56c7646a606ef87d18a) ثبت شدند. [بسته و راهنمای ورود](../../data/iran-geography/README.md) و [گزارش واردسازی محلی، حفظ شناسه/تاریخچه و آزمون‌ها](iran-geography-import-2026-11-27.md) مرجع این تحویل‌اند.۳۱استان و۱۴۸۱شهر فعال در سایت در دسترس‌اند؛ رکورد آزمایشی غیرفعال قبلی حفظ است. ورود سرور و انتشار لیارا انجام نشده‌اند.
+
+## مجوز و نام روش‌محور فروشگاه — #114
+
+سورس [47b798a](https://github.com/MohamadParsa/marketplace/commit/47b798a0b22a40f5f0309dd18978b25b9f6829f8) و [گزارش مستقل](backoffice-refinement-2026-11-25/issue-114-verification.md) شامل سیاست درختی/روش، snapshot نام و بازبینی خرید بدون مصرف وجه‌اند. توسعه PDP روش‌محور #118 فقط ثبت شده است.
+
+## بازبینی فرم‌های کاربران، فروشگاه‌ها و روش فروش — ۲۰۲۶-۱۱-۲۷
+
+سورس [2b056e1](https://github.com/MohamadParsa/marketplace/commit/2b056e1cd09cc82a61c0c021efdc5303bbf6ac0f) و [گزارش و هشت تصویر](backoffice-refinement-2026-11-25/users-stores-sales-review-2026-11-27.md) مرجع منوی تنظیمات/مدیریت کاربران، Primary مشترک، فیلتر متعادل و تب‌بندی‌اند. ذخیرهٔ کاربر/فروشگاه و افزودن/حذف عضویت در fixture حافظه‌ای مستقل بررسی شدند؛ دادهٔ اصلی تغییر نکرد. نسخهٔ رابط محلی۸۰۹۸به‌روز است؛ ادغام و انتشار عمومی جدا هستند.
+
+## تب تنظیمات و لینک تقویم فروشگاه — ۲۰۲۶-۱۱-۲۷
+
+سورس [f22d200](https://github.com/MohamadParsa/marketplace/commit/f22d2001c30daf4a8ffd4e91a4d5a47060765d17) و [گزارش و پنج تصویر](backoffice-refinement-2026-11-25/settings-preparation-review-2026-11-27.md) مرجع دو اصلاح اجراشده‌اند: تنظیمات خرید/حمل چهار تب دارد و تقویم از ردیف فروشگاه با شناسهٔ صریح باز می‌شود. انتخاب ضمنی و fallback به فروشگاه دیگر حذف شد؛ دامنهٔ ادمین/عضو و کنترل سرور حفظ است. در آن بازبینی، صفحهٔ حمل فروشگاه/تأیید نسخه فقط بررسی شد؛ ادامهٔ پذیرفته‌شده در بخش بعد است.
+
+## یکپارچه‌سازی حمل در تنظیمات فروشگاه — ۲۰۲۶-۱۱-۲۷
+
+سورس [b528fe5](https://github.com/MohamadParsa/marketplace/commit/b528fe5a5f4a489a7a00394a775518bfff0113c8) روی شاخهٔ PR #106 پوش شد. [گزارش و هشت تصویر](backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md) مرجع تب حمل هر فروشگاه، تنظیم یک/همه از روش عمومی و فروشگاه‌های من است. API و چرخهٔ تأیید تغییر نکردند؛ مرورگر با۴۴فروشگاه ساختگی، اعمال مشترک، انتشار/رد، تداخل نسخه، دسترسی محدود، لینک صفحهٔ بعد و موبایل بررسی شد. کامیت مدارک trailer `Source-Commit: b528fe5a5f4a489a7a00394a775518bfff0113c8` دارد؛ ادغام و استقرار عمومی جدا هستند.

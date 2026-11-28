@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader, Status } from "../../shared/components";
-import { money, number, date } from "../../shared/format";
+import { money, number, date, recordNumber } from "../../shared/format";
 export function DashboardPage() {
   const { state } = useWorkspace();
   const orders = state.orders ?? [];
@@ -81,7 +81,7 @@ export function DashboardPage() {
             columns={[
               {
                 title: "سفارش",
-                render: (o) => <Link to={"/orders/" + o.id}>{o.id}</Link>,
+                render: (o) => <Link to={"/orders/" + o.id}>{o.purchase_number ?? recordNumber(state, "order", o.id)}</Link>,
               },
               {
                 title: "فروشگاه",
@@ -139,8 +139,8 @@ export function DashboardPage() {
           <div className="test-note">
             <b>محیط بررسی با داده آزمون</b>
             <p>
-              فرایندها را با داده آزمون بررسی کنید. وضعیت این محیط به معنی
-              ثبت سفارش یا پرداخت واقعی نیست.
+              فرایندها را با داده آزمون بررسی کنید. وضعیت این محیط به معنی ثبت
+              سفارش یا پرداخت واقعی نیست.
             </p>
           </div>
         </section>
@@ -157,8 +157,8 @@ export function DashboardPage() {
           rows={[...(state.audit ?? [])].reverse().slice(0, 5)}
           empty="هنوز فعالیتی ثبت نشده؛ اولین عملیات شما اینجا نمایش داده می‌شود."
           columns={[
-            { title: "عملیات", render: (a) => a.action },
-            { title: "عامل", render: (a) => a.actor },
+            { title: "نوع عملیات", render: (a) => a.action },
+            { title: "عامل", render: (a) => state.users?.find(u => u.id === a.actor)?.name ?? recordNumber(state, "user", a.actor) },
             { title: "دلیل", render: (a) => a.reason || "—" },
             { title: "زمان", render: (a) => date(a.at) },
           ]}

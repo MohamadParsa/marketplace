@@ -1,0 +1,225 @@
+.sf-skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #f2e9ee;
+  border-radius: 8px;
+  min-height: 14px;
+}
+.sf-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    #fff8 50%,
+    transparent 80%
+  );
+  animation: sf-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes sf-skeleton-shimmer {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes sf-skeleton-reveal {
+  to {
+    opacity: 1;
+  }
+}
+/* Fast cache hits do not flash; the reserved frame exists from the first render. */
+.sf-image-skeleton,
+.sf-home-skeleton .sf-busy-content,
+.sf-product-skeleton .sf-busy-content {
+  opacity: 0;
+  animation: sf-skeleton-reveal 0s 120ms forwards;
+}
+.sf-catalog-image {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+.sf-catalog-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.sf-catalog-image[data-image-state="loading"] img {
+  opacity: 0;
+}
+.sf-image-skeleton {
+  position: absolute;
+  inset: 0;
+}
+.sf-image-fallback {
+  color: #8c7f87;
+  font-size: 11px;
+  padding: 12px;
+  text-align: center;
+}
+.lh-product-image .sf-catalog-image img {
+  mix-blend-mode: multiply;
+}
+.pdp-lightbox .sf-catalog-image {
+  width: min(80vw, 900px);
+  height: 75vh;
+}
+.sf-card-skeleton > i {
+  margin-top: 12px;
+  height: 16px;
+}
+.sf-skeleton-short {
+  width: 60%;
+}
+.sf-skeleton-price {
+  width: 75%;
+  margin-inline-start: auto;
+  margin-top: 32px !important;
+  height: 24px !important;
+}
+.sf-skeleton-heading {
+  width: min(220px, 60%);
+  height: 24px;
+}
+.sf-card-skeleton {
+  min-height: 355px;
+}
+.sf-category-skeletons {
+  display: flex;
+  overflow: hidden;
+  gap: 20px;
+  margin-block: 16px 20px;
+  height: 145px;
+  align-items: center;
+}
+.sf-category-skeletons > span {
+  flex: 0 0 calc((100% - 140px) / 8);
+  min-width: 94px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+.sf-category-skeletons i {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+}
+.sf-category-skeletons b {
+  width: 80%;
+  height: 14px;
+}
+.sf-product-skeleton {
+  padding-top: 12px;
+}
+.sf-product-skeleton-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(240px, 0.8fr);
+  gap: 24px;
+}
+.sf-product-skeleton .pdp-information > i,
+.sf-product-skeleton .pdp-buybox > i {
+  margin-block: 16px;
+  height: 22px;
+}
+.sf-product-skeleton .pdp-thumbnails > i {
+  width: 48px;
+  height: 48px;
+}
+.sf-product-skeleton .pdp-buybox {
+  margin-top: 16px;
+}
+.sf-axis-skeleton {
+  display: flex;
+  gap: 8px;
+  margin-block: 24px;
+}
+.sf-axis-skeleton i {
+  width: 60px;
+  height: 44px;
+}
+.sf-spec-skeleton {
+  height: 160px !important;
+}
+.plp-filter-skeleton {
+  display: grid;
+  gap: 24px;
+  min-height: 520px;
+}
+@media (max-width: 800px) {
+  .sf-product-skeleton-layout {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-skeleton::after {
+    animation: none;
+  }
+}
+
+.sf-catalog-image picture {
+  display: contents;
+}
+.launch-home .lh-hero.with-media {
+  aspect-ratio: 16 / 5;
+}
+.lh-hero .lh-hero-media,
+.lh-hero-media .sf-catalog-image {
+  height: 100%;
+}
+.launch-home .lh-hero .sf-catalog-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@media (max-width: 600px) {
+  .launch-home .lh-hero.with-media {
+    aspect-ratio: 2 / 3;
+  }
+}
+
+.lh-promos .lh-promo-product-image {
+  width: 100%;
+  height: 190px;
+}
+.lh-promo-product-image img {
+  mix-blend-mode: multiply;
+}
+.lh-promos .lh-promo-static-image {
+  aspect-ratio: 2 / 1;
+  height: auto;
+}
+@media (max-width: 600px) {
+  .lh-promos .lh-promo-product-image {
+    height: 155px;
+  }
+}
+
+.sf-home-skeleton .sf-category-skeletons {
+  margin: 0;
+}
+.sf-category-toggle-skeleton {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin: 8px auto 0;
+}
+
+.launch-home .lh-hero.with-media {
+  display: block;
+}
+.launch-home .lh-hero.with-media .lh-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}

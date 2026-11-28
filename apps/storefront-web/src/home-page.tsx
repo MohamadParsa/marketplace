@@ -1,5 +1,7 @@
+import { usePublicBusiness, businessPages, SocialIcon } from "./business-content";
 import { HeartIcon, useWishlist } from "./wishlist";
-import { LoadingPlaceholder } from "./busy-region";
+import { CatalogImage } from "./catalog-image";
+import { HomeCatalogSkeleton } from "./catalog-loading";
 import "./header-actions.css";
 import { CategoryMenu } from "./category-menu";
 import { useEffect, useId, useRef, useState } from "react";
@@ -14,6 +16,7 @@ interface HomeCategory {
   count: number;
 }
 export interface Card {
+  inactive?: boolean;
   available?: boolean;
   features?: {
     attribute_id: string;
@@ -126,8 +129,6 @@ function Price({ value }: { value: number }) {
   );
 }
 export function ProductCard({ card }: { card: Card }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [card.image_url]);
   return (
     <a
       className={`lh-product ${card.available === false ? "is-unavailable" : ""}`}
@@ -135,20 +136,11 @@ export function ProductCard({ card }: { card: Card }) {
       data-product-id={card.id}
     >
       <div className="lh-product-image">
-        {failed ? (
-          <div className="lh-image-fallback">
-            <Icon name="bag" />
-            <span>تصویر در دسترس نیست</span>
-          </div>
-        ) : (
-          <img
-            src={api + card.image_url}
-            alt={card.name}
-            loading="lazy"
-            decoding="async"
-            onError={() => setFailed(true)}
-          />
-        )}
+        <CatalogImage
+          src={card.image_url ? api + card.image_url : undefined}
+          alt={card.name}
+          loading="lazy"
+        />
       </div>
       <span className="lh-category-name">{card.category_name}</span>
       <h3>{card.name}</h3>
@@ -190,7 +182,7 @@ export function ProductCard({ card }: { card: Card }) {
         {card.price !== null && card.available !== false ? (
           <Price value={card.price} />
         ) : (
-          <strong className="lh-unavailable">ناموجود</strong>
+          <strong className="lh-unavailable">{card.inactive ? "غیرقابل خرید" : "ناموجود"}</strong>
         )}
       </div>
     </a>
@@ -274,24 +266,17 @@ function Hero({ banners, photos }: { banners: Banner[]; photos: Card[] }) {
   );
   const b = valid[index % Math.max(1, valid.length)];
   const visual = b ? (
-    <picture>
-      <source
-        media="(max-width: 600px)"
-        srcSet={
-          api +
-          `/content/banner-media/${encodeURIComponent(b.config.mobile_id)}`
-        }
-      />
-      <img
-        src={
-          api +
-          `/content/banner-media/${encodeURIComponent(b.config.desktop_id)}`
-        }
-        alt={b.config.alt}
-        fetchPriority="high"
-        onError={() => setBroken((x) => [...x, b.id])}
-      />
-    </picture>
+    <CatalogImage
+      src={
+        api + `/content/banner-media/${encodeURIComponent(b.config.desktop_id)}`
+      }
+      mobileSrc={
+        api + `/content/banner-media/${encodeURIComponent(b.config.mobile_id)}`
+      }
+      alt={b.config.alt}
+      fetchPriority="high"
+      onError={() => setBroken((x) => [...x, b.id])}
+    />
   ) : null;
   return (
     <section
@@ -408,7 +393,8 @@ function PromoBanners({
                   مدل‌های موجود را ببین <Icon name="arrow" />
                 </b>
               </div>
-              <img
+              <CatalogImage
+                className="lh-promo-product-image"
                 src={api + product.image_url}
                 alt={product.name}
                 loading="lazy"
@@ -417,18 +403,14 @@ function PromoBanners({
             </a>
           );
         const visual = (
-          <picture>
-            <source
-              media="(max-width:600px)"
-              srcSet={api + `/content/banner-media/${b.config.mobile_id}`}
-            />
-            <img
-              src={api + `/content/banner-media/${b.config.desktop_id}`}
-              alt={b.config.alt}
-              loading="lazy"
-              onError={() => setBroken((x) => [...x, b.id])}
-            />
-          </picture>
+          <CatalogImage
+            className="lh-promo-static-image"
+            src={api + `/content/banner-media/${b.config.desktop_id}`}
+            mobileSrc={api + `/content/banner-media/${b.config.mobile_id}`}
+            alt={b.config.alt}
+            loading="lazy"
+            onError={() => setBroken((x) => [...x, b.id])}
+          />
         );
         return b.config.link ? (
           <a href={b.config.link} key={b.id}>
@@ -453,10 +435,10 @@ function HomeCategories({ categories }: { categories: HomeCategory[] }) {
     >
       <span>
         {category.image_url ? (
-          <img
+          <CatalogImage
             src={api + category.image_url}
             alt=""
-            loading={lazy ? "lazy" : undefined}
+            loading={lazy ? "lazy" : "eager"}
           />
         ) : (
           <Icon name="bag" />
@@ -601,9 +583,11 @@ export function HomePage() {
               banners={banners}
               photos={rails.slice(0, 2).flatMap((r) => r.products.slice(0, 1))}
             />
-            <HomeCategories categories={availableCategories} />
+            {!loading && !error && (
+              <HomeCategories categories={availableCategories} />
+            )}
             {loading ? (
-              <LoadingPlaceholder label="دریافت محصولات" />
+              <HomeCatalogSkeleton />
             ) : error ? (
               <div className="lh-error" role="alert">
                 <h2>دریافت محصولات انجام نشد.</h2>
@@ -841,6 +825,8 @@ export function SiteHeader() {
   );
 }
 export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
+  const {data:business,loading,error,refresh}=usePublicBusiness();
+  const pages=businessPages.filter(([,key])=>business?.[key]?.trim());
   return (
     <footer className="lh-footer">
       <div className="lh-wrap lh-footer-main">
@@ -856,7 +842,7 @@ export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
           <p>انتخابی ساده، برای همراه‌های هر روز.</p>
         </div>
         <div>
-          <h2>دسته‌های چریوا</h2>
+          {categories.length>0&&<h2>دسته‌های چریوا</h2>}
           {categories.map((r) => (
             <a href={r.url} key={r.key}>
               {r.title}
@@ -864,14 +850,13 @@ export function SiteFooter({ categories }: { categories: HeaderCategory[] }) {
           ))}
         </div>
         <div>
-          <h2>درباره چریوا</h2>
-          <a href="/info/about">آشنایی با چریوا</a>
-          <a href="/info/contact">تماس با ما</a>
-          <a href="/info/shipping">شرایط ارسال</a>
-          <a href="/info/returns">شرایط بازگشت</a>
-          <a href="/info/terms">قوانین خرید</a>
-          <a href="/info/privacy">حریم خصوصی</a>
-          <a href="/#home-categories">دسته‌بندی کالاها</a>
+          {loading&&!business?<div className="footer-skeleton" aria-label="در حال دریافت اطلاعات عمومی"><i/><i/><i/></div>:null}
+          {error&&<div role="status"><p>{error}</p><button onClick={refresh}>تلاش مجدد اطلاعات عمومی</button></div>}
+          {pages.length>0&&<h2>درباره چریوا</h2>}
+          {pages.map(([slug,,label])=><a href={'/info/'+slug} key={slug}>{label}</a>)}
+          {business?.support_phone&&<a href={'tel:'+business.support_phone.replace(/[^0-9+۰-۹]/g,'')}>پشتیبانی: <span dir="ltr">{business.support_phone}</span></a>}
+          {business?.support_email&&<a href={'mailto:'+encodeURIComponent(business.support_email)}>{business.support_email}</a>}
+          {!!business?.social_links?.length&&<nav className="footer-social-links" aria-label="شبکه‌های اجتماعی چریوا">{business.social_links.map(link=><a href={link.url} key={link.id} target="_blank" rel="noopener noreferrer" aria-label={link.title+'؛ باز شدن در پنجره جدید'} title={link.title}><SocialIcon kind={link.kind}/></a>)}</nav>}
         </div>
       </div>
       <div className="lh-wrap lh-copyright">

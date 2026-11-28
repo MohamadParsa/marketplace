@@ -1,5 +1,19 @@
 # مستندات BDD بازارگاه
 
+[۹سناریوی طراحی لاگ و درگاه](features/experiences/logging-gateway-plan.feature) به [۳۶معیار پذیرش تسک‌های آینده](../delivery/logging-gateway-plan-2026-11-28/README.md) وصل‌اند؛ تست اجرایی نیستند.
+
+[۴سناریوی سوییچ و ضریب تبدیل #154](features/experiences/gateway-currency-and-switches.feature) به [معیارهای پذیرش](../delivery/gateway-currency-and-switches-2026-11-28.md) متصل‌اند؛ اجرای بانکی ندارند.
+
+[۴سناریوی بازبینی تنظیمات #153](features/experiences/payment-settings-revision.feature) به [پذیرش و شواهد](../delivery/payment-settings-revision-2026-11-28.md) وصل‌اند؛ آزمون بانکی واقعی از آن نتیجه نمی‌شود.
+
+[۴سناریوی تنظیمات درگاه #152](features/experiences/payment-gateway-settings.feature) به [تحویل و شواهد قدم تنظیمات](../delivery/payment-gateway-settings-2026-11-28.md) متصل‌اند؛ اجرای پرداخت از آن نتیجه نمی‌شود.
+
+[۴سناریوی طراحی تنظیمات چنددرگاهی و زرین‌پال](features/experiences/zarinpal-gateway-review.feature) به [بررسی پیش از اجرا](../delivery/zarinpal-gateway-review-2026-11-28.md) متصل‌اند؛ هنوز پیاده‌سازی یا آزمون اتصال انجام نشده است.
+
+[۴سناریوی گردش کیف پول و ثبت نتیجه انتقال بانکی #151](features/experiences/wallet-history-and-transfer-review.feature) به [پذیرش و شواهد اجرا](../delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md) وصل‌اند؛ اجرای مستقل runner Gherkin ادعا نمی‌شود.
+
+[ده سناریوی طراحی بازبینی چرخه سفارش و Q&A/تخفیف](features/experiences/order-lifecycle-review.feature) به [شرح‌های برنامه](../delivery/order-lifecycle-review-2026-11-27/README.md) وصل‌اند؛ فقط planning و بدون مجوز اجرا یا ادعای آزمون موفق.
+
 این پوشه مرجع سناریوهای رفتاری بازارگاه است. سناریوها با قالب Gherkin فارسی در فایل‌های `.feature` ثبت شده‌اند و هر سناریو با شناسه پذیرش موجود در سند حوزه یا تجربه پیوند دارد. این اسناد در وضعیت مستندات هستند و به‌تنهایی مجوز ساخت یا اتصال به سرویس واقعی نیستند.
 
 ## قواعد نگارش و ردیابی
@@ -63,3 +77,29 @@
 [سناریوهای علاقه‌مندی مشتری #63](features/experiences/customer-wishlist.feature) به گزارش HTTP/PG/مرورگر همان برش لینک دارند؛ اجرای BDD runner با اجرای تست‌های Go/مرورگر یکی نیست.
 
 [سناریوهای بازدیدهای اخیر #64](features/experiences/customer-recently-viewed.feature) به گزارش Go/HTTP/PG/lifecycle/مرورگر لینک دارند؛ runner جدا برای خود BDD ادعا نمی‌شود.
+
+[کوپن، اعتبار دلخواه و گروه گارانتی؛ سناریوهای چهار قابلیت محلی](features/experiences/checkout-adjustments.feature) · [شواهد اجرای مرتبط](../delivery/next-phase/issues-67-68-69-78-verification.md).
+
+## تکمیل کیف پول و پرداخت
+
+۱۶ سناریوی پذیرش FEAT-REV-001 تا004 در [checkout-wallet-policy.feature](features/experiences/checkout-wallet-policy.feature) ثبت شد؛ [اجرای مستقل API/سرویس/مرورگر و محدودیت‌ها](../delivery/backlog-review-2026-11-24/issues-96-99-verification.md). runner مستقلی برای Gherkin اجرا نشده است.
+
+[روش فروش و خروجی گرید #73/#81](features/experiences/sales-methods-and-grid-export.feature) به [گزارش اجرای Go/مرورگر/مولد](../delivery/next-phase/issues-73-81-verification.md) متصل است؛ اجرای runner مستقل BDD ادعا نمی‌شود.
+
+[کاربر واحد، رمز موقت و نقش‌های مستقل #111/#112](features/experiences/user-management-and-roles.feature) به [قرارداد اجرایی](../architecture/contracts/user-management.md) و [شواهد](../delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md) لینک دارد؛ runner مستقل Gherkin اجرا نشده است.
+
+[تبدیل محور #109](features/experiences/category-axis-conversion.feature): نگاشت، تراکنش و رضایت دوباره سبد؛ شاهد executable در گزارش تحویل.
+
+[پروفایل فروشگاه #113](features/experiences/store-management.feature): CRUD، تصویر و مجوز؛ شاهد executable در گزارش تحویل.
+
+[سیاست فروشگاه #114](features/experiences/store-sales-policy.feature): دسته، روش، نام snapshot و جلوگیری از مصرف وجه پیش از بازبینی.
+
+[مدیریت برند، حفاظت تاریخچه و فیلتر — #115](features/experiences/brand-management.feature).
+
+[محصول غیرفعال، کد عمومی و حفاظت خرید — #116](features/experiences/product-management.feature).
+
+[صفحات عمومی و شبکه‌های اجتماعی — #87](features/experiences/business-content.feature).
+
+[امتیاز و میانگین نظرات PDP — #119](features/experiences/product-review-rating.feature)؛ runner مستقل Gherkin اجرا نشده و شواهد اجرایی Go/مرورگر در گزارش است.
+
+[برنامه سناریوهای روش حمل/وقفه/تقویم](features/experiences/shipping-method-policies.feature) مربوط به #120/#121/#122/#123 و #16 است؛ این سناریوهای تازه هنوز پیاده‌سازی یا اجرا نشده‌اند.

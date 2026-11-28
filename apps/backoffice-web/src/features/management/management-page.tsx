@@ -1,7 +1,19 @@
-import { useState } from "react";
+import { CreateButton } from "../../shared/create-button";
+import { TextField } from "@mui/material";
+import { FilterPanel } from "../../shared/filter-panel";
+import {
+  ProductCatalogFilters,
+  filterProductRows,
+  emptyProductFilters,
+} from "./product-catalog-filters";
+import { WalletCreditDialog } from "./wallet-credit-dialog";
+import type { User } from "../../shared/types";
+import type { WalletCreditResult } from "../../../../../packages/commerce-client/types";
+import { CategorySalesDialog } from "../commerce/sales-methods-page";
+import { useEffect, useState } from "react";
 import { Alert, Button, Switch } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { AccessPanel } from "./access-panel";
+
 import { useWorkspace, can } from "../../shared/workspace";
 import {
   ActionDialog,
@@ -10,12 +22,13 @@ import {
   Status,
   type Field,
 } from "../../shared/components";
-import { labels, money } from "../../shared/format";
-import type { Command, Category } from "../../shared/types";
+import { labels, money, recordNumber } from "../../shared/format";
+import type { Command, Category, Product } from "../../shared/types";
 import { CategoryBindingsDialog } from "./shared-attributes";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { categoryPath } from "./category-tree";
 import { ProductQuickDialog } from "./product-workspace";
+import { ProductThumbnail } from "./product-thumbnail";
 import {
   CatalogIcon,
   CatalogIconDialog,
@@ -30,7 +43,9 @@ const roleOptions = [
 ].map((value) => ({ value, label: value }));
 export function ManagementPage({
   section,
+  onCatalogEdit,
 }: {
+  onCatalogEdit?: (row?: Product) => void;
   section:
     | "users"
     | "stores"
@@ -41,9 +56,28 @@ export function ManagementPage({
     | "shipping";
 }) {
   const navigate = useNavigate();
-  const { state, role, execute, busy, can: allowed } = useWorkspace();
+  const [params] = useSearchParams();
+  const { state, role, execute, busy, surface, can: allowed } = useWorkspace();
+  const [creditTarget, setCreditTarget] = useState<User>();
+  const [walletUpdates, setWalletUpdates] = useState<
+    Record<string, WalletCreditResult>
+  >({});
+  const categoryParam = params.get("category") ?? "";
+  useEffect(
+    () =>
+      setProductFilters((previous) => ({
+        ...previous,
+        category: categoryParam,
+      })),
+    [categoryParam],
+  );
   const [policyError, setError] = useState("");
+  const [salesCategory, setSalesCategory] = useState<string>();
   const [search, setSearch] = useState("");
+  const [productFilters, setProductFilters] = useState({
+    ...emptyProductFilters,
+    category: params.get("category") ?? "",
+  });
   const [iconTarget, setIconTarget] = useState<IconTarget>();
   const [bindingTarget, setBindingTarget] = useState<Category>();
   const [productTarget, setProductTarget] = useState<{
@@ -64,16 +98,16 @@ export function ManagementPage({
     categories: "دسته‌ها و خصوصیات",
     brands: "برندها",
     products: "محصولات و بررسی محتوا",
-    pricing: "قوانین کمیسیون",
+    pricing: "راهنمای قیمت و کمیسیون",
     shipping: "ارسال و تقویم کاری",
   };
   const create = () =>
     section === "categories"
-      ? navigate("/home-catalog?create=category")
+      ? navigate("/categories?create=category")
       : section === "users"
         ? open("کاربر جدید", { action: "user.create" }, [
             { name: "name", label: "نام کاربر" },
-            { name: "phone", label: "شماره حساب آزمون (۱۱ رقم)" },
+            { name: "phone", label: "شماره موبایل (۱۱ رقم)" },
             { name: "value", label: "نقش", options: roleOptions },
           ])
         : section === "stores"
@@ -90,39 +124,53 @@ export function ManagementPage({
         .toLocaleLowerCase()
         .includes(search.toLocaleLowerCase()),
     );
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
         title={titles[section]}
-        description="مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"
+        description={section === "pricing" ? "مسیر تنظیم قیمت فروش، مارکاپ و وضعیت تعریف قواعد کمیسیون" : "مشاهده، بررسی و مدیریت اطلاعات با ثبت تاریخچه تغییرات"}
         action={
-          ["users", "stores", "categories"].includes(section) &&
-          (role === "super-admin" || (section !== "users" && editable)) ? (
-            <Button variant="contained" startIcon={<Add />} onClick={create}>
+          ["users", "stores", "categories", "products"].includes(section) &&
+          (section === "products"
+            ? surface === "backoffice" &&
+              allowed("catalog.product.create", "management")
+            : role === "super-admin" || (section !== "users" && editable)) ? (
+            <CreateButton
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() =>
+                section === "products" ? onCatalogEdit?.() : create()
+              }
+            >
               افزودن{" "}
               {section === "users"
                 ? "کاربر"
                 : section === "stores"
                   ? "فروشگاه"
-                  : "دسته"}
-            </Button>
+                  : section === "products"
+                    ? "محصول"
+                    : "دسته"}
+            </CreateButton>
           ) : undefined
         }
       />
       {policyError && <Alert severity="error">{policyError}</Alert>}
       <section className="panel">
-        <div className="toolbar">
-          <input
-            aria-label="جست‌وجو"
-            className="search"
-            placeholder="جست‌وجو در این بخش…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <span className="muted">اطلاعات آزمون · به‌روز از سرور</span>
-        </div>
+        {section !== "products" && section !== "pricing" && (
+          <FilterPanel onSearch={() => setSearch(searchDraft)}>
+            <TextField
+              label="جست‌وجو"
+
+              placeholder="جست‌وجو در این بخش…"
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+            />
+          </FilterPanel>
+        )}
         {section === "users" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.users ?? [])}
             columns={[
               {
@@ -130,7 +178,7 @@ export function ManagementPage({
                 render: (u) => (
                   <>
                     <b>{u.name}</b>
-                    <small>{u.id}</small>
+                    <small>{recordNumber(state, "user", u.id)}</small>
                   </>
                 ),
               },
@@ -146,6 +194,21 @@ export function ManagementPage({
                 title: "عملیات",
                 render: (u) => (
                   <>
+                    <Button
+                      disabled={
+                        !u.active ||
+                        !allowed("commerce.wallet.credit", "finance")
+                      }
+                      onClick={() => setCreditTarget(u)}
+                    >
+                      شارژ کیف پول
+                    </Button>
+                    {walletUpdates[u.id] && (
+                      <small>
+                        موجودی پس از شارژ: {walletUpdates[u.id].balance_toman}{" "}
+                        تومان
+                      </small>
+                    )}
                     <Button
                       disabled={role !== "super-admin"}
                       onClick={() =>
@@ -186,6 +249,7 @@ export function ManagementPage({
         )}
         {section === "stores" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.stores ?? [])}
             columns={[
               {
@@ -193,7 +257,7 @@ export function ManagementPage({
                 render: (s) => (
                   <>
                     <b>{s.name}</b>
-                    <small>{s.id}</small>
+                    <small>{recordNumber(state, "store", s.id)}</small>
                   </>
                 ),
               },
@@ -256,6 +320,7 @@ export function ManagementPage({
         )}
         {section === "categories" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.categories ?? [])}
             columns={[
               {
@@ -303,7 +368,7 @@ export function ManagementPage({
                   <>
                     <Button
                       component={Link}
-                      to={`/home-catalog?category=${encodeURIComponent(c.id)}`}
+                      to={`/categories?category=${encodeURIComponent(c.id)}`}
                       disabled={c.archived || !editable}
                     >
                       ویرایش
@@ -313,6 +378,9 @@ export function ManagementPage({
                       onClick={() => setBindingTarget(c)}
                     >
                       تنظیم خصوصیات
+                    </Button>
+                    <Button onClick={() => setSalesCategory(c.id)}>
+                      مارکاپ روش فروش
                     </Button>
                     <Button
                       disabled={!editable || c.archived}
@@ -340,6 +408,7 @@ export function ManagementPage({
         )}
         {section === "brands" && (
           <DataTable
+            searchable={false}
             rows={filtered(state.brands ?? [])}
             columns={[
               {
@@ -374,132 +443,128 @@ export function ManagementPage({
           />
         )}
         {section === "products" && (
-          <DataTable
-            rows={filtered(state.products ?? [])}
-            columns={[
-              {
-                title: "محصول",
-                render: (p) => (
-                  <>
-                    <b>{p.name}</b>
-                    {p.content_revision?.state === "pending" && (
+          <>
+            <ProductCatalogFilters
+              state={state}
+              value={productFilters}
+              onChange={setProductFilters}
+            />
+            <DataTable
+              searchable={false}
+              key={JSON.stringify(productFilters)}
+              rows={filtered(filterProductRows(state, productFilters))}
+              columns={[
+                {
+                  title: "محصول",
+                  render: (p) => (
+                    <>
+                      <div className="product-grid-name">{surface === "backoffice" && <ProductThumbnail imageID={p.image_id || p.gallery_ids?.[0]} name={p.name} />}<b>{p.name}</b></div>
+                      {p.content_revision?.state === "pending" && (
+                        <small>
+                          ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                        </small>
+                      )}
                       <small>
-                        ویرایش در انتظار بررسی؛ نسخه عمومی قبلی محفوظ است.
+                        نسخه {p.version} · {p.public_code || "کد در حال تخصیص"}
                       </small>
-                    )}
-                    <Link to={`/products/${p.id}`}>جزئیات محصول</Link>
-                    <small>
-                      نسخه {p.version} · {p.id}
-                    </small>
-                  </>
-                ),
-              },
-              {
-                title: "دسته",
-                render: (p) =>
-                  state.categories?.find((c) => c.id === p.category_id)?.name,
-              },
-              { title: "نوع", render: (p) => labels[p.model] },
-              { title: "وضعیت", render: (p) => <Status value={p.status} /> },
-              {
-                title: "عملیات",
-                render: (p) => (
-                  <>
-                    <Button
-                      component={Link}
-                      to={`/home-catalog?product=${encodeURIComponent(p.id)}`}
-                      disabled={!editable}
-                    >
-                      ویرایش
-                    </Button>
-                    <Button
-                      onClick={() => setProductTarget({ id: p.id, tab: 0 })}
-                    >
-                      تنوع‌ها
-                    </Button>
-                    <Button
-                      onClick={() => setProductTarget({ id: p.id, tab: 1 })}
-                    >
-                      قیمت و موجودی
-                    </Button>
-                    <Button
-                      disabled={
-                        !editable ||
-                        p.status === "published" ||
-                        p.content_revision?.state === "pending"
-                      }
-                      onClick={() =>
-                        open(
-                          "تأیید و انتشار محتوا",
-                          {
-                            action: "product.publish",
-                            target: p.id,
-                            version: p.version,
-                          },
-                          [{ name: "reason", label: "یادداشت بررسی" }],
-                        )
-                      }
-                    >
-                      انتشار
-                    </Button>
-                    <Button
-                      color="error"
-                      disabled={
-                        !editable ||
-                        p.status === "rejected" ||
-                        p.content_revision?.state === "pending"
-                      }
-                      onClick={() =>
-                        open(
-                          "رد محتوای محصول",
-                          {
-                            action: "product.reject",
-                            target: p.id,
-                            version: p.version,
-                          },
-                          [{ name: "reason", label: "دلیل رد" }],
-                        )
-                      }
-                    >
-                      رد
-                    </Button>
-                  </>
-                ),
-              },
-            ]}
-          />
+                    </>
+                  ),
+                },
+                {
+                  title: "دسته",
+                  render: (p) =>
+                    state.categories?.find((c) => c.id === p.category_id)?.name,
+                },
+                { title: "نام انگلیسی", render: (p) => p.english_name || "—" },
+                {
+                  title: "برند",
+                  render: (p) =>
+                    state.brands?.find((b) => b.id === p.brand_id)?.name || "—",
+                },
+                {
+                  title: "فعال‌بودن",
+                  render: (p) => (p.active === false ? "غیرفعال" : "فعال"),
+                },
+                { title: "نوع", render: (p) => labels[p.model] },
+                { title: "وضعیت", render: (p) => <Status value={p.status} /> },
+                {
+                  title: "عملیات",
+                  render: (p) => (
+                    <>
+                      <Button component={Link} to={`/products/${p.id}`}>جزئیات محصول</Button>
+                      <Button
+                        onClick={() => onCatalogEdit?.(p)}
+                        disabled={
+                          surface !== "backoffice" ||
+                          !allowed("catalog.product.update", "management")
+                        }
+                      >
+                        ویرایش
+                      </Button>
+                      <Button
+                        onClick={() => setProductTarget({ id: p.id, tab: 0 })}
+                      >
+                        تنوع‌ها
+                      </Button>
+                      <Button
+                        onClick={() => setProductTarget({ id: p.id, tab: 1 })}
+                      >
+                        قیمت و موجودی
+                      </Button>
+                      <Button
+                        disabled={
+                          !allowed("product.publish", "management") ||
+                          p.status === "published" ||
+                          p.content_revision?.state === "pending"
+                        }
+                        onClick={() =>
+                          open(
+                            "تأیید و انتشار محتوا",
+                            {
+                              action: "product.publish",
+                              target: p.id,
+                              version: p.version,
+                            },
+                            [{ name: "reason", label: "یادداشت بررسی" }],
+                          )
+                        }
+                      >
+                        انتشار
+                      </Button>
+                      <Button
+                        color="error"
+                        disabled={
+                          !allowed("product.reject", "management") ||
+                          p.status === "rejected" ||
+                          p.content_revision?.state === "pending"
+                        }
+                        onClick={() =>
+                          open(
+                            "رد محتوای محصول",
+                            {
+                              action: "product.reject",
+                              target: p.id,
+                              version: p.version,
+                            },
+                            [{ name: "reason", label: "دلیل رد" }],
+                          )
+                        }
+                      >
+                        رد
+                      </Button>
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </>
         )}
-        {section === "pricing" && (
-          <DataTable
-            rows={filtered(state.rules ?? [])}
-            columns={[
-              { title: "قانون", render: (r) => <b>{r.name}</b> },
-              { title: "سطح", render: (r) => labels[r.level] },
-              { title: "شیوه", render: (r) => labels[r.kind] },
-              {
-                title: "مقدار",
-                render: (r) =>
-                  r.kind === "percent" ? `${r.value}٪` : money(r.value),
-              },
-              {
-                title: "فعال",
-                render: (r) => (
-                  <Switch
-                    checked={r.active}
-                    disabled={role !== "super-admin"}
-                    onChange={() =>
-                      open(
-                        "تغییر اعتبار قانون",
-                        { action: "rule.toggle", target: r.id },
-                        [{ name: "reason", label: "دلیل تغییر" }],
-                      )
-                    }
-                  />
-                ),
-              },
-            ]}
-          />
-        )}
+        {section === "pricing" && <section>
+          <h2>قیمت فروش و قرارداد فروشگاه</h2>
+          <p>قیمت پایه و موجودی برای عرضهٔ هر فروشگاه در «محصولات و محتوا ← قیمت و موجودی» تنظیم می‌شوند. مارکاپ هر روش فروش از تنظیمات همان دسته و روش فروش خوانده می‌شود.</p>
+          <Alert severity="info">این صفحه قرارداد فروشگاه نیست. تعریف و ویرایش قانون کمیسیون، پس از تعیین قواعد قرارداد و تسویه در دسترس قرار می‌گیرد.</Alert>
+          <div className="toolbar"><Button component={Link} to="/products">قیمت و موجودی محصولات</Button><Button component={Link} to="/categories">مارکاپ دسته‌ها</Button><Button component={Link} to="/sales-methods">روش‌های فروش</Button></div>
+        </section>}
         {section === "shipping" && (
           <>
             <div className="calendar-note">
@@ -510,6 +575,7 @@ export function ManagementPage({
               </span>
             </div>
             <DataTable
+              searchable={false}
               rows={filtered(state.shipping ?? [])}
               columns={[
                 { title: "روش ارسال", render: (s) => <b>{s.method}</b> },
@@ -546,7 +612,17 @@ export function ManagementPage({
           </>
         )}
       </section>
-      {section === "users" && <AccessPanel />}
+
+      {creditTarget && (
+        <WalletCreditDialog
+          key={creditTarget.id}
+          user={creditTarget}
+          close={() => setCreditTarget(undefined)}
+          onCredited={(result) =>
+            setWalletUpdates((old) => ({ ...old, [result.user_id]: result }))
+          }
+        />
+      )}
       {iconTarget && (
         <CatalogIconDialog
           target={iconTarget}
@@ -565,6 +641,12 @@ export function ManagementPage({
           key={bindingTarget.id}
           category={bindingTarget}
           close={() => setBindingTarget(undefined)}
+        />
+      )}
+      {salesCategory && (
+        <CategorySalesDialog
+          id={salesCategory}
+          close={() => setSalesCategory(undefined)}
         />
       )}
       {dialog && (

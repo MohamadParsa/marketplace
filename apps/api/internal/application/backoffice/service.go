@@ -2,19 +2,28 @@ package backoffice
 
 import (
 	"context"
+	"crypto/cipher"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/cherriva/marketplace/apps/api/internal/application/operationlog"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 	"slices"
 	"strings"
+	"time"
 )
 
 type Service struct {
-	repository  Repository
-	clock       Clock
-	identifiers Identifier
-	publicCache *PublicCache
+	operationLogs        *operationlog.Recorder
+	operationScanner     operationlog.Scanner
+	operationStats       func() any
+	repository           Repository
+	clock                Clock
+	identifiers          Identifier
+	publicCache          *PublicCache
+	gatewayCipher        cipher.AEAD
+	gatewayPublicBaseURL string
+	gatewayLocalCallback bool
 }
 
 func NewService(repository Repository, clock Clock, identifiers Identifier) *Service {
@@ -25,15 +34,29 @@ func roleAllows(role identity.Role, action string) bool {
 		return true
 	}
 	switch action {
+	case OrdersRequestsWrite:
+		return role == identity.RoleOperations || role == identity.RoleSupport
+	case OrdersRequestsReview:
+		return role == identity.RoleSupport
+	case OrdersOperate:
+		return role == identity.RoleOperations
+	case OrdersReceive:
+		return role == identity.RoleSupport
+	case StoresShippingRead, StoresShippingWrite, StoresShippingReview:
+		return role == identity.RoleOperations
 	case "product.content.review", "store.content-policy.set":
 		return role == identity.RoleOperations
-	case CommerceSettingsRead, CommerceOrdersRead:
+	case CouponsCreate, CouponsEdit, CouponsActivate:
+		return role == identity.RoleOperations
+	case StoresPreparationWrite, StoresRead, StoresWrite, StoresMembersRead, StoresMediaWrite, StoresEligibilityWrite:
+		return role == identity.RoleOperations
+	case SalesRead, CommerceSettingsRead, CommerceOrdersRead, CouponsRead:
 		return role == identity.RoleOperations || role == identity.RoleSupport || role == identity.RoleFinance
 	case CommerceShippingWrite, CommerceGeographyWrite, CommerceBusinessWrite:
 		return role == identity.RoleOperations
-	case CommerceDepositsRead, CommerceDepositsReview, CommerceOrdersConfirm, CommerceRefundsResolve:
+	case SalesWrite, CommerceDepositsRead, CommerceDepositsReview, CommerceOrdersConfirm, CommerceRefundsResolve, CommerceWalletCredit:
 		return role == identity.RoleFinance
-	case "product.media.update", "category.publish", "banner.media.set", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.icon.set", "product.icon.remove", "banner.create", "banner.save", "banner.publish", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
+	case "product.media.update", "category.publish", "banner.media.set", "homepage.save", "catalog.category.create", "catalog.category.update", "catalog.brand.create", "catalog.brand.update", "catalog.product.create", "catalog.product.update", "product.icon.set", "product.icon.remove", "banner.create", "banner.save", "banner.publish", "banner.media.remove", "category.icon.set", "category.icon.remove", "brand.icon.set", "brand.icon.remove", "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "variant.create", "offer.create", "offer.price.update", "offer.stock.update", "store.toggle", "store.create", "category.create", "category.archive", "product.publish", "product.reject", "shipping.update":
 		return role == identity.RoleOperations
 	case "case.start", "case.close", "case.refund", "case.assign", "order.deliver":
 		return role == identity.RoleSupport
@@ -43,7 +66,7 @@ func roleAllows(role identity.Role, action string) bool {
 	return false
 }
 func allowsAction(actor identity.User, action string) bool {
-	return roleAllows(actor.Role, action) || (!IsAccessCommand(action) && slices.Contains(actor.Permissions, action))
+	return roleAllows(actor.Role, action) || ((!IsAccessCommand(action) || action == UsersRead || action == UsersWrite || action == UsersPasswordReset) && slices.Contains(actor.Permissions, action))
 }
 
 func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, error) {
@@ -51,6 +74,10 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if err != nil {
 		return Workspace{}, err
 	}
+	state.UserMutations = nil
+	state.ActivityOrigins = nil
+	state.StoreMutations = nil
+	state.AxisPlans = nil
 	state.Wishlist = nil
 	state.RecentlyViewed = nil
 	if state.Commerce != nil {
@@ -66,8 +93,15 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 	if actor.Role == "" && !slices.Contains(actor.Permissions, WorkspaceRead) {
 		return Workspace{}, ErrForbidden
 	}
+	if !allowsAction(actor, StoresRead) {
+		for i := range state.Stores {
+			state.Stores[i].Profile = nil
+		}
+	}
 	if actor.Role != identity.RoleSuperAdmin {
-		state.Users = nil
+		if !allowsAction(actor, CommerceWalletCredit) && !allowsAction(actor, UsersRead) {
+			state.Users = nil
+		}
 		state.Access = nil
 		state.Audit = slices.DeleteFunc(state.Audit, func(event Audit) bool {
 			return IsAccessCommand(event.Action)
@@ -87,8 +121,14 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 			return event.Action == "transfer.resolve" || event.Action == "rule.toggle"
 		})
 	}
+	for i := range state.Users {
+		state.Users[i].NationalID = ""
+	}
 	state.Commerce = nil
-	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool { return strings.HasPrefix(a.Action, "commerce.") })
+	state.ProductReviews = nil
+	state.Audit = slices.DeleteFunc(state.Audit, func(a Audit) bool {
+		return strings.HasPrefix(a.Action, "commerce.") || strings.HasPrefix(a.Action, "stores.shipping.")
+	})
 	state.IconMedia = nil
 	state.BannerAssets = nil
 	state.Banners = nil
@@ -98,13 +138,21 @@ func (s *Service) Read(ctx context.Context, actor identity.User) (Workspace, err
 		state.HomeSettings = DefaultHomeSettings()
 	}
 	state.CardPreviews = BuildCardPreviews(state)
+	state.RecordNumbers = scopedRecordNumbers(state, state.RecordNumbers)
+	state.LastRecordNumber = 0
+	if actor.Role != identity.RoleSuperAdmin {
+		state.Audit = nil
+	}
 	return state, nil
 }
 func (s *Service) Execute(ctx context.Context, actor identity.User, command Command) error {
 	return s.ExecuteWithReauthentication(ctx, actor, command, nil)
 }
 
-func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identity.User, command Command, confirm func() error) error {
+func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identity.User, command Command, confirm func() error) (resultErr error) {
+	ctx = s.observeContext(ctx)
+	started := time.Now()
+	defer func() { s.operationFinish(ctx, "backoffice.command", started, resultErr, false) }()
 	if command.Action != "product.content.submit" && command.Action != "product.content.approve" && command.Action != "product.content.reject" && !isProductAction(command.Action) && !allowsAction(actor, command.Action) {
 		return ErrForbidden
 	}
@@ -118,18 +166,27 @@ func (s *Service) ExecuteWithReauthentication(ctx context.Context, actor identit
 	if err != nil {
 		return err
 	}
-	encoded, err := json.Marshal(command)
-	if err != nil {
-		return err
-	}
-	sum := sha256.Sum256(encoded)
-	fingerprint := hex.EncodeToString(sum[:])
 	execute := func(confirmed bool) error {
 		return s.repository.Update(ctx, func(state *Workspace) error {
 			current, err := catalogActor(*state, actor)
 			if err != nil {
 				return err
 			}
+			// Catalog administration is a backoffice surface operation, including
+			// for an account that also owns global roles and seller memberships.
+			if current.Surface == identity.SurfaceSeller && (strings.HasPrefix(command.Action, "catalog.") || strings.HasPrefix(command.Action, "attribute.") || strings.HasPrefix(command.Action, "category.") || command.Action == "homepage.save" || command.Action == "settings.card-limit" || command.Action == "settings.sales-window" || command.Action == "product.publish" || command.Action == "product.reject") {
+				return ErrForbidden
+			}
+			command, err := normalizeAttributeCommand(*state, command)
+			if err != nil {
+				return err
+			}
+			encoded, err := json.Marshal(command)
+			if err != nil {
+				return err
+			}
+			sum := sha256.Sum256(encoded)
+			fingerprint := hex.EncodeToString(sum[:])
 			if command.Action == "store.content-policy.set" && current.Surface != identity.SurfaceBackoffice {
 				return ErrForbidden
 			}
@@ -212,9 +269,9 @@ func (s *Service) apply(state *Workspace, c Command, id string, confirmed bool, 
 		return removeIcon(state, c)
 	case "banner.create", "banner.save", "banner.publish", "banner.media.remove":
 		return applyBanner(state, c, id)
-	case "variant.create", "offer.create", "offer.price.update", "offer.stock.update":
+	case "variant.create", "offer.create", "offer.update", "offer.price.update", "offer.stock.update":
 		return applyProduct(state, c, id)
-	case "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window":
+	case "attribute.groups.set", "attribute.create", "attribute.update", "attribute.delete", "category.bindings.set", "settings.card-limit", "settings.sales-window":
 		return applyAttributes(state, c, id)
 	case "category.icon.remove", "brand.icon.remove":
 		return removeIcon(state, c)

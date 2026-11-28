@@ -3,7 +3,7 @@ id: DEL-NEXT-001
 title: صف توسعه بعدی چریوا پس از اصلاحات تجربه فروشگاه
 status: in-review
 owner: eliassarband
-updated: 2026-11-24
+updated: 2026-11-28
 related: [DEL-SF-UX-001, ADR-009]
 approved_by: []
 implementation_status: in-progress
@@ -12,7 +12,9 @@ execution_authorized: true
 
 # برنامه درخواست‌های جدید — ۲۰۲۶-۱۱-۲۳
 
-مالک خواسته **اول تسک‌ها ثبت شوند، سپس با انتخاب او اجرا شوند**. این بسته۳۰شرح جدید با هدف بیزینسی، پیشنهاد فنی، وابستگی،۴AC و پرسش‌ها دارد. هر۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند؛ هشت تحویل done/closed و۲۲مورد دیگر todo/open هستند؛ #66 تحلیل قرارداد است و اجرای موتور مالی از آن نتیجه نمی‌شود. پس از ثبت، #80/#83/#84/#85/#86 تحویل شدند. در درخواست تازه، #78/#69/#68/#67/#66/#63/#64 برای اجرای تک‌به‌تک انتخاب شدند؛ #66 و سپس #63 در نوبت‌های قبل تحویل محلی شدند؛ این نوبت #64 به همراه اصلاحات UI صریح مالک تکمیل شد. تغییرات اجرایی پنج انتخاب و شواهدشان جدا ثبت می‌شوند؛ استقرار لیارا یا اجرای بقیه تسک‌ها از این انتخاب نتیجه نمی‌شود. P1/P2 و موج‌ها پیشنهادند؛ نه تاریخ تحویل و نه دستور شروع. صف قبلی #45تا#54 done/closed باقی می‌ماند.
+۳۰Issue ثبت و به الیاس (`eliassarband`) اساین شده‌اند. وضعیت جاری: هشت تحویل قبلی در main، دو تحویل پارسا #89/#90 روی شاخه‌های او و چهار تحویل #67/#68/#69/#78 در [PR #94](https://github.com/MohamadParsa/marketplace/pull/94) انجام و Issueهایشان بسته شده‌اند؛۱۴کار دیگر باز است؛ #73 و #81 محلی تکمیل شدند. چهار Issue اخیر طبق دستور صریح مالک با کامنت شواهد بسته شدند؛ PR #94 هنوز ادغام نشده است. [گزارش چهار قابلیت](issues-67-68-69-78-verification.md). نسخه یکپارچه پارسا و اصلاح دکمه تا دستور انتشار تازه لوکال می‌مانند؛ پیگیری #105. انتشار لیارا و انتخاب بقیه کارها جداست. صف #45تا#54 done/closed باقی است.
+
+هر دو سرویس نظر #89 و پرسش‌وپاسخ #90 پارسا در ادغام محلی حاضرند؛ Issueها توسط پارسا بسته‌اند و انتشار main از این وضعیت نتیجه نمی‌شود.
 
 [تصمیم تازه کیف پول/کوپن/گارانتی](../../decisions/adr-009-checkout-credit-and-warranty-direction.md) · [فهرست ماشین‌خوان](task-index.json) · [پرسش‌ها](../../product/open-questions.md#next-phase-questions).
 
@@ -25,21 +27,21 @@ execution_authorized: true
 | CV-NEXT-03 · [#64](https://github.com/MohamadParsa/marketplace/issues/64) | [ثبت و نمایش محصولات اخیراً دیده‌شده هر مشتری](tasks/cv-next-03-customer-recently-viewed.md) | P2 / W2 | done؛ [شواهد](issue-64-verification.md) |
 | CV-NEXT-04 · [#65](https://github.com/MohamadParsa/marketplace/issues/65) | [مقایسه محصولات از یک دسته‌بندی](tasks/cv-next-04-same-category-comparison.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-05 · [#66](https://github.com/MohamadParsa/marketplace/issues/66) | [قرارداد مبلغ سفارش، CreditUsage و DiscountUsage](tasks/cv-next-05-checkout-amounts-usage-contract.md) | P1 / W0 | done؛ [تحلیل](issue-66-analysis.md) |
-| CV-NEXT-06 · [#67](https://github.com/MohamadParsa/marketplace/issues/67) | [کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور](tasks/cv-next-06-coupon-management.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
-| CV-NEXT-07 · [#68](https://github.com/MohamadParsa/marketplace/issues/68) | [باکس مستقل کد تخفیف در مرحله پرداخت خرید](tasks/cv-next-07-checkout-coupon-box.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
-| CV-NEXT-08 · [#69](https://github.com/MohamadParsa/marketplace/issues/69) | [باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت](tasks/cv-next-08-checkout-wallet-credit.md) | P1 / W3 | todo؛ در صف مالک، این نوبت شروع نشد |
+| CV-NEXT-06 · [#67](https://github.com/MohamadParsa/marketplace/issues/67) | [کد تخفیف: تعریف و محدودیت‌ها در پنل و ارزیابی سرور](tasks/cv-next-06-coupon-management.md) | P1 / W3 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
+| CV-NEXT-07 · [#68](https://github.com/MohamadParsa/marketplace/issues/68) | [باکس مستقل کد تخفیف در مرحله پرداخت خرید](tasks/cv-next-07-checkout-coupon-box.md) | P1 / W3 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
+| CV-NEXT-08 · [#69](https://github.com/MohamadParsa/marketplace/issues/69) | [باکس اعتبار کیف پول و مبلغ دلخواه کنار روش پرداخت](tasks/cv-next-08-checkout-wallet-credit.md) | P1 / W3 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
 | CV-NEXT-09 · [#70](https://github.com/MohamadParsa/marketplace/issues/70) | [PlaceOrder: شفاف‌سازی قرارداد اتمیک و سناریوهای شکست](tasks/cv-next-09-atomic-place-order.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-10 · [#71](https://github.com/MohamadParsa/marketplace/issues/71) | [بازبینی دقیق دسترسی و محدوده داده فروشندگان](tasks/cv-next-10-seller-access-audit.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-11 · [#72](https://github.com/MohamadParsa/marketplace/issues/72) | [بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول](tasks/cv-next-11-pricing-direct-discounts.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | done محلی؛ [شواهد](issues-73-81-verification.md) |
 | CV-NEXT-13 · [#74](https://github.com/MohamadParsa/marketplace/issues/74) | [SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات](tasks/cv-next-13-seo-audit-remediation.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | todo؛ در صف مالک، این نوبت شروع نشد |
+| CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | تکمیل/بسته؛ audit اتمیک و گزارش ادمین |
+| CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | تکمیل/بسته؛ رفتار سروری و قیف |
+| CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | تکمیل/بسته؛ پذیرش نهایی و راهنمای لاگ |
+| CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
 | CV-NEXT-18 · [#79](https://github.com/MohamadParsa/marketplace/issues/79) | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | done؛ [شواهد](issue-80-verification.md) |
-| CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-20 · [#81](https://github.com/MohamadParsa/marketplace/issues/81) | [ممیزی تمام گریدهای پنل، فیلترها و خروجی Excel](tasks/cv-next-20-backoffice-grid-capabilities.md) | P2 / W2 | done محلی؛ [شواهد](issues-73-81-verification.md) |
 | CV-NEXT-21 · [#82](https://github.com/MohamadParsa/marketplace/issues/82) | [سرویس ایمیل تراکنشی، قالب و پیگیری ارسال](tasks/cv-next-21-transactional-email-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-22 · [#83](https://github.com/MohamadParsa/marketplace/issues/83) | [تب مستقل مزایا و معایب کنار مشخصات فنی PDP](tasks/cv-next-22-pdp-pros-cons-tab.md) | P2 / W1 | done؛ [شواهد](issue-83-verification.md) |
 | CV-NEXT-23 · [#84](https://github.com/MohamadParsa/marketplace/issues/84) | [بازشدن زیرمنو با hover متن یا فلش و حفظ کلیک](tasks/cv-next-23-category-menu-hover.md) | P2 / W1 | done؛ [شواهد](issue-84-verification.md) |
@@ -47,8 +49,8 @@ execution_authorized: true
 | CV-NEXT-25 · [#86](https://github.com/MohamadParsa/marketplace/issues/86) | [اولویت نمایش دسته و ترتیب پایدار گره‌های منو](tasks/cv-next-25-category-display-priority.md) | P2 / W1 | done؛ [شواهد](issue-86-verification.md) |
 | CV-NEXT-26 · [#87](https://github.com/MohamadParsa/marketplace/issues/87) | [تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما](tasks/cv-next-26-footer-business-content.md) | P2 / W1 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-27 · [#88](https://github.com/MohamadParsa/marketplace/issues/88) | [تکمیل مدیریت سکشن‌ها با فرم نوع‌دار و انتشار](tasks/cv-next-27-typed-section-management.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-28 · [#89](https://github.com/MohamadParsa/marketplace/issues/89) | [سرویس نظرات کاربران؛ ادامه CV-WEB-15](tasks/cv-next-28-product-reviews-service.md) | P2 / W2 | done/closed؛ کد شاخه پارسا، ادغام محلی |
+| CV-NEXT-29 · [#90](https://github.com/MohamadParsa/marketplace/issues/90) | [سرویس پرسش و پاسخ محصول؛ ادامه CV-WEB-16](tasks/cv-next-29-product-qa-service.md) | P2 / W2 | done/closed؛ کد شاخه پارسا، ادغام محلی · [شواهد](issue-90-verification.md) |
 | CV-NEXT-30 · [#91](https://github.com/MohamadParsa/marketplace/issues/91) | [لندینگ اقساطی متصل به روش فروش و شرایط واقعی](tasks/cv-next-30-installment-landing.md) | P2 / W3 | todo؛ اجرا انتخاب نشده |
 
 ## موج‌ها؛ ترتیب قابل انتخاب
@@ -69,7 +71,7 @@ execution_authorized: true
 | گروه‌بندی و گارانتی | 18 زیرساخت گروه مقادیر؛17 رفتار دامنه گارانتی | مقدار/گارانتی واقعی تنوع و سفارش حفظ شود؛ ادغام مخرب یا دسته محصول تازه فرض نشود |
 | منو |23 تعامل hover؛24 scroll؛25 اولویت داده | مالک مشترک جزء منو، تست رگرسیون ترکیبی؛ #46 باز نمی‌شود |
 | مدیریت سکشن |27 هسته نوع‌دار | #7 بنر responsive تحویل شده؛ #8 ریل دستی و #9 sticky مالکان اجرایی موجودند؛ Issue کپی ساخته نشود |
-| نظر و پرسش/پاسخ |28 و29 | ادامه کارهای تاریخی CV-WEB-15/16 و گیت‌های #25؛ تعریف/تنظیم قبلی انجام شده، سرویس اجرا نشده |
+| نظر و پرسش/پاسخ |28 و29 | ادامه کارهای تاریخی CV-WEB-15/16 و گیت‌های #25؛ گیت مشترک از #25 است. نظر در #89 و پرسش‌وپاسخ در #90 پیگیری می‌شوند |
 | هویت و نقش پایه | #1/#2/#3 | CV-NEXT-10 ممیزی scoped فروشنده است؛ نقص بنیانی به مالک موجود لینک شود، نه ورود/هویت موازی |
 | تنظیمات عمومی | #15 | کلیدهای مشترک از این مسیر؛ بازنویسی کل تنظیمات شرط کار مستقل نیست |
 
@@ -91,4 +93,26 @@ execution_authorized: true
 
 تغییرات در [PR #93](https://github.com/MohamadParsa/marketplace/pull/93) پس از موفقیت هر۵ job CI، شامل Go race/vet، روی main با کامیت `a253d5edbe0adb467e1e7fb2ab5903608fb64bdc` ادغام شدند. این Issue با کامنت شواهد بسته شد. استقرار لیارا انجام نشد؛ نسخه D:\Cherriva نیز با main همگام است. تغییرهای بعد از این دسته تا دستور صریح تازه مالک لوکال می‌مانند.
 
-نسخه ترکیبی، کنترل خرید و نمایش دسته‌های جدید main را حفظ می‌کند؛ build/lint و۶۵کنترل مرورگر روی آن موفق‌اند. نتایج Go محلی۲۲۷تست/زیرتست و یک skip اختیاری بود؛ CI همین PR نیز race و هر۵ job را موفق بررسی کرد. وضعیت سند همچنان in-review و وضعیت اجرای این هشت کار done است. سایر۲۲کار todo باقی‌اند و نوبت پیشنهادی بعد #67 است؛ پیش‌نیازهای مالی آن جدا بررسی می‌شوند.
+نسخه ترکیبی، کنترل خرید و نمایش دسته‌های جدید main را حفظ می‌کند؛ build/lint و۶۵کنترل مرورگر روی آن موفق‌اند. نتایج Go محلی۲۲۷تست/زیرتست و یک skip اختیاری بود؛ CI همین PR نیز race و هر۵ job را موفق بررسی کرد. وضعیت سند همچنان in-review و وضعیت اجرای این هشت کار done است. این آمار مربوط به تحویل قبلی است؛ وضعیت جاری چهار انتخاب مالی/گارانتی در بخش بعد آمده است.
+
+## اجرای چهارتایی محلی۲۰۲۶-۱۱-۲۴
+
+با دستور مالک، #67/#68/#69/#78 یکجا اجرا و سورس در commit `1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d` و PR #94 پوش شد. پس از پنج job موفق CI و دستور تازه مالک در۲۰۲۶-۱۱-۲۴، هر چهار Issue با کامنت شواهد completed/closed شدند. PR هنوز باز است؛ ادغام main و استقرار انجام نشده است. [قرارداد](../../architecture/contracts/checkout-adjustments.md) · [گزارش و تصاویر](issues-67-68-69-78-verification.md).
+
+انتشار مجاز این چهار انتخاب: [سورس 1dd7ccd](https://github.com/MohamadParsa/marketplace/commit/1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d) · [PR #94](https://github.com/MohamadParsa/marketplace/pull/94). وضعیت‌های «تحویل لوکال» در شرح آزمون بالا سابقه تحویل اول‌اند؛ هم‌اکنون همان بسته روی شاخه قابل بررسی است.
+
+[صف یکتا و ممیزی۲۰۲۶-۱۱-۲۴؛ وضعیت واقعی، تسک‌های تازه و جلوگیری از اجرای تکراری](../backlog-review-2026-11-24/README.md) · [والد گیت #95](https://github.com/MohamadParsa/marketplace/issues/95).
+
+## تحویل محلی #73 و #81 —۲۰۲۶-۱۱-۲۵
+
+مالک این دو را انتخاب کرد؛ فرم/نرخ/نگاشت فروش و override دسته، resolver خرید و گرید/Excel مشترک محلی تکمیل شدند. [شواهد](issues-73-81-verification.md) · [ممیزی تمام گریدها و مرز کارهای باز](backoffice-grid-audit.md). سایر تسک‌های فرم و provider بازند؛ پوش و لیارا انجام نشده‌اند.
+
+## درخواست تکمیلی ثبت‌شده — ۲۰۲۶-۱۱-۲۶
+
+[#119: پنج ستاره طلایی و میانگین فقط نظرات تأییدشده PDP](tasks/cv-next-31-pdp-review-stars-and-average.md)، اساین به eliassarband؛ اجرا با درخواست مالک تکمیل شده؛ [شواهد و تصاویر](issue-119-verification.md). میانگین هدر و نظرات، ستاره‌های یکدست و ورودی کیبورد تکمیل #89 است.
+
+[تحویل مستقل #87؛ فوتر، صفحات عمومی، شبکه‌ها، کش و شواهد](issue-87-verification.md). متن پیشنهادی آماده و انتشار نهایی از پنل با مالک است؛ نمونه ساختگی خودکار به داده اصلی وارد نشده است.
+
+## بازبینی لاگ و تقدم بر درگاه — ۲۰۲۶-۱۱-۲۸
+
+[برنامه تازه](../logging-gateway-plan-2026-11-28/README.md) مالکیت #75/#76/#77 را حفظ و زیرتسک‌های #155..157 را برای زیرساخت/مقصد/پوشش فنی اضافه می‌کند. رفتار سبد و audit زیر همان دو Issue موجودند؛ مقصد فعلاً محلی و درگاه #158..163 معوق است. پس از این برنامه‌ریزی، مالک اجرای غیر درگاه را انتخاب و NEXT-Q09/Q10 را پاسخ داد؛ [گزارش اجرا](../logging-gateway-plan-2026-11-28/execution.md) وضعیت فعلی همین شش تسک را مشخص می‌کند. بقیه todoها از این انتخاب مجوز نمی‌گیرند.

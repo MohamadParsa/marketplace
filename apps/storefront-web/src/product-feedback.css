@@ -1,0 +1,33 @@
+.launch-home .pdp-feedback-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid #e9c5d0;
+  border-radius: 10px;
+  background: #fff5f8;
+  color: #9d193c;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pdp-feedback-disclosure > [hidden] {
+  display: none;
+}
+.pdp-feedback-disclosure > div:not([hidden]) {
+  margin-top: 16px;
+}
+.launch-home .pdp-feedback-action:hover:not(:disabled) {
+  background: #fff5f8;
+  color: #b51f46;
+}
+.launch-home .pdp-feedback-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.launch-home .pdp-feedback-action:focus-visible {
+  outline: 2px solid #b51f46;
+  outline-offset: 3px;
+}

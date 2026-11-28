@@ -5,6 +5,20 @@ if ($env:DATABASE_URL) { throw 'Local startup requires an isolated REVIEW_DATABA
 $projectRoot = $PSScriptRoot
 $runtimeRoot = Join-Path $env:USERPROFILE '.codex/local-runtimes/cherriva'
 New-Item -ItemType Directory -Force -Path $runtimeRoot | Out-Null
+if (-not $env:PAYMENT_PUBLIC_BASE_URL) { $env:PAYMENT_PUBLIC_BASE_URL = 'http://localhost:5197' }
+# Keep the durable encryption key outside the repository and reuse it across both APIs.
+if (-not $env:PAYMENT_GATEWAY_ENCRYPTION_KEY) {
+    $gatewayKeyPath = Join-Path $runtimeRoot 'payment-gateway.key'
+    if (-not (Test-Path -LiteralPath $gatewayKeyPath)) {
+        $gatewayKeyBytes = New-Object byte[] 32
+        $gatewayKeyRandom = [Security.Cryptography.RandomNumberGenerator]::Create()
+        try { $gatewayKeyRandom.GetBytes($gatewayKeyBytes) } finally { $gatewayKeyRandom.Dispose() }
+        [IO.File]::WriteAllText($gatewayKeyPath, [Convert]::ToBase64String($gatewayKeyBytes))
+    }
+    & icacls.exe $gatewayKeyPath /inheritance:r /grant:r "$($env:USERDOMAIN)\$($env:USERNAME):(F)" | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Could not restrict local gateway key permissions.' }
+    $env:PAYMENT_GATEWAY_ENCRYPTION_KEY = [IO.File]::ReadAllText($gatewayKeyPath).Trim()
+}
 $go = (Get-Command go.exe -ErrorAction SilentlyContinue).Source
 if (-not $go) { $go = Join-Path $env:LOCALAPPDATA 'Programs/Go1.27.4/go/bin/go.exe' }
 if (-not (Test-Path $go)) { throw 'Install Go matching apps/api/go.mod before starting.' }
@@ -17,7 +31,15 @@ if (-not $env:REVIEW_DATABASE_URL) {
         & $pgCtl -D $pgData -l (Join-Path $runtimeRoot 'postgres.log') -o '-h 127.0.0.1 -p 55437' -w start
         if ($LASTEXITCODE -ne 0) { throw 'Local review PostgreSQL failed to start.' }
     }
-    $env:REVIEW_DATABASE_URL = 'postgres://postgres@127.0.0.1:55437/postgres?sslmode=disable'
+    # A previously started owned cluster may use another local port.
+    # Read its actual port instead of connecting to an unrelated/default instance.
+    $pidFile = Join-Path $pgData 'postmaster.pid'
+    $pidLines = @(Get-Content -LiteralPath $pidFile -ErrorAction Stop)
+    $reviewPort = 0
+    if ($pidLines.Count -lt 4 -or -not [int]::TryParse($pidLines[3], [ref]$reviewPort) -or $reviewPort -lt 1 -or $reviewPort -gt 65535) {
+        throw 'Cannot determine the owned review PostgreSQL port; set REVIEW_DATABASE_URL explicitly.'
+    }
+    $env:REVIEW_DATABASE_URL = "postgres://postgres@127.0.0.1:$reviewPort/postgres?sslmode=disable"
 }
 # Redis is optional; a failed local cache must not prevent database-backed startup.
 if ($NoCache -or $env:PUBLIC_CACHE_ENABLED -eq 'false') {
@@ -67,7 +89,7 @@ foreach ($surface in @(@{Name='backoffice';App='backoffice-web';Port='8098'},@{N
     $env:WEB_SURFACE = $surface.Name
     $env:WEB_ROOT = Join-Path $projectRoot "apps/$($surface.App)/build"
     if (-not (Test-Path (Join-Path $env:WEB_ROOT 'index.html'))) { throw 'Build the frontend before using -NoBuild.' }
-    Start-Process $apiExe -WorkingDirectory (Join-Path $projectRoot 'apps/api') -RedirectStandardOutput (Join-Path $runtimeRoot "$($surface.Name).out.log") -RedirectStandardError (Join-Path $runtimeRoot "$($surface.Name).err.log")
+    Start-Process $apiExe -WindowStyle Hidden -WorkingDirectory (Join-Path $projectRoot 'apps/api') -RedirectStandardOutput (Join-Path $runtimeRoot "$($surface.Name).out.log") -RedirectStandardError (Join-Path $runtimeRoot "$($surface.Name).err.log")
 }
 Write-Host "Source: $projectRoot"
 Write-Host 'Backoffice: http://localhost:8098'

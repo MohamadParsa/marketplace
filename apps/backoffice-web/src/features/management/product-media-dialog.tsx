@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
+import { variantCode } from "../../shared/format";
 import type { Product, Variant } from "../../shared/types";
 function Photo({ id }: { id: string }) {
   const { loadCatalogMedia } = useWorkspace();
@@ -88,7 +89,7 @@ export function ProductMediaDialog({
     ),
   ];
   return (
-    <Dialog open fullWidth maxWidth="md" onClose={() => !busy && close()}>
+    <Dialog open fullWidth maxWidth="lg" onClose={() => !busy && close()}>
       <DialogTitle>گالری و تصویر تنوع</DialogTitle>
       <DialogContent>
         <div className="home-admin-form">
@@ -195,7 +196,7 @@ export function ProductMediaDialog({
             .filter((v) => v.product_id === id)
             .map((v) => (
               <label key={v.id}>
-                تصویر تنوع {v.values.map((x) => x.value).join(" / ") || v.sku}
+                تصویر تنوع {v.values.map((x) => x.value).join(" / ") || variantCode(state, v.id)}
                 <select
                   value={variants[v.id] ?? ""}
                   disabled={busy}

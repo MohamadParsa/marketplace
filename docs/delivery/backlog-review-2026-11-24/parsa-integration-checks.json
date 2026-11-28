@@ -1,0 +1,108 @@
+{
+  "source_path": "D:\\Cherriva",
+  "branch": "codex/local-parsa-integration-20261124",
+  "local_head": "cffbf4f4125d73338d2af12972b08c41769901e3",
+  "local_button_override": true,
+  "pushed": false,
+  "main_received": "52a8a09155fbcedae981eaf18a27ecea76120375",
+  "parsa_heads": {
+    "reviews": "4e7373cc47880aa18b7a9a57ea44360b77afcd07",
+    "qa": "62ff5f316b398ffccd28e8d6713ab3367dfbcca0",
+    "design": "0be389b"
+  },
+  "go": {
+    "passed": 267,
+    "skipped": [
+      "TestCatalogSnapshotPostgresRoundTrip",
+      "TestAdjustmentsBrowserHarness"
+    ],
+    "vet": "passed",
+    "race_local": "not-run-CGO-disabled"
+  },
+  "frontend": {
+    "storefront_lint": "passed",
+    "storefront_build": "passed",
+    "backoffice_lint": "passed",
+    "backoffice_build": "passed"
+  },
+  "browser": [
+    {
+      "id": "desktop-one-active-design-control",
+      "pass": true
+    },
+    {
+      "id": "add-shows-progress-overlay",
+      "pass": true
+    },
+    {
+      "id": "desktop-double-click-one-add",
+      "pass": true
+    },
+    {
+      "id": "popup-links-to-real-cart",
+      "pass": true
+    },
+    {
+      "id": "same-control-becomes-counter",
+      "pass": true
+    },
+    {
+      "id": "desktop-delete-restores-add",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-enabled",
+      "pass": true
+    },
+    {
+      "id": "mobile-add-saved-in-server-cart",
+      "pass": true
+    },
+    {
+      "id": "cart-page-shows-selected-product",
+      "pass": true
+    },
+    {
+      "id": "guest-cart-cleaned-up",
+      "pass": true
+    },
+    {
+      "id": "unavailable-product-still-blocked",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-errors",
+      "pass": true
+    },
+    {
+      "id": "integrated-both-interaction-sections",
+      "pass": true
+    },
+    {
+      "id": "integrated-reviews-endpoint",
+      "pass": true
+    },
+    {
+      "id": "integrated-questions-endpoint",
+      "pass": true
+    },
+    {
+      "id": "integrated-independent-public-flags",
+      "pass": true
+    },
+    {
+      "id": "integrated-wishlist-and-product-tabs-preserved",
+      "pass": true
+    },
+    {
+      "id": "integrated-mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "integrated-no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "new_features_96_104_implemented": false,
+  "runtime_migrations": "additive-product-qa-applied"
+}

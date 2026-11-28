@@ -3,13 +3,25 @@ package backoffice
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
+	"math"
 	"strings"
 	"time"
 )
 
 type AddressInput struct {
+	DetailVersion       int      `json:"detail_version,omitempty"`
+	Title               string   `json:"title,omitempty"`
+	FullAddress         string   `json:"full_address,omitempty"`
+	HouseNumber         string   `json:"house_number,omitempty"`
+	Unit                string   `json:"unit,omitempty"`
+	RecipientSelf       *bool    `json:"recipient_self,omitempty"`
+	RecipientNationalID string   `json:"recipient_national_id,omitempty"`
+	Latitude            *float64 `json:"latitude,omitempty"`
+	Longitude           *float64 `json:"longitude,omitempty"`
+
 	ID         string `json:"id,omitempty"`
 	Version    int    `json:"version"`
 	Recipient  string `json:"recipient"`
@@ -32,18 +44,37 @@ func validPhone(s string) bool {
 	}
 	return true
 }
+
+var ErrProfileIncomplete = errors.New("recipient_profile_incomplete")
+var ErrAddressIncomplete = errors.New("address_incomplete")
+
+func validCoordinates(lat, lng *float64) bool {
+	if lat == nil || lng == nil {
+		return lat == nil && lng == nil
+	}
+	return !math.IsNaN(*lat) && !math.IsInf(*lat, 0) && !math.IsNaN(*lng) && !math.IsInf(*lng, 0) && *lat >= -90 && *lat <= 90 && *lng >= -180 && *lng <= 180
+}
 func addressFromInput(a identity.User, in AddressInput, id string) (commerce.Address, error) {
-	phone := normalizeDigits(in.Phone)
-	postal := normalizeDigits(in.PostalCode)
+	phone, postal := normalizeDigits(in.Phone), normalizeDigits(in.PostalCode)
+	nid := normalizeDigits(in.RecipientNationalID)
+	if in.RecipientSelf == nil || strings.TrimSpace(in.HouseNumber) == "" {
+		return commerce.Address{}, ErrAddressIncomplete
+	}
+	if *in.RecipientSelf {
+		if strings.TrimSpace(a.Name) == "" || a.Name == "مشتری" || !identity.ValidNationalID(a.NationalID) || !validPhone(a.Phone) {
+			return commerce.Address{}, ErrProfileIncomplete
+		}
+		in.Recipient, phone, nid = a.Name, a.Phone, a.NationalID
+	}
 	for _, v := range []struct {
 		s   string
 		max int
-	}{{in.Recipient, 100}, {in.Province, 100}, {in.City, 100}, {in.Street, 1000}} {
+	}{{in.Recipient, 100}, {in.Province, 100}, {in.City, 100}, {in.Street, 1000}, {in.HouseNumber, 32}} {
 		if strings.TrimSpace(v.s) == "" || !textBound(v.s, v.max) {
 			return commerce.Address{}, ErrInvalid
 		}
 	}
-	if !validPhone(phone) || len(postal) != 10 {
+	if !textBound(in.Title, 100) || !textBound(in.Unit, 32) || !textBound(in.FullAddress, 1500) || !validCoordinates(in.Latitude, in.Longitude) || !validPhone(phone) || !identity.ValidNationalID(nid) || len(postal) != 10 {
 		return commerce.Address{}, ErrInvalid
 	}
 	for _, r := range postal {
@@ -51,7 +82,35 @@ func addressFromInput(a identity.User, in AddressInput, id string) (commerce.Add
 			return commerce.Address{}, ErrInvalid
 		}
 	}
-	return commerce.Address{ID: id, UserID: a.ID, Version: in.Version + 1, Recipient: strings.TrimSpace(in.Recipient), Phone: phone, Province: strings.TrimSpace(in.Province), City: strings.TrimSpace(in.City), Street: strings.TrimSpace(in.Street), PostalCode: postal}, nil
+	full := strings.TrimSpace(in.FullAddress)
+	if full == "" {
+		full = strings.Join([]string{strings.TrimSpace(in.Province), strings.TrimSpace(in.City), strings.TrimSpace(in.Street), "پلاک " + strings.TrimSpace(in.HouseNumber)}, "، ")
+	}
+	return commerce.Address{ID: id, UserID: a.ID, Version: in.Version + 1, DetailVersion: 2, Recipient: strings.TrimSpace(in.Recipient), Phone: phone, RecipientNationalID: nid, RecipientSelf: in.RecipientSelf, Province: strings.TrimSpace(in.Province), City: strings.TrimSpace(in.City), Street: strings.TrimSpace(in.Street), PostalCode: postal, Title: strings.TrimSpace(in.Title), FullAddress: full, HouseNumber: strings.TrimSpace(in.HouseNumber), Unit: strings.TrimSpace(in.Unit), Latitude: in.Latitude, Longitude: in.Longitude}, nil
+}
+
+// Fresh profile is authoritative for self; an old authenticated session is not.
+func addressIdentity(w Workspace, a identity.User) identity.User {
+	for _, u := range w.Users {
+		if u.ID == a.ID {
+			a.Name, a.Phone, a.NationalID = u.Name, u.Phone, u.NationalID
+			break
+		}
+	}
+	return a
+}
+func validateCheckoutAddress(w Workspace, a identity.User, address commerce.Address) error {
+	if address.DetailVersion < 2 {
+		return ErrAddressIncomplete
+	}
+	if address.RecipientSelf != nil && *address.RecipientSelf {
+		current := addressIdentity(w, a)
+		_, err := addressFromInput(current, AddressInput{RecipientSelf: address.RecipientSelf, HouseNumber: address.HouseNumber, Province: address.Province, City: address.City, Street: address.Street, PostalCode: address.PostalCode}, address.ID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 func (s *Service) ReadAddresses(ctx context.Context, a identity.User) ([]commerce.Address, error) {
 	w, e := s.repository.Snapshot(ctx)
@@ -105,7 +164,7 @@ func (s *Service) SaveAddress(ctx context.Context, a identity.User, in AddressIn
 		} else if in.Version != 0 {
 			return nil, ErrConflict
 		}
-		address, e := addressFromInput(a, in, id)
+		address, e := addressFromInput(addressIdentity(*w, a), in, id)
 		if e != nil {
 			return nil, e
 		}

@@ -1,5 +1,6 @@
 import "./attribute-filter.css";
 import { useId, useState } from "react";
+import { attributeLabel } from "./display-numbers";
 export type AttributeFilterDefinition = {
   id: string;
   name: string;
@@ -39,10 +40,10 @@ export function AttributeFilter({
             <button
               type="button"
               key={v}
-              aria-label={`حذف فیلتر ${f.name}: ${v}`}
+              aria-label={`حذف فیلتر ${f.name}: ${attributeLabel(f.name,v)}`}
               onClick={() => choose(v, false)}
             >
-              {v} ×
+              {attributeLabel(f.name,v)} ×
             </button>
           ))}
         </div>
@@ -59,7 +60,7 @@ export function AttributeFilter({
                 onChange={(event) => choose(value, event.target.checked)}
               />
               <span className="plp-attribute-check" aria-hidden="true" />
-              <span>{value}</span>
+              <span>{attributeLabel(f.name,value)}</span>
             </label>
           ))}
         </div>

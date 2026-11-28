@@ -32,6 +32,35 @@ func validateAttribute(a catalog.AttributeDefinition) bool {
 		}
 		seen[key] = true
 	}
+	return validateAttributeGroups(a)
+}
+
+func validateAttributeGroups(a catalog.AttributeDefinition) bool {
+	options := map[string]bool{}
+	for _, v := range a.Options {
+		options[v] = true
+	}
+	if len(a.Groups) > 100 || (len(a.Groups) > 0 && a.Kind != "enum") {
+		return false
+	}
+	ids, names, members := map[string]bool{}, map[string]bool{}, map[string]bool{}
+	for _, group := range a.Groups {
+		name := strings.ToLower(strings.TrimSpace(group.Name))
+		if !attributeCode.MatchString(group.ID) || ids[group.ID] || name == "" || names[name] || utf8.RuneCountInString(group.Name) > 80 || group.Name != strings.TrimSpace(group.Name) || len(group.Values) == 0 || len(group.Values) > 2000 {
+			return false
+		}
+		ids[group.ID], names[name] = true, true
+		local := map[string]bool{}
+		for _, value := range group.Values {
+			if !options[value] || local[value] || (group.Active && members[value]) {
+				return false
+			}
+			local[value] = true
+			if group.Active {
+				members[value] = true
+			}
+		}
+	}
 	return true
 }
 
@@ -55,6 +84,29 @@ func attributeUsed(state *Workspace, id string) bool {
 
 func applyAttributes(state *Workspace, c Command, id string) error {
 	switch c.Action {
+	case "attribute.groups.set":
+		if c.Attribute == nil {
+			return ErrInvalid
+		}
+		for i := range state.Attributes {
+			a := &state.Attributes[i]
+			if a.ID != c.Target {
+				continue
+			}
+			if a.Version != c.Version {
+				return ErrConflict
+			}
+			copy := *a
+			copy.Groups = c.Attribute.Groups
+			if !validateAttributeGroups(copy) {
+				return ErrInvalid
+			}
+			a.Groups = copy.Groups
+			a.Version++
+			return nil
+		}
+		return ErrNotFound
+
 	case "settings.sales-window":
 		if c.Target != "display" || c.Amount < 1 || c.Amount > MaxSalesWindowDays {
 			return ErrInvalid
@@ -77,10 +129,16 @@ func applyAttributes(state *Workspace, c Command, id string) error {
 		state.DisplaySettings.Version++
 		return nil
 	case "attribute.create", "attribute.update":
-		if c.Attribute == nil || !validateAttribute(*c.Attribute) {
+		if c.Attribute == nil {
 			return ErrInvalid
 		}
 		a := *c.Attribute
+		if c.Action == "attribute.create" && a.Code == "" {
+			a.Code = recordCode(state, "attribute", id)
+		}
+		if !validateAttribute(a) {
+			return ErrInvalid
+		}
 		for _, existing := range state.Attributes {
 			if (c.Action == "attribute.create" || existing.ID != c.Target) && (existing.Code == a.Code || strings.EqualFold(existing.Name, a.Name)) {
 				return ErrConflict
@@ -134,7 +192,7 @@ func applyAttributes(state *Workspace, c Command, id string) error {
 			}
 			seen := map[string]bool{}
 			for _, b := range c.Bindings {
-				if seen[b.AttributeID] || b.Position < 0 || b.Position > 10000 {
+				if seen[b.AttributeID] || !b.ValidPositions() {
 					return ErrInvalid
 				}
 				seen[b.AttributeID] = true
@@ -208,10 +266,10 @@ func BuildCardPreviews(state Workspace) []catalog.CardPreview {
 			}
 			bindings := append([]catalog.AttributeBinding{}, category.Bindings...)
 			sort.Slice(bindings, func(i, j int) bool {
-				if bindings[i].Position == bindings[j].Position {
+				if bindings[i].PositionFor("card") == bindings[j].PositionFor("card") {
 					return bindings[i].AttributeID < bindings[j].AttributeID
 				}
-				return bindings[i].Position < bindings[j].Position
+				return bindings[i].PositionFor("card") < bindings[j].PositionFor("card")
 			})
 			for _, b := range bindings {
 				if !b.Card || len(preview.Features) >= state.DisplaySettings.CardAttributeLimit {

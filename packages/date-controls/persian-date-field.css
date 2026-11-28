@@ -1,0 +1,170 @@
+.persian-date-field {
+  position: relative;
+  min-width: 0;
+  margin-block: 0.75rem 0.4rem;
+  font-size: 14px;
+  text-align: right;
+}
+.persian-date-field > label {
+  position: absolute;
+  inset-block-start: -0.65em;
+  inset-inline-start: 12px;
+  background: #fff;
+  padding: 0 0.3rem;
+  font: inherit;
+  font-size: 0.85em;
+  color: #596273;
+  z-index: 1;
+}
+.persian-date-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #abb6c2;
+  border-radius: 7px;
+  background: #fff;
+  min-height: 44px;
+  overflow: hidden;
+}
+.persian-date-input:focus-within {
+  outline: 2px solid #ad2752;
+  outline-offset: 1px;
+}
+.persian-date-input > input {
+  min-width: 0;
+  flex: 1;
+  width: 100%;
+  font: inherit;
+  border: 0 !important;
+  background: transparent;
+  padding: 0.7rem 0.6rem;
+  color: #202735;
+  box-shadow: none !important;
+  outline: 0 !important;
+  letter-spacing: 0.02em;
+}
+.persian-date-input > button {
+  flex-shrink: 0;
+  background: transparent;
+  color: #9d2449;
+  border: 0;
+  font: inherit;
+  padding: 0.6rem;
+  cursor: pointer;
+  min-height: 42px;
+}
+.persian-date-input > button:disabled {
+  color: #89909a;
+  cursor: default;
+}
+.persian-date-field > small {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 12px;
+  color: #5b6471;
+}
+.persian-date-field > small.persian-date-error {
+  color: #b01d3d;
+}
+.persian-calendar {
+  direction: rtl;
+  box-sizing: border-box;
+  width: min(360px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  padding: 16px;
+  border: 1px solid #d4d9e1;
+  border-radius: 16px;
+  background: #fff;
+  color: #202735;
+  box-shadow: 0 18px 65px #0004;
+  overflow: auto;
+}
+.persian-calendar::backdrop {
+  background: #17223366;
+}
+.persian-calendar-heading,
+.persian-calendar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+}
+.persian-calendar-heading label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  min-width: 0;
+}
+.persian-calendar-heading select,
+.persian-calendar-heading input {
+  font: inherit;
+  background: #fff;
+  color: inherit;
+  border: 1px solid #bbc4d0;
+  border-radius: 6px;
+  padding: 7px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.persian-calendar-heading input {
+  max-width: 70px;
+}
+.persian-calendar button {
+  font: inherit;
+  cursor: pointer;
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: #f3f5f8;
+  color: #293144;
+  padding: 7px;
+}
+.persian-calendar button:focus-visible {
+  outline: 2px solid #a6214a;
+  outline-offset: 1px;
+}
+.persian-calendar button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.persian-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin-block: 15px;
+}
+.persian-calendar-grid > span {
+  text-align: center;
+  font-size: 12px;
+  padding-block: 7px;
+}
+.persian-calendar-grid > button[aria-pressed="true"] {
+  background: #a6214a;
+  color: #fff;
+}
+.persian-calendar-footer > button {
+  background: #a6214a;
+  color: #fff;
+  padding-inline: 14px;
+}
+.persian-date-list-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  max-width: 480px;
+}
+.persian-date-list-row > button {
+  font: inherit;
+  border: 1px solid #bdc6d0;
+  background: white;
+  border-radius: 7px;
+  padding: 10px;
+  color: #942344;
+  cursor: pointer;
+}
+.persian-date-list-row > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

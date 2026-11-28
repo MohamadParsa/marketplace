@@ -1,10 +1,10 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-24",
+  "updated": "2026-11-28",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
-  "execution": "issues-66-63-64-published-awaiting-next-owner-selection",
+  "execution": "issues-87-119-complete-pushed-awaiting-merge",
   "items": [
     {
       "n": 1,
@@ -127,8 +127,8 @@
         5,
         11
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 67,
       "url": "https://github.com/MohamadParsa/marketplace/issues/67",
       "assignee": "eliassarband",
@@ -136,7 +136,14 @@
         66,
         72
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/67#issuecomment-7129872494"
     },
     {
       "n": 7,
@@ -153,8 +160,8 @@
         9,
         12
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 68,
       "url": "https://github.com/MohamadParsa/marketplace/issues/68",
       "assignee": "eliassarband",
@@ -164,7 +171,14 @@
         70,
         73
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/68#issuecomment-7129874491"
     },
     {
       "n": 8,
@@ -180,8 +194,8 @@
         7,
         9
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 69,
       "url": "https://github.com/MohamadParsa/marketplace/issues/69",
       "assignee": "eliassarband",
@@ -190,7 +204,14 @@
         68,
         70
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/69#issuecomment-7129876556"
     },
     {
       "n": 9,
@@ -218,7 +239,8 @@
         72,
         73
       ],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "remaining_scope": "فقط ممیزی و مرز failure بیرونی؛ نقدی اتمیک حاضر است"
     },
     {
       "n": 10,
@@ -266,19 +288,33 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [
-        5,
-        11
+        5
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 73,
       "url": "https://github.com/MohamadParsa/marketplace/issues/73",
       "assignee": "eliassarband",
       "github_dependencies": [
-        66,
-        72
+        66
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "related_issues": [
+        72,
+        15,
+        108,
+        114
+      ],
+      "phased_dependencies": {
+        "formula_pricing_branch": [
+          72
+        ]
+      },
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md",
+      "delivery": "local-only",
+      "verification": "docs/delivery/next-phase/issues-73-81-verification.md",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
     },
     {
       "n": 13,
@@ -308,13 +344,13 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 75,
       "url": "https://github.com/MohamadParsa/marketplace/issues/75",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 15,
@@ -326,13 +362,13 @@
       "wave": "W2",
       "kind": "analysis-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 76,
       "url": "https://github.com/MohamadParsa/marketplace/issues/76",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 16,
@@ -344,13 +380,13 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 77,
       "url": "https://github.com/MohamadParsa/marketplace/issues/77",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 17,
@@ -364,15 +400,22 @@
       "deps": [
         18
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 78,
       "url": "https://github.com/MohamadParsa/marketplace/issues/78",
       "assignee": "eliassarband",
       "github_dependencies": [
         79
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "pushed-feature-branch-awaiting-review",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "state_reason": "completed",
+      "closed_by_owner_request": "2026-11-24",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/78#issuecomment-7129878573"
     },
     {
       "n": 18,
@@ -390,7 +433,8 @@
       "url": "https://github.com/MohamadParsa/marketplace/issues/79",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": false,
+      "remaining_scope": "PLP و scope/ترتیب؛ نه ساخت دوباره mapping"
     },
     {
       "n": 19,
@@ -424,15 +468,27 @@
       "deps": [
         10
       ],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 81,
       "url": "https://github.com/MohamadParsa/marketplace/issues/81",
       "assignee": "eliassarband",
       "github_dependencies": [
         71
       ],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "related_issues": [
+        108,
+        111,
+        113,
+        115,
+        116
+      ],
+      "scope_update": "docs/delivery/backoffice-refinement-2026-11-25/README.md",
+      "delivery": "local-only",
+      "verification": "docs/delivery/next-phase/issues-73-81-verification.md",
+      "source_commit": "8b0351893dedc248ef29fdf99fcfa5fb15d2f92a",
+      "source_pushed": false
     },
     {
       "n": 21,
@@ -538,17 +594,24 @@
       "id": "FEAT-NEXT-026",
       "title": "تکمیل محتوای فوتر و صفحات درباره چریوا و راهنما",
       "path": "docs/delivery/next-phase/tasks/cv-next-26-footer-business-content.md",
-      "priority": "P2",
+      "priority": "P1",
       "wave": "W1",
       "kind": "content-and-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 87,
       "url": "https://github.com/MohamadParsa/marketplace/issues/87",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "verification": "docs/delivery/next-phase/issue-87-verification.md",
+      "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
+      "source_pushed": true,
+      "local_delivery_status": "pushed-branch-awaiting-merge",
+      "publication_pending": false,
+      "local_only": false,
+      "delivery_receipt": "docs/delivery/next-phase/issue-87-delivery.json"
     },
     {
       "n": 27,
@@ -578,13 +641,15 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 89,
       "url": "https://github.com/MohamadParsa/marketplace/issues/89",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "parsa-source-branch-and-local-integration",
+      "main_integrated": false
     },
     {
       "n": 29,
@@ -596,13 +661,15 @@
       "wave": "W2",
       "kind": "implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 90,
       "url": "https://github.com/MohamadParsa/marketplace/issues/90",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true,
+      "publication_status": "parsa-source-branch-and-local-integration",
+      "main_integrated": false
     },
     {
       "n": 30,
@@ -625,6 +692,31 @@
         73
       ],
       "execution_authorized": false
+    },
+    {
+      "n": 31,
+      "code": "CV-NEXT-31",
+      "id": "FEAT-NEXT-031",
+      "title": "CV-NEXT-31 — پنج ستاره طلایی و میانگین نظرات تأییدشده در PDP",
+      "path": "docs/delivery/next-phase/tasks/cv-next-31-pdp-review-stars-and-average.md",
+      "priority": "P2",
+      "kind": "implementation",
+      "deps": [
+        89
+      ],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "state": "closed",
+      "number": 119,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/119",
+      "assignee": "eliassarband",
+      "verification": "docs/delivery/next-phase/issue-119-verification.md",
+      "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
+      "source_pushed": true,
+      "publication_pending": false,
+      "local_only": false,
+      "local_delivery_status": "pushed-branch-awaiting-merge",
+      "delivery_receipt": "docs/delivery/next-phase/issue-119-delivery.json"
     }
   ],
   "reused_issues": [
@@ -651,21 +743,29 @@
     63,
     64,
     66,
+    73,
     80,
+    81,
     83,
     84,
     85,
-    86
+    86,
+    87,
+    119
   ],
   "current_local_issue": null,
   "requested_issue_numbers": [
-    66,
     63,
     64,
+    66,
     67,
     68,
     69,
-    78
+    73,
+    78,
+    81,
+    87,
+    119
   ],
   "proposed_execution_order": [
     66,
@@ -676,7 +776,13 @@
     69,
     78
   ],
-  "publication_policy": "future-changes-local-until-explicit-owner-request",
-  "last_completed_local_issue": 64,
-  "next_proposed_issue": 67
+  "publication_policy": "push-and-comment-close-at-task-completion-owner-instruction",
+  "last_completed_local_issue": 119,
+  "next_proposed_issue": null,
+  "last_completed_local_issues": [
+    87,
+    119
+  ],
+  "audit_reference": "../backlog-review-2026-11-24/README.md",
+  "logging_execution": "issues-75-76-77-and-155-156-157-complete-pushed-closed"
 }

@@ -1,0 +1,202 @@
+{
+  "id": "CHECKS-ATTRIBUTE-REFERENCES-20261126",
+  "issue": 110,
+  "go": {
+    "passed_tests_and_subtests": 330,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "canonical-attribute-reference-and-code",
+        "pass": true
+      },
+      {
+        "id": "no-source-code-in-visible-grid",
+        "pass": true
+      },
+      {
+        "id": "search-by-canonical-code",
+        "pass": true
+      },
+      {
+        "id": "canonical-deep-link",
+        "pass": true
+      },
+      {
+        "id": "code-readonly-and-readable-title",
+        "pass": true
+      },
+      {
+        "id": "editing-alias-updates-one-definition",
+        "pass": true
+      },
+      {
+        "id": "legacy-deep-link-same-definition",
+        "pass": true
+      },
+      {
+        "id": "category-bindings-readable-and-joined",
+        "pass": true
+      },
+      {
+        "id": "warranty-groups-preserved",
+        "pass": true
+      },
+      {
+        "id": "attribute-page-mobile-bounded",
+        "pass": true
+      },
+      {
+        "id": "pdp-axes-use-same-alias",
+        "pass": true
+      },
+      {
+        "id": "variant-cart-price-remains-valid",
+        "pass": true
+      },
+      {
+        "id": "checkout-self-default-true",
+        "pass": true
+      },
+      {
+        "id": "missing-national-id-shows-profile-completion",
+        "pass": true
+      },
+      {
+        "id": "self-true-only-switch-remains",
+        "pass": true
+      },
+      {
+        "id": "title-map-full-address-dom-order",
+        "pass": true
+      },
+      {
+        "id": "other-recipient-required-fields",
+        "pass": true
+      },
+      {
+        "id": "checking-switch-hides-other-box",
+        "pass": true
+      },
+      {
+        "id": "toggle-preserves-unsaved-recipient",
+        "pass": true
+      },
+      {
+        "id": "address-dialog-mobile-bounded",
+        "pass": true
+      },
+      {
+        "id": "profile-address-hides-recipient-section",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 22,
+    "errors": [],
+    "isolated_memory": true
+  },
+  "frontend": {
+    "backoffice": "lint-and-build-passed",
+    "storefront": "lint-and-build-passed",
+    "existing_backoffice_chunk_warning": true
+  },
+  "snapshot_sha256": "c8154676f86f134c0ba98c7f53a7614e38f0c6cad2828b83e61b82eccdfbee98",
+  "snapshot_manifest_match": true,
+  "restart": {
+    "controlled_comparison_sections": 24,
+    "all_equal": true,
+    "initial_comparison_changed_sections": [
+      "offers"
+    ],
+    "initial_comparison_not_used_as_inventory_preservation_evidence": true
+  },
+  "source_pushed": true,
+  "deployed": false,
+  "artifacts": [
+    {
+      "path": "output/playwright/issue-110/address-mobile.png",
+      "sha256": "f53abd1a83064d0d7cd8ef313fe6ae5ce8bb355d8b178c2f2a41960785874116"
+    },
+    {
+      "path": "output/playwright/issue-110/attribute-search.png",
+      "sha256": "5aa90a37ac85dd13db8621fa8668a3553cc6a4dcc238330995c1468dc87f61ba"
+    },
+    {
+      "path": "output/playwright/issue-110/attributes-mobile.png",
+      "sha256": "b724767465dbcd063250ec74ee632c5208514dea3a45e1d181df052f32e81bf4"
+    },
+    {
+      "path": "output/playwright/issue-110/category-bindings.png",
+      "sha256": "df639273d6f461eef74c6d21f4c599ccc5aee9f3c7c3755e6221b5779905ee4b"
+    },
+    {
+      "path": "output/playwright/issue-110/checkout-other-recipient.png",
+      "sha256": "90bf2a711c9429e97d2509173639fe215182f5b13b0d0076e37014623b1213b1"
+    },
+    {
+      "path": "output/playwright/issue-110/legacy-link-editor.png",
+      "sha256": "3966ebb2821654f7b673cf3849fcb3a4b1c5247ef5f7b4526653397c4e265490"
+    },
+    {
+      "path": "output/playwright/issue-110/profile-address.png",
+      "sha256": "146f206dfe5c786b5bef4977a507716df8e7a13a8a78cd7f7220192a526f5916"
+    }
+  ],
+  "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+  "main_smoke": {
+    "status": 200,
+    "canonical_color": true,
+    "bindings_join": true,
+    "attribute_count": 242,
+    "no_roster": true
+  },
+  "publication": {
+    "branch": "codex/local-parsa-integration-20261124",
+    "initial_documentation_commit": "c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b",
+    "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+    "issue_state": "closed"
+  },
+  "ci": {
+    "tested_revision": "c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029",
+    "jobs": [
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029/job/139719033899"
+      },
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029/job/139719033862"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029/job/139719033812"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029/job/139719033795"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45763573029/job/139719033381"
+      }
+    ]
+  }
+}

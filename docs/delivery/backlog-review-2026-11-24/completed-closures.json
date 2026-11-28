@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-24",
+  "issues": [
+    {
+      "number": 67,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/67#issuecomment-7129872494"
+    },
+    {
+      "number": 68,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/68#issuecomment-7129874491"
+    },
+    {
+      "number": 69,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/69#issuecomment-7129876556"
+    },
+    {
+      "number": 78,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/78#issuecomment-7129878573"
+    }
+  ],
+  "pull_request": 94,
+  "pull_request_merged": false,
+  "new_local_source_pushed": false,
+  "local_issues_102_104": [
+    {
+      "number": 103,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/103#issuecomment-7131269837"
+    },
+    {
+      "number": 104,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/104#issuecomment-7131272054"
+    },
+    {
+      "number": 102,
+      "state": "closed",
+      "state_reason": "completed",
+      "comment_url": "https://github.com/MohamadParsa/marketplace/issues/102#issuecomment-7131275150"
+    }
+  ]
+}

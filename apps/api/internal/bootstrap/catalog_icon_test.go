@@ -77,6 +77,7 @@ func TestCatalogIconHTTPRoundTripAndRemoval(t *testing.T) {
 		t.Run(kind, func(t *testing.T) {
 			h := bootstrap.NewHTTPHandler(config.Config{Environment: "test"})
 			token := login(t, h, "09000000002")
+			adminToken := login(t, h, "09000000001")
 			state := iconWorkspace(t, h, token)
 			id, version := state.Categories[0].ID, state.Categories[0].Version
 			if kind == "brand" {
@@ -93,7 +94,11 @@ func TestCatalogIconHTTPRoundTripAndRemoval(t *testing.T) {
 			if kind == "brand" {
 				icon, next = state.Brands[0].IconID, state.Brands[0].Version
 			}
-			if icon == "" || next != version+1 || len(state.Audit) != 1 {
+			if len(state.Audit) != 0 {
+				t.Fatal("operator received private audit")
+			}
+			auditState := iconWorkspace(t, h, adminToken)
+			if icon == "" || next != version+1 || len(auditState.Audit) != 1 {
 				t.Fatalf("attachment/version/retry failed: %s/%d/%d", icon, next, len(state.Audit))
 			}
 			w := httptest.NewRecorder()
@@ -133,7 +138,8 @@ func TestCatalogIconHTTPRoundTripAndRemoval(t *testing.T) {
 			if kind == "brand" {
 				remaining = state.Brands[0].IconID
 			}
-			if remaining != "" || len(state.Audit) != 2 {
+			auditState = iconWorkspace(t, h, adminToken)
+			if remaining != "" || len(auditState.Audit) != 2 {
 				t.Fatal("remove/retry failed")
 			}
 			w = httptest.NewRecorder()

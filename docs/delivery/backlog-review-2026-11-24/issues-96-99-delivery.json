@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-25",
+  "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+  "verified_ci_head": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+  "issues": [
+    {
+      "number": 96,
+      "state": "closed",
+      "reason": "completed",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/96",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/96#issuecomment-7154315283",
+      "closed_at": "2026-11-25T05:58:29Z"
+    },
+    {
+      "number": 97,
+      "state": "closed",
+      "reason": "completed",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/97",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/97#issuecomment-7154316095",
+      "closed_at": "2026-11-25T05:58:32Z"
+    },
+    {
+      "number": 98,
+      "state": "closed",
+      "reason": "completed",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/98",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/98#issuecomment-7154316866",
+      "closed_at": "2026-11-25T05:58:35Z"
+    },
+    {
+      "number": 99,
+      "state": "closed",
+      "reason": "completed",
+      "url": "https://github.com/MohamadParsa/marketplace/issues/99",
+      "comment": "https://github.com/MohamadParsa/marketplace/issues/99#issuecomment-7154317730",
+      "closed_at": "2026-11-25T05:58:38Z"
+    }
+  ],
+  "ci_run": "https://github.com/MohamadParsa/marketplace/actions/runs/45556932708",
+  "ci_conclusion": "success",
+  "ci_jobs": [
+    "api (including go test -race)",
+    "backoffice-web",
+    "seller-portal-web",
+    "storefront-web",
+    "contracts"
+  ],
+  "merged": false,
+  "deployed": false
+}

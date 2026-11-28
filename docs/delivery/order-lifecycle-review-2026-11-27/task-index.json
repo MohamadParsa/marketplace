@@ -1,0 +1,328 @@
+{
+  "id": "DEL-ORDER-LIFECYCLE-REVIEW-20261127",
+  "updated": "2026-11-28",
+  "document_status": "in-review",
+  "owner": "eliassarband",
+  "implementation_status": "done",
+  "execution_authorized": true,
+  "source_commit": "2ac2da55a47d5cd444d251995734412c85f83ed7",
+  "parent_issue": 95,
+  "existing_audit_issue": 70,
+  "tasks": [
+    {
+      "id": "CV-ORDER-REV-01",
+      "spec_id": "FEAT-BO-ORDER-REV-001",
+      "issue": 131,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/131",
+      "title": "پرسش‌های همه محصولات با فیلتر بررسی؛ بدون انتخاب اولیه محصول",
+      "file": "tasks/global-product-questions.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "delivery": {
+        "source_commit": "21ebcd5c406ca620e9cd36ae052af1b0921e5df1",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/131#issuecomment-7227102095",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46060402872"
+      },
+      "resolved_questions": []
+    },
+    {
+      "id": "CV-ORDER-REV-02",
+      "spec_id": "FEAT-BO-ORDER-REV-002",
+      "issue": 132,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/132",
+      "title": "مودال تخفیف جمع‌وجور با دو کنترل در هر سطر",
+      "file": "tasks/compact-coupon-modal.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "delivery": {
+        "source_commit": "ace1d0d",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/132#issuecomment-7227314469",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46061686822"
+      },
+      "resolved_questions": []
+    },
+    {
+      "id": "CV-ORDER-REV-03",
+      "spec_id": "FEAT-BO-ORDER-REV-003",
+      "issue": 133,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/133",
+      "title": "قرارداد سه چرخه سفارش و نگاشت داده گذشته",
+      "file": "tasks/order-state-contract.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q01",
+        "ORDERREV-Q02",
+        "ORDERREV-Q03",
+        "ORDERREV-Q04",
+        "ORDERREV-Q05",
+        "ORDERREV-Q06",
+        "ORDERREV-Q07",
+        "ORDERREV-Q08",
+        "ORDERREV-Q09",
+        "ORDERREV-Q10"
+      ],
+      "delivery": {
+        "source_commit": "b73e752",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/133#issuecomment-7227405651",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46062531635"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-04",
+      "spec_id": "FEAT-BO-ORDER-REV-004",
+      "issue": 134,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/134",
+      "title": "مرز ثبت سفارش و مرسوله پیش از درخواست پرداخت",
+      "file": "tasks/place-order-boundary.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "#70"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q01",
+        "ORDERREV-Q03",
+        "ORDERREV-Q06"
+      ],
+      "delivery": {
+        "source_commit": "cf46e0b",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/134#issuecomment-7227527986",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46063441409"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-05",
+      "spec_id": "FEAT-BO-ORDER-REV-005",
+      "issue": 135,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/135",
+      "title": "تلاش‌های پرداخت و تفکیک شارژ کیف پول از پرداخت سفارش",
+      "file": "tasks/payment-attempt-states.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "CV-ORDER-REV-04"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q01",
+        "ORDERREV-Q02",
+        "ORDERREV-Q06"
+      ],
+      "delivery": {
+        "source_commit": "26fdef0",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/135#issuecomment-7227893028",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46065324703"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-06",
+      "spec_id": "FEAT-BO-ORDER-REV-006",
+      "issue": 136,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/136",
+      "title": "شروع پردازش، تأمین، ارسال با کد روش حمل و تحویل",
+      "file": "tasks/order-fulfillment.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "CV-ORDER-REV-04",
+        "CV-ORDER-REV-05"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q01",
+        "ORDERREV-Q03",
+        "ORDERREV-Q07",
+        "ORDERREV-Q10"
+      ],
+      "delivery": {
+        "source_commit": "f813e5e4bf8fcb5d40d5f973d0070cf89af38b62",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46069219490",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/136#issuecomment-7228455403"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-07",
+      "spec_id": "FEAT-BO-ORDER-REV-007",
+      "issue": 137,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/137",
+      "title": "پرونده کنسلی و مرجوعی روی سفارش، شامل پس از تکمیل",
+      "file": "tasks/order-cancellation-returns.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q03",
+        "ORDERREV-Q04",
+        "ORDERREV-Q05",
+        "ORDERREV-Q08"
+      ],
+      "delivery": {
+        "source_commit": "16c897eee3bd1f2fa47a21d4a22ed6f93af7f368",
+        "issue_state": "closed",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/137#issuecomment-7228723891",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46071901333"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-08",
+      "spec_id": "FEAT-BO-ORDER-REV-008",
+      "issue": 138,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/138",
+      "title": "استرداد مرتبط با سفارش به کیف پول یا انتقال دستی",
+      "file": "tasks/order-linked-refunds.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "CV-ORDER-REV-07",
+        "#72 در بخش وابسته"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q04",
+        "ORDERREV-Q08",
+        "ORDERREV-Q09"
+      ],
+      "delivery": {
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/138#issuecomment-7228921949",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46073403149",
+        "source_commit": "24afbb89da6cd4ab0fdd0f0db06e4501ab62b9d0"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-09",
+      "spec_id": "FEAT-BO-ORDER-REV-009",
+      "issue": 139,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/139",
+      "title": "تاریخچه چرخه سفارش و نمایش وضعیت هر مرسوله به مشتری",
+      "file": "tasks/order-history-customer-status.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "CV-ORDER-REV-04",
+        "CV-ORDER-REV-05",
+        "CV-ORDER-REV-06",
+        "CV-ORDER-REV-07",
+        "CV-ORDER-REV-08"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q03",
+        "ORDERREV-Q07",
+        "ORDERREV-Q10"
+      ],
+      "delivery": {
+        "source_commit": "5574af85d98a99326031180d69e58ad00227f1dc",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46074462303",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/139#issuecomment-7229126719",
+        "issue_state": "closed"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-10",
+      "spec_id": "FEAT-BO-ORDER-REV-010",
+      "issue": 140,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/140",
+      "title": "یکپارچه‌سازی منوی سفارش‌ها و جزئیات تب‌دار",
+      "file": "tasks/unified-order-workspace.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-03",
+        "CV-ORDER-REV-04",
+        "CV-ORDER-REV-05",
+        "CV-ORDER-REV-06",
+        "CV-ORDER-REV-07",
+        "CV-ORDER-REV-08",
+        "CV-ORDER-REV-09"
+      ],
+      "blocking_questions": [],
+      "resolved_questions": [
+        "ORDERREV-Q03",
+        "ORDERREV-Q04"
+      ],
+      "delivery": {
+        "source_commit": "9806e9b2419cf9b0a47b209fe567e82b19f459da",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/140#issuecomment-7229414122",
+        "issue_state": "closed",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46076151715"
+      }
+    },
+    {
+      "id": "CV-ORDER-REV-11",
+      "spec_id": "FEAT-BO-ORDER-REV-011",
+      "issue": 141,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/141",
+      "title": "کنترل تاریخ شمسی در storefront و بک‌آفیس",
+      "file": "tasks/persian-date-controls.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "dependencies": [
+        "CV-ORDER-REV-10"
+      ],
+      "blocking_questions": [],
+      "delivery": {
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46079100522",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/141#issuecomment-7229724013",
+        "source_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+        "issue_state": "closed"
+      }
+    }
+  ],
+  "execution_order": [
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141
+  ],
+  "deferred_scope": [
+    "real gateway verification/capture and BNPL",
+    "automatic/legal return deadlines",
+    "live bank/carrier/notification services",
+    "complete commission/settlement redesign #72"
+  ],
+  "audit_delivery": {
+    "issue": 70,
+    "issue_state": "closed",
+    "comment": "https://github.com/MohamadParsa/marketplace/issues/70#issuecomment-7227529080",
+    "source_commit": "cf46e0b"
+  },
+  "implementation_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+  "user_acceptance": "pending-manual-review",
+  "local_review": {
+    "backoffice": "http://localhost:8098",
+    "storefront": "http://localhost:5197",
+    "data_preserved": true,
+    "source_commit": "fd3e1f2248deb187964177c9e8777cbcd9061685",
+    "report": "final-local-review.md"
+  }
+}

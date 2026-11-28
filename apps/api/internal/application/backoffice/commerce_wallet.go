@@ -41,6 +41,8 @@ type WalletEntryView struct {
 	At          time.Time `json:"at"`
 }
 type RefundView struct {
+	PurchaseID   string    `json:"purchase_id,omitempty"`
+	RequestID    string    `json:"request_id,omitempty"`
 	ID           string    `json:"id"`
 	AmountToman  string    `json:"amount_toman"`
 	Instructions string    `json:"instructions"`
@@ -52,15 +54,18 @@ type RefundView struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 type WalletView struct {
-	BalanceToman   string               `json:"balance_toman"`
-	HeldToman      string               `json:"held_toman"`
-	AvailableToman string               `json:"available_toman"`
-	Entries        []WalletEntryView    `json:"entries"`
-	Deposits       []DepositView        `json:"deposits"`
-	Refunds        []RefundView         `json:"refunds"`
-	Methods        []PaymentMethodInput `json:"funding_methods"`
-	Destination    commerce.Destination `json:"destination"`
-	Currency       string               `json:"currency"`
+	WithdrawableToman string               `json:"withdrawable_toman"`
+	PurchaseOnlyToman string               `json:"purchase_only_toman"`
+	Credits           []CreditLotView      `json:"credits"`
+	BalanceToman      string               `json:"balance_toman"`
+	HeldToman         string               `json:"held_toman"`
+	AvailableToman    string               `json:"available_toman"`
+	Entries           []WalletEntryView    `json:"entries"`
+	Deposits          []DepositView        `json:"deposits"`
+	Refunds           []RefundView         `json:"refunds"`
+	Methods           []PaymentMethodInput `json:"funding_methods"`
+	Destination       commerce.Destination `json:"destination"`
+	Currency          string               `json:"currency"`
 }
 type RefundInput struct {
 	AmountToman  string `json:"amount_toman"`
@@ -71,7 +76,7 @@ func depositView(d commerce.Deposit) DepositView {
 	return DepositView{ID: d.ID, PurchaseID: d.PurchaseID, MethodID: d.Method.ID, MethodName: d.Method.Name, AmountToman: commerce.Toman(d.Amount), Date: d.Date, Reference: d.Reference, Status: d.Status, Version: d.Version, ReceiptID: d.ReceiptID, Destination: d.Destination, Instructions: d.Method.Instructions, Reason: d.Reason, CreatedAt: d.CreatedAt}
 }
 func refundView(r commerce.RefundRequest) RefundView {
-	return RefundView{r.ID, commerce.Toman(r.Amount), r.Instructions, r.Status, r.Version, r.Reference, r.Date, r.Reason, r.CreatedAt}
+	return RefundView{PurchaseID: r.PurchaseID, RequestID: r.RequestID, ID: r.ID, AmountToman: commerce.Toman(r.Amount), Instructions: r.Instructions, Status: r.Status, Version: r.Version, Reference: r.Reference, Date: r.Date, Reason: r.Reason, CreatedAt: r.CreatedAt}
 }
 func walletView(c *commerce.State, user string) WalletView {
 	balance, held := walletAmounts(c, user)
@@ -96,9 +101,15 @@ func walletView(c *commerce.State, user string) WalletView {
 			v.Methods = append(v.Methods, methodInput(m))
 		}
 	}
+	v.WithdrawableToman = commerce.Toman(withdrawableCredit(c, user))
+	v.PurchaseOnlyToman = commerce.Toman(max(0, balance-held-withdrawableCredit(c, user)))
+	v.Credits = creditLotViews(c, user)
 	return v
 }
 func (s *Service) ReadWallet(ctx context.Context, a identity.User) (WalletView, error) {
+	if e := s.ReleaseExpiredCommerce(ctx); e != nil {
+		return WalletView{}, e
+	}
 	w, e := s.repository.Snapshot(ctx)
 	if e != nil {
 		return WalletView{}, e
@@ -106,7 +117,11 @@ func (s *Service) ReadWallet(ctx context.Context, a identity.User) (WalletView, 
 	if e = customerActor(w, a); e != nil {
 		return WalletView{}, e
 	}
-	return walletView(commerceState(&w), a.ID), nil
+	c := commerceState(&w)
+	if e = ensureCreditState(c, a.ID, s.clock.Now()); e != nil {
+		return WalletView{}, e
+	}
+	return walletView(c, a.ID), nil
 }
 func normalizeReference(s string) (string, error) {
 	s = strings.ToUpper(normalizeDigits(s))
@@ -217,6 +232,7 @@ func (s *Service) CreateDeposit(ctx context.Context, a identity.User, in Deposit
 		}
 		d := commerce.Deposit{ID: id, UserID: a.ID, PurchaseID: in.PurchaseID, Method: method, Destination: destination, Amount: amount, Date: in.Date, Reference: ref, ReferenceKey: rk, Status: "pending", Version: 1, CreatedAt: now}
 		c.Deposits = append(c.Deposits, d)
+		updateFundingAttempt(c, d, now)
 		commerceAudit(w, id+":audit", a, "deposit.declare", id, "", now)
 		return depositView(d), nil
 	})
@@ -248,6 +264,7 @@ func (s *Service) AttachReceipt(ctx context.Context, a identity.User, depositID 
 				return nil, ErrConflict
 			}
 			d.ReceiptID = id
+			updateFundingAttempt(c, *d, now)
 			d.Version++
 			kept := []commerce.Receipt{}
 			for _, r := range c.Receipts {
@@ -298,11 +315,14 @@ func (s *Service) RequestRefund(ctx context.Context, a identity.User, in RefundI
 		if e != nil || amount <= 0 || strings.TrimSpace(in.Instructions) == "" || !textBound(in.Instructions, 1000) {
 			return nil, ErrInvalid
 		}
-		balance, held := walletAmounts(c, a.ID)
-		if balance-held < amount {
-			return nil, ErrInsufficientWallet
+		if e = ensureCreditState(c, a.ID, now); e != nil {
+			return nil, e
 		}
-		r := commerce.RefundRequest{ID: id, UserID: a.ID, Amount: amount, Instructions: strings.TrimSpace(in.Instructions), Status: "pending", Version: 1, CreatedAt: now}
+		allocations, e := allocateCreditMode(c, a.ID, amount, "", true)
+		if e != nil {
+			return nil, e
+		}
+		r := commerce.RefundRequest{Allocations: allocations, ID: id, UserID: a.ID, Amount: amount, Instructions: strings.TrimSpace(in.Instructions), Status: "pending", Version: 1, CreatedAt: now}
 		c.Refunds = append(c.Refunds, r)
 		commerceAudit(w, id+":audit", a, "refund.request", id, "", now)
 		return refundView(r), nil

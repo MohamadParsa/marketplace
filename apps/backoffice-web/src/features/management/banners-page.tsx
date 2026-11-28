@@ -1,3 +1,4 @@
+import { CreateButton } from "../../shared/create-button";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -48,7 +49,7 @@ export function BannersPage() {
         title="بنرهای صفحه اصلی"
         description="تصویر ثابت یا عکس کالای موجودِ دسته؛ پیش‌نویس تا انتشار روی نسخه عمومی اثر ندارد."
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={!list.can_edit}
             onClick={() => {
@@ -57,7 +58,7 @@ export function BannersPage() {
             }}
           >
             بنر جدید
-          </Button>
+          </CreateButton>
         }
       />
       <section className="panel">
@@ -70,7 +71,6 @@ export function BannersPage() {
               render: (b) => (
                 <>
                   <b>{b.name}</b>
-                  <small dir="ltr">{b.id}</small>
                 </>
               ),
             },
@@ -117,7 +117,7 @@ export function BannersPage() {
         <Dialog
           open
           fullWidth
-          maxWidth="sm"
+          maxWidth="xl"
           onClose={() => {
             if (!busy) setCreate(false);
           }}
@@ -287,7 +287,7 @@ function BannerEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="lg"
+      maxWidth="xl"
       onClose={() => {
         if (!busy) close();
       }}

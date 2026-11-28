@@ -4,17 +4,24 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/catalog"
 	"slices"
 	"sync"
 )
 
 // Repository contains synthetic staging data only. A restart restores the fixture.
 type Repository struct {
-	mu    sync.Mutex
-	state backoffice.Workspace
+	mu          sync.Mutex
+	state       backoffice.Workspace
+	qaQuestions map[string][]catalog.ProductQuestion
+	qaReceipts  map[qaReceiptKey]string
+	qaCursor    int64
 }
 
-func New(state backoffice.Workspace) *Repository { return &Repository{state: state} }
+func New(state backoffice.Workspace) *Repository {
+	backoffice.EnsureRecordNumbers(&state)
+	return &Repository{state: state, qaQuestions: map[string][]catalog.ProductQuestion{}, qaReceipts: map[qaReceiptKey]string{}}
+}
 func clone(state backoffice.Workspace) (backoffice.Workspace, error) {
 	encoded, err := json.Marshal(state)
 	if err != nil {
@@ -36,6 +43,9 @@ func (r *Repository) Snapshot(ctx context.Context) (backoffice.Workspace, error)
 	return clone(r.state)
 }
 func (r *Repository) Update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
+	return backoffice.ObserveWorkspaceUpdate(ctx, func(fn func(*backoffice.Workspace) error) error { return r.update(ctx, fn) }, apply)
+}
+func (r *Repository) update(ctx context.Context, apply func(*backoffice.Workspace) error) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}
@@ -48,6 +58,7 @@ func (r *Repository) Update(ctx context.Context, apply func(*backoffice.Workspac
 	if err := apply(&next); err != nil {
 		return err
 	}
+	backoffice.EnsureRecordNumbers(&next)
 	r.state = next
 	return nil
 }

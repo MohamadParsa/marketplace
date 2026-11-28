@@ -1,0 +1,157 @@
+{
+  "base_commit": "52a8a09155fbcedae981eaf18a27ecea76120375",
+  "source_path": "D:\\Cherriva",
+  "publication": "pushed-feature-branch-awaiting-review",
+  "issues": [
+    67,
+    68,
+    69,
+    78
+  ],
+  "go": {
+    "passing_tests_and_subtests": 259,
+    "skipped_tests": [
+      "TestCatalogSnapshotPostgresRoundTrip",
+      "TestAdjustmentsBrowserHarness"
+    ],
+    "vet": "passed",
+    "local_race": "not-run-CGO-disabled"
+  },
+  "frontend": {
+    "backoffice_lint": "passed",
+    "storefront_lint": "passed",
+    "backoffice_build": "passed",
+    "storefront_build": "passed"
+  },
+  "browser": [
+    {
+      "id": "coupon-independent-config-fields",
+      "pass": true
+    },
+    {
+      "id": "coupon-saved-via-backoffice",
+      "pass": true
+    },
+    {
+      "id": "coupon-server-state-and-permissions",
+      "pass": true
+    },
+    {
+      "id": "admin-rule-preview-without-reservation",
+      "pass": true
+    },
+    {
+      "id": "coupon-dialog-mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "warranty-one-display-chip",
+      "pass": true
+    },
+    {
+      "id": "legacy-raw-url-preserved",
+      "pass": true
+    },
+    {
+      "id": "group-cheapest-real-offer-selected",
+      "pass": true
+    },
+    {
+      "id": "real-warranty-on-seller-offers",
+      "pass": true
+    },
+    {
+      "id": "group-mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "cart-retains-real-warranty",
+      "pass": true
+    },
+    {
+      "id": "two-independent-adjustment-boxes",
+      "pass": true
+    },
+    {
+      "id": "wallet-removed-from-methods",
+      "pass": true
+    },
+    {
+      "id": "invalid-coupon-keeps-input",
+      "pass": true
+    },
+    {
+      "id": "coupon-updates-server-total",
+      "pass": true
+    },
+    {
+      "id": "partial-wallet-keeps-funding-methods",
+      "pass": true
+    },
+    {
+      "id": "editing-coupon-invalidates-consent",
+      "pass": true
+    },
+    {
+      "id": "full-wallet-no-method-required",
+      "pass": true
+    },
+    {
+      "id": "checkout-mobile-no-overflow",
+      "pass": true
+    },
+    {
+      "id": "order-awaits-team-and-exact-credit-held",
+      "pass": true
+    },
+    {
+      "id": "one-debit-and-unselected-balance-preserved",
+      "pass": true
+    },
+    {
+      "id": "no-runtime-page-errors",
+      "pass": true
+    },
+    {
+      "id": "admin-financial-snapshots-visible",
+      "pass": true
+    },
+    {
+      "id": "admin-order-mobile-no-page-overflow",
+      "pass": true
+    },
+    {
+      "id": "viewer-coupon-access-denied-and-create-disabled",
+      "pass": true
+    },
+    {
+      "id": "admin-no-runtime-page-errors",
+      "pass": true
+    },
+    {
+      "id": "adjustment-request-blocks-input-and-uses-overlay",
+      "pass": true
+    },
+    {
+      "id": "double-click-produces-one-preview-request",
+      "pass": true
+    },
+    {
+      "id": "remove-coupon-restores-server-total",
+      "pass": true
+    },
+    {
+      "id": "invalid-wallet-preserves-stage-and-input",
+      "pass": true
+    },
+    {
+      "id": "edge-cases-no-runtime-errors",
+      "pass": true
+    }
+  ],
+  "browser_page_errors": [],
+  "financial_browser_fixture": "isolated-memory-only",
+  "postgres_integration": "isolated-schemas-passed",
+  "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+  "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94"
+}

@@ -18,12 +18,23 @@ export const emptyProductContent = (): ProductContent => ({
   nofollow: false,
 });
 export function ProductContentFields({
-  value,
+  value: initial,
   onChange,
 }: {
   value: ProductContent;
   onChange: (c: ProductContent) => void;
 }) {
+  const defaults = emptyProductContent();
+  const value: ProductContent = {
+    ...defaults,
+    ...initial,
+    short_description: initial.short_description ?? "",
+    full_description: initial.full_description ?? "",
+    advantages: initial.advantages ?? [],
+    disadvantages: initial.disadvantages ?? [],
+    shipping: { ...defaults.shipping, ...initial.shipping },
+    seo: { ...defaults.seo, ...initial.seo },
+  };
   const set = (patch: Partial<ProductContent>) =>
     onChange({ ...value, ...patch });
   return (
@@ -33,6 +44,7 @@ export function ProductContentFields({
         <label>
           توضیح کوتاه
           <textarea
+            aria-label="توضیح کوتاه"
             maxLength={2000}
             rows={3}
             value={value.short_description}
@@ -57,6 +69,7 @@ export function ProductContentFields({
           <label key={key}>
             {label}
             <textarea
+              aria-label={label}
               rows={3}
               value={value[key].join("\n")}
               onChange={(e) => set({ [key]: e.target.value.split("\n") })}

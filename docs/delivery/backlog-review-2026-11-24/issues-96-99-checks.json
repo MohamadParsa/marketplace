@@ -1,0 +1,174 @@
+{
+  "date": "2026-11-25",
+  "issues": [
+    96,
+    97,
+    98,
+    99
+  ],
+  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+  "go": {
+    "passing_tests_and_subtests": 288,
+    "skipped_tests": [
+      "TestCatalogSnapshotPostgresRoundTrip",
+      "TestAdjustmentsBrowserHarness"
+    ],
+    "all_passed": true,
+    "vet_passed": true,
+    "race_run_locally": false,
+    "postgres": "Fresh loopback-only cluster; all schemas isolated; review database untouched",
+    "redis": "Disposable review Redis; no flush of other cache"
+  },
+  "frontend": {
+    "storefront_lint": true,
+    "storefront_build": true,
+    "backoffice_lint": true,
+    "backoffice_build": true
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "admin-credit-target-and-default-restriction",
+        "pass": true
+      },
+      {
+        "id": "uncertain-credit-keeps-exact-payload",
+        "pass": true
+      },
+      {
+        "id": "lost-credit-reply-recovered-without-second-write",
+        "pass": true
+      },
+      {
+        "id": "admin-credit-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "cash-credit-success-identifies-destination",
+        "pass": true
+      },
+      {
+        "id": "two-credit-types-visible-in-server-wallet",
+        "pass": true
+      },
+      {
+        "id": "unapplied-boxes-start-collapsed",
+        "pass": true
+      },
+      {
+        "id": "zero-coupon-wallet-summary-rows-absent",
+        "pass": true
+      },
+      {
+        "id": "summary-image-quantity-variant-and-two-sellers",
+        "pass": true
+      },
+      {
+        "id": "broken-thumbnail-preserves-frame",
+        "pass": true
+      },
+      {
+        "id": "direct-saving-from-server-visible-separately",
+        "pass": true
+      },
+      {
+        "id": "coupon-header-keyboard-toggle",
+        "pass": true
+      },
+      {
+        "id": "invalid-coupon-keeps-form-and-input",
+        "pass": true
+      },
+      {
+        "id": "expired-coupon-feedback",
+        "pass": true
+      },
+      {
+        "id": "quota-feedback-preserves-input",
+        "pass": true
+      },
+      {
+        "id": "network-failure-preserves-stage-and-draft",
+        "pass": true
+      },
+      {
+        "id": "desktop-coupon-field-button-aligned",
+        "pass": true
+      },
+      {
+        "id": "double-click-one-preview",
+        "pass": true
+      },
+      {
+        "id": "applied-coupon-summary-replaces-form",
+        "pass": true
+      },
+      {
+        "id": "applied-header-cannot-hide-summary",
+        "pass": true
+      },
+      {
+        "id": "old-wallet-shortcuts-removed",
+        "pass": true
+      },
+      {
+        "id": "insufficient-wallet-form-preserved",
+        "pass": true
+      },
+      {
+        "id": "wallet-applied-summary-replaces-form",
+        "pass": true
+      },
+      {
+        "id": "removing-adjustment-invalidates-quote-and-consent",
+        "pass": true
+      },
+      {
+        "id": "checkout-mobile-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "remove-wallet-restores-editable-form",
+        "pass": true
+      },
+      {
+        "id": "accepted-order-has-exact-discounts-and-source-snapshots",
+        "pass": true
+      },
+      {
+        "id": "funding-recorded-separately-and-one-debit",
+        "pass": true
+      },
+      {
+        "id": "cancel-preserves-purchase-only-source",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-page-errors",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "passed": 30,
+    "isolated_memory_fixture": true,
+    "review_database_untouched": true,
+    "fault_injection": [
+      "lost-success-reply",
+      "quota-message",
+      "network-failure"
+    ]
+  },
+  "ci": {
+    "head": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45556932708",
+    "conclusion": "success",
+    "jobs": [
+      "api (including go test -race)",
+      "backoffice-web",
+      "seller-portal-web",
+      "storefront-web",
+      "contracts"
+    ],
+    "race_passed": true
+  }
+}

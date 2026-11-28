@@ -1,4 +1,7 @@
-export function navigate(href: string) {
+export function navigate(
+  href: string,
+  options: { preserveScroll?: boolean } = {},
+) {
   const next = new URL(href, location.href);
   if (next.origin !== location.origin) {
     location.assign(next.href);
@@ -9,7 +12,11 @@ export function navigate(href: string) {
     "",
     location.href,
   );
-  history.pushState({ cherrivaScroll: 0 }, "", next.href);
+  history.pushState(
+    { cherrivaScroll: options.preserveScroll ? scrollY : 0 },
+    "",
+    next.href,
+  );
   dispatchEvent(new Event("cherriva:navigate"));
 }
 export function installNavigation() {

@@ -35,7 +35,7 @@ func (h *CommerceHandler) RecentlyViewed(w http.ResponseWriter, r *http.Request)
 			}
 		}
 		result, e := h.service.ReadRecentlyViewed(r.Context(), actor, page, size)
-		commerceResult(w, result, e)
+		commerceResult(w, r, result, e)
 		return
 	}
 	body, e := io.ReadAll(http.MaxBytesReader(w, r.Body, 1024))
@@ -45,9 +45,9 @@ func (h *CommerceHandler) RecentlyViewed(w http.ResponseWriter, r *http.Request)
 	}
 	if r.Method == "POST" {
 		e = h.service.RecordRecentlyViewed(r.Context(), actor, id)
-		commerceResult(w, map[string]bool{"recorded": e == nil}, e)
+		commerceResult(w, r, map[string]bool{"recorded": e == nil}, e)
 		return
 	}
 	removed, e := h.service.RemoveRecentlyViewed(r.Context(), actor, id)
-	commerceResult(w, map[string]int{"removed": removed}, e)
+	commerceResult(w, r, map[string]int{"removed": removed}, e)
 }

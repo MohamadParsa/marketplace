@@ -1,3 +1,8 @@
+import { CatalogChoice } from "./catalog-choice";
+import { BrandCatalogGrid } from "./brand-catalog-grid";
+import { CategorySalesDialog } from "../commerce/sales-methods-page";
+import { CategoryCatalogGrid } from "./category-catalog-grid";
+import { ManagementPage } from "./management-page";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   Alert,
@@ -16,13 +21,10 @@ import type {
   CategorySEO,
 } from "../../shared/types";
 import { CategoryTree } from "./category-tree";
-import { PaginationControls, usePagedRows } from "../../shared/pagination";
-import { ProductQuickDialog } from "./product-workspace";
 import {
   ProductContentFields,
   emptyProductContent,
 } from "./product-content-fields";
-import { ProductMediaDialog } from "./product-media-dialog";
 const empty: CatalogInput = {
   name: "",
   english_name: "",
@@ -42,42 +44,16 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 const titles = ["موبایل", "هندزفری", "پاوربانک", "ساعت هوشمند"];
-function ManagedPhoto({ id }: { id?: string }) {
-  const { loadCatalogMedia } = useWorkspace();
-  const [url, setUrl] = useState("");
-  useEffect(() => {
-    let active = true;
-    let current = "";
-    setUrl("");
-    if (id)
-      void loadCatalogMedia(id)
-        .then((b) => {
-          current = URL.createObjectURL(b);
-          if (active) setUrl(current);
-          else URL.revokeObjectURL(current);
-        })
-        .catch(() => {});
-    return () => {
-      active = false;
-      if (current) URL.revokeObjectURL(current);
-    };
-  }, [id, loadCatalogMedia]);
-  return url ? (
-    <img className="home-admin-photo" src={url} alt="تصویر اصلی محصول" />
-  ) : (
-    <span className="home-admin-photo empty">بدون تصویر</span>
-  );
-}
-export function HomeCatalogPage() {
-  const { state, execute, busy, can, uploadIcon } = useWorkspace();
-  const [params] = useSearchParams();
+export function CatalogPage({
+  section,
+}: {
+  section: "products" | "categories" | "brands" | "home";
+}) {
+  const { state, execute, busy, can, surface } = useWorkspace();
+  const [params, setParams] = useSearchParams();
   const opened = useRef("");
-  const [tab, setTab] = useState(
-    params.has("category") || params.get("create") === "category"
-      ? "categories"
-      : "products",
-  );
-  const [search, setSearch] = useState("");
+  const tab = section === "home" ? "rails" : section;
+  const [salesCategory, setSalesCategory] = useState<string>();
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [editing, setEditing] = useState<{
@@ -87,23 +63,8 @@ export function HomeCatalogPage() {
     key: string;
     input: CatalogInput;
   }>();
-  const [media, setMedia] = useState<string>();
-  const [quick, setQuick] = useState<string>();
-  const [image, setImage] = useState<Product>();
-  const [file, setFile] = useState<File>();
-  const [preview, setPreview] = useState("");
-  const [imageKey, setImageKey] = useState(crypto.randomUUID());
   const [settings, setSettings] = useState<HomeSettings>(state.home_settings);
   useEffect(() => setSettings(state.home_settings), [state.home_settings]);
-  useEffect(() => {
-    if (!file) {
-      setPreview("");
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
   async function run(fn: () => Promise<void>, message = "تغییرات ذخیره شد.") {
     setError("");
     setNotice("");
@@ -145,6 +106,7 @@ export function HomeCatalogPage() {
       version: row?.version,
       input: row
         ? {
+            active: kind === "product" ? row.active !== false : undefined,
             name: row.name,
             display_priority:
               kind === "category" ? row.display_priority : undefined,
@@ -175,35 +137,80 @@ export function HomeCatalogPage() {
             published:
               row.published ?? row.active ?? row.status === "published",
           }
-        : { ...empty, content: emptyProductContent() },
+        : {
+            ...empty,
+            active: kind === "product" ? true : undefined,
+            content: emptyProductContent(),
+          },
     });
   }
+  const closeEditing = () => {
+    setEditing(undefined);
+    const next = new URLSearchParams(params);
+    for (const key of ["create", "category", "brand", "product"])
+      next.delete(key);
+    setParams(next, { replace: true });
+  };
   useEffect(() => {
-    if (
-      params.get("create") === "category" &&
-      opened.current !== "new-category"
-    ) {
-      opened.current = "new-category";
-      open("category");
+    if (section === "home" || surface !== "backoffice") return;
+    const kind =
+      section === "categories"
+        ? "category"
+        : section === "brands"
+          ? "brand"
+          : "product";
+    const create = params.get("create") === kind;
+    const id = params.get(kind);
+    const marker = create ? `new-${kind}` : id;
+    if (!marker) {
+      opened.current = "";
       return;
     }
-    const categoryId = params.get("category");
-    const category = state.categories?.find((c) => c.id === categoryId);
-    if (category && opened.current !== category.id) {
-      opened.current = category.id;
-      open("category", category);
+    if (opened.current === marker) return;
+    if (create) {
+      opened.current = marker;
+      open(kind);
       return;
     }
-    const id = params.get("product");
-    const row = state.products?.find((p) => p.id === id);
-    if (row && id && opened.current !== id) {
-      opened.current = id;
-      open("product", row);
+    const row = (
+      kind === "category"
+        ? state.categories
+        : kind === "brand"
+          ? state.brands
+          : state.products
+    )?.find((r) => r.id === id);
+    if (row) {
+      opened.current = marker;
+      open(kind, row);
     }
-  }, [params, state.products, state.categories]);
+  }, [
+    params,
+    section,
+    surface,
+    state.categories,
+    state.products,
+    state.brands,
+  ]);
   async function save(e: FormEvent) {
     e.preventDefault();
-    if (!editing) return;
+    if (
+      surface !== "backoffice" ||
+      !editing ||
+      !can(
+        `catalog.${editing.kind}.${editing.id ? "update" : "create"}`,
+        "management",
+      )
+    )
+      return;
+    if (
+      editing.kind === "product" &&
+      (!editing.input.category_id ||
+        (editing.input.model === "independent" &&
+          !editing.input.owner_store_id))
+    ) {
+      setError("دسته و در محصول مستقل، فروشگاه مالک را انتخاب کنید.");
+      return;
+    }
     const original = state.categories?.find((c) => c.id === editing.id);
     if (
       editing.kind === "category" &&
@@ -242,53 +249,35 @@ export function HomeCatalogPage() {
           },
         }),
       );
-      setEditing(undefined);
+      closeEditing();
     } catch {
       /* form stays open */
     }
   }
-  const categoryLabel = (id: string) => {
-    const names: string[] = [];
-    const seen = new Set<string>();
-    let c = state.categories?.find((c) => c.id === id);
-    while (c && !seen.has(c.id)) {
-      seen.add(c.id);
-      names.push(c.name);
-      c = state.categories?.find((x) => x.id === c?.parent_id);
-    }
-    return names.reverse().join(" / ");
-  };
-  const editable = can("catalog.product.update", "management");
-  const query = search.toLocaleLowerCase();
-  const products = usePagedRows(
-    (state.products ?? []).filter((p) =>
-      (p.name + " " + p.english_name + " " + p.id)
-        .toLocaleLowerCase()
-        .includes(query),
-    ),
-  );
-  const categoryRows = usePagedRows(
-    (state.categories ?? []).filter(
-      (c) =>
-        !c.archived &&
-        (categoryLabel(c.id) + " " + c.english_name)
-          .toLocaleLowerCase()
-          .includes(query),
-    ),
-  );
-  const brandRows = usePagedRows(
-    (state.brands ?? []).filter((b) =>
-      b.name.toLocaleLowerCase().includes(query),
-    ),
-  );
   return (
     <>
-      <div className="page-header">
-        <div>
-          <h1>کاتالوگ و صفحه اصلی</h1>
-          <p>مدیریت کالا و چهار ریل ثابت صفحه اصلی</p>
+      {section !== "products" && (
+        <div className="page-header">
+          <div>
+            <h1>
+              {
+                {
+                  categories: "دسته‌بندی‌ها",
+                  brands: "برندها",
+                  home: "مدیریت صفحه اصلی",
+                }[section]
+              }
+            </h1>
+            <p>
+              {section === "home"
+                ? "چهار کروسل ثابت و پیوند مدیریت بنرها"
+                : section === "categories"
+                  ? "ساختار درختی، انتشار و خصوصیات مستقل هر دسته"
+                  : "ایجاد، ویرایش و آیکن برندهای کاتالوگ"}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       {error && (
         <Alert severity="error" onClose={() => setError("")}>
           {error}
@@ -299,178 +288,24 @@ export function HomeCatalogPage() {
           {notice}
         </Alert>
       )}
-      <div className="home-admin-tabs" role="tablist" aria-label="بخش کاتالوگ">
-        {[
-          ["products", "محصولات"],
-          ["categories", "دسته‌ها"],
-          ["brands", "برندها"],
-          ["rails", "چهار کروسل"],
-        ].map(([key, label]) => (
-          <button
-            key={key}
-            role="tab"
-            aria-selected={tab === key}
-            onClick={() => setTab(key)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      <section className="panel home-admin-panel">
-        {tab !== "rails" && (
-          <input
-            className="search"
-            aria-label="جست‌وجو در کاتالوگ"
-            placeholder="جست‌وجو در این بخش…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+      <section
+        className={
+          section === "categories" || section === "products"
+            ? "catalog-page-content"
+            : "panel home-admin-panel"
+        }
+      >
+        {tab === "products" && (
+          <ManagementPage
+            section="products"
+            onCatalogEdit={(row) => open("product", row)}
           />
         )}
-        {tab === "products" && (
-          <>
-            <div className="toolbar">
-              <h2>محصولات</h2>
-              <Button
-                disabled={busy || !can("catalog.product.create", "management")}
-                variant="contained"
-                onClick={() => open("product")}
-              >
-                محصول جدید
-              </Button>
-            </div>
-            <p className="muted">
-              ابتدا محصول را بسازید، تصویر و عرضه را ثبت کنید و سپس منتشر کنید.
-              قیمت عرضه، قیمت نهایی نقدی مشتری بدون ارسال است.
-            </p>
-            <div className="home-admin-list">
-              {products.rows.map((p) => (
-                <article key={p.id}>
-                  <ManagedPhoto id={p.image_id} />
-                  <div>
-                    <b>{p.name}</b>
-                    <small>
-                      {p.status === "published"
-                        ? "منتشرشده"
-                        : "پیش‌نویس / در انتظار بررسی"}{" "}
-                      ·{" "}
-                      {
-                        (state.categories ?? []).find(
-                          (c) => c.id === p.category_id,
-                        )?.name
-                      }
-                    </small>
-                    <div className="home-admin-actions">
-                      <Button
-                        disabled={!editable || busy}
-                        onClick={() => open("product", p)}
-                      >
-                        ویرایش محتوا
-                      </Button>
-                      <Button
-                        disabled={
-                          !can("product.media.update", "management") || busy
-                        }
-                        onClick={() => setMedia(p.id)}
-                      >
-                        گالری و تصویر تنوع
-                      </Button>
-                      <Button onClick={() => setQuick(p.id)}>
-                        تنوع، قیمت و موجودی
-                      </Button>
-                      <Button
-                        disabled={
-                          !can("product.icon.set", "management") || busy
-                        }
-                        onClick={() => {
-                          setImage(p);
-                          setFile(undefined);
-                        }}
-                      >
-                        تصویر اصلی
-                      </Button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-              {!state.products?.length && <p>هنوز محصولی ثبت نشده است.</p>}
-            </div>
-            <PaginationControls {...products.controls} />
-          </>
-        )}
         {tab === "categories" && (
-          <>
-            <div className="toolbar">
-              <h2>دسته‌ها</h2>
-              <Button
-                variant="contained"
-                disabled={busy || !can("catalog.category.create", "management")}
-                onClick={() => open("category")}
-              >
-                دسته جدید
-              </Button>
-            </div>
-            <div className="home-admin-list">
-              {categoryRows.rows.map((c) => (
-                <article key={c.id}>
-                  <div>
-                    <b>{c.name}</b>
-                    <small>{categoryLabel(c.id)}</small>
-                    <small>
-                      {c.display_priority == null
-                        ? "بدون اولویت"
-                        : `اولویت نمایش: ${c.display_priority.toLocaleString("fa-IR")}`}
-                    </small>
-                    <small>
-                      {c.published ? "منتشرشده" : "پیش‌نویس"} ·{" "}
-                      {c.english_name || "نام انگلیسی ثبت نشده"}
-                    </small>
-                  </div>
-                  <Button
-                    disabled={
-                      busy || !can("catalog.category.update", "management")
-                    }
-                    onClick={() => open("category", c)}
-                  >
-                    ویرایش دسته
-                  </Button>
-                  <Link to="/categories">آیکن و خصوصیات</Link>
-                </article>
-              ))}
-            </div>
-            <PaginationControls {...categoryRows.controls} />
-          </>
+          <CategoryCatalogGrid onEdit={(row) => open("category", row)} />
         )}
         {tab === "brands" && (
-          <>
-            <div className="toolbar">
-              <h2>برندها</h2>
-              <Button
-                variant="contained"
-                disabled={busy || !can("catalog.brand.create", "management")}
-                onClick={() => open("brand")}
-              >
-                برند جدید
-              </Button>
-            </div>
-            <div className="home-admin-list">
-              {brandRows.rows.map((b) => (
-                <article key={b.id}>
-                  <b>{b.name}</b>
-                  <span>{b.active ? "فعال" : "غیرفعال"}</span>
-                  <Button
-                    disabled={
-                      busy || !can("catalog.brand.update", "management")
-                    }
-                    onClick={() => open("brand", b)}
-                  >
-                    ویرایش برند
-                  </Button>
-                </article>
-              ))}
-            </div>
-            <PaginationControls {...brandRows.controls} />
-            <Link to="/brands">مدیریت آیکن برندها</Link>
-          </>
+          <BrandCatalogGrid onEdit={(row) => open("brand", row)} />
         )}
         {tab === "rails" && (
           <>
@@ -498,30 +333,25 @@ export function HomeCatalogPage() {
                   <b>
                     {i + 1}. {titles[i]}
                   </b>
-                  <label>
+                  <div>
                     دسته مرتبط
-                    <select
-                      aria-label={`دسته ${titles[i]}`}
+                    <CategoryTree
+                      categories={(state.categories ?? []).filter(
+                        (c) => c.published && !c.archived,
+                      )}
                       value={r.category_id}
-                      onChange={(e) =>
+                      allowRoot={false}
+                      disabled={busy || !can("homepage.save", "management")}
+                      onChange={(id) =>
                         setSettings({
                           ...settings,
                           rails: settings.rails.map((x, k) =>
-                            k === i ? { ...x, category_id: e.target.value } : x,
+                            k === i ? { ...x, category_id: id } : x,
                           ),
                         })
                       }
-                    >
-                      <option value="">انتخاب نشده</option>
-                      {(state.categories ?? [])
-                        .filter((c) => c.published && !c.archived)
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {categoryLabel(c.id)}
-                          </option>
-                        ))}
-                    </select>
-                  </label>
+                    />
+                  </div>
                   <label>
                     حداکثر کالا
                     <input
@@ -555,14 +385,11 @@ export function HomeCatalogPage() {
           </>
         )}
       </section>
-      {media && (
-        <ProductMediaDialog id={media} close={() => setMedia(undefined)} />
-      )}
       <Dialog
         open={!!editing}
-        onClose={() => !busy && setEditing(undefined)}
+        onClose={() => !busy && closeEditing()}
         fullWidth
-        maxWidth="sm"
+        maxWidth="xl"
         dir="rtl"
       >
         <form onSubmit={save}>
@@ -576,7 +403,17 @@ export function HomeCatalogPage() {
           </DialogTitle>
           <DialogContent>
             {error && <Alert severity="error">{error}</Alert>}
-            <div className="home-admin-form">
+            <fieldset
+              className="home-admin-form"
+              disabled={
+                busy ||
+                !editing ||
+                !can(
+                  `catalog.${editing.kind}.${editing.id ? "update" : "create"}`,
+                  "management",
+                )
+              }
+            >
               {editing && (
                 <>
                   <label>
@@ -593,46 +430,70 @@ export function HomeCatalogPage() {
                       }
                     />
                   </label>
-                  {editing.kind !== "brand" && (
-                    <>
+                  <>
+                    <label>
+                      نام انگلیسی
+                      <input
+                        required={editing.kind === "category"}
+                        dir="ltr"
+                        maxLength={160}
+                        value={editing.input.english_name}
+                        onChange={(e) =>
+                          setEditing({
+                            ...editing,
+                            input: {
+                              ...editing.input,
+                              english_name: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </label>
+                    {editing.kind !== "product" && (
                       <label>
-                        نام انگلیسی
-                        <input
-                          required={editing.kind === "category"}
-                          dir="ltr"
-                          maxLength={160}
-                          value={editing.input.english_name}
+                        توضیحات
+                        <textarea
+                          aria-label="توضیحات"
+                          maxLength={4000}
+                          rows={4}
+                          value={editing.input.description}
                           onChange={(e) =>
                             setEditing({
                               ...editing,
                               input: {
                                 ...editing.input,
-                                english_name: e.target.value,
+                                description: e.target.value,
                               },
                             })
                           }
                         />
                       </label>
-                      {editing.kind === "category" && (
-                        <label>
-                          توضیحات
-                          <textarea
-                            maxLength={4000}
-                            rows={4}
-                            value={editing.input.description}
-                            onChange={(e) =>
-                              setEditing({
-                                ...editing,
-                                input: {
-                                  ...editing.input,
-                                  description: e.target.value,
-                                },
-                              })
-                            }
-                          />
-                        </label>
-                      )}
+                    )}
+                  </>
+                  {editing.kind === "brand" && (
+                    <>
+                      <Alert
+                        severity={editing.input.published ? "info" : "warning"}
+                      >
+                        {editing.input.published
+                          ? "برند فعال در نمایش عمومی استفاده می‌شود."
+                          : "محصولات این برند تا فعال‌شدن آن از نمایش عمومی خارج می‌شوند؛ اتصال محصولات و سفارش‌های گذشته محفوظ می‌مانند."}
+                        {editing.id &&
+                          ` تعداد محصولات متصل: ${(state.products ?? []).filter((p) => p.brand_id === editing.id).length.toLocaleString("fa-IR")}`}
+                      </Alert>
+                      <small>
+                        تصویر از دکمه «تصویر برند» روی ردیف مدیریت می‌شود؛ ابتدا
+                        اطلاعات برند را ذخیره کنید.
+                      </small>
                     </>
+                  )}
+                  {editing.kind === "category" && editing.id && (
+                    <Button
+                      type="button"
+                      onClick={() => setSalesCategory(editing.id)}
+                    >
+                      روش‌های فروش و مارکاپ دسته
+                    </Button>
                   )}
                   {editing.kind === "category" && (
                     <label>
@@ -668,6 +529,7 @@ export function HomeCatalogPage() {
                     <label>
                       کد عمومی محصول (فقط‌خواندنی)
                       <input
+                        aria-label="کد عمومی محصول (فقط‌خواندنی)"
                         readOnly
                         dir="ltr"
                         value={
@@ -755,8 +617,9 @@ export function HomeCatalogPage() {
                   {editing.kind === "product" && (
                     <>
                       <div>
-                        <b>دسته *</b>
                         <CategoryTree
+                          label="دسته"
+                          required
                           categories={state.categories ?? []}
                           value={editing.input.category_id}
                           disabled={!!editing.id}
@@ -771,80 +634,97 @@ export function HomeCatalogPage() {
                       </div>
                       {!editing.id && (
                         <>
-                          <label>
-                            نوع محصول
-                            <select
-                              value={editing.input.model ?? "shared"}
-                              onChange={(e) =>
+                          <CatalogChoice
+                            label="نوع محصول"
+                            value={editing.input.model ?? "shared"}
+                            options={[
+                              { id: "shared", name: "مشترک" },
+                              { id: "independent", name: "مستقل فروشگاه" },
+                            ]}
+                            onChange={(v) =>
+                              setEditing({
+                                ...editing,
+                                input: {
+                                  ...editing.input,
+                                  model: v as "shared" | "independent",
+                                  owner_store_id: "",
+                                },
+                              })
+                            }
+                          />
+                          {editing.input.model === "independent" && (
+                            <CatalogChoice
+                              label="فروشگاه مالک"
+                              value={editing.input.owner_store_id ?? ""}
+                              options={(state.stores ?? [])
+                                .filter((st) => st.active)
+                                .map((st) => ({ id: st.id, name: st.name }))}
+                              onChange={(v) =>
                                 setEditing({
                                   ...editing,
                                   input: {
                                     ...editing.input,
-                                    model: e.target.value as
-                                      | "shared"
-                                      | "independent",
-                                    owner_store_id: "",
+                                    owner_store_id: v,
                                   },
                                 })
                               }
-                            >
-                              <option value="shared">مشترک</option>
-                              <option value="independent">مستقل فروشگاه</option>
-                            </select>
-                          </label>
-                          {editing.input.model === "independent" && (
-                            <label>
-                              فروشگاه مالک
-                              <select
-                                required
-                                value={editing.input.owner_store_id ?? ""}
-                                onChange={(e) =>
-                                  setEditing({
-                                    ...editing,
-                                    input: {
-                                      ...editing.input,
-                                      owner_store_id: e.target.value,
-                                    },
-                                  })
-                                }
-                              >
-                                <option value="">انتخاب فروشگاه</option>
-                                {state.stores
-                                  ?.filter((s) => s.active)
-                                  .map((s) => (
-                                    <option key={s.id} value={s.id}>
-                                      {s.name}
-                                    </option>
-                                  ))}
-                              </select>
-                            </label>
+                            />
                           )}
                         </>
                       )}
-                      <label>
-                        برند
-                        <select
-                          value={editing.input.brand_id}
+                      <CatalogChoice
+                        label="برند"
+                        value={editing.input.brand_id}
+                        options={(state.brands ?? [])
+                          .filter(
+                            (b) => b.active || b.id === editing.input.brand_id,
+                          )
+                          .map((b) => ({
+                            id: b.id,
+                            name: b.name + (b.active ? "" : " (غیرفعال)"),
+                          }))}
+                        clearLabel="بدون برند"
+                        onChange={(v) =>
+                          setEditing({
+                            ...editing,
+                            input: { ...editing.input, brand_id: v },
+                          })
+                        }
+                      />
+                      <label className="home-admin-check">
+                        <input
+                          type="checkbox"
+                          checked={editing.input.active !== false}
                           onChange={(e) =>
                             setEditing({
                               ...editing,
                               input: {
                                 ...editing.input,
-                                brand_id: e.target.value,
+                                active: e.target.checked,
                               },
                             })
                           }
-                        >
-                          <option value="">بدون برند</option>
-                          {(state.brands ?? [])
-                            .filter((b) => b.active)
-                            .map((b) => (
-                              <option key={b.id} value={b.id}>
-                                {b.name}
-                              </option>
-                            ))}
-                        </select>
+                        />
+                        محصول فعال و مجاز به خرید باشد
                       </label>
+                      {editing.input.active === false && (
+                        <Alert severity="warning">
+                          محصول از خانه حذف می‌شود؛ در PLP و PDP با برچسب
+                          «غیرقابل خرید» و بدون قیمت و خرید باقی می‌ماند. انتشار
+                          محتوا و سفارش گذشته محفوظ‌اند.
+                        </Alert>
+                      )}
+                      {!editing.id && (
+                        <div className="catalog-code-guide">
+                          <b>کد عمومی خودکار</b>
+                          <code dir="ltr">chr-[id]</code>
+                          <small>
+                            پس از ذخیره تخصیص می‌یابد؛ شناسه مبدأ یا کد دلخواه
+                            وارد نکنید. تصویر، تنوع و قیمت از اکشن‌های ردیف
+                            تکمیل می‌شوند.
+                          </small>
+                        </div>
+                      )}
                     </>
                   )}
                   {editing.kind === "product" && (
@@ -860,7 +740,23 @@ export function HomeCatalogPage() {
                   )}
                   {editing.kind === "product" && (
                     <fieldset className="home-admin-form">
-                      <legend>ویژگی‌های نمایشی و فیلتر</legend>
+                      <legend>مقادیر خصوصیات همین دسته</legend>
+                      <p>
+                        این فهرست فقط از خصوصیات غیرمحورِ منتسب به دسته
+                        انتخاب‌شده می‌آید. نمایش روی کارت و فیلتر در تنظیم دسته
+                        تعیین می‌شود؛ رنگ/گارانتی و سایر محورهای تنوع در فرم
+                        تنوع ثبت می‌شوند.
+                      </p>
+                      {editing.input.category_id && (
+                        <Link
+                          to={
+                            "/categories?category=" +
+                            encodeURIComponent(editing.input.category_id)
+                          }
+                        >
+                          مشاهده تنظیم دسته و خصوصیات
+                        </Link>
+                      )}
                       {(
                         state.categories?.find(
                           (c) => c.id === editing.input.category_id,
@@ -892,23 +788,25 @@ export function HomeCatalogPage() {
                               },
                             });
                           return (
-                            <label key={a.id}>
-                              {a.name}
-                              {a.unit ? " (" + a.unit + ")" : ""}
+                            <div className="home-admin-form" key={a.id}>
+                              <b>
+                                {a.name}
+                                {a.unit ? " (" + a.unit + ")" : ""}
+                              </b>
                               {a.kind === "enum" ? (
-                                <select
+                                <CatalogChoice
+                                  label={a.name}
                                   value={value}
-                                  onChange={(e) => setValue(e.target.value)}
-                                >
-                                  <option value="">ثبت نشده</option>
-                                  {a.options.map((o) => (
-                                    <option key={o} value={o}>
-                                      {o}
-                                    </option>
-                                  ))}
-                                </select>
+                                  options={a.options.map((o) => ({
+                                    id: o,
+                                    name: o,
+                                  }))}
+                                  clearLabel="ثبت نشده"
+                                  onChange={setValue}
+                                />
                               ) : (
                                 <input
+                                  aria-label={a.name}
                                   type={a.kind === "number" ? "number" : "text"}
                                   step="any"
                                   maxLength={160}
@@ -916,7 +814,7 @@ export function HomeCatalogPage() {
                                   onChange={(e) => setValue(e.target.value)}
                                 />
                               )}
-                            </label>
+                            </div>
                           );
                         })}
                       <small>
@@ -976,83 +874,33 @@ export function HomeCatalogPage() {
                   )}
                 </>
               )}
-            </div>
+            </fieldset>
           </DialogContent>
           <DialogActions>
-            <Button disabled={busy} onClick={() => setEditing(undefined)}>
+            <Button disabled={busy} onClick={closeEditing}>
               انصراف
             </Button>
-            <Button variant="contained" type="submit" disabled={busy}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={
+                busy ||
+                !editing ||
+                !can(
+                  `catalog.${editing.kind}.${editing.id ? "update" : "create"}`,
+                  "management",
+                )
+              }
+            >
               ذخیره
             </Button>
           </DialogActions>
         </form>
       </Dialog>
-      <Dialog
-        open={!!image}
-        onClose={() => !busy && setImage(undefined)}
-        fullWidth
-        maxWidth="xs"
-        dir="rtl"
-      >
-        <DialogTitle>تصویر اصلی محصول</DialogTitle>
-        <DialogContent>
-          {error && <Alert severity="error">{error}</Alert>}
-          <p>{image?.name}</p>
-          {preview ? (
-            <img
-              className="home-admin-upload-preview"
-              src={preview}
-              alt="پیش‌نمایش تصویر انتخاب‌شده"
-            />
-          ) : (
-            <ManagedPhoto id={image?.image_id} />
-          )}
-          <p>
-            PNG، JPEG یا WebP؛ حداکثر۵MiB و هر ضلع۴۰۹۶پیکسل؛ تصویر با حفظ نسبت
-            تا۱۰۲۴پیکسل آماده می‌شود.
-          </p>
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            aria-label="انتخاب تصویر محصول"
-            onChange={(e) => {
-              setFile(e.target.files?.[0]);
-              setImageKey(crypto.randomUUID());
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button disabled={busy} onClick={() => setImage(undefined)}>
-            انصراف
-          </Button>
-          <Button
-            variant="contained"
-            disabled={!file || !image || busy}
-            onClick={() => {
-              if (file && image)
-                void run(() =>
-                  uploadIcon({
-                    kind: "product",
-                    target: image.id,
-                    version: image.version,
-                    key: imageKey,
-                    file,
-                  }),
-                )
-                  .then(() => setImage(undefined))
-                  .catch(() => {});
-            }}
-          >
-            ذخیره تصویر
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {quick && (
-        <ProductQuickDialog
-          id={quick}
-          initialTab={1}
-          close={() => setQuick(undefined)}
+      {salesCategory && (
+        <CategorySalesDialog
+          id={salesCategory}
+          close={() => setSalesCategory(undefined)}
         />
       )}
     </>

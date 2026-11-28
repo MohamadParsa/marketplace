@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
     "http://localhost:8080";
   return {
     plugins: [react()],
+ resolve:{dedupe:["react","react-dom"]},
     server: {
       proxy: {
         "/backoffice": target,

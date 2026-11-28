@@ -19,6 +19,7 @@ type HomeRail struct {
 	Limit      int    `json:"limit"`
 }
 type CatalogInput struct {
+	Active               *bool                     `json:"active,omitempty"`
 	DisplayPriority      *int                      `json:"display_priority,omitempty"`
 	ClearDisplayPriority bool                      `json:"clear_display_priority,omitempty"`
 	Slug                 *string                   `json:"slug,omitempty"`
@@ -119,6 +120,8 @@ func imageAttached(w Workspace, id string) bool {
 	return false
 }
 func canPublishProduct(w Workspace, p catalog.Product) bool {
+	// Publication validates content and an offer independently of the sales switch.
+	p.Active = nil
 	return strings.TrimSpace(p.Name) != "" && publicCategory(w, p.CategoryID) != nil && validBrand(w, p.BrandID) && imageAttached(w, p.ImageID) && len(publicOffers(w, p)) > 0
 }
 func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
@@ -239,8 +242,32 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			return nil
 		}
 	case "catalog.brand.create", "catalog.brand.update":
+		if c.Action == "catalog.brand.update" {
+			found := false
+			for _, b := range w.Brands {
+				if b.ID == c.Target {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return ErrNotFound
+			}
+		}
+		// Keep old blank optional names compatible; nonblank names are unique.
+		key := func(v string) string {
+			return strings.ToLower(strings.TrimSpace(strings.NewReplacer("ي", "ی", "ك", "ک").Replace(v)))
+		}
+		for _, b := range w.Brands {
+			if c.Action == "catalog.brand.update" && b.ID == c.Target {
+				continue
+			}
+			if (c.Action == "catalog.brand.create" && b.ID == id) || key(b.Name) == key(in.Name) || (in.EnglishName != "" && key(b.EnglishName) == key(in.EnglishName)) {
+				return ErrConflict
+			}
+		}
 		if c.Action == "catalog.brand.create" {
-			w.Brands = append(w.Brands, catalog.Brand{ID: id, Name: in.Name, Active: in.Published, Version: 1})
+			w.Brands = append(w.Brands, catalog.Brand{ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: strings.TrimSpace(in.Description), Active: in.Published, Version: 1})
 			return nil
 		}
 		for i := range w.Brands {
@@ -250,6 +277,8 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 					return ErrConflict
 				}
 				x.Name = in.Name
+				x.EnglishName = in.EnglishName
+				x.Description = strings.TrimSpace(in.Description)
 				x.Active = in.Published
 				x.Version++
 				return nil
@@ -270,14 +299,27 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 				found = true
 			}
 		}
-		if !found || !validBrand(*w, in.BrandID) {
+		brandAllowed := validBrand(*w, in.BrandID)
+		if !brandAllowed && c.Action == "catalog.product.update" {
+			for _, old := range w.Products {
+				if old.ID == c.Target && old.BrandID == in.BrandID {
+					for _, b := range w.Brands {
+						if b.ID == in.BrandID {
+							brandAllowed = true
+						}
+					}
+					break
+				}
+			}
+		}
+		if !found || !brandAllowed {
 			return ErrInvalid
 		}
 		if c.Action == "catalog.product.create" {
 			if in.Published {
 				return ErrInvalid
 			}
-			if in.Attributes != nil && !validProductAttributes(*w, in.CategoryID, *in.Attributes) {
+			if in.Attributes != nil && !validContentAttributes(*w, in.CategoryID, nil, *in.Attributes) {
 				return ErrInvalid
 			}
 			model := in.Model
@@ -301,7 +343,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 					return ErrInvalid
 				}
 			}
-			p := catalog.Product{OwnerStoreID: in.OwnerStoreID, CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: model, Status: "draft", Version: 1, VariantVersion: 1}
+			p := catalog.Product{Active: in.Active, OwnerStoreID: in.OwnerStoreID, CreatedAt: now, ID: id, Name: in.Name, EnglishName: in.EnglishName, Description: in.Description, CategoryID: in.CategoryID, BrandID: in.BrandID, Model: model, Status: "draft", Version: 1, VariantVersion: 1}
 			if in.Attributes != nil {
 				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
 			}
@@ -311,7 +353,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			}
 			w.Products = append(w.Products, p)
 			if len(productAxes(*w, p)) == 0 {
-				w.Variants = append(w.Variants, catalog.Variant{ID: "base-" + id, ProductID: id, SKU: "BASE-" + id, Values: []catalog.AttributeValue{}, Version: 1})
+				w.Variants = append(w.Variants, catalog.Variant{ID: "base-" + id, ProductID: id, SKU: variantCode(w, "base-"+id), Values: []catalog.AttributeValue{}, Version: 1})
 			}
 			return nil
 		}
@@ -328,11 +370,14 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 			}
 			candidate := *p
 			candidate.Name, candidate.BrandID = in.Name, in.BrandID
+			if in.Active != nil {
+				candidate.Active = in.Active
+			}
 			if in.Published && p.Status != "published" && !canPublishProduct(*w, candidate) {
 				return ErrInvalid
 			}
 			if in.Attributes != nil {
-				if !validProductAttributes(*w, p.CategoryID, *in.Attributes) {
+				if !validContentAttributes(*w, p.CategoryID, p.Attributes, *in.Attributes) {
 					return ErrInvalid
 				}
 				p.Attributes = append([]catalog.AttributeValue{}, (*in.Attributes)...)
@@ -341,6 +386,7 @@ func applyHomeCatalog(w *Workspace, c Command, id string, now time.Time) error {
 				content := *in.Content
 				p.Content = &content
 			}
+			p.Active = candidate.Active
 			p.Name = in.Name
 			p.EnglishName = in.EnglishName
 			p.Description = in.Description
@@ -364,11 +410,15 @@ type PublicOffer struct {
 	ID           string `json:"id"`
 	VariantID    string `json:"variant_id"`
 	Price        int64  `json:"price"`
+	LeadDayBasis string `json:"lead_day_basis"`
 	LeadDays     int    `json:"lead_days"`
 }
 
 func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 	result := []PublicOffer{}
+	if !p.IsActive() {
+		return result
+	}
 	offers, variants, stores := w.Offers, w.Variants, w.Stores
 	if w.publicIndex != nil {
 		offers = w.publicIndex.offers[p.ID]
@@ -394,8 +444,8 @@ func publicOffers(w Workspace, p catalog.Product) []PublicOffer {
 			continue
 		}
 		for _, s := range stores {
-			if s.ID == o.StoreID && s.Active {
-				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDays: s.LeadDays})
+			if s.ID == o.StoreID && s.Active && StoreAllowsCategory(w, s, p.CategoryID) && StoreAllowsMethod(s, "cash") {
+				result = append(result, PublicOffer{RegularPrice: o.RegularPrice, ID: o.ID, VariantID: o.VariantID, Price: o.Price, LeadDayBasis: string(preparationPolicy(s).DayBasis), LeadDays: s.LeadDays})
 				break
 			}
 		}

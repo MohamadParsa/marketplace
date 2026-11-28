@@ -1,0 +1,158 @@
+{
+  "id": "CHECKS-PRODUCT-MANAGEMENT-20261126",
+  "issues": [
+    116
+  ],
+  "source_commit": "99ee075a58b45ff93c8116500ea3a62c8540b425",
+  "source_pushed": true,
+  "go": {
+    "passed_tests_and_subtests": 381,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "product-pagination-20",
+        "pass": true
+      },
+      {
+        "id": "product-category-url-sync",
+        "pass": true
+      },
+      {
+        "id": "product-pagination-next",
+        "pass": true
+      },
+      {
+        "id": "product-english-filter",
+        "pass": true
+      },
+      {
+        "id": "product-combined-empty-filter",
+        "pass": true
+      },
+      {
+        "id": "product-axis-content-separation",
+        "pass": true
+      },
+      {
+        "id": "product-code-readonly",
+        "pass": true
+      },
+      {
+        "id": "product-active-independent-of-published",
+        "pass": true
+      },
+      {
+        "id": "product-conflict-keeps-draft",
+        "pass": true
+      },
+      {
+        "id": "product-public-inactive-no-price",
+        "pass": true
+      },
+      {
+        "id": "product-pdp-no-add",
+        "pass": true
+      },
+      {
+        "id": "product-plp-inactive-card",
+        "pass": true
+      },
+      {
+        "id": "product-stale-cart-blocked",
+        "pass": true
+      },
+      {
+        "id": "product-create-code-guide",
+        "pass": true
+      },
+      {
+        "id": "product-create-content-auto-code",
+        "pass": true
+      },
+      {
+        "id": "product-quick-variants-preserved",
+        "pass": true
+      },
+      {
+        "id": "product-quick-pricing-preserved",
+        "pass": true
+      },
+      {
+        "id": "product-mobile-editor-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "product-mobile-grid-no-page-overflow",
+        "pass": true
+      },
+      {
+        "id": "product-viewer-cannot-write",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 21,
+    "errors": [],
+    "isolated_postgres": true
+  },
+  "backoffice_build": "passed",
+  "storefront_build": "passed",
+  "primary_preservation": {
+    "sections": 28,
+    "unchanged": true,
+    "changes": []
+  },
+  "merged": false,
+  "deployed": false,
+  "primary_http_and_legacy_smoke": {
+    "backoffice": 200,
+    "storefront": 200,
+    "product_url": "/product/chr-10082",
+    "active": true,
+    "has_image": true,
+    "offers": 1
+  },
+  "ci": {
+    "tested_revision": "13eb7c6db9ffafdcf0927fc01ae486c7554d03db",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282",
+    "jobs": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282/job/140041485512"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282/job/140041485736"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282/job/140041485861"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282/job/140041485869"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45858044282/job/140041486367"
+      }
+    ]
+  }
+}

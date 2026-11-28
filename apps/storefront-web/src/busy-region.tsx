@@ -49,16 +49,26 @@ export function BusyRegion({
 }
 export function LoadingPlaceholder({
   label = "در حال دریافت اطلاعات…",
+  children,
+  className = "",
 }: {
+  children?: ReactNode;
+  className?: string;
   label?: string;
 }) {
   return (
-    <BusyRegion busy label={label} className="sf-loading-placeholder">
-      <div className="sf-skeleton-lines" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </div>
+    <BusyRegion
+      busy
+      label={label}
+      className={`sf-loading-placeholder ${className}`}
+    >
+      {children ?? (
+        <div className="sf-skeleton-lines" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+      )}
     </BusyRegion>
   );
 }

@@ -1,4 +1,10 @@
+import { recordNumber } from "../../shared/format";
+import { CreateButton } from "../../shared/create-button";
+import { FilterPanel } from "../../shared/filter-panel";
+import { ChoiceField, MultiChoiceField } from "../../shared/option-select";
+import { OptionSelect } from "../../shared/option-select";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Alert,
   Button,
@@ -7,12 +13,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
   TextField,
 } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
 import { DataTable, PageHeader } from "../../shared/components";
-import type { AttributeDefinition, Category } from "../../shared/types";
+import type { AttributeDefinition } from "../../shared/types";
 
 const kinds = { enum: "انتخابی", text: "متن", number: "عدد" };
 const message = (e: unknown) =>
@@ -21,6 +26,35 @@ const message = (e: unknown) =>
 export function SharedAttributesPage() {
   const { state, execute, can: may } = useWorkspace();
   const [editor, setEditor] = useState<AttributeDefinition>();
+  const [params, setParams] = useSearchParams();
+  const reference = params.get("attribute");
+  const canonicalReference = (id: string) =>
+    "chr-a-" +
+    btoa(String.fromCharCode(...new TextEncoder().encode(id)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  const linkedAttribute = reference
+    ? state.attributes?.find(
+        (a) => a.id === reference || a.id === canonicalReference(reference),
+      )
+    : undefined;
+  useEffect(() => {
+    if (linkedAttribute) setEditor(linkedAttribute);
+    // Keep the editor snapshot stable during workspace refresh, including after save.
+  }, [reference, linkedAttribute?.id]);
+  const openEditor = (a: AttributeDefinition) => {
+    setEditor(a);
+    const next = new URLSearchParams(params);
+    next.set("attribute", a.id);
+    setParams(next, { replace: true });
+  };
+  const closeEditor = () => {
+    setEditor(undefined);
+    const next = new URLSearchParams(params);
+    next.delete("attribute");
+    setParams(next, { replace: true });
+  };
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(
     String(state.display_settings.card_attribute_limit),
@@ -36,19 +70,20 @@ export function SharedAttributesPage() {
     [state.display_settings.version],
   );
   const editable = may("attribute.create", "management");
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
         title="کتابخانه خصوصیات"
         description="یک تعریف مشترک؛ کاربرد مستقل در هر دسته، بدون ارث از والد"
         action={
-          <Button
+          <CreateButton
             variant="contained"
             disabled={!editable}
             onClick={() =>
               setEditor({
                 id: "",
-                code: "",
+                code: "chr-",
                 name: "",
                 kind: "enum",
                 options: [],
@@ -57,20 +92,25 @@ export function SharedAttributesPage() {
             }
           >
             خصوصیت جدید
-          </Button>
+          </CreateButton>
         }
       />
+      {reference && !linkedAttribute && (
+        <Alert severity="warning">
+          خصوصیت این پیوند در دسترس نیست؛ از فهرست خصوصیات انتخاب کنید.
+        </Alert>
+      )}
       <section className="panel">
-        <div className="toolbar">
-          <input
-            className="search"
-            aria-label="جست‌وجوی خصوصیت"
+        <FilterPanel onSearch={() => setSearch(searchDraft)}>
+          <TextField
+            label="جست‌وجوی خصوصیت"
             placeholder="نام یا کد خصوصیت…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
           />
-        </div>
+        </FilterPanel>
         <DataTable
+          searchable={false}
           rows={(state.attributes ?? []).filter((a) =>
             (a.name + " " + a.code)
               .toLocaleLowerCase()
@@ -82,7 +122,6 @@ export function SharedAttributesPage() {
               render: (a) => (
                 <>
                   <b>{a.name}</b>
-                  <small dir="ltr">{a.code}</small>
                 </>
               ),
             },
@@ -91,19 +130,9 @@ export function SharedAttributesPage() {
               render: (a) => `${kinds[a.kind]}${a.unit ? " / " + a.unit : ""}`,
             },
             {
-              title: "دسته‌های مرتبط",
-              render: (a) =>
-                (state.categories ?? [])
-                  .filter((c) =>
-                    c.bindings?.some((b) => b.attribute_id === a.id),
-                  )
-                  .map((c) => c.name)
-                  .join("، ") || "بدون انتساب",
-            },
-            {
               title: "عملیات",
               render: (a) => (
-                <Button onClick={() => setEditor(a)}>مشاهده و ویرایش</Button>
+                <Button onClick={() => openEditor(a)}>مشاهده و ویرایش</Button>
               ),
             },
           ]}
@@ -206,7 +235,7 @@ export function SharedAttributesPage() {
         <AttributeEditor
           key={editor.id || "new"}
           attribute={editor}
-          close={() => setEditor(undefined)}
+          close={closeEditor}
         />
       )}
     </>
@@ -239,6 +268,9 @@ function AttributeEditor({
     attribute.id ? "attribute.update" : "attribute.create",
     "management",
   );
+  const groupEditable = attribute.id
+    ? may("attribute.groups.set", "management")
+    : editable;
   const change = (field: keyof AttributeDefinition, value: string) => {
     setDraft({ ...draft, [field]: value });
     setKey(crypto.randomUUID());
@@ -292,7 +324,7 @@ function AttributeEditor({
     <Dialog
       open
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       onClose={() => {
         if (!pending) close();
       }}
@@ -322,28 +354,20 @@ function AttributeEditor({
             disabled={!editable || pending}
             inputProps={{ maxLength: 80 }}
           />
-          <TextField
-            label="کد یکتا"
-            value={draft.code}
-            onChange={(e) => change("code", e.target.value)}
-            required
-            disabled={!editable || pending || !!attribute.id}
-            inputProps={{ pattern: "[a-z][a-z0-9\\-]{0,63}", dir: "ltr" }}
-            helperText="حروف کوچک انگلیسی، رقم و خط تیره؛ پس از ایجاد ثابت است."
-          />
-          <TextField
-            select
-            label="نوع خصوصیت"
-            value={draft.kind}
-            onChange={(e) => change("kind", e.target.value)}
-            disabled={!editable || pending || used}
-          >
-            {Object.entries(kinds).map(([k, v]) => (
-              <MenuItem key={k} value={k}>
-                {v}
-              </MenuItem>
-            ))}
-          </TextField>
+          {attribute.id ? <TextField label="شمارهٔ خصوصیت" value={recordNumber(state, "attribute", attribute.id)} disabled /> : <p className="muted">شمارهٔ خصوصیت پس از ذخیره به‌صورت خودکار تعیین می‌شود.</p>}
+          <div role="group" aria-label="نوع خصوصیت" className="toolbar">
+            <OptionSelect
+              label={"نوع خصوصیت"}
+              multiple={false}
+              options={Object.entries(kinds).map(([k, v]) => ({
+                id: String(k),
+                name: String("" + v + ""),
+                selected: draft.kind === k,
+                disabled: !editable || pending || used,
+                onSelect: () => change("kind", k),
+              }))}
+            />
+          </div>
           <TextField
             label="واحد (اختیاری)"
             value={draft.unit ?? ""}
@@ -393,180 +417,7 @@ function AttributeEditor({
   );
 }
 
-export function CategoryBindingsDialog({
-  category,
-  close,
-}: {
-  category: Category;
-  close: () => void;
-}) {
-  const { state, execute, can: may } = useWorkspace();
-  const [original] = useState(category);
-  const [bindings, setBindings] = useState(category.bindings ?? []);
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
-  const [key, setKey] = useState(crypto.randomUUID());
-  const editable =
-    may("category.bindings.set", "management") && !category.archived;
-  const used = (state.products ?? []).some(
-    (p) => p.category_id === category.id,
-  );
-  return (
-    <Dialog
-      open
-      fullWidth
-      maxWidth="md"
-      onClose={() => {
-        if (!pending) close();
-      }}
-    >
-      <DialogTitle>خصوصیات دسته {category.name}</DialogTitle>
-      <DialogContent>
-        <Alert severity="info">
-          انتساب فقط برای همین دسته است؛ خصوصیت والد خودکار اضافه نمی‌شود.{" "}
-          {used &&
-            "این دسته محصول دارد؛ تغییر مجموعه محورهای تنوع تا تعیین سیاست تبدیل غیرفعال است."}
-        </Alert>
-        {error && <Alert severity="error">{error}</Alert>}
-        <div className="binding-list">
-          {(state.attributes ?? []).map((a, index) => {
-            const binding = bindings.find((b) => b.attribute_id === a.id);
-            const originalBinding = original.bindings?.find(
-              (b) => b.attribute_id === a.id,
-            );
-            const valueUsed = (state.products ?? []).some(
-              (p) =>
-                p.category_id === category.id &&
-                p.attributes?.some((v) => v.attribute_id === a.id),
-            );
-            return (
-              <div
-                className="binding-row"
-                key={a.id}
-                data-testid={`binding-${a.id}`}
-              >
-                <label>
-                  <Checkbox
-                    checked={!!binding}
-                    disabled={
-                      !editable ||
-                      pending ||
-                      (!!binding &&
-                        (valueUsed || (used && !!originalBinding?.axis)))
-                    }
-                    inputProps={{ "aria-label": `انتساب ${a.name}` }}
-                    onChange={(_, checked) => {
-                      setBindings(
-                        checked
-                          ? [
-                              ...bindings,
-                              {
-                                attribute_id: a.id,
-                                axis: false,
-                                card: false,
-                                filter: false,
-                                position: index,
-                              },
-                            ]
-                          : bindings.filter((b) => b.attribute_id !== a.id),
-                      );
-                      setKey(crypto.randomUUID());
-                    }}
-                  />
-                  {a.name}
-                  <small dir="ltr">{a.code}</small>
-                </label>
-                {(["axis", "card", "filter"] as const).map((flag) => (
-                  <label key={flag}>
-                    <Checkbox
-                      checked={binding?.[flag] ?? false}
-                      disabled={
-                        !editable ||
-                        pending ||
-                        !binding ||
-                        (flag === "axis" && (used || a.kind !== "enum"))
-                      }
-                      inputProps={{
-                        "aria-label": `${{ axis: "محور", card: "کارت", filter: "فیلتر" }[flag]} ${a.name}`,
-                      }}
-                      onChange={(_, checked) => {
-                        setBindings(
-                          bindings.map((b) =>
-                            b.attribute_id === a.id
-                              ? { ...b, [flag]: checked }
-                              : b,
-                          ),
-                        );
-                        setKey(crypto.randomUUID());
-                      }}
-                    />
-                    {
-                      {
-                        axis: "محور تنوع",
-                        card: "نمایش کارت",
-                        filter: "فیلتر",
-                      }[flag]
-                    }
-                  </label>
-                ))}
-                <TextField
-                  size="small"
-                  label={`ترتیب ${a.name}`}
-                  type="number"
-                  value={binding?.position ?? ""}
-                  disabled={!editable || pending || !binding}
-                  inputProps={{ min: 0, max: 10000, step: 1 }}
-                  onChange={(e) => {
-                    setBindings(
-                      bindings.map((b) =>
-                        b.attribute_id === a.id
-                          ? { ...b, position: Number(e.target.value) }
-                          : b,
-                      ),
-                    );
-                    setKey(crypto.randomUUID());
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-        {!state.attributes?.length && (
-          <p>ابتدا یک خصوصیت در کتابخانه تعریف کنید.</p>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={pending} onClick={close}>
-          انصراف
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!editable || pending}
-          onClick={async () => {
-            setPending(true);
-            setError("");
-            try {
-              await execute({
-                action: "category.bindings.set",
-                target: original.id,
-                version: original.version,
-                bindings,
-                idempotency_key: key,
-              });
-              close();
-            } catch (e) {
-              setError(message(e));
-            } finally {
-              setPending(false);
-            }
-          }}
-        >
-          ثبت انتساب‌ها
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
+export { CategoryBindingsDialog } from "./category-bindings-dialog";
 
 function SalesWindowSettings() {
   const { state, execute, can } = useWorkspace();

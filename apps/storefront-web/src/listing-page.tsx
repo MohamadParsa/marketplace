@@ -1,10 +1,11 @@
+import { CardSkeleton } from "./catalog-loading";
 import { BusyRegion } from "./busy-region";
 import { ToggleSwitch } from "./toggle-switch";
 import { PriceRangeFilter, type PriceRange } from "./price-range-filter";
 import { AttributeFilter } from "./attribute-filter";
 import { setPageCanonical } from "./page-canonical";
 import { ChoiceGroup } from "./choice-group";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Icon,
   ProductCard,
@@ -13,6 +14,7 @@ import {
   type Card,
 } from "./home-page";
 import { navigate } from "./navigation";
+import { catalogActivityHeaders } from "./commerce";
 const api = import.meta.env.VITE_API_BASE_URL ?? "";
 type Nav = { id: string; name: string; url: string; parent_id?: string };
 type Filter = {
@@ -144,9 +146,16 @@ export function ListingPage({ url }: { url: string }) {
   const [attempt, setAttempt] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const desktop = useDesktop();
+  const filterTrigger = useRef<HTMLButtonElement>(null);
+  const filterViewport = useRef<{
+    url: string;
+    anchor: HTMLElement | null;
+    top: number;
+  }>();
   useEffect(() => {
     if (!filtersOpen || desktop) return;
-    const previous = document.activeElement as HTMLElement | null;
+    const previous =
+      filterTrigger.current ?? (document.activeElement as HTMLElement | null);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const trap = (e: KeyboardEvent) => {
@@ -174,7 +183,7 @@ export function ListingPage({ url }: { url: string }) {
     return () => {
       document.body.style.overflow = overflow;
       document.removeEventListener("keydown", trap);
-      previous?.focus();
+      if (previous?.isConnected) previous.focus({ preventScroll: true });
     };
   }, [filtersOpen, desktop]);
   useEffect(() => {
@@ -183,7 +192,7 @@ export function ListingPage({ url }: { url: string }) {
     setLoading(true);
     setError(0);
     const restore = history.state?.cherrivaScroll ?? 0;
-    void fetch(api + "/storefront/catalog?" + query, { signal: c.signal })
+    void fetch(api + "/storefront/catalog?" + query, { signal: c.signal,headers:catalogActivityHeaders(),cache:"no-store" })
       .then(async (r) => {
         if (!r.ok) {
           if (active && !c.signal.aborted) setError(r.status);
@@ -192,9 +201,24 @@ export function ListingPage({ url }: { url: string }) {
         const body = (await r.json()) as Listing;
         if (active && !c.signal.aborted) {
           setData(body);
-          requestAnimationFrame(() =>
-            scrollTo({ top: restore, behavior: "instant" }),
-          );
+          requestAnimationFrame(() => {
+            if (!active || c.signal.aborted) return;
+            const saved = filterViewport.current;
+            if (saved?.url === current.pathname + current.search) {
+              filterViewport.current = undefined;
+              if (saved.anchor?.isConnected) {
+                const adjustment =
+                  saved.anchor.getBoundingClientRect().top - saved.top;
+                const sheet =
+                  saved.anchor.closest<HTMLElement>(".plp-filter-sheet");
+                if (sheet) sheet.scrollTop += adjustment;
+                else
+                  scrollTo({ top: scrollY + adjustment, behavior: "instant" });
+                return;
+              }
+            }
+            scrollTo({ top: restore, behavior: "instant" });
+          });
         }
       })
       .catch(() => {
@@ -237,7 +261,18 @@ export function ListingPage({ url }: { url: string }) {
     const next = new URLSearchParams(current.search);
     edit(next);
     next.delete("page");
-    navigate(current.pathname + (next.size ? "?" + next.toString() : ""));
+    const url = current.pathname + (next.size ? "?" + next.toString() : "");
+    const focused = document.activeElement as HTMLElement | null;
+    const anchor =
+      focused?.closest<HTMLElement>(".plp-attribute-options label") ??
+      focused?.closest<HTMLElement>("[data-filter-id]") ??
+      null;
+    filterViewport.current = {
+      url,
+      anchor,
+      top: anchor?.getBoundingClientRect().top ?? 0,
+    };
+    navigate(url, { preserveScroll: true });
   };
   const categories = (data?.navigation ?? [])
     .filter((c) => !c.parent_id)
@@ -315,11 +350,7 @@ export function ListingPage({ url }: { url: string }) {
           <>
             <div className="plp-title">
               <div>
-                <span className="lh-eyebrow">CHERRIVA / همراه انتخاب تو</span>
                 <h1>{heading}</h1>
-                {data?.category && (
-                  <small>انتخاب‌ها در دسته {data.category.name}</small>
-                )}
               </div>
               <span>
                 {data
@@ -339,9 +370,17 @@ export function ListingPage({ url }: { url: string }) {
             )}
             <BusyRegion busy={loading} label="دریافت کالاها">
               <div className="plp-layout">
-                {desktop && data && (
+                {desktop && (
                   <aside className="plp-filters" aria-label="فیلتر کالاها">
-                    {filters}
+                    {data ? (
+                      filters
+                    ) : (
+                      <div className="plp-filter-skeleton" aria-hidden="true">
+                        {Array.from({ length: 6 }, (_, i) => (
+                          <i className="sf-skeleton" key={i} />
+                        ))}
+                      </div>
+                    )}
                   </aside>
                 )}
                 <section className="plp-results" aria-label="فهرست محصولات">
@@ -349,6 +388,7 @@ export function ListingPage({ url }: { url: string }) {
                     {!desktop && (
                       <button
                         className="plp-filter-toggle"
+                        ref={filterTrigger}
                         onClick={() => setFiltersOpen(true)}
                         disabled={!data}
                         aria-expanded={filtersOpen}
@@ -365,31 +405,11 @@ export function ListingPage({ url }: { url: string }) {
                       ).map((v) => ({ value: v, label: sortLabels[v] }))}
                       onChange={(v) => change((p) => p.set("sort", v))}
                     />
-                    {current.pathname === "/search" && data && (
-                      <ChoiceGroup
-                        label="دسته نتایج جست‌وجو"
-                        value={params.get("category") ?? ""}
-                        options={[
-                          { value: "", label: "همه دسته‌ها" },
-                          ...data.navigation.map((c) => ({
-                            value: c.id,
-                            label: c.name,
-                          })),
-                        ]}
-                        onChange={(v) =>
-                          change((p) => {
-                            v ? p.set("category", v) : p.delete("category");
-                            for (const k of [...p.keys()])
-                              if (k.startsWith("attr.")) p.delete(k);
-                          })
-                        }
-                      />
-                    )}
                   </div>
                   {!data && loading ? (
                     <div className="plp-grid" aria-hidden="true">
                       {Array.from({ length: 8 }, (_, i) => (
-                        <div className="plp-skeleton" key={i} />
+                        <CardSkeleton key={i} />
                       ))}
                     </div>
                   ) : data?.products.length ? (

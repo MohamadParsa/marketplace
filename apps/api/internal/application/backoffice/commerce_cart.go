@@ -15,29 +15,36 @@ type CartOwner struct {
 	GuestToken string
 }
 type CartMutation struct {
-	OfferID    string `json:"offer_id"`
-	NewOfferID string `json:"new_offer_id,omitempty"`
-	Quantity   int    `json:"quantity"`
-	Version    int    `json:"version"`
-	Action     string `json:"action"`
+	ReviewVariantVersion *int   `json:"review_variant_version,omitempty"`
+	OfferID              string `json:"offer_id"`
+	NewOfferID           string `json:"new_offer_id,omitempty"`
+	Quantity             int    `json:"quantity"`
+	Version              int    `json:"version"`
+	Action               string `json:"action"`
 }
 type CartItemView struct {
-	ProductURL         string `json:"product_url"`
-	ProductID          string `json:"product_id"`
-	VariantID          string `json:"variant_id"`
-	OfferID            string `json:"offer_id"`
-	StoreID            string `json:"store_id"`
-	StoreName          string `json:"store_name"`
-	Name               string `json:"name"`
-	VariantLabel       string `json:"variant_label"`
-	ImageURL           string `json:"image_url"`
-	Quantity           int    `json:"quantity"`
-	UnitPriceToman     string `json:"unit_price_toman"`
-	PreviousPriceToman string `json:"previous_price_toman"`
-	TotalToman         string `json:"total_toman"`
-	Available          bool   `json:"available"`
-	PriceChanged       bool   `json:"price_changed"`
-	LeadDays           int    `json:"lead_days"`
+	Inactive             bool   `json:"inactive,omitempty"`
+	Restricted           bool   `json:"restricted,omitempty"`
+	ReviewRequired       bool   `json:"review_required,omitempty"`
+	PreviousVariantLabel string `json:"previous_variant_label,omitempty"`
+	VariantVersion       int    `json:"variant_version,omitempty"`
+	ProductURL           string `json:"product_url"`
+	ProductID            string `json:"product_id"`
+	VariantID            string `json:"variant_id"`
+	OfferID              string `json:"offer_id"`
+	StoreID              string `json:"store_id"`
+	StoreName            string `json:"store_name"`
+	Name                 string `json:"name"`
+	VariantLabel         string `json:"variant_label"`
+	ImageURL             string `json:"image_url"`
+	Quantity             int    `json:"quantity"`
+	UnitPriceToman       string `json:"unit_price_toman"`
+	PreviousPriceToman   string `json:"previous_price_toman"`
+	TotalToman           string `json:"total_toman"`
+	Available            bool   `json:"available"`
+	PriceChanged         bool   `json:"price_changed"`
+	LeadDayBasis         string `json:"lead_day_basis"`
+	LeadDays             int    `json:"lead_days"`
 }
 type CartView struct {
 	ID            string         `json:"id"`
@@ -108,7 +115,7 @@ func cartItem(w Workspace, l commerce.CartLine) (CartItemView, error) {
 	if ov == nil {
 		return CartItemView{}, ErrNotFound
 	}
-	v := CartItemView{ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
+	v := CartItemView{Inactive: !p.IsActive(), Restricted: ov.Restricted, ProductURL: ProductURL(p), ProductID: p.ID, VariantID: o.VariantID, OfferID: o.ID, StoreID: o.StoreID, StoreName: ov.StoreName, Name: p.Name, Quantity: l.Quantity, Available: o.Stock-o.Reserved >= l.Quantity && ov.Available, LeadDayBasis: ov.LeadDayBasis, LeadDays: ov.LeadDays, PreviousPriceToman: commerce.Toman(l.SeenPrice), PriceChanged: l.SeenPrice != commerce.Amount(o.Price)}
 	for _, variant := range d.Variants {
 		if variant.ID == o.VariantID {
 			values := []string{}
@@ -116,10 +123,23 @@ func cartItem(w Workspace, l commerce.CartLine) (CartItemView, error) {
 				values = append(values, a.Value)
 			}
 			v.VariantLabel = strings.Join(values, " / ")
+			for _, raw := range w.Variants {
+				if raw.ID == o.VariantID {
+					v.VariantVersion = raw.Version
+					break
+				}
+			}
+			v.ReviewRequired = l.ReviewRequired
+			v.PreviousVariantLabel = l.PreviousVariantLabel
 		}
 	}
 	if len(d.Gallery) > 0 {
 		v.ImageURL = d.Gallery[0]
+	}
+	if !p.IsActive() {
+		v.PreviousPriceToman = ""
+		v.PriceChanged = false
+		return v, nil
 	}
 	v.UnitPriceToman = commerce.Toman(commerce.Amount(o.Price))
 	total, e := commerce.Multiply(commerce.Amount(o.Price), l.Quantity)
@@ -134,7 +154,7 @@ func buildCart(w Workspace, c commerce.Cart) CartView {
 	var subtotal commerce.Amount
 	for _, l := range c.Lines {
 		item, e := cartItem(w, l)
-		if e != nil || !item.Available {
+		if e != nil || !item.Available || item.ReviewRequired {
 			v.CanCheckout = false
 		}
 		v.Items = append(v.Items, item)
@@ -242,7 +262,24 @@ func (s *Service) MutateCart(ctx context.Context, o CartOwner, in CartMutation, 
 				index = i
 			}
 		}
-		if in.Action == "remove" {
+		if in.Action == "review" {
+			if index < 0 {
+				return nil, ErrNotFound
+			}
+			line := &cart.Lines[index]
+			view, e := cartItem(*w, *line)
+			if e != nil {
+				return nil, e
+			}
+			if in.ReviewVariantVersion == nil || *in.ReviewVariantVersion != view.VariantVersion {
+				return nil, ErrCheckoutChanged
+			}
+			if !view.Available {
+				return nil, ErrStock
+			}
+			line.ReviewRequired = false
+			line.PreviousVariantLabel = ""
+		} else if in.Action == "remove" {
 			if index < 0 {
 				return nil, ErrNotFound
 			}
@@ -283,12 +320,15 @@ func (s *Service) MutateCart(ctx context.Context, o CartOwner, in CartMutation, 
 				if e != nil || !test.Available {
 					return nil, ErrStock
 				}
-				cart.Lines[index] = commerce.CartLine{OfferID: target, Quantity: qty, SeenPrice: price}
+				cart.Lines[index].Quantity = qty
+				cart.Lines[index].SeenPrice = price
 			} else if in.Action == "set" {
 				if index < 0 {
 					return nil, ErrNotFound
 				}
-				cart.Lines[index] = commerce.CartLine{OfferID: target, Quantity: in.Quantity, SeenPrice: price}
+				cart.Lines[index].OfferID = target
+				cart.Lines[index].Quantity = in.Quantity
+				cart.Lines[index].SeenPrice = price
 			} else if in.Action == "replace" {
 				destination := -1
 				for i, l := range cart.Lines {
@@ -305,10 +345,17 @@ func (s *Service) MutateCart(ctx context.Context, o CartOwner, in CartMutation, 
 					if e != nil || !test.Available {
 						return nil, ErrStock
 					}
-					cart.Lines[destination] = commerce.CartLine{OfferID: target, Quantity: qty, SeenPrice: price}
+					cart.Lines[destination].Quantity = qty
+					cart.Lines[destination].SeenPrice = price
+					if cart.Lines[index].ReviewRequired {
+						cart.Lines[destination].ReviewRequired = true
+						cart.Lines[destination].PreviousVariantLabel = cart.Lines[index].PreviousVariantLabel
+					}
 					cart.Lines = append(cart.Lines[:index], cart.Lines[index+1:]...)
 				} else {
-					cart.Lines[index] = commerce.CartLine{OfferID: target, Quantity: in.Quantity, SeenPrice: price}
+					cart.Lines[index].OfferID = target
+					cart.Lines[index].Quantity = in.Quantity
+					cart.Lines[index].SeenPrice = price
 				}
 			} else {
 				if len(cart.Lines) >= 100 {
@@ -358,6 +405,10 @@ func (s *Service) MergeCart(ctx context.Context, a identity.User, guest, key str
 						return nil, ErrConflict
 					}
 					cart.Lines[j].Quantity += line.Quantity
+					if line.ReviewRequired {
+						cart.Lines[j].ReviewRequired = true
+						cart.Lines[j].PreviousVariantLabel = line.PreviousVariantLabel
+					}
 					found = true
 				}
 			}

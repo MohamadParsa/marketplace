@@ -1,0 +1,94 @@
+{
+  "updated": "2026-11-25",
+  "issues": [
+    {
+      "number": 107,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 108,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 109,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 110,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 111,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 112,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 113,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 114,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 115,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 116,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 117,
+      "state": "open",
+      "assignee": "eliassarband",
+      "complete_description": true
+    },
+    {
+      "number": 73,
+      "state": "open",
+      "reused_existing": true
+    },
+    {
+      "number": 81,
+      "state": "open",
+      "reused_existing": true
+    }
+  ],
+  "new_issues": 11,
+  "reused_existing": [
+    73,
+    81
+  ],
+  "coordination_only": [
+    15,
+    71
+  ],
+  "parent": 95,
+  "application_changed": false,
+  "execution_authorized": false,
+  "git_push_performed": false
+}

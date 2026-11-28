@@ -1,0 +1,149 @@
+{
+  "id": "CHECKS-PDP-REVIEW-RATING-20261126",
+  "issues": [
+    119
+  ],
+  "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
+  "source_pushed": true,
+  "go": {
+    "passed_tests_and_subtests": 393,
+    "skipped": 4,
+    "failures": 0,
+    "postgres_isolated_schemas": true,
+    "redis": true,
+    "vet": "passed",
+    "race": "not-run-locally"
+  },
+  "browser": {
+    "checks": [
+      {
+        "id": "ratings-all-approved-not-page-average",
+        "pass": true
+      },
+      {
+        "id": "ratings-header-before-variant-selection",
+        "pass": true
+      },
+      {
+        "id": "ratings-header-link-to-reviews",
+        "pass": true
+      },
+      {
+        "id": "ratings-five-stars-one-svg-per-star",
+        "pass": true
+      },
+      {
+        "id": "ratings-single-row-no-overlap",
+        "pass": true
+      },
+      {
+        "id": "ratings-fractional-fill",
+        "pass": true
+      },
+      {
+        "id": "ratings-five-accessible-options",
+        "pass": true
+      },
+      {
+        "id": "ratings-click-selection",
+        "pass": true
+      },
+      {
+        "id": "ratings-native-keyboard",
+        "pass": true
+      },
+      {
+        "id": "ratings-no-individual-boxes",
+        "pass": true
+      },
+      {
+        "id": "ratings-submit-valid-integer",
+        "pass": true
+      },
+      {
+        "id": "ratings-pending-does-not-change-summary",
+        "pass": true
+      },
+      {
+        "id": "ratings-approved-refresh-header-and-comments",
+        "pass": true
+      },
+      {
+        "id": "ratings-idempotent-approval-count",
+        "pass": true
+      },
+      {
+        "id": "ratings-mobile-header-no-overflow",
+        "pass": true
+      },
+      {
+        "id": "ratings-mobile-stars-fit",
+        "pass": true
+      },
+      {
+        "id": "ratings-product-isolation-after-navigation",
+        "pass": true
+      },
+      {
+        "id": "ratings-zero-no-fabricated-average",
+        "pass": true
+      },
+      {
+        "id": "ratings-error-not-zero-or-five",
+        "pass": true
+      },
+      {
+        "id": "ratings-error-retry",
+        "pass": true
+      },
+      {
+        "id": "no-runtime-pageerror",
+        "pass": true
+      }
+    ],
+    "passed": 21,
+    "errors": [],
+    "isolated_postgres": true
+  },
+  "backoffice_build": "passed",
+  "storefront_build": "passed",
+  "primary_preservation": {
+    "sections": 29,
+    "unchanged": true
+  },
+  "merged": false,
+  "deployed": false,
+  "ci": {
+    "tested_revision": "18862341d8376a6c9fb12eb8316509a251890cbe",
+    "all_passed": true,
+    "api_race_and_vet": "passed",
+    "workflow_url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468",
+    "jobs": [
+      {
+        "name": "backoffice-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064374885"
+      },
+      {
+        "name": "contracts",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375113"
+      },
+      {
+        "name": "seller-portal-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375124"
+      },
+      {
+        "name": "api",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375213"
+      },
+      {
+        "name": "storefront-web",
+        "conclusion": "success",
+        "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45864692468/job/140064375398"
+      }
+    ]
+  }
+}

@@ -17,6 +17,9 @@ import (
 )
 
 func NewHTTPServer(cfg config.Config, lifecycle fx.Lifecycle) (*http.Server, error) {
+	return newHTTPServer(cfg, lifecycle, nil)
+}
+func newHTTPServer(cfg config.Config, lifecycle fx.Lifecycle, logs *OperationLogging) (*http.Server, error) {
 	server := &http.Server{Addr: cfg.Address, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 15 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second}
 	review := cfg.Environment == "local" || cfg.Environment == "test"
 	if review && cfg.DatabaseURL != "" {
@@ -39,7 +42,12 @@ func NewHTTPServer(cfg config.Config, lifecycle fx.Lifecycle) (*http.Server, err
 		dsn = cfg.ReviewDatabaseURL
 	}
 	if dsn == "" {
-		server.Handler = NewHTTPHandler(cfg)
+		server.Handler, _ = newCatalogHandlerRuntime(cfg, backofficememory.New(backofficememory.Fixture()), nil, logs)
+		if logs == nil && lifecycle != nil {
+			if h, ok := server.Handler.(*loggedHandler); ok {
+				lifecycle.Append(fx.Hook{OnStop: h.Close})
+			}
+		}
 		return server, nil
 	}
 	options, e := pgxpool.ParseConfig(dsn)
@@ -75,7 +83,12 @@ func NewHTTPServer(cfg config.Config, lifecycle fx.Lifecycle) (*http.Server, err
 		}
 	}
 	var workspace *backoffice.Service
-	server.Handler, workspace = newCatalogHandler(cfg, repo, cache)
+	server.Handler, workspace = newCatalogHandlerRuntime(cfg, repo, cache, logs)
+	if logs == nil && lifecycle != nil {
+		if h, ok := server.Handler.(*loggedHandler); ok {
+			lifecycle.Append(fx.Hook{OnStop: h.Close})
+		}
+	}
 	registerRecentHistoryCleanup(lifecycle, workspace)
 	if cache != nil && cfg.WebSurface == "storefront" {
 		warmCtx, warmCancel := context.WithCancel(context.Background())

@@ -39,6 +39,34 @@ func BuildCatalogSales(w Workspace) CatalogSales {
 	}
 	// A successful full-item refund is counted once even if multiple support cases/transfers reference it.
 	refunded := map[string]bool{}
+	removed := map[string]map[int]bool{}
+	for _, r := range w.Commerce.OrderRequests {
+		if r.Status == "approved" && r.Kind == "cancel" {
+			for _, item := range r.Items {
+				key := item.OrderID + "\x00" + item.ItemID
+				if removed[key] == nil {
+					removed[key] = map[int]bool{}
+				}
+				for _, unit := range item.UnitIndices {
+					removed[key][unit] = true
+				}
+			}
+		}
+	}
+	for _, f := range w.Commerce.OrderRefunds {
+		for _, line := range f.Adjustments {
+			if line.ItemID == "" {
+				continue
+			}
+			key := line.OrderID + "\x00" + line.ItemID
+			if removed[key] == nil {
+				removed[key] = map[int]bool{}
+			}
+			for _, unit := range line.UnitIndices {
+				removed[key][unit] = true
+			}
+		}
+	}
 	for _, t := range w.Transfers {
 		if t.Kind == "refund" && t.Status == "success" {
 			refunded[t.OrderID+"\x00"+t.ItemID] = true
@@ -65,7 +93,10 @@ func BuildCatalogSales(w Workspace) CatalogSales {
 			if item.Quantity <= 0 || item.ProductID == "" || item.Status == "cancelled" || item.Status == "refunded" || refunded[key] {
 				continue
 			}
-			result.Sales = append(result.Sales, CatalogSale{ProductID: item.ProductID, Quantity: int64(item.Quantity), PaidAt: at})
+			quantity := item.Quantity - len(removed[key])
+			if quantity > 0 {
+				result.Sales = append(result.Sales, CatalogSale{ProductID: item.ProductID, Quantity: int64(quantity), PaidAt: at})
+			}
 		}
 	}
 	sort.Slice(result.Sales, func(i, j int) bool {

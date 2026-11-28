@@ -26,12 +26,13 @@ type PurchaseAdminInput struct {
 	Reason  string `json:"reason"`
 }
 type RefundResolveInput struct {
-	ID        string `json:"id"`
-	Version   int    `json:"version"`
-	Complete  bool   `json:"complete"`
-	Reference string `json:"reference"`
-	Date      string `json:"date"`
-	Reason    string `json:"reason"`
+	VerifiedAmountToman string `json:"verified_amount_toman,omitempty"`
+	ID                  string `json:"id"`
+	Version             int    `json:"version"`
+	Complete            bool   `json:"complete"`
+	Reference           string `json:"reference"`
+	Date                string `json:"date"`
+	Reason              string `json:"reason"`
 }
 type AdminDepositView struct {
 	DepositView
@@ -39,7 +40,24 @@ type AdminDepositView struct {
 	CustomerName  string `json:"customer_name"`
 	CustomerPhone string `json:"customer_phone"`
 }
+type DiscountFundingView struct {
+	PlatformToman string `json:"platform_toman"`
+	SellerToman   string `json:"seller_toman"`
+	RuleVersion   int    `json:"rule_version"`
+}
+type CreditSourceView struct {
+	LotID        string `json:"lot_id"`
+	Title        string `json:"title,omitempty"`
+	Withdrawable bool   `json:"withdrawable"`
+	OriginLotID  string `json:"origin_lot_id,omitempty"`
+	Source       string `json:"source"`
+	AmountToman  string `json:"amount_toman"`
+	Kind         string `json:"kind"`
+	Status       string `json:"status"`
+}
 type AdminPurchaseView struct {
+	DiscountFunding *DiscountFundingView `json:"discount_funding,omitempty"`
+	CreditSources   []CreditSourceView   `json:"credit_sources,omitempty"`
 	PurchaseView
 	UserID        string `json:"user_id"`
 	CustomerName  string `json:"customer_name"`
@@ -97,13 +115,33 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 			view := purchaseView(c, p)
 			if !v.Permissions[CommerceDepositsRead] {
 				view.Deposits = []DepositView{}
+				view.PaymentAttempts = nil
+				view.Quote.Destination = commerce.Destination{}
+				view.Quote.PaymentMethod.Instructions = ""
 			}
 			if !v.Permissions[CommerceOrdersConfirm] {
 				view.WalletBalanceToman = ""
+				view.WalletConsumedToman = ""
 				view.WalletAvailableToman = ""
 				view.ShortfallToman = ""
+				view.CreditSources = nil
 			}
-			v.Purchases = append(v.Purchases, AdminPurchaseView{view, p.UserID, n, phone})
+			entry := AdminPurchaseView{PurchaseView: view, UserID: p.UserID, CustomerName: n, CustomerPhone: phone}
+			if q := findQuote(c, p.QuoteID); q != nil {
+				if q.Discount != nil && allowsAction(a, CouponsRead) {
+					var platform, seller commerce.Amount
+					for _, v := range q.Discount.Allocations {
+						platform += v.Platform
+						seller += v.Seller
+					}
+					entry.DiscountFunding = &DiscountFundingView{commerce.Toman(platform), commerce.Toman(seller), q.Discount.Coupon.Version}
+				}
+				if q.Credit != nil && v.Permissions[CommerceOrdersConfirm] {
+					entry.CreditSources = creditSourceViews(c, q)
+				}
+			}
+
+			v.Purchases = append(v.Purchases, entry)
 		}
 	}
 	if v.Permissions[CommerceDepositsRead] {
@@ -118,7 +156,7 @@ func (s *Service) ReadCommerceAdmin(ctx context.Context, a identity.User) (Comme
 			v.Refunds = append(v.Refunds, AdminRefundView{refundView(r), r.UserID, n, phone})
 		}
 	}
-	if v.Permissions[CommerceDepositsRead] || v.Permissions[CommerceOrdersConfirm] || v.Permissions[CommerceRefundsResolve] {
+	if a.Role == identity.RoleSuperAdmin {
 		for _, a := range w.Audit {
 			if strings.HasPrefix(a.Action, "commerce.") {
 				v.Audit = append(v.Audit, a)
@@ -163,6 +201,7 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 				if e = appendWallet(c, op+":credit", d.UserID, "deposit:"+d.ID, "deposit-credit", d.Amount, now); e != nil {
 					return nil, e
 				}
+				earmarkDeposit(c, *d, op+":credit")
 				d.Status = "approved"
 				d.VerifiedReference = ref
 				d.VerifiedDate = in.VerifiedDate
@@ -177,6 +216,7 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 			d.ReviewedAt = &now
 			d.ReviewedBy = a.ID
 			d.Version++
+			updateFundingAttempt(c, *d, now)
 			if p := findPurchase(c, d.PurchaseID); p != nil {
 				recordPurchaseEvent(p, a, "deposit."+d.Status, now)
 			}
@@ -188,102 +228,171 @@ func (s *Service) ReviewDeposit(ctx context.Context, a identity.User, in Deposit
 }
 func (s *Service) ConfirmPurchase(ctx context.Context, a identity.User, in PurchaseAdminInput, key string) (json.RawMessage, error) {
 	return s.mutateCommerce(ctx, "purchase-confirm:"+a.ID, key, in, func(w Workspace) error { return requireCommerceAdmin(w, a, CommerceOrdersConfirm) }, func(w *Workspace, op string, now time.Time) (any, error) {
-		c := commerceState(w)
-		p := findPurchase(c, in.ID)
-		if p == nil {
-			return nil, ErrNotFound
-		}
-		if p.Status == "confirmed" {
-			return purchaseView(c, *p), nil
-		}
-		if p.Version != in.Version {
-			return nil, ErrConflict
-		}
-		if p.Status == "cancelled" {
-			return nil, ErrConflict
-		}
-		q := findQuote(c, p.QuoteID)
-		if q == nil {
-			return nil, ErrConflict
-		}
-		if q.Status != "reserved" || !now.Before(q.ReservedUntil) {
-			p.Status = "requires-reconfirmation"
-			p.Version++
-			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-			return purchaseView(c, *p), nil
-		}
-		eligible := false
-		for _, m := range c.Settings.Methods {
-			if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) {
-				eligible = true
-			}
-		}
-		if !eligible {
-			releaseQuote(w, q)
-			q.Status = "invalidated"
-			p.Status = "requires-reconfirmation"
-			p.Reason = "روش پرداخت یا محدودیت آن تغییر کرده است."
-			p.Version++
-			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-			return purchaseView(c, *p), nil
-		}
-		for _, l := range q.Lines {
-			o, e := findOffer(*w, l.OfferID)
-			copyWorkspace := *w
-			copyWorkspace.Offers = append([]catalog.Offer{}, w.Offers...)
-			for i := range copyWorkspace.Offers {
-				if copyWorkspace.Offers[i].ID == l.OfferID {
-					copyWorkspace.Offers[i].Reserved -= l.Quantity
-				}
-			}
-			item, itemError := cartItem(copyWorkspace, commerce.CartLine{OfferID: l.OfferID, Quantity: l.Quantity})
-			if e != nil || itemError != nil || !item.Available || o.ProductID != l.ProductID || o.VariantID != l.VariantID || o.Stock < l.Quantity || o.Reserved < l.Quantity {
-				releaseQuote(w, q)
-				q.Status = "invalidated"
-				p.Status = "requires-reconfirmation"
-				p.Reason = "موجودی نیاز به بررسی دوباره دارد."
-				p.Version++
-				recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
-				return purchaseView(c, *p), nil
-			}
-		}
-		if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now); e != nil {
-			return nil, e
-		}
-		for _, l := range q.Lines {
-			for i := range w.Offers {
-				if w.Offers[i].ID == l.OfferID {
-					w.Offers[i].Stock -= l.Quantity
-					w.Offers[i].Reserved -= l.Quantity
-					w.Offers[i].Version++
-				}
-			}
-		}
-		q.Status = "consumed"
-		p.Status = "confirmed"
-		p.ConfirmedAt = &now
-		p.Version++
-		for i := range w.Orders {
-			if w.Orders[i].CheckoutID == p.ID {
-				w.Orders[i].Payment = "paid"
-				w.Orders[i].Status = "awaiting-supply"
-				w.Orders[i].Version++
-				for j := range w.Orders[i].Items {
-					w.Orders[i].Items[j].Status = "awaiting-supply"
-				}
-			}
-		}
-		recordPurchaseEvent(p, a, "order.paid", now)
-		commerceAudit(w, op, a, "purchase.confirm", p.ID, "", now)
-		return purchaseView(c, *p), nil
+		return finalizePurchase(w, a, in, op, now)
 	})
 }
+
+// Called inside the placement/confirmation transaction, after the caller's authority is checked.
+func finalizePurchase(w *Workspace, a identity.User, in PurchaseAdminInput, op string, now time.Time) (any, error) {
+	c := commerceState(w)
+	p := findPurchase(c, in.ID)
+	if p == nil {
+		return nil, ErrNotFound
+	}
+	if p.Status == "confirmed" {
+		return purchaseView(c, *p), nil
+	}
+	if p.Version != in.Version {
+		return nil, ErrConflict
+	}
+	if p.Status == "cancelled" {
+		return nil, ErrConflict
+	}
+	q := findQuote(c, p.QuoteID)
+	if q == nil {
+		return nil, ErrConflict
+	}
+	if q.Status != "reserved" || !now.Before(q.ReservedUntil) {
+		p.Status = "requires-reconfirmation"
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	eligible := q.Total == 0 || q.PaymentMethod.ID == "" && q.ContractVersion == 2 && q.Credit != nil && q.Total == q.Credit.Requested
+	for _, m := range c.Settings.Methods {
+		if m.ID == q.PaymentMethod.ID && methodEligible(*w, m, q.Lines, q.Total) && salesPaymentStillAllowed(*w, *q) {
+			eligible = true
+		}
+	}
+	eligible = eligible && storePoliciesStillAllowed(*w, *q) && shippingStillAllowed(*w, *q)
+	if q.ContractVersion == 2 && q.Credit != nil && q.Credit.Requested > 0 && !walletEligible(*w, q.Lines, q.Total) {
+		eligible = false
+	}
+	if !eligible {
+		releaseQuote(w, q, now)
+		q.Status = "invalidated"
+		p.Status = "requires-reconfirmation"
+		p.Reason = "روش پرداخت، ارسال یا محدودیت آن تغییر کرده است."
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	for _, l := range q.Lines {
+		o, e := findOffer(*w, l.OfferID)
+		copyWorkspace := *w
+		copyWorkspace.Offers = append([]catalog.Offer{}, w.Offers...)
+		for i := range copyWorkspace.Offers {
+			if copyWorkspace.Offers[i].ID == l.OfferID {
+				copyWorkspace.Offers[i].Reserved -= l.Quantity
+			}
+		}
+		item, itemError := cartItem(copyWorkspace, commerce.CartLine{OfferID: l.OfferID, Quantity: l.Quantity})
+		if e != nil || itemError != nil || !item.Available || o.ProductID != l.ProductID || o.VariantID != l.VariantID || o.Stock < l.Quantity || o.Reserved < l.Quantity {
+			releaseQuote(w, q, now)
+			q.Status = "invalidated"
+			p.Status = "requires-reconfirmation"
+			p.Reason = "موجودی نیاز به بررسی دوباره دارد."
+			p.Version++
+			recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+			return purchaseView(c, *p), nil
+		}
+	}
+	finalized := *q
+	finalized.Shipments = append([]commerce.ShipmentSnapshot{}, q.Shipments...)
+	shippingError := finalizeShipmentCalendars(&finalized, now)
+	if shippingError == nil {
+		shippingError = commitShipping(w, finalized, now)
+	}
+	if shippingError != nil {
+		releaseQuote(w, q, now)
+		q.Status = "invalidated"
+		p.Status = "requires-reconfirmation"
+		p.Reason = "فرصت آماده‌سازی یا رزرو ظرفیت تغییر کرده؛ روش و موعد تحویل باید دوباره انتخاب و تأیید شوند."
+		p.Version++
+		recordPurchaseEvent(p, a, "order.reconfirmation-required", now)
+		return purchaseView(c, *p), nil
+	}
+	q.Shipments = finalized.Shipments
+	if q.ContractVersion == 2 {
+		if q.Credit == nil || q.Credit.Status != "held" {
+			return nil, ErrConflict
+		}
+		allocations := combinedCredit(q)
+		if creditSum(allocations) != q.Total {
+			return nil, ErrInsufficientWallet
+		}
+		q.Credit.Status = "posted"
+		if q.Total > 0 {
+			if e := appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); e != nil {
+				return nil, e
+			}
+		}
+	} else if q.Total > 0 {
+		if err := ensureCreditState(c, p.UserID, now); err != nil {
+			return nil, err
+		}
+		allocations, err := allocateCredit(c, p.UserID, q.Total, "")
+		if err != nil {
+			return nil, err
+		}
+		q.Credit = &commerce.CreditUsage{Requested: q.Total, Existing: allocations, Funding: []commerce.CreditAllocation{}, Status: "posted"}
+		if err = appendWallet(c, op+":debit", p.UserID, "order:"+p.ID, "order-payment", -q.Total, now, allocations); err != nil {
+			return nil, err
+		}
+	}
+	for _, l := range q.Lines {
+		for i := range w.Offers {
+			if w.Offers[i].ID == l.OfferID {
+				w.Offers[i].Stock -= l.Quantity
+				w.Offers[i].Reserved -= l.Quantity
+				w.Offers[i].Version++
+			}
+		}
+	}
+	q.Status = "consumed"
+	p.Status = "confirmed"
+	p.ConfirmedAt = &now
+	updateOrderPayment(c, q.ID, "paid", "", now)
+	p.Version++
+	for i := range w.Orders {
+		if w.Orders[i].CheckoutID == p.ID {
+			w.Orders[i].Payment = "paid"
+			for _, ship := range q.Shipments {
+				if ship.StoreID == w.Orders[i].StoreID {
+					w.Orders[i].Preparation = ship.Preparation
+					w.Orders[i].Delivery = ship.Delivery
+					w.Orders[i].DeliveryFrom, w.Orders[i].DeliveryTo = ship.DeliveryFrom, ship.DeliveryTo
+				}
+			}
+			w.Orders[i].Status = "awaiting-supply"
+			w.Orders[i].Version++
+			for j := range w.Orders[i].Items {
+				w.Orders[i].Items[j].Status = "awaiting-supply"
+			}
+		}
+	}
+	refreshPurchaseOrderState(w, p)
+	recordPurchaseEvent(p, a, "order.paid", now)
+	commerceAudit(w, op, a, "purchase.confirm", p.ID, "", now)
+	return purchaseView(c, *p), nil
+}
 func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in PurchaseAdminInput, key string) (json.RawMessage, error) {
-	return s.mutateCommerce(ctx, "purchase-admin-cancel:"+a.ID, key, in, func(w Workspace) error { return requireCommerceAdmin(w, a, CommerceOrdersConfirm) }, func(w *Workspace, op string, now time.Time) (any, error) {
+	return s.mutateCommerce(ctx, "purchase-admin-cancel:"+a.ID, key, in, func(w Workspace) error {
+		if e := requireCommerceAdmin(w, a, CommerceOrdersConfirm); e != nil {
+			return e
+		}
+		if p := findPurchase(commerceState(&w), in.ID); p != nil && p.ConfirmedAt != nil {
+			return requireCommerceAdmin(w, a, CommerceRefundsResolve)
+		}
+		return nil
+	}, func(w *Workspace, op string, now time.Time) (any, error) {
 		c := commerceState(w)
 		p := findPurchase(c, in.ID)
 		if p == nil {
 			return nil, ErrNotFound
+		}
+		if hasLiveOrderRequest(c, p.ID) {
+			return nil, ErrConflict
 		}
 		if p.Status == "cancelled" {
 			return purchaseView(c, *p), nil
@@ -297,12 +406,18 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 		}
 		if p.Status == "confirmed" {
 			for _, order := range w.Orders {
-				if order.CheckoutID == p.ID && order.Status != "awaiting-supply" {
+				if order.CheckoutID == p.ID && !beforeShipping(order.Status) {
 					return nil, ErrConflict
 				}
 			}
-			if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
-				return nil, e
+			releaseShipping(w, q.ID, true, now)
+			if q.Total > 0 {
+				if e := appendWallet(c, op+":credit", p.UserID, "order-cancel:"+p.ID, "order-cancel-credit", q.Total, now); e != nil {
+					return nil, e
+				}
+				if err := returnPurchaseCredit(c, q, op+":credit", a, now); err != nil {
+					return nil, err
+				}
 			}
 			for _, l := range q.Lines {
 				for i := range w.Offers {
@@ -316,10 +431,13 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 				}
 			}
 		} else {
-			releaseQuote(w, q)
+			releaseQuote(w, q, now)
 			q.Status = "cancelled"
 		}
 		p.Status = "cancelled"
+		if p.ConfirmedAt == nil {
+			updateOrderPayment(c, p.QuoteID, "failed", "staff_cancelled", now)
+		}
 		p.CancelledAt = &now
 		p.Reason = in.Reason
 		p.Version++
@@ -332,6 +450,7 @@ func (s *Service) AdminCancelPurchase(ctx context.Context, a identity.User, in P
 				}
 			}
 		}
+		refreshPurchaseOrderState(w, p)
 		recordPurchaseEvent(p, a, "order.cancelled", now)
 		commerceAudit(w, op, a, "purchase.admin-cancel", p.ID, "", now)
 		return purchaseView(c, *p), nil
@@ -344,6 +463,15 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			r := &c.Refunds[i]
 			if r.ID != in.ID {
 				continue
+			}
+			if err := ensureCreditState(c, r.UserID, now); err != nil {
+				return nil, err
+			}
+			if r.RequestID != "" && in.Complete {
+				amount, e := commerce.ParseToman(normalizeDigits(in.VerifiedAmountToman))
+				if e != nil || amount != r.Amount {
+					return nil, ErrInvalid
+				}
 			}
 			if r.Status == "completed" && in.Complete {
 				ref, e := normalizeReference(in.Reference)
@@ -360,8 +488,14 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			}
 			if in.Complete {
 				ref, e := normalizeReference(in.Reference)
-				if e != nil || !validDepositDate(in.Date, now) || strings.TrimSpace(in.Reason) == "" {
-					return nil, ErrInvalid
+				if e != nil {
+					return nil, ErrTransferReference
+				}
+				if !validDepositDate(in.Date, now) {
+					return nil, ErrTransferDate
+				}
+				if strings.TrimSpace(in.Reason) == "" {
+					return nil, ErrRefundReason
 				}
 				for _, other := range c.Refunds {
 					if other.ID != r.ID && other.Status == "completed" && other.Reference == ref && other.Date == in.Date {
@@ -369,7 +503,7 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 					}
 				}
 				r.Status = "completed"
-				if e = appendWallet(c, op+":debit", r.UserID, "refund:"+r.ID, "manual-refund", -r.Amount, now); e != nil {
+				if e = appendWallet(c, op+":debit", r.UserID, "refund:"+r.ID, "manual-refund", -r.Amount, now, r.Allocations); e != nil {
 					return nil, e
 				}
 				r.Reference = ref
@@ -384,6 +518,15 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			r.ResolvedAt = &now
 			r.ResolvedBy = a.ID
 			r.Version++
+			if r.PurchaseID != "" {
+				if p := findPurchase(c, r.PurchaseID); p != nil {
+					p.Version++
+					recordPurchaseEvent(p, a, "refund.bank-"+r.Status, now)
+					event := &p.Events[len(p.Events)-1]
+					event.ID = op
+					event.RequestID = r.RequestID
+				}
+			}
 			commerceAudit(w, op, a, "refund.resolve", r.ID, "", now)
 			return refundView(*r), nil
 		}

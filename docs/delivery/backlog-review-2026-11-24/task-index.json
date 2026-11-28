@@ -1,0 +1,548 @@
+{
+  "id": "PLAN-BACKLOG-RECONCILIATION-001",
+  "updated": "2026-11-25",
+  "owner": "eliassarband",
+  "document_status": "in-review",
+  "parent_issue": 95,
+  "source_main": "52a8a09155fbcedae981eaf18a27ecea76120375",
+  "published_review_pr": 94,
+  "local_integration_head": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+  "new_feature_execution_authorized": true,
+  "local_integration_authorized": true,
+  "local_code_publication_authorized": true,
+  "new_tasks": [
+    {
+      "code": "CV-REV-01",
+      "id": "FEAT-REV-001",
+      "slug": "checkout-adjustment-box-states",
+      "title": "باکس‌های کوپن و کیف پول: جمع‌شدن، حالت اعمال‌شده، پیام و هم‌راستایی",
+      "priority": "P1",
+      "kind": "implementation",
+      "business": "مرحله پرداخت خلوت و روشن باشد و مشتری دقیقاً بداند چه مقدار تخفیف یا اعتبار اعمال شده است.",
+      "requirements": [
+        "در حالت unapplied باکس پیش‌فرض بسته باشد؛ کلیک روی کل هدر آن را با حرکت رو به پایین باز/بسته کند. هدر دکمه کیبوردپذیر با aria-expanded/aria-controls باشد.",
+        "در حالت applied باکس باز بماند؛ فرم و کنترل‌های اعمال پنهان و به‌جایش خلاصه مبلغ واقعاً اعمال‌شده و لینک/دکمه انصراف نمایش داده شود. هدر نباید خلاصه applied را پنهان کند.",
+        "انصراف، کوپن یا سهم کیف پول را از طریق محاسبه معتبر سرور حذف کند و فرم قابل ویرایش بازگردد؛ مقدار تایپ‌شده به‌تنهایی applied نیست.",
+        "دکمه اعمال با کنترل متنی هم‌راستا باشد؛ موبایل به چیدمان مناسب همان عرض تبدیل شود.",
+        "هر تلاش اعمال پاسخ روشن داشته باشد: موفقیت، اعتبار ناکافی، کد نامعتبر/منقضی/غیرمجاز، سهمیه شخص استفاده‌شده یا خطای ارتباط؛ در خطا ورودی و مرحله خرید محفوظ و باکس باز بماند.",
+        "دکمه‌های «بدون مصرف اعتبار قبلی» و «بیشترین اعتبار مجاز» حذف شوند؛ امکان مبلغ دلخواه و انصراف applied حفظ شود."
+      ],
+      "technical": [
+        "مکمل UX برای پایه #68/#69 در PR #94 است؛ موتور کوپن/اعتبار، دفتر و رزرو دوباره ساخته نشوند.",
+        "قرارداد خطای عمومی امن برای دلیل نامعتبر بودن کوپن/اعتبار در صورت نیاز تکمیل شود؛ اطلاعات کاربران یا شمار سهمیه دیگران افشا نشود.",
+        "هر تغییر مؤثر، quote و consent قبلی را باطل کند؛ پاسخ دیررس یا دوبار کلیک حالت قبلی را احیا نکند. overlay موجود و کنترل idempotency حفظ شود.",
+        "صفر اعتبار یا کوپنِ بدون تخفیف، موفقیت applied ساختگی نسازد؛ اصلاح خودکار مبلغ انتخابی بدون رضایت مشتری انجام نشود."
+      ],
+      "acceptance": [
+        "بازکردن/بستن unapplied، حفظ حالت باز applied و ناوبری کیبورد در دسکتاپ/موبایل آزمون شوند.",
+        "در موفقیت فقط خلاصه و انصراف و در خطا فرم و پیام صحیح دیده شوند؛ هر دو فرم دکمه هم‌راستا داشته باشند.",
+        "اعمال/انصراف هر باکس، جمع معتبر و eligibility روش تأمین و رضایت تازه را هم‌زمان به‌روز کند؛ کسر دوگانه یا بازیابی پاسخ قدیمی رخ ندهد.",
+        "اعتبار ناکافی، کد غلط، سهمیه مصرف‌شده و قطع شبکه با حفظ ورودی بررسی شوند؛ دو دکمه شلوغ‌کننده دیگر وجود نداشته باشند."
+      ],
+      "dependencies": [
+        67,
+        68,
+        69
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 96,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/96",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        67,
+        68,
+        69
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-adjustment-box-states.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/96#issuecomment-7154315283",
+      "pull_request": 106
+    },
+    {
+      "code": "CV-REV-02",
+      "id": "FEAT-REV-002",
+      "slug": "wallet-credit-withdrawal-policy",
+      "title": "مدل اعتبار قابل‌برداشت و فقط‌خرید؛ مصرف، استرداد و حفظ منشأ",
+      "priority": "P1",
+      "kind": "analysis-then-implementation",
+      "business": "اعتبار مدیریتیِ فقط‌خرید نباید با برداشت مستقیم یا خرید و لغو به وجه قابل‌برداشت تبدیل شود.",
+      "requirements": [
+        "هر منبع اعتبار پرچم قابل‌برداشت/فقط‌خرید داشته باشد و مانده کل، قابل خرج و قابل برداشت قابل بازسازی باشند.",
+        "اعتبار فقط‌خرید در سفارش قابل استفاده باشد اما در درخواست برداشت/بازپرداخت نقدی وارد ظرفیت قابل برداشت نشود.",
+        "رزرو، مصرف، لغو و استرداد منشأ و محدودیت همان اعتبار را حفظ کنند؛ اعتبار قدیمی یا مانده ناشناخته بدون سیاست مصوب بازطبقه‌بندی نشود."
+      ],
+      "technical": [
+        "بر CreditLot/CreditUsage و دفتر موجود #66/#69 سوار شود؛ balance موازی، credit تکراری یا تغییر تاریخچه مالی ایجاد نشود.",
+        "ابتدا قرارداد تفاوت «برداشت وجه» با برگشت همان وجه خرید و سیاست تخصیص منابع را نهایی کنید؛ سپس migration سازگار و writer/read model و تست مالی اجرا شوند.",
+        "held/spent/free و مانده قابل‌برداشت از تخصیص منابع محاسبه شود؛ انقضا/لغو/تأیید هم‌زمان و بازپرداخت جاری دورزننده policy نباشند."
+      ],
+      "acceptance": [
+        "دو منبع با پرچم متفاوت در مصرف/رزرو/لغو قابل ردیابی و جمع دقیق داشته باشند.",
+        "برداشت از اعتبار فقط‌خرید و تبدیل آن از مسیر خرید→لغو→برداشت در سرور رد شود.",
+        "مهاجرت مانده قدیمی/legacy-unattributed و سفارش قدیمی طبق تصمیم ثبت‌شده و بدون تغییر دفتر آزمون شود.",
+        "هم‌زمانی برداشت/خرید، آزادسازی hold و retry نه دوبار برداشت و نه مانده منفی بسازد."
+      ],
+      "dependencies": [
+        66,
+        69
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 97,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/97",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        66,
+        69
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/wallet-credit-withdrawal-policy.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "اولویت مصرف اعتبار قابل‌برداشت و فقط‌خرید: FIFO قبلی یا اولویت اعتبار محدود؟",
+        "سیاست مانده‌های قدیمی و legacy-unattributed و وضعیت پیش‌فرض پرچم شارژ جدید چیست؟",
+        "آیا اعتبار قابل‌برداشت مدیریتی سقف/فرایند متفاوتی از اعتبار فقط‌خرید دارد؟ تا تصمیم، قاعده حدسی پیاده نشود."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/97#issuecomment-7154316095",
+      "pull_request": 106
+    },
+    {
+      "code": "CV-REV-03",
+      "id": "FEAT-REV-003",
+      "slug": "admin-customer-wallet-credit",
+      "title": "اکشن شارژ دستی کیف پول روی ردیف مشتری در بک‌آفیس",
+      "priority": "P1",
+      "kind": "implementation-after-contract",
+      "business": "ادمین مجاز از همان فهرست کاربران/مشتریان برای حساب انتخاب‌شده اعتبار دستی ثبت کند.",
+      "requirements": [
+        "روی ردیف مشتری دکمه «شارژ کیف پول» باشد؛ مودال حساب مقصد و مبلغ و عنوان و توضیحات و تیک «قابل برداشت» را نمایش دهد.",
+        "تیک خاموش یعنی اعتبار صرفاً قابل خرج در سایت؛ پیش از ثبت، اثر محدودیت واضح باشد.",
+        "یک ثبت موفق دقیقاً یک شارژ با سابقه عامل، مقصد، مبلغ، عنوان، توضیح و نوع اعتبار بسازد و مانده/فهرست به‌روز شود."
+      ],
+      "technical": [
+        "کاربر و مشتری همان User فعلی‌اند؛ Customer یا wallet مستقل موازی ساخته نشود.",
+        "مجوز قابل انتساب server-side، احراز نشست جاری، idempotency و کنترل مبلغ مثبت در محدوده Money لازم است؛ دست‌کاری user_id و نقش بدون اختیار رد شود.",
+        "منشأ admin-credit از واریز بانکی مستقل باشد؛ رسید/واریز تأییدشده ساختگی تولید نشود. schema/قیود دفتر و ثبت مالی طبق قرارداد منبع اعتبار تکمیل شوند.",
+        "Audit مجاز به عنوان/دلیل وصل باشد و secret/اطلاعات بانکی در لاگ نرود؛ اکشن مالی جدا از export عمومی گرید #81 است."
+      ],
+      "acceptance": [
+        "شارژ هر دو نوع به مشتری درست برسد و تکرار همان درخواست یک credit بسازد.",
+        "مبلغ صفر/منفی/نامعتبر، نقش بی‌اختیار و حساب مقصد نامجاز حتی در API مستقیم رد شوند.",
+        "مشتری اعتبار را در کیف پول و خرید ببیند و نوع فقط‌خرید تابع policy باشد.",
+        "restart و خطای شبکه باعث از دست‌رفتن منشأ/دوباره‌شارژشدن نشوند؛ نمایش ردیف و مودال موبایل/RTL بررسی شود."
+      ],
+      "dependencies": [
+        "CV-REV-02",
+        69
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "related_issues": [
+        71,
+        75
+      ],
+      "number": 98,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/98",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        97,
+        69
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/admin-customer-wallet-credit.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "پیش‌فرض تیک و اجباری‌بودن عنوان/توضیح پیش از اجرا در قرارداد اعتبار نهایی شوند."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/98#issuecomment-7154316866",
+      "pull_request": 106
+    },
+    {
+      "code": "CV-REV-04",
+      "id": "FEAT-REV-004",
+      "slug": "checkout-order-summary-savings",
+      "title": "خلاصه سفارش تصویری، سود خرید و حذف سطرهای مبلغ صفر",
+      "priority": "P1",
+      "kind": "implementation",
+      "business": "خلاصه خرید با اسکرول کمتر، اقلام و مبلغ واقعی و تفاوت تخفیف مستقیم، کوپن و اعتبار را روشن کند.",
+      "requirements": [
+        "هر قلم تصویر کوچک، قیمت کنار آن و نام و مشخصات/تنوع منتخب داشته باشد؛ کالای چندعددی و چند فروشنده خوانا باشند.",
+        "زیر جمع کالاها «سود شما از خرید» برای جمع تخفیف مستقیم اقلام نمایش داده شود؛ با مبلغ کد تخفیف یکی نشود.",
+        "سطر کد تخفیف و اعتبار کیف پول فقط اگر مبلغشان بیشتر از صفر است نمایش داده شود و در غیر این صورت فضا نگیرد."
+      ],
+      "technical": [
+        "سرور quote باید قیمت نقدی/مرجع معتبر و سهم تخفیف مستقیم را در snapshot مشخص کند؛ مصرف‌کننده UI موتور قیمت یا کمیسیون تازه نسازد.",
+        "پیشنهاد مبنای سود: جمع (قیمت مرجع معتبر منهای نقدی نهایی)×تعداد، پیش از کوپن؛ ارسال/مارکاپ/اعتبار جزو سود مستقیم نیستند. نبود مرجع معتبر، سود ساختگی تولید نکند.",
+        "مرجع قیمت/تخفیف #72 و محاسبات checkout #66/#67/#69 باقی بمانند؛ نمایش سفارش قطعی از snapshot همان خرید باشد.",
+        "fallback تصویر، aspect ratio ثابت، خطوط نام قابل خواندن و واحد تومان موجود رعایت شوند."
+      ],
+      "acceptance": [
+        "قلم تصویر/نام/تنوع/تعداد/قیمت روشن در desktop و390px داشته باشد و تصویر خراب چیدمان را نشکند.",
+        "نمونه دیجیتال/طلا، چندعدد و چندفروشنده سود مستقیم درست و جدا از کوپن داشته باشند.",
+        "کوپن/اعتبار صفر سطر یا فاصله خالی نسازند؛ مبلغ مثبت همراه انصراف با محاسبه نهایی سازگار باشد.",
+        "تغییر قیمت پس از خرید، خلاصه تاریخی یا سود ثبت‌شده سفارش را بازنویسی نکند."
+      ],
+      "dependencies": [
+        66,
+        67,
+        69,
+        72
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 99,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/99",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        66,
+        67,
+        69,
+        72
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/checkout-order-summary-savings.md",
+      "verification": "issues-96-99-verification.md",
+      "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+      "historical_questions": [
+        "مبنای «قیمت مرجع معتبر» و سهم تخفیف مستقیم در قرارداد #72 نهایی شود؛ تا آن زمان UI می‌تواند مستقل طراحی شود، عدد سود حدس زده نشود."
+      ],
+      "decisions_reference": "docs/architecture/contracts/wallet-credit-policy.md",
+      "state_reason": "completed",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/99#issuecomment-7154317730",
+      "pull_request": 106
+    },
+    {
+      "code": "CV-REV-05",
+      "id": "FEAT-REV-005",
+      "slug": "address-fields-recipient-snapshot",
+      "title": "تکمیل فرم آدرس و گیرنده متفاوت با snapshot سفارش",
+      "priority": "P1",
+      "kind": "implementation",
+      "business": "مالک سفارش مشتری است، ولی مقصد و تحویل‌گیرنده می‌توانند برای خود مشتری یا فرد دیگری ثبت شوند.",
+      "requirements": [
+        "نشانی کامل (پیشنهاد نقشه، قابل ویرایش)، استان*، شهر*، آدرس*، پلاک*، واحد، کدپستی* و عنوان آدرس در ایجاد/ویرایش موجود باشند.",
+        "استان/شهر وابسته و از جغرافیای فعال پنل باشند؛ این همان استثنای dropdown مورد تأیید قبلی است.",
+        "سویچ «تحویل‌گیرنده خودم هستم» پیش‌فرض روشن باشد؛ خاموش‌شدن باکس نام و نام خانوادگی گیرنده*، کد ملی گیرنده* و شماره موبایل گیرنده* را باز کند.",
+        "ستاره‌دارها در فرانت و سرور اجباری باشند؛ داده گیرنده، مالک حساب و سفارش را عوض نکند.",
+        "نام و کد ملی معتبر پروفایل برای گیرنده خودم الزامی و موبایل از حساب جاری است؛ نشانی کامل بالاترین ردیف تمام‌عرض است."
+      ],
+      "technical": [
+        "مدل Address و DTO و فرم مودال و Quote/Shipment snapshot تکمیل شوند؛ مدل قدیمی و سفارش قبلی با فیلدهای جدید اختیاری قابل خواندن بمانند.",
+        "هنگام خودم‌هستم از پروفایل معتبر مشتری و سیاست تکمیل اطلاعات استفاده شود؛ داده گیرنده دیگر با تغییر سویچ بی‌صدا با داده مالک مخلوط نشود.",
+        "کد ملی/شماره/نشانی داده خصوصی‌اند؛ وارد کش عمومی، analytics و لاگ بدنه نشوند؛ مجوز فروشنده پیش/پس از تأمین طبق حریم فعلی باقی بماند.",
+        "تغییر آدرس/گیرنده، هزینه/روش ارسال و quote/رضایت قبلی را نامعتبر کند؛ snapshot سفارش قطعی از پروفایل امروز بازسازی نشود."
+      ],
+      "acceptance": [
+        "اعتبارسنجی همه فیلدهای ستاره‌دار و استان/شهر ناسازگار حتی در درخواست مستقیم آزمون شود.",
+        "self=true و self=false گیرنده درست بسازند و UserID مالک سفارش در هر دو حالت مشتری بماند.",
+        "ویرایش بعدی آدرس/پروفایل/گیرنده سفارش قبلی را عوض نکند؛ اطلاعات گیرنده دیگر افشا نشود.",
+        "modal موبایل/کیبورد، تغییر سویچ، داده قدیمی و حفظ ورودی در خطا بررسی شوند."
+      ],
+      "dependencies": [
+        30
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 100,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/100",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        30
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-fields-recipient-snapshot.md",
+      "publication_status": "local-only",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
+      "decisions_reference": "docs/architecture/contracts/customer-address-map.md",
+      "state_reason": "completed",
+      "source_commit": "e23e2fef05335aaa483a070186166f4c3f03ef15",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/100#issuecomment-7155618382"
+    },
+    {
+      "code": "CV-REV-06",
+      "id": "FEAT-REV-006",
+      "slug": "address-map-reverse-geocoding",
+      "title": "نقشه در مودال آدرس و تبدیل موقعیت به نشانی قابل ویرایش",
+      "priority": "P2",
+      "kind": "provider-decision-then-implementation",
+      "business": "مشتری مقصد را روی نقشه انتخاب کند و متن نشانی پیشنهادی را اصلاح و ثبت کند.",
+      "requirements": [
+        "در مودال ایجاد/ویرایش، نقشه و pin/انتخاب موقعیت و استخراج نشانی کامل وجود داشته باشد؛ متن همیشه قابل ویرایش باشد.",
+        "خطای نقشه/مجوز مکان‌یابی/سرویس نباید ورود دستی آدرس را مسدود کند.",
+        "نتیجه جغرافیایی به استان/شهر معتبر خود چریوا نگاشت شود و شهر ناشناخته بی‌صدا ثبت نشود."
+      ],
+      "technical": [
+        "اتصال نشان آماده است؛ مالک تنظیم کلیدها و آزمون حساب واقعی را به آینده واگذار کرد. SDK رسمی با تایل/lookup ساختگی و آداپتر با HTTP محلی آزمون شدند.",
+        "مختصات و متن پیشنهادی کنار Address ذخیره شوند؛ پاسخ دیررس reverse-geocoding نباید موقعیت جدید یا متن ویرایش‌شده مشتری را بازنویسی کند.",
+        "کلید خصوصی در سرور/secret store باشد؛ کلید مرورگر در صورت لزوم محدود به دامنه و سیاست provider شود؛ مختصات خصوصی cache عمومی نشود.",
+        "مکان‌یابی اختیاری است و pin دستی/ورود دستی و دسترسی کیبورد مسیر جایگزین دارند."
+      ],
+      "acceptance": [
+        "انتخاب/جابه‌جایی pin و ویرایش متن در create/edit ماندگار باشد.",
+        "دو پاسخ با ترتیب معکوس، انتخاب یا متن تازه را عوض نکنند.",
+        "عدم مجوز مکان‌یابی، timeout/قطع provider و نتیجه خارج جغرافیای فعال، fallback روشن داشته باشند.",
+        "تست provider ساختگی از sandbox واقعی و کلید/دامنه/هزینه سرویس انتخاب‌شده جدا گزارش شود."
+      ],
+      "dependencies": [
+        "CV-REV-05"
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 101,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/101",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        100
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/address-map-reverse-geocoding.md",
+      "publication_status": "local-only",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-100-101-verification.md",
+      "decisions_reference": "docs/architecture/contracts/customer-address-map.md",
+      "external_activation": "pending-owner-private-keys-and-domain-verification",
+      "state_reason": "completed",
+      "source_commit": "e23e2fef05335aaa483a070186166f4c3f03ef15",
+      "completion_comment": "https://github.com/MohamadParsa/marketplace/issues/101#issuecomment-7155620631"
+    },
+    {
+      "code": "CV-REV-07",
+      "id": "FEAT-REV-007",
+      "slug": "public-chr-identifier-aliases",
+      "title": "حذف پیشوند gsp از شناسه‌های عمومی URL؛ تنوع، عرضه و رسانه",
+      "priority": "P1",
+      "kind": "analysis-then-implementation",
+      "business": "هیچ نشانی قابل مشاهده مشتری، برند مبدأ gsp را به‌جای هویت چریوا نشان ندهد.",
+      "requirements": [
+        "نام‌گذاری chr محصول و slug دسته #42 حفظ شود؛ مشکل تازه query تنوع مانند ?variant=gsp-variant-... و دیگر شناسه‌های قابل مشاهده عمومی پوشش داده شود.",
+        "تمام تولیدکننده‌های URL و مصرف‌کننده‌های انتخاب تنوع/فروشنده، سبد، علاقه‌مندی، بازدید اخیر و آدرس رسانه بررسی و یک قرارداد عمومی chr بگیرند.",
+        "لینک قدیمی مشتری/بوکمارک و سبد قبلی همچنان به همان انتخاب واقعی برسد."
+      ],
+      "technical": [
+        "راهکار پیشنهادی alias عمومی پایدار با نگاشت به شناسه داخلی است؛ تعویض کور متنی gsp در DB/PK/FK/دفتر/سفارش/seed و manifest مجاز نیست.",
+        "قالب عمومی chr برای تنوع/عرضه/رسانه و رفتار canonical/redirect قبل از migration نهایی شود؛ resolver ورودی قدیمی و جدید را پشتیبانی کند.",
+        "در DTO و cache عمومی، شناسه‌های مشتری با alias صادر و در مرز command به شناسه واقعی resolve شوند؛ privacy و انتخاب variant/offer نامنطبق دور زده نشود.",
+        "PR یا migration #42 دوباره اجرا نشود؛ این کار فقط دامنه باقی‌مانده را تکمیل و کش/SSR/SEO مرتبط را هماهنگ کند."
+      ],
+      "acceptance": [
+        "انتخاب تنوع/گارانتی/فروشنده URL دارای chr بسازد و همان قیمت و عرضه واقعی را بار کند.",
+        "لینک gsp قدیمی و سبد قبلی بدون گم‌شدن انتخاب کار کنند و URL تازه gsp منتشر نکند.",
+        "شناسه‌ها و روابط سفارش/دفتر/رسانه و checksum داده واردشده بدون بازنویسی مخرب بمانند.",
+        "canonical، query نامعتبر، تداخل alias، cache و restart و تصاویر روی ورودی قدیم/جدید آزمون شوند."
+      ],
+      "dependencies": [
+        42,
+        78
+      ],
+      "questions": [
+        "فرمت نهایی alias تنوع/عرضه/رسانه و الزام پاک‌بودن همه DTOهای عمومی، پیش از اجرا ثبت شود؛ پیشنهاد فعلی حفظ شناسه داخلی و اصلاح مرز عمومی است."
+      ],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 102,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/102",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        42,
+        78
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/public-chr-identifier-aliases.md",
+      "publication_status": "local-commit-unpushed",
+      "source_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
+      "state_reason": "completed",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/102#issuecomment-7131275150"
+    },
+    {
+      "code": "CV-REV-08",
+      "id": "FEAT-REV-008",
+      "slug": "storefront-spacing-density",
+      "title": "کاهش whitespace و اسکرول اضافی خانه، PLP و PDP مطابق طرح A",
+      "priority": "P1",
+      "kind": "design-then-implementation",
+      "business": "محتوای مهم با فاصله منطقی و اسکرول کمتر در دید مشتری قرار گیرد.",
+      "requirements": [
+        "فضای خالی بالای PLP و متن «CHERRIVA / همراه انتخاب تو» بازطراحی یا حذف تزئینی شود؛ breadcrumb و عنوان سئوی دسته حفظ شوند.",
+        "فاصله بین اجزا، ارتفاع بخش‌های ابتدایی، گالری/خرید PDP و سکشن‌های خانه در دسکتاپ/موبایل بازبینی و جمع‌وجور شوند.",
+        "خوانایی، لمس‌پذیری، نشان C و رنگ و طرح A حفظ شوند؛ کوچک‌کردن بی‌قاعده همه فاصله‌ها راه‌حل نیست."
+      ],
+      "technical": [
+        "مکمل #52/#54 و ساختار واکنش‌گرای فعلی است؛ متن بازشونده و چیپ تنوع دوباره پیاده نشوند.",
+        "ابتدا baseline در1440×900 و390×844 و محل محتوا/فولد ثبت و طرح قبل/بعد ارائه شود؛ سپس spacing token و CSSهای هدف اصلاح شوند.",
+        "نوار خرید چسبان، safe-area و صفحه‌کلید موبایل روی محتوا/فوتر نیفتند؛ SEO و ترتیب DOM و ناوبری کیبورد قربانی تراکم نشوند."
+      ],
+      "acceptance": [
+        "قبل/بعد خانه/PLP/PDP با داده یکسان، محتوای بیشتر در دید اولیه و اسکرول کمتر نشان دهد.",
+        "breadcrumb، عنوان، فیلترها و خرید در390px/desktop بدون overflow یا overlap قابل استفاده باشند.",
+        "تنوع‌های متعدد طلا، عنوان بلند و محصول بدون تصویر فرم را به هم نریزند.",
+        "تأیید طراحی با طرح A و regression screenshot/keyboard پیش از پایان ثبت شود."
+      ],
+      "dependencies": [
+        28,
+        29,
+        52,
+        54
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 103,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/103",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        28,
+        29,
+        52,
+        54
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/storefront-spacing-density.md",
+      "publication_status": "local-commit-unpushed",
+      "source_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
+      "state_reason": "completed",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/103#issuecomment-7131269837"
+    },
+    {
+      "code": "CV-REV-09",
+      "id": "FEAT-REV-009",
+      "slug": "catalog-section-card-skeletons",
+      "title": "Skeleton هدفمند سکشن و کارت در خانه، PLP و PDP",
+      "priority": "P1",
+      "kind": "implementation",
+      "business": "تا رسیدن داده یا تصویر، جای محتوا مشخص بماند و کاربر صفحه خالی یا جابه‌جایی شدید نبیند.",
+      "requirements": [
+        "برای سکشن‌ها/کارت‌ها و گالری/باکس PDP که بارگذاری‌شان طول می‌کشد placeholder متناسب با طرح نهایی نمایش داده شود.",
+        "Skeleton با ساختار و نسبت تصویر واقعی هم‌اندازه باشد و پس از دریافت داده/خالی/خطا به حالت درست تبدیل شود.",
+        "در بارگذاری سریع cache-hit چشمک اضافی ایجاد نشود و احترام به reduced-motion برقرار باشد."
+      ],
+      "technical": [
+        "از LoadingPlaceholder/BusyRegion موجود استفاده و فقط شکاف‌های بارگذاری اولیه/سکشن/تصویر تکمیل شوند؛ progress overlay عملیات #51 و سیاست کش #41 بازنویسی نشوند.",
+        "aria-busy و اعلان قابل دسترس در سطح مناسب باشند؛ هر کارت یک اعلان تکراری به screen reader نسازد.",
+        "خطای API یا تصویر نباید Skeleton دائمی بسازد؛ retry و fallback تصویر و empty-state موجود حفظ شوند."
+      ],
+      "acceptance": [
+        "slow network و slow image برای خانه و ریل‌ها/PLP/PDP placeholders صحیح و محتوای بدون پرش نشان دهند.",
+        "خطا، لیست خالی، تصویر خراب، cache-hit و تغییر سریع صفحه، placeholder اشتباه/مانده نسازند.",
+        "در390px وdesktop ابعاد پایدار، reduced-motion و دسترس‌پذیری بررسی شوند.",
+        "عملیات سبد و انتخاب تنوع همچنان overlay دارند و skeleton موجب درخواست شبکه/تکرار اضافی نشود."
+      ],
+      "dependencies": [
+        41,
+        51
+      ],
+      "questions": [],
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "number": 104,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/104",
+      "assignee": "eliassarband",
+      "state": "closed",
+      "github_dependencies": [
+        41,
+        51
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/catalog-section-card-skeletons.md",
+      "publication_status": "local-commit-unpushed",
+      "source_commit": "ce417c5e42a1d3639332a5829e0572e14d1afb4a",
+      "verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
+      "state_reason": "completed",
+      "closure_comment": "https://github.com/MohamadParsa/marketplace/issues/104#issuecomment-7131272054"
+    },
+    {
+      "code": "CV-REV-10",
+      "id": "FEAT-REV-010",
+      "slug": "publish-local-pdp-add-enablement",
+      "title": "بررسی و انتشار نسخه محلی یکپارچه پارسا و فعال‌سازی خرید",
+      "priority": "P1",
+      "kind": "publication-followup",
+      "business": "تفاوت نسخه محلی دکمه فعال با سورس پوش‌شده به‌صورت یک کار روشن در صف گم نشود.",
+      "requirements": [
+        "اصلاح پیش‌فرض فلگ افزودن، فایل نمونه محیط و README در لوکال آماده و۱۲بررسی مرورگر واقعی موفق‌اند.",
+        "پس از انتخاب صریح مالک برای انتشار همین اصلاح، commit مستقل/پوش و PR/ادغام و build محیط مقصد انجام و فعال‌بودن دکمه همان‌جا بررسی شود."
+      ],
+      "technical": [
+        "PR #94 بسته قبلی است و فلگ را تغییر نداده؛ این کار مجوز تازه برای پوش کد دکمه در مرحله فعلی برنامه‌ریزی نیست.",
+        "فقط false صریح باید افزودن تازه را متوقف کند؛ guards موجودی/عرضه/بارگذاری و یک کنترل منتخب و جلوگیری از ثبت دوباره حفظ شوند.",
+        "داده تست guest پس از بررسی پاک‌سازی اقلام شود؛ تست انتشار نیازی به سفارش یا پرداخت واقعی ندارد."
+      ],
+      "acceptance": [
+        "اصلاح دکمه در commit قابل ردیابی پس از مجوز انتشار قرار گیرد و نسخه مقصد همان build را نشان دهد.",
+        "دسکتاپ/موبایل، popup و شمارنده، double click و کالای ناموجود روی همان محیط مقصد بررسی شوند.",
+        "سوابق تست محلی۱۲مورد از CI/بررسی محیط مقصد جدا ثبت و Issue پس از تحویل واقعی بسته شود."
+      ],
+      "dependencies": [
+        29,
+        89,
+        90,
+        94
+      ],
+      "questions": [],
+      "implementation_status": "pushed-review-pending-environment",
+      "execution_authorized": false,
+      "integration_sources": {
+        "reviews": "4e7373cc47880aa18b7a9a57ea44360b77afcd07",
+        "qa": "62ff5f316b398ffccd28e8d6713ab3367dfbcca0",
+        "design": "0be389b",
+        "local_merge": "cffbf4f4125d73338d2af12972b08c41769901e3"
+      },
+      "number": 105,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/105",
+      "assignee": "eliassarband",
+      "state": "open",
+      "github_dependencies": [
+        29,
+        89,
+        90,
+        94
+      ],
+      "path": "docs/delivery/backlog-review-2026-11-24/tasks/publish-local-pdp-add-enablement.md",
+      "publication_authorized": true,
+      "deployment_authorized": false,
+      "pull_request": 106
+    }
+  ],
+  "existing_social_owner": 87,
+  "authorized_issue_numbers": [
+    103,
+    104,
+    102,
+    96,
+    97,
+    98,
+    99
+  ],
+  "authorization_scope": "only authorized_issue_numbers; every other item retains its own authorization=false",
+  "source_commit": "35f9c59e9e3b11a7398d7f537451f60014859b36",
+  "integrated_review_pr": 106,
+  "publication": {
+    "branch": "codex/local-parsa-integration-20261124",
+    "pull_request": "https://github.com/MohamadParsa/marketplace/pull/106",
+    "evidence_commit": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "status": "pushed-review-open",
+    "merged": false,
+    "deployed": false,
+    "delivery_receipt": "issues-96-99-delivery.json",
+    "verified_ci_head": "b724a694f089beb06afcc6294d8cf62352ec87b3",
+    "ci_conclusion": "success",
+    "ci_run": "https://github.com/MohamadParsa/marketplace/actions/runs/45556932708"
+  }
+}

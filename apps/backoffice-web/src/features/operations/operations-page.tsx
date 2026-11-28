@@ -1,4 +1,12 @@
+import { TextField } from "@mui/material";
+import { FilterPanel } from "../../shared/filter-panel";
 import { useState } from "react";
+import { SupplyOverduePanel } from "./supply-overdue-panel";
+import { OrderOperationsPanel } from "./order-operations-panel";
+import {
+  deliveryPromise,
+  shippingCharge,
+} from "../../../../../packages/commerce-client/shipping-presentation";
 import { Link, useParams } from "react-router-dom";
 import { Alert, Button } from "@mui/material";
 import { useWorkspace } from "../../shared/workspace";
@@ -9,7 +17,7 @@ import {
   Status,
   type Field,
 } from "../../shared/components";
-import { date, money, number, labels } from "../../shared/format";
+import { date, money, number, labels, recordNumber, displayRecord } from "../../shared/format";
 import type { Command } from "../../shared/types";
 export function OperationsPage({
   section,
@@ -23,7 +31,11 @@ export function OperationsPage({
     fields: Field[];
     command: Command;
   } | null>(null);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() =>
+    section === "support"
+      ? (new URLSearchParams(location.search).get("order") ?? "")
+      : "",
+  );
   const open = (
     title: string,
     command: Command,
@@ -45,34 +57,18 @@ export function OperationsPage({
   const product = (productId: string) =>
     state.products?.find((p) => p.id === productId)?.name ?? productId;
   const selected = state.orders?.find((o) => o.id === id);
-  const exportAudit = () => {
-    const blob = new Blob([JSON.stringify(state.audit ?? [], null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "audit-test.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const [searchDraft, setSearchDraft] = useState(search);
   return (
     <>
       <PageHeader
         title={
           selected
-            ? `جزئیات سفارش ${selected.purchase_number ?? selected.id}`
+            ? `جزئیات سفارش ${selected.purchase_number ?? recordNumber(state, "order", selected.id)}`
             : titles[section]
         }
         description="پیگیری مرحله‌های عملیات و بررسی تاریخچه؛ هر تصمیم با عامل و دلیل ثبت می‌شود."
-        action={
-          section === "reports" ? (
-            <Button variant="outlined" onClick={exportAudit}>
-              دریافت گزارش مجاز
-            </Button>
-          ) : undefined
-        }
       />
+      {section === "orders" && !selected && <SupplyOverduePanel />}
       {selected ? (
         <>
           <Link to="/orders">← بازگشت به سفارش‌ها</Link>
@@ -81,9 +77,11 @@ export function OperationsPage({
               <h2>اطلاعات سفارش</h2>
               <dl>
                 <dt>خرید چندفروشگاهی</dt>
-                <dd>{selected.purchase_number ?? selected.purchase_id}</dd>
+                <dd>{selected.purchase_number ?? recordNumber(state, "order", selected.id)}</dd>
                 <dt>فروشگاه</dt>
-                <dd>{seller(selected.store_id)}</dd>
+                <dd>
+                  {selected.store_display_name || seller(selected.store_id)}
+                </dd>
                 <dt>شهر مقصد</dt>
                 <dd>{selected.city}</dd>
                 <dt>زمان ثبت</dt>
@@ -101,7 +99,27 @@ export function OperationsPage({
                   {selected.packages.join("، ") || "هنوز بسته‌ای ثبت نشده"}
                 </dd>
               </dl>
-              {selected.status === "shipped" && (
+              {selected.delivery_from && (
+                <section aria-label="وعده ثبت‌شدهٔ حمل">
+                  <h3>
+                    {selected.shipping_terms?.name ?? selected.shipping_method}
+                  </h3>
+                  <p>
+                    {shippingCharge(
+                      selected.shipping_terms?.collection_mode,
+                      String((selected.shipping_terms?.fee ?? 0) / 10),
+                    )}
+                  </p>
+                  <p>
+                    {deliveryPromise(
+                      selected.delivery,
+                      selected.delivery_from,
+                      selected.delivery_to ?? selected.delivery_from,
+                    )}
+                  </p>
+                </section>
+              )}
+              {selected.status === "shipped" && !selected.checkout_id && (
                 <Button
                   disabled={!can("order.deliver", "support")}
                   variant="contained"
@@ -120,6 +138,7 @@ export function OperationsPage({
             <section className="panel detail">
               <h2>اقلام و snapshot خرید</h2>
               <DataTable
+                searchable={false}
                 rows={selected.items}
                 columns={[
                   { title: "محصول", render: (i) => product(i.product_id) },
@@ -137,21 +156,22 @@ export function OperationsPage({
               </Alert>
             </section>
           </div>
+          {selected.checkout_id && <OrderOperationsPanel id={selected.id} />}
         </>
       ) : (
         <section className="panel">
-          <div className="toolbar">
-            <input
-              aria-label="جست‌وجو"
-              className="search"
+          <FilterPanel onSearch={() => setSearch(searchDraft)}>
+            <TextField
+              label="جست‌وجو"
+
               placeholder="جست‌وجو با شناسه، فروشگاه یا وضعیت…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
             />
-            <span className="muted">محیط آزمون</span>
-          </div>
+          </FilterPanel>
           {section === "orders" && (
             <DataTable
+              searchable={false}
               rows={filter(state.orders ?? [])}
               columns={[
                 {
@@ -159,7 +179,7 @@ export function OperationsPage({
                   render: (o) => (
                     <>
                       <Link to={"/orders/" + o.id}>
-                        <b>سفارش {o.purchase_number ?? o.id}</b>
+                        <b>سفارش {o.purchase_number ?? recordNumber(state, "order", o.id)}</b>
                       </Link>
                       <small>
                         {o.purchase_number
@@ -169,7 +189,10 @@ export function OperationsPage({
                     </>
                   ),
                 },
-                { title: "فروشگاه", render: (o) => seller(o.store_id) },
+                {
+                  title: "فروشگاه",
+                  render: (o) => o.store_display_name || seller(o.store_id),
+                },
                 { title: "مقصد", render: (o) => o.city },
                 {
                   title: "مبلغ کالا",
@@ -199,13 +222,14 @@ export function OperationsPage({
           )}
           {section === "support" && (
             <DataTable
+              searchable={false}
               rows={filter(state.cases ?? [])}
               columns={[
                 {
                   title: "پرونده",
                   render: (c) => (
                     <>
-                      <b>{c.id}</b>
+                      <b>{recordNumber(state, "case", c.id)}</b>
                       <small>{c.kind}</small>
                     </>
                   ),
@@ -213,7 +237,7 @@ export function OperationsPage({
                 {
                   title: "سفارش",
                   render: (c) => (
-                    <Link to={"/orders/" + c.order_id}>{c.order_id}</Link>
+                    <Link to={"/orders/" + c.order_id}>{state.orders?.find(o => o.id === c.order_id)?.purchase_number ?? recordNumber(state, "order", c.order_id)}</Link>
                   ),
                 },
                 {
@@ -326,10 +350,11 @@ export function OperationsPage({
                 </span>
               </div>
               <DataTable
+                searchable={false}
                 rows={filter(state.assignments ?? [])}
                 empty="هنوز واگذاری ثبت نشده. از صفحه پشتیبانی، یک قلم را به فروشگاه جایگزین واگذار کنید."
                 columns={[
-                  { title: "واگذاری", render: (a) => a.id.slice(0, 12) },
+                  { title: "واگذاری", render: (a) => recordNumber(state, "assignment", a.id) },
                   { title: "پرونده", render: (a) => a.case_id },
                   { title: "تأمین‌کننده", render: (a) => seller(a.store_id) },
                   { title: "قلم", render: (a) => a.item_id },
@@ -347,6 +372,7 @@ export function OperationsPage({
           )}
           {section === "notifications" && (
             <DataTable
+              searchable={false}
               rows={filter(state.notifications ?? [])}
               columns={[
                 { title: "رخداد", render: (n) => <b>{n.event}</b> },
@@ -384,15 +410,16 @@ export function OperationsPage({
           )}
           {section === "reports" && (
             <DataTable
+              searchable={false}
               rows={filter([...(state.audit ?? [])].reverse())}
               empty="هنوز عملیاتی ثبت نشده است."
               columns={[
                 {
-                  title: "عملیات",
+                  title: "نوع عملیات",
                   render: (a) => <span className="code">{a.action}</span>,
                 },
-                { title: "عامل", render: (a) => a.actor },
-                { title: "هدف", render: (a) => a.target || "رکورد جدید" },
+                { title: "عامل", render: (a) => state.users?.find(u => u.id === a.actor)?.name ?? recordNumber(state, "user", a.actor) },
+                { title: "هدف", render: (a) => a.target ? displayRecord(state, a.target) : "رکورد جدید" },
                 { title: "دلیل", render: (a) => a.reason || "—" },
                 { title: "زمان", render: (a) => date(a.at) },
               ]}

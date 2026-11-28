@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-24",
+  "updated": "2026-11-27",
   "workspace": "D:\\Cherriva",
-  "current_source_commit": "9e72faf5a1c9b5ce73e3628e539c8cd082f29b02",
+  "current_source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
   "rows": [
     {
       "issue": 27,
@@ -285,6 +285,173 @@
       "documentation_commit": "fec70e82d1cd332d2673a470737baac1fae91df8",
       "pull_request": 93,
       "merge_commit": "a253d5edbe0adb467e1e7fb2ab5903608fb64bdc"
+    },
+    {
+      "issues": [
+        67,
+        68,
+        69,
+        78
+      ],
+      "delivery": "checkout-coupons-selected-wallet-warranty",
+      "source_commit": "1dd7ccd616ba0d6380ce75adcdf9aaf38310a64d",
+      "documentation_commit": "8df64e46c02a3d603aa49fd94ea8d8f3b300b9ab",
+      "verification": "docs/delivery/next-phase/issues-67-68-69-78-verification.md",
+      "pull_request": "https://github.com/MohamadParsa/marketplace/pull/94",
+      "source_tree_matches_documentation_revision": true,
+      "status": "pushed-awaiting-review"
+    },
+    {
+      "issue": 111,
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "implementation_status": "done",
+      "issue_state": "closed",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "source_tree_matches_documentation_revision": true,
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit",
+      "source_pushed": true,
+      "pull_request": 106
+    },
+    {
+      "issue": 112,
+      "source_commit": "37ec82c31408d69736a4f7826fa5ae07ec905077",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-delivery.json",
+      "implementation_status": "done",
+      "issue_state": "closed",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "source_tree_matches_documentation_revision": true,
+      "documentation_commit_reference": "Source-Commit trailer on local documentation commit",
+      "source_pushed": true,
+      "pull_request": 106
+    },
+    {
+      "issue": 110,
+      "source_commit": "2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-110-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "source_tree_matches_documentation_revision": true,
+      "additional_owner_changes": [
+        "address-title-map-full-address-order",
+        "checkout-only-recipient-switch",
+        "self-hides-recipient-fields-except-profile-completion"
+      ],
+      "issue_state": "closed",
+      "source_pushed": true,
+      "pull_request": 106
+    },
+    {
+      "issues": [
+        107,
+        108
+      ],
+      "source_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-verification.md",
+      "implementation_status": "done",
+      "source_tree_matches_documentation_revision": true,
+      "publication_status": "pushed-branch-awaiting-merge",
+      "issue_states": {
+        "107": "closed",
+        "108": "closed"
+      },
+      "source_pushed": true,
+      "pull_request": 106,
+      "documentation_commit": "a0d739b5062b5f337c8b25e9c6a87493f715c301",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issues-107-108-delivery.json"
+    },
+    {
+      "issue": 109,
+      "source_commit": "a029b88f6d78d9745311cf4afbdeb8dd3f4538d9",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-109-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "source_pushed": true,
+      "issue_state": "closed",
+      "documentation_commit": "d317123a39504fd2c190b4ed69c6d0a61a673534",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-109-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 113,
+      "source_commit": "1438140f260b3ca11fbb952c999f5ebbbc6c5a7a",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-113-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "source_pushed": true,
+      "issue_state": "closed",
+      "documentation_commit": "e6831ad6997e1efbe63b42e46a24b311348a22fc",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-113-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 114,
+      "source_commit": "47b798a0b22a40f5f0309dd18978b25b9f6829f8",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-114-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "source_pushed": true,
+      "issue_state": "closed",
+      "documentation_commit": "eb4105889fcbded38a70206e2ea3697eaa0a3520",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-114-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 115,
+      "source_commit": "4ec243011c3c37ddb2fbbc6da9976037e084915e",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-115-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "source_pushed": true,
+      "issue_state": "closed",
+      "documentation_commit": "9ff99146b273d49b23d9f3e8ba37897e7a8ea91d",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-115-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 116,
+      "source_commit": "99ee075a58b45ff93c8116500ea3a62c8540b425",
+      "verification": "docs/delivery/backoffice-refinement-2026-11-25/issue-116-verification.md",
+      "implementation_status": "done",
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "source_pushed": true,
+      "issue_state": "closed",
+      "documentation_commit": "13eb7c6db9ffafdcf0927fc01ae486c7554d03db",
+      "delivery_receipt": "docs/delivery/backoffice-refinement-2026-11-25/issue-116-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 87,
+      "source_commit": "0c80dcf7c2e03c2b5a883a680bdf8b7918c9b39e",
+      "verification": "docs/delivery/next-phase/issue-87-verification.md",
+      "implementation_status": "done",
+      "source_pushed": true,
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "issue_state": "closed",
+      "documentation_commit": "de60e55df209d40878bb17e97616a98c09572b90",
+      "delivery_receipt": "docs/delivery/next-phase/issue-87-delivery.json",
+      "source_tree_matches_documentation_revision": true
+    },
+    {
+      "issue": 119,
+      "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
+      "verification": "docs/delivery/next-phase/issue-119-verification.md",
+      "implementation_status": "done",
+      "source_pushed": true,
+      "publication_status": "pushed-branch-awaiting-merge",
+      "pull_request": 106,
+      "issue_state": "closed",
+      "documentation_commit": "18862341d8376a6c9fb12eb8316509a251890cbe",
+      "delivery_receipt": "docs/delivery/next-phase/issue-119-delivery.json",
+      "source_tree_matches_documentation_revision": true
     }
   ],
   "scope": "Source publication is distinct from Liara deployment and public acceptance.",
@@ -361,5 +528,53 @@
         "url": "https://github.com/MohamadParsa/marketplace/actions/runs/45336788237/job/138250644576"
       }
     ]
+  },
+  "current_local_integration_commit": "1ba3964142e43364e2fd4e0b9767389cca974cda",
+  "local_integration_publication_pending": true,
+  "local_integration_verification": "docs/delivery/backlog-review-2026-11-24/parsa-integration.md",
+  "local_publication_issue": 105,
+  "local_catalog_ux_reference_issues": [
+    102,
+    103,
+    104
+  ],
+  "local_catalog_ux_reference_verification": "docs/delivery/backlog-review-2026-11-24/issues-102-103-104-verification.md",
+  "local_user_management_verification": "docs/delivery/backoffice-refinement-2026-11-25/issues-111-112-verification.md",
+  "backoffice_review_20261127": {
+    "issues": [124, 125, 126, 127, 128, 129, 130],
+    "source_commit": "2ac2da55a47d5cd444d251995734412c85f83ed7",
+    "source_ci_run": 46047411179,
+    "source_ci_successful_jobs": 5,
+    "verification": "docs/delivery/backoffice-refinement-2026-11-25/backoffice-review-2026-11-27.md",
+    "source_pushed": true,
+    "pull_request": 106,
+    "merged": false,
+    "deployed": false
+  },
+  "store_shipping_ui_integration": {
+    "source_commit": "b528fe5a5f4a489a7a00394a775518bfff0113c8",
+    "verification": "docs/delivery/backoffice-refinement-2026-11-25/store-shipping-integration-2026-11-27.md",
+    "source_pushed": true,
+    "source_ci_run": 46031207626,
+    "source_ci_successful_jobs": 5,
+    "pull_request": 106,
+    "merged": false,
+    "deployed": false
+  },
+  "latest_branch_source_publication": {
+    "issues": [
+      87,
+      109,
+      113,
+      114,
+      115,
+      116,
+      119
+    ],
+    "source_commit": "5b630e2366c333895b375e4a288d09384e2a3378",
+    "source_pushed": true,
+    "pull_request": 106,
+    "merged": false,
+    "deployed": false
   }
 }

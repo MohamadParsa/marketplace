@@ -1,3 +1,4 @@
+import { ChoiceField } from "./option-select";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 
@@ -46,18 +47,14 @@ export function PaginationControls({
           ? `${fa(page * size + 1)} تا ${fa(Math.min((page + 1) * size, total))} از ${fa(total)}`
           : "موردی وجود ندارد"}
       </span>
-      <div className="pagination-sizes" aria-label="تعداد در صفحه">
-        {[20, 50, 100].map((n) => (
-          <Button
-            key={n}
-            size="small"
-            aria-pressed={n === size}
-            onClick={() => setSize(n)}
-          >
-            {fa(n)}
-          </Button>
-        ))}
-      </div>
+      <div className="pagination-sizes">
+        <ChoiceField
+          label="تعداد در صفحه"
+          value={String(size)}
+          options={[20, 50, 100].map((n) => ({ id: String(n), name: fa(n) }))}
+          onChange={(value) => setSize(Number(value))}
+        />
+      </div>{" "}
       <div className="pagination-pages">
         <Button disabled={page === 0} onClick={() => setPage(page - 1)}>
           قبلی

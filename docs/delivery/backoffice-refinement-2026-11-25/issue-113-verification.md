@@ -1,0 +1,47 @@
+---
+id: VERIFY-STORE-MANAGEMENT-20261126
+title: تحویل مستقل مدیریت پروفایل فروشگاه — #113
+status: in-review
+owner: eliassarband
+updated: 2026-11-26
+related: [FEAT-BO-REFINEMENT-007]
+approved_by: []
+implementation_status: done
+execution_authorized: true
+---
+
+# خروجی
+
+فرم مستقل `/stores` ایجاد/ویرایش نام، توضیح، ایمیل، فعال‌بودن، تصویر، استان/شهر/نشانی/کدپستی، تلفن ثابت و موبایل دارد. گرید فیلترهای مستقل نام/وضعیت/استان/شهر/عضو، صفحه‌بندی سروری و خروجی Excel دارد. اعضای واقعی و نقش همان فروشگاه نمایش داده می‌شوند؛ لینک عضو به همان فرم کاربران می‌رسد و عضویت موازی ساخته نمی‌شود.
+
+[قرارداد فیلدها، API و مجوزها](../../architecture/contracts/store-management.md) · [نتیجه ماشین‌خوان](issue-113-checks.json) · [BDD مستند](../../bdd/features/experiences/store-management.feature).
+
+## حفاظت و پذیرش
+
+| معیار | نتیجه و شاهد |
+| --- | --- |
+| AC01 | ساخت/ویرایش نسخه‌دار و idempotent، ذخیره تصویر در رسانه مدیریت‌شده و بازیابی پس از restart؛ مالک، ID، مدل، وقفه تأمین و سیاست محتوای قبلی حفظ شدند. [آزمون HTTP/PG](../../../apps/api/internal/bootstrap/stores_management_test.go) |
+| AC02 | تغییر استان شهر را پاک می‌کند؛ شهر ناسازگار، ایمیل/تلفن/موبایل/کدپستی نامعتبر، تصویر خراب یا بیش‌ازحد و فیلدهای تزریقی از سرور رد می‌شوند. خطا draft و تصویر قبلی را حفظ می‌کند. |
+| AC03 | مجوزهای read/write/members/media جدا و قابل انتساب‌اند؛ member filter بدون مجوز رد می‌شود. فهرست، انتخاب/فیلتر export، صفحه‌بندی و لینک عضو در مرورگر آزموده شدند. [رقابت و سلب مجوز](../../../apps/api/internal/application/backoffice/stores_management_test.go) و [مرورگر](../../../tests/e2e/stores-management.cjs) |
+
+اطلاعات تماس و تصویر پروفایل خصوصی‌اند و به workspace فروشنده/محصول، projection یا Redis عمومی راه ندارند. تصویر فقط با مجوز خواندن فروشگاه دریافت می‌شود. تغییر نام عمومی، ETag صفحه محصول را تازه می‌کند؛ تماس خصوصی در همان پاسخ وجود ندارد. فرم با طرح A، نشان C و انتخاب‌های بدون dropdown تازه جز استان/شهر ساخته شده است.
+
+## آزمون
+
+۳۵۶تست/زیرتست Go با۴skip اختیاری و صفر شکست، PostgreSQL ایزوله و Redis؛ go vet و build/TypeScript بک‌آفیس و storefront موفق. در این تعداد، تست‌های پایه و #109 نیز regression شده‌اند. race محلی اجرا نشد و نتیجه CI جدا ثبت می‌شود. هشدار قبلی bundle بزرگ بک‌آفیس باقی است و dependency تازه اضافه نشده است.
+
+۱۶کنترل مرورگر فروشگاه موفق و صفر runtime pageerror: ایجاد/ویرایش کامل، تصویر و ورودی خراب، cascade، فیلتر ترکیبی/صفحه‌بندی، حفظ draft در۴۰۹، readonly/منوی viewer، لینک همان کاربر و عرض۳۹۰پیکسل. fixture فقط حافظه ایزوله است؛ BDD سند است و runner مستقل ادعا نمی‌شود.
+
+[فیلترها](../../../output/playwright/issue-113/store-filters.png) · [پروفایل](../../../output/playwright/issue-113/store-profile.png) · [موبایل](../../../output/playwright/issue-113/store-profile-mobile.png). تصاویر ساختگی و بازبینی شده‌اند.
+
+نسخه محلی در `D:\Cherriva` قابل اجراست؛ پس از restart،۲۴بخش هویت/رمز/نقش/عضویت، سفارش/دفتر/بانک، کاتالوگ/قیمت/موجودی/audit با baseline برابر بودند. snapshot کاتالوگ با SHA-256 manifest مطابق است. بسته تاریخی در این کار تغییر نکرد؛ چهار اختلاف قبلی manifest گزارش #109 همچنان از پیش وجود دارند و دستکاری نشدند.
+
+## نسخه و مرز
+
+سورس مستقل [1438140](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a). ذخیره افزایشی در JSONB و جدول رسانه موجود است و DDL/backfill جدید لازم نیست. تنها نام اجباری است؛ داده تماس تازه اختیاری و شهر قدیمی بدون استان فقط بدون تغییر قابل حفظ است. retry یک key اثر دوباره ندارد؛ پاسخ رکورد جاری است. فیلتر/صفحه‌بندی در سرور است ولی repository هنوز workspace کامل را snapshot می‌کند؛ SQL ایندکس‌شده تازه و benchmark تولید ادعا نمی‌شود.
+
+تصویر فعلاً خصوصی پنل است. محدودیت دسته/روش و نام روش‌محور فروشگاه در #114، و تکمیل برند در #115 جدا اجرا می‌شوند. main/Liara ادغام یا مستقر نشده‌اند؛ رسید پوش/CI پس از ثبت افزوده می‌شود.
+
+## رسید نهایی
+
+[سورس](https://github.com/MohamadParsa/marketplace/commit/1438140f260b3ca11fbb952c999f5ebbbc6c5a7a) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/e6831ad6997e1efbe63b42e46a24b311348a22fc) روی شاخه PR #106 پوش شدند؛ [کامنت پایان](https://github.com/MohamadParsa/marketplace/issues/113#issuecomment-7189889238) ثبت و #113 completed بسته شد. هر۵job [CI](https://github.com/MohamadParsa/marketplace/actions/runs/45804449092) روی مدارک با source tree یکسان موفق‌اند؛ race/vet شامل آن است. [رسید ماشین‌خوان](issue-113-delivery.json). #114/#115 جدا و main/Liara بدون استقرار باقی‌اند.

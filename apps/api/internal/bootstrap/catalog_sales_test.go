@@ -44,7 +44,7 @@ func TestBestSellingPostgresInvalidationSettingsPrivacyRestart(t *testing.T) {
 	}
 	r := cacheRequest(h, path, "")
 	var d backoffice.ListingResult
-	if json.Unmarshal(r.Body.Bytes(), &d) != nil || d.Products[0].ID != "smartwatch" {
+	if json.Unmarshal(r.Body.Bytes(), &d) != nil || d.Products[0].ID != backoffice.PublicReference("p", "smartwatch") {
 		t.Fatal("stale best selling", r.Body.String())
 	}
 	for _, private := range []string{"sales-test", "sales-order", "paid_at", "quantity", "user_id", "sales_read_model"} {

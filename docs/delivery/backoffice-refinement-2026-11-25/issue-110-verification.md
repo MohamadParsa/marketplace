@@ -1,0 +1,69 @@
+---
+id: DEL-BO-ATTRIBUTE-REFERENCES-001
+title: تحویل کد چریوا در خصوصیات پنل و اصلاح چیدمان آدرس
+status: in-review
+owner: eliassarband
+updated: 2026-11-26
+related: [FEAT-BO-REFINEMENT-004, API-CATALOG-ATTRIBUTES-001, FEAT-REV-005]
+approved_by: []
+implementation_status: done
+---
+
+# نتیجه و دامنه
+
+#110 مرز خواندن و نوشتن خصوصیات پنل را به alias چریوا رساند؛ نام فارسی و نوع خصوصیت در گرید/انتساب دیده می‌شود و کد ثابت chr در دیالوگ قابل مشاهده و جست‌وجو است. [قرارداد دقیق](../../architecture/contracts/catalog-attributes.md#تکمیل-مرز-پنل-و-کد-چریوا--110). #108 بهبود کلی فرم و #109 تبدیل محور استفاده‌شده مستقل باقی‌اند؛ به‌علت استقلال projection، اجرای این بخش منتظر تبدیل داده نیست.
+
+هیچ شناسه داخلی، کد مبدأ ذخیره‌شده، مقدار محصول، تنوع، قیمت، موجودی یا گروه واقعی گارانتی بازنویسی نمی‌شود. کد نمایش و ID هر دو alias نوع a دارند ولی از Code و ID مستقل ساخته می‌شوند. native و imported یک مسیر دارند؛ همان codec قبلی #102 استفاده شده است. حفظ شکل آرایه خالی در projection هم با تست رگرسیون پوشش دارد.
+
+## مسیرها و رفتار
+
+- `/attributes`: نام و کد chr جست‌وجوپذیر؛ نام/نوع در گرید، کد ثابت فقط در دیالوگ. انتخاب نوع با دکمه است.
+- `/attributes?attribute=<chr-a-token>` پیوند جدید؛ `?attribute=<شناسه قدیمی>` همان تعریف را باز می‌کند. ورودی خراب/نامرتبط تعریف تازه نمی‌سازد.
+- workspace پنل/فروشنده، binding دسته، مقادیر محصول و نسخه محتوا، محور/مقدار تنوع و preview کارت مراجع هماهنگ دارند؛ نتیجه resolve نیز هماهنگ است. مالی/سفارش/کاربر از projection خارج‌اند. فقط نمایش target رویداد خصوصیت تبدیل می‌شود، نه رکورد اصلی audit.
+- command پیش از fingerprint و بررسی نسخه، alias را به مرجع ذخیره‌شده تبدیل می‌کند؛ retry با ورودی قدیمی/جدید یک عملیات است. کد canonical فقط به کد immutable همان target برمی‌گردد. نوع توکن اشتباه/خراب و duplicate binding رد می‌شوند؛ مجوز و scope قبلی پابرجاست.
+
+## تکمیل خواسته‌های همان گفتگو درباره آدرس
+
+عنوان آدرس تمام‌عرض در بالای نقشه و نشانی کامل تمام‌عرض زیر آن است. در مسیر خرید، سوییچ «تحویل‌گیرنده خودم هستم» برای آدرس تازه پیش‌فرض روشن است؛ در صورت تکمیل پروفایل فقط همان سوییچ دیده می‌شود. با خاموش‌کردن، نام/کد ملی/موبایل گیرنده دیگر اجباری‌اند و با روشن‌کردن کادر پنهان می‌شود؛ تغییر سوییچ draft گیرنده را پاک نمی‌کند.
+
+در آدرس‌های پروفایل، بخش انتخاب گیرنده نمایش ندارد؛ اطلاعات گیرندهٔ آدرس موجود بدون تغییر اجباری حفظ می‌شود. آدرس تازه خودم است. استثنای صریح مالک: نبود کد ملی همچنان فرم تکمیل پروفایل را نمایش می‌دهد. اگر فقط نام پروفایل ناقص باشد، هنگام ذخیره درخواست تکمیل می‌شود. validation و snapshot سمت سرور #100 تغییر نکرده‌اند؛ مخفی‌شدن UI مجوز ثبت کد ملی نامعتبر نیست.
+
+## معیار و شاهد
+
+| معیار | بررسی |
+| --- | --- |
+| AC01 | جست‌وجو با code canonical، عنوان خوانای کتابخانه/دیالوگ/انتساب دسته، عرض موبایل |
+| AC02 | لینک قدیمی/جدید یک تعریف؛ update و binding با retry قدیم/جدید؛ نوع غلط و alias خراب؛ role غیرمجاز و version قدیمی |
+| AC03 | snapshot خصوصی قبل/بعد projection یکسان؛ گروه گارانتی/قیمت/موجودی/سبد؛ import مجدد already_applied و checksum؛ PostgreSQL restart |
+| آدرس | ترتیب title/map/full_address؛ پیش‌فرض self؛ استثنای کد ملی؛ باز/بسته‌شدن گیرنده و حفظ draft؛ نبود بخش در پروفایل |
+
+[تست HTTP/PG](../../../apps/api/internal/bootstrap/panel_attribute_references_test.go) · [normalize بدون تغییر input](../../../apps/api/internal/application/backoffice/attribute_references_test.go) · [آرایه‌های خالی](../../../apps/api/internal/transport/http/panel_attribute_references_test.go) · [import/retry](../../../apps/api/internal/application/backoffice/catalog_seed_test.go) · [مرورگر](../../../tests/e2e/attribute-codes-and-address-layout.cjs). BDD مستند است و runner جدا ادعا نمی‌شود. سناریوی قدیمی آدرس با نمایش جدید همگام شده است؛ اجرای مجدد تمام سناریوهای provider واقعی در این کار ادعا نشده.
+
+## محیط و محدودیت
+
+مرورگر از harness حافظه‌ای موجود با `CHERRIVA_SALES_GRID_BROWSER=1` و `CHERRIVA_PANEL_ATTRIBUTE_BROWSER=1`، روی۸۰۹۷/۵۱۹۹ استفاده می‌کند؛ کاربران و عملیات آزمایش وارد DB اصلی نمی‌شوند. PostgreSQL/Redis تست با schemaهای موقت جدا هستند. هیچ اتصال به SQL Server مبدأ یا فعال‌سازی نشان/ارسال واقعی انجام نشد.
+
+قالب chr توکن پایدار است و مهاجرتی ندارد. حفاظت تغییر محور مصرف‌شده هنوز متعلق به #109 است. hash snapshot اصلی و وضعیت داده پس از restart نسخه اصلی در نتیجه نهایی ثبت می‌شود. سورس در `D:\Cherriva` است. طبق دستور تازه مالک، پس از اتمام پوش شاخه انجام می‌شود؛ انتشار لیارا و merge جدا هستند.
+
+
+## نتیجه نهایی
+
+۳۳۰تست/زیرتست Go موفق،۴skip اختیاری و صفر شکست؛ PostgreSQL با schema ایزوله و Redis فعال بودند. go vet و lint/build هر دو app موفق؛ هشدار قبلی حجم chunk بک‌آفیس باقی است. race محلی اجرا نشده است.۲۲بررسی مرورگر و صفر runtime pageerror موفق‌اند؛ اشکال null شدن آرایه خالی و بازشدن مجدد دیالوگ پس از save در همین تحویل اصلاح و رگرسیون گرفته شد.
+
+checksum snapshot اصلی با manifest تطبیق دارد؛ فایل/manifest/بسته تاریخی تغییر نکرده‌اند. import مجدد در fixture واردشده already_applied و restart PostgreSQL مستقل موفق است. در نسخه اصلی محلی۲۴بخش هویت، نقش، مالی، کاتالوگ، قیمت/موجودی و audit پس از مقایسه کنترل‌شده restart، hash یکسان دارند. در مقایسه اولیه، hash عرضه‌ها متفاوت بود؛ آن مقایسه برای ادعای حفظ موجودی استفاده نشد و بدون بازگردانی داده، baseline تازه و restart کنترل‌شده گرفته شد. علت تفاوت اولیه از hash تنها قابل اثبات نیست؛ هیچ SQL مستقیم برای جایگزینی داده اجرا نشد.
+
+نسخه اصلی۸۰۹۸/۵۱۹۷ از D:\Cherriva راه‌اندازی و warmup برقرار است. smoke خواندنی محیط اصلی: پاسخ۲۰۰،۲۴۲تعریف خصوصیت، رنگ با id/code نوع chr-a و اتصال صحیح binding؛ roster کاربران در پوسته برنمی‌گردد. حساب و رمز محلی تیم تغییر نکرده است. [نتیجه ماشین‌خوان](issue-110-checks.json).
+
+[جست‌وجوی کد](../../../output/playwright/issue-110/attribute-search.png) · [ویرایش از لینک قدیمی](../../../output/playwright/issue-110/legacy-link-editor.png) · [انتساب دسته](../../../output/playwright/issue-110/category-bindings.png) · [کتابخانه موبایل](../../../output/playwright/issue-110/attributes-mobile.png) · [گیرنده در خرید](../../../output/playwright/issue-110/checkout-other-recipient.png) · [آدرس موبایل](../../../output/playwright/issue-110/address-mobile.png) · [آدرس پروفایل](../../../output/playwright/issue-110/profile-address.png). همه داده‌های تصاویر ساختگی‌اند.
+
+سورس در کامیت 2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950 ثبت شد؛ کامیت مدارک با trailer Source-Commit به آن وصل می‌شود. دستور تازه مالک پوش در انتهای تکمیل را مجاز کرده است؛ رسید پوش/کامنت و بستن در همین بسته ثبت می‌شود. پوش شاخه با merge و استقرار لیارا متفاوت است.
+
+
+## رسید پوش و بستن
+
+[کامیت سورس](https://github.com/MohamadParsa/marketplace/commit/2bc38ac30fa2b0c7e6df7fa30dcb23b2539b4950) و [مدارک اولیه](https://github.com/MohamadParsa/marketplace/commit/c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b) روی شاخه `codex/local-parsa-integration-20261124` پوش شدند. [PR #106](https://github.com/MohamadParsa/marketplace/pull/106) نسخه یکپارچه است؛ [Issue #110 با کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/110#issuecomment-7183781436) و دلیل completed بسته شد. اصلاح آدرس در [کامنت #100](https://github.com/MohamadParsa/marketplace/issues/100#issuecomment-7183783057) نیز ثبت شد. [رسید ماشین‌خوان](issue-110-delivery.json).
+
+کامیت‌های قبلی محلی #100/#101/#73/#81/#111/#112 نیز همراه تاریخچه همین شاخه پوش شدند؛ یادداشت‌های قدیمی «پوش‌نشده» وضعیت زمان ثبتشان بودند. source tree کد و مدارک برابر کنترل شد. main/لیارا ادغام یا مستقر نشده و #95/#105 باز می‌مانند.
+
+
+CI روی revision مدارک اولیه `c75b4b2183ffb010f840ef3b349f0f7eb81b1d0b` با source tree یکسان، هر۵job موفق داشت؛ [اجرای GitHub Actions](https://github.com/MohamadParsa/marketplace/actions/runs/45763573029) شامل Go race/vet، lint/build بک‌آفیس و سایت و پنل فروشنده و contracts است. کامیت نهایی فقط رسید و مستندات همین نتیجه را ثبت می‌کند و کد اجرایی را تغییر نمی‌دهد.

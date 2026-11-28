@@ -1,6 +1,7 @@
 package httptransport
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/cherriva/marketplace/apps/api/internal/application/auth"
 	"github.com/cherriva/marketplace/apps/api/internal/application/backoffice"
+	"github.com/cherriva/marketplace/apps/api/internal/domain/commerce"
 	"github.com/cherriva/marketplace/apps/api/internal/domain/identity"
 )
 
@@ -32,16 +34,68 @@ func NewCommerceHandler(s *backoffice.Service, a *auth.Service) *CommerceHandler
 	return &CommerceHandler{service: s, auth: a, guestLimits: map[string]guestLimit{}}
 }
 func commerceError(w http.ResponseWriter, e error) {
+	var gatewayFields *backoffice.GatewayFieldError
+	if errors.As(e, &gatewayFields) {
+		writeJSON(w, 400, map[string]any{"code": "invalid_gateway_settings", "fields": gatewayFields.Fields})
+		return
+	}
+	var field *backoffice.ShippingFieldError
+	if errors.As(e, &field) {
+		writeJSON(w, 400, map[string]any{"code": "invalid_shipping_method", "fields": map[string]string{field.Field: field.Message}})
+		return
+	}
 	status, code := 503, "commerce_unavailable"
 	switch {
+	case errors.Is(e, backoffice.ErrGatewayKeyUnavailable):
+		status, code = 503, "gateway_key_unavailable"
+	case errors.Is(e, backoffice.ErrShippingUnavailable):
+		status, code = 409, "shipping_unavailable"
+	case errors.Is(e, backoffice.ErrShippingFull):
+		status, code = 409, "slot_full"
+	case errors.Is(e, backoffice.ErrShippingExpired):
+		status, code = 409, "slot_expired"
+	case errors.Is(e, backoffice.ErrReauthenticationRequired):
+		status, code = 403, "reauthentication_required"
+	case errors.Is(e, backoffice.ErrUserContactConflict):
+		status, code = 409, "duplicate_user_contact"
+	case errors.Is(e, backoffice.ErrLastAdministrator):
+		status, code = 409, "last_administrator"
 	case errors.Is(e, backoffice.ErrForbidden):
 		status, code = 403, "forbidden"
 	case errors.Is(e, backoffice.ErrNotFound):
 		status, code = 404, "not_found"
+	case errors.Is(e, backoffice.ErrProfileIncomplete):
+		status, code = 400, "recipient_profile_incomplete"
+	case errors.Is(e, backoffice.ErrAddressIncomplete):
+		status, code = 400, "address_incomplete"
 	case errors.Is(e, backoffice.ErrAddressUnavailable):
 		status, code = 400, "address_unavailable"
+	case errors.Is(e, backoffice.ErrWithdrawalUnavailable):
+		status, code = 409, "withdrawal_credit_unavailable"
+	case errors.Is(e, backoffice.ErrWalletExceedsTotal):
+		status, code = 400, "wallet_exceeds_total"
+	case errors.Is(e, backoffice.ErrCouponUnknown):
+		status, code = 400, "coupon_invalid"
+	case errors.Is(e, backoffice.ErrCouponExpired):
+		status, code = 400, "coupon_expired"
+	case errors.Is(e, backoffice.ErrCouponNotStarted):
+		status, code = 400, "coupon_not_started"
+	case errors.Is(e, backoffice.ErrCouponUserQuota):
+		status, code = 400, "coupon_user_limit_reached"
+	case errors.Is(e, backoffice.ErrCouponQuota):
+		status, code = 400, "coupon_quota_reached"
+	case errors.Is(e, backoffice.ErrCouponNoDiscount):
+		status, code = 400, "coupon_no_discount"
+	case errors.Is(e, backoffice.ErrCoupon):
+		status, code = 400, "coupon_not_eligible"
 	case errors.Is(e, backoffice.ErrInvalid):
 		status, code = 400, "invalid_request"
+	case errors.Is(e, backoffice.ErrTransferReference):
+		status, code = 400, "invalid_transfer_reference"
+	case errors.Is(e, backoffice.ErrTransferDate):
+		status, code = 400, "invalid_transfer_date"
+	case errors.Is(e, backoffice.ErrRefundReason):
+		status, code = 400, "refund_reason_required"
 	case errors.Is(e, backoffice.ErrConflict):
 		status, code = 409, "state_conflict"
 	case errors.Is(e, backoffice.ErrStock):
@@ -66,11 +120,52 @@ func commerceBody(w http.ResponseWriter, r *http.Request, out any) bool {
 		return false
 	}
 	limit := int64(128 * 1024)
+	if strings.HasPrefix(r.URL.Path, "/backoffice/shipping/methods") || r.URL.Path == "/backoffice/stores/shipping" || r.URL.Path == "/seller/stores/shipping" {
+		limit = 2 * 1024 * 1024
+	}
+	if r.URL.Path == "/backoffice/stores/preparation/batch" {
+		limit = 1024 * 1024
+	}
+	if strings.HasPrefix(r.URL.Path, "/backoffice/stores/") && strings.HasSuffix(r.URL.Path, "/eligibility") {
+		limit = 1024 * 1024
+	}
+	if strings.HasPrefix(r.URL.Path, "/backoffice/axis-conversions/") {
+		limit = 8 * 1024 * 1024
+	}
+	if r.URL.Path == "/backoffice/commerce/sales" || r.URL.Path == "/backoffice/users/export" {
+		limit = 2 * 1024 * 1024
+	}
 	if r.URL.Path == "/backoffice/commerce/settings" {
 		limit = 1024 * 1024
 	}
 	r.Body = http.MaxBytesReader(w, r.Body, limit)
-	d := json.NewDecoder(r.Body)
+	var body io.Reader = r.Body
+	if strings.HasPrefix(r.URL.Path, "/storefront/") {
+		b, err := io.ReadAll(r.Body)
+		if err != nil {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		dec := json.NewDecoder(bytes.NewReader(b))
+		dec.UseNumber()
+		var value any
+		if dec.Decode(&value) != nil || dec.Decode(new(any)) != io.EOF {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		value, err = normalizeReferenceValue(value, "")
+		if err != nil {
+			writeError(w, 400, "invalid_catalog_reference")
+			return false
+		}
+		b, err = json.Marshal(value)
+		if err != nil {
+			writeError(w, 400, "invalid_request")
+			return false
+		}
+		body = bytes.NewReader(b)
+	}
+	d := json.NewDecoder(body)
 	d.DisallowUnknownFields()
 	if d.Decode(out) != nil || d.Decode(new(any)) != io.EOF {
 		writeError(w, 400, "invalid_request")
@@ -98,9 +193,20 @@ func (h *CommerceHandler) owner(w http.ResponseWriter, r *http.Request) (backoff
 	}
 	return backoffice.CartOwner{GuestToken: token}, true
 }
-func commerceResult(w http.ResponseWriter, data any, e error) {
+func commerceResult(w http.ResponseWriter, r *http.Request, data any, e error) {
 	if e != nil {
 		commerceError(w, e)
+		return
+	}
+	if strings.HasPrefix(r.URL.Path, "/storefront/") {
+		b, err := publicCatalogJSON(data)
+		if err != nil {
+			commerceError(w, err)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
+		_, _ = w.Write(b)
 		return
 	}
 	writeJSON(w, 200, data)
@@ -140,7 +246,7 @@ func (h *CommerceHandler) CreateGuest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d, e := h.service.CreateGuestCart(r.Context())
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
 }
 func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -150,7 +256,7 @@ func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method == "GET" {
 		v, e := h.service.ReadCart(r.Context(), o)
-		commerceResult(w, v, e)
+		commerceResult(w, r, v, e)
 		return
 	}
 	var in backoffice.CartMutation
@@ -158,7 +264,7 @@ func (h *CommerceHandler) Cart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d, e := h.service.MutateCart(r.Context(), o, in, r.Header.Get("Idempotency-Key"))
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
 }
 func (h *CommerceHandler) Customer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -245,7 +351,7 @@ func (h *CommerceHandler) Customer(w http.ResponseWriter, r *http.Request) {
 			e = backoffice.ErrNotFound
 		}
 	}
-	commerceResult(w, result, e)
+	commerceResult(w, r, result, e)
 }
 func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -257,6 +363,49 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	var result any
 	var e error
 	switch r.URL.Path {
+	case "/backoffice/commerce/sales":
+		if r.Method == "GET" {
+			result, e = h.service.ReadSales(r.Context(), a)
+		} else {
+			var in commerce.SalesSettings
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.SaveSales(r.Context(), a, in, key)
+		}
+	case "/backoffice/commerce/wallet/credits":
+		if r.Method == "GET" {
+			result, e = h.service.ReadCustomerCreditWallet(r.Context(), a, r.URL.Query().Get("user_id"), r.Header.Get("Idempotency-Key"))
+		} else {
+			var in backoffice.AdminCreditInput
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.CreditCustomerWallet(r.Context(), a, in, key)
+		}
+
+	case "/backoffice/commerce/coupons/activate":
+		var in backoffice.CouponActivationInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		result, e = h.service.ActivateCoupon(r.Context(), a, in, key)
+	case "/backoffice/commerce/coupons/preview":
+		var in backoffice.CouponPreviewInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		result, e = h.service.PreviewCoupon(r.Context(), a, in)
+	case "/backoffice/commerce/coupons":
+		if r.Method == "GET" {
+			result, e = h.service.ReadCoupons(r.Context(), a)
+		} else {
+			var in backoffice.CouponInput
+			if !commerceBody(w, r, &in) {
+				return
+			}
+			result, e = h.service.SaveCoupon(r.Context(), a, in, key)
+		}
 	case "/backoffice/commerce":
 		result, e = h.service.ReadCommerceAdmin(r.Context(), a)
 	case "/backoffice/commerce/settings":
@@ -296,7 +445,7 @@ func (h *CommerceHandler) Admin(w http.ResponseWriter, r *http.Request) {
 	default:
 		e = backoffice.ErrNotFound
 	}
-	commerceResult(w, result, e)
+	commerceResult(w, r, result, e)
 }
 func (h *CommerceHandler) Seller(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -305,7 +454,7 @@ func (h *CommerceHandler) Seller(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	out, e := h.service.ReadSellerCheckoutOrders(r.Context(), a, r.PathValue("id"))
-	commerceResult(w, out, e)
+	commerceResult(w, r, out, e)
 }
 func (h *CommerceHandler) Receipt(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
@@ -366,5 +515,57 @@ func (h *CommerceHandler) UploadReceipt(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	d, e := h.service.AttachReceipt(r.Context(), a, r.PathValue("id"), version, r.Header.Get("Idempotency-Key"), data)
-	commerceResult(w, d, e)
+	commerceResult(w, r, d, e)
+}
+
+func (h *CommerceHandler) AuthorizeExport(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	surface := identity.SurfaceBackoffice
+	if strings.HasPrefix(r.URL.Path, "/seller/") {
+		surface = identity.SurfaceSeller
+	}
+	a, ok := h.actor(w, r, surface)
+	if !ok {
+		return
+	}
+	if err := h.service.AuthorizeGridExport(r.Context(), a); err != nil {
+		commerceError(w, err)
+		return
+	}
+	w.WriteHeader(204)
+}
+
+func (h *CommerceHandler) Users(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	actor, ok := h.actor(w, r, identity.SurfaceBackoffice)
+	if !ok {
+		return
+	}
+	if strings.HasSuffix(r.URL.Path, "/save") {
+		var in backoffice.UserInput
+		if !commerceBody(w, r, &in) {
+			return
+		}
+		out, e := h.service.SaveUser(r.Context(), actor, in, r.Header.Get("Idempotency-Key"))
+		commerceResult(w, r, out, e)
+		return
+	}
+	var in struct {
+		Filter backoffice.UserFilter `json:"filter"`
+		IDs    []string              `json:"ids"`
+	}
+	if !commerceBody(w, r, &in) {
+		return
+	}
+	out, e := h.service.ListUsers(r.Context(), actor, in.Filter, strings.HasSuffix(r.URL.Path, "/export"), in.IDs)
+	commerceResult(w, r, out, e)
+}
+
+func (h *CommerceHandler) Business(w http.ResponseWriter, r *http.Request) {
+	b, e := h.service.PublicBusinessContent(r.Context())
+	if e != nil {
+		commerceError(w, e)
+		return
+	}
+	writeCatalogJSON(w, r, b)
 }

@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { StoresPage } from "../features/management/stores-page";
+import { ShippingMethodsPage } from "../features/commerce/shipping-methods-page";
+import { SellerStoresPage, LegacyStoreShippingRoute } from "../features/management/seller-stores-page";
+import { StorePreparationPage } from "../features/management/store-preparation-page";
+import { PageErrorBoundary } from "../shared/page-error-boundary";
+import { UsersPage } from "../features/management/users-page";
+import { RolesPage } from "../features/management/access-panel";
+import { TemporaryPassword } from "../../../../packages/identity-client/temporary-password";
+import { CouponsPage } from "../features/commerce/coupons-page";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BrowserRouter,
   Link,
@@ -41,12 +50,20 @@ import {
   AssessmentOutlined,
   LogoutOutlined,
   MenuOutlined,
+  RateReviewOutlined,
 } from "@mui/icons-material";
-import { CommercePage, SellerCheckoutPage } from "../features/commerce/commerce-page";
+import {
+  CommercePage,
+  SellerCheckoutPage,
+} from "../features/commerce/commerce-page";
 import { SharedAttributesPage } from "../features/management/shared-attributes";
 import { ProductDetailsPage } from "../features/management/product-workspace";
 import { ProfilePage } from "../features/management/profile-page";
-import { HomeCatalogPage } from "../features/management/home-catalog-page";
+import { SalesMethodsPage } from "../features/commerce/sales-methods-page";
+import { CatalogPage } from "../features/management/catalog-pages";
+import { LegacyCatalogRoute } from "../features/management/legacy-catalog-route";
+import { ProductReviewsPage } from "../features/management/product-reviews-page";
+import { ProductQuestionsPage } from "../features/management/product-questions-page";
 import { BannersPage } from "../features/management/banners-page";
 import { api, ApiError } from "../shared/api";
 import type { Command, Role, Session } from "../shared/types";
@@ -54,8 +71,12 @@ import { can, WorkspaceContext } from "../shared/workspace";
 import { DashboardPage } from "../features/dashboard/dashboard-page";
 import { ManagementPage } from "../features/management/management-page";
 import { OperationsPage } from "../features/operations/operations-page";
+import { OperationReportsPage } from "../features/operations/operation-reports-page";
+import { OrderWorkspaceList, OrderWorkspaceDetail } from "../features/operations/order-workspace";
+import { ShipmentWorkspace, ShipmentWorkspaceDetail } from "../features/operations/shipment-workspace";
 import { FinancePage } from "../features/finance/finance-page";
 import { LoginPage } from "./login-page";
+import { readStaffSession, saveStaffSession } from "../shared/staff-session";
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } },
 });
@@ -68,6 +89,7 @@ const theme = createTheme({
   palette: { primary: { main: "#B51F46" }, background: { default: "#F7F7F9" } },
   shape: { borderRadius: 10 },
   components: {
+    MuiTextField: { defaultProps: { size: "small", fullWidth: true, InputLabelProps: { shrink: true } } },
     MuiButton: { defaultProps: { disableElevation: true } },
     MuiDialog: { defaultProps: { dir: "rtl" } },
   },
@@ -78,51 +100,91 @@ const menu = [
     items: [{ path: "/", label: "داشبورد", icon: <DashboardOutlined /> }],
   },
   {
-    heading: "مدیریت بازارگاه",
+    heading: "تنظیمات",
     items: [
       {
-        path: "/home-catalog",
-        label: "کاتالوگ و صفحه اصلی",
+        path: "/sales-methods",
+        label: "روش‌های فروش",
         icon: <Inventory2Outlined />,
       },
       {
+        path: "/commerce-settings",
+        label: "تنظیمات خرید و حمل",
+        icon: <LocalShippingOutlined />,
+      },
+    ],
+  },
+  {
+    heading: "مدیریت کاربران و مشتریان",
+    items: [
+      {
         path: "/users",
-        label: "کاربران و نقش‌ها",
+        label: "کاربران",
         icon: <PeopleOutline />,
         roles: ["super-admin"],
       },
+      {
+        path: "/roles",
+        label: "نقش‌ها و مجوزها",
+        icon: <DashboardOutlined />,
+        roles: ["super-admin"],
+      },
       { path: "/stores", label: "فروشگاه‌ها", icon: <StorefrontOutlined /> },
+      { path: "/my-stores", label: "فروشگاه‌های من", icon: <StorefrontOutlined /> },
+    ],
+  },
+  {
+    heading: "مدیریت بازارگاه",
+    items: [
+      { path: "/store-preparation", label: "وقفه و تقویم فروشگاه", icon: <LocalShippingOutlined /> },
+      {
+        path: "/pricing",
+        label: "وضعیت قوانین کمیسیون",
+        icon: <PercentOutlined />,
+        roles: ["super-admin", "finance"],
+      },
+      {
+        path: "/shipping",
+        label: "روش‌های حمل",
+        icon: <LocalShippingOutlined />,
+      },
+    ],
+  },
+  {
+    heading: "کاتالوگ",
+    items: [
       {
         path: "/categories",
-        label: "دسته‌ها و خصوصیات",
+        label: "دسته‌بندی‌ها",
         icon: <CategoryOutlined />,
-      },
-      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
-      {
-        path: "/banners",
-        label: "بنرهای دو اندازه",
-        icon: <Inventory2Outlined />,
       },
       {
         path: "/attributes",
         label: "کتابخانه خصوصیات",
         icon: <CategoryOutlined />,
       },
+      { path: "/brands", label: "برندها", icon: <LabelOutlined /> },
       {
         path: "/products",
         label: "محصولات و محتوا",
         icon: <Inventory2Outlined />,
       },
+      { path: "/product-reviews", label: "نظرات محصولات", icon: <RateReviewOutlined />, roles: ["super-admin"] },
+      { path: "/product-questions", label: "پرسش و پاسخ محصولات", icon: <RateReviewOutlined />, roles: ["super-admin"] },
+    ],
+  },
+  {
+    heading: "محتوا",
+    items: [
       {
-        path: "/pricing",
-        label: "قیمت و کمیسیون",
-        icon: <PercentOutlined />,
-        roles: ["super-admin", "finance"],
+        path: "/home-settings",
+        label: "مدیریت صفحه اصلی",
+        icon: <DashboardOutlined />,
       },
       {
-        path: "/shipping",
-        label: "ارسال و تقویم",
-        icon: <LocalShippingOutlined />,
+        path: "/banners",
+        label: "بنرهای دو اندازه",
+        icon: <Inventory2Outlined />,
       },
     ],
   },
@@ -130,16 +192,17 @@ const menu = [
     heading: "عملیات و پشتیبانی",
     items: [
       {
-        path: "/commerce",
-        label: "سفارش و پرداخت سایت",
+        path: "/wallet-operations",
+        label: "واریز و برداشت کیف پول",
         icon: <ReceiptLongOutlined />,
       },
       {
-        path: "/commerce-settings",
-        label: "تنظیمات خرید و حمل",
-        icon: <LocalShippingOutlined />,
+        path: "/coupons",
+        label: "کدهای تخفیف",
+        icon: <PercentOutlined />,
       },
       { path: "/orders", label: "سفارش‌ها", icon: <ReceiptLongOutlined /> },
+      { path: "/shipments", label: "مرسوله‌ها", icon: <LocalShippingOutlined /> },
       {
         path: "/support",
         label: "پشتیبانی و پرونده‌ها",
@@ -170,6 +233,7 @@ const menu = [
         path: "/reports",
         label: "گزارش فعالیت‌ها",
         icon: <AssessmentOutlined />,
+        roles:["super-admin"],
       },
     ],
   },
@@ -190,7 +254,7 @@ function Workspace({
     [session.token],
   );
   const loadProfile = useCallback(
-    () => api.profile(session.token,session.user.Surface),
+    () => api.profile(session.token, session.user.Surface),
     [session.token],
   );
   const query = useQuery({
@@ -216,11 +280,25 @@ function Workspace({
   useEffect(() => {
     if (query.error instanceof ApiError && query.error.status === 401) logout();
   }, [query.error, logout]);
+  const [expandedPanels, setExpandedPanels] = useState<Record<string,boolean>>(
+    Object.fromEntries(menu.map(group => [group.heading, false]))
+  );
+  const previousMenuPath = useRef(location.pathname);
+  useEffect(() => {
+    if (previousMenuPath.current === location.pathname) return;
+    previousMenuPath.current = location.pathname;
+    const active=menu.find(group=>group.items.some(item=>location.pathname===item.path||item.path!=="/"&&location.pathname.startsWith(item.path+"/")));
+    if(active)setExpandedPanels(previous=>({...previous,[active.heading]:true}));
+  }, [location.pathname]);
   const current = menu
     .flatMap((g) => g.items)
     .find((i) => i.path === location.pathname);
   const role = session.user.Role;
   const permissions = session.user.Permissions ?? [];
+  const canCreditWallet =
+    role === "super-admin" ||
+    role === "finance" ||
+    permissions.includes("commerce.wallet.credit");
   const financeVisible =
     role === "super-admin" ||
     role === "finance" ||
@@ -229,6 +307,24 @@ function Workspace({
     !roles ||
     roles.includes(role) ||
     (roles.includes("finance") && financeVisible);
+  const visibleMenu = menu
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((i) =>
+        session.user.Surface === "seller"
+          ? ["/products", "/orders", "/shipments", "/store-preparation", "/my-stores"].includes(i.path)
+          : i.path === "/my-stores" ? false
+          : i.path === "/wallet-operations" ? role === "super-admin" || role === "finance" || permissions.some(p=>["commerce.deposits.read","commerce.refunds.resolve"].includes(p))
+          : i.path === "/users"
+            ? canCreditWallet || permissions.includes("users.read")
+            : ["/stores", "/store-preparation"].includes(i.path)
+              ? role === "super-admin" ||
+                role === "operations" ||
+                permissions.includes("stores.read")
+              : visible("roles" in i ? i.roles : undefined),
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
   return (
     <div className="app-layout">
       <aside className={"sidebar " + (menuOpen ? "is-open" : "")}>
@@ -253,16 +349,19 @@ function Workspace({
           <span className="live-dot" />
         </div>
         <nav>
-          {menu.map((group) => (
-            <div className="nav-group" key={group.heading}>
-              <h3>{group.heading}</h3>
-              {group.items
-                .filter((i) =>
-                  session.user.Surface === "seller"
-                    ? ["/products","/commerce"].includes(i.path)
-                    : visible("roles" in i ? i.roles : undefined),
-                )
-                .map((item) => (
+          {visibleMenu.map((group,index) => (
+            <section className="nav-group nav-panel" key={group.heading}>
+              <button className="nav-panel-heading" id={`nav-panel-heading-${index}`} aria-expanded={!!expandedPanels[group.heading]} aria-controls={`nav-panel-content-${index}`} onClick={()=>setExpandedPanels(previous=>({...previous,[group.heading]:!previous[group.heading]}))}>
+                <span>{group.heading}</span><span className="nav-panel-arrow" aria-hidden="true">⌄</span>
+              </button>
+              <div
+                id={`nav-panel-content-${index}`}
+                role="group"
+                aria-labelledby={`nav-panel-heading-${index}`}
+                className="nav-panel-content"
+                hidden={!expandedPanels[group.heading]}
+              >
+                {group.items.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
@@ -279,7 +378,8 @@ function Workspace({
                     )}
                   </NavLink>
                 ))}
-            </div>
+              </div>
+            </section>
           ))}
         </nav>
         <div className="sidebar-bottom">
@@ -358,12 +458,29 @@ function Workspace({
           ) : (
             <WorkspaceContext.Provider
               value={{
+                authToken: session.token,
+                actorID: session.user.ID,
+                readCustomerWallet: (user, key) =>
+                  api.readCustomerWallet(session.token, user, key),
+                creditCustomerWallet: async (input, key) => {
+                  try {
+                    return await api.creditCustomerWallet(
+                      session.token,
+                      input,
+                      key,
+                    );
+                  } catch (error) {
+                    if (error instanceof ApiError && error.status === 401)
+                      logout();
+                    throw error;
+                  }
+                },
                 state: query.data,
                 role,
                 surface: session.user.Surface,
                 loadProfile,
                 updateProfile: (input) =>
-                  api.updateProfile(session.token, input,session.user.Surface),
+                  api.updateProfile(session.token, input, session.user.Surface),
                 loadCatalogMedia,
                 loadBanners: () => api.banners(session.token),
                 loadBannerAsset: (id) => api.bannerAsset(session.token, id),
@@ -372,6 +489,16 @@ function Workspace({
                   await cache.invalidateQueries({ queryKey: ["banners"] });
                   return result;
                 },
+                loadProductQA: (id, after) =>
+                  api.productQA(session.token, id, after),
+                changeProductQA: (id, question, mutation, key) =>
+                  api.changeProductQA(
+                    session.token,
+                    id,
+                    question,
+                    mutation,
+                    key,
+                  ),
                 loadProduct: (id) =>
                   api.productWorkspace(session.token, id, session.user.Surface),
                 resolveVariant: (id, values) =>
@@ -401,14 +528,25 @@ function Workspace({
                 busy: mutation.isPending,
               }}
             >
+              <PageErrorBoundary key={location.pathname}>
               <Routes>
+                <Route path="/sales-methods" element={<SalesMethodsPage />} />
+                <Route
+                  path="/coupons"
+                  element={<CouponsPage token={session.token} />}
+                />
                 <Route
                   path="/commerce"
-                  element={
+                  element={<Navigate to="/orders" replace/>}
+                />
+                <Route path="/orders" element={session.user.Surface === "seller" ? <SellerCheckoutPage token={session.token}/> : <OrderWorkspaceList/>}/>
+                <Route path="/shipments" element={<ShipmentWorkspace/>}/>
+                <Route path="/shipments/:id" element={<ShipmentWorkspaceDetail/>}/>
+                <Route path="/wallet-operations" element={
                     session.user.Surface === "seller" ? (
-                      <SellerCheckoutPage token={session.token} />
+                      <Navigate to="/orders" replace/>
                     ) : (
-                      <CommercePage token={session.token} />
+                      <CommercePage token={session.token} financialOnly />
                     )
                   }
                 />
@@ -423,13 +561,29 @@ function Workspace({
                   }
                 />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/store-preparation" element={<StorePreparationPage />} />
+                <Route path="/store-shipping" element={<LegacyStoreShippingRoute />} />
+                <Route path="/my-stores" element={session.user.Surface === "seller" ? <SellerStoresPage /> : <Navigate to="/stores" replace />} />
+                <Route
+                  path="/stores"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    (role === "super-admin" ||
+                      role === "operations" ||
+                      permissions.includes("stores.read")) ? (
+                      <StoresPage />
+                    ) : (
+                      <Navigate to={session.user.Surface === "seller" ? "/my-stores" : "/"} replace />
+                    )
+                  }
+                />
                 <Route
                   path="/home-catalog"
                   element={
                     session.user.Surface === "seller" ? (
                       <Navigate to="/" replace />
                     ) : (
-                      <HomeCatalogPage />
+                      <LegacyCatalogRoute />
                     )
                   }
                 />
@@ -443,6 +597,24 @@ function Workspace({
                     )
                   }
                 />
+                {(["categories", "brands", "products", "home"] as const).map(
+                  (section) => (
+                    <Route
+                      key={section}
+                      path={
+                        section === "home" ? "/home-settings" : "/" + section
+                      }
+                      element={
+                        session.user.Surface === "seller" &&
+                        section !== "products" ? (
+                          <Navigate to="/products" replace />
+                        ) : (
+                          <CatalogPage key={section} section={section} />
+                        )
+                      }
+                    />
+                  ),
+                )}
                 <Route path="/products/:id" element={<ProductDetailsPage />} />
                 <Route
                   path="/banners"
@@ -454,25 +626,60 @@ function Workspace({
                     )
                   }
                 />
-                <Route path="/attributes" element={<SharedAttributesPage />} />
-                {(
-                  [
-                    "users",
-                    "stores",
-                    "categories",
-                    "brands",
-                    "products",
-                    "pricing",
-                    "shipping",
-                  ] as const
-                ).map((section) => (
+                <Route
+                  path="/product-questions"
+                  element={session.user.Surface === "backoffice" && role === "super-admin" ? <ProductQuestionsPage /> : <Navigate to="/" replace />}
+                />
+                <Route
+                  path="/product-reviews"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    role === "super-admin" ? (
+                      <ProductReviewsPage token={session.token} />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/attributes"
+                  element={
+                    session.user.Surface === "seller" ? (
+                      <Navigate to="/products" replace />
+                    ) : (
+                      <SharedAttributesPage />
+                    )
+                  }
+                />
+                <Route
+                  path="/users"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    (canCreditWallet || permissions.includes("users.read")) ? (
+                      <UsersPage />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/roles"
+                  element={
+                    session.user.Surface === "backoffice" &&
+                    role === "super-admin" ? (
+                      <RolesPage />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+                <Route path="/shipping" element={session.user.Surface === "seller" ? <Navigate to="/my-stores" replace /> : <ShippingMethodsPage />} />
+                {(["pricing"] as const).map((section) => (
                   <Route
                     key={section}
                     path={"/" + section}
                     element={
-                      (session.user.Surface === "seller" &&
-                        section !== "products") ||
-                      (section === "users" && role !== "super-admin") ||
+                      session.user.Surface === "seller" ||
                       (section === "pricing" && !financeVisible) ? (
                         <Navigate to="/" replace />
                       ) : (
@@ -483,7 +690,6 @@ function Workspace({
                 ))}
                 {(
                   [
-                    "orders",
                     "support",
                     "assignments",
                     "notifications",
@@ -493,12 +699,12 @@ function Workspace({
                   <Route
                     key={section}
                     path={"/" + section}
-                    element={<OperationsPage key={section} section={section} />}
+                    element={section==="reports"?<OperationReportsPage/>:<OperationsPage key={section} section={section} />}
                   />
                 ))}
                 <Route
                   path="/orders/:id"
-                  element={<OperationsPage section="orders" />}
+                  element={session.user.Surface === "seller" ? <OperationsPage section="orders"/> : <OrderWorkspaceDetail/>}
                 />
                 <Route
                   path="/finance"
@@ -520,6 +726,7 @@ function Workspace({
                   }
                 />
               </Routes>
+              </PageErrorBoundary>
             </WorkspaceContext.Provider>
           )}
           <footer className="page-footer">
@@ -538,21 +745,77 @@ function Workspace({
   );
 }
 function SessionApp() {
-  const location=useLocation(),navigate=useNavigate();
-  const loginSurface=location.pathname==="/seller-login"?"seller":"backoffice";
+  const location = useLocation(),
+    navigate = useNavigate();
+  const loginSurface =
+    location.pathname === "/seller-login" || location.pathname === "/my-stores" ? "seller" : "backoffice";
   const [session, setSession] = useState<Session | null>(null);
+  const [candidate, setCandidate] = useState(() => {
+    const saved = readStaffSession();
+    return location.pathname === "/seller-login" && saved?.surface !== "seller" ? null : saved;
+  });
+  const [restoreError, setRestoreError] = useState("");
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  useEffect(() => {
+    if (!candidate || session) return;
+    let active = true;
+    setRestoreError("");
+    void api.resumeSession(candidate.token, candidate.surface).then(result => {
+      if (!active) return;
+      queryClient.clear();
+      saveStaffSession(result);
+      setSession(result);
+    }).catch(error => {
+      if (!active) return;
+      if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
+        saveStaffSession(null);
+        setCandidate(null);
+        queryClient.clear();
+      } else setRestoreError("بررسی نشست انجام نشد. اتصال را بررسی و دوباره تلاش کنید.");
+    });
+    return () => { active = false; };
+  }, [candidate, session, restoreAttempt]);
+  const acceptSession = (next: Session) => {
+    queryClient.clear();
+    saveStaffSession(next);
+    setSession(next);
+  };
   const logout = () => {
-    if (session)
+    const token = session?.token ?? candidate?.token;
+    const surface = session?.user.Surface ?? candidate?.surface;
+    if (token && surface)
       void api
-        .logout(session.token, session.user.Surface)
+        .logout(token, surface)
         .catch(() => undefined);
     setSession(null);
+    setCandidate(null);
+    saveStaffSession(null);
     queryClient.clear();
   };
-  return session ? (
+  if (candidate && !session) return <main className="login-form" aria-busy={!restoreError}>
+    {restoreError ? <Alert severity="error" action={<Button onClick={() => setRestoreAttempt(value => value + 1)}>تلاش مجدد</Button>}>{restoreError}</Alert> : <p role="status">در حال بررسی نشست…</p>}
+    {restoreError && <Button onClick={logout}>بازگشت به ورود</Button>}
+  </main>;
+  return session?.user.PasswordChangeRequired ? (
+    <TemporaryPassword<Session>
+      token={session.token}
+      surface={session.user.Surface}
+      base={import.meta.env.VITE_API_BASE_URL ?? ""}
+      onComplete={acceptSession}
+      onCancel={logout}
+    />
+  ) : session ? (
     <Workspace session={session} logout={logout} />
   ) : (
-    <LoginPage key={loginSurface} surface={loginSurface} onLogin={s=>{setSession(s);if(s.user.Surface==="seller")navigate("/products",{replace:true})}} />
+    <LoginPage
+      key={loginSurface}
+      surface={loginSurface}
+      onLogin={(s) => {
+        acceptSession(s);
+        if (s.user.Surface === "seller" && location.pathname === "/seller-login")
+          navigate("/products", { replace: true });
+      }}
+    />
   );
 }
 export function App() {
