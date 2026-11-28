@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[تسک‌بندی بازخورد ورود، سفارش، کیف پول و مرسوله — ۲۰۲۶-۱۱-۲۸؛ فقط برنامه‌ریزی](delivery/order-experience-followup-2026-11-28/README.md)
+[تحویل۸اصلاح ورود، سفارش، کیف پول و مرسوله؛ شواهد و اجرای محلی — ۲۰۲۶-۱۱-۲۸](delivery/order-experience-followup-2026-11-28/final-local-review.md)
 
 [ممیزی و شواهد همه کنترل‌های تاریخ شمسی سایت و بک‌آفیس](delivery/order-lifecycle-review-2026-11-27/issue-141-verification.md).
 

@@ -1,8 +1,8 @@
 # صف اصلاحات ورود، سفارش و مرسوله — ۲۰۲۶-۱۱-۲۸
 
-مالک: @eliassarband · وضعیت اسناد: `in-review` · وضعیت اجرا: `in-progress` · `execution_authorized: true` · والد صف: [#95](https://github.com/MohamadParsa/marketplace/issues/95).
+مالک: @eliassarband · وضعیت اسناد: `in-review` · وضعیت اجرا: `done` · `execution_authorized: true` · والد صف: [#95](https://github.com/MohamadParsa/marketplace/issues/95).
 
-برنامه اولیه پاسخ به «اینا را تسک کن» بود؛ مالک سپس اجرای هر۸تسک را صریحاً انتخاب کرد. نیازمندی‌های روشن در [قواعد مشترک](../../domains/orders/experience-followup-2026-11-28.md) و جزئیات مستقل در شرح‌ها ثبت می‌شوند. #131 تا #141 تحویل‌های قبلی و بسته می‌مانند؛ این صف اصلاحات حاصل بازبینی مالک است. ایجاد/ثبت Issue و push مستندات به معنی شروع کدنویسی یا بستن آن‌ها نیست.
+برنامه اولیه پاسخ به «اینا را تسک کن» بود؛ مالک سپس اجرای هر۸تسک را صریحاً انتخاب کرد. نیازمندی‌های روشن در [قواعد مشترک](../../domains/orders/experience-followup-2026-11-28.md) و جزئیات مستقل در شرح‌ها ثبت می‌شوند. #131 تا #141 تحویل‌های قبلی و بسته می‌مانند؛ این صف اصلاحات حاصل بازبینی مالک است. نتیجه اجرای انتخاب‌شده در گزارش‌های شواهد هر Issue و جدول تحویل نهایی ثبت است.
 
 ## نتیجه بررسی سورس و هم‌پوشانی
 
@@ -37,13 +37,13 @@
 
 ## آمادگی و پرسش مؤثر
 
-دامنه، مالک، مجوز، ورودی/خطا، پذیرش و شاهد بستن هر تسک مشخص‌اند. [معیار آمادگی](../readiness.md) پیش از اجرای انتخاب‌شده بررسی شود؛ سند in-review یا Issue باز جای انتخاب مالک را نمی‌گیرد. طراحی فنی بازیابی نشست و استفاده مجدد از قطعیت مالی باید پیش از کد ثبت شود. [ORDERFOLLOW-Q01](../../product/open-questions.md#order-experience-followup-20261128) فقط تکلیف نمایش لغوشده‌های پس از شروع را باز می‌گذارد؛ مانع سایر قسمت‌های روشن نیست. جزئیات پیشنهادها در سند قواعد از تصمیم‌های صریح جدا هستند.
+دامنه، مالک، مجوز، ورودی/خطا، پذیرش و شاهد بستن هر تسک مشخص‌اند. [معیار آمادگی](../readiness.md) برای هر برش انتخاب‌شده بررسی شد؛ وضعیت in-review اسناد از تکمیل اجرا جدا می‌ماند. طراحی نشست همان تب با اعتبارسنجی سرور و بازاستفاده از قطعیت مالی در شواهد #143/#146 ثبت شده‌اند. [ORDERFOLLOW-Q01](../../product/open-questions.md#order-experience-followup-20261128) با پاسخ صریح مالک حل و در #147 اجرا شد. جزئیات پیشنهادها در سند قواعد از تصمیم‌های صریح جدا هستند.
 
 ## پذیرش کلی و شرط پایان
 
 - تست متناسب هر تغییر و سناریوهای منفی مجوز، مالکیت و هم‌زمانی لازم است. مسیر مالی باید با PostgreSQL و شکست ذخیره/پاسخ نامعلوم اثبات شود؛ UI صرفاً از رنگ یا متن ساختگی نتیجه نسازد.
 - کنترل‌های تاریخ شمسی و ارقام فارسی، فیلتر بسته اولیه، جست‌وجوی primary، label یکسان و RTL در همه فرم‌های تازه حفظ شوند.
-- هر Issue فقط بعد از کد و تست موفق، شواهد، هماهنگی مستندات، commit/push و کامنت مناسب بسته شود؛ این تحویل هیچ Issue اجرایی را نمی‌بندد.
+- هر Issue فقط بعد از کد و تست موفق، شواهد، هماهنگی مستندات، commit/push و کامنت مناسب بسته شود؛ بستن هر Issue در نتیجه اجرای خودش و با شواهد CI انجام می‌شود.
 - [فهرست ماشین‌خوان](task-index.json)، [BDD طراحی](../../bdd/features/experiences/order-experience-followup.feature) و [ردیابی](../../governance/traceability.md#order-experience-followup-20261128) مرجع ارتباط‌اند. BDD در این نوبت اجرا نشده است.
 
 ## بررسی تحویل برنامه‌ریزی
@@ -55,3 +55,20 @@
 ## شروع اجرا
 
 مالک اجرای هر۸تسک، تست و تکمیل گیت و بستن با شواهد را انتخاب کرد. ORDERFOLLOW-Q01 با انتخاب صریح پیشنهاد پاسخ گرفت: لغوشده پس از شروع در تاریخچه و فیلتر لغوشده می‌ماند و صف پیش‌فرض فقط فعال‌هاست. گزارش برنامه‌ریزی بالا تاریخی است؛ پیشرفت جاری در task-index و گزارش مستقل هر Issue ثبت می‌شود.
+
+## نتیجه اجرا
+
+هر۸کار با تست و push جداگانه و هر۵check موفق CI، با کامنت شواهد بسته شدند. [تحویل نهایی و اجرای محلی](final-local-review.md).
+
+| Issue و شواهد | کامیت | کامنت بستن / CI |
+| --- | --- | --- |
+| [#142](issue-142-verification.md) | [4049af9](https://github.com/MohamadParsa/marketplace/commit/4049af9ab74e32a0dd741336d1e25a168776d7fe) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/142#issuecomment-7235847266) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46120293895/job/140903109206) |
+| [#143](issue-143-verification.md) | [c1e5f9e](https://github.com/MohamadParsa/marketplace/commit/c1e5f9ec9b45581ac5effab2d7d2b418432a3c1b) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/143#issuecomment-7235895777) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46120618838/job/140904088124) |
+| [#144](issue-144-verification.md) | [c321435](https://github.com/MohamadParsa/marketplace/commit/c321435d746e41a17add984ca07045e3f02bb021) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/144#issuecomment-7235967160) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46120916826/job/140905001954) |
+| [#145](issue-145-verification.md) | [ac5ec92](https://github.com/MohamadParsa/marketplace/commit/ac5ec92fa14d5098121386bdbd4b4436e5c1c18e) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/145#issuecomment-7235967780) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46121071170/job/140905477576) |
+| [#146](issue-146-verification.md) | [7aee4ed](https://github.com/MohamadParsa/marketplace/commit/7aee4ed4455ca2aee9900cea95ee79036afdebb3) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/146#issuecomment-7236082941) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46121979106/job/140908260258) |
+| [#147](issue-147-verification.md) | [d277959](https://github.com/MohamadParsa/marketplace/commit/d277959ea49d22a3a4276b31a0dac6ddedbd686d) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/147#issuecomment-7236100818) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46122064767/job/140908518379) |
+| [#148](issue-148-verification.md) | [c5d5ba2](https://github.com/MohamadParsa/marketplace/commit/c5d5ba26fc4a8a7522ec7bd1e8e163c8bcf41396) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/148#issuecomment-7236158092) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46122361727/job/140909427173) |
+| [#149](issue-149-verification.md) | [ec759db](https://github.com/MohamadParsa/marketplace/commit/ec759db393118c78fc4af356b14115633b70eb00) | [کامنت](https://github.com/MohamadParsa/marketplace/issues/149#issuecomment-7236252808) · [CI موفق](https://github.com/MohamadParsa/marketplace/actions/runs/46123223630/job/140912028637) |
+
+برای #146، کامیت اصلی19b7d3f و اصلاح انتظار تست هم‌زمانی7aee4ed هر دو پوش شده‌اند؛ CI نهایی آن سبز است. وضعیت سند in-review، تکمیل اجرا و پذیرش دستی مالک سه موضوع مستقل‌اند. PR #106 باز است و merge/deploy نشده است.

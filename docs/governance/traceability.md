@@ -3,7 +3,7 @@
 <a id="order-experience-followup-20261128"></a>
 ## بازخورد ورود و سفارش و مرسوله — ۲۰۲۶-۱۱-۲۸
 
-[قواعد مشترک](../domains/orders/experience-followup-2026-11-28.md) → [شرح‌ها و Issueهای واقعی](../delivery/order-experience-followup-2026-11-28/README.md) → [فهرست ماشین‌خوان](../delivery/order-experience-followup-2026-11-28/task-index.json) → [BDD طراحی](../bdd/features/experiences/order-experience-followup.feature). وضعیت همه todo و execution_authorized=false است؛ سناریوها شاهد تست اجراشده نیستند. پرسش محدود صف لغوشده در [ORDERFOLLOW-Q01](../product/open-questions.md#order-experience-followup-20261128) ثبت است.
+[قواعد مشترک](../domains/orders/experience-followup-2026-11-28.md) → [شرح‌ها و Issueهای واقعی](../delivery/order-experience-followup-2026-11-28/README.md) → [فهرست ماشین‌خوان](../delivery/order-experience-followup-2026-11-28/task-index.json) → [BDD طراحی](../bdd/features/experiences/order-experience-followup.feature). مالک اجرای هر۸کار را انتخاب کرد؛ وضعیت اجرا و شواهد تست مستقل هر Issue در فهرست تحویل ثبت‌اند. خود فایل سناریوهای طراحی شاهد اجرای runner نیست. پاسخ صریح پرسش محدود صف لغوشده در [ORDERFOLLOW-Q01](../product/open-questions.md#order-experience-followup-20261128) ثبت است.
 
 | قاعده | تسک / شناسه پذیرش |
 | --- | --- |

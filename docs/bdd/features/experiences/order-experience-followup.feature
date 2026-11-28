@@ -1,8 +1,8 @@
 # language: fa
 # مرجع: docs/domains/orders/experience-followup-2026-11-28.md
 # شرح‌ها: docs/delivery/order-experience-followup-2026-11-28/README.md
-# صرفاً سناریوهای طراحی؛ اجرا انتخاب نشده و ادعای passed یا اتصال به runner ندارد.
-@design-scenarios @planning-only
+# صرفاً سناریوهای طراحی؛ اجرا با دستور مالک انتخاب شده؛ این فایل طراحی است و ادعای اتصال به runner ندارد.
+@design-scenarios @implementation-authorized
 ویژگی: اصلاح تجربه ورود و سفارش و مرسوله
 
   @acceptance=FEAT-ORDER-FOLLOW-001-AC01
