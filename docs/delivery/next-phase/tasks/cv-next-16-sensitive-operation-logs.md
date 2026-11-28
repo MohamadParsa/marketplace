@@ -14,7 +14,7 @@ execution_authorized: true
 
 # CV-NEXT-16 — لاگ فنی عملیات حساس، خطا و شکست با correlation
 
-Issue: [#77](https://github.com/MohamadParsa/marketplace/issues/77) · اساین: `eliassarband` · وضعیت اجرا: **پذیرش محلی تکمیل؛ بستن پس از CI** · اجرای غیر درگاه با دستور صریح مالک.
+Issue: [#77](https://github.com/MohamadParsa/marketplace/issues/77) · اساین: `eliassarband` · وضعیت اجرا: **تکمیل و بسته؛ سورس4f76041 و هر۵CI موفق** · اجرای غیر درگاه با دستور صریح مالک.
 
 ## مسئله و نتیجه بیزینسی
 
@@ -66,4 +66,4 @@ ACهای همین قابلیت به تست مناسب API/دامنه/مرورگ�
 
 ## شواهد پایان
 
-قرارداد/ذخیره/instrumentation در #155..157 و audit/رفتار در #75/#76 تکمیل شده‌اند؛ در این تسک دوباره ساخته نشدند. تست شکست checkout با correlation مشترک، عدم تغییر مالی و حذف داده خصوصی؛ تست مسیر عمومی از پشت symlink؛ lint/build و full Go/PostgreSQL/Redis/vet موفق‌اند. race در CI لینوکس بررسی می‌شود. [گزارش و تصاویر](../../logging-gateway-plan-2026-11-28/execution.md) · [راهنمای محلی و مرجع مشاهده](../../logging-gateway-plan-2026-11-28/local-logging-guide.md). Gateway/OAuth در #158..163 اجرا نشده است.
+قرارداد/ذخیره/instrumentation در #155..157 و audit/رفتار در #75/#76 تکمیل شده‌اند؛ در این تسک دوباره ساخته نشدند. تست شکست checkout با correlation مشترک، عدم تغییر مالی و حذف داده خصوصی؛ تست مسیر عمومی از پشت symlink؛ lint/build و full Go/PostgreSQL/Redis/vet موفق‌اند. race و guard symlink در CI لینوکس موفق‌اند. [گزارش و تصاویر](../../logging-gateway-plan-2026-11-28/execution.md) · [راهنمای محلی و مرجع مشاهده](../../logging-gateway-plan-2026-11-28/local-logging-guide.md). Gateway/OAuth در #158..163 اجرا نشده است.

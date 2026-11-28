@@ -47,10 +47,10 @@ integration filesystem و concurrency/rotation/restart/failure؛ اعداد rete
 
 ## پرسش و بخش متوقف
 
-NEXT-Q09؛ مدت/حجم نگهداری و رفتار شکست هر نوع لاگ هنوز تصمیم باز است، مقصد محلی انتخاب شده.
+NEXT-Q09 با پاسخ مالک برای برش محلی حل شده است؛ سیاست۷/۳۰روز، سقف۵۰۰MiB، مشاهده ادمین و تفکیک telemetry از audit اتمیک در راهنمای محلی ثبت است.
 
 مرجع: [دفتر پرسش‌ها](../../../product/open-questions.md) · [برنامه و ترتیب](../README.md) · [BDD طراحی](../../../bdd/features/experiences/logging-gateway-plan.feature). BDD در این نوبت اجرا نشده و همه داده‌های تست آینده باید ساختگی و ایزوله باشند.
 
 ## شاهد اجرا
 
-JSON Lines خصوصی، صف محدود، flush/close، قفل بین پردازه‌ای Windows/Unix، rotation و سقف مشترک فایل‌ها، نگهداری۷/۳۰روز و reader/CLI فقط‌خواندنی پیاده شدند. تست هم‌زمانی دو نویسنده، restart/صفحه‌بندی، rotation/retention/سقف، صف پر و مسیر خراب موفق‌اند. اتصال به boot برنامه و endpoint ادمین در #157/#75/#76 انجام می‌شود. [گزارش](../execution.md).
+JSON Lines خصوصی، صف محدود، flush/close، قفل بین پردازه‌ای Windows/Unix، rotation و سقف مشترک فایل‌ها، نگهداری۷/۳۰روز و reader/CLI فقط‌خواندنی پیاده شدند. تست هم‌زمانی دو نویسنده، restart/صفحه‌بندی، rotation/retention/سقف، صف پر و مسیر خراب موفق‌اند. اتصال به boot برنامه و endpoint ادمین در #157/#75/#76 تکمیل شده است. [گزارش](../execution.md).

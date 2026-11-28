@@ -6,14 +6,14 @@ owner: eliassarband
 updated: 2026-11-28
 related: [API-OPERATION-LOGGING-001, FEAT-NEXT-014, FEAT-NEXT-015, FEAT-NEXT-016]
 approved_by: []
-implementation_status: in-progress
+implementation_status: logging-complete-gateway-deferred
 execution_authorized: true
 planning_status: done
 ---
 
 # اول لاگ‌گیری؛ سپس درگاه
 
-پس از تسک‌بندی، مالک اجرای همه موارد غیر درگاه را انتخاب کرد و NEXT-Q09/Q10 را پاسخ داد. #155/#156/#157 و #75/#76 تکمیل و بسته‌اند؛ پذیرش نهایی #77 در حال تکمیل است. [گزارش اجرا](execution.md)، [راهنمای محلی](local-logging-guide.md) و [ماتریس پوشش](coverage.md) شاهد وضعیت جاری‌اند. همه تسک‌ها مسئول `eliassarband` دارند؛ #158..163 درگاه با برچسب `status:deferred` همچنان معوق‌اند.
+پس از تسک‌بندی، مالک اجرای همه موارد غیر درگاه را انتخاب کرد و NEXT-Q09/Q10 را پاسخ داد. #155/#156/#157 و #75/#76/#77 تکمیل، پوش و با کامنت شواهد بسته‌اند؛ هر۵CI سورس نهایی موفق است. [گزارش اجرا](execution.md)، [راهنمای محلی](local-logging-guide.md) و [ماتریس پوشش](coverage.md) شاهد وضعیت جاری‌اند. همه تسک‌ها مسئول `eliassarband` دارند؛ #158..163 درگاه با برچسب `status:deferred` همچنان معوق‌اند.
 
 ## خواسته صریح و تصمیم‌ها
 

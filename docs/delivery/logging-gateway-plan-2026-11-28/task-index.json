@@ -148,10 +148,11 @@
       "spec": "tasks/gateway-end-to-end-and-activation-review.md"
     }
   ],
-  "implementation_status": "in-progress",
+  "implementation_status": "logging-done-gateway-deferred",
   "completed_existing_issues": [
     75,
-    76
+    76,
+    77
   ],
-  "pending_acceptance_issue": 77
+  "source_commit": "4f7604115b6d10e300c6b4e32dd4ec01c948806f"
 }

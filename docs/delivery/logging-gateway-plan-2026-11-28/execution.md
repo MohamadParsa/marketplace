@@ -6,7 +6,7 @@ owner: eliassarband
 updated: 2026-11-28
 related: [DEL-LOGGING-GATEWAY-001, API-OPERATION-LOGGING-001]
 approved_by: []
-implementation_status: in-progress
+implementation_status: done
 execution_authorized: true
 ---
 
@@ -29,7 +29,7 @@ execution_authorized: true
 | #157 | تکمیل و بسته؛ سورسcd183ee و هر۵CI موفق | runtime/lifecycle، HTTP/actor، commerce/preview/command و adapter پیامک/نشان |
 | #75 | تکمیل و بسته؛ سورسbaaa312 و هر۵CI موفق | audit اتمیک/غیرقابل بازنویسی، diff مجاز و گزارش فقط ادمین |
 | #76 | تکمیل و بسته؛ سورس7e7cb57 و هر۵CI موفق | رویدادهای سروری، dedupe و گزارش قیف فقط ادمین |
-| #77 | پیاده و تست محلی؛ CI در انتظار | پذیرش یکپارچه، مسیر خصوصی با ancestor واقعی و راهنمای محلی |
+| #77 | تکمیل و بسته؛ سورس4f76041 و هر۵CI موفق | پذیرش یکپارچه، مسیر خصوصی با ancestor واقعی و راهنمای محلی |
 
 تکمیل هر مرحله با commit/push، بررسی CI و کامنت شواهد همان Issue ثبت می‌شود. هیچ تماس زرین‌پال یا احراز پذیرنده در این دامنه ساخته نمی‌شود؛ callback زمان پرداخت/دامنه سایت به تسک معوق خودش تعلق دارد.
 
@@ -49,3 +49,8 @@ execution_authorized: true
 
 
 اجرای اصلی محلی8098/5197 با API و رابط تازه آماده و health/صفحه گزارش/خانه۲۰۰بودند. پیش/پس راه‌اندازی:۳۵۳۴محصول،۴۸فروشگاه،۲۲سفارش و۱۵خرید ثابت؛۱۴ورودی ledger با fingerprint یکسان `4eef5db469592d7c060f730f49e8ce7e5fdf417c01667707ac12f6dd9768862b`. هیچ درخواست/استرداد جدید ایجاد نشد. CLI فقط‌خواندنی رویداد فنی با operation معتبر را از مقصد اصلی خواند. مرورگر هر سه تب با fixture دوباره موفق بود؛ actor در audit با نام مجاز نمایش داده می‌شود.
+
+
+## بستن و پوش نهایی
+
+هر شش Issue غیر درگاه با کامنت شواهد بسته شدند: [#155](https://github.com/MohamadParsa/marketplace/issues/155#issuecomment-7239503828)، [#156](https://github.com/MohamadParsa/marketplace/issues/156#issuecomment-7239616618)، [#157](https://github.com/MohamadParsa/marketplace/issues/157#issuecomment-7239784469)، [#75](https://github.com/MohamadParsa/marketplace/issues/75#issuecomment-7239916708)، [#76](https://github.com/MohamadParsa/marketplace/issues/76#issuecomment-7240111001) و [#77](https://github.com/MohamadParsa/marketplace/issues/77#issuecomment-7240245858). [CI سورس نهایی](https://github.com/MohamadParsa/marketplace/actions/runs/46151516858) شامل هر۵بررسی موفق است؛ guard symlink در Linux نیز همراه race پاس شد. بررسی لینک‌های نسبی و یکتایی شناسه‌های اسناد تغییرکرده بدون خطا بود. شش Issue #158..163 همچنان open/deferred و PR #106 و والد #95 بازند؛ هیچ merge/deploy انجام نشد.
