@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+DOM-ORDER-FOLLOW-001-R10/R11 → [استرداد کل سفارش #164](../delivery/order-experience-followup-2026-11-28/tasks/full-order-refund.md) و [خلاصه سفارش بک‌آفیس #165](../delivery/order-experience-followup-2026-11-28/tasks/backoffice-order-summary-layout.md) → [۸معیار و۸سناریوی طراحی](../bdd/features/experiences/order-refund-summary-planning.feature). هر دو todo و execution_authorized=false؛ runner اجرا نشده است.
+
 [API-OPERATION-LOGGING-001](../architecture/contracts/operation-logging.md) → [#75/#76/#77 و زیرتسک‌های لاگ #155..157، درگاه معوق #158..163](../delivery/logging-gateway-plan-2026-11-28/README.md) → [BDD طراحی](../bdd/features/experiences/logging-gateway-plan.feature). اجرای غیر درگاه با دستور صریح مالک: [شواهد API/مرورگر/CI](../delivery/logging-gateway-plan-2026-11-28/execution.md) و [راهنمای محلی](../delivery/logging-gateway-plan-2026-11-28/local-logging-guide.md). BDD طرح مستند است و runner اجرا نشده؛ درگاه #158..163 معوق است.
 
 DOM-PAYMENTS-001-R28..29 → [اصلاح سوییچ/ضریب #154 و FEAT-BO-GATEWAY-CURRENCY-001-AC01..04](../delivery/gateway-currency-and-switches-2026-11-28.md) → [BDD طراحی](../bdd/features/experiences/gateway-currency-and-switches.feature). اتصال بانکی خارج این تحویل است.

@@ -212,5 +212,45 @@
         "comment": "https://github.com/MohamadParsa/marketplace/issues/151#issuecomment-7237211101"
       }
     }
+  ],
+  "implementation_scope": "original-eight-tasks",
+  "additional_planned_tasks": [
+    {
+      "id": "CV-ORD-UI-03",
+      "spec_id": "FEAT-BO-ORDER-REFUND-FULL-001",
+      "issue": 164,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/164",
+      "title": "CV-ORD-UI-03 — استرداد کل سفارش با اقدام مستقل روی سفارش",
+      "file": "tasks/full-order-refund.md",
+      "owner": "eliassarband",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "related_closed_issues": [
+        137,
+        138,
+        140
+      ],
+      "dependencies": [],
+      "blocking_questions": []
+    },
+    {
+      "id": "CV-ORD-UI-04",
+      "spec_id": "FEAT-BO-ORDER-SUMMARY-001",
+      "issue": 165,
+      "url": "https://github.com/MohamadParsa/marketplace/issues/165",
+      "title": "CV-ORD-UI-04 — چیدمان منظم خلاصه سفارش و گیرنده بالای اقلام در بک‌آفیس",
+      "file": "tasks/backoffice-order-summary-layout.md",
+      "owner": "eliassarband",
+      "state": "open",
+      "implementation_status": "todo",
+      "execution_authorized": false,
+      "related_closed_issues": [
+        140,
+        144
+      ],
+      "dependencies": [],
+      "blocking_questions": []
+    }
   ]
 }
