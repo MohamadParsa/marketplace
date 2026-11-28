@@ -1,6 +1,6 @@
 # نقشه مستندات
 
-[برنامه لاگ محلی و تسک‌های معوق درگاه؛ فقط تسک‌بندی](delivery/logging-gateway-plan-2026-11-28/README.md)
+[اجرای لاگ محلی، گزارش ادمین و تسک‌های معوق درگاه](delivery/logging-gateway-plan-2026-11-28/README.md)
 
 [اصلاح سوییچ‌های درگاه و ضریب تبدیل تومان/ریال — #154](delivery/gateway-currency-and-switches-2026-11-28.md)
 

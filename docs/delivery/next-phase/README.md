@@ -3,7 +3,7 @@ id: DEL-NEXT-001
 title: صف توسعه بعدی چریوا پس از اصلاحات تجربه فروشگاه
 status: in-review
 owner: eliassarband
-updated: 2026-11-25
+updated: 2026-11-28
 related: [DEL-SF-UX-001, ADR-009]
 approved_by: []
 implementation_status: in-progress
@@ -35,9 +35,9 @@ execution_authorized: true
 | CV-NEXT-11 · [#72](https://github.com/MohamadParsa/marketplace/issues/72) | [بازبینی قیمت‌گذاری دیجیتال/طلا و تخفیف مستقیم محصول](tasks/cv-next-11-pricing-direct-discounts.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-12 · [#73](https://github.com/MohamadParsa/marketplace/issues/73) | [روش فروش، اتصال به روش پرداخت و مارکاپ در خرید](tasks/cv-next-12-sales-method-markup.md) | P1 / W0 | done محلی؛ [شواهد](issues-73-81-verification.md) |
 | CV-NEXT-13 · [#74](https://github.com/MohamadParsa/marketplace/issues/74) | [SEO: ممیزی، فهرست تغییرات مصوب و اجرای اصلاحات](tasks/cv-next-13-seo-audit-remediation.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
-| CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | todo؛ اجرا انتخاب نشده |
+| CV-NEXT-14 · [#75](https://github.com/MohamadParsa/marketplace/issues/75) | [ActivityLog: سابقه تغییرات و عملیات کسب‌وکار در پنل](tasks/cv-next-14-business-activity-log.md) | P1 / W0 | تکمیل/بسته؛ audit اتمیک و گزارش ادمین |
+| CV-NEXT-15 · [#76](https://github.com/MohamadParsa/marketplace/issues/76) | [CustomerActivity و Analytics رفتار مشتری](tasks/cv-next-15-customer-activity-analytics.md) | P2 / W2 | تکمیل/بسته؛ رفتار سروری و قیف |
+| CV-NEXT-16 · [#77](https://github.com/MohamadParsa/marketplace/issues/77) | [لاگ فنی عملیات حساس، خطا و شکست با correlation](tasks/cv-next-16-sensitive-operation-logs.md) | P1 / W0 | پذیرش محلی تکمیل؛ CI در انتظار |
 | CV-NEXT-17 · [#78](https://github.com/MohamadParsa/marketplace/issues/78) | [گروه نمایشی گارانتی و حفظ گارانتی واقعی هر عرضه](tasks/cv-next-17-warranty-display-groups.md) | P2 / W2 | done/closed؛ سورس در PR #94، ادغام‌نشده؛ [شواهد چهار قابلیت](issues-67-68-69-78-verification.md) |
 | CV-NEXT-18 · [#79](https://github.com/MohamadParsa/marketplace/issues/79) | [گروه‌بندی مقادیر خصوصیات پرتعداد در گروه‌های کوچک‌تر](tasks/cv-next-18-attribute-value-groups.md) | P2 / W2 | todo؛ اجرا انتخاب نشده |
 | CV-NEXT-19 · [#80](https://github.com/MohamadParsa/marketplace/issues/80) | [بازبینی و اصلاح نمایش فیلترهای PLP](tasks/cv-next-19-plp-filter-experience.md) | P2 / W1 | done؛ [شواهد](issue-80-verification.md) |
@@ -115,4 +115,4 @@ execution_authorized: true
 
 ## بازبینی لاگ و تقدم بر درگاه — ۲۰۲۶-۱۱-۲۸
 
-[برنامه تازه](../logging-gateway-plan-2026-11-28/README.md) مالکیت #75/#76/#77 را حفظ و زیرتسک‌های #155..157 را برای زیرساخت/مقصد/پوشش فنی اضافه می‌کند. رفتار سبد و audit زیر همان دو Issue موجودند؛ مقصد فعلاً محلی و درگاه #158..163 معوق است. todoهای جدول بالا هنوز شروع نشده‌اند؛ ساخت تسک مجوز اجرا نیست.
+[برنامه تازه](../logging-gateway-plan-2026-11-28/README.md) مالکیت #75/#76/#77 را حفظ و زیرتسک‌های #155..157 را برای زیرساخت/مقصد/پوشش فنی اضافه می‌کند. رفتار سبد و audit زیر همان دو Issue موجودند؛ مقصد فعلاً محلی و درگاه #158..163 معوق است. پس از این برنامه‌ریزی، مالک اجرای غیر درگاه را انتخاب و NEXT-Q09/Q10 را پاسخ داد؛ [گزارش اجرا](../logging-gateway-plan-2026-11-28/execution.md) وضعیت فعلی همین شش تسک را مشخص می‌کند. بقیه todoها از این انتخاب مجوز نمی‌گیرند.

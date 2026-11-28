@@ -75,10 +75,11 @@ func TestAuditAndLocalLogReportsAdminOnlyFilteredAndRedacted(t *testing.T) {
 	repo := backofficememory.New(w)
 	events := []operationlog.Event{}
 	ctx := auditContext(&events)
+	operationlog.SetActor(ctx, "backoffice", "admin", "")
 	if err := repo.Update(ctx, func(w *backoffice.Workspace) error {
 		w.Offers[0].Stock--
 		w.Offers[0].Version++
-		w.Audit = append(w.Audit, backoffice.Audit{ID: "stock-1", Actor: "u-admin", Action: "offer.stock.update", Target: "offer", Reason: "PRIVATE-REASON"})
+		w.Audit = append(w.Audit, backoffice.Audit{ID: "stock-1", Actor: "admin", Action: "offer.stock.update", Target: "offer", Reason: "PRIVATE-REASON"})
 		return nil
 	}); err != nil {
 		t.Fatal(err)
@@ -104,6 +105,9 @@ func TestAuditAndLocalLogReportsAdminOnlyFilteredAndRedacted(t *testing.T) {
 	json.Unmarshal(result, &report)
 	if len(report.Items) != 1 || report.Items[0].After["stock"] != "9" || !report.Items[0].ReasonPresent {
 		t.Fatal(string(result))
+	}
+	if report.Items[0].ActorLabel != "مدیر آزمایشی" {
+		t.Fatal("actor label missing in authorized report")
 	}
 	commerceHTTP(t, h, admin, "", "POST", "/backoffice/observability/events/query", map[string]any{"limit": 201}, "", 400)
 }

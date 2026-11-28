@@ -1,6 +1,6 @@
 {
   "id": "DEL-NEXT-001",
-  "updated": "2026-11-26",
+  "updated": "2026-11-28",
   "owner": "eliassarband",
   "document_status": "in-review",
   "execution_authorized": true,
@@ -344,13 +344,13 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 75,
       "url": "https://github.com/MohamadParsa/marketplace/issues/75",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 15,
@@ -362,13 +362,13 @@
       "wave": "W2",
       "kind": "analysis-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
-      "state": "open",
+      "implementation_status": "done",
+      "state": "closed",
       "number": 76,
       "url": "https://github.com/MohamadParsa/marketplace/issues/76",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 16,
@@ -380,13 +380,13 @@
       "wave": "W0",
       "kind": "audit-then-implementation",
       "deps": [],
-      "implementation_status": "todo",
+      "implementation_status": "in-progress",
       "state": "open",
       "number": 77,
       "url": "https://github.com/MohamadParsa/marketplace/issues/77",
       "assignee": "eliassarband",
       "github_dependencies": [],
-      "execution_authorized": false
+      "execution_authorized": true
     },
     {
       "n": 17,

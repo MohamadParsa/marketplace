@@ -12,7 +12,7 @@ execution_authorized: true
 
 # CV-LOG-01 — قرارداد مشترک لاگ، شناسه پیگیری و حذف داده حساس
 
-Issue: [#155](https://github.com/MohamadParsa/marketplace/issues/155) · مسئول: `eliassarband` · فقط برنامه؛ شروع کدنویسی در درخواست فعلی انتخاب نشده است.
+Issue: [#155](https://github.com/MohamadParsa/marketplace/issues/155) · مسئول: `eliassarband` · تکمیل، پوش و با CI موفق بسته شد؛ دستور اجرا پس از تسک‌بندی صادر شد.
 
 ## مسئله و نتیجه
 
@@ -53,4 +53,4 @@ NEXT-Q09 برای جزئیات مجاز و نقش مشاهده؛ تصمیم‌ه
 
 ## شاهد اجرا
 
-قرارداد و Recorder مشترک، پالایش allowlist پیش از sink، context هم‌روند برای HTTP/worker و adapter استاندارد slog پیاده شد. تست‌های قرارداد/حریم/خطای sink/context و هم‌روندی محلی موفق‌اند؛ اتصال به برنامه و ذخیره فایل در #156/#157 تکمیل می‌شود. race محلی به‌دلیل نبود CGO اجرا نشد و در CI لینوکس بررسی می‌شود. [گزارش اجرا](../execution.md).
+قرارداد و Recorder مشترک، پالایش allowlist پیش از sink، context هم‌روند برای HTTP/worker و adapter استاندارد slog پیاده شد. تست‌های قرارداد/حریم/خطای sink/context و هم‌روندی محلی موفق‌اند؛ اتصال به برنامه و ذخیره فایل در #156/#157 تکمیل شده است. race محلی به‌دلیل نبود CGO اجرا نشد و در CI لینوکس موفق بوده است. [گزارش اجرا](../execution.md).

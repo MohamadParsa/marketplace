@@ -48,6 +48,7 @@ func (s *Service) ReadOperationLogStats(ctx context.Context, a identity.User) (a
 type AuditReportRow struct {
 	ID            string            `json:"id"`
 	Actor         string            `json:"actor"`
+	ActorLabel    string            `json:"actor_label"`
 	Action        string            `json:"action"`
 	Target        string            `json:"target"`
 	StoreID       string            `json:"store_id,omitempty"`
@@ -78,6 +79,16 @@ func (s *Service) ReadAuditReport(ctx context.Context, a identity.User, q operat
 		limit = 100
 	}
 	rows := []AuditReportRow{}
+	actorLabels := map[string]string{"system": "سیستم"}
+	for _, user := range w.Users {
+		label := strings.TrimSpace(user.Name)
+		if label == "" {
+			label = strings.TrimSpace(user.FirstName + " " + user.LastName)
+		}
+		if label != "" {
+			actorLabels[user.ID] = label
+		}
+	}
 	for _, v := range w.Audit {
 		older, cursorErr := operationlog.BeforeCursor(v.At, auditPublicID(v.ID), q.Cursor)
 		if cursorErr != nil {
@@ -96,7 +107,7 @@ func (s *Service) ReadAuditReport(ctx context.Context, a identity.User, q operat
 		if q.Outcome != "" && q.Outcome != outcome {
 			continue
 		}
-		rows = append(rows, AuditReportRow{ID: auditPublicID(v.ID), Actor: v.Actor, Action: v.Action, Target: v.Target, StoreID: v.StoreID, OperationID: v.OperationID, RequestID: v.RequestID, Outcome: outcome, Version: v.Version, Before: safeAuditProjection(v.Before), After: safeAuditProjection(v.After), ReasonPresent: v.Reason != "", At: v.At})
+		rows = append(rows, AuditReportRow{ID: auditPublicID(v.ID), Actor: v.Actor, ActorLabel: actorLabels[v.Actor], Action: v.Action, Target: v.Target, StoreID: v.StoreID, OperationID: v.OperationID, RequestID: v.RequestID, Outcome: outcome, Version: v.Version, Before: safeAuditProjection(v.Before), After: safeAuditProjection(v.After), ReasonPresent: v.Reason != "", At: v.At})
 	}
 	sort.Slice(rows, func(i, j int) bool {
 		if rows[i].At.Equal(rows[j].At) {

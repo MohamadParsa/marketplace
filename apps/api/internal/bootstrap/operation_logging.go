@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -24,12 +25,21 @@ func buildOperationLogging(cfg config.Config) (*OperationLogging, error) {
 	if cfg.OperationLogDir == "" {
 		return runtime, nil
 	}
-	dir, err := filepath.Abs(cfg.OperationLogDir)
+	unavailable := func() (*OperationLogging, error) {
+		runtime.Status = "storage-unavailable"
+		runtime.Recorder = operationlog.New(operationlog.SinkFunc(func(operationlog.Event) error { return locallog.ErrStorage }), "api", cfg.Environment, cfg.WebSurface)
+		runtime.Recorder.ConfigureBehaviorRetention(cfg.BehaviorRetentionDays)
+		return runtime, nil
+	}
+	dir, err := resolvedLogPath(cfg.OperationLogDir)
 	if err != nil {
-		return nil, errors.New("invalid private log directory")
+		return unavailable()
 	}
 	if cfg.WebRoot != "" {
-		root, _ := filepath.Abs(cfg.WebRoot)
+		root, e := resolvedLogPath(cfg.WebRoot)
+		if e != nil {
+			return unavailable()
+		}
 		rel, e := filepath.Rel(root, dir)
 		if e == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
 			return nil, errors.New("log directory must be outside web root")
@@ -53,14 +63,42 @@ func buildOperationLogging(cfg config.Config) (*OperationLogging, error) {
 	}
 	store, err := locallog.New(opts)
 	if err != nil {
-		runtime.Status = "storage-unavailable"
-		runtime.Recorder = operationlog.New(operationlog.SinkFunc(func(operationlog.Event) error { return locallog.ErrStorage }), "api", cfg.Environment, cfg.WebSurface)
-		return runtime, nil
+		return unavailable()
 	}
 	runtime.Store, runtime.Status = store, "ready"
 	runtime.Recorder = operationlog.New(store, "api", cfg.Environment, cfg.WebSurface)
 	runtime.Recorder.ConfigureBehaviorRetention(opts.BehaviorDays)
 	return runtime, nil
+}
+
+// Resolve existing ancestors as well: the final log directory may not exist yet,
+// and an intermediate junction/symlink must not bypass the public-root check.
+func resolvedLogPath(path string) (string, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", err
+	}
+	current := abs
+	for {
+		if _, err = os.Lstat(current); err == nil {
+			resolved, err := existingLogPath(current)
+			if err != nil {
+				return "", err
+			}
+			rel, err := filepath.Rel(current, abs)
+			if err != nil {
+				return "", err
+			}
+			return filepath.Join(resolved, rel), nil
+		} else if !os.IsNotExist(err) {
+			return "", err
+		}
+		parent := filepath.Dir(current)
+		if parent == current {
+			return abs, nil
+		}
+		current = parent
+	}
 }
 func NewOperationLogging(cfg config.Config, lifecycle fx.Lifecycle) (*OperationLogging, error) {
 	runtime, err := buildOperationLogging(cfg)

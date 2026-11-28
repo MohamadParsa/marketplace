@@ -1,6 +1,6 @@
 {
   "planning_status": "done",
-  "execution_authorized": false,
+  "execution_authorized": true,
   "date": "2026-11-28",
   "existing_issues_updated": [
     75,
@@ -15,10 +15,10 @@
       "issue": 155,
       "url": "https://github.com/MohamadParsa/marketplace/issues/155",
       "title": "CV-LOG-01 — قرارداد مشترک لاگ، شناسه پیگیری و حذف داده حساس",
-      "state": "open",
+      "state": "closed",
       "owner": "eliassarband",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "dependencies": [],
       "spec": "tasks/logging-contract-correlation-redaction.md"
     },
@@ -28,10 +28,10 @@
       "issue": 156,
       "url": "https://github.com/MohamadParsa/marketplace/issues/156",
       "title": "CV-LOG-02 — ذخیره محلی لاگ، چرخش فایل و امکان تغییر مقصد",
-      "state": "open",
+      "state": "closed",
       "owner": "eliassarband",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "dependencies": [
         155
       ],
@@ -43,10 +43,10 @@
       "issue": 157,
       "url": "https://github.com/MohamadParsa/marketplace/issues/157",
       "title": "CV-LOG-03 — پوشش مسیر خرید، عملیات حساس و تماس سرویس‌های بیرونی",
-      "state": "open",
+      "state": "closed",
       "owner": "eliassarband",
-      "implementation_status": "todo",
-      "execution_authorized": false,
+      "implementation_status": "done",
+      "execution_authorized": true,
       "dependencies": [
         155,
         156
@@ -147,5 +147,11 @@
       ],
       "spec": "tasks/gateway-end-to-end-and-activation-review.md"
     }
-  ]
+  ],
+  "implementation_status": "in-progress",
+  "completed_existing_issues": [
+    75,
+    76
+  ],
+  "pending_acceptance_issue": 77
 }

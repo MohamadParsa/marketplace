@@ -14,7 +14,7 @@ execution_authorized: true
 
 # CV-NEXT-15 — CustomerActivity و Analytics رفتار مشتری
 
-Issue: [#76](https://github.com/MohamadParsa/marketplace/issues/76) · اساین: `eliassarband` · وضعیت اجرا: **تکمیل و تست محلی؛ بستن پس از CI** · شروع اجرا: دستور صریح مالک برای همه تسک‌های غیر درگاه.
+Issue: [#76](https://github.com/MohamadParsa/marketplace/issues/76) · اساین: `eliassarband` · وضعیت اجرا: **تکمیل، پوش و با هر۵CI موفق بسته‌شده؛ سورس7e7cb57** · شروع اجرا: دستور صریح مالک برای همه تسک‌های غیر درگاه.
 
 ## مسئله و نتیجه بیزینسی
 

@@ -9,7 +9,7 @@ import { PersianDateField } from "../../../../../packages/date-controls/persian-
 import { ActivityFunnelPanel } from "./activity-funnel";
 
 type LogEvent = { event_id: string; event_name: string; log_type: string; severity: string; outcome: string; recorded_at: string; operation_id: string; actor_id?: string; provider?: string; provider_operation?: string; error_code?: string; duration_ms?: number; http_status?: number; attributes?: Record<string, unknown> };
-type AuditRow = { id: string; actor: string; action: string; target: string; store_id?: string; operation_id?: string; outcome: string; version?: number; before: Record<string,string>; after: Record<string,string>; reason_present: boolean; at: string };
+type AuditRow = { id: string; actor: string; actor_label?: string; action: string; target: string; store_id?: string; operation_id?: string; outcome: string; version?: number; before: Record<string,string>; after: Record<string,string>; reason_present: boolean; at: string };
 type Stats = { status: string; recorder?: { recorded: number; rejected: number; write_failures: number }; storage?: { written: number; dropped: number; write_failures: number; corrupt_lines: number; queued: number } };
 type Filters = { from: string; to: string; log_type: string; severity: string; outcome: string; operation_id: string; actor_id: string; event_name: string; store_id: string };
 const emptyFilters: Filters = { from:"", to:"", log_type:"", severity:"", outcome:"", operation_id:"", actor_id:"", event_name:"", store_id:"" };
@@ -55,7 +55,7 @@ export function OperationReportsPage(){
     {stats&&<Alert severity={stats.status==="ready"&&!(stats.storage?.dropped||stats.storage?.write_failures||stats.recorder?.write_failures)?"info":"warning"}>{stats.status==="ready"?"ذخیره محلی فعال است.":stats.status==="disabled"?"ذخیره محلی در این محیط تنظیم نشده است.":"ذخیره محلی در دسترس نیست؛ عملیات اصلی ادامه دارد."} ثبت‌شده: {number(stats.storage?.written??0)} · افت صف: {number(stats.storage?.dropped??0)} · خطای نوشتن: {number((stats.storage?.write_failures??0)+(stats.recorder?.write_failures??0))}</Alert>}
     <section className="panel operation-reports" aria-busy={busy}><EditorTabs label="بخش‌های گزارش عملیات" value={tab} onChange={value=>{setTab(value);setNext("");setDraft(emptyFilters);setFilters(emptyFilters);}} panels={[
       {id:"audit",label:"سابقه عملیات",content:<>{tab==="audit"&&filter}<DataTable searchable={false} rows={audit} empty={busy?"در حال دریافت…":"عملیاتی با این فیلتر ثبت نشده است."} columns={[
-        {title:"عملیات",render:a=><span className="code">{a.action}</span>},{title:"عامل",render:a=>actor(a.actor)},{title:"هدف",render:a=>a.target?displayRecord(state,a.target):"رکورد جدید"},{title:"زمان",render:a=>dateTime(a.at)},
+        {title:"عملیات",render:a=><span className="code">{a.action}</span>},{title:"عامل",render:a=>a.actor_label||actor(a.actor)},{title:"هدف",render:a=>a.target?displayRecord(state,a.target):"رکورد جدید"},{title:"زمان",render:a=>dateTime(a.at)},
         {title:"جزئیات",render:a=><details><summary>مشاهده تغییرات</summary><p>نتیجه: {outcomes[a.outcome]??a.outcome} · نسخه: {number(a.version??0)}</p>{a.operation_id&&<p className="log-reference">پیگیری: <bdi>{a.operation_id}</bdi></p>}{Array.from(new Set([...Object.keys(a.before),...Object.keys(a.after)])).map(key=><p key={key}>{fields[key]??key}: <bdi>{auditValue(a.before[key])}</bdi> ← <bdi>{auditValue(a.after[key])}</bdi></p>)}{!Object.keys(a.after).length&&!Object.keys(a.before).length&&<p>جزئیات تغییر برای سابقهٔ قدیمی ثبت نشده است.</p>}{a.reason_present&&<p>شرح عملیات در پرونده یا فرم مربوط نگهداری شده است.</p>}</details>}
       ]}/></>},
       {id:"events",label:"لاگ اجرا و سرویس‌ها",content:<>{tab==="events"&&filter}<DataTable searchable={false} rows={events.map(e=>({...e,id:e.event_id}))} empty={busy?"در حال دریافت…":"رویدادی با این فیلتر ثبت نشده است."} columns={[
@@ -63,6 +63,6 @@ export function OperationReportsPage(){
         {title:"جزئیات",render:e=><details><summary>مشاهده پیگیری</summary><p className="log-reference">عملیات: <bdi>{e.operation_id}</bdi></p>{e.provider&&<p>سرویس: {e.provider} · {e.provider_operation}</p>}<p>مدت: {number(e.duration_ms??0)} میلی‌ثانیه · پاسخ: {e.http_status??"—"}</p>{e.error_code&&<p>کد خطا: {e.error_code}</p>}</details>}
       ]}/></>},
       {id:"funnel",label:"رفتار مشتری و مسیر خرید",content:tab==="funnel"?<ActivityFunnelPanel/>:null}
-    ]}/><div className="page-toolbar"><Button disabled={busy} onClick={()=>void load()}>به‌روزرسانی گزارش</Button>{next&&<Button variant="outlined" disabled={busy} onClick={()=>void load(next)}>نمایش بیشتر</Button>}</div></section>
+    ]}/><div className="page-toolbar">{tab!=="funnel"&&<Button disabled={busy} onClick={()=>void load()}>به‌روزرسانی گزارش</Button>}{next&&<Button variant="outlined" disabled={busy} onClick={()=>void load(next)}>نمایش بیشتر</Button>}</div></section>
   </>;
 }

@@ -11,4 +11,11 @@
 | lifecycle، کش و cleanup موجود | slog از همان Recorder پالایش‌شده؛ متن/exception آزاد ذخیره نمی‌شود. | [entrypoint](../../../apps/api/cmd/api/main.go) و [handler slog](../../../apps/api/internal/application/operationlog/slog.go) |
 | gateway initialize/token/refresh/activation/request/redirect/callback/verify/inquiry/retry/reconciliation و مالی بعدی | **معوق و اجرا نشده**؛ قرارداد BeginExternal و schema آماده است، هیچ ادعای تماس/پوشش بانک واقعی نیست. | #158..163 |
 
-audit کسب‌وکار (#75)، رفتار سروری و قیف (#76) و پذیرش نهایی (#77) در [گزارش اجرا](execution.md) جدا تکمیل می‌شوند؛ این ماتریس ادعای ثبت هر رویداد فرضی یا اتصال بیرونی تازه نیست. همه تست‌های نوشتنی روی fixture/مسیر موقت‌اند.
+audit کسب‌وکار (#75)، رفتار سروری و قیف (#76) و پذیرش نهایی (#77) در [گزارش اجرا](execution.md) و [راهنما](local-logging-guide.md) شواهد جدا دارند؛ این ماتریس ادعای ثبت هر رویداد فرضی یا اتصال بیرونی تازه نیست. همه تست‌های نوشتنی روی fixture/مسیر موقت‌اند.
+
+| مسیر حسابرسی/رفتار | ثبت و نتیجه | منبع |
+| --- | --- | --- |
+| audit تغییر حساس | metadata و diff مجاز داخل commit، telemetry پس از commit؛ DB بدون prune خودکار | [observer](../../../apps/api/internal/application/backoffice/audit_observer.go) |
+| view/search | نتیجه موفق سرور، شناسه مستعار سبد موجود، دستگاه محدود، بدون متن جست‌وجو | handler محصول/listing و [رفتار](../../../apps/api/internal/application/backoffice/customer_activity.go) |
+| cart/quote/placed/paid | تغییر قطعی repository، replay/merge بدون دوباره‌شماری، paid مستقل از topup | [رفتار](../../../apps/api/internal/application/backoffice/customer_activity.go) |
+| گزارش ادمین | audit/event/stats/funnel با کنترل فعلی نقش و سطح؛ بازه شمسی/دستگاه/دسته/محیط | [گزارش](../../../apps/api/internal/application/backoffice/operation_reports.go) و [قیف](../../../apps/api/internal/application/backoffice/activity_funnel.go) |

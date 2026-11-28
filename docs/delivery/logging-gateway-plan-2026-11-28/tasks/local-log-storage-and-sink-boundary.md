@@ -12,7 +12,7 @@ execution_authorized: true
 
 # CV-LOG-02 — ذخیره محلی لاگ، چرخش فایل و امکان تغییر مقصد
 
-Issue: [#156](https://github.com/MohamadParsa/marketplace/issues/156) · مسئول: `eliassarband` · فقط برنامه؛ شروع کدنویسی در درخواست فعلی انتخاب نشده است.
+Issue: [#156](https://github.com/MohamadParsa/marketplace/issues/156) · مسئول: `eliassarband` · تکمیل، پوش و با CI موفق بسته شد؛ دستور اجرا پس از تسک‌بندی صادر شد.
 
 ## مسئله و نتیجه
 
