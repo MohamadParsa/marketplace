@@ -206,8 +206,10 @@
       "implementation_status": "done",
       "execution_authorized": true,
       "delivery": {
-        "issue_state": "open",
-        "verification": "local-tests-passed-ci-pending"
+        "issue_state": "closed",
+        "source_commit": "153655c30fa3b376c92305d049ebc629aeec45df",
+        "ci": "https://github.com/MohamadParsa/marketplace/actions/runs/46130026327",
+        "comment": "https://github.com/MohamadParsa/marketplace/issues/151#issuecomment-7237211101"
       }
     }
   ]

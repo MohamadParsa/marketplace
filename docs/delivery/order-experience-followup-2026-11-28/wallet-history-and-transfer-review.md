@@ -79,4 +79,4 @@ Issue: [#151](https://github.com/MohamadParsa/marketplace/issues/151) · وال�
 
 [فرم موبایل](assets/refund-review-mobile.png) · [گردش دسکتاپ](assets/wallet-history-desktop.png) · [گردش موبایل](assets/wallet-history-mobile.png) · [دکمه سفارش](assets/order-list-action.png).
 
-لینک CI و کامنت پایان پس از push به فهرست تحویل افزوده می‌شود؛ merge و انتشار عمومی مستقل‌اند.
+کامیت [153655c](https://github.com/MohamadParsa/marketplace/commit/153655c30fa3b376c92305d049ebc629aeec45df) پوش شد؛ هر۵بررسی [CI](https://github.com/MohamadParsa/marketplace/actions/runs/46130026327)، از جمله `go test -race ./...` و `go vet ./...` موفق‌اند. #151 با [کامنت شواهد](https://github.com/MohamadParsa/marketplace/issues/151#issuecomment-7237211101) بسته شد. فهرست تحویل به همین کامیت و شواهد وصل است؛ merge و انتشار عمومی مستقل‌اند.
