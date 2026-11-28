@@ -488,8 +488,14 @@ func (s *Service) ResolveRefund(ctx context.Context, a identity.User, in RefundR
 			}
 			if in.Complete {
 				ref, e := normalizeReference(in.Reference)
-				if e != nil || !validDepositDate(in.Date, now) || strings.TrimSpace(in.Reason) == "" {
-					return nil, ErrInvalid
+				if e != nil {
+					return nil, ErrTransferReference
+				}
+				if !validDepositDate(in.Date, now) {
+					return nil, ErrTransferDate
+				}
+				if strings.TrimSpace(in.Reason) == "" {
+					return nil, ErrRefundReason
 				}
 				for _, other := range c.Refunds {
 					if other.ID != r.ID && other.Status == "completed" && other.Reference == ref && other.Date == in.Date {

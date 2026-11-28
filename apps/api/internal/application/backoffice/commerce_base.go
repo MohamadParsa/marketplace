@@ -21,6 +21,9 @@ var ErrWalletExceedsTotal = errors.New("wallet_exceeds_total")
 var ErrInsufficientWallet = errors.New("insufficient_wallet")
 var ErrInvalidMethod = errors.New("payment_method_not_eligible")
 var ErrStock = errors.New("insufficient_stock")
+var ErrTransferReference = errors.New("invalid_transfer_reference")
+var ErrTransferDate = errors.New("invalid_transfer_date")
+var ErrRefundReason = errors.New("refund_reason_required")
 
 func commerceState(w *Workspace) *commerce.State {
 	if w.Commerce == nil {

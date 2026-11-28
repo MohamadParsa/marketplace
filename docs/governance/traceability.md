@@ -1,5 +1,7 @@
 # ردیابی قابلیت تا پذیرش
 
+FEAT-WALLET-REVIEW-001-AC01..04 → [گردش کیف پول و اصلاح ثبت انتقال #151](../delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md) → [BDD طراحی](../bdd/features/experiences/wallet-history-and-transfer-review.feature). شاهد API/مرورگر با داده ساختگی از سناریوی طراحی و انتقال بانکی واقعی جداست.
+
 FEAT-SF-ORDER-PRESENTATION-001-AC01..04 → [اصلاح و بررسی #150](../delivery/order-experience-followup-2026-11-28/storefront-presentation-and-legacy-menu-review.md) → [BDD طراحی](../bdd/features/experiences/order-presentation-refinement.feature). تاریخ صریح، اتصال اقلام/وعده با store_id و جمع مرجع/خلاصه کیف پول اجرا شدند؛ بررسی منوهای قدیمی مجوز حذف یا بازنویسی آن‌ها نیست.
 
 <a id="order-experience-followup-20261128"></a>

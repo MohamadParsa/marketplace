@@ -888,6 +888,7 @@
   line-height: 1.9;
 }
 .buy-order-product-name{min-width:0;font-size:12px;line-height:1.9;overflow-wrap:anywhere}.buy-order-product-name small{display:block;color:#7a6975}.customer-shipment-promise p{margin-block:6px;unicode-bidi:plaintext}
+.buy-order-list-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.buy-page a.order-view-link{background:#b51f46;color:#fff;border:1px solid #921638;gap:10px;font-size:14px}.buy-page a.order-view-link:hover{background:#921638}.buy-page a.order-view-link:focus-visible{outline:3px solid #ce92a4;outline-offset:3px}.buy-wallet-card a.buy-secondary{color:#8e1638;background:#fff}.wallet-transaction-list,.wallet-request-history{padding:0;list-style:none;display:grid;gap:12px}.wallet-transaction{display:flex;align-items:center;flex-wrap:wrap;gap:14px;border:1px solid var(--border);border-radius:12px;padding:16px}.wallet-transaction>div{flex:1;min-width:170px;display:grid;gap:6px}.wallet-transaction time,.wallet-request-history time{display:block;font-size:12px;color:#756675}.wallet-transaction small{font-size:12px}.wallet-transaction-amount{font-weight:700;color:#226b48}.wallet-transaction[data-direction=debit] .wallet-transaction-amount{color:#a71f43}.wallet-request-history li{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--border)}
 .buy-order-item-details {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);

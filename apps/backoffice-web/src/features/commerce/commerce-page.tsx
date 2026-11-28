@@ -1,9 +1,9 @@
 import { EditorTabs } from "../../shared/editor-tabs";
+import { normalizeTransferReference, transferReferenceError } from "../../../../../packages/commerce-client/transfer-reference";
 import { PersianDateField, PersianDatesField } from "../../../../../packages/date-controls/persian-date-field";
 import { tehranCapacityDate, persianCapacityDate, persianDigits, validISODate } from "../../../../../packages/date-controls/calendar";
 import { PurchaseRequests, PurchaseHistory } from "../operations/order-requests-panel";
 import { OrderOperationsPanel } from "../operations/order-operations-panel";
-import { displayRecord } from "../../shared/format";
 import { MultiChoiceField } from "../../shared/option-select";
 import {
   deliveryPromise,
@@ -29,6 +29,7 @@ import {
   Checkbox,
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   FormControlLabel,
   MenuItem,
@@ -67,7 +68,13 @@ async function request<T>(
   });
   if (!r.ok) {
     const e = await r.json().catch(() => ({}));
+    const fieldMessages:Record<string,string>={
+      invalid_transfer_reference:"کد پیگیری روی رسید بانک معتبر نیست؛ ۳ تا ۸۰ نویسه شامل عدد، حروف لاتین یا خط تیره وارد کنید.",
+      invalid_transfer_date:"تاریخ واقعی انتقال را وارد کنید؛ تاریخ آینده معتبر نیست.",
+      refund_reason_required:"شرح ثبت نتیجه انتقال بانکی را وارد کنید.",
+    };
     throw Error(
+      fieldMessages[e.code] ??
       (
         {
           401: "نشست منقضی شده است؛ دوباره وارد شوید.",
@@ -418,17 +425,18 @@ export function CommercePage({
               />
             )}
           </section>
-          <section className="panel commerce-audit">
-            <h2>رویدادهای مالی مجاز</h2>
+          <details className="panel commerce-audit">
+            <summary>تاریخچه عملیات مالی</summary>
+            <p>سابقه ثبت و بررسی عملیات در محدوده دسترسی شما؛ این بخش برای پیگیری است و اقدامی برای تکمیل پرداخت ندارد.</p>
             {data.audit
               .slice(-30)
               .reverse()
               .map((a, i) => (
                 <p key={a.id ?? i}>
-                  {a.action} · {data.purchases.find(p => p.id === a.target)?.number ?? data.deposits.find(d => d.id === a.target)?.customer_name ?? data.refunds.find(r => r.id === a.target)?.customer_name ?? displayRecord(state, a.target)}
+                  {({"commerce.deposit.review":"بررسی اعلام واریز","commerce.refund.resolve":"ثبت نتیجه برداشت بانکی","commerce.refund.request":"ثبت درخواست برداشت","commerce.purchase.confirm":"ثبت پرداخت سفارش","commerce.purchase.accept":"ثبت سفارش","commerce.purchase.admin-cancel":"لغو سفارش"} as Record<string,string>)[a.action] ?? "ثبت عملیات مالی"} · {data.purchases.find(p => p.id === a.target)?.number ?? data.deposits.find(d => d.id === a.target)?.customer_name ?? data.refunds.find(r => r.id === a.target)?.customer_name ?? "سابقه ثبت‌شده"}
                 </p>
               ))}
-          </section>
+          </details>
         </>
       )}
       <Dialog
@@ -437,14 +445,14 @@ export function CommercePage({
           if (!busy) setSelected(null);
         }}
         fullWidth
-        maxWidth="xl"
+        maxWidth={selectedPurchase?"xl":selectedRefund?"sm":"md"}
       >
         <DialogTitle>
           {selectedDeposit
             ? "بررسی اعلام واریز"
             : selectedPurchase
               ? "جزئیات سفارش"
-              : "رسیدگی بازپرداخت"}
+              : "ثبت نتیجه انتقال بانکی"}
         </DialogTitle>
         <DialogContent>
           {error && <Alert severity="error">{error}</Alert>}
@@ -507,10 +515,10 @@ export function CommercePage({
               }
             />
           )}
-          <Button disabled={busy} onClick={() => setSelected(null)}>
-            بستن
-          </Button>
         </DialogContent>
+        <DialogActions><Button disabled={busy} onClick={() => setSelected(null)}>
+            بستن
+          </Button></DialogActions>
       </Dialog>
     </>
   );
@@ -972,30 +980,31 @@ function RefundReview({
     [date, setDate] = useState(tehranCapacityDate),
     [reason, setReason] = useState(""),
     [checked, setChecked] = useState(false);
+  const referenceError=transferReferenceError(ref);
+  const dateValid=validISODate(date)&&date<=tehranCapacityDate();
   return (
     <>
       <h3>
         {money(r.amount_toman)} · {label(r.status)}
       </h3>
       <p>{r.instructions}</p>
-      <p>
-        {r.reason} · {r.reference}
-      </p>
+      {(r.reason||r.reference)&&<p>{r.reason}{r.reference&&" · کد پیگیری: "+r.reference}</p>}
       {allowed && r.status === "pending" && (
-        <fieldset disabled={busy}>
-          <Alert severity="warning">
-            انتقال بانکی خودکار نیست؛ فقط پس از انجام واقعی پرداخت، نتیجه را ثبت
-            کنید. تکمیل، مبلغ رزروشده را از کیف پول کم می‌کند.
+        <fieldset disabled={busy} className="refund-review-form">
+          <Alert severity="info" className="refund-review-wide">
+            این درخواست برای برداشت از کیف پول و واریز به حساب مشتری است. پس از انتقال واقعی مبلغ دقیق، کد پیگیری و تاریخ رسید بانک را وارد کنید؛ ثبت تکمیل مبلغ رزروشده را از کیف پول کم می‌کند.
           </Alert>
-          <Field label="مرجع پرداخت انجام‌شده" value={ref} onChange={setRef} />
+          <TextField label="کد پیگیری انتقال بانکی" required fullWidth value={ref} onChange={event=>setRef(event.target.value)} error={!!ref&&!!referenceError} helperText={ref&&referenceError?referenceError:"کد روی رسید بانک؛ ۳ تا ۸۰ نویسه شامل عدد، حروف لاتین یا خط تیره."} inputProps={{dir:"ltr",maxLength:80}} />
           <PersianDateField
-            label="تاریخ پرداخت"
+            label="تاریخ انتقال بانکی"
             required
             value={date}
             onChange={setDate}
+            max={tehranCapacityDate()}
           />
-          <Field label="نتیجه و دلیل" value={reason} onChange={setReason} />
+          <TextField label="شرح ثبت نتیجه" required value={reason} onChange={event=>setReason(event.target.value)} multiline minRows={2} maxRows={4} className="refund-review-wide" inputProps={{maxLength:1000}} />
           <FormControlLabel
+            className="refund-review-wide"
             control={
               <Checkbox
                 checked={checked}
@@ -1006,14 +1015,14 @@ function RefundReview({
           />
           <Button
             variant="contained"
-            disabled={busy || !checked || !ref || !reason.trim() || !validISODate(date)}
+            disabled={busy || !checked || !!referenceError || !reason.trim() || !dateValid}
             onClick={() =>
               submit({
                 id: r.id,
                 version: r.version,
                 complete: true,
                 verified_amount_toman: r.amount_toman,
-                reference: ref,
+                reference: normalizeTransferReference(ref),
                 date,
                 reason,
               })

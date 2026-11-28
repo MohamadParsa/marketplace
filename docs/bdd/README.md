@@ -1,5 +1,7 @@
 # مستندات BDD بازارگاه
 
+[۴سناریوی گردش کیف پول و ثبت نتیجه انتقال بانکی #151](features/experiences/wallet-history-and-transfer-review.feature) به [پذیرش و شواهد اجرا](../delivery/order-experience-followup-2026-11-28/wallet-history-and-transfer-review.md) وصل‌اند؛ اجرای مستقل runner Gherkin ادعا نمی‌شود.
+
 [ده سناریوی طراحی بازبینی چرخه سفارش و Q&A/تخفیف](features/experiences/order-lifecycle-review.feature) به [شرح‌های برنامه](../delivery/order-lifecycle-review-2026-11-27/README.md) وصل‌اند؛ فقط planning و بدون مجوز اجرا یا ادعای آزمون موفق.
 
 این پوشه مرجع سناریوهای رفتاری بازارگاه است. سناریوها با قالب Gherkin فارسی در فایل‌های `.feature` ثبت شده‌اند و هر سناریو با شناسه پذیرش موجود در سند حوزه یا تجربه پیوند دارد. این اسناد در وضعیت مستندات هستند و به‌تنهایی مجوز ساخت یا اتصال به سرویس واقعی نیستند.

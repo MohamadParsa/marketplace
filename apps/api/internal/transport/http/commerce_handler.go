@@ -83,6 +83,12 @@ func commerceError(w http.ResponseWriter, e error) {
 		status, code = 400, "coupon_not_eligible"
 	case errors.Is(e, backoffice.ErrInvalid):
 		status, code = 400, "invalid_request"
+	case errors.Is(e, backoffice.ErrTransferReference):
+		status, code = 400, "invalid_transfer_reference"
+	case errors.Is(e, backoffice.ErrTransferDate):
+		status, code = 400, "invalid_transfer_date"
+	case errors.Is(e, backoffice.ErrRefundReason):
+		status, code = 400, "refund_reason_required"
 	case errors.Is(e, backoffice.ErrConflict):
 		status, code = 409, "state_conflict"
 	case errors.Is(e, backoffice.ErrStock):

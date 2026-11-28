@@ -196,6 +196,19 @@
         "comment": "https://github.com/MohamadParsa/marketplace/issues/150#issuecomment-7236602828",
         "issue_state": "closed"
       }
+    },
+    {
+      "id": "CV-ORD-UI-02",
+      "spec_id": "FEAT-WALLET-REVIEW-001",
+      "scope": "wallet-history-and-transfer-review",
+      "issue": 151,
+      "file": "wallet-history-and-transfer-review.md",
+      "implementation_status": "done",
+      "execution_authorized": true,
+      "delivery": {
+        "issue_state": "open",
+        "verification": "local-tests-passed-ci-pending"
+      }
     }
   ]
 }

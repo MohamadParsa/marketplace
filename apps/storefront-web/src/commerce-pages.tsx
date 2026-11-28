@@ -4,6 +4,7 @@ import { tehranCapacityDate, persianCapacityDate, persianDigits } from "../../..
 import { CustomerOrderHistory, CustomerShipments } from "./order-shipments";
 import { CustomerPurchaseProgress, CustomerOrderFinance } from "./customer-order-details";
 import { OrderItems } from "./order-items";
+import { WalletTransactions } from "./wallet-transactions";
 import { ShippingChoiceCards } from "./shipping-choice-cards";
 import { deliveryPromise, shippingCharge } from "../../../packages/commerce-client/shipping-presentation";
 import { usePublicBusiness, businessPages } from "./business-content";
@@ -1610,13 +1611,8 @@ function OrderContent({ id }: { id?: string }) {
             .reverse()
             .map((p) => (
               <article className="buy-panel" key={p.id}>
-                <h2>
-                  {id ? (
-                    "سفارش شما"
-                  ) : (
-                    <a href={"/account/orders/" + p.number}>مشاهده سفارش</a>
-                  )}
-                </h2>
+                <div className="buy-order-list-heading"><h2>{id?"سفارش شما":"سفارش "+p.number.replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}</h2>
+                {!id&&<a className="buy-primary order-view-link" href={"/account/orders/"+p.number}>مشاهده جزئیات سفارش <span aria-hidden="true">←</span></a>}</div>
                 <p className="buy-order-number">
                   شماره سفارش: <b>{p.number.replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}</b>
                 </p>
@@ -2025,9 +2021,10 @@ export function DepositForm({
 }
 export function WalletPage() {
   const { token } = useCommerce();
+  const transactions=new URLSearchParams(location.search).get("view")==="transactions";
   return (
-    <CommerceShell title="کیف پول">
-      <RequireLogin>{token && <WalletContent />}</RequireLogin>
+    <CommerceShell title={transactions?"تراکنش‌های کیف پول":"کیف پول"}>
+      <RequireLogin>{token && (transactions?<WalletTransactions/>:<WalletContent />)}</RequireLogin>
     </CommerceShell>
   );
 }
@@ -2080,6 +2077,7 @@ function WalletContent() {
                 {money(wallet.held_toman)}
               </small>
               <div className="buy-row">
+                <a className="buy-secondary" href="/wallet?view=transactions">مشاهده تراکنش‌ها</a>
                 <button
                   onClick={() => setTopup(true)}
                   disabled={!wallet.funding_methods.length}
@@ -2240,6 +2238,7 @@ export function AccountPage({ addresses = false }: { addresses?: boolean }) {
                 <a href="/account/orders">سفارش‌ها</a>
                 <a href="/account/addresses">آدرس‌ها</a>
                 <a href="/wallet">کیف پول</a>
+                <a href="/wallet?view=transactions">تراکنش‌های کیف پول</a>
                 <button
                   onClick={() => {
                     void call("/storefront/auth/logout", token, {}).finally(
